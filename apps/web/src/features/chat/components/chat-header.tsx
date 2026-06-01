@@ -53,9 +53,6 @@ export function ChatHeader({ onClose, onReset, isExpanded, onToggleExpand }: Cha
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-3">
           <AiAvatar size="sm" />
-          <pre className="text-foreground font-mono text-[2px] leading-none whitespace-pre">
-            {`███╗   ██╗██╗ █████╗ ████████╗███████╗\n████╗ ████║██║██╔══██╗╚══██╔══╝██╔════╝\n██╔████╔██║██║███████║   ██║   █████╗  \n██║╚██╔╝██║██║██╔══██║   ██║   ██╔══╝  \n██║ ╚═╝ ██║██║██║  ██║   ██║   ███████╗\n╚═╝     ╚═╝╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝`}
-          </pre>
         </div>
       </div>
       <div className="flex items-center gap-1">
