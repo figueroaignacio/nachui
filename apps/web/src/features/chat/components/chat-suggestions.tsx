@@ -1,4 +1,3 @@
-import { Logo } from '@/components/common/logo';
 import { BulbIcon, CodeIcon, Comment01Icon, SparklesIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Typography } from '@repo/ui/components/typography';
@@ -32,7 +31,6 @@ export function ChatSuggestions({ onSuggestionClick }: ChatSuggestionsProps) {
 
   return (
     <div className="flex min-h-[500px] flex-col items-center justify-center space-y-5 py-6 text-center">
-      <Logo size="assistant" />
       <div>
         <Typography variant="h3" className="text-foreground mb-1.5 text-sm font-semibold">
           {t('title')}
