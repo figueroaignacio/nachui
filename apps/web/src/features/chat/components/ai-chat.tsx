@@ -42,7 +42,7 @@ export function AiChat() {
 
   return (
     <>
-      <div className="fixed right-6 bottom-6 z-500">
+      <div className="fixed right-6 bottom-6">
         <AnimatePresence>
           {!isOpen && !isExpanded && (
             <ChatToggleButton isOpen={isOpen} onClick={() => setIsOpen(true)} />
