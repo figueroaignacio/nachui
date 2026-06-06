@@ -65,18 +65,20 @@ export function MobileMenu() {
             >
               <Logo size="mobile" />
             </button>
-            <ThemeToggle />
           </div>
-          <button
-            onClick={toggleMenu}
-            title="Close menu"
-            aria-label="Close menu"
-            aria-expanded={isMenuOpen}
-            type="button"
-            className="hover:bg-muted rounded-md p-2 transition-colors"
-          >
-            <HugeiconsIcon icon={Cancel01Icon} size={20} aria-hidden="true" />
-          </button>
+          <div className="flex items-center gap-x-3">
+            <ThemeToggle />
+            <button
+              onClick={toggleMenu}
+              title="Close menu"
+              aria-label="Close menu"
+              aria-expanded={isMenuOpen}
+              type="button"
+              className="hover:bg-muted rounded-md p-2 transition-colors"
+            >
+              <HugeiconsIcon icon={Cancel01Icon} size={20} aria-hidden="true" />
+            </button>
+          </div>
         </div>
         <div className="flex-1 overflow-y-auto px-6 py-6">
           {navigation && navigation.length > 0 && (
