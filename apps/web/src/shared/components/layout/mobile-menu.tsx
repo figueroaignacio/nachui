@@ -40,18 +40,11 @@ export function MobileMenu() {
           type="button"
         >
           <HugeiconsIcon icon={PanelLeftIcon} aria-hidden="true" />
-        </button>
-        <button
-          title="Go to home page"
-          aria-label="Go to home page"
-          type="button"
-          className="flex items-center gap-x-2 text-sm font-medium"
-        >
-          <Logo size="sm" />
-        </button>
+        </button>{' '}
       </Flex>
       <div className="flex items-center gap-x-5">
         <Searcher />
+        <LocaleSwitcher />
       </div>
       <nav
         className={cn(
@@ -64,8 +57,15 @@ export function MobileMenu() {
       >
         <div className="flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-x-3">
+            <button
+              title="Go to home page"
+              aria-label="Go to home page"
+              type="button"
+              className="flex items-center gap-x-2 text-sm font-medium"
+            >
+              <Logo size="mobile" />
+            </button>
             <ThemeToggle />
-            <LocaleSwitcher />
           </div>
           <button
             onClick={toggleMenu}
