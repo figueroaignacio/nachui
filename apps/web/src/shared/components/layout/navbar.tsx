@@ -25,11 +25,11 @@ export function Navbar() {
         <Flex as="nav" align="center" gap="6" className="text-sm font-medium">
           {navigation.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+
             return (
               <Link
                 className={cn(
-                  'focus-visible:ring-foreground focus-visible:ring-offset-background rounded-sm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-                  isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground/80',
+                  'focus-visible:ring-foreground focus-visible:ring-offset-background text-muted-foreground hover:text-foreground rounded-sm transition-colors outline-none hover:underline focus-visible:ring-2 focus-visible:ring-offset-2',
                 )}
                 href={item.href}
                 key={item.href}
