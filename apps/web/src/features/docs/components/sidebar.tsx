@@ -78,14 +78,17 @@ export function Sidebar() {
                           <Link
                             href={item.href}
                             className={cn(
-                              'flex items-center gap-2 rounded-lg px-3 py-2 text-xs transition-colors',
+                              'flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs transition-colors',
                               isActive
                                 ? 'bg-secondary text-foreground font-medium'
                                 : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
                             )}
                           >
-                            {getIcon(item.title, item.href)}
-                            <span>{item.title}</span>
+                            <div className="flex items-center gap-2">
+                              {getIcon(item.title, item.href)}
+                              <span>{item.title}</span>
+                            </div>
+                            {isActive && <div className="bg-foreground size-1.5 rounded-full" />}
                           </Link>
                         </li>
                       );
