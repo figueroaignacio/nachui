@@ -1,32 +1,17 @@
-/**
- * Centralized domain configuration for multilingual SEO.
- *
- * Domains:
- *   en → https://en.nachui.tech
- *   es → https://es.nachui.tech
- *
- * Used by: robots.ts, sitemap.ts, metadata (canonical, hreflang, OG).
- */
+export const baseUrl = 'https://nachui.tech';
 
-export const domainMap = {
-  en: 'https://en.nachui.tech',
-  es: 'https://es.nachui.tech',
-} as const;
-
-export type SupportedLocale = keyof typeof domainMap;
-
-export const locales = Object.keys(domainMap) as SupportedLocale[];
+export const locales = ['en', 'es'] as const;
+export type SupportedLocale = (typeof locales)[number];
 
 export const defaultLocale: SupportedLocale = 'en';
 
 export function getDomainForLocale(locale: string): string {
-  return domainMap[locale as SupportedLocale] ?? domainMap[defaultLocale];
+  return `${baseUrl}/${locale}`;
 }
 
 export function getAbsoluteUrl(locale: string, path = ''): string {
-  const domain = getDomainForLocale(locale);
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  return `${domain}${cleanPath}`;
+  return `${baseUrl}/${locale}${cleanPath}`;
 }
 
 export function buildAlternates(path = '') {
@@ -34,9 +19,9 @@ export function buildAlternates(path = '') {
 
   const languages: Record<string, string> = {};
   for (const locale of locales) {
-    languages[locale] = `${domainMap[locale]}${cleanPath}`;
+    languages[locale] = `${baseUrl}/${locale}${cleanPath}`;
   }
-  languages['x-default'] = `${domainMap[defaultLocale]}${cleanPath}`;
+  languages['x-default'] = `${baseUrl}/${defaultLocale}${cleanPath}`;
 
   return languages;
 }

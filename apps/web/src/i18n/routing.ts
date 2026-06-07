@@ -6,19 +6,5 @@ export type Locale = (typeof locales)[number];
 export const routing = defineRouting({
   locales: ['en', 'es'],
   defaultLocale: 'en',
-  localePrefix: {
-    mode: 'never',
-  },
-  domains: [
-    {
-      domain: 'en.nachui.tech',
-      locales: ['en'],
-      defaultLocale: 'en',
-    },
-    {
-      domain: 'es.nachui.tech',
-      locales: ['es'],
-      defaultLocale: 'es',
-    },
-  ],
+  localePrefix: 'always',
 });

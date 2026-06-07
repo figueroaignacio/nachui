@@ -60,9 +60,9 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
 export async function generateMetadata({ params }: LocaleLayoutProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'siteConfig' });
-  const appUrl =
-    process.env.NEXT_PUBLIC_APP_URL ||
-    (locale === 'es' ? 'https://es.nachui.tech' : 'https://en.nachui.tech');
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL
+    ? `${process.env.NEXT_PUBLIC_APP_URL}/${locale}`
+    : `https://nachui.tech/${locale}`;
 
   return {
     metadataBase: new URL(appUrl),
