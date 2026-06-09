@@ -10,8 +10,6 @@ import { Typography } from '@repo/ui/components/typography';
 import { Container } from '@repo/ui/layout/container';
 import { Flex } from '@repo/ui/layout/flex';
 import { Stack } from '@repo/ui/layout/stack';
-import type { Variants } from 'motion/react';
-import { motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { HeroComponentPreview } from './hero-component-preview';
 
@@ -22,32 +20,17 @@ interface HomePageActions {
   variant?: 'default' | 'secondary';
 }
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
-};
-
 export function LandingHero() {
   const t = useTranslations('sections.home');
   const actions: HomePageActions[] = t.raw('actions');
 
   return (
     <Stack align="center" className="bg-background relative min-h-svh overflow-hidden pt-24 pb-16">
-      <motion.section variants={containerVariants} initial="hidden" animate="visible">
+      <section>
         <Container size="fluid">
           <Stack align="center" justify="center" gap="3" className="relative z-10">
             <GitHubStarHeroCta />
-            <motion.div variants={itemVariants} className="space-y-4 text-center">
+            <div className="space-y-4 text-center">
               <Typography
                 variant="h1"
                 className="text-foreground text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-7xl"
@@ -60,14 +43,11 @@ export function LandingHero() {
               >
                 {t('subheading2')}
               </Typography>
-            </motion.div>
-            <motion.p
-              variants={itemVariants}
-              className="text-muted-foreground mx-auto max-w-2xl text-center text-lg md:text-xl"
-            >
+            </div>
+            <p className="text-muted-foreground mx-auto max-w-2xl text-center text-lg md:text-xl">
               {t('description')}
-            </motion.p>
-            <motion.div variants={itemVariants}>
+            </p>
+            <div>
               <Flex align="center" gap="4" className="pt-4">
                 <Button
                   size="sm"
@@ -85,9 +65,9 @@ export function LandingHero() {
                   <Link href="/docs/components">{actions[1]?.label || 'View components'}</Link>
                 </Button>
               </Flex>
-            </motion.div>
+            </div>
 
-            <motion.div variants={itemVariants}>
+            <div>
               <Flex direction="column" align="center" gap="6" className="mt-8 sm:flex-row">
                 <Flex
                   align="center"
@@ -98,13 +78,13 @@ export function LandingHero() {
                   <ThemeColorSwitcher />
                 </Flex>
               </Flex>
-            </motion.div>
-            <motion.div variants={itemVariants} className="relative w-full">
+            </div>
+            <div className="relative w-full">
               <HeroComponentPreview />
-            </motion.div>
+            </div>
           </Stack>
         </Container>
-      </motion.section>
+      </section>
     </Stack>
   );
 }

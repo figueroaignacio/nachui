@@ -1,5 +1,3 @@
-'use client';
-
 import { Container } from '@repo/ui/layout/container';
 import { Grid } from '@repo/ui/layout/grid';
 import { Stack } from '@repo/ui/layout/stack';
