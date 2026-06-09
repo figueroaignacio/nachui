@@ -12,6 +12,26 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '../../components/button';
 import { DropdownMenu } from '../../components/dropdown-menu';
 
+const menuGroups = [
+  {
+    label: 'Account',
+    items: [
+      { icon: UserIcon, label: 'Profile' },
+      { icon: Notification03Icon, label: 'Notifications' },
+      { icon: Settings01Icon, label: 'Settings' },
+    ],
+  },
+  {
+    label: 'Security',
+    items: [
+      { icon: Shield02Icon, label: 'Privacy & Security' },
+      { icon: KeyboardIcon, label: 'Keyboard shortcuts' },
+    ],
+  },
+];
+
+const actionItems = [{ icon: Logout02Icon, label: 'Sign out', destructive: true }];
+
 export function Default() {
   return (
     <DropdownMenu>
@@ -19,34 +39,27 @@ export function Default() {
         <Button variant="outline">Account</Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content className="w-56" align="start">
-        <DropdownMenu.Label>Account</DropdownMenu.Label>
-        <DropdownMenu.Item>
-          <HugeiconsIcon icon={UserIcon} className="mr-2 size-4" />
-          Profile
-        </DropdownMenu.Item>
-        <DropdownMenu.Item>
-          <HugeiconsIcon icon={Notification03Icon} className="mr-2 size-4" />
-          Notifications
-        </DropdownMenu.Item>
-        <DropdownMenu.Item>
-          <HugeiconsIcon icon={Settings01Icon} className="mr-2 size-4" />
-          Settings
-        </DropdownMenu.Item>
-        <DropdownMenu.Separator />
-        <DropdownMenu.Label>Security</DropdownMenu.Label>
-        <DropdownMenu.Item>
-          <HugeiconsIcon icon={Shield02Icon} className="mr-2 size-4" />
-          Privacy & Security
-        </DropdownMenu.Item>
-        <DropdownMenu.Item>
-          <HugeiconsIcon icon={KeyboardIcon} className="mr-2 size-4" />
-          Keyboard shortcuts
-        </DropdownMenu.Item>
-        <DropdownMenu.Separator />
-        <DropdownMenu.Item className="text-destructive focus:text-destructive">
-          <HugeiconsIcon icon={Logout02Icon} className="mr-2 size-4" />
-          Sign out
-        </DropdownMenu.Item>
+        {menuGroups.map((group, groupIdx) => (
+          <div key={groupIdx}>
+            <DropdownMenu.Label>{group.label}</DropdownMenu.Label>
+            {group.items.map((item, itemIdx) => (
+              <DropdownMenu.Item key={itemIdx}>
+                <HugeiconsIcon icon={item.icon} className="mr-2 size-4" />
+                {item.label}
+              </DropdownMenu.Item>
+            ))}
+            <DropdownMenu.Separator />
+          </div>
+        ))}
+        {actionItems.map((item, idx) => (
+          <DropdownMenu.Item
+            key={idx}
+            className={item.destructive ? 'text-destructive focus:text-destructive' : ''}
+          >
+            <HugeiconsIcon icon={item.icon} className="mr-2 size-4" />
+            {item.label}
+          </DropdownMenu.Item>
+        ))}
       </DropdownMenu.Content>
     </DropdownMenu>
   );

@@ -2,21 +2,26 @@
 
 import { Breadcrumb } from '../../components/breadcrumb';
 
+const items = [
+  { label: 'Home', href: '/' },
+  { label: 'Documentation', href: '/docs' },
+  { label: 'Components', isPage: true },
+];
+
 export function Default() {
   return (
     <Breadcrumb>
       <Breadcrumb.List>
-        <Breadcrumb.Item>
-          <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
-        </Breadcrumb.Item>
-        <Breadcrumb.Separator />
-        <Breadcrumb.Item>
-          <Breadcrumb.Link href="/docs">Documentation</Breadcrumb.Link>
-        </Breadcrumb.Item>
-        <Breadcrumb.Separator />
-        <Breadcrumb.Item>
-          <Breadcrumb.Page>Components</Breadcrumb.Page>
-        </Breadcrumb.Item>
+        {items.map((item, index) => (
+          <Breadcrumb.Item key={index}>
+            {item.isPage ? (
+              <Breadcrumb.Page>{item.label}</Breadcrumb.Page>
+            ) : (
+              <Breadcrumb.Link href={item.href}>{item.label}</Breadcrumb.Link>
+            )}
+            {index < items.length - 1 && <Breadcrumb.Separator />}
+          </Breadcrumb.Item>
+        ))}
       </Breadcrumb.List>
     </Breadcrumb>
   );
