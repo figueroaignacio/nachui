@@ -3,36 +3,24 @@
 import { Button } from '../../components/button';
 import { Tooltip } from '../../components/tooltip';
 
+const positions = [
+  { label: 'Top', side: 'top', content: 'Tooltip on top' },
+  { label: 'Bottom', side: 'bottom', content: 'Tooltip on bottom' },
+  { label: 'Left', side: 'left', content: 'Tooltip on left' },
+  { label: 'Right', side: 'right', content: 'Tooltip on right' },
+] as const;
+
 export function Positions() {
   return (
     <div className="flex flex-col items-center gap-10 md:flex-row">
-      <Tooltip>
-        <Tooltip.Trigger asChild>
-          <Button variant="outline">Top</Button>
-        </Tooltip.Trigger>
-        <Tooltip.Content side="top">Tooltip on top</Tooltip.Content>
-      </Tooltip>
-
-      <Tooltip>
-        <Tooltip.Trigger asChild>
-          <Button variant="outline">Bottom</Button>
-        </Tooltip.Trigger>
-        <Tooltip.Content side="bottom">Tooltip on bottom</Tooltip.Content>
-      </Tooltip>
-
-      <Tooltip>
-        <Tooltip.Trigger asChild>
-          <Button variant="outline">Left</Button>
-        </Tooltip.Trigger>
-        <Tooltip.Content side="left">Tooltip on left</Tooltip.Content>
-      </Tooltip>
-
-      <Tooltip>
-        <Tooltip.Trigger asChild>
-          <Button variant="outline">Right</Button>
-        </Tooltip.Trigger>
-        <Tooltip.Content side="right">Tooltip on right</Tooltip.Content>
-      </Tooltip>
+      {positions.map(({ label, side, content }) => (
+        <Tooltip key={side}>
+          <Tooltip.Trigger asChild>
+            <Button variant="outline">{label}</Button>
+          </Tooltip.Trigger>
+          <Tooltip.Content side={side}>{content}</Tooltip.Content>
+        </Tooltip>
+      ))}
     </div>
   );
 }

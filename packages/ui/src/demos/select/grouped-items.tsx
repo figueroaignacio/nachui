@@ -2,6 +2,25 @@
 
 import { Select } from '../../components/select';
 
+const groups = [
+  {
+    label: 'Citrus',
+    options: [
+      { value: 'orange', label: 'Orange' },
+      { value: 'lemon', label: 'Lemon' },
+      { value: 'lime', label: 'Lime' },
+    ],
+  },
+  {
+    label: 'Berries',
+    options: [
+      { value: 'strawberry', label: 'Strawberry' },
+      { value: 'blueberry', label: 'Blueberry' },
+      { value: 'raspberry', label: 'Raspberry' },
+    ],
+  },
+] as const;
+
 export function GroupedItems() {
   return (
     <div className="w-full max-w-xs">
@@ -9,16 +28,15 @@ export function GroupedItems() {
         <option value="" disabled>
           Select a fruit
         </option>
-        <optgroup label="Citrus">
-          <option value="orange">Orange</option>
-          <option value="lemon">Lemon</option>
-          <option value="lime">Lime</option>
-        </optgroup>
-        <optgroup label="Berries">
-          <option value="strawberry">Strawberry</option>
-          <option value="blueberry">Blueberry</option>
-          <option value="raspberry">Raspberry</option>
-        </optgroup>
+        {groups.map((group) => (
+          <optgroup key={group.label} label={group.label}>
+            {group.options.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </optgroup>
+        ))}
       </Select>
     </div>
   );

@@ -1,15 +1,21 @@
 import { Spinner } from '@repo/ui/components/spinner';
 
+const variants = [
+  'default',
+  'primary',
+  'muted',
+  'success',
+  'destructive',
+  'warning',
+  'info',
+] as const;
+
 export default function SpinnerVariants() {
   return (
     <div className="flex flex-wrap justify-center gap-4 py-8">
-      <Spinner variant="default" />
-      <Spinner variant="primary" />
-      <Spinner variant="muted" />
-      <Spinner variant="success" />
-      <Spinner variant="destructive" />
-      <Spinner variant="warning" />
-      <Spinner variant="info" />
+      {variants.map((variant) => (
+        <Spinner key={variant} variant={variant} />
+      ))}
     </div>
   );
 }

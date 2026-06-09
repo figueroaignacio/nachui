@@ -3,67 +3,55 @@
 import { Button } from '../../components/button';
 import { Toast, useToast } from '../../components/toast';
 
+const variants = [
+  {
+    label: 'Default',
+    options: { title: 'Default notification', description: 'This is a default toast.' },
+  },
+  {
+    label: 'Success',
+    options: {
+      title: 'Success!',
+      description: 'Your changes have been saved.',
+      variant: 'success' as const,
+    },
+  },
+  {
+    label: 'Error',
+    options: {
+      title: 'Error',
+      description: 'Something went wrong. Please try again.',
+      variant: 'error' as const,
+    },
+  },
+  {
+    label: 'Info',
+    options: {
+      title: 'Info',
+      description: 'A new version is available.',
+      variant: 'info' as const,
+    },
+  },
+  {
+    label: 'Warning',
+    options: {
+      title: 'Warning',
+      description: 'Your session is about to expire.',
+      variant: 'warning' as const,
+    },
+  },
+];
+
 function VariantsDemo() {
   const { toast } = useToast();
 
   return (
     <div className="flex flex-wrap gap-2">
-      <Button
-        variant="outline"
-        onClick={() =>
-          toast({ title: 'Default notification', description: 'This is a default toast.' })
-        }
-      >
-        Default
-      </Button>
-      <Button
-        variant="outline"
-        onClick={() =>
-          toast({
-            title: 'Success!',
-            description: 'Your changes have been saved.',
-            variant: 'success',
-          })
-        }
-      >
-        Success
-      </Button>
-      <Button
-        variant="outline"
-        onClick={() =>
-          toast({
-            title: 'Error',
-            description: 'Something went wrong. Please try again.',
-            variant: 'error',
-          })
-        }
-      >
-        Error
-      </Button>
-      <Button
-        variant="outline"
-        onClick={() =>
-          toast({
-            title: 'Info',
-            description: 'A new version is available.',
-            variant: 'info',
-          })
-        }
-      >
-        Info
-      </Button>
-      <Button
-        variant="outline"
-        onClick={() =>
-          toast({
-            title: 'Warning',
-            description: 'Your session is about to expire.',
-            variant: 'warning',
-          })
-        }
-      >
-        Warning
-      </Button>
+      {variants.map((variant) => (
+        <Button key={variant.label} variant="outline" onClick={() => toast(variant.options)}>
+          {variant.label}
+        </Button>
+      ))}
     </div>
   );
 }

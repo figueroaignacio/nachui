@@ -1,6 +1,10 @@
 'use client';
 
+import { Fragment } from 'react';
+
 import { Separator } from '../../components/separator';
+
+const navLinks = ['Docs', 'Components', 'Blog'] as const;
 
 export function Default() {
   return (
@@ -11,11 +15,12 @@ export function Default() {
       </div>
       <Separator />
       <div className="flex h-5 items-center gap-4 text-sm">
-        <span>Docs</span>
-        <Separator orientation="vertical" />
-        <span>Components</span>
-        <Separator orientation="vertical" />
-        <span>Blog</span>
+        {navLinks.map((link, index) => (
+          <Fragment key={link}>
+            {index > 0 && <Separator orientation="vertical" />}
+            <span>{link}</span>
+          </Fragment>
+        ))}
       </div>
     </div>
   );

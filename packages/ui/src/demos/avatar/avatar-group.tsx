@@ -2,21 +2,21 @@
 
 import { Avatar } from '../../components/avatar';
 
+const avatars = [
+  { src: 'https://github.com/figueroaignacio.png', alt: '@figueroaignacio', fallback: 'FI' },
+  { src: 'https://github.com/nicvazquezdev.png', alt: '@nicvazquezdev', fallback: 'NV' },
+  { src: 'https://github.com/ManuZarraga.png', alt: '@ManuZarraga', fallback: 'MZ' },
+];
+
 export function AvatarGroup() {
   return (
     <Avatar.Group>
-      <Avatar>
-        <Avatar.Image src="https://github.com/figueroaignacio.png" alt="@figueroaignacio" />
-        <Avatar.Fallback>FI</Avatar.Fallback>
-      </Avatar>
-      <Avatar>
-        <Avatar.Image src="https://github.com/nicvazquezdev.png" alt="@nicvazquezdev" />
-        <Avatar.Fallback>NV</Avatar.Fallback>
-      </Avatar>
-      <Avatar>
-        <Avatar.Image src="https://github.com/ManuZarraga.png" alt="@ManuZarraga" />
-        <Avatar.Fallback>MZ</Avatar.Fallback>
-      </Avatar>
+      {avatars.map((avatar) => (
+        <Avatar key={avatar.alt}>
+          <Avatar.Image src={avatar.src} alt={avatar.alt} />
+          <Avatar.Fallback>{avatar.fallback}</Avatar.Fallback>
+        </Avatar>
+      ))}
       <Avatar>
         <Avatar.Fallback className="bg-muted text-muted-foreground">+3</Avatar.Fallback>
       </Avatar>

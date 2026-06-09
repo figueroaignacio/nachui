@@ -6,10 +6,22 @@ import * as React from 'react';
 import { Button } from '../../components/button';
 import { DropdownMenu } from '../../components/dropdown-menu';
 
+const ITEMS = [
+  { id: 'status-bar', label: 'Status Bar' },
+  { id: 'activity-bar', label: 'Activity Bar' },
+  { id: 'panel', label: 'Panel' },
+] as const;
+
+const INITIAL_STATE: Record<string, boolean> = {
+  'status-bar': true,
+  'activity-bar': false,
+  panel: false,
+};
+
 export function Checkboxes() {
-  const [showStatusBar, setShowStatusBar] = React.useState(true);
-  const [showActivityBar, setShowActivityBar] = React.useState(false);
-  const [showPanel, setShowPanel] = React.useState(false);
+  const [checked, setChecked] = React.useState<Record<string, boolean>>(INITIAL_STATE);
+
+  const toggle = (id: string) => setChecked((prev) => ({ ...prev, [id]: !prev[id] }));
 
   return (
     <DropdownMenu>
@@ -19,24 +31,14 @@ export function Checkboxes() {
       <DropdownMenu.Content className="w-56" align="start">
         <DropdownMenu.Label>Appearance</DropdownMenu.Label>
         <DropdownMenu.Separator />
-        <DropdownMenu.Item onClick={() => setShowStatusBar(!showStatusBar)}>
-          <span className="flex w-6 items-center justify-center">
-            {showStatusBar && <HugeiconsIcon icon={Tick02Icon} size={16} />}
-          </span>
-          Status Bar
-        </DropdownMenu.Item>
-        <DropdownMenu.Item onClick={() => setShowActivityBar(!showActivityBar)}>
-          <span className="flex w-6 items-center justify-center">
-            {showActivityBar && <HugeiconsIcon icon={Tick02Icon} size={16} />}
-          </span>
-          Activity Bar
-        </DropdownMenu.Item>
-        <DropdownMenu.Item onClick={() => setShowPanel(!showPanel)}>
-          <span className="flex w-6 items-center justify-center">
-            {showPanel && <HugeiconsIcon icon={Tick02Icon} size={16} />}
-          </span>
-          Panel
-        </DropdownMenu.Item>
+        {ITEMS.map(({ id, label }) => (
+          <DropdownMenu.Item key={id} onClick={() => toggle(id)}>
+            <span className="flex w-6 items-center justify-center">
+              {checked[id] && <HugeiconsIcon icon={Tick02Icon} size={16} />}
+            </span>
+            {label}
+          </DropdownMenu.Item>
+        ))}
       </DropdownMenu.Content>
     </DropdownMenu>
   );
