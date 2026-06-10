@@ -41,12 +41,12 @@
   "dependencies": {
     "@ai-sdk/google": "^3.0.80",
     "@repo/db": "workspace:*",
-    "ai": "^6.0.195",
+    "ai": "^6.0.199",
     "zod": "^4.4.3"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "^25.9.1",
+    "@types/node": "^25.9.2",
     "@vitest/coverage-v8": "^4.1.8",
     "dotenv": "^17.4.2",
     "tsup": "^8.5.1",
