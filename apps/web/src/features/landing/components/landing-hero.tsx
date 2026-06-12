@@ -6,10 +6,7 @@ import { Link } from '@/i18n/navigation';
 import { ArrowRight02Icon, SourceCodeIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '@repo/ui/components/button';
-import { Typography } from '@repo/ui/components/typography';
 import { Container } from '@repo/ui/layout/container';
-import { Flex } from '@repo/ui/layout/flex';
-import { Stack } from '@repo/ui/layout/stack';
 import { useTranslations } from 'next-intl';
 import { HeroComponentPreview } from './hero-component-preview';
 
@@ -25,66 +22,81 @@ export function LandingHero() {
   const actions: HomePageActions[] = t.raw('actions');
 
   return (
-    <Stack align="center" className="bg-background relative min-h-svh overflow-hidden pt-24 pb-16">
-      <section>
-        <Container size="fluid">
-          <Stack align="center" justify="center" gap="3" className="relative z-10">
-            <GitHubStarHeroCta />
-            <div className="space-y-4 text-center">
-              <Typography
-                variant="h1"
-                className="text-foreground text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-7xl"
-              >
-                {t('subheading1')}
-              </Typography>
-              <Typography
-                variant="h1"
-                className="text-muted-foreground text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-7xl"
-              >
-                {t('subheading2')}
-              </Typography>
-            </div>
-            <p className="text-muted-foreground mx-auto max-w-2xl text-center text-lg md:text-xl">
-              {t('description')}
-            </p>
-            <div>
-              <Flex align="center" gap="4" className="pt-4">
-                <Button
-                  size="sm"
-                  rightIcon={<HugeiconsIcon icon={ArrowRight02Icon} size={18} />}
-                  asChild
-                >
-                  <Link href="/docs">{actions[0]?.label || 'Get started'}</Link>
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  leftIcon={<HugeiconsIcon icon={SourceCodeIcon} size={18} />}
-                  asChild
-                >
-                  <Link href="/docs/components">{actions[1]?.label || 'View components'}</Link>
-                </Button>
-              </Flex>
-            </div>
+    <section className="bg-background relative overflow-hidden pt-20 pb-0 sm:pt-28">
+      {/* Dot-grid background */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle, color-mix(in oklch, var(--border) 70%, transparent) 1px, transparent 1px)',
+          backgroundSize: '28px 28px',
+        }}
+      />
+      {/* Radial vignette fades grid at edges + bottom */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(ellipse 100% 60% at 50% 0%, transparent 10%, var(--background) 100%)',
+        }}
+      />
 
-            <div>
-              <Flex direction="column" align="center" gap="6" className="mt-8 sm:flex-row">
-                <Flex
-                  align="center"
-                  gap="2"
-                  className="border-border/50 bg-muted/30 hover:bg-muted/50 rounded-full border px-4 py-2 shadow-sm backdrop-blur-sm transition-all"
-                >
-                  <span className="text-muted-foreground mr-1 text-sm font-medium">Theme</span>
-                  <ThemeColorSwitcher />
-                </Flex>
-              </Flex>
-            </div>
-            <div className="relative w-full">
-              <HeroComponentPreview />
-            </div>
-          </Stack>
-        </Container>
-      </section>
-    </Stack>
+      <Container size="xl" className="relative z-10">
+        {/* ── Hero text block ── */}
+        <div className="flex flex-col items-center gap-6 px-4 text-center">
+          <GitHubStarHeroCta />
+
+          {/* Single short headline */}
+          <h1 className="text-foreground text-5xl leading-none font-bold tracking-tight sm:text-6xl lg:text-8xl">
+            {t('subheading1')}
+          </h1>
+
+          {/* One-liner description */}
+          <p className="text-muted-foreground max-w-xs text-sm leading-relaxed sm:max-w-sm sm:text-base">
+            {t('description')}
+          </p>
+
+          {/* CTAs */}
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Button
+              size="sm"
+              rightIcon={<HugeiconsIcon icon={ArrowRight02Icon} size={16} />}
+              asChild
+            >
+              <Link href="/docs">{actions[0]?.label ?? 'Get started'}</Link>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<HugeiconsIcon icon={SourceCodeIcon} size={16} />}
+              asChild
+            >
+              <Link href="/docs/components">{actions[1]?.label ?? 'View components'}</Link>
+            </Button>
+          </div>
+
+          {/* Theme switcher pill */}
+          <div className="border-border/50 bg-muted/30 flex items-center gap-2 rounded-full border px-4 py-2 shadow-sm backdrop-blur-sm">
+            <span className="text-muted-foreground mr-1 text-sm font-medium">Theme</span>
+            <ThemeColorSwitcher />
+          </div>
+        </div>
+
+        {/* ── Component preview grid ── */}
+        <div className="relative mt-12 sm:mt-16">
+          <HeroComponentPreview />
+          {/* Bottom fade into next section */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute right-0 bottom-0 left-0 h-40 sm:h-64"
+            style={{
+              background: 'linear-gradient(to top, var(--background) 0%, transparent 100%)',
+            }}
+          />
+        </div>
+      </Container>
+    </section>
   );
 }

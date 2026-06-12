@@ -1,9 +1,9 @@
 {
   "home": {
     "badge": "Presentando NachUI v1",
-    "subheading1": "Tu sistema de diseño. En tu repositorio.",
-    "subheading2": "Sin wrappers. Escrito desde cero.",
-    "description": "Deja de importar librerías de UI infladas. NachUI copia componentes compuestos de React directamente a tu base de código mediante una CLI. Totalmente tuyos, totalmente editables.",
+    "subheading1": "Copia. Tuyo. Lanza.",
+    "subheading2": "",
+    "description": "Copia componentes React directamente a tu proyecto. Sin cajas negras, sin wrappers. Totalmente tuyo.",
     "github": "Código abierto, el código es tuyo",
     "actions": [
       {
@@ -20,8 +20,8 @@
       }
     ],
     "tech": {
-      "title": "Construido con Tecnologías Modernas",
-      "subtitle": "Construido con las herramientas que aman los desarrolladores. Un stack confiable para desarrollar con seguridad.",
+      "title": "El Stack.",
+      "subtitle": "Las herramientas en las que confían los devs.",
       "technologies": [
         {
           "name": "TypeScript",

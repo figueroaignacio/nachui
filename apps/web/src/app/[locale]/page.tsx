@@ -1,7 +1,6 @@
 import { LandingLogoCta } from '@/components/common/landing-logo-cta';
 import { LandingHero } from '@/features/landing/components/landing-hero';
 import { buildAlternates, getAbsoluteUrl } from '@/lib/domains';
-import { Stack } from '@repo/ui/layout/stack';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
@@ -14,10 +13,10 @@ export default async function HomePage({ params }: PageProps) {
   setRequestLocale(locale);
 
   return (
-    <Stack align="center">
+    <div className="flex flex-col">
       <LandingHero />
       <LandingLogoCta />
-    </Stack>
+    </div>
   );
 }
 

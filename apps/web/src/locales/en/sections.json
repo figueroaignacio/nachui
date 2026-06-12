@@ -1,9 +1,9 @@
 {
   "home": {
     "badge": "Introducing NachUI v1",
-    "subheading1": "Your design system. In your repository.",
-    "subheading2": "Zero wrappers. Built from scratch.",
-    "description": "Stop importing bloated UI packages. NachUI copies compound React components directly into your codebase via a CLI. Fully yours, fully editable.",
+    "subheading1": "Copy. Own. Ship.",
+    "subheading2": "",
+    "description": "Copy React components directly into your codebase. No black boxes, no wrappers. Fully yours.",
     "github": "Open source, the code is yours",
     "actions": [
       {
@@ -20,8 +20,8 @@
       }
     ],
     "tech": {
-      "title": "Built with Modern Technologies",
-      "subtitle": "Built with the tools developers love. A reliable stack ensuring confidence in every deploy.",
+      "title": "The Stack.",
+      "subtitle": "Tools developers trust.",
       "technologies": [
         {
           "name": "TypeScript",
