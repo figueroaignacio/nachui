@@ -44,7 +44,7 @@ export function BricksHero({ activeSlug }: BricksHeroProps) {
       <Container size="xl" className="relative z-10">
         <div className="flex flex-col items-center gap-6 px-4 text-center">
           <GitHubStarHeroCta />
-          <h1 className="text-foreground text-6xl leading-none font-bold tracking-tight">
+          <h1 className="text-foreground text-4xl leading-none font-bold tracking-tight lg:text-6xl">
             {t('title')}
           </h1>
           <p className="text-muted-foreground max-w-xs text-sm leading-relaxed sm:max-w-sm sm:text-base">
