@@ -90,9 +90,9 @@
     "postedBy": "Publicado por:"
   },
   "bricks": {
-    "title": "Deja de construir desde cero.",
-    "subtitle": "Copia. Pega. Lanza.",
-    "description": "Plantillas de React listas para producción. Cero dependencias, cero wrappers. Código compuesto y limpio copiado directamente a tu proyecto.",
+    "title": "Copia. Pega. Lanza.",
+    "subtitle": "",
+    "description": "Plantillas de React listas para producción. Cero dependencias, cero wrappers. Pégalo directamente en tu proyecto.",
     "actions": [
       {
         "label": "Leer Documentación",

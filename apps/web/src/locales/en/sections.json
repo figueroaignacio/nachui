@@ -90,9 +90,9 @@
     "postedBy": "Posted by:"
   },
   "bricks": {
-    "title": "Stop building from scratch.",
-    "subtitle": "Copy. Paste. Ship.",
-    "description": "Production-ready React layouts designed for builders. Zero dependencies, zero wrappers. Clean, compound components copy-pasted directly to your project.",
+    "title": "Copy. Paste. Ship.",
+    "subtitle": "",
+    "description": "Production-ready React layouts. Zero dependencies, zero wrappers. Copy-paste directly into your project.",
     "actions": [
       {
         "label": "Read the Docs",

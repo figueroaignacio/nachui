@@ -23,7 +23,6 @@ export function LandingHero() {
 
   return (
     <section className="bg-background relative overflow-hidden pt-20 pb-0 sm:pt-28">
-      {/* Dot-grid background */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -33,7 +32,6 @@ export function LandingHero() {
           backgroundSize: '28px 28px',
         }}
       />
-      {/* Radial vignette fades grid at edges + bottom */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -44,21 +42,14 @@ export function LandingHero() {
       />
 
       <Container size="xl" className="relative z-10">
-        {/* ── Hero text block ── */}
         <div className="flex flex-col items-center gap-6 px-4 text-center">
           <GitHubStarHeroCta />
-
-          {/* Single short headline */}
-          <h1 className="text-foreground text-5xl leading-none font-bold tracking-tight sm:text-6xl lg:text-8xl">
+          <h1 className="text-foreground text-6xl leading-none font-bold tracking-tight">
             {t('subheading1')}
           </h1>
-
-          {/* One-liner description */}
           <p className="text-muted-foreground max-w-xs text-sm leading-relaxed sm:max-w-sm sm:text-base">
             {t('description')}
           </p>
-
-          {/* CTAs */}
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Button
               size="sm"
