@@ -1,31 +1,13 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-
-export type ThemeColor = 'orange' | 'zinc' | 'green' | 'blue' | 'rose';
+// Theme color is fixed to zinc — no switching needed.
+// Kept as a stub so existing imports don't break during migration.
+export type ThemeColor = 'zinc';
 
 interface ThemeState {
   color: ThemeColor;
   setColor: (color: ThemeColor) => void;
 }
 
-export const useThemeStore = create<ThemeState>()(
-  persist(
-    (set) => ({
-      color: 'orange',
-      setColor: (color) => {
-        set({ color });
-        if (typeof document !== 'undefined') {
-          document.documentElement.dataset.themeColor = color;
-        }
-      },
-    }),
-    {
-      name: 'nach-theme-color',
-      onRehydrateStorage: () => (state) => {
-        if (state && typeof document !== 'undefined') {
-          document.documentElement.dataset.themeColor = state.color;
-        }
-      },
-    },
-  ),
-);
+export const useThemeStore = (): ThemeState => ({
+  color: 'zinc',
+  setColor: () => {},
+});

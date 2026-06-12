@@ -1,7 +1,6 @@
 'use client';
 
 import { GitHubStarHeroCta } from '@/components/common/github-star-cta';
-import { ThemeColorSwitcher } from '@/features/theme/components/theme-color-switcher';
 import { Link } from '@/i18n/navigation';
 import { ArrowRight02Icon, SourceCodeIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -66,12 +65,6 @@ export function LandingHero() {
             >
               <Link href="/docs/components">{actions[1]?.label ?? 'View components'}</Link>
             </Button>
-          </div>
-
-          {/* Theme switcher pill */}
-          <div className="border-border/50 bg-muted/30 flex items-center gap-2 rounded-full border px-4 py-2 shadow-sm backdrop-blur-sm">
-            <span className="text-muted-foreground mr-1 text-sm font-medium">Theme</span>
-            <ThemeColorSwitcher />
           </div>
         </div>
 
