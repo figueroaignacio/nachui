@@ -1,6 +1,7 @@
 export interface DocItem {
   title: string;
   href: string;
+  target?: string;
 }
 
 export interface DocSection {

@@ -1,5 +1,6 @@
 import {
   AiBrain01Icon,
+  AiEditingIcon,
   AiInnovation02Icon,
   BookOpen01Icon,
   BrickWallIcon,
@@ -29,6 +30,8 @@ export const getIcon = (title: string, href?: string) => {
   if (['faq', 'faqs'].includes(lowerTitle))
     return <HugeiconsIcon icon={HelpSquareIcon} size={16} />;
   if ('skills'.includes(lowerTitle)) return <HugeiconsIcon icon={AiInnovation02Icon} size={16} />;
+  if (['generator', 'generador'].includes(lowerTitle))
+    return <HugeiconsIcon icon={AiEditingIcon} size={16} />;
 
   if (href) {
     if (href.includes('/installation')) return <HugeiconsIcon icon={Download01Icon} size={16} />;

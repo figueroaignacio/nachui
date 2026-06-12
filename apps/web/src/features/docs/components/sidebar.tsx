@@ -83,6 +83,8 @@ export function Sidebar() {
                                 ? 'bg-secondary text-foreground font-medium'
                                 : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
                             )}
+                            target={item.target}
+                            rel="noopener noreferrer"
                           >
                             <div className="flex items-center gap-2">
                               {getIcon(item.title, item.href)}

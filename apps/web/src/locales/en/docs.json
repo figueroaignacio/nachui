@@ -20,6 +20,11 @@
         {
           "title": "Layout",
           "href": "/docs/layout"
+        },
+        {
+          "title": "AI Generator",
+          "href": "https://ai.nachui.tech",
+          "target": "_blank"
         }
       ]
     },

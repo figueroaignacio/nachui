@@ -34,6 +34,7 @@ export function Navbar() {
                 href={item.href}
                 key={item.href}
                 aria-current={isActive ? 'page' : undefined}
+                target={item.target}
               >
                 {item.title}
               </Link>
