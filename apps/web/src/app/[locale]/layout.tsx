@@ -7,9 +7,10 @@ import { routing } from '@/i18n/routing';
 import { fontHeading, fontSans } from '@/lib/font';
 import '@repo/ui/globals.css';
 import { Container } from '@repo/ui/src/layout/container';
+import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
-import { setRequestLocale, getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
 interface LocaleLayoutProps {
@@ -40,6 +41,7 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
     <html lang={locale} suppressHydrationWarning>
       <head>
         <ThemeInitScript />
+        <Analytics />
       </head>
       <body className={`relative ${fontSans.variable} ${fontHeading.variable}`}>
         <SkipLink />
