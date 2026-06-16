@@ -1,6 +1,6 @@
 // Theme color is fixed to zinc — no switching needed.
 // Kept as a stub so existing imports don't break during migration.
-export type ThemeColor = 'zinc';
+export type ThemeColor = 'zinc' | 'orange' | 'green' | 'blue' | 'rose';
 
 interface ThemeState {
   color: ThemeColor;
