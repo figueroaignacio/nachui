@@ -10,12 +10,14 @@ export function getDomainForLocale(locale: string): string {
 }
 
 export function getAbsoluteUrl(locale: string, path = ''): string {
-  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  const cleaned = path === '/' ? '/' : path.replace(/\/+$/, '');
+  const cleanPath = cleaned.startsWith('/') ? cleaned : `/${cleaned}`;
   return `${baseUrl}/${locale}${cleanPath}`;
 }
 
 export function buildAlternates(path = '') {
-  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  const cleaned = path === '/' ? '/' : path.replace(/\/+$/, '');
+  const cleanPath = cleaned.startsWith('/') ? cleaned : `/${cleaned}`;
 
   const languages: Record<string, string> = {};
   for (const locale of locales) {

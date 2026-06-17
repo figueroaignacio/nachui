@@ -3,7 +3,7 @@ import { CopyButton } from '@/components/mdx/copy-button';
 import { MDXContent } from '@/components/mdx/mdx-content';
 import { getSkillInstallCommand, getSkillSourceUrl } from '@/features/skills/lib/skills';
 import { ContentRepository } from '@/lib/content-repository';
-import { buildAlternates, getAbsoluteUrl } from '@/lib/domains';
+import { buildAlternates, getAbsoluteUrl, locales } from '@/lib/domains';
 import { Container } from '@repo/ui/layout/container';
 import { Typography } from '@repo/ui/src/components/typography';
 import { Stack } from '@repo/ui/src/layout/stack';
@@ -107,7 +107,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-  return ContentRepository.getSkills().map((skill) => ({
-    slug: skill.slug,
-  }));
+  const skills = ContentRepository.getSkills();
+  return locales.flatMap((locale) =>
+    skills.map((skill) => ({
+      locale,
+      slug: skill.slug,
+    })),
+  );
 }

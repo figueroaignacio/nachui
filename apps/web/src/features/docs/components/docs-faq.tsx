@@ -13,8 +13,25 @@ export function DocsFaq() {
   const t = useTranslations('sections.faq');
   const items: FaqItem[] = t.raw('items');
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
+
   return (
     <section className="bg-background relative z-10 w-full pt-7">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <Stack gap="12">
         <div>
           <Accordion type="single" className="w-full">

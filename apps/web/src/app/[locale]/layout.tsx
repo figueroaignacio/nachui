@@ -36,12 +36,37 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
   }
 
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'siteConfig' });
+
+  const softwareSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'NachUI',
+    url: process.env.NEXT_PUBLIC_APP_URL || 'https://nachui.tech',
+    description: t('description'),
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'Web',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    author: {
+      '@type': 'Person',
+      name: 'Ignacio Figueroa',
+      url: 'https://ignaciofigueroa.dev',
+    },
+  };
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
         <ThemeInitScript />
         <Analytics />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
+        />
       </head>
       <body className={`relative ${fontSans.variable} ${fontHeading.variable}`}>
         <SkipLink />
@@ -62,12 +87,11 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
 export async function generateMetadata({ params }: LocaleLayoutProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'siteConfig' });
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL
-    ? `${process.env.NEXT_PUBLIC_APP_URL}/${locale}`
-    : `https://nachui.tech/${locale}`;
+  const baseUrlVal = process.env.NEXT_PUBLIC_APP_URL || 'https://nachui.tech';
+  const appUrl = `${baseUrlVal}/${locale}`;
 
   return {
-    metadataBase: new URL(appUrl),
+    metadataBase: new URL(baseUrlVal),
     title: {
       default: 'NachUI',
       template: `%s | NachUI`,
@@ -85,16 +109,6 @@ export async function generateMetadata({ params }: LocaleLayoutProps): Promise<M
       card: 'summary_large_image',
       title: 'NachUI',
       description: t('description'),
-    },
-    other: {
-      'application/ld+json': JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'SoftwareApplication',
-        name: 'NachUI',
-        description: t('description'),
-        applicationCategory: 'DeveloperApplication',
-        operatingSystem: 'Web',
-      }),
     },
   };
 }

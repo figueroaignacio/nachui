@@ -32,6 +32,22 @@ export default async function AboutPage({ params }: PageProps) {
     },
   ];
 
+  const profileSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    mainEntity: {
+      '@type': 'Person',
+      name: 'Ignacio Figueroa',
+      description: t('subtitle'),
+      image: 'https://github.com/figueroaignacio.png',
+      sameAs: [
+        'https://ignaciofigueroa.dev',
+        'https://github.com/figueroaignacio',
+        'https://www.linkedin.com/in/figueroa-ignacio/',
+      ],
+    },
+  };
+
   return (
     <Flex
       direction="column"
@@ -39,6 +55,10 @@ export default async function AboutPage({ params }: PageProps) {
       justify="center"
       className="bg-background relative min-h-svh overflow-hidden py-24"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(profileSchema) }}
+      />
       <Container as="section" size="lg" className="z-10 max-w-3xl">
         <div className="relative mb-8">
           <Image

@@ -39,8 +39,29 @@ export default async function DocPage({ params }: { params: Promise<DocPageProps
   const tocContent = Array.isArray(doc.toc?.content) ? doc.toc.content : [];
   const currentPath = `/docs${doc.slugAsParams ? `/${doc.slugAsParams}` : ''}`;
 
+  const techArticleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: doc.title,
+    description: doc.description,
+    inLanguage: doc.locale || 'en',
+    publisher: {
+      '@type': 'Organization',
+      name: 'NachUI',
+      url: 'https://nachui.tech',
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': getAbsoluteUrl(doc.locale || 'en', `/docs/${doc.slugAsParams}`),
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(techArticleSchema) }}
+      />
       <Container size="md" className="px-0">
         <Stack as="article" className="w-full min-w-0">
           <Stack gap="1" className="mt-8 mb-10 sm:mt-10 sm:mb-12">

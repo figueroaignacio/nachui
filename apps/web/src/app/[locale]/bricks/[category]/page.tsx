@@ -3,7 +3,7 @@ import { BricksHero } from '@/features/bricks/components/bricks-hero';
 import { BRICK_COMPONENTS } from '@/features/bricks/lib/brick-components';
 import { getAllCategorySlugs, getBrickCategory } from '@/features/bricks/lib/bricks-registry';
 import { getBrickSourceCode } from '@/features/bricks/lib/get-brick-source';
-import { buildAlternates, getAbsoluteUrl } from '@/lib/domains';
+import { buildAlternates, getAbsoluteUrl, locales } from '@/lib/domains';
 import { Container } from '@repo/ui/layout/container';
 import { Stack } from '@repo/ui/layout/stack';
 import type { Metadata } from 'next';
@@ -16,7 +16,12 @@ type PageProps = {
 
 export function generateStaticParams() {
   const slugs = getAllCategorySlugs();
-  return slugs.map((category) => ({ category }));
+  return locales.flatMap((locale) =>
+    slugs.map((category) => ({
+      locale,
+      category,
+    })),
+  );
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
