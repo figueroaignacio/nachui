@@ -1,0 +1,10 @@
+{
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist, or it has been moved.",
+    "actionBack": "Go back",
+    "actionHome": "Go home",
+    "codeBlockTitle": "terminal",
+    "codeBlockContent": "// 404: File not found\n// The router attempted to resolve the pathname, but {filename} was not found in the file system.\n\nconst route = await resolveRoute(''{query}'');\nif (!route) '{'\n  throw new Error(''{filename}'');\n'}'"
+  }
+}

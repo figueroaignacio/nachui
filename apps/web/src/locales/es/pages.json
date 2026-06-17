@@ -1,0 +1,10 @@
+{
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La página que buscas no existe o ha sido movida.",
+    "actionBack": "Volver",
+    "actionHome": "Ir al inicio",
+    "codeBlockTitle": "terminal",
+    "codeBlockContent": "// 404: Archivo no encontrado\n// El enrutador intentó resolver la ruta, pero no se encontró {filename} en el sistema de archivos.\n\nconst route = await resolveRoute(''{query}'');\nif (!route) '{'\n  throw new Error(''{filename}'');\n'}'"
+  }
+}
