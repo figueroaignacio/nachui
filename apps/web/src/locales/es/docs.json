@@ -3,7 +3,9 @@
     "title": "Página no encontrada",
     "description": "Lo sentimos, la página que estás buscando no existe o ha sido movida a otra ubicación.",
     "goHome": "Volver al inicio",
-    "goDocs": "Ver documentación"
+    "goDocs": "Ver documentación",
+    "codeBlockTitle": "docs-router",
+    "codeBlockContent": "// 404: Documento no encontrado\n// El enrutador intentó resolver la página, pero no se encontró {filename}.\n\nconst page = await resolveDoc(''{query}'');\nif (!page) '{'\n  throw new Error(''Página de documentación \"{filename}\" no encontrada.'');\n'}'"
   },
   "navigation": [
     {
