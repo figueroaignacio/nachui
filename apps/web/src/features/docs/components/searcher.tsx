@@ -4,7 +4,12 @@ import { useSearch } from '@/features/docs/hooks/use-search';
 import { useDialogFocus } from '@/hooks/use-dialog-focus';
 import { useKbdShortcut } from '@/hooks/use-kbd-shortcut';
 import { useRouter } from '@/i18n/navigation';
-import { ArrowMoveDownLeftIcon, Search02Icon } from '@hugeicons/core-free-icons';
+import {
+  ArrowDown01Icon,
+  ArrowMoveDownLeftIcon,
+  ArrowUp01Icon,
+  Search02Icon,
+} from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Dialog } from '@repo/ui/components/dialog';
 import { Kbd } from '@repo/ui/components/kbd';
@@ -63,52 +68,70 @@ export function Searcher() {
     >
       <Dialog.Trigger asChild>
         <button
-          className="border-border/50 bg-secondary/50 text-muted-foreground hover:bg-secondary/80 hover:text-foreground flex h-9 w-full items-center gap-2 rounded-full border px-4 text-sm transition-colors sm:w-44"
+          className="group border-border/40 bg-secondary/30 text-muted-foreground hover:bg-secondary/60 hover:border-border/60 hover:text-foreground/80 flex h-8 w-full items-center gap-2.5 rounded-lg border px-3 text-xs transition-all duration-150 sm:w-48"
           title={t('label')}
           aria-label={t('label')}
         >
-          <HugeiconsIcon icon={Search02Icon} size={18} aria-hidden="true" />
-          <span>{t('placeholder')}</span>
-          <div className="ml-auto hidden items-center gap-1 text-[10px] sm:flex">
+          <HugeiconsIcon
+            icon={Search02Icon}
+            size={13}
+            className="shrink-0 opacity-60 transition-opacity group-hover:opacity-80"
+            aria-hidden="true"
+          />
+          <span className="flex-1 text-left">{t('placeholder')}</span>
+          <div className="hidden items-center gap-0.5 sm:flex">
             <Kbd size="sm">ctrl</Kbd>
-            <span className="text-muted-foreground">+</span>
+            <span className="text-muted-foreground/50 text-[9px]">+</span>
             <Kbd size="sm">K</Kbd>
           </div>
         </button>
       </Dialog.Trigger>
-      <Dialog.Content className="max-w-xl rounded-xl border">
-        <Dialog.Header>
-          <SearchInput
-            value={query}
-            onChange={setQuery}
-            onClear={clearQuery}
-            onKeyDown={handleKeyDown}
-            inputRef={inputRef}
-            placeholder={t('placeholder')}
-          />
-        </Dialog.Header>
-        <div className="grid gap-4">
-          <SearchResults
-            query={query}
-            results={results}
-            navigation={navigation}
-            selectedIndex={selectedIndex}
-          />
-        </div>
-        <Dialog.Footer>
-          <div className="flex items-center gap-2">
-            <Kbd size="sm" variant="outline" className="text-[10px]">
+
+      <Dialog.Content className="border-border/60 max-w-lg overflow-hidden rounded-xl border p-0 shadow-2xl">
+        {/* Input */}
+        <SearchInput
+          value={query}
+          onChange={setQuery}
+          onClear={clearQuery}
+          onKeyDown={handleKeyDown}
+          inputRef={inputRef}
+          placeholder={t('placeholder')}
+        />
+
+        {/* Results */}
+        <SearchResults
+          query={query}
+          results={results}
+          navigation={navigation}
+          selectedIndex={selectedIndex}
+        />
+
+        {/* Footer */}
+        <div className="border-border/30 flex items-center justify-between border-t px-4 py-2.5">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              <Kbd size="sm" variant="outline">
+                <HugeiconsIcon icon={ArrowDown01Icon} size={9} aria-hidden="true" />
+              </Kbd>
+              <Kbd size="sm" variant="outline">
+                <HugeiconsIcon icon={ArrowUp01Icon} size={9} aria-hidden="true" />
+              </Kbd>
+              <span className="text-muted-foreground/50 text-[10px]">navigate</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Kbd size="sm" variant="outline">
+                <HugeiconsIcon icon={ArrowMoveDownLeftIcon} size={9} aria-hidden="true" />
+              </Kbd>
+              <span className="text-muted-foreground/50 text-[10px]">{t('select')}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Kbd size="sm" variant="outline" className="text-[9px]">
               esc
             </Kbd>
-            <span className="text-muted-foreground text-xs">{t('exit')}</span>
+            <span className="text-muted-foreground/50 text-[10px]">{t('exit')}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <Kbd size="sm" variant="outline" className="text-[10px]">
-              <HugeiconsIcon icon={ArrowMoveDownLeftIcon} size={10} aria-hidden="true" />
-            </Kbd>
-            <span className="text-muted-foreground text-xs">{t('select')}</span>
-          </div>
-        </Dialog.Footer>
+        </div>
       </Dialog.Content>
     </Dialog>
   );

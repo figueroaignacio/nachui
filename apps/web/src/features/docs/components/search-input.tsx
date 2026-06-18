@@ -19,10 +19,10 @@ export function SearchInput({
   inputRef,
 }: SearchInputProps) {
   return (
-    <div className="border-border/50 flex items-center border-b px-3">
+    <div className="border-border/40 flex items-center gap-3 border-b px-4 py-3">
       <HugeiconsIcon
         icon={Search02Icon}
-        className="text-muted-foreground h-5 w-5 shrink-0"
+        className="text-muted-foreground/60 h-4 w-4 shrink-0"
         aria-hidden="true"
       />
       <input
@@ -32,16 +32,16 @@ export function SearchInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={onKeyDown}
-        className="text-foreground placeholder:text-muted-foreground flex h-14 w-full bg-transparent px-3 py-3 text-sm focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        className="text-foreground placeholder:text-muted-foreground/50 flex h-10 w-full bg-transparent text-sm focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         aria-label="Search documentation"
       />
       {value && (
         <button
           onClick={onClear}
-          className="text-muted-foreground hover:text-foreground flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center"
+          className="text-muted-foreground/50 hover:text-foreground flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded transition-colors"
           aria-label="Clear search"
         >
-          <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" aria-hidden="true" />
+          <HugeiconsIcon icon={Cancel01Icon} className="h-3.5 w-3.5" aria-hidden="true" />
         </button>
       )}
     </div>
