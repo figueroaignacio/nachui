@@ -74,7 +74,7 @@ export function MobileMenu() {
               aria-label="Close menu"
               aria-expanded={isMenuOpen}
               type="button"
-              className="hover:bg-muted rounded-md p-2 transition-colors"
+              className="hover:bg-card rounded-md p-2 transition-colors"
             >
               <HugeiconsIcon icon={Cancel01Icon} size={20} aria-hidden="true" />
             </button>
@@ -96,8 +96,8 @@ export function MobileMenu() {
                         href={item.href}
                         onClick={toggleMenu}
                         className={cn(
-                          'hover:bg-muted hover:text-primary flex items-center justify-between rounded-md px-2 py-2 text-sm font-medium transition-colors',
-                          isActive && 'text-foreground bg-muted',
+                          'hover:bg-card hover:text-primary flex items-center justify-between rounded-md px-2 py-2 text-sm font-medium transition-colors',
+                          isActive && 'text-foreground bg-card',
                         )}
                       >
                         <div className="flex items-center gap-2">
@@ -128,8 +128,8 @@ export function MobileMenu() {
                         href={item.href}
                         onClick={toggleMenu}
                         className={cn(
-                          'text-muted-foreground hover:bg-muted hover:text-primary flex items-center justify-between rounded-md px-2 py-1.5 text-xs transition-colors',
-                          isActive && 'bg-muted text-foreground font-medium',
+                          'text-muted-foreground hover:bg-card hover:text-primary flex items-center justify-between rounded-md px-2 py-1.5 text-xs transition-colors',
+                          isActive && 'bg-card text-foreground font-medium',
                         )}
                       >
                         <div className="flex items-center gap-2">

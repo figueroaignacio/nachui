@@ -80,8 +80,8 @@ export function Sidebar() {
                             className={cn(
                               'flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-xs transition-colors',
                               isActive
-                                ? 'bg-secondary text-foreground font-medium'
-                                : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
+                                ? 'bg-card text-foreground font-medium'
+                                : 'text-muted-foreground hover:bg-card hover:text-foreground',
                             )}
                             target={item.target}
                             rel="noopener noreferrer"
