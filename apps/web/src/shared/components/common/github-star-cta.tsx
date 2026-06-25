@@ -31,7 +31,7 @@ export function GitHubStarHeroCta() {
         </span>
       </span>
 
-      <span className="bg-primary/10 text-primary group-hover:bg-primary/20 relative flex items-center gap-1.5 rounded-full px-2.5 py-1 transition-colors duration-200">
+      <span className="bg-primary/10 text-primary group-hover:bg-primary/20 relative hidden items-center gap-1.5 rounded-full px-2.5 py-1 transition-colors duration-200 sm:flex">
         <span className="flex items-center">
           <HugeiconsIcon
             icon={StarIcon}
