@@ -35,15 +35,15 @@
 .dark {
   --background: oklch(14.5% 0.008 240);
   --foreground: oklch(91% 0.01 230);
-  --card: oklch(17.5% 0.01 240);
+  --card: oklch(21% 0.012 240);
   --card-foreground: oklch(91% 0.01 230);
-  --popover: oklch(19% 0.012 240);
+  --popover: oklch(23% 0.013 240);
   --popover-foreground: oklch(91% 0.01 230);
   --primary: oklch(98.5% 0 0);
   --primary-foreground: oklch(20.5% 0 0);
-  --secondary: oklch(22% 0.012 240);
+  --secondary: oklch(26% 0.014 240);
   --secondary-foreground: oklch(91% 0.01 230);
-  --muted: oklch(22% 0.012 240);
+  --muted: oklch(26% 0.014 240);
   --muted-foreground: oklch(60% 0.012 230);
   --accent: oklch(24% 0.014 240);
   --accent-foreground: oklch(98.5% 0 0);

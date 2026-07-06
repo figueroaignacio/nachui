@@ -66,12 +66,12 @@ function ShadowSides() {
     <>
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 sm:w-20"
+        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 sm:w-0"
         style={{ background: 'linear-gradient(to right, var(--background) 0%, transparent 100%)' }}
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 sm:w-20"
+        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 sm:w-0"
         style={{ background: 'linear-gradient(to left, var(--background) 0%, transparent 100%)' }}
       />
     </>

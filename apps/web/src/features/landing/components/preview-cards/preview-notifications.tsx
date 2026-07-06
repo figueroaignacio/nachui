@@ -3,7 +3,7 @@ import { Switch } from '@repo/ui/components/switch';
 
 export function PreviewNotifications() {
   return (
-    <Card variant="outline">
+    <Card variant="outline" className="bg-card">
       <Card.Content compact className="flex items-center justify-between p-4 px-5">
         <div>
           <div className="text-foreground text-sm font-bold">Allow notifications</div>

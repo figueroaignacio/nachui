@@ -4,7 +4,7 @@ import { Spinner } from '@repo/ui/components/spinner';
 
 export function PreviewStatus() {
   return (
-    <Card variant="outline">
+    <Card variant="outline" className="bg-card">
       <Card.Content compact className="flex flex-col gap-4 pt-4">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">

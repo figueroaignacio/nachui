@@ -4,7 +4,7 @@ import { Card } from '@repo/ui/components/card';
 
 export function PreviewSchema() {
   return (
-    <Card variant="outline">
+    <Card variant="outline" className="bg-card">
       <Card.Content compact className="pt-5 pb-5">
         <div className="bg-destructive/20 text-destructive mb-3 flex size-8 items-center justify-center rounded-full">
           <span className="font-bold">!</span>

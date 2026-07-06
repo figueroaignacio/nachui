@@ -3,7 +3,7 @@ import { Tabs } from '@repo/ui/components/tabs';
 
 export function PreviewTabs() {
   return (
-    <Card variant="outline">
+    <Card variant="outline" className="bg-card">
       <Card.Content compact className="pt-4 pb-4">
         <Tabs defaultValue="account" className="w-full">
           <Tabs.List className="grid w-full grid-cols-2">

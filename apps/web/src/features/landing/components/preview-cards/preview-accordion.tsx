@@ -3,7 +3,7 @@ import { Accordion } from '@repo/ui/components/accordion';
 export function PreviewAccordion() {
   return (
     <div
-      className="flex flex-col gap-3 rounded-2xl border border-zinc-200/80 bg-white/60 p-5 backdrop-blur-md dark:border-zinc-800/80 dark:bg-zinc-950/60"
+      className="border-border bg-card flex flex-col gap-3 rounded-2xl border p-5"
       role="region"
       aria-label="Frequently asked questions accordion"
     >

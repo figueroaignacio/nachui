@@ -4,7 +4,7 @@ import { Separator } from '@repo/ui/components/separator';
 
 export function PreviewBadges() {
   return (
-    <Card variant="default">
+    <Card variant="outline" className="bg-card backdrop-blur-sm">
       <Card.Content compact className="flex flex-col gap-3 pt-4">
         <div className="text-muted-foreground text-xs font-medium">Environment Status</div>
         <div className="space-y-3">

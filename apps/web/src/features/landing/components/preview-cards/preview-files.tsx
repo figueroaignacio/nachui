@@ -3,7 +3,7 @@ import { Files } from '@repo/ui/components/files';
 
 export function PreviewFiles() {
   return (
-    <Card variant="outline" className="h-full">
+    <Card variant="outline" className="bg-card h-full">
       <Card.Content compact className="pt-4 pb-4">
         <div className="text-foreground mb-3 text-sm font-bold tracking-tight">
           Project Explorer

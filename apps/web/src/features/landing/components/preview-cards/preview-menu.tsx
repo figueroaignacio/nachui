@@ -9,7 +9,7 @@ import { Separator } from '@repo/ui/components/separator';
 
 export function PreviewMenu() {
   return (
-    <Card variant="outline">
+    <Card variant="outline" className="bg-card">
       <Card.Content compact className="flex flex-col gap-4 pt-5 pb-5">
         <div className="flex items-center justify-between">
           <Label className="text-[10px] font-bold tracking-widest uppercase">Settings</Label>
