@@ -40,7 +40,7 @@ export function LandingHero() {
         }}
       />
 
-      <Container size="xl" className="relative z-10">
+      <Container size="fluid" className="relative z-10">
         <div className="flex flex-col items-center gap-6 px-4 text-center">
           <GitHubStarHeroCta />
           <h1 className="text-foreground text-4xl leading-none font-bold tracking-tight lg:text-6xl">
@@ -67,14 +67,30 @@ export function LandingHero() {
             </Button>
           </div>
         </div>
-
-        {/* ── Component preview grid ── */}
-        <div className="relative mt-12 sm:mt-16">
-          <HeroComponentPreview />
-          {/* Bottom fade into next section */}
+        <div className="relative mt-10 overflow-hidden sm:hidden" style={{ height: '420px' }}>
+          <div
+            style={{
+              transform: 'scale(0.65)',
+              transformOrigin: 'top left',
+              width: `${(100 / 0.65).toFixed(4)}%`,
+            }}
+          >
+            <HeroComponentPreview />
+          </div>
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute right-0 bottom-0 left-0 h-40 sm:h-64"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-36"
+            style={{
+              background: 'linear-gradient(to top, var(--background) 0%, transparent 100%)',
+            }}
+          />
+        </div>
+
+        <div className="relative -mx-4 mt-16 hidden px-4 sm:block md:-mx-6 md:px-6 lg:-mx-8 lg:px-8">
+          <HeroComponentPreview />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-64"
             style={{
               background: 'linear-gradient(to top, var(--background) 0%, transparent 100%)',
             }}
