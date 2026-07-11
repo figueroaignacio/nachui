@@ -46,15 +46,9 @@ export function LandingHero() {
         <div className="relative [zoom:0.65] overflow-hidden rounded-t-lg sm:[zoom:1]">
           <HeroComponentPreview />
         </div>
-        {/* Vertical shadow/fade in the middle on mobile */}
         <div
           aria-hidden="true"
-          className="via-background pointer-events-none absolute inset-y-0 left-1/2 z-10 w-16 -translate-x-1/2 bg-gradient-to-r from-transparent to-transparent sm:hidden"
-        />
-        {/* Bottom shadow/fade at the finish on mobile */}
-        <div
-          aria-hidden="true"
-          className="from-background pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-gradient-to-t to-transparent sm:hidden"
+          className="from-background pointer-events-none absolute inset-x-0 bottom-0 z-10 h-72 bg-gradient-to-t to-transparent sm:hidden"
         />
       </div>
     </section>
