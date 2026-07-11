@@ -1,11 +1,6 @@
 'use client';
 
-import { GitHubStarHeroCta } from '@/components/common/github-star-cta';
 import { Link } from '@/i18n/navigation';
-import { ArrowRight02Icon, SourceCodeIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
-import { Button } from '@repo/ui/components/button';
-import { Container } from '@repo/ui/layout/container';
 import { useTranslations } from 'next-intl';
 import { HeroComponentPreview } from './hero-component-preview';
 
@@ -21,82 +16,56 @@ export function LandingHero() {
   const actions: HomePageActions[] = t.raw('actions');
 
   return (
-    <section className="bg-background relative overflow-hidden pt-20 pb-0 sm:pt-28">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage:
-            'radial-gradient(circle, color-mix(in oklch, var(--border) 70%, transparent) 1px, transparent 1px)',
-          backgroundSize: '28px 28px',
-        }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(ellipse 100% 60% at 50% 0%, transparent 10%, var(--background) 100%)',
-        }}
-      />
-
-      <Container size="fluid" className="relative z-10">
-        <div className="flex flex-col items-center gap-6 px-4 text-center">
-          <GitHubStarHeroCta />
-          <h1 className="text-foreground text-4xl leading-none font-bold tracking-tight lg:text-6xl">
+    <section className="w-full">
+      <div className="mx-auto w-full pt-16 pb-12 md:pt-24 md:pb-16">
+        <div className="max-w-2xl">
+          <h1 className="font-heading text-foreground text-[2rem] leading-[1.1] font-normal tracking-tight italic md:text-[2.75rem]">
             {t('subheading1')}
           </h1>
-          <p className="text-muted-foreground max-w-xs text-sm leading-relaxed sm:max-w-sm sm:text-base">
+          <p className="text-muted-strong mt-5 text-[17px] leading-relaxed font-normal md:text-[18px]">
             {t('description')}
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <Button
-              size="sm"
-              rightIcon={<HugeiconsIcon icon={ArrowRight02Icon} size={16} />}
-              asChild
+          <div className="mt-8 flex items-center gap-5">
+            <Link
+              href={actions[0]?.href ?? '/docs'}
+              className="bg-foreground text-background inline-flex items-center gap-2 rounded-[4px] px-4 py-2 font-mono text-sm transition-all hover:opacity-80 active:scale-[0.98]"
             >
-              <Link href="/docs">{actions[0]?.label ?? 'Get started'}</Link>
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<HugeiconsIcon icon={SourceCodeIcon} size={16} />}
-              asChild
+              {actions[0]?.label ?? 'Get started'}
+              <span aria-hidden="true">→</span>
+            </Link>
+            <Link
+              href={actions[1]?.href ?? '/docs/components'}
+              className="text-muted-foreground hover:text-foreground font-mono text-sm transition-colors"
             >
-              <Link href="/docs/components">{actions[1]?.label ?? 'View components'}</Link>
-            </Button>
+              {actions[1]?.label ?? 'View components'} ↗
+            </Link>
           </div>
         </div>
-        <div className="relative mt-10 overflow-hidden sm:hidden" style={{ height: '420px' }}>
-          <div
-            style={{
-              transform: 'scale(0.65)',
-              transformOrigin: 'top left',
-              width: `${(100 / 0.65).toFixed(4)}%`,
-            }}
-          >
-            <HeroComponentPreview />
-          </div>
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-36"
-            style={{
-              background: 'linear-gradient(to top, var(--background) 0%, transparent 100%)',
-            }}
-          />
-        </div>
-
-        <div className="relative -mx-4 mt-16 hidden px-4 sm:block md:-mx-6 md:px-6 lg:-mx-8 lg:px-8">
+      </div>
+      <div className="relative mx-6 mb-8 overflow-hidden sm:hidden" style={{ height: '420px' }}>
+        <div
+          style={{
+            transform: 'scale(0.65)',
+            transformOrigin: 'top left',
+            width: `${(100 / 0.65).toFixed(4)}%`,
+          }}
+        >
           <HeroComponentPreview />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-64"
-            style={{
-              background: 'linear-gradient(to top, var(--background) 0%, transparent 100%)',
-            }}
-          />
         </div>
-      </Container>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-36"
+          style={{
+            background: 'linear-gradient(to top, var(--background) 0%, transparent 100%)',
+          }}
+        />
+      </div>
+
+      <div className="relative mx-auto mb-0 hidden w-full sm:block">
+        <div className="relative overflow-hidden rounded-t-lg">
+          <HeroComponentPreview />
+        </div>
+      </div>
     </section>
   );
 }

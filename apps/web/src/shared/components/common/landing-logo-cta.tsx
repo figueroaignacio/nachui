@@ -1,43 +1,45 @@
 import { Link } from '@/i18n/navigation';
-import { Button } from '@repo/ui/components/button';
-import { Container } from '@repo/ui/layout/container';
-import { Separator } from '@repo/ui/src/components/separator';
 import { useTranslations } from 'next-intl';
-import { Logo } from './logo';
 
 export function LandingLogoCta() {
   const t = useTranslations('components');
 
-  const actions = [
-    { href: '/docs', children: t('landingLogoCta.primaryAction'), variant: 'default' as const },
-    {
-      href: '/docs/components',
-      children: t('landingLogoCta.secondaryAction'),
-      variant: 'ghost' as const,
-    },
-  ];
-
   return (
-    <section className="bg-background/60 relative w-full">
-      <Container size="lg">
-        <div className="relative flex min-h-lvh flex-col items-center justify-center gap-8 py-24 text-center sm:py-32">
-          <Separator label={t('landingLogoCta.version')} className="w-full" />
-          <Logo size="md" />
-          <p className="text-muted-foreground max-w-sm text-sm leading-relaxed sm:text-base">
-            {t('landingLogoCta.line1')}
-            <br />
-            {t('landingLogoCta.line2')}
+    <section className="w-full py-16 sm:py-24">
+      <div className="mx-auto w-full max-w-7xl px-6">
+        {/* Divider */}
+        <div className="bg-rule mb-16 h-px" />
+
+        {/* Content */}
+        <div className="max-w-xl">
+          <p className="text-muted-foreground mb-4 font-mono text-[11px] tracking-[0.2em] uppercase">
+            {t('landingLogoCta.version')}
           </p>
-          <div className="flex items-center gap-3">
-            {actions.map((action, index) => (
-              <Button key={index} size="sm" variant={action.variant} asChild>
-                <Link href={action.href}>{action.children}</Link>
-              </Button>
-            ))}
+          <p className="text-muted-strong mb-8 text-[17px] leading-relaxed">
+            {t('landingLogoCta.line1')} {t('landingLogoCta.line2')}
+          </p>
+          <div className="flex items-center gap-6">
+            <Link
+              href="/docs"
+              className="bg-foreground text-background inline-flex items-center gap-2 rounded-[4px] px-4 py-2 font-mono text-sm transition-all hover:opacity-80 active:scale-[0.98]"
+            >
+              {t('landingLogoCta.primaryAction')} →
+            </Link>
+            <Link
+              href="/docs/components"
+              className="text-muted-foreground hover:text-foreground font-mono text-sm transition-colors"
+            >
+              {t('landingLogoCta.secondaryAction')} ↗
+            </Link>
           </div>
-          <Separator label={t('landingLogoCta.license')} />
         </div>
-      </Container>
+
+        {/* License note */}
+        <div className="bg-rule mt-16 h-px" />
+        <p className="text-muted-foreground mt-4 font-mono text-xs">
+          {t('landingLogoCta.license')}
+        </p>
+      </div>
     </section>
   );
 }

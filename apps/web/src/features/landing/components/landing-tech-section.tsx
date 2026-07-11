@@ -5,7 +5,6 @@ import {
   TailwindIcon,
   TypescriptIcon,
 } from '@/components/common/tech-icons';
-import { Container } from '@repo/ui/layout/container';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 
@@ -24,26 +23,29 @@ const techIconMap: Record<string, React.ReactNode> = {
 
 export function LandingTechSection() {
   const t = useTranslations('sections.home.tech');
-
   const technologies = t.raw('technologies') as Technology[];
 
   return (
-    <section className="border-border/50 w-full border-y py-10 sm:py-14">
-      <Container size="xl">
-        <p className="text-muted-foreground mb-8 px-4 text-xs font-semibold tracking-widest uppercase sm:px-0">
-          {t('title')}
-        </p>
+    <section className="w-full py-12 sm:py-16">
+      <div className="mx-auto w-full max-w-7xl px-6">
+        {/* Section label */}
+        <div className="mb-8">
+          <p className="text-muted-foreground font-mono text-[11px] tracking-[0.2em] uppercase">
+            {t('title')}
+          </p>
+          <div className="bg-rule mt-3 h-px" />
+        </div>
 
-        {/* Tech logos row — wraps on small screens */}
-        <div className="flex flex-wrap items-center gap-x-8 gap-y-4 px-4 sm:gap-x-12 sm:px-0">
+        {/* Tech logos row */}
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
           {technologies.map((tech) => (
-            <div key={tech.name} className="text-muted-foreground/70 flex items-center gap-2.5">
-              <div className="h-5 w-5 shrink-0">{techIconMap[tech.name]}</div>
-              <span className="text-sm font-medium">{tech.name}</span>
+            <div key={tech.name} className="text-muted-foreground/70 flex items-center gap-2">
+              <div className="h-4 w-4 shrink-0">{techIconMap[tech.name]}</div>
+              <span className="font-mono text-[13px]">{tech.name}</span>
             </div>
           ))}
         </div>
-      </Container>
+      </div>
     </section>
   );
 }
