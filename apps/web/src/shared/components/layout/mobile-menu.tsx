@@ -13,7 +13,6 @@ import { Flex } from '@repo/ui/src/layout/flex';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { LocaleSwitcher } from '../common/locale-switcher';
-import { Logo } from '../common/logo';
 import { ThemeToggle } from '../common/theme-toggle';
 
 export function MobileMenu() {
@@ -63,7 +62,7 @@ export function MobileMenu() {
               type="button"
               className="flex items-center gap-x-2 text-sm font-medium"
             >
-              <Logo size="mobile" />
+              nachui
             </button>
           </div>
           <div className="flex items-center gap-x-3">

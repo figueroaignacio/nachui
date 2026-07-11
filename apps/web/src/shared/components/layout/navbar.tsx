@@ -3,11 +3,11 @@
 import { Searcher } from '@/features/docs/components/searcher';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { Navigation } from '@/lib/definitions';
-import { Container } from '@repo/ui/layout/container';
-import { Flex } from '@repo/ui/layout/flex';
 import { cn } from '@repo/ui/lib/cn';
+import { Container } from '@repo/ui/src/layout/container';
 import { useTranslations } from 'next-intl';
-import { Logo } from '../common/logo';
+import { LocaleSwitcher } from '../common/locale-switcher';
+import { ThemeToggle } from '../common/theme-toggle';
 
 export function Navbar() {
   const t = useTranslations('ui');
@@ -15,36 +15,42 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <Container
-      as="div"
-      className="relative z-50 hidden w-full items-center justify-between py-3 md:flex"
-      size="fluid"
-    >
-      <Flex align="center" justify="between" gap="6">
-        <Logo size="sm" />
-        <Flex as="nav" align="center" gap="6" className="text-sm font-medium">
-          {navigation.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
-
-            return (
-              <Link
-                className={cn(
-                  'focus-visible:ring-foreground focus-visible:ring-offset-background text-muted-foreground hover:text-foreground rounded-sm transition-colors outline-none hover:underline focus-visible:ring-2 focus-visible:ring-offset-2',
-                )}
-                href={item.href}
-                key={item.href}
-                aria-current={isActive ? 'page' : undefined}
-                target={item.target}
-              >
-                {item.title}
-              </Link>
-            );
-          })}
-        </Flex>
-      </Flex>
-      <Flex align="center" gap="3">
-        <Searcher />
-      </Flex>
+    <Container size="fluid">
+      <div className="relative z-50 hidden w-full md:flex">
+        <div className="mx-auto flex w-full items-center justify-between py-4">
+          <Link
+            href="/"
+            className="text-foreground hover:text-muted-foreground font-mono text-sm font-medium transition-colors"
+            aria-label="NachUI home"
+          >
+            nachui
+          </Link>
+          <nav className="flex items-center gap-6" aria-label="Main navigation">
+            {navigation.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  target={item.target}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={cn(
+                    'focus-visible:ring-ring rounded-sm font-mono text-xs transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                    isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
+                  )}
+                >
+                  {item.title}
+                </Link>
+              );
+            })}
+          </nav>
+          <div className="flex items-center gap-3">
+            <Searcher />
+            <LocaleSwitcher />
+            <ThemeToggle />
+          </div>
+        </div>
+      </div>
     </Container>
   );
 }
