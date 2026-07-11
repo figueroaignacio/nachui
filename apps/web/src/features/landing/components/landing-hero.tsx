@@ -42,29 +42,20 @@ export function LandingHero() {
           </div>
         </div>
       </div>
-      <div className="relative mx-6 mb-8 overflow-hidden sm:hidden" style={{ height: '420px' }}>
-        <div
-          style={{
-            transform: 'scale(0.65)',
-            transformOrigin: 'top left',
-            width: `${(100 / 0.65).toFixed(4)}%`,
-          }}
-        >
+      <div className="relative mx-auto mb-8 w-full max-w-7xl">
+        <div className="relative [zoom:0.65] overflow-hidden rounded-t-lg sm:[zoom:1]">
           <HeroComponentPreview />
         </div>
+        {/* Vertical shadow/fade in the middle on mobile */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-36"
-          style={{
-            background: 'linear-gradient(to top, var(--background) 0%, transparent 100%)',
-          }}
+          className="via-background pointer-events-none absolute inset-y-0 left-1/2 z-10 w-16 -translate-x-1/2 bg-gradient-to-r from-transparent to-transparent sm:hidden"
         />
-      </div>
-
-      <div className="relative mx-auto mb-0 hidden w-full sm:block">
-        <div className="relative overflow-hidden rounded-t-lg">
-          <HeroComponentPreview />
-        </div>
+        {/* Bottom shadow/fade at the finish on mobile */}
+        <div
+          aria-hidden="true"
+          className="from-background pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-gradient-to-t to-transparent sm:hidden"
+        />
       </div>
     </section>
   );

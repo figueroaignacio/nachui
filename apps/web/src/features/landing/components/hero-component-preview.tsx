@@ -49,7 +49,7 @@ const cards = [
 export function HeroComponentPreview() {
   return (
     <div className="relative w-full overflow-hidden" aria-label="Component showcase">
-      <div className="columns-1 gap-4 [column-fill:_balance] sm:columns-2 lg:columns-3 xl:columns-4">
+      <div className="columns-2 gap-4 [column-fill:_balance] sm:columns-2 lg:columns-3 xl:columns-4">
         {cards.map((card) => (
           <div key={card.key} className="mb-4 break-inside-avoid">
             {card}
