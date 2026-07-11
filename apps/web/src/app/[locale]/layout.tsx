@@ -4,9 +4,10 @@ import { Header } from '@/components/layout/header';
 import { Providers } from '@/components/providers';
 import { ThemeInitScript } from '@/features/theme/components/theme-init-script';
 import { routing } from '@/i18n/routing';
-import { fontHeading, fontSans } from '@/lib/font';
+import { fontHeading, fontMono, fontSans, fontSerif } from '@/lib/font';
 import '@repo/ui/globals.css';
 import { Container } from '@repo/ui/src/layout/container';
+
 import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
@@ -68,14 +69,16 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
           dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
         />
       </head>
-      <body className={`relative ${fontSans.variable} ${fontHeading.variable}`}>
+      <body
+        className={`relative ${fontSans.variable} ${fontHeading.variable} ${fontSerif.variable} ${fontMono.variable}`}
+      >
         <SkipLink />
         <NextIntlClientProvider>
           <Providers>
             <Header />
-            <main id="main-content">
-              <Container size="fluid">{children}</Container>
-            </main>
+            <Container size="fluid">
+              <main id="main-content">{children}</main>
+            </Container>
             <Footer />
           </Providers>
         </NextIntlClientProvider>
