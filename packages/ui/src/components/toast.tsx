@@ -41,9 +41,9 @@ const TOAST_EXIT_BY_POSITION: Record<ToastPosition, Record<string, number | stri
 
 const TOAST_TRANSITION = {
   type: 'spring',
-  damping: 25,
-  stiffness: 350,
-  mass: 0.5,
+  damping: 30,
+  stiffness: 400,
+  mass: 0.4,
 } as const;
 
 const TOAST_EXIT_TRANSITION = { duration: 0.2, ease: 'easeIn' } as const;
@@ -51,7 +51,7 @@ const TOAST_EXIT_TRANSITION = { duration: 0.2, ease: 'easeIn' } as const;
 // --- CVA variants ---
 
 const toastVariants = cva(
-  'pointer-events-auto relative flex w-full items-center gap-3 overflow-hidden rounded-lg border p-4 bg-background',
+  'pointer-events-auto relative flex w-full items-center gap-3 overflow-hidden rounded-sm border p-3.5 bg-background',
   {
     variants: {
       variant: {
@@ -201,6 +201,7 @@ function ToastProvider({
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

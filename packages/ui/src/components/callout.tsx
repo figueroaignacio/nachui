@@ -9,14 +9,14 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import React from 'react';
 import { cn } from '../lib/cn';
 
-const calloutVariants = cva('flex w-full items-start gap-3 rounded-xl border p-4 text-sm', {
+const calloutVariants = cva('flex w-full items-start gap-3 rounded-sm border p-3.5 text-sm', {
   variants: {
     variant: {
-      default: 'bg-card/50 text-card-foreground border-border',
-      info: 'bg-info/10 text-info border-info/20',
-      warning: 'bg-warning/10 text-warning border-warning/20',
-      danger: 'bg-destructive/70 border-destructive/20',
-      success: 'bg-success/10 text-success border-success/20',
+      default: 'bg-surface-muted text-card-foreground border-border',
+      info: 'bg-info/8 text-info border-info/15',
+      warning: 'bg-warning/8 text-warning border-warning/15',
+      danger: 'bg-destructive/8 text-destructive border-destructive/15',
+      success: 'bg-success/8 text-success border-success/15',
     },
   },
   defaultVariants: {

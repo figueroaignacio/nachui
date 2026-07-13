@@ -136,7 +136,7 @@ const AccordionItem = ({
   return (
     <div
       ref={ref}
-      className={cn('overflow-hidden border-b border-white/5 last:border-0', className)}
+      className={cn('border-border overflow-hidden border-b last:border-0', className)}
       {...props}
     >
       {children}
@@ -172,9 +172,9 @@ const AccordionTrigger = ({
       aria-controls={contentId}
       aria-expanded={isOpen}
       onClick={() => toggleItem(value)}
-      whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
+      whileTap={shouldReduceMotion ? undefined : { scale: 0.99 }}
       className={cn(
-        'group flex w-full items-center justify-between py-4 text-left text-sm font-medium transition-all hover:underline',
+        'group hover:text-muted-foreground flex w-full items-center justify-between py-3.5 text-left text-sm font-medium transition-colors',
         className,
       )}
     >

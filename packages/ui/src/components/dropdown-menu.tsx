@@ -227,7 +227,7 @@ const DropdownMenuTrigger = ({
       onClick={handleClick}
       whileTap={!shouldReduceMotion ? { scale: 0.98 } : undefined}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium',
+        'inline-flex items-center justify-center gap-2 rounded-sm px-4 py-2 text-sm font-medium',
         'text-foreground border-border border',
         'hover:bg-muted transition-colors',
         'focus-visible:ring-ring focus-visible:ring-1 focus-visible:outline-none',
@@ -334,8 +334,8 @@ const DropdownMenuContent = ({
           exit={DROPDOWN_EXIT[position]}
           style={{ ...verticalStyle, ...DROPDOWN_CONTENT_STYLE }}
           className={cn(
-            'border-border absolute z-50 min-w-48 overflow-hidden rounded-md border',
-            'bg-background backdrop-blur-lg',
+            'border-border absolute z-50 min-w-48 overflow-hidden rounded-sm border',
+            'bg-background',
             ALIGN_CLASSES[align].split(' ')[0],
             transformOriginClass,
             className,
@@ -401,9 +401,9 @@ const DropdownMenuItem = ({
       whileHover={!disabled ? { backgroundColor: 'var(--muted)', scale: 1 } : undefined}
       whileTap={!disabled ? { scale: 0.98 } : undefined}
       className={cn(
-        'relative flex cursor-pointer items-center rounded-md px-3 py-2 text-sm outline-none select-none',
-        'transition-colors duration-200',
-        disabled && 'pointer-events-none opacity-50',
+        'relative flex cursor-pointer items-center rounded-none px-3 py-1.5 text-sm outline-none select-none',
+        'transition-colors duration-150',
+        disabled && 'pointer-events-none opacity-40',
         variant === 'destructive' && 'text-destructive focus:text-destructive',
         className,
       )}

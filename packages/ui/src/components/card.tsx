@@ -3,7 +3,7 @@ import React from 'react';
 import { cn } from '../lib/cn';
 
 const cardVariants = cva(
-  'rounded-xl transition-all duration-200 h-full flex flex-col justify-between',
+  'rounded-sm transition-colors duration-150 h-full flex flex-col justify-between',
   {
     variants: {
       variant: {
@@ -11,13 +11,9 @@ const cardVariants = cva(
         outline: 'text-card-foreground border border-border',
         ghost: 'bg-transparent text-card-foreground border-0',
       },
-      gradient: {
-        true: 'bg-gradient-to-br from-card to-card/80',
-      },
     },
     defaultVariants: {
       variant: 'default',
-      gradient: false,
     },
   },
 );
@@ -34,7 +30,7 @@ const cardHeaderVariants = cva('flex flex-col space-y-1.5', {
   },
 });
 
-const cardTitleVariants = cva('text-lg font-semibold leading-none tracking-tight');
+const cardTitleVariants = cva('text-base font-medium leading-none tracking-tight');
 const cardDescriptionVariants = cva('text-sm text-muted-foreground leading-relaxed');
 
 const cardContentVariants = cva('flex-1', {
@@ -91,14 +87,13 @@ interface CardFooterProps
 const CardRoot = ({
   className,
   variant = 'default',
-  gradient = false,
   as: Component = 'div',
   children,
   ref,
   ...props
 }: CardProps & { ref?: React.Ref<HTMLDivElement> }) => {
   return (
-    <Component ref={ref} className={cn(cardVariants({ variant, gradient }), className)} {...props}>
+    <Component ref={ref} className={cn(cardVariants({ variant }), className)} {...props}>
       {children}
     </Component>
   );

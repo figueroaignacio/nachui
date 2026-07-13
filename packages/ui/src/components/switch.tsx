@@ -17,7 +17,7 @@ function Switch({
   return (
     <label
       className={cn(
-        'focus-within:ring-ring focus-within:ring-offset-background relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-within:ring-2 focus-within:ring-offset-2 focus-within:outline-none has-disabled:cursor-not-allowed has-disabled:opacity-50',
+        'focus-within:ring-ring focus-within:ring-offset-background border-border/60 relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border transition-colors focus-within:ring-1 focus-within:ring-offset-1 focus-within:outline-none has-disabled:cursor-not-allowed has-disabled:opacity-40',
         className,
       )}
     >
@@ -34,11 +34,11 @@ function Switch({
       />
       <div
         aria-hidden="true"
-        className="bg-input peer-checked:bg-primary/60 pointer-events-none absolute inset-x-0 h-full w-full rounded-full transition-colors"
+        className="bg-muted peer-checked:bg-primary/70 pointer-events-none absolute inset-x-0 h-full w-full rounded-full transition-colors"
       />
       <span
         aria-hidden="true"
-        className="bg-secondary-foreground pointer-events-none z-10 block h-5 w-5 rounded-full shadow-sm ring-0 transition-transform peer-checked:translate-x-5"
+        className="bg-foreground/60 peer-checked:bg-primary-foreground pointer-events-none z-10 block h-3.5 w-3.5 translate-x-0.5 rounded-full shadow-sm ring-0 transition-transform peer-checked:translate-x-4"
       />
     </label>
   );

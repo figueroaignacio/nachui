@@ -225,7 +225,7 @@ const PopoverContent = ({
           transition={POPOVER_TRANSITION}
           style={sideOffsetStyle}
           className={cn(
-            'bg-popover text-popover-foreground absolute z-50 w-72 rounded-xl border p-4 shadow-md outline-none',
+            'bg-popover text-popover-foreground absolute z-50 w-72 rounded-sm border p-4 shadow-sm outline-none',
             POPOVER_POSITION_CLASSES[side],
             className,
           )}

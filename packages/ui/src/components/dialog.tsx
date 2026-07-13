@@ -20,9 +20,9 @@ const FOCUSABLE_SELECTOR = [
 // --- Animation constants (module level) ---
 
 const OVERLAY_VARIANTS = {
-  initial: { opacity: 0, backdropFilter: 'blur(0px)' },
-  animate: { opacity: 1, backdropFilter: 'blur(4px)' },
-  exit: { opacity: 0, backdropFilter: 'blur(0px)' },
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
 } as const;
 
 const OVERLAY_TRANSITION = { duration: 0.3 } as const;
@@ -135,6 +135,7 @@ const DialogPortal = ({ children }: DialogPortalProps) => {
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -190,7 +191,7 @@ const DialogOverlay = ({
       exit="exit"
       transition={OVERLAY_TRANSITION}
       style={OVERLAY_STYLE}
-      className={cn('fixed inset-0 z-200 bg-white/10 dark:bg-black/40', className)}
+      className={cn('fixed inset-0 z-200 bg-black/20 dark:bg-black/50', className)}
       onClick={() => setOpen(false)}
       {...props}
     />
@@ -290,7 +291,7 @@ const DialogContent = ({
             transition={DIALOG_TRANSITION}
             style={DIALOG_STYLE}
             className={cn(
-              'bg-background fixed top-[50%] left-[50%] z-500 grid w-full max-w-xl translate-x-[-50%] translate-y-[-50%] gap-4 rounded-xl border p-6',
+              'bg-background fixed top-[50%] left-[50%] z-500 grid w-full max-w-xl translate-x-[-50%] translate-y-[-50%] gap-4 rounded-sm border p-6',
               className,
             )}
           >

@@ -16,7 +16,7 @@ import { cn } from '../lib/cn';
 // --- CVA variants ---
 
 const bannerVariants = cva(
-  'relative flex w-full items-center justify-center gap-3 border-b px-4 py-2.5 text-sm',
+  'relative flex w-full items-center justify-center gap-3 border-b px-4 py-2 text-sm',
   {
     variants: {
       variant: {

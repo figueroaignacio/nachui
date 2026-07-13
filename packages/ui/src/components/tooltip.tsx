@@ -32,13 +32,6 @@ const TOOLTIP_ANIMATION_VARIANTS = {
   },
 } as const;
 
-const TOOLTIP_ARROW_POSITION = {
-  top: 'bottom-[-4px] left-1/2 -translate-x-1/2 border-b-0 border-r-0',
-  bottom: 'top-[-4px] left-1/2 -translate-x-1/2 border-t-0 border-l-0',
-  left: 'right-[-4px] top-1/2 -translate-y-1/2 border-l-0 border-b-0',
-  right: 'left-[-4px] top-1/2 -translate-y-1/2 border-r-0 border-t-0',
-} as const;
-
 const TOOLTIP_TRANSITION = { duration: 0.2, ease: 'easeOut' } as const;
 
 const TOOLTIP_STYLE = { willChange: 'opacity, transform, filter' } as const;
@@ -214,16 +207,13 @@ const TooltipContent = ({
           transition={TOOLTIP_TRANSITION}
           style={sideOffsetStyle}
           className={cn(
-            'bg-foreground text-background absolute z-50 rounded-md px-3 py-1.5 text-xs whitespace-nowrap shadow-md',
+            'bg-foreground text-background absolute z-50 rounded-none px-2.5 py-1 text-xs whitespace-nowrap',
             TOOLTIP_POSITION_CLASSES[side],
             className,
           )}
           {...props}
         >
           {children}
-          <div
-            className={cn('bg-foreground absolute h-2 w-2 rotate-45', TOOLTIP_ARROW_POSITION[side])}
-          />
         </motion.div>
       )}
     </AnimatePresence>

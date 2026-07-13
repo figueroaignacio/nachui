@@ -28,7 +28,7 @@ function Progress({
       aria-valuemin={0}
       aria-valuemax={max}
       aria-valuenow={value ?? undefined}
-      className={cn('bg-secondary relative h-2 w-full overflow-hidden rounded-full', className)}
+      className={cn('bg-secondary relative h-1 w-full overflow-hidden rounded-none', className)}
       {...props}
     >
       {value === null || value === undefined ? (
