@@ -42,7 +42,7 @@ export function LandingHero() {
           </div>
         </div>
       </div>
-      <div className="relative mx-auto mb-8 w-full max-w-7xl">
+      <div className="relative mx-auto mb-8 w-full">
         <div className="relative [zoom:0.65] overflow-hidden rounded-t-lg sm:[zoom:1]">
           <HeroComponentPreview />
         </div>
