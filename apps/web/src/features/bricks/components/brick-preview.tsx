@@ -2,13 +2,13 @@
 
 import type { BrickSourceFile } from '@/features/bricks/lib/get-brick-source';
 import { useCopyToClipboard } from '@/features/docs/hooks/use-copy-to-clipboard';
-import { Copy01Icon, LaptopIcon, Tick02Icon } from '@hugeicons/core-free-icons';
+import { LaptopIcon, Tick02Icon, Copy01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Tabs } from '@repo/ui/components/tabs';
-import { Typography } from '@repo/ui/components/typography';
 import { cn } from '@repo/ui/lib/cn';
 import { useState } from 'react';
 import { BrickCodeViewer } from './brick-code-viewer';
+
 interface BrickPreviewProps {
   id: string;
   name: string;
@@ -18,11 +18,10 @@ interface BrickPreviewProps {
   installCommand?: string;
 }
 
-type ViewportSize = 'desktop' | 'tablet' | 'mobile';
+type ViewportSize = 'desktop' | 'mobile';
 
 const VIEWPORT_WIDTHS: Record<ViewportSize, string> = {
   desktop: 'w-full',
-  tablet: 'max-w-[768px]',
   mobile: 'max-w-[375px]',
 };
 
@@ -38,26 +37,32 @@ export function BrickPreview({
   const { isCopied, copyToClipboard } = useCopyToClipboard(2000);
 
   return (
-    <section aria-labelledby={`brick-${id}-title`}>
-      <Tabs defaultValue="preview" variant="ghost" className="space-y-6">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <Tabs.List>
-              <Tabs.Trigger variant="ghost" value="preview">
+    <section aria-labelledby={`brick-${id}-title`} className="border-border border-t pt-10">
+      <Tabs defaultValue="preview" variant="underline" className="space-y-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2
+              id={`brick-${id}-title`}
+              className="font-heading text-foreground text-lg leading-snug font-normal italic"
+            >
+              {name}
+            </h2>
+            <p className="text-muted-foreground mt-1 font-mono text-[13px]">{description}</p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Tabs.List variant="underline" className="border-0">
+              <Tabs.Trigger variant="underline" value="preview">
                 Preview
               </Tabs.Trigger>
-              <Tabs.Trigger variant="ghost" value="code">
+              <Tabs.Trigger variant="underline" value="code">
                 Code
               </Tabs.Trigger>
             </Tabs.List>
-            <Typography variant="p" className="text-muted-foreground hidden text-sm sm:block">
-              {description}
-            </Typography>
-          </div>
 
-          <div className="flex items-center gap-2">
+            {/* Viewport toggles */}
             <div
-              className="border-border bg-muted/30 hidden items-center gap-1 rounded-md border p-0.5 sm:flex"
+              className="border-border hidden items-center gap-0.5 border-b sm:flex"
               role="group"
               aria-label="Viewport size"
             >
@@ -65,9 +70,9 @@ export function BrickPreview({
                 type="button"
                 onClick={() => setViewport('desktop')}
                 className={cn(
-                  'rounded-sm p-1.5 transition-colors',
+                  'px-2 pb-3 transition-colors',
                   viewport === 'desktop'
-                    ? 'bg-background text-foreground shadow-sm'
+                    ? 'text-foreground'
                     : 'text-muted-foreground hover:text-foreground',
                 )}
                 aria-label="Desktop viewport"
@@ -79,9 +84,9 @@ export function BrickPreview({
                 type="button"
                 onClick={() => setViewport('mobile')}
                 className={cn(
-                  'rounded-sm p-1.5 transition-colors',
+                  'px-2 pb-3 transition-colors',
                   viewport === 'mobile'
-                    ? 'bg-background text-foreground shadow-sm'
+                    ? 'text-foreground'
                     : 'text-muted-foreground hover:text-foreground',
                 )}
                 aria-label="Mobile viewport"
@@ -113,7 +118,7 @@ export function BrickPreview({
                   isCopied ? 'Install command copied' : `Copy install command: ${installCommand}`
                 }
                 className={cn(
-                  'border-border bg-muted/30 text-muted-foreground hover:text-foreground flex items-center gap-2 rounded-md border px-3 py-1.5 font-mono text-xs transition-colors',
+                  'border-border text-muted-foreground hover:text-foreground flex items-center gap-2 border-b pb-3 font-mono text-[12px] transition-colors',
                   isCopied && 'text-success',
                 )}
                 title={isCopied ? 'Copied!' : `Copy: ${installCommand}`}
@@ -130,7 +135,7 @@ export function BrickPreview({
         </div>
 
         <Tabs.Content value="preview" className="mt-0">
-          <div className="border-border bg-background/50 rounded-lg border">
+          <div className="border-border bg-surface-muted border">
             <div
               className={cn(
                 'mx-auto flex min-h-[500px] items-center justify-center p-6 transition-all duration-300 sm:p-10',
@@ -146,10 +151,10 @@ export function BrickPreview({
           {files && files.length > 0 ? (
             <BrickCodeViewer files={files} />
           ) : (
-            <div className="border-border bg-destructive/10 rounded-lg border p-6">
-              <Typography variant="p" className="text-destructive text-sm font-medium">
-                ⚠️ Source code not available for brick &ldquo;{name}&rdquo;.
-              </Typography>
+            <div className="border-border border p-6">
+              <p className="text-destructive font-mono text-sm">
+                ⚠ Source code not available for brick &ldquo;{name}&rdquo;.
+              </p>
             </div>
           )}
         </Tabs.Content>

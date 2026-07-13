@@ -16,9 +16,9 @@ export function BackButton() {
   return (
     <button
       onClick={onBack}
-      className="hover:text-primary flex items-center gap-x-2 text-sm hover:cursor-pointer hover:underline"
+      className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center gap-2 font-mono text-[12px] tracking-wide uppercase transition-colors"
     >
-      <HugeiconsIcon icon={ArrowLeft} />
+      <HugeiconsIcon icon={ArrowLeft} size={12} />
       {t('label')}
     </button>
   );

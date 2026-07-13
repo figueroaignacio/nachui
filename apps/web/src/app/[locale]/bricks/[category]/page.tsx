@@ -5,7 +5,6 @@ import { getAllCategorySlugs, getBrickCategory } from '@/features/bricks/lib/bri
 import { getBrickSourceCode } from '@/features/bricks/lib/get-brick-source';
 import { buildAlternates, getAbsoluteUrl, locales } from '@/lib/domains';
 import { Container } from '@repo/ui/layout/container';
-import { Stack } from '@repo/ui/layout/stack';
 import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -90,11 +89,11 @@ export default async function BricksCategoryPage({ params }: PageProps) {
   );
 
   return (
-    <div className="bg-background relative min-h-svh overflow-hidden pb-16">
+    <div className="bg-background min-h-svh">
       <BricksHero activeSlug={category} />
 
-      <Container size="xl" className="pt-8">
-        <Stack gap="12">
+      <Container size="xl" className="py-12">
+        <div className="flex flex-col gap-16">
           {bricksWithCode.map((brick) => {
             const Component = BRICK_COMPONENTS[brick.component];
 
@@ -114,7 +113,7 @@ export default async function BricksCategoryPage({ params }: PageProps) {
               </BrickPreview>
             );
           })}
-        </Stack>
+        </div>
       </Container>
     </div>
   );

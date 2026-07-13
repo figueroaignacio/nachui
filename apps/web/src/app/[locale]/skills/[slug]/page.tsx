@@ -5,8 +5,6 @@ import { getSkillInstallCommand, getSkillSourceUrl } from '@/features/skills/lib
 import { ContentRepository } from '@/lib/content-repository';
 import { buildAlternates, getAbsoluteUrl, locales } from '@/lib/domains';
 import { Container } from '@repo/ui/layout/container';
-import { Typography } from '@repo/ui/src/components/typography';
-import { Stack } from '@repo/ui/src/layout/stack';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -32,9 +30,14 @@ export default async function SkillDetailPage({ params }: PageProps) {
     <div className="bg-background min-h-svh">
       <Container size="md" className="px-0 py-10">
         <BackButton />
-        <Stack className="border-border mt-6 mb-8 border-b pb-8" gap="4">
-          <Typography variant="h1">{skill.name}</Typography>
-          <p className="text-muted-foreground mb-6 font-mono text-base">
+
+        {/* Header */}
+        <div className="border-border mt-8 border-t pt-8">
+          <p className="section-label mb-4">Skill</p>
+          <h1 className="font-heading text-foreground text-[2rem] leading-[1.05] font-normal tracking-tight italic md:text-[2.5rem]">
+            {skill.name}
+          </h1>
+          <p className="text-muted-foreground mt-3 font-mono text-[13px]">
             figueroaignacio/ui-skills ·{' '}
             <a
               href={githubUrl}
@@ -45,7 +48,9 @@ export default async function SkillDetailPage({ params }: PageProps) {
               {t('viewSource')}
             </a>
           </p>
-          <div className="text-foreground bg-muted/30 border-border flex w-full max-w-lg items-center gap-3 rounded border px-4 py-2.5 font-mono text-sm">
+
+          {/* Install command */}
+          <div className="border-border text-foreground bg-surface-muted mt-6 flex w-full max-w-lg items-center gap-3 border px-4 py-2.5 font-mono text-sm">
             <span className="text-muted-foreground shrink-0">$</span>
             <code className="flex-1 truncate text-sm select-all">{cliCommand}</code>
             <CopyButton
@@ -53,13 +58,22 @@ export default async function SkillDetailPage({ params }: PageProps) {
               className="text-muted-foreground hover:text-foreground shrink-0 transition-colors"
             />
           </div>
-        </Stack>
-        <p className="text-muted-foreground mb-10 font-mono text-sm italic">
-          {t('triggersWhen', { description: skill.description })}
-        </p>
-        <article className="prose prose-sm dark:prose-invert max-w-none">
-          <MDXContent code={skill.body} />
-        </article>
+        </div>
+
+        {/* Trigger description */}
+        <div className="border-border mt-8 border-t pt-6">
+          <p className="section-label mb-2">Triggers when</p>
+          <p className="text-muted-strong font-mono text-[13px] leading-relaxed italic">
+            {t('triggersWhen', { description: skill.description })}
+          </p>
+        </div>
+
+        {/* MDX content */}
+        <div className="border-border mt-8 border-t pt-6">
+          <article className="prose prose-sm dark:prose-invert max-w-none">
+            <MDXContent code={skill.body} />
+          </article>
+        </div>
       </Container>
     </div>
   );
