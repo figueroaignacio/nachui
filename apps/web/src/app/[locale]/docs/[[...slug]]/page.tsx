@@ -8,7 +8,6 @@ import { Toc } from '@/features/docs/components/toc';
 import type { Locale } from '@/i18n/routing';
 import { ContentRepository } from '@/lib/content-repository';
 import { buildAlternates, getAbsoluteUrl } from '@/lib/domains';
-import { Typography } from '@repo/ui/components/typography';
 import { Flex } from '@repo/ui/layout/flex';
 import { Stack } from '@repo/ui/layout/stack';
 import { Container } from '@repo/ui/src/layout/container';
@@ -64,34 +63,37 @@ export default async function DocPage({ params }: { params: Promise<DocPageProps
       />
       <Container size="md" className="px-0">
         <Stack as="article" className="w-full min-w-0">
-          <Stack gap="1" className="mt-8 mb-10 sm:mt-10 sm:mb-12">
+          <div className="mt-8 mb-10 sm:mt-10 sm:mb-12">
             <MobileToc toc={tocContent} />
-            <Stack gap="3">
-              <Typography
-                variant="h1"
-                className="font-heading text-foreground text-3xl font-bold tracking-tighter sm:text-4xl lg:text-5xl"
-              >
+
+            {/* Header */}
+            <div className="border-border border-t pt-8">
+              <p className="section-label mb-4">Documentation</p>
+              <h1 className="font-heading text-foreground text-[2rem] leading-[1.05] font-normal tracking-tight italic md:text-[2.5rem]">
                 {doc.title}
-              </Typography>
+              </h1>
               {doc.description && (
-                <Typography
-                  variant="p"
-                  className="text-muted-foreground max-w-2xl text-base leading-relaxed sm:text-lg"
-                >
+                <p className="text-muted-strong mt-4 text-[17px] leading-relaxed">
                   {doc.description}
-                </Typography>
+                </p>
               )}
-            </Stack>
-            <Flex wrap="wrap" align="center" justify="between" gap="3" className="mt-5 pb-5">
-              <DocActions
-                page={doc.title}
-                url={getAbsoluteUrl(doc.locale || 'en', `/docs/${doc.slugAsParams}`)}
-                filePath={doc.sourceFilePath}
-                rawContent={doc.raw}
-              />
-              <DocsNavigationButtons currentPath={currentPath} />
-            </Flex>
-          </Stack>
+              <Flex
+                wrap="wrap"
+                align="center"
+                justify="between"
+                gap="3"
+                className="border-border/40 mt-6 border-t pt-5 pb-5"
+              >
+                <DocActions
+                  page={doc.title}
+                  url={getAbsoluteUrl(doc.locale || 'en', `/docs/${doc.slugAsParams}`)}
+                  filePath={doc.sourceFilePath}
+                  rawContent={doc.raw}
+                />
+                <DocsNavigationButtons currentPath={currentPath} />
+              </Flex>
+            </div>
+          </div>
           <div className="min-w-0 flex-1">
             {doc.body ? <MDXContent code={doc.body} /> : <div>Error</div>}
           </div>
