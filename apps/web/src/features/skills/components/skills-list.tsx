@@ -2,7 +2,6 @@
 
 import { useCopyToClipboard } from '@/features/docs/hooks/use-copy-to-clipboard';
 import { getSkillInstallCommand } from '@/features/skills/lib/skills';
-import { Container } from '@repo/ui/layout/container';
 import type { Route } from 'next';
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -36,6 +35,7 @@ export function SkillsList({ initialSkills, initialQuery }: SkillsListProps) {
 
   useEffect(() => {
     const q = searchParams.get('q') ?? '';
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSearch(q);
   }, [searchParams]);
 
@@ -65,37 +65,35 @@ export function SkillsList({ initialSkills, initialQuery }: SkillsListProps) {
   };
 
   return (
-    <div className="bg-background min-h-svh">
-      <Container size="lg" className="px-0 py-10">
-        <SkillsHeader totalCount={initialSkills.length} />
-        <SkillsSearchInput value={search} onChange={handleSearchChange} />
+    <div className="bg-background min-h-svh py-10">
+      <SkillsHeader totalCount={initialSkills.length} />
+      <SkillsSearchInput value={search} onChange={handleSearchChange} />
 
-        <div className="border-border text-muted-foreground hidden grid-cols-[2rem_1fr_auto] gap-4 border-b py-3 font-mono text-xs font-medium uppercase lg:grid">
-          <span>#</span>
-          <span>{t('columns.skill')}</span>
-          <span>{t('columns.install')}</span>
-        </div>
+      <div className="border-border text-muted-foreground hidden grid-cols-[2rem_1fr_auto] gap-4 border-b py-3 font-mono text-xs font-medium uppercase lg:grid">
+        <span>#</span>
+        <span>{t('columns.skill')}</span>
+        <span>{t('columns.install')}</span>
+      </div>
 
-        {filtered.length === 0 ? (
-          <p className="text-muted-foreground py-10 text-center font-mono text-sm">
-            {t('noResults', { query: search })}
-          </p>
-        ) : (
-          <ul>
-            {filtered.map((skill, idx) => (
-              <SkillsRow
-                key={skill.slug}
-                index={idx + 1}
-                skill={skill}
-                copied={copiedId === skill.slug}
-                onCopy={handleCopy}
-              />
-            ))}
-          </ul>
-        )}
+      {filtered.length === 0 ? (
+        <p className="text-muted-foreground py-10 text-center font-mono text-sm">
+          {t('noResults', { query: search })}
+        </p>
+      ) : (
+        <ul>
+          {filtered.map((skill, idx) => (
+            <SkillsRow
+              key={skill.slug}
+              index={idx + 1}
+              skill={skill}
+              copied={copiedId === skill.slug}
+              onCopy={handleCopy}
+            />
+          ))}
+        </ul>
+      )}
 
-        <SkillsFooter />
-      </Container>
+      <SkillsFooter />
     </div>
   );
 }

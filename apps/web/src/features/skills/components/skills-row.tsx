@@ -16,7 +16,7 @@ export function SkillsRow({ index, skill, copied, onCopy }: SkillsRowProps) {
       <div className="group hover:bg-muted/20 grid grid-cols-[2rem_1fr_auto] items-center gap-4 px-0 py-4 transition-colors">
         <span className="text-muted-foreground font-mono text-base tabular-nums">{index}</span>
         <Link href={`/skills/${skill.slug}`} className="flex min-w-0 flex-col lg:gap-3">
-          <span className="text-foreground group-hover:text-foreground/80 truncate text-base font-semibold transition-colors">
+          <span className="text-foreground group-hover:text-foreground/80 truncate text-base font-medium transition-colors">
             {skill.name}
           </span>
           <span className="text-muted-foreground mt-0.5 truncate font-mono text-sm lg:mt-0">

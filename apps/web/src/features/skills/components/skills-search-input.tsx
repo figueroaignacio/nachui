@@ -25,7 +25,7 @@ export function SkillsSearchInput({ value, onChange }: SkillsSearchInputProps) {
         onChange={(e) => onChange(e.target.value)}
         className="text-foreground placeholder:text-muted-foreground/50 border-border focus:border-foreground/40 w-full border-b bg-transparent py-3 pl-6 font-mono text-base transition-colors outline-none"
       />
-      <kbd className="text-muted-foreground border-border absolute inset-y-0 right-0 hidden items-center rounded border px-1.5 py-0.5 font-mono text-xs sm:flex">
+      <kbd className="text-muted-foreground border-border absolute inset-y-0 right-0 hidden items-center rounded-sm border px-1.5 py-0.5 font-mono text-xs sm:flex">
         /
       </kbd>
     </div>
