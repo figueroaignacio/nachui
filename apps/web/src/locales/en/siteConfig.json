@@ -1,6 +1,6 @@
 {
-  "title": "Design system components you actually own.",
-  "description": "React design system components copy-pasted directly into your repository. Zero dependencies, no npm wrappers.",
+  "title": "Minimalist React design system you actually own.",
+  "description": "Editorial, zero-dependency React components copy-pasted directly into your repository. Clean typography, high signal, zero bundle bloat.",
   "openGraph": {
     "type": "website",
     "siteName": "NachUI",
@@ -9,7 +9,7 @@
         "url": "/opengraph-image",
         "width": 1200,
         "height": 630,
-        "alt": "React design system components copy-pasted directly into your repository. Zero dependencies, no npm wrappers."
+        "alt": "Editorial, zero-dependency React components copy-pasted directly into your repository. Clean typography, high signal, zero bundle bloat."
       }
     ]
   },

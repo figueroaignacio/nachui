@@ -1,86 +1,86 @@
 {
   "home": {
-    "badge": "Introducing NachUI v1",
-    "subheading1": "Copy. Own. Ship.",
+    "badge": "Minimalism in code & design",
+    "subheading1": "Strictly minimal. Designed for focus.",
     "subheading2": "",
-    "description": "Copy React components directly into your codebase. No black boxes, no wrappers. Fully yours.",
+    "description": "Premium minimalist React components for modern developers. Clean typography, off-white bone layout, and absolute zero npm wrappers. Copy and own the raw source code.",
     "github": "Open source, the code is yours",
     "actions": [
       {
         "label": "Get started",
         "href": "/docs",
-        "description": "A complete guide to install, integrate, and make the most of the Design System.",
+        "description": "A complete guide to integrate the minimalist design system into your codebase.",
         "variant": "default"
       },
       {
         "label": "View components",
         "href": "/docs/components",
-        "description": "Explore all available components and learn how to apply them effectively.",
+        "description": "Explore all copy-paste ready minimalist React components.",
         "variant": "secondary"
       }
     ],
     "tech": {
-      "title": "The Stack.",
-      "subtitle": "Tools developers trust.",
+      "title": "The Tech Stack.",
+      "subtitle": "No wrappers. Just direct primitives.",
       "technologies": [
         {
           "name": "TypeScript",
-          "description": "Type-safe JavaScript to develop with confidence and fewer errors"
+          "description": "Strict type-safety for compile-time reliability"
         },
         {
           "name": "React",
-          "description": "Modern library for building interactive and dynamic user interfaces"
+          "description": "Primitive component hooks and render loops"
         },
         {
           "name": "Next.js",
-          "description": "Full-stack framework for high-performance web applications"
+          "description": "High-performance full-stack pages and routing"
         },
         {
           "name": "Tailwind CSS",
-          "description": "CSS utilities to quickly design responsive interfaces"
+          "description": "Atomic utility styling with custom variable tokens"
         },
         {
           "name": "Motion",
-          "description": "Fluid animations that enhance the user experience"
+          "description": "Quiet, subtle transitions for user feedback"
         }
       ]
     },
     "features": {
       "title": "Everything you need.",
-      "subtitle": "Nothing you don't.",
-      "description": "A meticulously crafted system designed to accelerate your workflow without compromising on quality or control.",
+      "subtitle": "Absolute zero noise.",
+      "description": "A design system built to get out of your way. Fast page speeds, clean type hierarchies, and total codebase control.",
       "items": [
         {
-          "title": "AI Agent Assistant",
-          "description": "An integrated intelligent agent ready to answer developer questions."
+          "title": "Editorial AI Docs",
+          "description": "An integrated assistant that knows the codebase inside out to answer your questions instantly."
         },
         {
-          "title": "Smart CLI",
-          "description": "Add components, tokens, and templates automatically with a single command."
+          "title": "Pragmatic CLI",
+          "description": "Inject components, variables, and layouts into your workspace with a single clean command."
         },
         {
-          "title": "Developer-First Docs",
-          "description": "Copy-paste ready. No guesswork. Pure productivity."
+          "title": "Document-Style Reference",
+          "description": "Copy-paste ready components. No npm dependency bloat. Clear visual separation."
         },
         {
-          "title": "Open Source",
-          "description": "Full ownership. Inspect, modify, and extend every single line without restrictions."
+          "title": "Pristine Ownership",
+          "description": "No hidden runtime scripts or upstream updates. Inspect and modify every single line."
         },
         {
-          "title": "Hyper-Optimized",
-          "description": "Zero bloat. Built for speed and maximum performance."
+          "title": "Absolute Efficiency",
+          "description": "Maximum loading performance. Only compile the exact lines of code your project requires."
         },
         {
-          "title": "Fluid Motion",
-          "description": "Staggered reveals. Polished micro-interactions built right in."
+          "title": "Quiet Transitions",
+          "description": "Subtle, non-distracting motion scales and scroll entry animations for premium feedback."
         },
         {
           "title": "Refined Minimalism",
-          "description": "Unopinionated aesthetics. High signal, absolute zero noise."
+          "description": "Harmonious warm bone tones, thin structural border rules, and crisp type hierarchies."
         },
         {
-          "title": "Universal Access",
-          "description": "WCAG 2.2 compliant out of the box. Fully keyboard-ready."
+          "title": "Inclusive Design",
+          "description": "Full WCAG 2.2 standards and keyboard accessibility baked into every layout primitive."
         }
       ]
     }

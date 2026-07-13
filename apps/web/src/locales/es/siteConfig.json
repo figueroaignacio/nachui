@@ -1,6 +1,6 @@
 {
-  "title": "Componentes de React que realmente te pertenecen.",
-  "description": "Un sistema de diseño React desde cero. Copia componentes compuestos directamente a tu repo con nuestra CLI. Sin wrappers de npm ni dependencias.",
+  "title": "Sistema de diseño React minimalista que realmente te pertenece.",
+  "description": "Componentes de React editoriales y sin dependencias. Copia componentes minimalistas directamente a tu repositorio sin wrappers ni exceso de código.",
   "openGraph": {
     "type": "website",
     "siteName": "NachUI",
@@ -9,7 +9,7 @@
         "url": "/opengraph-image",
         "width": 1200,
         "height": 630,
-        "alt": "Un sistema de diseño React desde cero. Copia componentes compuestos directamente a tu repo con nuestra CLI. Sin wrappers de npm ni dependencias."
+        "alt": "Componentes de React editoriales y sin dependencias. Copia componentes minimalistas directamente a tu repositorio sin wrappers ni exceso de código."
       }
     ]
   },

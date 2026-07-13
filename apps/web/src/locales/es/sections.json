@@ -1,86 +1,86 @@
 {
   "home": {
-    "badge": "Presentando NachUI v1",
-    "subheading1": "Copia. Tuyo. Lanza.",
+    "badge": "Minimalismo en código y diseño",
+    "subheading1": "Estrictamente minimalista. Diseñado para enfocar.",
     "subheading2": "",
-    "description": "Copia componentes React directamente a tu proyecto. Sin cajas negras, sin wrappers. Totalmente tuyo.",
+    "description": "Componentes React minimalistas y premium para desarrolladores modernos. Tipografía limpia, distribución warm bone y absoluto cero wrappers de npm. Copia y aduéñate del código fuente.",
     "github": "Código abierto, el código es tuyo",
     "actions": [
       {
         "label": "Comenzar",
         "href": "/docs",
-        "description": "Una guía completa para instalar, integrar y aprovechar al máximo el Sistema de Diseño.",
+        "description": "Una guía completa para integrar el sistema de diseño minimalista en tu código.",
         "variant": "default"
       },
       {
         "label": "Ver componentes",
         "href": "/docs/components",
-        "description": "Explora todos los componentes disponibles y aprende cómo aplicarlos efectivamente.",
+        "description": "Explora todos los componentes minimalistas de React listos para copiar y pegar.",
         "variant": "secondary"
       }
     ],
     "tech": {
-      "title": "El Stack.",
-      "subtitle": "Las herramientas en las que confían los devs.",
+      "title": "El Stack Técnico.",
+      "subtitle": "Sin wrappers. Solo primitivas directas.",
       "technologies": [
         {
           "name": "TypeScript",
-          "description": "Type-safe JavaScript para desarrollar con confianza y menos errores"
+          "description": "Tipado estricto para una confiabilidad total en tiempo de compilación"
         },
         {
           "name": "React",
-          "description": "Biblioteca moderna para crear interfaces de usuario interactivas y dinámicas"
+          "description": "Hooks de componentes primitivos y bucles de renderizado"
         },
         {
           "name": "Next.js",
-          "description": "Framework full-stack para aplicaciones web de alto rendimiento"
+          "description": "Páginas y enrutamiento full-stack de alto rendimiento"
         },
         {
           "name": "Tailwind CSS",
-          "description": "Utilidades CSS para diseñar interfaces responsivas rápidamente"
+          "description": "Estilizado por utilidades atómicas con tokens de variables personalizados"
         },
         {
           "name": "Motion",
-          "description": "Animaciones fluidas que mejoran la experiencia del usuario"
+          "description": "Transiciones sutiles y silenciosas para el feedback del usuario"
         }
       ]
     },
     "features": {
       "title": "Todo lo que necesitas.",
-      "subtitle": "Nada que no.",
-      "description": "Un sistema meticulosamente diseñado para acelerar tu flujo de trabajo sin comprometer la calidad ni el control.",
+      "subtitle": "Absoluto cero ruido.",
+      "description": "Un sistema de diseño creado para no interponerse en tu camino. Velocidad de carga instantánea, jerarquías tipográficas limpias y control absoluto del código.",
       "items": [
         {
-          "title": "Asistente de IA",
-          "description": "Un agente inteligente integrado listo para responder preguntas de desarrolladores."
+          "title": "Docs con IA Editorial",
+          "description": "Un asistente inteligente integrado que conoce el código al detalle para responder tus dudas al instante."
         },
         {
-          "title": "CLI Inteligente",
-          "description": "Agrega componentes, tokens y plantillas automáticamente con un solo comando."
+          "title": "CLI Pragmática",
+          "description": "Inyecta componentes, variables y layouts en tu espacio de trabajo con un solo comando limpio."
         },
         {
-          "title": "Documentación Elite",
-          "description": "Listo para copiar y pegar. Sin adivinanzas. Productividad pura."
+          "title": "Referencia Estilo Documento",
+          "description": "Componentes listos para copiar y pegar. Sin sobrecarga de dependencias npm. Claridad visual."
         },
         {
-          "title": "Código Abierto",
-          "description": "Propiedad total. Inspecciona, modifica y extiende cada línea sin restricciones."
+          "title": "Propiedad Absoluta",
+          "description": "Sin scripts ocultos en runtime ni actualizaciones de terceros. Inspecciona y modifica cada línea."
         },
         {
-          "title": "Hiper-Optimizado",
-          "description": "Sin exceso. Construido para la velocidad y el máximo rendimiento."
+          "title": "Eficiencia Total",
+          "description": "Rendimiento óptimo. Compila exclusivamente las líneas exactas de código que requiere tu proyecto."
         },
         {
-          "title": "Movimiento Fluido",
-          "description": "Revelaciones escalonadas. Micro-interacciones pulidas integradas."
+          "title": "Transiciones Silenciosas",
+          "description": "Animaciones de entrada y hover sumamente sutiles y no intrusivas para una experiencia premium."
         },
         {
           "title": "Minimalismo Refinado",
-          "description": "Estética sin opiniones. Alta señal, cero ruido absoluto."
+          "description": "Tonos cálidos warm bone, líneas divisorias delgadas y jerarquías tipográficas perfectamente legibles."
         },
         {
-          "title": "Acceso Universal",
-          "description": "Cumple con WCAG 2.2 de fábrica. Totalmente listo para teclado."
+          "title": "Diseño Inclusivo",
+          "description": "Cumplimiento completo de las normas WCAG 2.2 y accesibilidad por teclado nativa."
         }
       ]
     }
