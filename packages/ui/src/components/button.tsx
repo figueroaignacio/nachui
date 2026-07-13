@@ -10,7 +10,7 @@ import { cn } from '../lib/cn';
 // --- CVA ---
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm text-sm font-medium outline-none select-none relative overflow-hidden disabled:pointer-events-none disabled:opacity-40 disabled:cursor-not-allowed aria-invalid:ring-1 aria-invalid:ring-destructive/50 aria-invalid:border-destructive transition-colors',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium outline-none select-none relative overflow-hidden disabled:pointer-events-none disabled:opacity-40 disabled:cursor-not-allowed aria-invalid:ring-1 aria-invalid:ring-destructive/50 aria-invalid:border-destructive transition-colors',
   {
     variants: {
       variant: {

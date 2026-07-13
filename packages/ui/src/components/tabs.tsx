@@ -12,7 +12,7 @@ const TABS_INDICATOR_TRANSITION = { type: 'spring', bounce: 0.2, duration: 0.6 }
 // --- CVA ---
 
 const tabsListVariants = cva(
-  'inline-flex rounded-sm p-0.5 text-muted-foreground w-full sm:w-auto overflow-hidden',
+  'inline-flex rounded-md p-0.5 text-muted-foreground w-full sm:w-auto overflow-hidden',
   {
     variants: {
       variant: {
@@ -264,7 +264,7 @@ const TabsTrigger = ({
             'absolute inset-0 z-10',
             finalVariant === 'underline'
               ? 'bg-foreground top-auto bottom-0 h-[1.5px]'
-              : 'bg-background border-border/30 rounded-xs border',
+              : 'bg-background border-border/30 rounded-sm border',
           )}
           transition={TABS_INDICATOR_TRANSITION}
         />

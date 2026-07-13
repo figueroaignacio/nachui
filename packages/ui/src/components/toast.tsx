@@ -51,7 +51,7 @@ const TOAST_EXIT_TRANSITION = { duration: 0.2, ease: 'easeIn' } as const;
 // --- CVA variants ---
 
 const toastVariants = cva(
-  'pointer-events-auto relative flex w-full items-center gap-3 overflow-hidden rounded-sm border p-3.5 bg-background',
+  'pointer-events-auto relative flex w-full items-center gap-3 overflow-hidden rounded-md border p-3.5 bg-background',
   {
     variants: {
       variant: {

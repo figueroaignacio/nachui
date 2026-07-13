@@ -9,7 +9,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import React from 'react';
 import { cn } from '../lib/cn';
 
-const calloutVariants = cva('flex w-full items-start gap-3 rounded-sm border p-3.5 text-sm', {
+const calloutVariants = cva('flex w-full items-start gap-3 rounded-md border p-3.5 text-sm', {
   variants: {
     variant: {
       default: 'bg-surface-muted text-card-foreground border-border',
