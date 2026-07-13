@@ -73,7 +73,6 @@ export function Pricing01() {
             <Card
               key={tier.name}
               className={tier.name === 'Pro' ? 'ring-primary/20 relative ring-2' : 'relative'}
-              gradient={tier.name === 'Pro'}
             >
               <Card.Header>
                 <div className="flex items-start justify-between gap-3">
