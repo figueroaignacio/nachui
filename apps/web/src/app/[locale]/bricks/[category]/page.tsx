@@ -4,7 +4,6 @@ import { BRICK_COMPONENTS } from '@/features/bricks/lib/brick-components';
 import { getAllCategorySlugs, getBrickCategory } from '@/features/bricks/lib/bricks-registry';
 import { getBrickSourceCode } from '@/features/bricks/lib/get-brick-source';
 import { buildAlternates, getAbsoluteUrl, locales } from '@/lib/domains';
-import { Container } from '@repo/ui/layout/container';
 import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -91,30 +90,27 @@ export default async function BricksCategoryPage({ params }: PageProps) {
   return (
     <div className="bg-background min-h-svh">
       <BricksHero activeSlug={category} />
+      <div className="flex flex-col gap-16">
+        {bricksWithCode.map((brick) => {
+          const Component = BRICK_COMPONENTS[brick.component];
 
-      <Container size="xl" className="py-12">
-        <div className="flex flex-col gap-16">
-          {bricksWithCode.map((brick) => {
-            const Component = BRICK_COMPONENTS[brick.component];
+          if (!Component) {
+            return null;
+          }
 
-            if (!Component) {
-              return null;
-            }
-
-            return (
-              <BrickPreview
-                key={brick.id}
-                id={brick.id}
-                name={brick.name}
-                description={brick.description}
-                files={brick.files}
-              >
-                <Component />
-              </BrickPreview>
-            );
-          })}
-        </div>
-      </Container>
+          return (
+            <BrickPreview
+              key={brick.id}
+              id={brick.id}
+              name={brick.name}
+              description={brick.description}
+              files={brick.files}
+            >
+              <Component />
+            </BrickPreview>
+          );
+        })}
+      </div>
     </div>
   );
 }
