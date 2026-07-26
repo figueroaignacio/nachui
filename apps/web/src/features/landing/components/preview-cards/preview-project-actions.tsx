@@ -7,7 +7,7 @@ import { Label } from '@repo/ui/components/label';
 export function PreviewProjectActions() {
   return (
     <div
-      className="border-border bg-card flex flex-col gap-2 rounded-2xl border p-5"
+      className="border-border bg-card flex flex-col gap-2 rounded-lg border p-5"
       role="menu"
       aria-label="Project quick actions"
     >

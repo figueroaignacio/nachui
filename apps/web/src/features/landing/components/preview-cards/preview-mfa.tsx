@@ -5,7 +5,7 @@ import { Input } from '@repo/ui/components/input';
 export function PreviewMfa() {
   return (
     <div
-      className="border-border bg-card flex flex-col items-center gap-5 rounded-2xl border p-5"
+      className="border-border bg-card flex flex-col items-center gap-5 rounded-lg border p-5"
       role="form"
       aria-label="Two Factor Authentication"
     >

@@ -8,7 +8,7 @@ import { Switch } from '@repo/ui/components/switch';
 export function PreviewControls() {
   return (
     <div
-      className="border-border bg-card flex flex-col gap-4 rounded-2xl border p-5"
+      className="border-border bg-card flex flex-col gap-4 rounded-lg border p-5"
       role="region"
       aria-label="Preference settings controls"
     >

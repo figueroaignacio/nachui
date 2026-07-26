@@ -7,7 +7,7 @@ import { Progress } from '@repo/ui/components/progress';
 export function PreviewDeploy() {
   return (
     <div
-      className="border-border bg-card flex flex-col gap-5 rounded-2xl border p-5"
+      className="border-border bg-card flex flex-col gap-5 rounded-lg border p-5"
       role="region"
       aria-label="Deployment Status Tracker"
     >

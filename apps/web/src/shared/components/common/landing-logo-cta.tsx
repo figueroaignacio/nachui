@@ -7,10 +7,7 @@ export function LandingLogoCta() {
   return (
     <section className="w-full py-16 sm:py-24">
       <div className="mx-auto w-full max-w-7xl px-6">
-        {/* Divider */}
         <div className="bg-rule mb-16 h-px" />
-
-        {/* Content */}
         <div className="max-w-xl">
           <p className="text-muted-foreground mb-4 font-mono text-[11px] tracking-[0.2em] uppercase">
             {t('landingLogoCta.version')}
@@ -21,7 +18,7 @@ export function LandingLogoCta() {
           <div className="flex items-center gap-6">
             <Link
               href="/docs"
-              className="bg-foreground text-background inline-flex items-center gap-2 rounded-[4px] px-4 py-2 font-mono text-sm transition-all hover:opacity-80 active:scale-[0.98]"
+              className="bg-foreground text-background inline-flex items-center gap-2 rounded-sm px-4 py-2 font-mono text-sm transition-all hover:opacity-80 active:scale-[0.98]"
             >
               {t('landingLogoCta.primaryAction')} →
             </Link>
@@ -33,8 +30,6 @@ export function LandingLogoCta() {
             </Link>
           </div>
         </div>
-
-        {/* License note */}
         <div className="bg-rule mt-16 h-px" />
         <p className="text-muted-foreground mt-4 font-mono text-xs">
           {t('landingLogoCta.license')}

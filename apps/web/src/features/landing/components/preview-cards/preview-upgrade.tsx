@@ -3,7 +3,7 @@ import { Card } from '@repo/ui/components/card';
 
 export function PreviewUpgrade() {
   return (
-    <Card variant="outline" className="bg-card rounded-2xl backdrop-blur-sm">
+    <Card variant="outline" className="bg-card rounded-lg backdrop-blur-sm">
       <Card.Content compact className="flex items-center justify-between p-4 px-5">
         <div className="flex items-center gap-3">
           <div className="text-muted-foreground">

@@ -5,7 +5,7 @@ const bars = [40, 65, 50, 80, 60, 90, 75, 55, 85, 70, 95, 62];
 export function PreviewAnalytics() {
   return (
     <div
-      className="border-border bg-card flex flex-col gap-4 rounded-2xl border p-5"
+      className="border-border bg-card flex flex-col gap-4 rounded-lg border p-5"
       role="region"
       aria-label="Analytics overview widget"
     >

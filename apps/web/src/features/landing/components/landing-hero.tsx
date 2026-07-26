@@ -25,17 +25,17 @@ export function LandingHero() {
           <p className="text-muted-strong mt-5 text-[17px] leading-relaxed font-normal md:text-[18px]">
             {t('description')}
           </p>
-          <div className="mt-8 flex items-center gap-5">
+          <div className="mt-8 flex items-center gap-3">
             <Link
               href={actions[0]?.href ?? '/docs'}
-              className="bg-foreground text-background inline-flex items-center gap-2 rounded-[4px] px-4 py-2 font-mono text-sm transition-all hover:opacity-80 active:scale-[0.98]"
+              className="bg-foreground text-background inline-flex items-center gap-2 rounded-md px-4 py-2 font-mono text-sm transition-all hover:opacity-80 active:scale-[0.98]"
             >
               {actions[0]?.label ?? 'Get started'}
               <span aria-hidden="true">→</span>
             </Link>
             <Link
               href={actions[1]?.href ?? '/docs/components'}
-              className="text-muted-foreground hover:text-foreground font-mono text-sm transition-colors"
+              className="text-muted-foreground hover:text-foreground border-border rounded-md border px-4 py-2 font-mono text-sm transition-colors"
             >
               {actions[1]?.label ?? 'View components'} ↗
             </Link>
