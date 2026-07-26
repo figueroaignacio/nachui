@@ -7,8 +7,8 @@ const kbdVariants = cva(
   {
     variants: {
       size: {
-        sm: 'h-5 px-1.5 text-[10px] min-w-[20px] rounded-xs',
-        default: 'h-6 px-2 text-[11px] min-w-[24px] rounded-xs',
+        sm: 'h-5 px-1.5 text-[10px] min-w-[20px] rounded-sm',
+        default: 'h-6 px-2 text-[11px] min-w-[24px] rounded-sm',
         lg: 'h-8 px-2.5 text-[13px] min-w-[32px] rounded-sm',
       },
       variant: {

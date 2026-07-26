@@ -49,9 +49,9 @@ const COLLAPSIBLE_CONTENT_STYLE = { willChange: 'height, opacity, filter' } as c
 const collapsibleVariants = cva('', {
   variants: {
     variant: {
-      default: '',
-      bordered: 'rounded-md border border-border',
-      card: 'rounded-md border border-border bg-card',
+      default: 'rounded-lg',
+      bordered: 'rounded-lg border border-border',
+      card: 'rounded-lg border border-border bg-card',
     },
   },
   defaultVariants: {

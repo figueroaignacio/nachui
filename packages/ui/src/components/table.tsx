@@ -6,7 +6,7 @@ const TableRoot = ({
   ref,
   ...props
 }: React.HTMLAttributes<HTMLTableElement> & { ref?: React.Ref<HTMLTableElement> }) => (
-  <div className="border-border relative w-full overflow-auto rounded-sm border">
+  <div className="border-border relative w-full overflow-auto rounded-md border">
     <table ref={ref} className={cn('w-full text-xs', className)} {...props} />
   </div>
 );

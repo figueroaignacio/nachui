@@ -21,7 +21,7 @@ function Select({
       <select
         ref={ref}
         className={cn(
-          'border-input placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full appearance-none rounded-xl border bg-transparent px-3 py-2 pr-10 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+          'border-input placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full appearance-none rounded-md border bg-transparent px-3 py-2 pr-10 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
           className,
         )}
         {...props}

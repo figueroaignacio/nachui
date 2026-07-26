@@ -3,7 +3,7 @@ import React from 'react';
 import { cn } from '../lib/cn';
 
 const cardVariants = cva(
-  'rounded-md transition-colors duration-150 h-full flex flex-col justify-between',
+  'rounded-lg transition-colors duration-150 h-full flex flex-col justify-between',
   {
     variants: {
       variant: {
