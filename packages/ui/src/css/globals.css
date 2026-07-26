@@ -37,7 +37,7 @@
   --border: oklch(90.5% 0.004 70);
   --input: oklch(90.5% 0.004 70);
   --ring: oklch(18% 0.003 70);
-  --radius: 0.25rem;
+  --radius: 0.75rem;
   --grid-color: oklch(18% 0.003 70 / 0.03);
 
   /* Editorial tokens */
