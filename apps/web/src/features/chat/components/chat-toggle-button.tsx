@@ -51,7 +51,7 @@ export function ChatToggleButton({ isOpen, onClick }: ChatToggleButtonProps) {
       transition={buttonTransition}
     >
       <Tooltip open={shouldShowTooltip} onOpenChange={setIsHovered} delayDuration={0}>
-        <Tooltip.Trigger asChild>
+        <Tooltip.Trigger asChild className="bg-background">
           <Button onClick={onClick} variant="outline">
             {t('button.label')}
           </Button>

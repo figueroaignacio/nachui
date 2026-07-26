@@ -28,12 +28,12 @@ export function CodeBlock({
   return (
     <div
       className={cn(
-        'group relative mt-6 w-full overflow-hidden rounded-md bg-[#0e1216]',
+        'group relative mt-6 w-full overflow-hidden rounded-sm bg-[#0a0908]',
         className,
       )}
     >
       <div className="max-h-inherit flex h-full flex-col">
-        <div className="bg-[#0e1216 ]/50 sticky top-0 z-10 flex items-center justify-between border-b border-white/5 px-4 py-2 backdrop-blur-sm">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/5 bg-[#201f1e]/50 px-4 py-2 backdrop-blur-sm">
           <div className="flex items-center gap-3">
             <div className="flex gap-1.5">
               <div className="h-2.5 w-2.5 rounded-full bg-red-500" />

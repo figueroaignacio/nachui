@@ -57,7 +57,7 @@ export function DocActions({ page, url, filePath, rawContent }: DocActionsProps)
       <Button
         variant="outline"
         size="sm"
-        className="h-8 gap-2 rounded-l-full border-r-0 px-4"
+        className="h-8 gap-2 rounded-l-md border-r-0 px-4"
         onClick={handleExplain}
         leftIcon={<AiAvatar size="sm" />}
       >
@@ -66,7 +66,7 @@ export function DocActions({ page, url, filePath, rawContent }: DocActionsProps)
       <Button
         variant="outline"
         size="sm"
-        className="h-8 gap-2 rounded-none border-r-0 px-4"
+        className="h-8 gap-2 border-r-0 px-4"
         onClick={() => copyToClipboard(rawContent)}
         leftIcon={<HugeiconsIcon icon={isCopied ? Tick02Icon : Copy01Icon} size={16} />}
       >

@@ -68,7 +68,7 @@ export function Searcher() {
     >
       <Dialog.Trigger asChild>
         <button
-          className="group border-border/40 bg-secondary/30 text-muted-foreground hover:bg-secondary/60 hover:border-border/60 hover:text-foreground/80 flex h-8 w-full items-center gap-2.5 rounded-lg border px-3 text-xs transition-all duration-150 sm:w-48"
+          className="group border-border/40 bg-secondary/30 text-muted-foreground hover:bg-secondary/60 hover:border-border/60 hover:text-foreground/80 flex h-8 w-full items-center gap-2.5 rounded-sm border px-3 text-xs transition-all duration-150 sm:w-48"
           title={t('label')}
           aria-label={t('label')}
         >
@@ -86,9 +86,7 @@ export function Searcher() {
           </div>
         </button>
       </Dialog.Trigger>
-
-      <Dialog.Content className="border-border/60 max-w-lg overflow-hidden rounded-xl border p-0 shadow-2xl">
-        {/* Input */}
+      <Dialog.Content className="border-border/60 max-w-lg overflow-hidden border p-0 shadow-2xl">
         <SearchInput
           value={query}
           onChange={setQuery}
@@ -97,16 +95,12 @@ export function Searcher() {
           inputRef={inputRef}
           placeholder={t('placeholder')}
         />
-
-        {/* Results */}
         <SearchResults
           query={query}
           results={results}
           navigation={navigation}
           selectedIndex={selectedIndex}
         />
-
-        {/* Footer */}
         <div className="border-border/30 flex items-center justify-between border-t px-4 py-2.5">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">

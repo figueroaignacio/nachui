@@ -53,14 +53,14 @@ export function DocsNavigationButtons({ currentPath }: DocsNavigationButtonsProp
         label={prev ? `Previous: ${prev.title}` : 'No previous page'}
         icon={ArrowLeft01Icon}
         disabled={!prev}
-        className="rounded-lg"
+        className="rounded-md"
       />
       <NavIconButton
         href={next?.href}
         label={next ? `Next: ${next.title}` : 'No next page'}
         icon={ArrowRight01Icon}
         disabled={!next}
-        className="rounded-lg"
+        className="rounded-md"
       />
     </div>
   );

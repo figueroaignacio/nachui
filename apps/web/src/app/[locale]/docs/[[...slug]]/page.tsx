@@ -65,8 +65,6 @@ export default async function DocPage({ params }: { params: Promise<DocPageProps
         <Stack as="article" className="w-full min-w-0">
           <div className="mt-8 mb-10 sm:mt-10 sm:mb-12">
             <MobileToc toc={tocContent} />
-
-            {/* Header */}
             <div className="border-border border-t pt-8">
               <p className="section-label mb-4">Documentation</p>
               <h1 className="font-heading text-foreground text-[2rem] leading-[1.05] font-normal tracking-tight italic md:text-[2.5rem]">
@@ -82,7 +80,7 @@ export default async function DocPage({ params }: { params: Promise<DocPageProps
                 align="center"
                 justify="between"
                 gap="3"
-                className="border-border/40 mt-6 border-t pt-5 pb-5"
+                className="border-border/40 mt-6 pt-5 pb-5"
               >
                 <DocActions
                   page={doc.title}

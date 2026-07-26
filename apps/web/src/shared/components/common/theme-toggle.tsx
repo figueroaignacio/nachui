@@ -15,7 +15,7 @@ export function ThemeToggle() {
   ] as const;
 
   return (
-    <div className="border-border/50 bg-muted/50 relative z-10 inline-flex items-center rounded-full border p-1 shadow-sm backdrop-blur-xl">
+    <div className="border-border/50 bg-muted/50 relative z-10 inline-flex items-center rounded-md border p-1 shadow-sm backdrop-blur-xl">
       {themes.map((t) => {
         const isActive = theme === t.value;
 
@@ -38,7 +38,7 @@ export function ThemeToggle() {
                 transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
               />
             )}
-            <HugeiconsIcon icon={t.icon} size={14} aria-hidden="true" />
+            <HugeiconsIcon icon={t.icon} size={10} aria-hidden="true" />
           </button>
         );
       })}
