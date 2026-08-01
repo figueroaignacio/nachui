@@ -18,7 +18,7 @@ const TableHeader = ({
   ...props
 }: React.HTMLAttributes<HTMLTableSectionElement> & {
   ref?: React.Ref<HTMLTableSectionElement>;
-}) => <thead ref={ref} className={cn('[&_tr]:border-b', className)} {...props} />;
+}) => <thead ref={ref} className={cn('bg-card [&_tr]:border-b', className)} {...props} />;
 TableHeader.displayName = 'TableHeader';
 
 const TableBody = ({
