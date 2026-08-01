@@ -1,5 +1,5 @@
-import { Typography } from '@repo/ui/components/typography';
 import type { Message } from '@/lib/definitions';
+import { Typography } from '@repo/ui/components/typography';
 import { cn } from '@repo/ui/lib/cn';
 import { ChatExplanationRequest } from './chat-explanation-request';
 import { ChatMarkdownContent } from './chat-markdown-content';
@@ -33,19 +33,19 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
             ) : (
               <Typography
                 variant="p"
-                className="bg-foreground text-background max-w-[85%] rounded-[24px] rounded-tr-[4px] px-6 py-3.5 text-[15px] leading-relaxed font-medium wrap-break-word shadow-sm ring-1 ring-black/5 dark:ring-white/10"
+                className="max-w-[85%] px-2 py-5 text-sm leading-relaxed font-medium wrap-break-word"
               >
                 {message.content}
               </Typography>
             )}
           </div>
         ) : (
-          <div className="group text-foreground/90 relative mb-8 w-full min-w-0 pl-1 text-[15px] leading-relaxed">
+          <div className="group text-foreground/90 relative mb-8 w-full min-w-0 pl-1 text-sm leading-relaxed">
             <ChatMarkdownContent content={message.content} />
             {isStreaming && (
               <span
                 aria-hidden
-                className="bg-foreground ml-0.5 inline-block h-[1em] w-[2px] animate-pulse rounded-sm align-middle"
+                className="bg-foreground ml-0.5 inline-block h-[1em] w-0.5 animate-pulse rounded-sm align-middle"
               />
             )}
           </div>

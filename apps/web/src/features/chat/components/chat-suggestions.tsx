@@ -30,7 +30,7 @@ export function ChatSuggestions({ onSuggestionClick }: ChatSuggestionsProps) {
   ];
 
   return (
-    <div className="flex min-h-[500px] flex-col items-center justify-center space-y-5 py-6 text-center">
+    <div className="flex min-h-125 flex-col items-center justify-center space-y-5 py-6 text-center">
       <div>
         <Typography variant="h3" className="text-foreground mb-1.5 text-sm font-semibold">
           {t('title')}

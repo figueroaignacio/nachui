@@ -89,7 +89,7 @@ export function ChatWindow(props: ChatWindowProps) {
             className={
               isExpanded
                 ? 'bg-background fixed inset-0 z-9999 flex'
-                : 'bg-background border-border fixed inset-y-0 right-0 z-9999 flex h-full w-full flex-col overflow-hidden border-l md:w-[450px] lg:w-[700px]'
+                : 'bg-background border-border fixed inset-y-0 right-0 z-9999 flex h-full w-full flex-col overflow-hidden border-l md:w-112.5 lg:w-175'
             }
           >
             {isExpanded ? (
