@@ -63,6 +63,10 @@ type DrawerContextProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   id: string;
+  hasTitle: boolean;
+  setHasTitle: (value: boolean) => void;
+  hasDescription: boolean;
+  setHasDescription: (value: boolean) => void;
 };
 
 const DrawerContext = React.createContext<DrawerContextProps | null>(null);
@@ -89,6 +93,8 @@ const DrawerRoot = ({
   onOpenChange,
 }: DrawerProps) => {
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const [hasTitle, setHasTitle] = React.useState(false);
+  const [hasDescription, setHasDescription] = React.useState(false);
   const id = React.useId();
 
   const isControlled = controlledOpen !== undefined;
@@ -109,28 +115,35 @@ const DrawerRoot = ({
   );
 
   React.useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : 'unset';
+    if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = previousOverflow;
     };
   }, [open]);
 
-  return <DrawerContext value={{ open, setOpen, id }}>{children}</DrawerContext>;
+  return (
+    <DrawerContext
+      value={{ open, setOpen, id, hasTitle, setHasTitle, hasDescription, setHasDescription }}
+    >
+      {children}
+    </DrawerContext>
+  );
 };
 
-const DrawerTrigger = ({
-  children,
-  className,
-  variant,
-  size,
-  ...props
-}: ButtonProps & { icon?: boolean }) => {
-  const { setOpen } = useDrawerContext();
+const DrawerTrigger = ({ children, className, variant, size, onClick, ...props }: ButtonProps) => {
+  const { open, setOpen } = useDrawerContext();
 
   return (
     <Button
-      className={cn(className)}
-      onClick={() => setOpen(true)}
+      className={className}
+      aria-haspopup="dialog"
+      aria-expanded={open}
+      onClick={(e) => {
+        onClick?.(e);
+        setOpen(true);
+      }}
       variant={variant}
       size={size}
       {...props}
@@ -189,7 +202,7 @@ const DrawerContent = ({
   showDragHandle = true,
   ...props
 }: DrawerContentProps) => {
-  const { open, setOpen, id } = useDrawerContext();
+  const { open, setOpen, id, hasTitle, hasDescription } = useDrawerContext();
   const [mounted, setMounted] = React.useState(false);
   const contentRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLElement | null>(null);
@@ -197,7 +210,10 @@ const DrawerContent = ({
   const dragY = useMotionValue(0);
   const dragX = useMotionValue(0);
 
-  React.useEffect(() => setMounted(true), []);
+  React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- SSR-safe portal mount flag
+    setMounted(true);
+  }, []);
 
   React.useEffect(() => {
     if (!open) return;
@@ -240,7 +256,7 @@ const DrawerContent = ({
       const content = contentRef.current;
       if (content) {
         const focusable = content.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
-        focusable?.focus();
+        (focusable ?? content).focus();
       }
     });
 
@@ -295,8 +311,9 @@ const DrawerContent = ({
             ref={contentRef}
             role="dialog"
             aria-modal="true"
-            aria-labelledby={`${id}-title`}
-            aria-describedby={`${id}-description`}
+            aria-labelledby={hasTitle ? `${id}-title` : undefined}
+            aria-describedby={hasDescription ? `${id}-description` : undefined}
+            tabIndex={-1}
             drag={dragAxis}
             dragMomentum={false}
             dragElastic={dragElastic}
@@ -314,7 +331,7 @@ const DrawerContent = ({
             {...props}
           >
             {showDragHandle && (
-              <div className="flex shrink-0 items-center justify-center py-2.5">
+              <div aria-hidden="true" className="flex shrink-0 items-center justify-center py-2.5">
                 <div className="bg-muted-foreground/30 h-1 w-10 cursor-grab rounded-full active:cursor-grabbing" />
               </div>
             )}
@@ -344,11 +361,22 @@ const DrawerContent = ({
   return createPortal(drawer, document.body);
 };
 
-const DrawerClose = ({ children }: { children: React.ReactNode }) => {
+const DrawerClose = ({
+  children,
+  onClick,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   const { setOpen } = useDrawerContext();
 
   return (
-    <button type="button" aria-label="Close" onClick={() => setOpen(false)}>
+    <button
+      type="button"
+      onClick={(e) => {
+        onClick?.(e);
+        setOpen(false);
+      }}
+      {...props}
+    >
       {children}
     </button>
   );
@@ -371,7 +399,13 @@ const DrawerTitle = ({
   children: React.ReactNode;
   className?: string;
 }) => {
-  const { id } = useDrawerContext();
+  const { id, setHasTitle } = useDrawerContext();
+
+  React.useEffect(() => {
+    setHasTitle(true);
+    return () => setHasTitle(false);
+  }, [setHasTitle]);
+
   return (
     <h2 id={`${id}-title`} className={cn('text-xl font-semibold tracking-tight', className)}>
       {children}
@@ -386,7 +420,13 @@ const DrawerDescription = ({
   children: React.ReactNode;
   className?: string;
 }) => {
-  const { id } = useDrawerContext();
+  const { id, setHasDescription } = useDrawerContext();
+
+  React.useEffect(() => {
+    setHasDescription(true);
+    return () => setHasDescription(false);
+  }, [setHasDescription]);
+
   return (
     <p id={`${id}-description`} className={cn('text-muted-foreground mt-1 text-sm', className)}>
       {children}

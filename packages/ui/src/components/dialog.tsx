@@ -50,6 +50,10 @@ type DialogContextType = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   id: string;
+  hasTitle: boolean;
+  setHasTitle: (value: boolean) => void;
+  hasDescription: boolean;
+  setHasDescription: (value: boolean) => void;
 };
 
 const DialogContext = React.createContext<DialogContextType | undefined>(undefined);
@@ -78,6 +82,8 @@ const DialogRoot = ({
   onOpenChange,
 }: DialogProps) => {
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const [hasTitle, setHasTitle] = React.useState(false);
+  const [hasDescription, setHasDescription] = React.useState(false);
   const id = React.useId();
 
   const isControlled = controlledOpen !== undefined;
@@ -97,7 +103,13 @@ const DialogRoot = ({
     [isControlled, onOpenChange, open],
   );
 
-  return <DialogContext value={{ open, setOpen, id }}>{children}</DialogContext>;
+  return (
+    <DialogContext
+      value={{ open, setOpen, id, hasTitle, setHasTitle, hasDescription, setHasDescription }}
+    >
+      {children}
+    </DialogContext>
+  );
 };
 
 interface DialogTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -110,20 +122,39 @@ const DialogTrigger = ({
   ref,
   ...props
 }: DialogTriggerProps & { ref?: React.Ref<HTMLButtonElement> }) => {
-  const { setOpen } = useDialogContext();
+  const { open, setOpen } = useDialogContext();
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setOpen(true);
     onClick?.(e);
   };
 
-  if (asChild) {
-    return cloneElement(props.children as React.ReactElement<Record<string, unknown>>, {
-      onClick: handleClick,
+  if (asChild && React.isValidElement(props.children)) {
+    const child = props.children as React.ReactElement<Record<string, unknown>>;
+    const childOnClick = child.props.onClick as
+      | ((e: React.MouseEvent<HTMLButtonElement>) => void)
+      | undefined;
+
+    return cloneElement(child, {
+      'aria-haspopup': 'dialog',
+      'aria-expanded': open,
+      onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
+        childOnClick?.(e);
+        handleClick(e);
+      },
     });
   }
 
-  return <button type="button" onClick={handleClick} ref={ref} {...props} />;
+  return (
+    <button
+      type="button"
+      aria-haspopup="dialog"
+      aria-expanded={open}
+      onClick={handleClick}
+      ref={ref}
+      {...props}
+    />
+  );
 };
 DialogTrigger.displayName = 'DialogTrigger';
 
@@ -161,9 +192,17 @@ const DialogClose = ({
     onClick?.(e);
   };
 
-  if (asChild) {
-    return cloneElement(props.children as React.ReactElement<Record<string, unknown>>, {
-      onClick: handleClick,
+  if (asChild && React.isValidElement(props.children)) {
+    const child = props.children as React.ReactElement<Record<string, unknown>>;
+    const childOnClick = child.props.onClick as
+      | ((e: React.MouseEvent<HTMLButtonElement>) => void)
+      | undefined;
+
+    return cloneElement(child, {
+      onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
+        childOnClick?.(e);
+        handleClick(e);
+      },
     });
   }
 
@@ -199,17 +238,17 @@ const DialogOverlay = ({
 };
 DialogOverlay.displayName = 'DialogOverlay';
 
-type DialogContentProps = {
-  className?: string;
+interface DialogContentProps extends HTMLMotionProps<'div'> {
   children?: React.ReactNode;
-};
+}
 
 const DialogContent = ({
   className,
   children,
   ref,
+  ...props
 }: DialogContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { id, open, setOpen } = useDialogContext();
+  const { id, open, setOpen, hasTitle, hasDescription } = useDialogContext();
   const contentRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLElement | null>(null);
 
@@ -254,16 +293,17 @@ const DialogContent = ({
       const content = contentRef.current;
       if (content) {
         const focusable = content.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
-        focusable?.focus();
+        (focusable ?? content).focus();
       }
     });
 
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
 
     return () => {
       document.removeEventListener('keydown', trapFocus);
       document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = previousOverflow;
       triggerRef.current?.focus();
     };
   }, [open, setOpen]);
@@ -281,8 +321,9 @@ const DialogContent = ({
             }}
             role="dialog"
             aria-modal="true"
-            aria-labelledby={`${id}-title`}
-            aria-describedby={`${id}-description`}
+            aria-labelledby={hasTitle ? `${id}-title` : undefined}
+            aria-describedby={hasDescription ? `${id}-description` : undefined}
+            tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
             variants={DIALOG_VARIANTS}
             initial="initial"
@@ -291,9 +332,10 @@ const DialogContent = ({
             transition={DIALOG_TRANSITION}
             style={DIALOG_STYLE}
             className={cn(
-              'bg-background fixed top-[50%] left-[50%] z-500 grid w-full max-w-xl translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6',
+              'bg-background fixed top-[50%] left-[50%] z-500 grid w-full max-w-xl translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 outline-none',
               className,
             )}
+            {...props}
           >
             {children}
             <DialogClose className="ring-offset-background focus-visible:ring-ring absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none">
@@ -340,7 +382,12 @@ const DialogTitle = ({
   ref,
   ...props
 }: DialogTitleProps & { ref?: React.Ref<HTMLHeadingElement> }) => {
-  const { id } = useDialogContext();
+  const { id, setHasTitle } = useDialogContext();
+
+  React.useEffect(() => {
+    setHasTitle(true);
+    return () => setHasTitle(false);
+  }, [setHasTitle]);
 
   return (
     <h2
@@ -362,7 +409,12 @@ const DialogDescription = ({
   ref,
   ...props
 }: DialogDescriptionProps & { ref?: React.Ref<HTMLParagraphElement> }) => {
-  const { id } = useDialogContext();
+  const { id, setHasDescription } = useDialogContext();
+
+  React.useEffect(() => {
+    setHasDescription(true);
+    return () => setHasDescription(false);
+  }, [setHasDescription]);
 
   return (
     <p
