@@ -10,7 +10,7 @@ import { cn } from '../lib/cn';
 // --- CVA ---
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium outline-none select-none relative overflow-hidden disabled:pointer-events-none disabled:opacity-40 disabled:cursor-not-allowed aria-invalid:ring-1 aria-invalid:ring-destructive/50 aria-invalid:border-destructive transition-colors',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium outline-none select-none relative overflow-hidden ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 aria-invalid:ring-1 aria-invalid:ring-destructive/50 aria-invalid:border-destructive transition-colors',
   {
     variants: {
       variant: {
@@ -19,7 +19,7 @@ const buttonVariants = cva(
         outline: 'border-border border bg-transparent hover:bg-muted text-foreground',
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         ghost: 'hover:bg-muted text-foreground',
-        link: 'text-foreground underline-offset-4 hover:underline p-0 h-auto',
+        link: 'text-foreground underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-9 px-4 py-2',
@@ -28,6 +28,10 @@ const buttonVariants = cva(
         icon: 'size-9',
       },
     },
+    compoundVariants: [
+      // The link variant should hug its text regardless of the size prop.
+      { variant: 'link', className: 'h-auto p-0' },
+    ],
     defaultVariants: {
       variant: 'default',
       size: 'default',
@@ -61,7 +65,6 @@ interface ButtonProps extends HTMLMotionProps<'button'>, VariantProps<typeof but
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   fullWidth?: boolean;
-  asChild?: boolean;
   children?: React.ReactNode;
 }
 
