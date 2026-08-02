@@ -19,7 +19,7 @@ function Radio({
       <input
         type="radio"
         ref={ref}
-        className="peer focus-visible:ring-ring border-primary checked:border-primary checked:bg-primary bg-background size-5 shrink-0 cursor-pointer appearance-none rounded-full border transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        className="peer focus-visible:ring-ring border-primary checked:border-primary checked:bg-primary bg-background size-4 shrink-0 cursor-pointer appearance-none rounded-full border transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         onChange={(e) => {
           onChange?.(e);
           if (onCheckedChange) {
@@ -30,7 +30,7 @@ function Radio({
       />
       <div
         aria-hidden="true"
-        className="bg-background pointer-events-none absolute size-2 rounded-full opacity-0 transition-opacity peer-checked:opacity-100"
+        className="bg-background pointer-events-none absolute size-1.5 rounded-full opacity-0 transition-opacity peer-checked:opacity-100"
       />
     </div>
   );

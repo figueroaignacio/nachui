@@ -53,7 +53,12 @@ const InputError = ({
   ref,
   ...props
 }: React.HTMLAttributes<HTMLSpanElement> & { ref?: React.Ref<HTMLSpanElement> }) => (
-  <span ref={ref} className={cn('text-destructive text-xs', className)} {...props} />
+  <span
+    ref={ref}
+    aria-live="polite"
+    className={cn('text-destructive text-xs', className)}
+    {...props}
+  />
 );
 InputError.displayName = 'InputError';
 
@@ -68,6 +73,7 @@ const InputRoot = ({
   rightIcon,
   id,
   ref,
+  'aria-describedby': ariaDescribedBy,
   ...props
 }: InputProps & { ref?: React.Ref<HTMLInputElement> }) => {
   const generatedId = React.useId();
@@ -76,7 +82,7 @@ const InputRoot = ({
   const descriptionId = `${inputId}-description`;
 
   const describedBy =
-    [description ? descriptionId : undefined, error ? errorId : undefined]
+    [description ? descriptionId : undefined, error ? errorId : undefined, ariaDescribedBy]
       .filter(Boolean)
       .join(' ') || undefined;
 
