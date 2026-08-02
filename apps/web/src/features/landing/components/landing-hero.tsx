@@ -19,7 +19,7 @@ export function LandingHero() {
     <section className="w-full">
       <div className="mx-auto w-full pt-16 pb-12 md:pt-24 md:pb-16">
         <div className="max-w-2xl">
-          <h1 className="font-heading text-foreground text-[2rem] leading-[1.1] font-normal tracking-tight italic md:text-[2.75rem]">
+          <h1 className="font-heading text-foreground text-[2rem] leading-[1.1] font-semibold tracking-tight md:text-[2.75rem]">
             {t('subheading1')}
           </h1>
           <p className="text-muted-strong mt-5 text-[17px] leading-relaxed font-normal md:text-[18px]">

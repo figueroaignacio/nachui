@@ -35,12 +35,12 @@ import { InlineCode } from './inline-code';
 import { PackageManagerTabs } from './package-manager-tabs';
 
 const headingStyles = {
-  h1: 'font-heading mt-2 scroll-m-20 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter text-foreground',
-  h2: 'font-heading mt-12 sm:mt-16 scroll-m-20 text-2xl sm:text-3xl font-semibold tracking-tight first:mt-0 border-b border-border/40 pb-4 text-foreground/95',
+  h1: 'font-heading mt-2 scroll-m-20 text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.1] tracking-tight text-foreground',
+  h2: 'font-heading mt-12 sm:mt-16 scroll-m-20 text-2xl sm:text-3xl font-semibold leading-snug tracking-tight first:mt-0 border-b border-border/40 pb-4 text-foreground/95',
   h3: 'font-heading mt-10 sm:mt-12 mb-4 scroll-m-20 text-xl sm:text-2xl font-semibold tracking-tight text-foreground/90',
-  h4: 'font-heading mt-8 sm:mt-10 scroll-m-20 text-lg sm:text-xl font-medium tracking-tight text-foreground/90',
-  h5: 'font-heading mt-8 scroll-m-20 text-base sm:text-lg font-medium tracking-tight text-foreground/80',
-  h6: 'font-heading mt-8 scroll-m-20 text-sm sm:text-base font-medium tracking-tight text-muted-foreground',
+  h4: 'font-heading mt-8 sm:mt-10 scroll-m-20 text-lg sm:text-xl font-semibold tracking-tight text-foreground/90',
+  h5: 'font-heading mt-8 scroll-m-20 text-base sm:text-lg font-medium text-foreground/80',
+  h6: 'font-heading mt-8 scroll-m-20 text-sm font-medium tracking-wide uppercase text-muted-foreground',
 } as const;
 
 function createHeading(Tag: keyof typeof headingStyles) {

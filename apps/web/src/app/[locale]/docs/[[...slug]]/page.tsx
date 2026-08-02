@@ -67,7 +67,7 @@ export default async function DocPage({ params }: { params: Promise<DocPageProps
             <MobileToc toc={tocContent} />
             <div>
               <p className="section-label mb-4">Documentation</p>
-              <h1 className="font-heading text-foreground text-[2rem] leading-[1.05] font-normal tracking-tight italic md:text-[2.5rem]">
+              <h1 className="font-heading text-foreground text-[2rem] leading-[1.05] font-semibold tracking-tight md:text-[2.5rem]">
                 {doc.title}
               </h1>
               {doc.description && (

@@ -4,7 +4,7 @@ import { Header } from '@/components/layout/header';
 import { Providers } from '@/components/providers';
 import { ThemeInitScript } from '@/features/theme/components/theme-init-script';
 import { routing } from '@/i18n/routing';
-import { fontHeading, fontMono, fontSans, fontSerif } from '@/lib/font';
+import { fontCode, fontHeading, fontSans, fontSerif } from '@/lib/font';
 import '@repo/ui/globals.css';
 import { Container } from '@repo/ui/src/layout/container';
 
@@ -70,7 +70,7 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
         />
       </head>
       <body
-        className={`relative ${fontSans.variable} ${fontHeading.variable} ${fontSerif.variable} ${fontMono.variable}`}
+        className={`relative ${fontSans.variable} ${fontHeading.variable} ${fontSerif.variable} ${fontCode.variable}`}
       >
         <SkipLink />
         <NextIntlClientProvider>

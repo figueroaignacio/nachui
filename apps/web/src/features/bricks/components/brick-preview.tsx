@@ -43,7 +43,7 @@ export function BrickPreview({
           <div>
             <h2
               id={`brick-${id}-title`}
-              className="font-heading text-foreground text-lg leading-snug font-normal italic"
+              className="font-heading text-foreground text-lg leading-snug font-medium"
             >
               {name}
             </h2>

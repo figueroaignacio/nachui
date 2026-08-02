@@ -34,7 +34,7 @@ export default async function SkillDetailPage({ params }: PageProps) {
         {/* Header */}
         <div className="border-border mt-8 border-t pt-8">
           <p className="section-label mb-4">Skill</p>
-          <h1 className="font-heading text-foreground text-[2rem] leading-[1.05] font-normal tracking-tight italic md:text-[2.5rem]">
+          <h1 className="font-heading text-foreground text-[2rem] leading-[1.05] font-semibold tracking-tight md:text-[2.5rem]">
             {skill.name}
           </h1>
           <p className="text-muted-foreground mt-3 font-mono text-[13px]">

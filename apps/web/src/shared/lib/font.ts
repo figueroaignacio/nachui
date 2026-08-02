@@ -1,41 +1,31 @@
-import { DM_Sans, EB_Garamond, JetBrains_Mono, Playfair_Display } from 'next/font/google';
+import { Bricolage_Grotesque, JetBrains_Mono, Source_Serif_4 } from 'next/font/google';
 
-export const fontHeading = Playfair_Display({
+export const fontHeading = Bricolage_Grotesque({
   subsets: ['latin'],
   variable: '--font-heading',
   display: 'swap',
-  weight: ['400'],
-  style: ['normal', 'italic'],
   preload: true,
 });
 
-export const fontSans = DM_Sans({
+export const fontSans = Bricolage_Grotesque({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
   preload: true,
 });
 
-export const fontSerif = EB_Garamond({
-  subsets: ['latin'],
-  variable: '--font-serif',
-  display: 'swap',
-  weight: ['400', '500'],
-  style: ['normal', 'italic'],
-  preload: true,
-});
-
-export const fontMono = JetBrains_Mono({
+export const fontCode = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
   display: 'swap',
-  weight: ['400', '500'],
+  weight: ['400', '500', '700'],
   preload: false,
 });
 
-export const fontCode = JetBrains_Mono({
+export const fontSerif = Source_Serif_4({
   subsets: ['latin'],
+  variable: '--font-serif',
   display: 'swap',
-  weight: ['400', '500', '700'],
-  preload: false,
+  style: ['normal', 'italic'],
+  preload: true,
 });
