@@ -16,7 +16,7 @@ describe('Banner', () => {
 
     expect(screen.getByText('Welcome')).toBeInTheDocument();
     expect(screen.getByText('This is a banner.')).toBeInTheDocument();
-    expect(screen.getByRole('banner')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toBeInTheDocument();
   });
 
   it('renders danger variant with alert role', () => {

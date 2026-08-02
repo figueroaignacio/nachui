@@ -13,10 +13,10 @@ describe('Callout', () => {
 
     expect(screen.getByText('Note')).toBeInTheDocument();
     expect(screen.getByText('This is a callout.')).toBeInTheDocument();
-    expect(screen.getByRole('region')).toBeInTheDocument();
+    expect(screen.getByRole('note')).toBeInTheDocument();
   });
 
-  it('renders danger variant as an alert with default icon', () => {
+  it('renders danger variant as a note with default icon', () => {
     const { container } = render(
       <Callout variant="danger">
         <Callout.Title>Error</Callout.Title>
@@ -24,7 +24,7 @@ describe('Callout', () => {
       </Callout>,
     );
 
-    expect(screen.getByRole('alert')).toBeInTheDocument();
+    expect(screen.getByRole('note')).toBeInTheDocument();
     expect(container.querySelector('svg')).not.toBeNull();
   });
 

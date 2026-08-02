@@ -6,7 +6,6 @@ import { Files } from './files';
 
 // Mock motion to display AnimatePresence correctly in simple tests
 vi.mock('motion/react', async () => {
-  const React = await import('react');
   return {
     motion: {
       div: ({ children, ref, ...props }: React.ComponentProps<'div'> & Record<string, unknown>) => (

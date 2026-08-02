@@ -5,7 +5,6 @@ import type * as React from 'react';
 import { Tabs } from './tabs';
 
 vi.mock('motion/react', async () => {
-  const React = await import('react');
   return {
     motion: {
       div: ({

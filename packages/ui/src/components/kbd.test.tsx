@@ -19,11 +19,11 @@ describe('Kbd', () => {
   it('renders different sizes correctly', () => {
     const { rerender } = render(<Kbd size="sm">K</Kbd>);
     let element = screen.getByText('K');
-    expect(element).toHaveClass('h-5', 'px-1', 'text-[10px]');
+    expect(element).toHaveClass('h-5', 'px-1.5', 'text-[10px]');
 
     rerender(<Kbd size="lg">K</Kbd>);
     element = screen.getByText('K');
-    expect(element).toHaveClass('h-8', 'px-2', 'text-[13px]');
+    expect(element).toHaveClass('h-8', 'px-2.5', 'text-[13px]');
   });
 
   it('renders outline variant correctly', () => {

@@ -5,7 +5,6 @@ import type * as React from 'react';
 import { DropdownMenu } from './dropdown-menu';
 
 vi.mock('motion/react', async () => {
-  const React = await import('react');
   return {
     motion: {
       button: ({

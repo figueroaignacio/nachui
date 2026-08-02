@@ -5,7 +5,6 @@ import type * as React from 'react';
 import { Tooltip, TooltipProvider } from './tooltip';
 
 vi.mock('motion/react', async () => {
-  const React = await import('react');
   return {
     motion: {
       div: ({

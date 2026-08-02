@@ -5,7 +5,6 @@ import type * as React from 'react';
 import { Collapsible } from './collapsible';
 
 vi.mock('motion/react', async () => {
-  const React = await import('react');
   return {
     motion: {
       button: ({

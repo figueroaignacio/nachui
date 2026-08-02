@@ -6,7 +6,6 @@ import { Accordion } from './accordion';
 
 // Mock motion to display AnimatePresence correctly in tests
 vi.mock('motion/react', async () => {
-  const React = await import('react');
   return {
     motion: {
       button: ({

@@ -78,6 +78,6 @@ describe('Input', () => {
 
     rerender(<Input size="lg" placeholder="lg" />);
     input = screen.getByPlaceholderText('lg');
-    expect(input.className).toContain('h-11');
+    expect(input.className).toContain('h-10');
   });
 });

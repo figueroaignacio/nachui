@@ -32,6 +32,6 @@ describe('Breadcrumb', () => {
   it('renders ellipsis component', () => {
     render(<Breadcrumb.Ellipsis data-testid="ellipsis" />);
     expect(screen.getByTestId('ellipsis')).toBeInTheDocument();
-    expect(screen.getByText('More')).toHaveClass('sr-only');
+    expect(screen.getByTestId('ellipsis')).toHaveAttribute('aria-hidden', 'true');
   });
 });

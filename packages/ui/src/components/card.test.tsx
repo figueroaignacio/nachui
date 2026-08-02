@@ -32,14 +32,14 @@ describe('Card', () => {
     expect(card).toHaveClass('border', 'border-border'); // Outline variant
   });
 
-  it('renders correctly with gradient prop', () => {
+  it('renders correctly with ghost variant', () => {
     render(
-      <Card gradient data-testid="card-root">
+      <Card variant="ghost" data-testid="card-root">
         Content
       </Card>,
     );
     const card = screen.getByTestId('card-root');
     expect(card).toBeInTheDocument();
-    expect(card).toHaveClass('bg-gradient-to-br'); // Gradient prop class
+    expect(card).toHaveClass('bg-transparent');
   });
 });

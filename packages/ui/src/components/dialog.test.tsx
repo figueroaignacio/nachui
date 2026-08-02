@@ -6,7 +6,6 @@ import { Dialog } from './dialog';
 
 // Mock motion to disable AnimatePresence delay for Portals
 vi.mock('motion/react', async () => {
-  const React = await import('react');
   return {
     motion: {
       div: ({

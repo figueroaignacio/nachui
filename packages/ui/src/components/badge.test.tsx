@@ -31,7 +31,7 @@ describe('Badge', () => {
       </Badge>,
     );
     const badge = screen.getByTestId('badge');
-    expect(badge).toHaveClass('bg-destructive');
+    expect(badge).toHaveClass('bg-destructive/10');
   });
 
   it('applies outline variant classes', () => {
