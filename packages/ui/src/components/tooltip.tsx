@@ -100,8 +100,24 @@ interface TooltipTriggerProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 function TooltipTrigger({ children, asChild = false, className, ...props }: TooltipTriggerProps) {
-  const { setOpen, delayDuration, id } = useTooltip();
+  const { open, setOpen, delayDuration, id } = useTooltip();
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  // WCAG 1.4.13: the tooltip must be dismissible without moving the pointer.
+  React.useEffect(() => {
+    if (!open) return;
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [open, setOpen]);
 
   const handleMouseEnter = () => {
     timeoutRef.current = setTimeout(() => {
@@ -119,6 +135,7 @@ function TooltipTrigger({ children, asChild = false, className, ...props }: Tool
   };
 
   const handleBlur = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setOpen(false);
   };
 
@@ -133,7 +150,7 @@ function TooltipTrigger({ children, asChild = false, className, ...props }: Tool
 
     return React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
       ...props,
-      'aria-describedby': id,
+      'aria-describedby': open ? id : undefined,
       onMouseEnter: (e: React.MouseEvent) => {
         handleMouseEnter();
         childProps.onMouseEnter?.(e);
@@ -156,7 +173,9 @@ function TooltipTrigger({ children, asChild = false, className, ...props }: Tool
 
   return (
     <div
-      aria-describedby={id}
+      aria-describedby={open ? id : undefined}
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- the wrapper must be focusable so keyboard users can summon the tooltip when the child isn't interactive
+      tabIndex={0}
       className={cn('cursor-pointer', className)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

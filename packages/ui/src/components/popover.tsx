@@ -43,6 +43,7 @@ interface PopoverContextType {
   open: boolean;
   setOpen: (open: boolean) => void;
   id: string;
+  triggerRef: React.RefObject<HTMLButtonElement | null>;
 }
 
 const PopoverContext = React.createContext<PopoverContextType | undefined>(undefined);
@@ -73,6 +74,7 @@ const PopoverRoot = ({
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
   const id = React.useId();
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
 
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : uncontrolledOpen;
@@ -99,6 +101,7 @@ const PopoverRoot = ({
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setOpen(false);
+        triggerRef.current?.focus();
       }
     };
 
@@ -111,7 +114,7 @@ const PopoverRoot = ({
   }, [open, setOpen]);
 
   return (
-    <PopoverContext value={{ open, setOpen, id }}>
+    <PopoverContext value={{ open, setOpen, id, triggerRef }}>
       <div ref={containerRef} className="relative inline-flex">
         {children}
       </div>
@@ -129,19 +132,37 @@ const PopoverTrigger = ({
   ref,
   ...props
 }: PopoverTriggerProps & { ref?: React.Ref<HTMLButtonElement> }) => {
-  const { open, setOpen, id } = usePopoverContext();
+  const { open, setOpen, id, triggerRef } = usePopoverContext();
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setOpen(!open);
     onClick?.(e);
   };
 
-  if (asChild) {
-    return React.cloneElement(props.children as React.ReactElement<Record<string, unknown>>, {
-      onClick: handleClick,
+  const mergedRef = React.useCallback(
+    (node: HTMLButtonElement | null) => {
+      triggerRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) (ref as React.MutableRefObject<HTMLButtonElement | null>).current = node;
+    },
+    [ref, triggerRef],
+  );
+
+  if (asChild && React.isValidElement(props.children)) {
+    const child = props.children as React.ReactElement<Record<string, unknown>>;
+    const childOnClick = child.props.onClick as
+      | ((e: React.MouseEvent<HTMLButtonElement>) => void)
+      | undefined;
+
+    return React.cloneElement(child, {
+      ref: mergedRef,
+      onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
+        childOnClick?.(e);
+        handleClick(e);
+      },
       'aria-expanded': open,
       'aria-haspopup': 'dialog',
-      'aria-controls': id,
+      'aria-controls': open ? id : undefined,
     });
   }
 
@@ -149,10 +170,10 @@ const PopoverTrigger = ({
     <button
       type="button"
       onClick={handleClick}
-      ref={ref}
+      ref={mergedRef}
       aria-expanded={open}
       aria-haspopup="dialog"
-      aria-controls={id}
+      aria-controls={open ? id : undefined}
       {...props}
     />
   );
@@ -175,9 +196,17 @@ const PopoverClose = ({
     onClick?.(e);
   };
 
-  if (asChild) {
-    return React.cloneElement(props.children as React.ReactElement<Record<string, unknown>>, {
-      onClick: handleClick,
+  if (asChild && React.isValidElement(props.children)) {
+    const child = props.children as React.ReactElement<Record<string, unknown>>;
+    const childOnClick = child.props.onClick as
+      | ((e: React.MouseEvent<HTMLButtonElement>) => void)
+      | undefined;
+
+    return React.cloneElement(child, {
+      onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
+        childOnClick?.(e);
+        handleClick(e);
+      },
     });
   }
 
@@ -201,6 +230,16 @@ const PopoverContent = ({
   ...props
 }: PopoverContentProps) => {
   const { open, id, setOpen } = usePopoverContext();
+  const contentRef = React.useRef<HTMLDivElement>(null);
+
+  // Move focus into the popover when it opens so keyboard users can reach its content.
+  React.useEffect(() => {
+    if (!open) return;
+    const frame = requestAnimationFrame(() => {
+      contentRef.current?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [open]);
 
   const sideOffsetStyle = React.useMemo(
     () => ({
@@ -217,8 +256,10 @@ const PopoverContent = ({
     <AnimatePresence>
       {open && (
         <motion.div
+          ref={contentRef}
           id={id}
           role="dialog"
+          tabIndex={-1}
           initial={POPOVER_ANIMATION_VARIANTS[side].initial}
           animate={POPOVER_ANIMATION_VARIANTS[side].animate}
           exit={POPOVER_ANIMATION_VARIANTS[side].initial}
