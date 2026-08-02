@@ -1,10 +1,9 @@
 {
   "home": {
     "badge": "Minimalism in code & design",
-    "subheading1": "Strictly minimal. Designed for focus.",
+    "subheading1": "Designed minimal for modern developers",
     "subheading2": "",
-    "description": "Premium minimalist React components for modern developers. Clean typography, off-white bone layout, and absolute zero npm wrappers. Copy and own the raw source code.",
-    "github": "Open source, the code is yours",
+    "description": "React components to build your own design system in a simple way.",
     "actions": [
       {
         "label": "Get started",
