@@ -122,16 +122,19 @@ interface ToastItemProps {
 }
 
 function ToastItem({ toast: t, onDismiss, position }: ToastItemProps) {
+  const [paused, setPaused] = React.useState(false);
+  const isUrgent = t.variant === 'error' || t.variant === 'warning';
+
   React.useEffect(() => {
     const duration = t.duration ?? 5000;
-    if (duration <= 0) return;
+    if (duration <= 0 || paused) return;
 
     const timer = setTimeout(() => {
       onDismiss(t.id);
     }, duration);
 
     return () => clearTimeout(timer);
-  }, [t.id, t.duration, onDismiss]);
+  }, [t.id, t.duration, onDismiss, paused]);
 
   const variantIcon = VARIANT_ICONS[t.variant ?? 'default'];
 
@@ -142,8 +145,12 @@ function ToastItem({ toast: t, onDismiss, position }: ToastItemProps) {
       animate={TOAST_ENTER.animate}
       exit={{ ...TOAST_EXIT_BY_POSITION[position], transition: TOAST_EXIT_TRANSITION }}
       transition={TOAST_TRANSITION}
-      role={t.variant === 'error' || t.variant === 'warning' ? 'alert' : 'status'}
-      aria-live="polite"
+      role={isUrgent ? 'alert' : 'status'}
+      aria-live={isUrgent ? 'assertive' : 'polite'}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
       className={cn(toastVariants({ variant: t.variant }), 'flex-col')}
     >
       <div className="flex w-full items-center gap-2">
@@ -153,10 +160,9 @@ function ToastItem({ toast: t, onDismiss, position }: ToastItemProps) {
           type="button"
           aria-label="Dismiss notification"
           onClick={() => onDismiss(t.id)}
-          className="shrink-0 opacity-50 transition-opacity hover:opacity-100"
+          className="focus-visible:ring-ring shrink-0 rounded-sm opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none"
         >
-          <HugeiconsIcon icon={Cancel01Icon} size={14} />
-          <span className="sr-only">Close</span>
+          <HugeiconsIcon icon={Cancel01Icon} size={14} aria-hidden="true" />
         </button>
       </div>
       {(t.description || t.action) && (
@@ -170,7 +176,7 @@ function ToastItem({ toast: t, onDismiss, position }: ToastItemProps) {
                   t.action?.onClick();
                   onDismiss(t.id);
                 }}
-                className="mt-2 shrink-0 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-white/10"
+                className="hover:bg-muted focus-visible:ring-ring mt-2 shrink-0 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
               >
                 {t.action.label}
               </button>

@@ -42,6 +42,7 @@ type BannerProps = VariantProps<typeof bannerVariants> & {
   icon?: React.ReactNode;
   onClose?: () => void;
   sticky?: boolean;
+  dismissible?: boolean;
   className?: string;
   children?: React.ReactNode;
 };
@@ -109,7 +110,7 @@ const BannerAction = ({ className, children, ref, ...props }: BannerActionProps)
   <a
     ref={ref}
     className={cn(
-      'shrink-0 rounded-md border border-current/20 px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors hover:bg-white/15',
+      'shrink-0 rounded-md border border-current/20 px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors hover:bg-current/10 focus-visible:ring-2 focus-visible:ring-current focus-visible:outline-none',
       className,
     )}
     {...props}
@@ -127,12 +128,13 @@ const BannerRoot = ({
   icon,
   onClose,
   sticky = false,
+  dismissible = true,
   children,
   ref,
 }: BannerProps) => {
   const [visible, setVisible] = React.useState(true);
   const resolvedVariant: BannerVariant = variant ?? 'default';
-  const role = resolvedVariant === 'danger' || resolvedVariant === 'warning' ? 'alert' : 'banner';
+  const role = resolvedVariant === 'danger' || resolvedVariant === 'warning' ? 'alert' : 'status';
   const variantIcon = icon === undefined ? VARIANT_ICONS[resolvedVariant] : null;
 
   const handleClose = React.useCallback(() => {
@@ -162,14 +164,16 @@ const BannerRoot = ({
 
           <div className="flex flex-1 items-center gap-3">{children}</div>
 
-          <button
-            type="button"
-            onClick={handleClose}
-            className="shrink-0 cursor-pointer rounded-md p-1 opacity-70 transition-opacity hover:opacity-100"
-            aria-label="Dismiss banner"
-          >
-            <HugeiconsIcon icon={Cancel01Icon} size={14} />
-          </button>
+          {dismissible && (
+            <button
+              type="button"
+              onClick={handleClose}
+              className="focus-visible:ring-ring shrink-0 cursor-pointer rounded-md p-1 opacity-70 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none"
+              aria-label="Dismiss banner"
+            >
+              <HugeiconsIcon icon={Cancel01Icon} size={14} aria-hidden="true" />
+            </button>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

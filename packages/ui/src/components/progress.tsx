@@ -21,17 +21,21 @@ function Progress({
   ref,
   ...props
 }: ProgressProps & { ref?: React.Ref<HTMLDivElement> }) {
+  const safeMax = max > 0 ? max : 100;
+  const clampedValue =
+    value === null || value === undefined ? undefined : Math.min(Math.max(value, 0), safeMax);
+
   return (
     <div
       ref={ref}
       role="progressbar"
       aria-valuemin={0}
-      aria-valuemax={max}
-      aria-valuenow={value ?? undefined}
+      aria-valuemax={safeMax}
+      aria-valuenow={clampedValue}
       className={cn('bg-secondary relative h-1 w-full overflow-hidden rounded-none', className)}
       {...props}
     >
-      {value === null || value === undefined ? (
+      {clampedValue === undefined ? (
         <motion.div
           className="bg-primary absolute inset-y-0 w-1/3 rounded-full"
           animate={INDETERMINATE_ANIMATE}
@@ -41,7 +45,7 @@ function Progress({
         <motion.div
           className="bg-primary h-full w-full flex-1"
           initial={DETERMINATE_INITIAL}
-          animate={{ x: `-${100 - (value / max) * 100}%` }}
+          animate={{ x: `-${100 - (clampedValue / safeMax) * 100}%` }}
           transition={DETERMINATE_TRANSITION}
         />
       )}
