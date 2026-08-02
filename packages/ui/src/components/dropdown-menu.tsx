@@ -11,7 +11,7 @@ import { cn } from '../lib/cn';
 interface DropdownContextValue {
   isOpen: boolean;
   toggleMenu: () => void;
-  closeMenu: () => void;
+  closeMenu: (options?: { restoreFocus?: boolean }) => void;
   openMenu: () => void;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
   triggerId: string;
@@ -22,6 +22,7 @@ interface DropdownMenuProps {
   children: React.ReactNode;
   className?: string;
   defaultOpen?: boolean;
+  open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
 
@@ -61,9 +62,9 @@ const DROPDOWN_ICON_STYLE = { willChange: 'transform' } as const;
 const DROPDOWN_CONTENT_STYLE = { willChange: 'opacity, transform, filter' } as const;
 
 const ALIGN_CLASSES = {
-  start: 'left-0 origin-top-left',
-  center: 'left-1/2 -translate-x-1/2 origin-top',
-  end: 'right-0 origin-top-right',
+  start: 'left-0',
+  center: 'left-1/2 -translate-x-1/2',
+  end: 'right-0',
 } as const;
 
 const DROPDOWN_INITIAL = {
@@ -139,34 +140,49 @@ function useClickOutside(
   }, [ref, triggerRef, handler, enabled]);
 }
 
+function getMenuItems(container: HTMLElement | null): HTMLElement[] {
+  if (!container) return [];
+  return Array.from(
+    container.querySelectorAll<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])'),
+  );
+}
+
 // --- Components ---
 
 const DropdownMenuRoot = ({
   children,
   className,
   defaultOpen = false,
+  open: controlledOpen,
   onOpenChange,
 }: DropdownMenuProps): React.JSX.Element => {
-  const [isOpen, setIsOpen] = React.useState(defaultOpen);
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
-  const openMenu = React.useCallback(() => {
-    setIsOpen(true);
-    onOpenChange?.(true);
-  }, [onOpenChange]);
+  const isControlled = controlledOpen !== undefined;
+  const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
 
-  const closeMenu = React.useCallback(() => {
-    setIsOpen(false);
-    onOpenChange?.(false);
-  }, [onOpenChange]);
-
-  const toggleMenu = React.useCallback(() => {
-    setIsOpen((prev) => {
-      const next = !prev;
+  const setOpen = React.useCallback(
+    (next: boolean) => {
+      if (!isControlled) setUncontrolledOpen(next);
       onOpenChange?.(next);
-      return next;
-    });
-  }, [onOpenChange]);
+    },
+    [isControlled, onOpenChange],
+  );
+
+  const openMenu = React.useCallback(() => setOpen(true), [setOpen]);
+
+  const closeMenu = React.useCallback(
+    (options?: { restoreFocus?: boolean }) => {
+      setOpen(false);
+      if (options?.restoreFocus !== false) {
+        triggerRef.current?.focus();
+      }
+    },
+    [setOpen],
+  );
+
+  const toggleMenu = React.useCallback(() => setOpen(!isOpen), [setOpen, isOpen]);
 
   const id = React.useId();
   const triggerId = `dropdown-trigger-${id}`;
@@ -198,7 +214,7 @@ const DropdownMenuTrigger = ({
   className,
   asChild = false,
 }: DropdownMenuTriggerProps): React.JSX.Element => {
-  const { isOpen, toggleMenu, triggerRef, triggerId, contentId } = useDropdownContext();
+  const { isOpen, toggleMenu, openMenu, triggerRef, triggerId, contentId } = useDropdownContext();
   const shouldReduceMotion = useReducedMotion();
 
   const handleClick = React.useCallback(
@@ -209,14 +225,40 @@ const DropdownMenuTrigger = ({
     [toggleMenu, onClick],
   );
 
+  const handleKeyDown = React.useCallback(
+    (e: React.KeyboardEvent<HTMLButtonElement>) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        openMenu();
+      }
+    },
+    [openMenu],
+  );
+
+  const triggerA11yProps = {
+    'aria-expanded': isOpen,
+    'aria-haspopup': 'menu' as const,
+    'aria-controls': isOpen ? contentId : undefined,
+    id: triggerId,
+  };
+
   if (asChild && React.isValidElement(children)) {
+    const childProps = children.props as {
+      onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+      onKeyDown?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
+    };
+
     return React.cloneElement(children, {
       ref: triggerRef,
-      onClick: handleClick,
-      'aria-expanded': isOpen,
-      'aria-haspopup': 'menu' as const,
-      'aria-controls': contentId,
-      id: triggerId,
+      onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
+        childProps.onClick?.(e);
+        handleClick(e);
+      },
+      onKeyDown: (e: React.KeyboardEvent<HTMLButtonElement>) => {
+        childProps.onKeyDown?.(e);
+        handleKeyDown(e);
+      },
+      ...triggerA11yProps,
     } as React.HTMLAttributes<HTMLElement>);
   }
 
@@ -225,6 +267,7 @@ const DropdownMenuTrigger = ({
       ref={triggerRef}
       type="button"
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
       whileTap={!shouldReduceMotion ? { scale: 0.98 } : undefined}
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium',
@@ -233,10 +276,7 @@ const DropdownMenuTrigger = ({
         'focus-visible:ring-ring focus-visible:ring-1 focus-visible:outline-none',
         className,
       )}
-      aria-expanded={isOpen}
-      aria-haspopup="menu"
-      aria-controls={contentId}
-      id={triggerId}
+      {...triggerA11yProps}
     >
       {children}
       <motion.span
@@ -262,7 +302,12 @@ const DropdownMenuContent = ({
   const contentRef = React.useRef<HTMLDivElement>(null);
   const [position, setPosition] = React.useState<'bottom' | 'top'>('bottom');
 
-  useClickOutside(contentRef, triggerRef, closeMenu, isOpen);
+  const closeWithoutFocus = React.useCallback(
+    () => closeMenu({ restoreFocus: false }),
+    [closeMenu],
+  );
+
+  useClickOutside(contentRef, triggerRef, closeWithoutFocus, isOpen);
 
   React.useLayoutEffect(() => {
     if (!isOpen || !triggerRef.current) return;
@@ -273,7 +318,8 @@ const DropdownMenuContent = ({
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        const triggerRect = triggerRef.current!.getBoundingClientRect();
+        if (!triggerRef.current) return;
+        const triggerRect = triggerRef.current.getBoundingClientRect();
         const contentHeight = contentRef.current?.offsetHeight || 200;
         const windowHeight = window.innerHeight;
         const spaceBelow = windowHeight - triggerRect.bottom;
@@ -294,14 +340,51 @@ const DropdownMenuContent = ({
     };
   }, [isOpen, triggerRef]);
 
+  // Move focus to the first item when the menu opens.
   React.useEffect(() => {
     if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeMenu();
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, closeMenu]);
+    const frame = requestAnimationFrame(() => {
+      getMenuItems(contentRef.current)[0]?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [isOpen]);
+
+  const handleKeyDown = React.useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeMenu();
+        return;
+      }
+      if (e.key === 'Tab') {
+        closeMenu();
+        return;
+      }
+
+      const items = getMenuItems(contentRef.current);
+      if (items.length === 0) return;
+
+      const currentIndex = items.indexOf(document.activeElement as HTMLElement);
+
+      let nextIndex: number | null = null;
+      if (e.key === 'ArrowDown') {
+        nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % items.length;
+      } else if (e.key === 'ArrowUp') {
+        nextIndex =
+          currentIndex < 0 ? items.length - 1 : (currentIndex - 1 + items.length) % items.length;
+      } else if (e.key === 'Home') {
+        nextIndex = 0;
+      } else if (e.key === 'End') {
+        nextIndex = items.length - 1;
+      }
+
+      if (nextIndex !== null) {
+        e.preventDefault();
+        items[nextIndex]?.focus();
+      }
+    },
+    [closeMenu],
+  );
 
   const transformOriginClass =
     position === 'bottom'
@@ -329,6 +412,7 @@ const DropdownMenuContent = ({
           id={contentId}
           role="menu"
           aria-labelledby={triggerId}
+          onKeyDown={handleKeyDown}
           initial={DROPDOWN_INITIAL[position]}
           animate={DROPDOWN_ANIMATE}
           exit={DROPDOWN_EXIT[position]}
@@ -336,7 +420,7 @@ const DropdownMenuContent = ({
           className={cn(
             'border-border absolute z-50 min-w-48 overflow-hidden rounded-md border',
             'bg-background',
-            ALIGN_CLASSES[align].split(' ')[0],
+            ALIGN_CLASSES[align],
             transformOriginClass,
             className,
           )}
@@ -347,6 +431,15 @@ const DropdownMenuContent = ({
     </AnimatePresence>
   );
 };
+
+const itemClassName = (disabled: boolean, variant: 'default' | 'destructive') =>
+  cn(
+    'relative flex cursor-pointer items-center rounded-sm px-3 py-1.5 text-sm outline-none select-none',
+    'transition-colors duration-150',
+    'hover:bg-muted focus-visible:bg-muted focus:bg-muted',
+    disabled && 'pointer-events-none opacity-40',
+    variant === 'destructive' && 'text-destructive focus:text-destructive',
+  );
 
 const DropdownMenuItem = ({
   children,
@@ -379,70 +472,83 @@ const DropdownMenuItem = ({
         onClick?.(e as unknown as React.MouseEvent<HTMLDivElement>);
         onSelect?.();
         closeMenu();
-      } else if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        const next = e.currentTarget.nextElementSibling as HTMLElement;
-        if (next) next.focus();
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        const prev = e.currentTarget.previousElementSibling as HTMLElement;
-        if (prev) prev.focus();
       }
     },
     [disabled, onClick, onSelect, closeMenu],
   );
 
-  const content = (
-    <motion.div
-      role="menuitem"
-      tabIndex={disabled ? -1 : 0}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      whileHover={!disabled ? { backgroundColor: 'var(--muted)', scale: 1 } : undefined}
-      whileTap={!disabled ? { scale: 0.98 } : undefined}
-      className={cn(
-        'relative flex cursor-pointer items-center rounded-sm px-3 py-1.5 text-sm outline-none select-none',
-        'transition-colors duration-150',
-        disabled && 'pointer-events-none opacity-40',
-        variant === 'destructive' && 'text-destructive focus:text-destructive',
-        className,
-      )}
-    >
-      {children}
-    </motion.div>
-  );
-
   if (asChild && React.isValidElement(children)) {
+    const childProps = children.props as Record<string, unknown>;
+    const childOnClick = childProps.onClick as
+      | ((e: React.MouseEvent<HTMLDivElement>) => void)
+      | undefined;
+    const childOnKeyDown = childProps.onKeyDown as
+      | ((e: React.KeyboardEvent<HTMLDivElement>) => void)
+      | undefined;
+
     return React.cloneElement(children, {
-      onClick: handleClick,
-      onKeyDown: handleKeyDown,
+      onClick: (e: React.MouseEvent<HTMLDivElement>) => {
+        childOnClick?.(e);
+        handleClick(e);
+      },
+      onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => {
+        childOnKeyDown?.(e);
+        handleKeyDown(e);
+      },
       role: 'menuitem',
-      tabIndex: disabled ? -1 : 0,
+      tabIndex: -1,
+      'aria-disabled': disabled || undefined,
       className: cn(
-        'relative flex cursor-pointer items-center rounded-md px-3 py-2 text-sm outline-none select-none',
-        'transition-colors duration-200',
-        disabled && 'pointer-events-none opacity-50',
-        variant === 'destructive' && 'text-destructive focus:text-destructive',
+        itemClassName(disabled, variant),
         className,
-        (children.props as Record<string, unknown>)?.className as string | undefined,
+        childProps.className as string | undefined,
       ),
-      style: (children.props as Record<string, unknown>)?.style as React.CSSProperties | undefined,
+      style: childProps.style as React.CSSProperties | undefined,
     } as React.ComponentProps<'div'>);
   }
 
-  return content;
-};
-
-const DropdownLabel = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="text-muted-foreground px-3 py-2 text-xs font-semibold tracking-wider uppercase">
+    <div
+      role="menuitem"
+      tabIndex={-1}
+      aria-disabled={disabled || undefined}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      className={cn(itemClassName(disabled, variant), className)}
+    >
       {children}
     </div>
   );
 };
 
-const DropdownSeparator = () => {
-  return <div className="bg-border/50 my-1 h-px" />;
+const DropdownLabel = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  return (
+    <div
+      role="presentation"
+      className={cn(
+        'text-muted-foreground px-3 py-2 text-xs font-semibold tracking-wider uppercase',
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+};
+
+const DropdownSeparator = ({ className }: { className?: string }) => {
+  return (
+    <div
+      role="separator"
+      aria-orientation="horizontal"
+      className={cn('bg-border/50 my-1 h-px', className)}
+    />
+  );
 };
 
 const DropdownMenu = Object.assign(DropdownMenuRoot, {
