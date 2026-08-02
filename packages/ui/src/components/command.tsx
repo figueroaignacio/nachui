@@ -37,14 +37,26 @@ export const Command = ({
   ...props
 }: CommandProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const [copied, setCopied] = React.useState(false);
+  const resetTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  React.useEffect(() => {
+    return () => {
+      if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
+    };
+  }, []);
+
+  const markCopied = React.useCallback(() => {
+    setCopied(true);
+    onCopied?.();
+    if (resetTimeoutRef.current) clearTimeout(resetTimeoutRef.current);
+    resetTimeoutRef.current = setTimeout(() => setCopied(false), resetDelay);
+  }, [onCopied, resetDelay]);
 
   const handleCopy = React.useCallback(async () => {
     if (copied) return;
     try {
       await navigator.clipboard.writeText(command);
-      setCopied(true);
-      onCopied?.();
-      setTimeout(() => setCopied(false), resetDelay);
+      markCopied();
     } catch {
       const textarea = document.createElement('textarea');
       textarea.value = command;
@@ -55,14 +67,12 @@ export const Command = ({
       textarea.select();
       try {
         document.execCommand('copy');
-        setCopied(true);
-        onCopied?.();
-        setTimeout(() => setCopied(false), resetDelay);
+        markCopied();
       } finally {
         document.body.removeChild(textarea);
       }
     }
-  }, [command, copied, onCopied, resetDelay]);
+  }, [command, copied, markCopied]);
 
   return (
     <div
@@ -87,7 +97,7 @@ export const Command = ({
         className={cn(
           'text-muted-foreground hover:text-foreground shrink-0 rounded p-0.5 transition-colors',
           'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none',
-          copied && 'text-green-500 hover:text-green-500',
+          copied && 'text-success hover:text-success',
         )}
       >
         <AnimatePresence mode="wait" initial={false}>

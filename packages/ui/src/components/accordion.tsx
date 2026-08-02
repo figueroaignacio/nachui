@@ -47,7 +47,10 @@ type AccordionContextValue = {
   type: 'single' | 'multiple';
   openItems: string[];
   toggleItem: (value: string) => void;
+  baseId: string;
 };
+
+const slugify = (value: string) => value.replace(/[^a-zA-Z0-9-]/gi, '');
 
 const AccordionContext = React.createContext<AccordionContextValue | null>(null);
 
@@ -63,7 +66,7 @@ const useAccordionContext = () => {
 
 interface AccordionProps {
   type?: 'single' | 'multiple';
-  defaultValue?: string;
+  defaultValue?: string | string[];
   children?: React.ReactNode;
   className?: string;
   value?: string[];
@@ -79,9 +82,11 @@ const AccordionRoot = ({
   onValueChange,
   ref,
 }: AccordionProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const [uncontrolledValue, setUncontrolledValue] = React.useState<string[]>(
-    defaultValue ? [defaultValue] : [],
-  );
+  const [uncontrolledValue, setUncontrolledValue] = React.useState<string[]>(() => {
+    if (!defaultValue) return [];
+    return Array.isArray(defaultValue) ? defaultValue : [defaultValue];
+  });
+  const baseId = React.useId();
 
   const isControlled = value !== undefined;
   const openItems = isControlled ? value : uncontrolledValue;
@@ -111,8 +116,8 @@ const AccordionRoot = ({
   );
 
   return (
-    <AccordionContext value={{ type, openItems, toggleItem }}>
-      <div ref={ref} className={cn('w-full space-y-2', className)}>
+    <AccordionContext value={{ type, openItems, toggleItem, baseId }}>
+      <div ref={ref} data-accordion-root="" className={cn('w-full space-y-2', className)}>
         {children}
       </div>
     </AccordionContext>
@@ -158,20 +163,45 @@ const AccordionTrigger = ({
   className,
   ref,
 }: AccordionTriggerProps & { ref?: React.Ref<HTMLButtonElement> }) => {
-  const { openItems, toggleItem } = useAccordionContext();
+  const { openItems, toggleItem, baseId } = useAccordionContext();
   const isOpen = openItems.includes(value);
   const shouldReduceMotion = useReducedMotion();
-  const triggerId = `accordion-trigger-${value.replace(/[^a-zA-Z0-9-]/gi, '')}`;
-  const contentId = `accordion-content-${value.replace(/[^a-zA-Z0-9-]/gi, '')}`;
+  const triggerId = `${baseId}-trigger-${slugify(value)}`;
+  const contentId = `${baseId}-content-${slugify(value)}`;
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) return;
+
+    const root = e.currentTarget.closest<HTMLElement>('[data-accordion-root]');
+    if (!root) return;
+
+    const triggers = Array.from(
+      root.querySelectorAll<HTMLButtonElement>('[data-accordion-trigger]'),
+    );
+    const currentIndex = triggers.indexOf(e.currentTarget);
+    if (currentIndex < 0) return;
+
+    e.preventDefault();
+    let nextIndex = currentIndex;
+    if (e.key === 'ArrowDown') nextIndex = (currentIndex + 1) % triggers.length;
+    else if (e.key === 'ArrowUp')
+      nextIndex = (currentIndex - 1 + triggers.length) % triggers.length;
+    else if (e.key === 'Home') nextIndex = 0;
+    else if (e.key === 'End') nextIndex = triggers.length - 1;
+
+    triggers[nextIndex]?.focus();
+  };
 
   return (
     <motion.button
       ref={ref}
       id={triggerId}
       type="button"
+      data-accordion-trigger=""
       aria-controls={contentId}
       aria-expanded={isOpen}
       onClick={() => toggleItem(value)}
+      onKeyDown={handleKeyDown}
       whileTap={shouldReduceMotion ? undefined : { scale: 0.99 }}
       className={cn(
         'group hover:text-muted-foreground flex w-full items-center justify-between py-3.5 text-left text-sm font-medium transition-colors',
@@ -216,10 +246,10 @@ const AccordionContent = ({
   className,
   ref,
 }: AccordionContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { openItems } = useAccordionContext();
+  const { openItems, baseId } = useAccordionContext();
   const isOpen = openItems.includes(value);
-  const triggerId = `accordion-trigger-${value.replace(/[^a-zA-Z0-9-]/gi, '')}`;
-  const contentId = `accordion-content-${value.replace(/[^a-zA-Z0-9-]/gi, '')}`;
+  const triggerId = `${baseId}-trigger-${slugify(value)}`;
+  const contentId = `${baseId}-content-${slugify(value)}`;
 
   return (
     <AnimatePresence initial={false} mode="wait">

@@ -1,8 +1,13 @@
 import React from 'react';
+import { cn } from '../lib/cn';
 
-export function Snippet({ children }: { children: React.ReactNode }) {
+export interface SnippetProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+}
+
+export function Snippet({ children, className, ...props }: SnippetProps) {
   return (
-    <div className="flex min-h-[100px] items-center" role="region" aria-label="Code snippet">
+    <div className={cn('flex min-h-25 items-center', className)} {...props}>
       <div className="bg-primary-foreground w-full rounded-xl px-6 py-3">{children}</div>
     </div>
   );

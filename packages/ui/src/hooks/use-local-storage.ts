@@ -7,6 +7,7 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- SSR-safe hydration flag
     setIsMounted(true);
     try {
       const item = window.localStorage.getItem(key);

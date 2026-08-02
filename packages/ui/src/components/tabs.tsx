@@ -132,12 +132,15 @@ const TabsRoot = ({
 TabsRoot.displayName = 'Tabs';
 
 interface TabsListProps
-  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof tabsListVariants> {}
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof tabsListVariants> {
+  orientation?: 'horizontal' | 'vertical';
+}
 
 const TabsList = ({
   className,
   variant,
   size,
+  orientation = 'horizontal',
   children,
   ref,
   ...props
@@ -149,7 +152,7 @@ const TabsList = ({
     <div
       ref={ref}
       role="tablist"
-      aria-orientation="horizontal"
+      aria-orientation={orientation}
       className={cn(tabsListVariants({ variant: finalVariant, size }), className)}
       {...props}
     >

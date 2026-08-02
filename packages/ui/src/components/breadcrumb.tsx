@@ -71,7 +71,6 @@ const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<'span'
       {...props}
     >
       <HugeiconsIcon icon={MoreHorizontalIcon} className="size-4" size={16} />
-      <span className="sr-only">More</span>
     </span>
   );
 };

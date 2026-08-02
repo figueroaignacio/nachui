@@ -61,20 +61,27 @@ const variantTagMap: Record<
 export type TypographyProps = React.HTMLAttributes<HTMLElement> &
   VariantProps<typeof typographyVariants> & {
     as?: React.ElementType;
+    ref?: React.Ref<HTMLElement>;
   };
 
-export const Typography = React.forwardRef<HTMLElement, TypographyProps>(
-  ({ className, variant = 'p', align, weight, as, ...props }, ref) => {
-    const Component = as ?? variantTagMap[variant!];
+export const Typography = ({
+  className,
+  variant = 'p',
+  align,
+  weight,
+  as,
+  ref,
+  ...props
+}: TypographyProps) => {
+  const Component = as ?? variantTagMap[variant ?? 'p'];
 
-    return (
-      <Component
-        ref={ref}
-        className={cn(typographyVariants({ variant, align, weight, className }))}
-        {...props}
-      />
-    );
-  },
-);
+  return (
+    <Component
+      ref={ref}
+      className={cn(typographyVariants({ variant, align, weight, className }))}
+      {...props}
+    />
+  );
+};
 
 Typography.displayName = 'Typography';

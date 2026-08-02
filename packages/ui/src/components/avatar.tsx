@@ -46,7 +46,14 @@ export interface AvatarImageProps extends React.ImgHTMLAttributes<HTMLImageEleme
   onLoadingStatusChange?: (status: 'loaded' | 'error') => void;
 }
 
-const AvatarImage = ({ className, src, ...props }: AvatarImageProps) => {
+const AvatarImage = ({
+  className,
+  src,
+  onLoad,
+  onError,
+  onLoadingStatusChange,
+  ...props
+}: AvatarImageProps) => {
   const { status, setStatus } = useAvatarContext();
 
   React.useEffect(() => {
@@ -61,8 +68,16 @@ const AvatarImage = ({ className, src, ...props }: AvatarImageProps) => {
       src={src}
       alt=""
       className={cn('aspect-square h-full w-full object-cover', className)}
-      onLoad={() => setStatus('loaded')}
-      onError={() => setStatus('error')}
+      onLoad={(e) => {
+        setStatus('loaded');
+        onLoadingStatusChange?.('loaded');
+        onLoad?.(e);
+      }}
+      onError={(e) => {
+        setStatus('error');
+        onLoadingStatusChange?.('error');
+        onError?.(e);
+      }}
       {...props}
     />
   );

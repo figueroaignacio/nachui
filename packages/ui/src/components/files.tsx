@@ -220,7 +220,7 @@ const FilesRoot: React.FC<FilesProps> = ({ children, defaultValue, className }) 
 
   return (
     <FilesContext value={contextValue}>
-      <div className={cn('w-full min-w-[250px]', className)}>{children}</div>
+      <div className={cn('w-full min-w-62.5', className)}>{children}</div>
     </FilesContext>
   );
 };
