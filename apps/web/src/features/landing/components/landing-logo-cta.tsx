@@ -6,7 +6,7 @@ export function LandingLogoCta() {
 
   return (
     <section className="w-full py-16 sm:py-24">
-      <div className="mx-auto w-full max-w-7xl px-6">
+      <div className="mx-auto w-full px-6">
         <div className="bg-rule mb-16 h-px" />
         <div className="max-w-xl">
           <p className="text-muted-foreground mb-4 font-mono text-[11px] tracking-[0.2em] uppercase">

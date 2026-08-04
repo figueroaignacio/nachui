@@ -1,28 +1,22 @@
 'use client';
 
 import { useCopyToClipboard } from '@/features/docs/hooks/use-copy-to-clipboard';
-import { getSkillInstallCommand } from '@/features/skills/lib/skills';
+import { getSkillInstallCommand, type SerializedSkill } from '@/features/skills/lib/skills';
 import type { Route } from 'next';
 import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
-import { SkillsFooter } from './skills-footer';
-import { SkillsHeader } from './skills-header';
-import { SkillsRow } from './skills-row';
-import { SkillsSearchInput } from './skills-search-input';
+import { SkillsFooter } from '../components/skills-footer';
+import { SkillsHeader } from '../components/skills-header';
+import { SkillsRow } from '../components/skills-row';
+import { SkillsSearchInput } from '../components/skills-search-input';
 
-export type SerializedSkill = {
-  slug: string;
-  name: string;
-  description: string;
-};
-
-export type SkillsListProps = {
+export type SkillsViewProps = {
   initialSkills: SerializedSkill[];
   initialQuery?: string;
 };
 
-export function SkillsList({ initialSkills, initialQuery }: SkillsListProps) {
+export function SkillsView({ initialSkills, initialQuery }: SkillsViewProps) {
   const t = useTranslations('components.skillsList');
   const router = useRouter();
   const pathname = usePathname();

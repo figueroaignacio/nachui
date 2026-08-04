@@ -2,7 +2,7 @@ import { SkipLink } from '@/components/common/skip-link';
 import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
 import { Providers } from '@/components/providers';
-import { ThemeInitScript } from '@/features/theme/components/theme-init-script';
+import { ThemeInitScript } from '@/components/common/theme-init-script';
 import { routing } from '@/i18n/routing';
 import { fontCode, fontHeading, fontSans, fontSerif } from '@/lib/font';
 import '@repo/ui/globals.css';

@@ -1,20 +1,19 @@
-import { Typography } from '@repo/ui/components/typography';
-// Types
-import type { Metadata } from 'next';
+import { BlogView } from '@/features/blog/views/blog-view';
 import type { Locale } from '@/i18n/routing';
-
-// Hooks
-import { getTranslations, setRequestLocale } from 'next-intl/server';
-
-// Components
-import { AllPosts } from '@/features/blog/components/all-posts';
 import { buildAlternates, getAbsoluteUrl } from '@/lib/domains';
-import { Container } from '@repo/ui/layout/container';
-import { Stack } from '@repo/ui/layout/stack';
+import type { Metadata } from 'next';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 type PageProps = {
   params: Promise<{ locale: Locale }>;
 };
+
+export default async function BlogPage({ params }: PageProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  return <BlogView />;
+}
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
@@ -51,24 +50,4 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       languages: buildAlternates('/blog'),
     },
   };
-}
-
-export default async function BlogPage({ params }: PageProps) {
-  const { locale } = await params;
-  setRequestLocale(locale);
-  const t = await getTranslations({ locale, namespace: 'sections.blog' });
-
-  return (
-    <Container as="section" className="space-y-12 py-12">
-      <Stack gap="1">
-        <Typography variant="h1" className="text-2xl font-bold">
-          Blog
-        </Typography>
-        <Typography variant="h2" className="text-muted-foreground text-lg">
-          {t('subtitle')}
-        </Typography>
-      </Stack>
-      <AllPosts />
-    </Container>
-  );
 }

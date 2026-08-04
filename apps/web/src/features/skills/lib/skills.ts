@@ -1,5 +1,11 @@
 export type SkillSlug = string;
 
+export type SerializedSkill = {
+  slug: string;
+  name: string;
+  description: string;
+};
+
 export function getSkillInstallCommand(slug: SkillSlug) {
   return `npx skills add github:figueroaignacio/ui-skills/skills/${slug}`;
 }

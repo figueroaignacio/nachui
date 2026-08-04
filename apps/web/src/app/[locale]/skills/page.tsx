@@ -1,8 +1,8 @@
-import { SkillsList } from '@/features/skills/components/skills-list';
+import { SkillsView } from '@/features/skills/views/skills-view';
 import { ContentRepository } from '@/lib/content-repository';
 import { buildAlternates, getAbsoluteUrl } from '@/lib/domains';
 import type { Metadata } from 'next';
-import { setRequestLocale, getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -22,7 +22,7 @@ export default async function SkillsPage({ params, searchParams }: PageProps) {
     description: skill.description,
   }));
 
-  return <SkillsList initialSkills={serializedSkills} initialQuery={initialQuery} />;
+  return <SkillsView initialSkills={serializedSkills} initialQuery={initialQuery} />;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

@@ -1,4 +1,4 @@
-import { LandingLogoCta } from '@/components/common/landing-logo-cta';
+import { LandingLogoCta } from '@/features/landing/components/landing-logo-cta';
 import { routing } from '@/i18n/routing';
 import { hasLocale } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';

@@ -1,5 +1,4 @@
-import { LandingLogoCta } from '@/components/common/landing-logo-cta';
-import { LandingHero } from '@/features/landing/components/landing-hero';
+import { HomeView } from '@/features/landing/views/home-view';
 import { buildAlternates, getAbsoluteUrl } from '@/lib/domains';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -12,12 +11,7 @@ export default async function HomePage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return (
-    <div className="flex flex-col">
-      <LandingHero />
-      <LandingLogoCta />
-    </div>
-  );
+  return <HomeView />;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

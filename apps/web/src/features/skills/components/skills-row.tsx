@@ -1,7 +1,7 @@
 import { Link } from '@/i18n/navigation';
 import { getSkillInstallCommand } from '../lib/skills';
 import { SkillsCopyButton } from './skills-copy-button';
-import type { SerializedSkill } from './skills-list';
+import type { SerializedSkill } from '../lib/skills';
 
 export type SkillsRowProps = {
   index: number;
