@@ -13,7 +13,6 @@
     "@ai-sdk/react": "^3.0.201",
     "@hugeicons/core-free-icons": "^4.2.0",
     "@hugeicons/react": "^1.1.6",
-    "@repo/ai": "workspace:*",
     "@vercel/analytics": "^2.0.1",
     "ai": "^6.0.199",
     "date-fns": "^4.4.0",
