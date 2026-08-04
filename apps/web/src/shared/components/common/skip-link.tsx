@@ -3,7 +3,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { getTranslations } from 'next-intl/server';
 
 export async function SkipLink() {
-  let label = 'Skip to main content';
+  let label: string;
 
   try {
     const t = await getTranslations('components.skipLink');

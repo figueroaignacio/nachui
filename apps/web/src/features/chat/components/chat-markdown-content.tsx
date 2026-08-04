@@ -4,6 +4,7 @@ import { CodeBlock } from '@/components/mdx/codeblock';
 import { InlineCode } from '@/components/mdx/inline-code';
 import { Table } from '@repo/ui/components/table';
 import { Typography } from '@repo/ui/components/typography';
+import { isValidElement } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -109,10 +110,12 @@ export function ChatMarkdownContent({ content }: MarkdownContentProps) {
             <Table.Cell className="px-4 py-3 align-top leading-6">{children}</Table.Cell>
           ),
           pre: ({ children }) => {
-            const child = (children as any)?.props;
+            const child = isValidElement(children)
+              ? (children.props as { className?: string; children?: React.ReactNode })
+              : null;
             if (!child) return <pre className="overflow-x-auto">{children}</pre>;
             const language = child.className?.replace('language-', '') || 'tsx';
-            const extractCode = (node: any): string => {
+            const extractCode = (node: unknown): string => {
               if (!node) return '';
               if (typeof node === 'string') return node;
               if (Array.isArray(node)) return node.map(extractCode).join('');
