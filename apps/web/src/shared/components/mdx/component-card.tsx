@@ -20,13 +20,18 @@ export function ComponentCard({ label, href, description }: ComponentCardProps) 
     COMPONENT_LIST_PREVIEWS[componentName] || DEMO_COMPONENTS[componentName]?.default;
 
   return (
-    <Link href={href} className="group block">
-      <div className="border-border flex flex-col gap-3 overflow-hidden rounded-xl border transition-all duration-200 active:scale-[0.98]">
+    <div className="group relative">
+      {/* Overlay link keeps interactive elements in the preview out of the anchor's DOM subtree. */}
+      <Link href={href} className="absolute inset-0 z-20 rounded-xl" aria-label={label} />
+      <div className="border-border flex flex-col gap-3 overflow-hidden rounded-xl border transition-all duration-200 group-active:scale-[0.98]">
         <div className="relative flex aspect-video items-center justify-center overflow-hidden p-6 sm:p-8">
           <div className="absolute inset-0 z-0 mask-[linear-gradient(to_bottom,white,transparent)] opacity-[0.03] dark:opacity-[0.07]">
             <div className="absolute h-full w-full bg-[radial-gradient(#000_1px,transparent_1px)] bg-size-[16px_16px] dark:bg-[radial-gradient(#fff_1px,transparent_1px)]" />
           </div>
-          <div className="pointer-events-none z-10 scale-90 transition-transform duration-300 select-none group-hover:scale-100 sm:scale-100">
+          <div
+            inert
+            className="pointer-events-none z-10 scale-90 transition-transform duration-300 select-none group-hover:scale-100 sm:scale-100"
+          >
             {PreviewComponent ? (
               <PreviewComponent />
             ) : (
@@ -55,6 +60,6 @@ export function ComponentCard({ label, href, description }: ComponentCardProps) 
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
