@@ -1,6 +1,6 @@
 'use client';
 
-import { GitHubIcon } from '@/components/common/tech-icons';
+import { GitHubIcon } from '@/components/common/github-icon';
 import { buttonVariants } from '@repo/ui/components/button';
 import { Card } from '@repo/ui/components/card';
 import { Typography } from '@repo/ui/components/typography';
