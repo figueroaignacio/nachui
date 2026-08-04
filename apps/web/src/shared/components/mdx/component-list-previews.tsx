@@ -17,6 +17,88 @@ const MockBar = ({ className }: { className?: string }) => (
   <div className={`bg-muted-foreground/20 h-1.5 rounded-full ${className}`} />
 );
 
+const CloseGlyph = ({ size = 12 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+  >
+    <path d="M18 6 6 18M6 6l12 12" />
+  </svg>
+);
+
+const ChevronGlyph = ({ size = 14, className }: { size?: number; className?: string }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    className={className}
+  >
+    <path d="m6 9 6 6 6-6" />
+  </svg>
+);
+
+const CheckGlyph = ({ size = 9, className }: { size?: number; className?: string }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 12 12"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <polyline points="2,6 5,9 10,3" />
+  </svg>
+);
+
+const CopyGlyph = ({ size = 13, className }: { size?: number; className?: string }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    className={className}
+  >
+    <rect x="9" y="9" width="12" height="12" rx="2" />
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+  </svg>
+);
+
+type MockButtonProps = {
+  variant?: 'primary' | 'outline' | 'ghost';
+  small?: boolean;
+  barClassName?: string;
+};
+
+// Mirrors @repo/ui Button: rounded-md, h-9 default / h-8 sm.
+const MockButton = ({ variant = 'primary', small, barClassName = 'w-10' }: MockButtonProps) => {
+  const look = {
+    primary: 'bg-primary shadow-sm',
+    outline: 'border-border border bg-transparent',
+    ghost: 'opacity-60',
+  }[variant];
+  const bar = variant === 'primary' ? 'bg-primary-foreground/50' : 'opacity-40';
+
+  return (
+    <div
+      className={`inline-flex items-center rounded-md ${small ? 'h-8 px-3' : 'h-9 px-4'} ${look}`}
+    >
+      <MockBar className={`${bar} ${barClassName}`} />
+    </div>
+  );
+};
+
 export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
   banner: () => (
     <div className="flex w-[220px] items-center gap-2.5 border-b px-3 py-2 text-sm">
@@ -26,35 +108,20 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
           <MockBar className="h-1.5 w-20 bg-current opacity-60" />
           <MockBar className="h-1 w-full bg-current opacity-25" />
         </div>
-        <div className="flex h-5 items-center rounded border border-current/20 px-1.5">
+        <div className="flex h-5 items-center rounded-sm border border-current/20 px-1.5">
           <MockBar className="h-1 w-6 bg-current opacity-40" />
         </div>
       </div>
       <div className="shrink-0 opacity-40">
-        <svg
-          width="9"
-          height="9"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <path d="M18 6 6 18M6 6l12 12" />
-        </svg>
+        <CloseGlyph size={9} />
       </div>
     </div>
   ),
   button: () => (
     <div className="flex items-center gap-2">
-      <div className="bg-primary/80 inline-flex h-9 items-center rounded-xl px-4 shadow-md">
-        <MockBar className="w-14 bg-white/40" />
-      </div>
-      <div className="border-border bg-background inline-flex h-9 items-center rounded-xl border px-4">
-        <MockBar className="w-10 opacity-40" />
-      </div>
-      <div className="hover:bg-muted inline-flex h-9 items-center rounded-xl px-3 opacity-50">
-        <MockBar className="w-8 opacity-40" />
-      </div>
+      <MockButton variant="primary" barClassName="w-14" />
+      <MockButton variant="outline" barClassName="w-10" />
+      <MockButton variant="ghost" barClassName="w-8" />
     </div>
   ),
   accordion: () => (
@@ -64,20 +131,12 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
         { open: false, tw: 'w-20' },
         { open: false, tw: 'w-28' },
       ].map((item, i) => (
-        <div key={i} className="border-b border-white/5 last:border-0">
+        <div key={i} className="border-border/50 border-b last:border-0">
           <div className="flex w-full items-center justify-between py-4">
             <MockBar className={`${item.tw} ${item.open ? 'opacity-70' : 'opacity-40'}`} />
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
+            <ChevronGlyph
               className={`text-muted-foreground/50 shrink-0 ${item.open ? 'rotate-180' : ''}`}
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
+            />
           </div>
           {item.open && (
             <div className="space-y-1.5 pb-4">
@@ -109,13 +168,13 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
   ),
   badge: () => (
     <div className="flex flex-wrap items-center gap-2">
-      <div className="bg-primary/80 inline-flex items-center rounded-full border border-transparent px-2.5 py-0.5 text-[10px] font-semibold text-white shadow-sm">
+      <div className="bg-primary text-primary-foreground inline-flex items-center rounded-sm border border-transparent px-2 py-0.5 text-[11px] font-medium tracking-wide">
         Default
       </div>
-      <div className="bg-secondary text-secondary-foreground/80 inline-flex items-center rounded-full border border-transparent px-2.5 py-0.5 text-[10px] font-semibold">
+      <div className="bg-secondary text-secondary-foreground/80 inline-flex items-center rounded-sm border border-transparent px-2 py-0.5 text-[11px] font-medium tracking-wide">
         Secondary
       </div>
-      <div className="text-foreground/70 border-border inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-semibold">
+      <div className="text-foreground/70 border-border inline-flex items-center rounded-sm border px-2 py-0.5 text-[11px] font-medium tracking-wide">
         Outline
       </div>
     </div>
@@ -131,12 +190,8 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
         <MockBar className="w-5/6 opacity-25" />
       </div>
       <div className="flex justify-end gap-2 px-4 pb-4">
-        <div className="border-border bg-background flex h-8 items-center rounded-xl border px-3">
-          <MockBar className="h-1 w-8 opacity-40" />
-        </div>
-        <div className="bg-primary/80 flex h-8 items-center rounded-xl px-3 shadow-md">
-          <MockBar className="h-1 w-10 bg-white/40" />
-        </div>
+        <MockButton variant="outline" small barClassName="h-1 w-8" />
+        <MockButton variant="primary" small barClassName="h-1 w-10" />
       </div>
     </div>
   ),
@@ -145,22 +200,9 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
       {[true, false, false].map((checked, i) => (
         <div key={i} className="flex items-center gap-2.5">
           <div
-            className={`relative flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border ${checked ? 'bg-primary/80 border-transparent' : 'border-primary/50 bg-background'}`}
+            className={`relative flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border ${checked ? 'bg-primary border-transparent' : 'border-primary/50 bg-background'}`}
           >
-            {checked && (
-              <svg
-                width="9"
-                height="9"
-                viewBox="0 0 12 12"
-                fill="none"
-                stroke="white"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="2,6 5,9 10,3" />
-              </svg>
-            )}
+            {checked && <CheckGlyph className="text-primary-foreground" />}
           </div>
           <MockBar className={`${i === 0 ? 'w-28 opacity-65' : 'w-20 opacity-35'}`} />
         </div>
@@ -172,7 +214,7 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
       {[true, false, false].map((selected, i) => (
         <div key={i} className="flex items-center gap-2.5">
           <div
-            className={`relative flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${selected ? 'bg-primary/80 border-primary/80' : 'border-border/60 bg-background'}`}
+            className={`relative flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${selected ? 'bg-primary border-primary' : 'border-border/60 bg-background'}`}
           >
             {selected && <div className="bg-background h-1.5 w-1.5 rounded-full" />}
           </div>
@@ -185,17 +227,7 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
     <div className="border-border w-[190px] rounded-lg border">
       <div className="flex items-center justify-between p-4">
         <MockBar className="w-20 opacity-60" />
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className="text-muted-foreground/50 shrink-0 rotate-180"
-        >
-          <path d="m6 9 6 6 6-6" />
-        </svg>
+        <ChevronGlyph className="text-muted-foreground/50 shrink-0 rotate-180" />
       </div>
       <div className="border-border/30 space-y-2 border-t px-4 pb-4">
         <div className="space-y-2 pt-3">
@@ -230,19 +262,18 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
     </div>
   ),
 
+  command: () => (
+    <div className="border-border bg-surface-muted flex w-[225px] items-center gap-3 rounded-md border px-4 py-2.5 font-mono">
+      <span className="text-muted-foreground shrink-0 select-none">$</span>
+      <code className="text-foreground/80 flex-1 truncate text-xs">npx nachui add button</code>
+      <CopyGlyph className="text-muted-foreground/60 shrink-0" />
+    </div>
+  ),
+
   dialog: () => (
-    <div className="bg-background border-border relative w-52 rounded-xl border p-5 shadow-lg">
+    <div className="bg-background border-border relative w-52 rounded-lg border p-5 shadow-lg">
       <div className="absolute top-4 right-4 opacity-40">
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <path d="M18 6 6 18M6 6l12 12" />
-        </svg>
+        <CloseGlyph />
       </div>
       <div className="mb-3 flex flex-col space-y-1.5">
         <MockBar className="bg-muted-foreground/55 h-2 w-28" />
@@ -250,19 +281,15 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
         <MockBar className="h-1 w-4/5 opacity-25" />
       </div>
       <div className="flex justify-end gap-2 pt-1">
-        <div className="border-border bg-background flex h-8 items-center rounded-xl border px-3">
-          <MockBar className="h-1 w-10 opacity-40" />
-        </div>
-        <div className="bg-primary/80 flex h-8 items-center rounded-xl px-3 shadow-md">
-          <MockBar className="h-1 w-12 bg-white/40" />
-        </div>
+        <MockButton variant="outline" small barClassName="h-1 w-10" />
+        <MockButton variant="primary" small barClassName="h-1 w-12" />
       </div>
     </div>
   ),
 
   'dropdown-menu': () => (
     <div className="flex flex-col items-start gap-1.5">
-      <div className="border-border bg-background inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm">
+      <div className="border-border bg-background inline-flex h-9 items-center gap-2 rounded-md border px-4 text-sm">
         <MockBar className="w-16 opacity-55" />
         <HugeiconsIcon icon={ArrowDown01Icon} size={14} className="text-muted-foreground/50" />
       </div>
@@ -274,13 +301,13 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
           {[false, true, false].map((active, i) => (
             <div
               key={i}
-              className={`flex items-center rounded-md px-3 py-2 text-sm ${active ? 'bg-muted/60' : ''}`}
+              className={`flex items-center rounded-sm px-3 py-2 text-sm ${active ? 'bg-muted/60' : ''}`}
             >
               <MockBar className={`${active ? 'w-24 opacity-60' : 'w-20 opacity-30'}`} />
             </div>
           ))}
           <div className="bg-border/50 my-1 h-px" />
-          <div className="text-destructive/60 flex items-center rounded-md px-3 py-2 text-sm">
+          <div className="text-destructive/60 flex items-center rounded-sm px-3 py-2 text-sm">
             <MockBar className="bg-destructive/40 w-16 opacity-60" />
           </div>
         </div>
@@ -291,17 +318,7 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
   files: () => (
     <div className="w-[185px] space-y-0.5">
       <div className="flex items-center rounded px-2 py-1 text-sm font-medium">
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className="text-muted-foreground mr-1 shrink-0 rotate-90 opacity-55"
-        >
-          <path d="m9 18 6-6-6-6" />
-        </svg>
+        <ChevronGlyph className="text-muted-foreground mr-1 shrink-0 opacity-55" />
         <HugeiconsIcon
           icon={Folder01Icon}
           size={14}
@@ -319,17 +336,7 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
           <MockBar className="w-24 flex-1 opacity-40" />
         </div>
         <div className="flex items-center rounded px-2 py-1 text-sm font-medium">
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="text-muted-foreground mr-1 shrink-0 opacity-40"
-          >
-            <path d="m9 18 6-6-6-6" />
-          </svg>
+          <ChevronGlyph className="text-muted-foreground mr-1 shrink-0 -rotate-90 opacity-40" />
           <HugeiconsIcon
             icon={Folder01Icon}
             size={14}
@@ -356,7 +363,7 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
         <MockBar className="bg-muted-foreground/50 h-1.5 w-16" />
         <MockBar className="h-1 w-32 opacity-25" />
       </div>
-      <div className="border-input relative flex h-9 w-full items-center gap-2 rounded-sm border bg-transparent px-3 shadow-xs">
+      <div className="border-input relative flex h-9 w-full items-center gap-2 rounded-md border bg-transparent px-3 shadow-xs">
         <HugeiconsIcon
           icon={User02FreeIcons}
           size={14}
@@ -406,7 +413,7 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
 
   popover: () => (
     <div className="flex flex-col items-start gap-1.5">
-      <div className="border-border bg-background inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-sm opacity-75">
+      <div className="border-border bg-background inline-flex h-9 items-center gap-1.5 rounded-md border px-3 text-sm opacity-75">
         <MockBar className="w-16 opacity-55" />
         <HugeiconsIcon icon={ArrowDown01Icon} size={10} className="text-muted-foreground/50" />
       </div>
@@ -419,12 +426,8 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
           <MockBar className="w-3/4 opacity-25" />
         </div>
         <div className="mt-4 flex gap-2">
-          <div className="border-border flex h-8 items-center rounded-xl border px-2.5">
-            <MockBar className="h-1 w-8 opacity-40" />
-          </div>
-          <div className="bg-primary/80 flex h-8 items-center rounded-xl px-2.5">
-            <MockBar className="h-1 w-10 bg-white/40" />
-          </div>
+          <MockButton variant="outline" small barClassName="h-1 w-8" />
+          <MockButton variant="primary" small barClassName="h-1 w-10" />
         </div>
       </div>
     </div>
@@ -455,14 +458,24 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
 
   select: () => (
     <div className="w-[190px] space-y-1.5">
-      <MockBar className="bg-muted-foreground/45 h-1.5 w-14" />
-      <div className="border-input relative flex h-10 w-full items-center justify-between rounded-md border bg-transparent px-3 pr-9">
+      <div className="border-input relative flex h-9 w-full items-center justify-between rounded-md border bg-transparent px-3">
         <MockBar className="w-24 opacity-50" />
-        <HugeiconsIcon
-          icon={ArrowDown01Icon}
-          size={14}
-          className="text-muted-foreground/50 absolute right-3"
-        />
+        <ChevronGlyph className="text-muted-foreground/50 rotate-180" />
+      </div>
+      <div className="bg-popover border-border w-full rounded-md border p-1 shadow-md">
+        {[
+          { selected: true, w: 'w-24' },
+          { selected: false, w: 'w-16' },
+          { selected: false, w: 'w-20' },
+        ].map((option, i) => (
+          <div
+            key={i}
+            className={`flex items-center justify-between rounded-sm px-2 py-1.5 ${option.selected ? 'bg-muted/60' : ''}`}
+          >
+            <MockBar className={`${option.w} ${option.selected ? 'opacity-60' : 'opacity-30'}`} />
+            {option.selected && <CheckGlyph size={10} className="text-foreground/70" />}
+          </div>
+        ))}
       </div>
     </div>
   ),
@@ -487,28 +500,19 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
     </div>
   ),
   drawer: () => (
-    <div className="bg-background border-border relative h-36 w-52 overflow-hidden rounded-md border shadow-2xl">
+    <div className="bg-background border-border relative h-36 w-52 overflow-hidden rounded-lg border shadow-2xl">
       <div className="pointer-events-none absolute inset-0 space-y-2 p-4 opacity-10">
         <MockBar className="w-full" />
         <MockBar className="w-5/6" />
         <MockBar className="w-4/6" />
       </div>
-      <div className="bg-background border-border absolute inset-y-2 right-2 flex w-28 flex-col rounded-sm border shadow-2xl">
+      <div className="bg-background border-border absolute inset-y-2 right-2 flex w-28 flex-col rounded-md border shadow-2xl">
         <div className="flex shrink-0 justify-center py-2.5">
           <div className="bg-muted-foreground/25 h-1 w-10 rounded-full" />
         </div>
         <div className="flex shrink-0 justify-end px-3 pb-1">
-          <div className="hover:bg-muted flex h-6 w-6 items-center justify-center rounded-full opacity-40">
-            <svg
-              width="10"
-              height="10"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M18 6 6 18M6 6l12 12" />
-            </svg>
+          <div className="flex h-6 w-6 items-center justify-center rounded-full opacity-40">
+            <CloseGlyph size={10} />
           </div>
         </div>
         <div className="flex-1 space-y-2 px-4 pb-4">
@@ -539,19 +543,23 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
     </div>
   ),
   switch: () => (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <div className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full">
-          <div className="bg-primary/60 pointer-events-none absolute inset-x-0 h-full w-full rounded-full" />
-          <span className="bg-secondary-foreground pointer-events-none z-10 block h-5 w-5 translate-x-5 rounded-full shadow-sm" />
+    <div className="w-[180px] space-y-3">
+      {[
+        { on: true, w: 'w-24', op: 'opacity-60' },
+        { on: false, w: 'w-16', op: 'opacity-35' },
+      ].map((row, i) => (
+        <div key={i} className="flex items-center justify-between">
+          <MockBar className={`${row.w} ${row.op}`} />
+          <div className="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full">
+            <div
+              className={`pointer-events-none absolute inset-x-0 h-full w-full rounded-full ${row.on ? 'bg-primary/60' : 'bg-input'}`}
+            />
+            <span
+              className={`pointer-events-none z-10 block h-5 w-5 rounded-full shadow-sm ${row.on ? 'bg-secondary-foreground translate-x-5' : 'bg-secondary-foreground/60 translate-x-0'}`}
+            />
+          </div>
         </div>
-      </div>
-      <div className="flex items-center justify-between">
-        <div className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full">
-          <div className="bg-input pointer-events-none absolute inset-x-0 h-full w-full rounded-full" />
-          <span className="bg-secondary-foreground/60 pointer-events-none z-10 block h-5 w-5 translate-x-0 rounded-full shadow-sm" />
-        </div>
-      </div>
+      ))}
     </div>
   ),
 
@@ -587,7 +595,7 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
             {['w-14', 'w-12', 'w-8'].map((w, i) => (
               <th
                 key={i}
-                className={`border-border text-muted-foreground h-10 border-r px-3 py-2 text-left font-medium last:border-r-0 ${i === 2 ? 'last:border-r-0' : ''}`}
+                className="border-border text-muted-foreground h-10 border-r px-3 py-2 text-left font-medium last:border-r-0"
               >
                 <MockBar className={`${w} bg-muted-foreground/45`} />
               </th>
@@ -596,14 +604,14 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
         </thead>
         <tbody className="[&_tr:last-child]:border-0">
           {[
-            ['w-16', 'w-10', 'w-6'],
-            ['w-20', 'w-8', 'w-8'],
-            ['w-14', 'w-12', 'w-5'],
-          ].map((cols, i) => (
+            { cols: ['w-16', 'w-10', 'w-6'], op: 'opacity-35' },
+            { cols: ['w-20', 'w-8', 'w-8'], op: 'opacity-30' },
+            { cols: ['w-14', 'w-12', 'w-5'], op: 'opacity-25' },
+          ].map((row, i) => (
             <tr key={i} className="border-border/30 border-b last:border-0">
-              {cols.map((w, j) => (
+              {row.cols.map((w, j) => (
                 <td key={j} className="border-border border-r px-3 py-2.5 last:border-r-0">
-                  <MockBar className={`${w} opacity-${35 - i * 5}`} />
+                  <MockBar className={`${w} ${row.op}`} />
                 </td>
               ))}
             </tr>
@@ -621,23 +629,14 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
         <MockBar className="h-1 w-full bg-current opacity-30" />
       </div>
       <div className="mt-0.5 shrink-0 opacity-40">
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <path d="M18 6 6 18M6 6l12 12" />
-        </svg>
+        <CloseGlyph />
       </div>
     </div>
   ),
 
   tooltip: () => (
     <div className="flex flex-col items-center gap-0">
-      <div className="bg-foreground/85 rounded-xl px-3 py-1.5 shadow-md">
+      <div className="bg-foreground/85 rounded-md px-3 py-1.5 shadow-md">
         <MockBar className="bg-background/45 h-1.5 w-16" />
       </div>
       <div
@@ -649,28 +648,31 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
       </div>
     </div>
   ),
-  textarea: () => (
-    <div className="flex w-[190px] flex-col gap-1.5">
-      <MockBar className="bg-muted-foreground/45 h-1.5 w-14" />
-      <div className="border-input relative w-full rounded-md border bg-transparent p-3 shadow-xs">
-        <div className="space-y-1.5">
+
+  typography: () => (
+    <div className="flex w-[200px] items-center gap-4">
+      <span className="font-heading text-foreground/90 text-5xl font-semibold tracking-tight">
+        Ag
+      </span>
+      <div className="flex-1 space-y-2.5">
+        <MockBar className="bg-muted-foreground/60 h-2.5 w-full" />
+        <MockBar className="bg-muted-foreground/45 h-2 w-5/6" />
+        <div className="space-y-1.5 pt-1">
           <MockBar className="w-full opacity-30" />
-          <MockBar className="w-full opacity-25" />
-          <MockBar className="w-4/5 opacity-20" />
-          <MockBar className="w-3/5 opacity-15" />
-        </div>
-        <div className="absolute right-1.5 bottom-1.5 opacity-20">
-          <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor">
-            <path d="M6 2L8 0v2H6zM4 4L8 0v2L6 4H4zM2 6L8 0v2L4 6H2z" opacity=".6" />
-          </svg>
+          <MockBar className="w-4/5 opacity-25" />
         </div>
       </div>
     </div>
   ),
+
   spinner: () => (
-    <div className="flex items-center gap-5">
-      <div className="flex flex-col items-center gap-2">
-        <div className="text-muted-foreground/50 h-8 w-8 animate-spin">
+    <div className="flex items-end gap-6">
+      {[
+        { size: 'h-4 w-4', tone: 'text-muted-foreground/35' },
+        { size: 'h-6 w-6', tone: 'text-muted-foreground/50' },
+        { size: 'h-8 w-8', tone: 'text-muted-foreground/70' },
+      ].map((spinner, i) => (
+        <div key={i} className={`${spinner.size} ${spinner.tone} animate-spin`}>
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -681,7 +683,7 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
             <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
           </svg>
         </div>
-      </div>
+      ))}
     </div>
   ),
 };
