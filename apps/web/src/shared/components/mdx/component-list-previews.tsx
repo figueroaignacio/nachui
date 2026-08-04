@@ -107,12 +107,12 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
       <Breadcrumb.List>
         <Breadcrumb.Item>
           <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
-          <Breadcrumb.Separator />
         </Breadcrumb.Item>
+        <Breadcrumb.Separator />
         <Breadcrumb.Item>
           <Breadcrumb.Link href="/docs">Docs</Breadcrumb.Link>
-          <Breadcrumb.Separator />
         </Breadcrumb.Item>
+        <Breadcrumb.Separator />
         <Breadcrumb.Item>
           <Breadcrumb.Page>Button</Breadcrumb.Page>
         </Breadcrumb.Item>

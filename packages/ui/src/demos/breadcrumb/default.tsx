@@ -1,5 +1,7 @@
 'use client';
 
+import { Fragment } from 'react';
+
 import { Breadcrumb } from '../../components/breadcrumb';
 
 const items = [
@@ -13,14 +15,16 @@ export function Default() {
     <Breadcrumb>
       <Breadcrumb.List>
         {items.map((item, index) => (
-          <Breadcrumb.Item key={index}>
-            {item.isPage ? (
-              <Breadcrumb.Page>{item.label}</Breadcrumb.Page>
-            ) : (
-              <Breadcrumb.Link href={item.href}>{item.label}</Breadcrumb.Link>
-            )}
+          <Fragment key={index}>
+            <Breadcrumb.Item>
+              {item.isPage ? (
+                <Breadcrumb.Page>{item.label}</Breadcrumb.Page>
+              ) : (
+                <Breadcrumb.Link href={item.href}>{item.label}</Breadcrumb.Link>
+              )}
+            </Breadcrumb.Item>
             {index < items.length - 1 && <Breadcrumb.Separator />}
-          </Breadcrumb.Item>
+          </Fragment>
         ))}
       </Breadcrumb.List>
     </Breadcrumb>

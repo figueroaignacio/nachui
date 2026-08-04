@@ -24,12 +24,12 @@ export function PreviewPaymentsNav() {
           <Breadcrumb.List>
             <Breadcrumb.Item>
               <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
-              <Breadcrumb.Separator />
             </Breadcrumb.Item>
+            <Breadcrumb.Separator />
             <Breadcrumb.Item>
               <Breadcrumb.Ellipsis />
-              <Breadcrumb.Separator />
             </Breadcrumb.Item>
+            <Breadcrumb.Separator />
             <Breadcrumb.Item>
               <Breadcrumb.Page>Payments</Breadcrumb.Page>
             </Breadcrumb.Item>

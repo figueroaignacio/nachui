@@ -2,6 +2,8 @@
 
 import { SlashIcon } from 'lucide-react';
 
+import { Fragment } from 'react';
+
 import { Breadcrumb } from '../../components/breadcrumb';
 
 const crumbs = [
@@ -15,18 +17,20 @@ export function CustomSeparator() {
     <Breadcrumb>
       <Breadcrumb.List>
         {crumbs.map((crumb, index) => (
-          <Breadcrumb.Item key={crumb.label}>
-            {crumb.href ? (
-              <Breadcrumb.Link href={crumb.href}>{crumb.label}</Breadcrumb.Link>
-            ) : (
-              <Breadcrumb.Page>{crumb.label}</Breadcrumb.Page>
-            )}
+          <Fragment key={crumb.label}>
+            <Breadcrumb.Item>
+              {crumb.href ? (
+                <Breadcrumb.Link href={crumb.href}>{crumb.label}</Breadcrumb.Link>
+              ) : (
+                <Breadcrumb.Page>{crumb.label}</Breadcrumb.Page>
+              )}
+            </Breadcrumb.Item>
             {index < crumbs.length - 1 && (
               <Breadcrumb.Separator>
                 <SlashIcon className="h-3.5 w-3.5" />
               </Breadcrumb.Separator>
             )}
-          </Breadcrumb.Item>
+          </Fragment>
         ))}
       </Breadcrumb.List>
     </Breadcrumb>
