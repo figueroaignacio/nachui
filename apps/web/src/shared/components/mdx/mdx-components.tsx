@@ -111,11 +111,16 @@ function ListItem({ className, ...props }: React.HTMLAttributes<HTMLLIElement>) 
     <li
       className={cn(
         'text-foreground/80 pl-1 text-base leading-7 sm:text-[17px] sm:leading-8',
+        '[&>ol]:my-3 [&>ul]:my-3',
         className,
       )}
       {...props}
     />
   );
+}
+
+function Strong({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
+  return <strong className={cn('text-foreground font-semibold', className)} {...props} />;
 }
 
 function HorizontalRule({ className, ...props }: React.HTMLAttributes<HTMLHRElement>) {
@@ -193,6 +198,7 @@ export const mdxComponents = {
   h6: H6,
   a: Link,
   p: Paragraph,
+  strong: Strong,
   ul: UnorderedList,
   ol: OrderedList,
   li: ListItem,
