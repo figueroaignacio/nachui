@@ -34,17 +34,4 @@
     hyphens: auto;
   }
 
-  .animate-ascii-twinkle {
-    animation: ascii-twinkle 4s ease-in-out infinite;
-  }
-}
-
-@keyframes ascii-twinkle {
-  0%,
-  100% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 1;
-  }
 }
