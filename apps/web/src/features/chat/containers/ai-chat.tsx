@@ -5,8 +5,8 @@ import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll';
 import { AnimatePresence } from 'motion/react';
 import { useCallback, type RefObject } from 'react';
 import { useChatStore } from '../store/chat-store';
-import { ChatToggleButton } from './chat-toggle-button';
-import { ChatWindow } from './chat-window';
+import { ChatToggleButton } from '../ui/chat-toggle-button';
+import { ChatWindow } from '../widgets/chat-window';
 
 export function AiChat() {
   const {

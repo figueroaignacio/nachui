@@ -1,7 +1,7 @@
 'use client';
 
 import { GitHubIcon } from '@/components/common/github-icon';
-import { AiAvatar } from '@/features/chat/components/ai-avatar';
+import { AiAvatar } from '@/features/chat/ui/ai-avatar';
 import { useChatStore } from '@/features/chat/store/chat-store';
 import { useCopyToClipboard } from '@/features/docs/hooks/use-copy-to-clipboard';
 import { ArrowDown01Icon, Copy01Icon, Tick02Icon } from '@hugeicons/core-free-icons';

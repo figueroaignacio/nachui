@@ -1,5 +1,5 @@
 import { BlurBackdrop } from '@/components/common/blur-backdrop';
-import { AiChat } from '@/features/chat/components/ai-chat';
+import { AiChat } from '@/features/chat/containers/ai-chat';
 import { Sidebar } from '@/features/docs/components/sidebar';
 import { Grid } from '@repo/ui/layout/grid';
 

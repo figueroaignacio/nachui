@@ -1,8 +1,8 @@
 import type { Message } from '@/lib/definitions';
 import { Container } from '@repo/ui/layout/container';
 import { AnimatePresence, motion, type Transition } from 'motion/react';
-import { ChatHeader } from './chat-header';
-import { ChatInput } from './chat-input';
+import { ChatHeader } from '../ui/chat-header';
+import { ChatInput } from '../ui/chat-input';
 import { ChatMessages } from './chat-messages';
 
 interface ChatWindowProps {

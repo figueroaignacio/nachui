@@ -2,10 +2,10 @@ import type { Message } from '@/lib/definitions';
 import { cn } from '@repo/ui/lib/cn';
 import type { RefObject } from 'react';
 import { useEffect } from 'react';
-import { ChatError } from './chat-error';
-import { ChatLoading } from './chat-loading';
-import { ChatMessage } from './chat-message';
-import { ChatSuggestions } from './chat-suggestions';
+import { ChatError } from '../ui/chat-error';
+import { ChatLoading } from '../ui/chat-loading';
+import { ChatMessage } from '../ui/chat-message';
+import { ChatSuggestions } from '../ui/chat-suggestions';
 
 interface ChatMessagesProps {
   messages: Message[];
