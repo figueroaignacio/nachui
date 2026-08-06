@@ -39,6 +39,10 @@
       "helperText": "Presiona Enter para enviar, Shift + Enter para nueva línea",
       "tooltip": "¿Puedo ayudarte?",
       "thinking": "Pensando",
+      "tools": {
+        "searchKnowledgeBase": "Buscando en la documentación",
+        "getComponentCode": "Leyendo el código del componente"
+      },
       "copy": "Copiar",
       "copied": "Copiado",
       "explainRequest": "Explicar {component}",
@@ -121,13 +125,13 @@
       "skill": "Skill",
       "install": "Instalar"
     },
-    "noResults": "No hay skills que coincidan con \u201c{query}\u201d",
+    "noResults": "No hay skills que coincidan con “{query}”",
     "copy": "Copiar",
     "copied": "Copiado",
     "syncedFrom": "Sincronizado desde"
   },
   "skillDetail": {
     "viewSource": "Ver fuente",
-    "triggersWhen": "Se activa cuando: \u201c{description}\u201d"
+    "triggersWhen": "Se activa cuando: “{description}”"
   }
 }

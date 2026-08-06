@@ -39,6 +39,10 @@
       "helperText": "Press Enter to send, Shift + Enter for new line",
       "tooltip": "Hey! I can help you",
       "thinking": "Thinking",
+      "tools": {
+        "searchKnowledgeBase": "Searching the docs",
+        "getComponentCode": "Reading the component source"
+      },
       "copy": "Copy",
       "copied": "Copied",
       "explainRequest": "Explain {component}",
@@ -121,13 +125,13 @@
       "skill": "Skill",
       "install": "Install"
     },
-    "noResults": "No skills match \u201c{query}\u201d",
+    "noResults": "No skills match “{query}”",
     "copy": "Copy",
     "copied": "Copied",
     "syncedFrom": "Synced from"
   },
   "skillDetail": {
     "viewSource": "View source",
-    "triggersWhen": "Triggers when: \u201c{description}\u201d"
+    "triggersWhen": "Triggers when: “{description}”"
   }
 }

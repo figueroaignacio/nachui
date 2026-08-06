@@ -17,6 +17,7 @@ export function AiChat() {
     messages,
     isLoading,
     isStreaming,
+    activeTool,
     error,
     messagesEndRef,
     sendMessage,
@@ -55,6 +56,7 @@ export function AiChat() {
         messages={messages}
         isLoading={isLoading}
         isStreaming={isStreaming}
+        activeTool={activeTool}
         error={error}
         messagesEndRef={messagesEndRef as RefObject<HTMLDivElement>}
         message={message}

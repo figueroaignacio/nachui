@@ -2,6 +2,7 @@ import type { Message } from '@/lib/definitions';
 import { cn } from '@repo/ui/lib/cn';
 import type { RefObject } from 'react';
 import { useEffect } from 'react';
+import type { ToolName } from '../hooks/use-chat';
 import { ChatError } from '../ui/chat-error';
 import { ChatLoading } from '../ui/chat-loading';
 import { ChatMessage } from '../ui/chat-message';
@@ -11,6 +12,7 @@ interface ChatMessagesProps {
   messages: Message[];
   isLoading: boolean;
   isStreaming: boolean;
+  activeTool: ToolName | null;
   error: Error | undefined;
   endRef: RefObject<HTMLDivElement>;
   onSuggestionClick: (text: string) => void;
@@ -20,15 +22,25 @@ export function ChatMessages({
   messages,
   isLoading,
   isStreaming,
+  activeTool,
   error,
   endRef,
   onSuggestionClick,
 }: ChatMessagesProps) {
-  const showSuggestions = messages.length === 0;
-
   const lastMsg = messages[messages.length - 1];
   const lastContent = lastMsg?.content ?? '';
   const lastRole = lastMsg?.role;
+
+  // State selection:
+  // - empty    → suggestions
+  // - loading  → ChatLoading, tool-aware. Covers the submitted phase AND the
+  //   tool-execution phase — the stream is already "streaming" while a tool
+  //   runs, but no text has arrived, which previously left the screen blank.
+  // - error    → ChatError
+  // - data     → the messages themselves
+  const showSuggestions = messages.length === 0 && !isLoading;
+  const showLoading = activeTool !== null || (isLoading && lastRole !== 'assistant');
+  const showError = error !== undefined && !isLoading;
 
   useEffect(() => {
     if (!endRef.current) return;
@@ -51,7 +63,7 @@ export function ChatMessages({
 
         return (
           <div
-            key={idx}
+            key={msg.id ?? idx}
             className={cn('flex flex-col', msg.role === 'user' ? 'items-end' : 'items-start')}
           >
             <ChatMessage message={msg} isStreaming={isActiveStream} />
@@ -59,19 +71,17 @@ export function ChatMessages({
         );
       })}
 
-      {error && !isLoading && !isStreaming && (
+      {showError && (
         <div>
           <ChatError />
         </div>
       )}
 
-      {showSuggestions && !isLoading && !isStreaming && (
-        <ChatSuggestions onSuggestionClick={onSuggestionClick} />
-      )}
+      {showSuggestions && <ChatSuggestions onSuggestionClick={onSuggestionClick} />}
 
-      {isLoading && !isStreaming && (
+      {showLoading && (
         <div>
-          <ChatLoading />
+          <ChatLoading activeTool={activeTool} />
         </div>
       )}
 

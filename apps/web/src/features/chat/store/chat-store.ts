@@ -1,4 +1,5 @@
 import type { Message } from '@/lib/definitions';
+import type { ToolName } from '../hooks/use-chat';
 import { create } from 'zustand';
 
 interface ChatStore {
@@ -14,6 +15,7 @@ interface ChatStore {
   messages: Message[];
   isLoading: boolean;
   isStreaming: boolean;
+  activeTool: ToolName | null;
   error: Error | undefined;
   messagesEndRef: React.RefObject<HTMLDivElement | null> | null;
 
@@ -40,6 +42,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   messages: [],
   isLoading: false,
   isStreaming: false,
+  activeTool: null,
   error: undefined,
   messagesEndRef: null,
 

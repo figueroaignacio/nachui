@@ -1,6 +1,7 @@
 import type { Message } from '@/lib/definitions';
 import { Container } from '@repo/ui/layout/container';
 import { AnimatePresence, motion, type Transition } from 'motion/react';
+import type { ToolName } from '../hooks/use-chat';
 import { ChatHeader } from '../ui/chat-header';
 import { ChatInput } from '../ui/chat-input';
 import { ChatMessages } from './chat-messages';
@@ -11,6 +12,7 @@ interface ChatWindowProps {
   messages: Message[];
   isLoading: boolean;
   isStreaming: boolean;
+  activeTool: ToolName | null;
   error: Error | undefined;
   messagesEndRef: React.RefObject<HTMLDivElement>;
   message: string;
@@ -49,6 +51,7 @@ export function ChatWindow(props: ChatWindowProps) {
     messages,
     isLoading,
     isStreaming,
+    activeTool,
     error,
     messagesEndRef,
     message,
@@ -60,6 +63,35 @@ export function ChatWindow(props: ChatWindowProps) {
     onSuggestionClick,
     onToggleExpand,
   } = props;
+
+  const body = (
+    <div className="bg-background relative z-10 flex h-full flex-col">
+      <ChatHeader
+        onClose={onClose}
+        onReset={onReset}
+        isExpanded={isExpanded}
+        onToggleExpand={onToggleExpand}
+      />
+      <div className="flex-1 overflow-y-auto">
+        <ChatMessages
+          messages={messages}
+          isLoading={isLoading}
+          isStreaming={isStreaming}
+          activeTool={activeTool}
+          error={error}
+          endRef={messagesEndRef}
+          onSuggestionClick={onSuggestionClick}
+        />
+      </div>
+      <ChatInput
+        message={message}
+        isLoading={isLoading || isStreaming}
+        onMessageChange={onMessageChange}
+        onSubmit={onSubmit}
+        onKeyDown={onKeyDown}
+      />
+    </div>
+  );
 
   return (
     <AnimatePresence>
@@ -92,61 +124,7 @@ export function ChatWindow(props: ChatWindowProps) {
                 : 'bg-background border-border fixed inset-y-0 right-0 z-9999 flex h-full w-full flex-col overflow-hidden border-l md:w-112.5 lg:w-175'
             }
           >
-            {isExpanded ? (
-              <Container size="lg">
-                <div className="bg-background relative z-10 flex h-full flex-col rounded-lg">
-                  <ChatHeader
-                    onClose={onClose}
-                    onReset={onReset}
-                    isExpanded={isExpanded}
-                    onToggleExpand={onToggleExpand}
-                  />
-                  <div className="flex-1 overflow-y-auto">
-                    <ChatMessages
-                      messages={messages}
-                      isLoading={isLoading}
-                      isStreaming={isStreaming}
-                      error={error}
-                      endRef={messagesEndRef}
-                      onSuggestionClick={onSuggestionClick}
-                    />
-                  </div>
-                  <ChatInput
-                    message={message}
-                    isLoading={isLoading || isStreaming}
-                    onMessageChange={onMessageChange}
-                    onSubmit={onSubmit}
-                    onKeyDown={onKeyDown}
-                  />
-                </div>
-              </Container>
-            ) : (
-              <div className="relative z-10 flex h-full flex-col">
-                <ChatHeader
-                  onClose={onClose}
-                  onReset={onReset}
-                  isExpanded={isExpanded}
-                  onToggleExpand={onToggleExpand}
-                />
-                <div className="flex-1 overflow-y-auto">
-                  <ChatMessages
-                    messages={messages}
-                    isLoading={isLoading}
-                    isStreaming={isStreaming}
-                    error={error}
-                    endRef={messagesEndRef}
-                    onSuggestionClick={onSuggestionClick}
-                  />
-                </div>
-                <ChatInput
-                  message={message}
-                  isLoading={isLoading || isStreaming}
-                  onMessageChange={onMessageChange}
-                  onSubmit={onSubmit}
-                  onKeyDown={onKeyDown}
-                />
-              </div>
-            )}
+            {isExpanded ? <Container size="lg">{body}</Container> : body}
           </motion.div>
         </>
       )}
