@@ -86,7 +86,7 @@ export function ChatMarkdownContent({ content }: MarkdownContentProps) {
               {children}
             </blockquote>
           ),
-          hr: () => <hr className="border-border my-8 border-dashed" />,
+          hr: () => <hr className="border-border my-8" />,
           strong: ({ children }) => (
             <strong className="text-foreground wrap-break-words font-semibold">{children}</strong>
           ),

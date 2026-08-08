@@ -41,7 +41,7 @@ export function ComponentCard({ label, href, description }: ComponentCardProps) 
             )}
           </div>
         </div>
-        <div className="border-border bg-secondary/50 flex justify-between border-t border-dashed px-4 py-12">
+        <div className="border-border bg-secondary/50 flex justify-between border-t px-4 py-12">
           <div>
             <Typography variant="h3" className="font-heading font-semibold tracking-tight">
               {label}

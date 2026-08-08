@@ -73,7 +73,7 @@ export async function AboutView() {
               </p>
             </div>
           </div>
-          <hr className="border-border mb-10 border-dashed" />
+          <hr className="border-border mb-10" />
 
           {/* ── Prose ── */}
           <div className="text-foreground/80 mb-14 flex flex-col gap-5 text-base leading-relaxed">
@@ -85,7 +85,7 @@ export async function AboutView() {
 
           {/* ── Stats ── */}
           <div
-            className="border-border bg-card mb-14 grid grid-cols-4 divide-x divide-dashed overflow-hidden rounded-lg border max-sm:grid-cols-2 max-sm:divide-y"
+            className="border-border bg-card mb-14 grid grid-cols-4 divide-x overflow-hidden rounded-lg border max-sm:grid-cols-2 max-sm:divide-y"
             role="list"
             aria-label="Project statistics"
           >
@@ -102,14 +102,14 @@ export async function AboutView() {
           </div>
 
           {/* ── Links ── */}
-          <nav className="border-border border-t border-dashed pt-7" aria-label="External profiles">
+          <nav className="border-border border-t pt-7" aria-label="External profiles">
             {actions.map((action) => (
               <a
                 key={action.href}
                 href={action.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border-border group flex items-center justify-between border-b border-dashed py-3 last:border-b-0"
+                className="border-border group flex items-center justify-between border-b py-3 last:border-b-0"
               >
                 <span className="flex items-center gap-3">
                   <span className="border-border bg-muted text-muted-foreground rounded px-2 py-0.5 font-mono text-[0.63rem] tracking-widest uppercase">

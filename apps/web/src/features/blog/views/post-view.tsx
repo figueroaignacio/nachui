@@ -58,7 +58,7 @@ export async function PostView({ post }: PostViewProps) {
           {post.description}
         </Typography>
       </Stack>
-      <div className="border-border space-y-3 border-b border-dashed pb-3">
+      <div className="border-border space-y-3 border-b pb-3">
         <Typography variant="p">{t('postedBy')}</Typography>
         <DeveloperWatermark />
       </div>

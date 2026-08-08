@@ -117,7 +117,7 @@ export function MobileMenu() {
                 {getIcon(section.title)}
                 {section.title}
               </Typography>
-              <ul className="ml-1.5 space-y-1 border-l border-dashed pl-4">
+              <ul className="ml-1.5 space-y-1 border-l pl-4">
                 {section.items.map((item, itemIndex) => {
                   const isActive = pathname === item.href;
 

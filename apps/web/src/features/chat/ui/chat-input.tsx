@@ -20,7 +20,7 @@ export function ChatInput(props: ChatInputProps) {
   return (
     <form
       onSubmit={onSubmit}
-      className="bg-background/80 relative z-10 w-full border-t border-dashed px-6 py-5 backdrop-blur-md"
+      className="bg-background/80 relative z-10 w-full border-t px-6 py-5 backdrop-blur-md"
     >
       <div className="bg-background border-border/50 focus-within:border-foreground/20 focus-within:ring-ring/10 flex items-center gap-3 rounded-full border p-1.5 shadow-sm transition-all duration-300 focus-within:ring-4">
         <input

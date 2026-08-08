@@ -9,7 +9,7 @@ const GITHUB_URL = 'https://github.com/figueroaignacio/ui';
 export function GitHubStarTocCta() {
   const t = useTranslations('components.githubStar');
   return (
-    <div className="border-border/40 mt-6 border-t border-dashed pt-5">
+    <div className="border-border/40 mt-6 border-t pt-5">
       <a
         href={GITHUB_URL}
         target="_blank"

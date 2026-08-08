@@ -8,7 +8,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-rule border-t border-dashed">
+    <footer className="border-rule border-t">
       <div className="mx-auto flex w-full flex-col gap-8 px-6 pt-12 pb-10 md:flex-row md:items-start md:justify-between">
         <div className="max-w-xs space-y-3">
           <span className="text-foreground font-mono text-sm font-medium">nachui</span>
@@ -95,7 +95,7 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <div className="border-rule border-t border-dashed">
+      <div className="border-rule border-t">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-6 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
           <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-6">
             <p className="text-muted-foreground font-mono text-xs">
@@ -128,10 +128,7 @@ export function Footer() {
                 rss
               </Link>
             </div>
-            <div
-              className="border-rule hidden h-4 border-l border-dashed sm:block"
-              aria-hidden="true"
-            />
+            <div className="border-rule hidden h-4 border-l sm:block" aria-hidden="true" />
             <div className="flex items-center gap-3">
               <LocaleSwitcher />
               <ThemeToggle />

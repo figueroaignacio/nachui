@@ -19,7 +19,7 @@ export function SearchInput({
   inputRef,
 }: SearchInputProps) {
   return (
-    <div className="border-border/40 flex items-center gap-3 border-b border-dashed px-4 py-3">
+    <div className="border-border/40 flex items-center gap-3 border-b px-4 py-3">
       <HugeiconsIcon
         icon={Search02Icon}
         className="text-muted-foreground/60 h-4 w-4 shrink-0"

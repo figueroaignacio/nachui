@@ -35,7 +35,7 @@ export function Sidebar() {
   }, []);
 
   return (
-    <aside className="lg:border-r lg:border-dashed lg:pr-3">
+    <aside className="lg:border-r lg:pr-3">
       <nav className="hide-scrollbar sticky top-24 hidden h-[calc(100vh-5rem)] shrink-0 space-y-8 overflow-y-scroll mask-[linear-gradient(180deg,black_90%,transparent)] pb-20 lg:block">
         {docsNavigation.map((section: DocSection) => {
           const isOpen = openSections.includes(section.title);

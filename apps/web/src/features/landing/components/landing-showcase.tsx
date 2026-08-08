@@ -54,7 +54,7 @@ export function LandingShowcase() {
         </Link>
       </div>
 
-      <div className="border-rule bg-surface-muted/50 flex flex-col gap-8 rounded-lg border border-dashed p-5 sm:p-8 lg:flex-row lg:items-center lg:gap-14">
+      <div className="border-rule bg-surface-muted/50 flex flex-col gap-8 rounded-lg border p-5 sm:p-8 lg:flex-row lg:items-center lg:gap-14">
         <div className="flex flex-col lg:w-[42%] lg:shrink-0">
           <p className="section-label">{t('featured.badge')}</p>
           <h3 className="font-heading text-foreground mt-3 text-xl font-semibold tracking-tight">
@@ -67,7 +67,7 @@ export function LandingShowcase() {
             {featuredMeta.map((item) => (
               <li
                 key={item}
-                className="border-rule text-muted-foreground rounded-sm border border-dashed px-2 py-0.5 font-mono text-[11px]"
+                className="border-rule text-muted-foreground rounded-sm border px-2 py-0.5 font-mono text-[11px]"
               >
                 {item}
               </li>

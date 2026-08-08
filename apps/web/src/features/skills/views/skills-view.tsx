@@ -63,7 +63,7 @@ export function SkillsView({ initialSkills, initialQuery }: SkillsViewProps) {
       <SkillsHeader totalCount={initialSkills.length} />
       <SkillsSearchInput value={search} onChange={handleSearchChange} />
 
-      <div className="border-border text-muted-foreground bleed-x hidden grid-cols-[2rem_1fr_auto] gap-4 border-b border-dashed py-3 font-mono text-xs font-medium uppercase lg:grid">
+      <div className="border-border text-muted-foreground bleed-x hidden grid-cols-[2rem_1fr_auto] gap-4 border-b py-3 font-mono text-xs font-medium uppercase lg:grid">
         <span>#</span>
         <span>{t('columns.skill')}</span>
         <span>{t('columns.install')}</span>

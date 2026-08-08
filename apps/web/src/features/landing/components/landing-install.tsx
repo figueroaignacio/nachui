@@ -49,8 +49,8 @@ export function LandingInstall() {
         </div>
 
         <div className="min-w-0 lg:flex-1">
-          <div className="border-border bg-card/40 overflow-hidden rounded-lg border border-dashed">
-            <div className="border-border flex items-center justify-between gap-4 border-b border-dashed px-3 py-2">
+          <div className="border-border bg-card/40 overflow-hidden rounded-lg border">
+            <div className="border-border flex items-center justify-between gap-4 border-b px-3 py-2">
               <span className="text-muted-foreground font-mono text-[11px]">{t('terminal')}</span>
               <CopyButton
                 value={command}

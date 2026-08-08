@@ -22,7 +22,7 @@ export async function SkillDetailView({ skill }: SkillDetailViewProps) {
         <BackButton />
 
         {/* Header */}
-        <div className="border-border mt-8 border-t border-dashed pt-8">
+        <div className="border-border mt-8 border-t pt-8">
           <p className="section-label mb-4">Skill</p>
           <h1 className="font-heading text-foreground text-[2rem] leading-[1.05] font-semibold tracking-tight md:text-[2.5rem]">
             {skill.name}
@@ -51,7 +51,7 @@ export async function SkillDetailView({ skill }: SkillDetailViewProps) {
         </div>
 
         {/* Trigger description */}
-        <div className="border-border mt-8 border-t border-dashed pt-6">
+        <div className="border-border mt-8 border-t pt-6">
           <p className="section-label mb-2">Triggers when</p>
           <p className="text-muted-strong font-mono text-[13px] leading-relaxed italic">
             {t('triggersWhen', { description: skill.description })}
@@ -59,7 +59,7 @@ export async function SkillDetailView({ skill }: SkillDetailViewProps) {
         </div>
 
         {/* MDX content */}
-        <div className="border-border mt-8 border-t border-dashed pt-6">
+        <div className="border-border mt-8 border-t pt-6">
           <article className="prose max-w-none">
             <MDXContent code={skill.body} />
           </article>
