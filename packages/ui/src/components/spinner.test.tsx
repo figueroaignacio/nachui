@@ -22,11 +22,11 @@ describe('Spinner', () => {
   });
 
   it('applies variant colors correctly', () => {
-    const { rerender } = render(<Spinner variant="primary" />);
-    expect(screen.getByRole('status')).toHaveClass('text-primary');
+    const { rerender } = render(<Spinner variant="muted" />);
+    expect(screen.getByRole('status')).toHaveClass('text-muted-foreground');
 
     rerender(<Spinner variant="destructive" />);
-    expect(screen.getByRole('status')).toHaveClass('text-destructive');
+    expect(screen.getByRole('status')).toHaveClass('text-destructive-text');
 
     rerender(<Spinner variant="muted" />);
     expect(screen.getByRole('status')).toHaveClass('text-muted-foreground');

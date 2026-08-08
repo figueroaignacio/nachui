@@ -1,14 +1,6 @@
 import { Spinner } from '@repo/ui/components/spinner';
 
-const variants = [
-  'default',
-  'primary',
-  'muted',
-  'success',
-  'destructive',
-  'warning',
-  'info',
-] as const;
+const variants = ['default', 'muted', 'success', 'destructive', 'warning', 'info'] as const;
 
 export default function SpinnerVariants() {
   return (

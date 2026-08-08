@@ -13,10 +13,10 @@ const calloutVariants = cva('flex w-full items-start gap-3 rounded-md border p-3
   variants: {
     variant: {
       default: 'bg-surface-muted text-card-foreground border-border',
-      info: 'bg-info/8 text-info border-info/15',
-      warning: 'bg-warning/8 text-warning border-warning/15',
-      danger: 'bg-destructive/8 text-destructive border-destructive/15',
-      success: 'bg-success/8 text-success border-success/15',
+      info: 'bg-info-surface text-info-text border-info-border',
+      warning: 'bg-warning-surface text-warning-text border-warning-border',
+      danger: 'bg-destructive-surface text-destructive-text border-destructive-border',
+      success: 'bg-success-surface text-success-text border-success-border',
     },
   },
   defaultVariants: {

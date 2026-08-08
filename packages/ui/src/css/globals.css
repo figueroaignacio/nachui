@@ -3,25 +3,17 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* ── Canvas y superficies ───────────────────────────────────────────────
-     Rampa de elevación con pasos parejos: 98.5 → 97 → 95.5 → 94
-     (antes: 98.5 / 96.2 / 98.5 / 94.5, con popover empatado con background). */
   --background: oklch(98.5% 0.004 70);
   --foreground: oklch(18% 0.003 70);
 
   --card: oklch(97% 0.004 70);
   --card-foreground: oklch(18% 0.003 70);
 
-  /* Elevado por encima de card: un popover sobre una card tiene que leerse. */
   --popover: oklch(99.2% 0.004 70);
   --popover-foreground: oklch(18% 0.003 70);
 
-  /* Rebajado: fondo de zonas inertes (celdas alternadas, wells, skeleton). */
   --surface-muted: oklch(95.5% 0.004 70);
 
-  /* ── Interactivo ────────────────────────────────────────────────────────
-     primary sigue siendo el charcoal, pero ya no es idéntico a foreground:
-     así `bg-primary` y `bg-foreground` dejan de ser intercambiables. */
   --primary: oklch(22% 0.004 70);
   --primary-foreground: oklch(98.5% 0.004 70);
   --secondary: oklch(94% 0.005 70);
@@ -30,19 +22,14 @@
   --accent-foreground: oklch(22% 0.004 70);
 
   --muted: oklch(94% 0.004 70);
-  --muted-foreground: oklch(45% 0.004 70); /* 6.3:1 sobre muted */
+  --muted-foreground: oklch(45% 0.004 70);
   --muted-strong: oklch(35% 0.004 70);
 
-  /* Superficie invertida (tooltip, banner default). Antes se resolvía con
-     `bg-foreground text-background`, sin token. */
   --inverse: oklch(18% 0.003 70);
   --inverse-foreground: oklch(98.5% 0.004 70);
 
-  /* ── Estructura ─────────────────────────────────────────────────────────
-     Dos niveles: `border` es la hairline decorativa; `border-interactive` es
-     el contorno de controles de formulario, que WCAG 1.4.11 exige a 3:1. */
   --border: oklch(90.5% 0.004 70);
-  --border-interactive: oklch(64% 0.006 70); /* 3.0:1 sobre card */
+  --border-interactive: oklch(64% 0.006 70);
   --input: oklch(64% 0.006 70);
   --ring: oklch(22% 0.004 70);
   --rule: oklch(90.5% 0.004 70);
@@ -50,11 +37,6 @@
   --radius: 0.75rem;
   --grid-color: oklch(18% 0.003 70 / 0.03);
 
-  /* ── Feedback ───────────────────────────────────────────────────────────
-     4 roles por hue. `solid` para banners y botones llenos; `text` para
-     iconos y texto sobre canvas; `surface` + `border` para callouts suaves.
-     Nunca usar `--destructive` como color de texto: para eso está
-     `--destructive-text`. */
   --destructive: oklch(55% 0.17 25);
   --destructive-foreground: oklch(98.5% 0.004 70);
   --destructive-text: oklch(50% 0.15 25);
@@ -79,27 +61,12 @@
   --info-surface: oklch(96% 0.03 245);
   --info-border: oklch(85% 0.06 245);
 
-  /* ── Overlay ───────────────────────────────────────────────────────────
-     Antes: `bg-black/20` en dialog y `bg-black/50` en drawer, hardcodeado. */
   --overlay: oklch(18% 0.003 70 / 0.32);
 
-  /* ── Elevación ─────────────────────────────────────────────────────────
-     Definidas en ambos temas: hoy --shadow-lg sólo existe en .dark, así que
-     en light el fallback es "sin sombra".
-
-     Se llaman --elevation-* y no --shadow-* a propósito: en @theme inline el
-     lado izquierdo del mapeo es --shadow-*, y usar el mismo nombre a ambos
-     lados (--shadow-sm: var(--shadow-sm)) es una referencia circular. Los
-     tokens de color evitan esto igual, con --color-x: var(--x). */
   --elevation-sm: 0 1px 2px oklch(18% 0.003 70 / 0.06);
   --elevation-md: 0 4px 12px -4px oklch(18% 0.003 70 / 0.1);
   --elevation-lg: 0 12px 32px -12px oklch(18% 0.003 70 / 0.16);
 
-  /* ── Código ────────────────────────────────────────────────────────────
-     Bajado de 96.5% a 95.5%: --card sube a 97% en esta propuesta, y a 96.5%
-     el bloque de código quedaba a 1.015:1 de la card que lo contiene en las
-     docs, o sea indistinguible. A 95.5% la separación es 1.045:1 y el peor
-     token de la rampa sigue en 5.27:1 sobre el fondo. */
   --code: oklch(95.5% 0.004 70);
   --code-plain: oklch(25% 0.005 70);
   --code-comment: oklch(50% 0.01 70);
@@ -138,7 +105,7 @@
   --inverse-foreground: oklch(14% 0.002 70);
 
   --border: oklch(27% 0.003 70);
-  --border-interactive: oklch(51% 0.004 70); /* 3.1:1 sobre card */
+  --border-interactive: oklch(51% 0.004 70);
   --input: oklch(51% 0.004 70);
   --ring: oklch(92% 0.002 70);
   --rule: oklch(27% 0.003 70);
@@ -239,17 +206,12 @@
   --color-overlay: var(--overlay);
   --color-code: var(--code);
 
-  /* Escala de radios. La anterior saltaba de 1.125rem (lg) a 1.875rem (xl) y
-     3rem (2xl); 2xl era más grande que cualquier superficie del sistema. */
-  --radius-sm: calc(var(--radius) * 0.5); /* 0.375rem — checkbox, kbd, badge */
-  --radius-md: var(--radius); /* 0.75rem  — input, button, popover */
-  --radius-lg: calc(var(--radius) * 1.33); /* 1rem     — card, dialog */
-  --radius-xl: calc(var(--radius) * 1.66); /* 1.25rem  — drawer, snippet */
-  --radius-2xl: calc(var(--radius) * 2); /* 1.5rem   — hero */
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.33);
+  --radius-xl: calc(var(--radius) * 1.66);
+  --radius-2xl: calc(var(--radius) * 2);
 
-  /* Nombres distintos a cada lado: ver la nota en --elevation-* arriba.
-     Ojo: drawer.tsx usa `shadow-2xl`, que no está en esta escala y cae al
-     default de Tailwind. La Fase 5 lo pasa a `shadow-lg`. */
   --shadow-sm: var(--elevation-sm);
   --shadow-md: var(--elevation-md);
   --shadow-lg: var(--elevation-lg);
@@ -314,18 +276,10 @@
   font-family: var(--font-serif, var(--font-sans));
 }
 
-/* Page frame
-   Hairline rails that run the full height of the page, with a gutter of bare
-   canvas outside them. Section rules use .rule-bleed to cross the rails and
-   reach the viewport edges, which is what reads as a drawn grid rather than a
-   boxed-in container. Rails start at sm: on phones the gutter is 0, so a rail
-   would just hug the screen edge. */
 :root {
   --frame-gutter: 0rem;
   --frame-pad: 1rem;
   --frame-border: 0px;
-  /* Distance from the content edge out to the viewport edge. Substitution is
-     lazy, so the media queries below feed straight into it. */
   --frame-bleed: calc(var(--frame-pad) + var(--frame-gutter) + var(--frame-border));
 }
 
@@ -343,8 +297,6 @@
   }
 }
 
-/* The wide gutter waits for xl: at lg it would eat 80px that the docs
-   three-column layout still needs for its content column. */
 @media (min-width: 80rem) {
   :root {
     --frame-gutter: 2.5rem;
@@ -355,8 +307,6 @@
   padding-inline: var(--frame-gutter);
 }
 
-/* Full-width chrome that lives outside the frame (header, footer) but has to
-   line its content up with the framed column. */
 .frame-aligned {
   padding-inline: var(--frame-bleed);
 }
@@ -371,9 +321,6 @@
   margin-inline: calc(-1 * var(--frame-bleed));
 }
 
-/* Full-bleed band: the element's own borders and backgrounds reach the viewport
-   edges while its content stays aligned with the rest of the column. Never use
-   inside a grid column (docs content) — only on page-level sections. */
 .bleed-x {
   margin-inline: calc(-1 * var(--frame-bleed));
   padding-inline: var(--frame-bleed);

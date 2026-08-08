@@ -14,12 +14,11 @@ const spinnerVariants = cva('animate-spin inline-flex items-center justify-cente
     },
     variant: {
       default: 'text-foreground',
-      primary: 'text-primary',
       muted: 'text-muted-foreground',
-      success: 'text-success',
-      destructive: 'text-destructive',
-      warning: 'text-warning',
-      info: 'text-info',
+      success: 'text-success-text',
+      destructive: 'text-destructive-text',
+      warning: 'text-warning-text',
+      info: 'text-info-text',
     },
   },
   defaultVariants: {

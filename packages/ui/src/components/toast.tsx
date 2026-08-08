@@ -56,10 +56,10 @@ const toastVariants = cva(
     variants: {
       variant: {
         default: 'text-foreground border-border',
-        success: 'text-success border-success/20',
-        error: 'text-destructive border-destructive/20',
-        info: 'text-info border-info/20',
-        warning: 'text-warning border-warning/20',
+        success: 'text-success-text border-success-border',
+        error: 'text-destructive-text border-destructive-border',
+        info: 'text-info-text border-info-border',
+        warning: 'text-warning-text border-warning-border',
       },
     },
     defaultVariants: {

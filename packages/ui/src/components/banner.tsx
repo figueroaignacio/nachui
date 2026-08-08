@@ -20,7 +20,7 @@ const bannerVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-foreground text-background border-foreground',
+        default: 'bg-inverse text-inverse-foreground border-inverse',
         info: 'bg-info text-info-foreground border-info',
         warning: 'bg-warning text-warning-foreground border-warning',
         danger: 'bg-destructive text-destructive-foreground border-destructive',
