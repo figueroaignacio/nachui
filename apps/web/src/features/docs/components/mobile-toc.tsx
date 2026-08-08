@@ -36,7 +36,7 @@ export function MobileToc({ toc }: TocProps) {
       <Drawer.Trigger
         variant="default"
         size="icon"
-        className="fixed bottom-6 left-6 z-50 h-14 w-14 rounded-full shadow-2xl lg:hidden"
+        className="fixed bottom-6 left-6 z-50 h-14 w-14 rounded-full shadow-2xl xl:hidden"
         aria-label={t('label')}
       >
         <HugeiconsIcon icon={LayoutAlignBottomIcon} size={24} />

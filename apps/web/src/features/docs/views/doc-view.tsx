@@ -81,7 +81,7 @@ export function DocView({ doc }: DocViewProps) {
           <DocsPagination currentPath={currentPath} />
         </Stack>
       </Container>
-      <div className="hidden lg:block">
+      <div className="hidden xl:block">
         <Toc toc={tocContent} />
       </div>
     </>
