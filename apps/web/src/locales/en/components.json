@@ -106,9 +106,12 @@
     "version": "v1.0",
     "line1": "Source code in your repo.",
     "line2": "No node_modules wrapper.",
-    "primaryAction": "Get started",
+    "primaryAction": "Read the install guide",
     "secondaryAction": "Browse components",
-    "license": "MIT"
+    "license": "MIT",
+    "description": "The CLI writes the component straight into your project. From that point on it is your file: no wrapper package, no upstream release to wait for.",
+    "terminal": "terminal",
+    "outputNote": "One file per component, in the path your nachui.json points to."
   },
   "issueCta": {
     "question": "Found something to improve?",

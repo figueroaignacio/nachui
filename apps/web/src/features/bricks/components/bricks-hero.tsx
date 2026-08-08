@@ -18,7 +18,7 @@ export function BricksHero({ activeSlug }: BricksHeroProps) {
         <p className="text-muted-strong mt-4 text-[15px] leading-relaxed">{t('description')}</p>
       </div>
 
-      <nav aria-label="Brick categories" className="border-border border-b">
+      <nav aria-label="Brick categories" className="border-border bleed-x border-b border-dashed">
         <div className="flex items-center justify-between">
           <div className="hide-scrollbar flex items-center gap-0 overflow-x-auto">
             {BRICK_CATEGORIES.map((category) => (

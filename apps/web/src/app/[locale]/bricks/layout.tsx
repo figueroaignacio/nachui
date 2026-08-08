@@ -1,4 +1,4 @@
-import { LandingLogoCta } from '@/features/landing/components/landing-logo-cta';
+import { LandingInstall } from '@/features/landing/components/landing-install';
 import { routing } from '@/i18n/routing';
 import { hasLocale } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
@@ -26,7 +26,7 @@ export default async function BricksLayout({ children, params }: BricksLayoutPro
   return (
     <div>
       {children}
-      <LandingLogoCta />
+      <LandingInstall />
     </div>
   );
 }

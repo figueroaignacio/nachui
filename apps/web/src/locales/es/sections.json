@@ -83,6 +83,27 @@
           "description": "Cumplimiento completo de las normas WCAG 2.2 y accesibilidad por teclado nativa."
         }
       ]
+    },
+    "liveDemo": {
+      "preview": "Vista previa",
+      "code": "Código",
+      "badge": "En vivo",
+      "save": "Guardar cambios",
+      "saved": "Cambios guardados",
+      "idleHint": "Componentes reales: probá los switches, el select y guardá.",
+      "savedHint": "No se envió nada a ningún lado. Esto es el componente."
+    },
+    "showcase": {
+      "label": "Ejemplos en vivo",
+      "title": "Hecho con NachUI",
+      "description": "Cada panel de abajo es el componente real corriendo en esta página, no una captura.",
+      "cta": "Ver todos los componentes",
+      "featured": {
+        "badge": "Destacado",
+        "title": "Un panel de dashboard con cuatro slots y sin librería de gráficos",
+        "description": "Contribution History es una sola Card compuesta por los slots de header, content y footer. Las barras son divs con alturas basadas en tokens: leelo de arriba a abajo y cambiá la línea que quieras.",
+        "meta": ["Card.Header", "Card.Content", "Card.Footer", "Button"]
+      }
     }
   },
   "blog": {

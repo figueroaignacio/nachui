@@ -19,7 +19,8 @@
   --secondary: oklch(93.5% 0.005 70);
   --secondary-foreground: oklch(18% 0.003 70);
   --muted: oklch(94.5% 0.004 70);
-  --muted-foreground: oklch(48% 0.004 70);
+  /* Secondary text. Kept >= 4.5:1 against background, card, popover and muted. */
+  --muted-foreground: oklch(45% 0.004 70);
   --accent: oklch(93.5% 0.005 70);
   --accent-foreground: oklch(18% 0.003 70);
 
@@ -63,7 +64,8 @@
   --secondary: oklch(24% 0.002 70);
   --secondary-foreground: oklch(92% 0.002 70);
   --muted: oklch(24% 0.002 70);
-  --muted-foreground: oklch(58% 0.002 70);
+  /* Secondary text. Kept >= 4.5:1 against background, card, popover and muted. */
+  --muted-foreground: oklch(66% 0.002 70);
   --accent: oklch(22% 0.002 70);
   --accent-foreground: oklch(92% 0.002 70);
 
@@ -176,12 +178,64 @@
 }
 
 .section-rule {
-  @apply bg-rule mt-3 h-px;
+  @apply border-rule mt-3 border-t border-dashed;
 }
 
 .prose-reading {
   @apply text-muted-strong text-[15px] leading-[1.75];
   font-family: var(--font-serif, var(--font-sans));
+}
+
+/* Page frame
+   Hairline rails that run the full height of the page, with a gutter of bare
+   canvas outside them. Section rules use .rule-bleed to cross the rails and
+   reach the viewport edges, which is what reads as a drawn grid rather than a
+   boxed-in container. Rails start at sm: on phones the gutter is 0, so a rail
+   would just hug the screen edge. */
+:root {
+  --frame-gutter: 0rem;
+  --frame-pad: 1rem;
+  --frame-border: 0px;
+  /* Distance from the content edge out to the viewport edge. Substitution is
+     lazy, so the media queries below feed straight into it. */
+  --frame-bleed: calc(var(--frame-pad) + var(--frame-gutter) + var(--frame-border));
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --frame-gutter: 1.5rem;
+    --frame-pad: 1.5rem;
+    --frame-border: 1px;
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --frame-gutter: 2.5rem;
+    --frame-pad: 2rem;
+  }
+}
+
+.page-frame-outer {
+  padding-inline: var(--frame-gutter);
+}
+
+.page-frame {
+  padding-inline: var(--frame-pad);
+  border-inline: var(--frame-border) dashed var(--rule);
+}
+
+.rule-bleed {
+  border-block-start: 1px dashed var(--rule);
+  margin-inline: calc(-1 * var(--frame-bleed));
+}
+
+/* Full-bleed band: the element's own borders and backgrounds reach the viewport
+   edges while its content stays aligned with the rest of the column. Never use
+   inside a grid column (docs content) — only on page-level sections. */
+.bleed-x {
+  margin-inline: calc(-1 * var(--frame-bleed));
+  padding-inline: var(--frame-bleed);
 }
 
 .hide-scrollbar {

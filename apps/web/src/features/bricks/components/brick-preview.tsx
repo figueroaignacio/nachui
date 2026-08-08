@@ -37,7 +37,10 @@ export function BrickPreview({
   const { isCopied, copyToClipboard } = useCopyToClipboard(2000);
 
   return (
-    <section aria-labelledby={`brick-${id}-title`} className="border-border border-t pt-10">
+    <section
+      aria-labelledby={`brick-${id}-title`}
+      className="border-border border-t border-dashed pt-10"
+    >
       <Tabs defaultValue="preview" variant="underline" className="space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -62,7 +65,7 @@ export function BrickPreview({
 
             {/* Viewport toggles */}
             <div
-              className="border-border hidden items-center gap-0.5 border-b sm:flex"
+              className="border-border hidden items-center gap-0.5 border-b border-dashed sm:flex"
               role="group"
               aria-label="Viewport size"
             >
@@ -135,7 +138,7 @@ export function BrickPreview({
         </div>
 
         <Tabs.Content value="preview" className="mt-0">
-          <div className="border-border bg-surface-muted border">
+          <div className="border-border bg-surface-muted border border-dashed">
             <div
               className={cn(
                 'mx-auto flex min-h-[500px] items-center justify-center p-6 transition-all duration-300 sm:p-10',
@@ -151,7 +154,7 @@ export function BrickPreview({
           {files && files.length > 0 ? (
             <BrickCodeViewer files={files} />
           ) : (
-            <div className="border-border border p-6">
+            <div className="border-border border border-dashed p-6">
               <p className="text-destructive font-mono text-sm">
                 ⚠ Source code not available for brick &ldquo;{name}&rdquo;.
               </p>

@@ -12,8 +12,8 @@ export type SkillsRowProps = {
 
 export function SkillsRow({ index, skill, copied, onCopy }: SkillsRowProps) {
   return (
-    <li className="border-border border-b last:border-0">
-      <div className="group hover:bg-muted/20 grid grid-cols-[2rem_1fr_auto] items-center gap-4 px-0 py-4 transition-colors">
+    <li className="border-border bleed-x group hover:bg-muted/20 border-b border-dashed transition-colors last:border-0">
+      <div className="grid grid-cols-[2rem_1fr_auto] items-center gap-4 px-0 py-4">
         <span className="text-muted-foreground font-mono text-base tabular-nums">{index}</span>
         <Link href={`/skills/${skill.slug}`} className="flex min-w-0 flex-col lg:gap-3">
           <span className="text-foreground group-hover:text-foreground/80 truncate text-base font-medium transition-colors">

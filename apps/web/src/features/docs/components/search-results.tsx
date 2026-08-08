@@ -64,7 +64,7 @@ function SectionHeader({ label }: { label: string }) {
       <span className="text-muted-foreground/40 text-[10px] font-semibold tracking-widest uppercase">
         {label}
       </span>
-      <span className="bg-border/30 h-px flex-1" />
+      <span className="border-border/30 flex-1 border-t border-dashed" />
     </div>
   );
 }

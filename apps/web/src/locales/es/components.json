@@ -106,9 +106,12 @@
     "version": "v1.0",
     "line1": "Código fuente en tu repositorio.",
     "line2": "Sin wrappers en node_modules.",
-    "primaryAction": "Comenzar",
+    "primaryAction": "Ver la guía de instalación",
     "secondaryAction": "Ver componentes",
-    "license": "MIT"
+    "license": "MIT",
+    "description": "La CLI escribe el componente directo en tu proyecto. Desde ahí el archivo es tuyo: sin paquete wrapper y sin esperar una release ajena.",
+    "terminal": "terminal",
+    "outputNote": "Un archivo por componente, en la ruta que indica tu nachui.json."
   },
   "issueCta": {
     "question": "¿Encontraste algo que mejorar?",

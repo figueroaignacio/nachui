@@ -1,12 +1,12 @@
 import { SkipLink } from '@/components/common/skip-link';
 import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
+import { PageFrame } from '@/components/layout/page-frame';
 import { Providers } from '@/components/providers';
 import { ThemeInitScript } from '@/components/common/theme-init-script';
 import { routing } from '@/i18n/routing';
 import { fontCode, fontHeading, fontSans, fontSerif } from '@/lib/font';
 import '@repo/ui/globals.css';
-import { Container } from '@repo/ui/src/layout/container';
 
 import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
@@ -76,9 +76,9 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
         <NextIntlClientProvider>
           <Providers>
             <Header />
-            <Container size="fluid">
+            <PageFrame>
               <main id="main-content">{children}</main>
-            </Container>
+            </PageFrame>
             <Footer />
           </Providers>
         </NextIntlClientProvider>

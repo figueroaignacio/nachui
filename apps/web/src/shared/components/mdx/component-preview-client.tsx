@@ -33,13 +33,13 @@ export function ComponentPreviewClient({
           {componentPreview}
         </div>
         {description && (
-          <div className="border-border bg-muted/30 border-t px-6 py-4">
+          <div className="border-border bg-muted/30 border-t border-dashed px-6 py-4">
             <Typography variant="p" className="text-muted-foreground text-sm">
               {description}
             </Typography>
           </div>
         )}
-        <div className="border-border border-t">
+        <div className="border-border border-t border-dashed">
           {code ? (
             <CodeBlock
               code={code}

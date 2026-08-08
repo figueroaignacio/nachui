@@ -101,7 +101,7 @@ export function Searcher() {
           navigation={navigation}
           selectedIndex={selectedIndex}
         />
-        <div className="border-border/30 flex items-center justify-between border-t px-4 py-2.5">
+        <div className="border-border/30 flex items-center justify-between border-t border-dashed px-4 py-2.5">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
               <Kbd size="sm" variant="outline">

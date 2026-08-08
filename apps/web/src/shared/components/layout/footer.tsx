@@ -8,8 +8,8 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="mt-24">
-      <div className="mx-auto flex w-full flex-col gap-8 px-6 py-8 md:flex-row md:items-start md:justify-between">
+    <footer className="border-rule border-t border-dashed">
+      <div className="mx-auto flex w-full flex-col gap-8 px-6 pt-12 pb-10 md:flex-row md:items-start md:justify-between">
         <div className="max-w-xs space-y-3">
           <span className="text-foreground font-mono text-sm font-medium">nachui</span>
           <p className="text-muted-foreground text-[13px] leading-relaxed">
@@ -95,9 +95,9 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <div>
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-6">
+      <div className="border-rule border-t border-dashed">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-6 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+          <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-6">
             <p className="text-muted-foreground font-mono text-xs">
               © {currentYear} NachUI. {t('footer.copyright')}
             </p>
@@ -113,21 +113,29 @@ export function Footer() {
               </a>
             </p>
           </div>
-          <div className="flex items-center gap-5">
-            <Link
-              href="/sitemap.xml"
-              className="text-muted-foreground hover:text-foreground font-mono text-xs transition-colors"
-            >
-              {t('footer.sitemap')}
-            </Link>
-            <Link
-              href="/rss.xml"
-              className="text-muted-foreground hover:text-foreground font-mono text-xs transition-colors"
-            >
-              rss
-            </Link>
-            <LocaleSwitcher />
-            <ThemeToggle />
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-8">
+            <div className="flex items-center gap-6">
+              <Link
+                href="/sitemap.xml"
+                className="text-muted-foreground hover:text-foreground font-mono text-xs transition-colors"
+              >
+                {t('footer.sitemap')}
+              </Link>
+              <Link
+                href="/rss.xml"
+                className="text-muted-foreground hover:text-foreground font-mono text-xs transition-colors"
+              >
+                rss
+              </Link>
+            </div>
+            <div
+              className="border-rule hidden h-4 border-l border-dashed sm:block"
+              aria-hidden="true"
+            />
+            <div className="flex items-center gap-3">
+              <LocaleSwitcher />
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </div>

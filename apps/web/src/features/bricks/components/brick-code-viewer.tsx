@@ -140,7 +140,7 @@ export function BrickCodeViewer({ files }: BrickCodeViewerProps) {
 
   return (
     <div className="dark text-foreground flex min-h-[500px] flex-col overflow-hidden rounded-lg bg-[#0e1216] md:flex-row">
-      <div className="flex flex-col border-b md:w-64 md:border-r md:border-b-0">
+      <div className="flex flex-col border-b border-dashed md:w-64 md:border-r md:border-b-0">
         <div className="p-3">
           <Typography
             variant="h4"

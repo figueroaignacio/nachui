@@ -314,7 +314,7 @@ export const COMPONENT_LIST_PREVIEWS: Record<string, React.ComponentType> = {
         Open popover
       </Button>
       <div className="bg-popover border-border w-52 rounded-md border p-4 shadow-md">
-        <div className="border-border/40 mb-3 border-b pb-2.5">
+        <div className="border-border/40 mb-3 border-b border-dashed pb-2.5">
           <MockBar className="bg-muted-foreground/50 w-24" />
         </div>
         <div className="space-y-2">

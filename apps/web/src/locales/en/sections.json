@@ -82,6 +82,27 @@
           "description": "Full WCAG 2.2 standards and keyboard accessibility baked into every layout primitive."
         }
       ]
+    },
+    "liveDemo": {
+      "preview": "Preview",
+      "code": "Code",
+      "badge": "Live",
+      "save": "Save changes",
+      "saved": "Changes saved",
+      "idleHint": "Real components — toggle, select and save.",
+      "savedHint": "Nothing was sent anywhere. This is the component."
+    },
+    "showcase": {
+      "label": "Live examples",
+      "title": "Built with NachUI",
+      "description": "Every panel below is the real component running on this page, not a screenshot.",
+      "cta": "Browse all components",
+      "featured": {
+        "badge": "Featured",
+        "title": "A dashboard panel with four slots and no chart library",
+        "description": "Contribution History is one Card composed of header, content and footer slots. The bars are plain divs sized from design tokens — read it top to bottom, change any line.",
+        "meta": ["Card.Header", "Card.Content", "Card.Footer", "Button"]
+      }
     }
   },
   "blog": {
