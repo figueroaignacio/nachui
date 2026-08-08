@@ -36,6 +36,19 @@ import { DropdownMenu } from '@/components/ui/dropdown-menu';
 </DropdownMenu>
 ```
 
+## Composition
+
+Use the following composition to build a `DropdownMenu`:
+
+```tree
+DropdownMenu
+├── DropdownMenu.Trigger
+└── DropdownMenu.Content
+    ├── DropdownMenu.Label
+    ├── DropdownMenu.Item
+    └── DropdownMenu.Separator
+```
+
 ## Variants
 
 ### Checkboxes

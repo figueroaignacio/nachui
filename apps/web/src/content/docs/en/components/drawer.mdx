@@ -35,6 +35,19 @@ import { Drawer } from '@/components/ui/drawer';
 </Drawer>
 ```
 
+## Composition
+
+Use the following composition to build a `Drawer`:
+
+```tree
+Drawer
+├── Drawer.Trigger
+└── Drawer.Content
+    └── Drawer.Header
+        ├── Drawer.Title
+        └── Drawer.Description
+```
+
 ## Features
 
 - **Multiple sides** - Slide from bottom, top, left, or right

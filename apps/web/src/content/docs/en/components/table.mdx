@@ -42,6 +42,24 @@ import { Table } from '@/components/ui/table';
 </Table>
 ```
 
+## Composition
+
+Use the following composition to build a `Table`:
+
+```tree
+Table
+├── Table.Caption
+├── Table.Header
+│   └── Table.Row
+│       └── Table.Head
+├── Table.Body
+│   └── Table.Row
+│       └── Table.Cell
+└── Table.Footer
+    └── Table.Row
+        └── Table.Cell
+```
+
 ## Variants
 
 ### With Actions

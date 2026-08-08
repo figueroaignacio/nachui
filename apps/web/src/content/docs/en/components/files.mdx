@@ -34,6 +34,19 @@ import { Files } from '@/components/ui/files';
 </Files>
 ```
 
+## Composition
+
+Use the following composition to build a `Files`:
+
+```tree
+Files
+├── Files.Folder
+│   ├── Files.Folder
+│   │   └── Files.File
+│   └── Files.File
+└── Files.File
+```
+
 ## Features
 
 - **Expandable folders** - Click to expand/collapse nested structures

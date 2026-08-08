@@ -41,6 +41,21 @@ import { Dialog } from '@/components/ui/dialog';
 </Dialog>
 ```
 
+## Composición
+
+Usa la siguiente composición para construir un `Dialog`:
+
+```tree
+Dialog
+├── Dialog.Trigger
+└── Dialog.Content
+    ├── Dialog.Header
+    │   ├── Dialog.Title
+    │   └── Dialog.Description
+    └── Dialog.Footer
+        └── Dialog.Close
+```
+
 ## Variantes
 
 ### Alerta (Alert)
