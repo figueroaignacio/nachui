@@ -3,53 +3,104 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* Canvas: Premium Warm Bone */
+  /* ── Canvas y superficies ───────────────────────────────────────────────
+     Rampa de elevación con pasos parejos: 98.5 → 97 → 95.5 → 94
+     (antes: 98.5 / 96.2 / 98.5 / 94.5, con popover empatado con background). */
   --background: oklch(98.5% 0.004 70);
   --foreground: oklch(18% 0.003 70);
 
-  /* Surfaces: Slightly darker warm bone */
-  --card: oklch(96.2% 0.004 70);
+  --card: oklch(97% 0.004 70);
   --card-foreground: oklch(18% 0.003 70);
-  --popover: oklch(98.5% 0.004 70);
+
+  /* Elevado por encima de card: un popover sobre una card tiene que leerse. */
+  --popover: oklch(99.2% 0.004 70);
   --popover-foreground: oklch(18% 0.003 70);
 
-  /* Interactive: Slate Charcoal */
-  --primary: oklch(18% 0.003 70);
+  /* Rebajado: fondo de zonas inertes (celdas alternadas, wells, skeleton). */
+  --surface-muted: oklch(95.5% 0.004 70);
+
+  /* ── Interactivo ────────────────────────────────────────────────────────
+     primary sigue siendo el charcoal, pero ya no es idéntico a foreground:
+     así `bg-primary` y `bg-foreground` dejan de ser intercambiables. */
+  --primary: oklch(22% 0.004 70);
   --primary-foreground: oklch(98.5% 0.004 70);
-  --secondary: oklch(93.5% 0.005 70);
-  --secondary-foreground: oklch(18% 0.003 70);
-  --muted: oklch(94.5% 0.004 70);
-  /* Secondary text. Kept >= 4.5:1 against background, card, popover and muted. */
-  --muted-foreground: oklch(45% 0.004 70);
-  --accent: oklch(93.5% 0.005 70);
-  --accent-foreground: oklch(18% 0.003 70);
+  --secondary: oklch(94% 0.005 70);
+  --secondary-foreground: oklch(22% 0.004 70);
+  --accent: oklch(92.5% 0.006 70);
+  --accent-foreground: oklch(22% 0.004 70);
 
-  /* Feedback (Minimal desaturated feedback tones) */
-  --destructive: oklch(62% 0.16 20);
-  --destructive-foreground: oklch(98.5% 0.004 70);
-  --info: oklch(64% 0.12 240);
-  --info-foreground: oklch(98.5% 0.004 70);
-  --success: oklch(65% 0.11 140);
-  --success-foreground: oklch(98.5% 0.004 70);
-  --warning: oklch(84% 0.11 80);
-  --warning-foreground: oklch(18% 0.003 70);
+  --muted: oklch(94% 0.004 70);
+  --muted-foreground: oklch(45% 0.004 70); /* 6.3:1 sobre muted */
+  --muted-strong: oklch(35% 0.004 70);
 
-  /* Structure */
+  /* Superficie invertida (tooltip, banner default). Antes se resolvía con
+     `bg-foreground text-background`, sin token. */
+  --inverse: oklch(18% 0.003 70);
+  --inverse-foreground: oklch(98.5% 0.004 70);
+
+  /* ── Estructura ─────────────────────────────────────────────────────────
+     Dos niveles: `border` es la hairline decorativa; `border-interactive` es
+     el contorno de controles de formulario, que WCAG 1.4.11 exige a 3:1. */
   --border: oklch(90.5% 0.004 70);
-  --input: oklch(90.5% 0.004 70);
-  --ring: oklch(18% 0.003 70);
+  --border-interactive: oklch(64% 0.006 70); /* 3.0:1 sobre card */
+  --input: oklch(64% 0.006 70);
+  --ring: oklch(22% 0.004 70);
+  --rule: oklch(90.5% 0.004 70);
+
   --radius: 0.75rem;
   --grid-color: oklch(18% 0.003 70 / 0.03);
 
-  /* Editorial tokens */
-  --rule: oklch(90.5% 0.004 70);
-  --muted-strong: oklch(35% 0.004 70);
-  --surface-muted: oklch(95.5% 0.004 70);
+  /* ── Feedback ───────────────────────────────────────────────────────────
+     4 roles por hue. `solid` para banners y botones llenos; `text` para
+     iconos y texto sobre canvas; `surface` + `border` para callouts suaves.
+     Nunca usar `--destructive` como color de texto: para eso está
+     `--destructive-text`. */
+  --destructive: oklch(55% 0.17 25);
+  --destructive-foreground: oklch(98.5% 0.004 70);
+  --destructive-text: oklch(50% 0.15 25);
+  --destructive-surface: oklch(96% 0.03 25);
+  --destructive-border: oklch(85% 0.07 25);
 
-  /* Code surface + syntax. The surface sits one step off the page canvas so a
-     block reads as an editor well rather than a second card. Every token below
-     clears 4.5:1 against --code. */
-  --code: oklch(96.5% 0.004 70);
+  --warning: oklch(55% 0.13 75);
+  --warning-foreground: oklch(98.5% 0.004 70);
+  --warning-text: oklch(48% 0.11 75);
+  --warning-surface: oklch(96.5% 0.035 80);
+  --warning-border: oklch(85% 0.08 80);
+
+  --success: oklch(53% 0.13 150);
+  --success-foreground: oklch(98.5% 0.004 70);
+  --success-text: oklch(48% 0.11 150);
+  --success-surface: oklch(96% 0.03 150);
+  --success-border: oklch(85% 0.06 150);
+
+  --info: oklch(54% 0.15 245);
+  --info-foreground: oklch(98.5% 0.004 70);
+  --info-text: oklch(50% 0.13 245);
+  --info-surface: oklch(96% 0.03 245);
+  --info-border: oklch(85% 0.06 245);
+
+  /* ── Overlay ───────────────────────────────────────────────────────────
+     Antes: `bg-black/20` en dialog y `bg-black/50` en drawer, hardcodeado. */
+  --overlay: oklch(18% 0.003 70 / 0.32);
+
+  /* ── Elevación ─────────────────────────────────────────────────────────
+     Definidas en ambos temas: hoy --shadow-lg sólo existe en .dark, así que
+     en light el fallback es "sin sombra".
+
+     Se llaman --elevation-* y no --shadow-* a propósito: en @theme inline el
+     lado izquierdo del mapeo es --shadow-*, y usar el mismo nombre a ambos
+     lados (--shadow-sm: var(--shadow-sm)) es una referencia circular. Los
+     tokens de color evitan esto igual, con --color-x: var(--x). */
+  --elevation-sm: 0 1px 2px oklch(18% 0.003 70 / 0.06);
+  --elevation-md: 0 4px 12px -4px oklch(18% 0.003 70 / 0.1);
+  --elevation-lg: 0 12px 32px -12px oklch(18% 0.003 70 / 0.16);
+
+  /* ── Código ────────────────────────────────────────────────────────────
+     Bajado de 96.5% a 95.5%: --card sube a 97% en esta propuesta, y a 96.5%
+     el bloque de código quedaba a 1.015:1 de la card que lo contiene en las
+     docs, o sea indistinguible. A 95.5% la separación es 1.045:1 y el peor
+     token de la rampa sigue en 5.27:1 sobre el fondo. */
+  --code: oklch(95.5% 0.004 70);
   --code-plain: oklch(25% 0.005 70);
   --code-comment: oklch(50% 0.01 70);
   --code-punctuation: oklch(46% 0.01 70);
@@ -61,51 +112,69 @@
 }
 
 .dark {
-  /* Canvas: Deep Warm Charcoal/Stone Black */
   --background: oklch(14% 0.002 70);
   --foreground: oklch(92% 0.002 70);
 
-  /* Surfaces */
   --card: oklch(18.5% 0.002 70);
   --card-foreground: oklch(92% 0.002 70);
-  --popover: oklch(19.5% 0.002 70);
+
+  --popover: oklch(21.5% 0.002 70);
   --popover-foreground: oklch(92% 0.002 70);
 
-  /* Interactive */
+  --surface-muted: oklch(20% 0.002 70);
+
   --primary: oklch(92% 0.002 70);
   --primary-foreground: oklch(14% 0.002 70);
   --secondary: oklch(24% 0.002 70);
   --secondary-foreground: oklch(92% 0.002 70);
-  --muted: oklch(24% 0.002 70);
-  /* Secondary text. Kept >= 4.5:1 against background, card, popover and muted. */
-  --muted-foreground: oklch(66% 0.002 70);
-  --accent: oklch(22% 0.002 70);
+  --accent: oklch(27% 0.003 70);
   --accent-foreground: oklch(92% 0.002 70);
 
-  /* Feedback */
-  --destructive: oklch(58% 0.14 20);
-  --destructive-foreground: oklch(14% 0.002 70);
-  --info: oklch(62% 0.11 240);
-  --info-foreground: oklch(14% 0.002 70);
-  --success: oklch(63% 0.1 140);
-  --success-foreground: oklch(14% 0.002 70);
-  --warning: oklch(75% 0.1 80);
-  --warning-foreground: oklch(14% 0.002 70);
-
-  /* Structure */
-  --border: oklch(25% 0.002 70);
-  --input: oklch(25% 0.002 70);
-  --ring: oklch(92% 0.002 70);
-  --grid-color: oklch(100% 0 0 / 0.02);
-  --shadow-lg: 0 8px 24px -10px oklch(0% 0 0 / 0.6);
-
-  /* Editorial tokens */
-  --rule: oklch(25% 0.002 70);
+  --muted: oklch(24% 0.002 70);
+  --muted-foreground: oklch(66% 0.002 70);
   --muted-strong: oklch(74% 0.002 70);
-  --surface-muted: oklch(20% 0.002 70);
 
-  /* Code surface + syntax. 16.5% sits between the page canvas (14%) and card
-     (18.5%), so the block separates from both. */
+  --inverse: oklch(92% 0.002 70);
+  --inverse-foreground: oklch(14% 0.002 70);
+
+  --border: oklch(27% 0.003 70);
+  --border-interactive: oklch(51% 0.004 70); /* 3.1:1 sobre card */
+  --input: oklch(51% 0.004 70);
+  --ring: oklch(92% 0.002 70);
+  --rule: oklch(27% 0.003 70);
+
+  --grid-color: oklch(100% 0 0 / 0.02);
+
+  --destructive: oklch(60% 0.16 25);
+  --destructive-foreground: oklch(14% 0.002 70);
+  --destructive-text: oklch(74% 0.13 25);
+  --destructive-surface: oklch(24% 0.05 25);
+  --destructive-border: oklch(36% 0.08 25);
+
+  --warning: oklch(62% 0.13 75);
+  --warning-foreground: oklch(14% 0.002 70);
+  --warning-text: oklch(80% 0.11 75);
+  --warning-surface: oklch(24% 0.04 80);
+  --warning-border: oklch(36% 0.07 80);
+
+  --success: oklch(58% 0.13 150);
+  --success-foreground: oklch(14% 0.002 70);
+  --success-text: oklch(76% 0.12 150);
+  --success-surface: oklch(23% 0.04 150);
+  --success-border: oklch(35% 0.07 150);
+
+  --info: oklch(58% 0.15 245);
+  --info-foreground: oklch(14% 0.002 70);
+  --info-text: oklch(76% 0.11 245);
+  --info-surface: oklch(24% 0.04 245);
+  --info-border: oklch(36% 0.07 245);
+
+  --overlay: oklch(0% 0 0 / 0.6);
+
+  --elevation-sm: 0 1px 2px oklch(0% 0 0 / 0.4);
+  --elevation-md: 0 4px 12px -4px oklch(0% 0 0 / 0.5);
+  --elevation-lg: 0 12px 32px -12px oklch(0% 0 0 / 0.65);
+
   --code: oklch(16.5% 0.002 70);
   --code-plain: oklch(90% 0.002 70);
   --code-comment: oklch(63% 0.01 70);
@@ -124,34 +193,67 @@
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+  --color-surface-muted: var(--surface-muted);
+
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted-strong: var(--muted-strong);
+  --color-inverse: var(--inverse);
+  --color-inverse-foreground: var(--inverse-foreground);
+
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
-  --color-info: var(--info);
-  --color-info-foreground: var(--info-foreground);
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
+  --color-destructive-text: var(--destructive-text);
+  --color-destructive-surface: var(--destructive-surface);
+  --color-destructive-border: var(--destructive-border);
+
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
+  --color-warning-text: var(--warning-text);
+  --color-warning-surface: var(--warning-surface);
+  --color-warning-border: var(--warning-border);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-text: var(--success-text);
+  --color-success-surface: var(--success-surface);
+  --color-success-border: var(--success-border);
+
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-info-text: var(--info-text);
+  --color-info-surface: var(--info-surface);
+  --color-info-border: var(--info-border);
+
   --color-border: var(--border);
+  --color-border-interactive: var(--border-interactive);
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-rule: var(--rule);
-  --color-muted-strong: var(--muted-strong);
-  --color-surface-muted: var(--surface-muted);
+  --color-overlay: var(--overlay);
   --color-code: var(--code);
-  --radius-sm: calc(var(--radius) * 0.5);
-  --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) * 1.5);
-  --radius-xl: calc(var(--radius) * 2.5);
-  --radius-2xl: calc(var(--radius) * 4);
+
+  /* Escala de radios. La anterior saltaba de 1.125rem (lg) a 1.875rem (xl) y
+     3rem (2xl); 2xl era más grande que cualquier superficie del sistema. */
+  --radius-sm: calc(var(--radius) * 0.5); /* 0.375rem — checkbox, kbd, badge */
+  --radius-md: var(--radius); /* 0.75rem  — input, button, popover */
+  --radius-lg: calc(var(--radius) * 1.33); /* 1rem     — card, dialog */
+  --radius-xl: calc(var(--radius) * 1.66); /* 1.25rem  — drawer, snippet */
+  --radius-2xl: calc(var(--radius) * 2); /* 1.5rem   — hero */
+
+  /* Nombres distintos a cada lado: ver la nota en --elevation-* arriba.
+     Ojo: drawer.tsx usa `shadow-2xl`, que no está en esta escala y cae al
+     default de Tailwind. La Fase 5 lo pasa a `shadow-lg`. */
+  --shadow-sm: var(--elevation-sm);
+  --shadow-md: var(--elevation-md);
+  --shadow-lg: var(--elevation-lg);
+
   --font-sans: var(--font-sans);
   --font-heading: var(--font-heading);
   --font-serif: var(--font-serif);
