@@ -1,11 +1,11 @@
 'use client';
 
+import { CodeBlock } from '@/components/mdx/codeblock';
 import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
 import { Card } from '@repo/ui/components/card';
 import { Select } from '@repo/ui/components/select';
 import { Switch } from '@repo/ui/components/switch';
-import { Tabs } from '@repo/ui/components/tabs';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 
@@ -17,7 +17,9 @@ const toggles = [
   { id: 'notify', label: 'Notify on failure', hint: 'email + webhook', on: false },
 ];
 
-const code = `import { useState } from 'react';
+const code = `'use client';
+
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -32,31 +34,16 @@ export function DeploySettings() {
         <Card.Title>Deploy settings</Card.Title>
       </Card.Header>
       <Card.Content compact>
-        <Switch defaultChecked aria-label="Auto-deploy" />
+        <Switch defaultChecked aria-label="Auto-deploy on push" />
       </Card.Content>
       <Card.Footer compact>
-        <Button loading={saving} fullWidth>
+        <Button loading={saving} onClick={() => setSaving(true)} fullWidth>
           Save changes
         </Button>
       </Card.Footer>
     </Card>
   );
 }`;
-
-const syntax = /(<\/?[A-Z][\w.]*|\b(?:import|from|export|function|return|const)\b|'[^']*')/g;
-
-function highlight(line: string) {
-  return line.split(syntax).map((part, index) => {
-    if (!part) return null;
-    const isTag = /^<\/?[A-Z]/.test(part);
-
-    return (
-      <span key={index} className={isTag ? 'text-foreground' : undefined}>
-        {part}
-      </span>
-    );
-  });
-}
 
 function DeploySettingsDemo() {
   const t = useTranslations('sections.home.liveDemo');
@@ -78,7 +65,7 @@ function DeploySettingsDemo() {
   }
 
   return (
-    <Card className="shadow-lg">
+    <Card className="w-full max-w-sm">
       <Card.Header compact>
         <div className="flex items-start justify-between gap-3">
           <div className="space-y-1">
@@ -127,46 +114,25 @@ function DeploySettingsDemo() {
   );
 }
 
+/**
+ * Same shape as a docs component preview — live component over its source, one
+ * frame, one divider — so the hero and the docs read as the same system.
+ */
 export function HeroLiveDemo() {
-  const t = useTranslations('sections.home.liveDemo');
-
   return (
-    <Tabs
-      defaultValue="preview"
-      variant="ghost"
-      className="border-border bg-card/40 overflow-hidden rounded-lg border border-dashed backdrop-blur-sm"
-    >
-      <div className="border-border flex items-center justify-between gap-4 border-b border-dashed px-3 py-2">
-        <span className="text-muted-foreground truncate font-mono text-[11px]">
-          deploy-settings.tsx
-        </span>
-        <Tabs.List variant="ghost" className="w-auto shrink-0" size="sm">
-          <Tabs.Trigger value="preview" size="sm" className="px-2.5 py-1">
-            {t('preview')}
-          </Tabs.Trigger>
-          <Tabs.Trigger value="code" size="sm" className="px-2.5 py-1">
-            {t('code')}
-          </Tabs.Trigger>
-        </Tabs.List>
+    <div className="border-rule overflow-hidden rounded-md border">
+      <div className="flex items-center justify-center p-6 sm:p-8">
+        <DeploySettingsDemo />
       </div>
-      <Tabs.Content value="preview" className="mt-0 p-4 sm:p-5">
-        <div className="min-h-[26rem]">
-          <DeploySettingsDemo />
-        </div>
-      </Tabs.Content>
-      <Tabs.Content value="code" className="mt-0">
-        <div className="min-h-[26rem] overflow-x-auto p-4 sm:p-5">
-          <pre className="text-muted-strong font-mono text-[12px] leading-[1.7]">
-            <code>
-              {code.split('\n').map((line, index) => (
-                <span key={index} className="block">
-                  {line ? highlight(line) : ' '}
-                </span>
-              ))}
-            </code>
-          </pre>
-        </div>
-      </Tabs.Content>
-    </Tabs>
+      <div className="border-rule border-t">
+        <CodeBlock
+          code={code}
+          language="tsx"
+          showLineNumbers
+          collapsible
+          className="rounded-none border-0"
+        />
+      </div>
+    </div>
   );
 }

@@ -85,8 +85,6 @@
       ]
     },
     "liveDemo": {
-      "preview": "Vista previa",
-      "code": "Código",
       "badge": "En vivo",
       "save": "Guardar cambios",
       "saved": "Cambios guardados",
