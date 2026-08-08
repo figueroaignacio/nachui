@@ -136,11 +136,10 @@ export function BrickCodeViewer({ files }: BrickCodeViewerProps) {
     () => files.find((f) => f.filePath === activeFile)?.code ?? '',
     [files, activeFile],
   );
-  const activeFileName = activeFile.split('/').pop() ?? '';
 
   return (
-    <div className="dark text-foreground flex min-h-[500px] flex-col overflow-hidden rounded-lg bg-[#0e1216] md:flex-row">
-      <div className="flex flex-col border-b border-dashed md:w-64 md:border-r md:border-b-0">
+    <div className="dark text-foreground bg-background flex min-h-[500px] flex-col overflow-hidden rounded-lg md:flex-row">
+      <div className="flex flex-col border-b md:w-64 md:border-r md:border-b-0">
         <div className="p-3">
           <Typography
             variant="h4"
@@ -168,7 +167,6 @@ export function BrickCodeViewer({ files }: BrickCodeViewerProps) {
         <CodeBlock
           code={activeFileContent}
           language="tsx"
-          filename={activeFileName}
           showLineNumbers
           className="mt-0 h-full rounded-none border-0"
         />

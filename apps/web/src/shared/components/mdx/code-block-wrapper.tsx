@@ -1,33 +1,19 @@
 'use client';
 
-import { Button } from '@repo/ui/components/button';
-import { useTranslations } from 'next-intl';
-import { cloneElement, useState } from 'react';
+import { cloneElement } from 'react';
 
 interface CodeBlockProps {
-  expandButton?: React.ReactNode;
-  isExpanded?: boolean;
+  collapsible?: boolean;
 }
 
 interface CodeBlockWrapperProps {
   children: React.ReactElement<CodeBlockProps>;
-  expandButtonTitle?: string;
 }
 
+/**
+ * Marks a CodeBlock as collapsible. The clip/expand state lives in CodeBlock
+ * itself so the button sits inside the scroll container it controls.
+ */
 export function CodeBlockWrapper({ children }: CodeBlockWrapperProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const t = useTranslations('components.codeblockWrapper');
-
-  const expandButton = (
-    <Button
-      variant="link"
-      size="sm"
-      onClick={() => setIsExpanded((prev) => !prev)}
-      className="text-white"
-    >
-      {isExpanded ? <>{t('collapse')}</> : <>{t('expand')}</>}
-    </Button>
-  );
-
-  return cloneElement(children, { expandButton, isExpanded });
+  return cloneElement(children, { collapsible: true });
 }

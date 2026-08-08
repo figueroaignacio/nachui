@@ -28,25 +28,25 @@ export function ComponentPreviewClient({
 
   return (
     <div className={className}>
-      <div className="border-border mt-5 rounded-md border">
+      <div className="border-rule mt-5 overflow-hidden rounded-md border">
         <div className={`flex min-h-100 items-center ${alignmentClasses[align]} p-8 sm:p-12`}>
           {componentPreview}
         </div>
         {description && (
-          <div className="border-border bg-muted/30 border-t border-dashed px-6 py-4">
+          <div className="border-rule bg-muted/30 border-t px-6 py-4">
             <Typography variant="p" className="text-muted-foreground text-sm">
               {description}
             </Typography>
           </div>
         )}
-        <div className="border-border border-t border-dashed">
+        <div className="border-rule border-t">
           {code ? (
             <CodeBlock
               code={code}
               language="tsx"
               showLineNumbers
-              filename={filePath?.split('/').pop()}
-              className="mt-0 rounded-t-none border-none"
+              collapsible
+              className="rounded-none border-0"
             />
           ) : (
             <div className="border-border bg-destructive/10 p-6">

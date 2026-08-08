@@ -21,8 +21,8 @@
     "headline": "Desarrollador Fullstack & Estudiante de Programación"
   },
   "codeblockWrapper": {
-    "expand": "Expandir",
-    "collapse": "Colapsar"
+    "expand": "Ver código completo",
+    "collapse": "Contraer"
   },
   "chat": {
     "input": {

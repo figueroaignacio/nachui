@@ -20,7 +20,7 @@ export function CopyButton({ value, className }: CopyButtonProps) {
       title={isCopied ? 'Copied!' : 'Copy code'}
       aria-label={isCopied ? 'Copied!' : 'Copy code'}
       className={cn(
-        'text-white transition-transform duration-100 hover:scale-[1.05] hover:cursor-pointer active:scale-[0.90]',
+        'text-muted-foreground hover:text-foreground transition-all duration-100 hover:scale-[1.05] hover:cursor-pointer active:scale-[0.90]',
         className,
       )}
     >

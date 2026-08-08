@@ -45,6 +45,19 @@
   --rule: oklch(90.5% 0.004 70);
   --muted-strong: oklch(35% 0.004 70);
   --surface-muted: oklch(95.5% 0.004 70);
+
+  /* Code surface + syntax. The surface sits one step off the page canvas so a
+     block reads as an editor well rather than a second card. Every token below
+     clears 4.5:1 against --code. */
+  --code: oklch(96.5% 0.004 70);
+  --code-plain: oklch(25% 0.005 70);
+  --code-comment: oklch(50% 0.01 70);
+  --code-punctuation: oklch(46% 0.01 70);
+  --code-keyword: oklch(46% 0.16 300);
+  --code-string: oklch(45% 0.12 150);
+  --code-function: oklch(47% 0.14 250);
+  --code-number: oklch(49% 0.13 60);
+  --code-tag: oklch(49% 0.16 20);
 }
 
 .dark {
@@ -90,6 +103,18 @@
   --rule: oklch(25% 0.002 70);
   --muted-strong: oklch(74% 0.002 70);
   --surface-muted: oklch(20% 0.002 70);
+
+  /* Code surface + syntax. 16.5% sits between the page canvas (14%) and card
+     (18.5%), so the block separates from both. */
+  --code: oklch(16.5% 0.002 70);
+  --code-plain: oklch(90% 0.002 70);
+  --code-comment: oklch(63% 0.01 70);
+  --code-punctuation: oklch(68% 0.008 70);
+  --code-keyword: oklch(76% 0.13 300);
+  --code-string: oklch(79% 0.12 150);
+  --code-function: oklch(77% 0.11 250);
+  --code-number: oklch(80% 0.1 60);
+  --code-tag: oklch(75% 0.13 20);
 }
 
 @theme inline {
@@ -121,6 +146,7 @@
   --color-rule: var(--rule);
   --color-muted-strong: var(--muted-strong);
   --color-surface-muted: var(--surface-muted);
+  --color-code: var(--code);
   --radius-sm: calc(var(--radius) * 0.5);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) * 1.5);
@@ -178,7 +204,7 @@
 }
 
 .section-rule {
-  @apply border-rule mt-3 border-t border-dashed;
+  @apply bg-rule mt-3 h-px;
 }
 
 .prose-reading {
@@ -222,11 +248,11 @@
 
 .page-frame {
   padding-inline: var(--frame-pad);
-  border-inline: var(--frame-border) dashed var(--rule);
+  border-inline: var(--frame-border) solid var(--rule);
 }
 
 .rule-bleed {
-  border-block-start: 1px dashed var(--rule);
+  border-block-start: 1px solid var(--rule);
   margin-inline: calc(-1 * var(--frame-bleed));
 }
 

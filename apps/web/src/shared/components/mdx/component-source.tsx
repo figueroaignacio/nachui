@@ -6,15 +6,10 @@ import { getComponentSourceCode } from '@/features/docs/lib/get-component-code';
 
 interface ComponentSourceProps {
   component: string;
-  expandButtonTitle?: string;
   className?: string;
 }
 
-export async function ComponentSource({
-  component,
-  expandButtonTitle = 'View Source',
-  className,
-}: ComponentSourceProps) {
+export async function ComponentSource({ component, className }: ComponentSourceProps) {
   const { code, filePath, error } = await getComponentSourceCode(component);
 
   if (error) {
@@ -26,11 +21,6 @@ export async function ComponentSource({
   }
 
   return (
-    <ComponentSourceClient
-      code={code}
-      expandButtonTitle={expandButtonTitle}
-      className={className}
-      filePath={filePath || undefined}
-    />
+    <ComponentSourceClient code={code} className={className} filePath={filePath || undefined} />
   );
 }

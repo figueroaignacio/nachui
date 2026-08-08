@@ -2,16 +2,51 @@
 
 import { fontCode } from '@/lib/font';
 import { cn } from '@repo/ui/lib/cn';
-import { Highlight, themes } from 'prism-react-renderer';
-import { useRef } from 'react';
+import { Highlight, type PrismTheme } from 'prism-react-renderer';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 import { CopyButton } from './copy-button';
+
+/**
+ * Token colours resolve from CSS variables rather than a bundled Prism theme,
+ * so a block follows light/dark instantly — no `useTheme()`, no mounted gate,
+ * and no flash of the wrong palette on hydration.
+ */
+const codeTheme: PrismTheme = {
+  plain: { color: 'var(--code-plain)', backgroundColor: 'transparent' },
+  styles: [
+    {
+      types: ['comment', 'prolog', 'doctype', 'cdata'],
+      style: { color: 'var(--code-comment)', fontStyle: 'italic' },
+    },
+    { types: ['punctuation', 'operator'], style: { color: 'var(--code-punctuation)' } },
+    {
+      types: ['keyword', 'builtin', 'important', 'atrule'],
+      style: { color: 'var(--code-keyword)' },
+    },
+    {
+      types: ['string', 'char', 'attr-value', 'inserted', 'regex'],
+      style: { color: 'var(--code-string)' },
+    },
+    {
+      types: ['function', 'class-name', 'maybe-class-name'],
+      style: { color: 'var(--code-function)' },
+    },
+    {
+      types: ['number', 'boolean', 'constant', 'symbol', 'attr-name', 'property'],
+      style: { color: 'var(--code-number)' },
+    },
+    { types: ['tag', 'selector', 'deleted'], style: { color: 'var(--code-tag)' } },
+  ],
+};
 
 interface CodeBlockProps {
   code: string;
   language?: string;
   className?: string;
   showLineNumbers?: boolean;
-  filename?: string;
+  /** Start clipped behind a fade, with a button that expands into a scroll area. */
+  collapsible?: boolean;
 }
 
 export function CodeBlock({
@@ -19,51 +54,37 @@ export function CodeBlock({
   language = 'tsx',
   className,
   showLineNumbers = true,
-  filename: _filename,
+  collapsible = false,
 }: CodeBlockProps) {
+  const t = useTranslations('components.codeblockWrapper');
+  const [isExpanded, setIsExpanded] = useState(false);
+
   const codeString = code.trim();
-  const filename = _filename?.trim() || undefined;
-  const preRef = useRef<HTMLPreElement>(null);
+  const isCollapsed = collapsible && !isExpanded;
 
   return (
     <div
-      className={cn(
-        'group relative mt-6 w-full overflow-hidden rounded-sm bg-[#0a0908]',
-        className,
-      )}
+      className={cn('border-rule bg-code relative overflow-hidden rounded-md border', className)}
     >
-      <div className="max-h-inherit flex h-full flex-col">
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/5 bg-[#201f1e]/50 px-4 py-2 backdrop-blur-sm">
-          <div className="flex items-center gap-3">
-            <div className="flex gap-1.5">
-              <div className="h-2.5 w-2.5 rounded-full bg-red-500" />
-              <div className="h-2.5 w-2.5 rounded-full bg-yellow-500" />
-              <div className="h-2.5 w-2.5 rounded-full bg-green-500" />
-            </div>
-            {filename ? (
-              <span
-                className={cn(
-                  'rounded-sm bg-white/5 px-2 py-0.5 font-mono text-[11px] leading-none text-white/60',
-                  fontCode.className,
-                )}
-              >
-                {filename}
-              </span>
-            ) : null}
-          </div>
-          <div className="flex items-center gap-2">
-            <CopyButton value={codeString} />
-          </div>
-        </div>
-        <Highlight code={codeString} language={language} theme={themes.vsDark}>
-          {({ className: _className, style, tokens, getLineProps, getTokenProps }) => (
-            <>
+      <CopyButton
+        value={codeString}
+        className="bg-code/80 absolute top-2.5 right-2.5 z-20 rounded-sm p-1.5 backdrop-blur-sm"
+      />
+
+      {/* Two nested scrollports, one per axis. The outer keeps its vertical
+          scrollbar (the only hint that a long file continues below); the inner
+          hides the horizontal one while staying fully scrollable by wheel,
+          trackpad, touch and keyboard. Capping the height here is what keeps a
+          long file from stretching the page — expanding swaps the clip for a
+          scroll area, never for growth. */}
+      <div
+        className={cn(isCollapsed ? 'max-h-52 overflow-y-hidden' : 'max-h-[32rem] overflow-y-auto')}
+      >
+        <div className="hide-scrollbar overflow-x-auto">
+          <Highlight code={codeString} language={language} theme={codeTheme}>
+            {({ style, tokens, getLineProps, getTokenProps }) => (
               <pre
-                ref={preRef}
-                className={cn(
-                  'overflow-x-auto p-5 text-[13px] leading-relaxed',
-                  fontCode.className,
-                )}
+                className={cn('w-fit min-w-full p-4 text-[13px] leading-[1.7]', fontCode.className)}
                 style={{ ...style, backgroundColor: 'transparent' }}
               >
                 {tokens.map((line, i) => {
@@ -72,11 +93,11 @@ export function CodeBlock({
                   return (
                     <div key={i} {...lineProps} className={cn('table-row', lineProps.className)}>
                       {showLineNumbers && (
-                        <span className="table-cell w-8 pr-4 text-right text-white/20 select-none">
+                        <span className="bg-code text-muted-foreground/60 sticky left-0 table-cell w-10 pr-4 text-right tabular-nums select-none">
                           {i + 1}
                         </span>
                       )}
-                      <span className="table-cell">
+                      <span className="table-cell pr-10">
                         {line.map((token, key) => (
                           <span key={key} {...getTokenProps({ token })} />
                         ))}
@@ -85,10 +106,33 @@ export function CodeBlock({
                   );
                 })}
               </pre>
-            </>
-          )}
-        </Highlight>
+            )}
+          </Highlight>
+        </div>
       </div>
+
+      {collapsible &&
+        (isCollapsed ? (
+          <div className="from-code via-code absolute inset-x-0 bottom-0 flex justify-center bg-linear-to-t to-transparent pt-16 pb-3">
+            <ExpandButton onClick={() => setIsExpanded(true)}>{t('expand')}</ExpandButton>
+          </div>
+        ) : (
+          <div className="border-rule flex justify-center border-t py-2">
+            <ExpandButton onClick={() => setIsExpanded(false)}>{t('collapse')}</ExpandButton>
+          </div>
+        ))}
     </div>
+  );
+}
+
+function ExpandButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-sm px-3 py-1 font-mono text-xs transition-colors"
+    >
+      {children}
+    </button>
   );
 }
