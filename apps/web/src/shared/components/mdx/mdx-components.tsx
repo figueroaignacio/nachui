@@ -127,13 +127,22 @@ function HorizontalRule({ className, ...props }: React.HTMLAttributes<HTMLHRElem
   return <hr className={cn('border-border/50 my-10 md:my-14', className)} {...props} />;
 }
 
+const PLAIN_TEXT_FENCES = new Set(['tree', 'txt', 'text', 'plaintext']);
+
 export function Pre({ children }: { children: React.ReactNode }) {
   if (!isValidElement(children)) {
     return <pre className="overflow-x-auto">{children}</pre>;
   }
 
-  const childProps = children.props as { className?: string; children?: React.ReactNode };
-  const language = childProps.className?.replace('language-', '') || 'tsx';
+  // rehype-pretty-code replaces `class="language-x"` with `data-language`, so
+  // read both: raw MDX gives the class, the processed tree gives the attribute.
+  const childProps = children.props as {
+    className?: string;
+    'data-language'?: string;
+    children?: React.ReactNode;
+  };
+  const language =
+    childProps['data-language'] || childProps.className?.replace('language-', '') || 'tsx';
 
   const extractCode = (node: unknown): string => {
     if (!node) return '';
@@ -149,9 +158,18 @@ export function Pre({ children }: { children: React.ReactNode }) {
   };
   const code = extractCode(childProps.children).trim();
 
+  // Plain-text fences (composition trees, terminal output) are read as a shape,
+  // not stepped through line by line — numbering them just adds noise.
+  const isPlainText = PLAIN_TEXT_FENCES.has(language);
+
   return (
     <div className="my-6 w-full overflow-x-auto">
-      <CodeBlock code={code} language={language} className="min-w-0 shadow-sm" />
+      <CodeBlock
+        code={code}
+        language={language}
+        showLineNumbers={!isPlainText}
+        className="min-w-0 shadow-sm"
+      />
     </div>
   );
 }
