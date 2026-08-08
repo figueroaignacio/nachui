@@ -4,7 +4,6 @@ import { Searcher } from '@/features/docs/components/searcher';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { Navigation } from '@/lib/definitions';
 import { cn } from '@repo/ui/lib/cn';
-import { Container } from '@repo/ui/src/layout/container';
 import { useTranslations } from 'next-intl';
 import { LocaleSwitcher } from '../common/locale-switcher';
 import { ThemeToggle } from '../common/theme-toggle';
@@ -15,8 +14,8 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <Container size="fluid">
-      <div className="relative z-50 hidden w-full md:flex">
+    <div className="frame-aligned">
+      <div className="relative z-50 hidden w-full lg:flex">
         <div className="mx-auto flex w-full items-center justify-between py-4">
           <Link
             href="/"
@@ -51,6 +50,6 @@ export function Navbar() {
           </div>
         </div>
       </div>
-    </Container>
+    </div>
   );
 }

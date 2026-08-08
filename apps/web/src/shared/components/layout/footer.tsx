@@ -9,7 +9,7 @@ export function Footer() {
 
   return (
     <footer className="border-rule border-t">
-      <div className="mx-auto flex w-full flex-col gap-8 px-6 pt-12 pb-10 md:flex-row md:items-start md:justify-between">
+      <div className="frame-aligned flex w-full flex-col gap-8 pt-12 pb-10 md:flex-row md:items-start md:justify-between">
         <div className="max-w-xs space-y-3">
           <span className="text-foreground font-mono text-sm font-medium">nachui</span>
           <p className="text-muted-foreground text-[13px] leading-relaxed">
@@ -96,7 +96,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-rule border-t">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-6 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+        <div className="frame-aligned flex w-full flex-col gap-6 py-6 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
           <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-6">
             <p className="text-muted-foreground font-mono text-xs">
               © {currentYear} NachUI. {t('footer.copyright')}

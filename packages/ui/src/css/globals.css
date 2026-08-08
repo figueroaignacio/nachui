@@ -246,6 +246,12 @@
   padding-inline: var(--frame-gutter);
 }
 
+/* Full-width chrome that lives outside the frame (header, footer) but has to
+   line its content up with the framed column. */
+.frame-aligned {
+  padding-inline: var(--frame-bleed);
+}
+
 .page-frame {
   padding-inline: var(--frame-pad);
   border-inline: var(--frame-border) solid var(--rule);
