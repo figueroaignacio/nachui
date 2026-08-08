@@ -14,7 +14,7 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <div className="frame-aligned">
+    <div>
       <div className="relative z-50 hidden w-full lg:flex">
         <div className="mx-auto flex w-full items-center justify-between py-4">
           <Link

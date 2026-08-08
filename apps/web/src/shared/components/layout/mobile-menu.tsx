@@ -28,7 +28,7 @@ export function MobileMenu() {
   useLockBodyScroll(isMenuOpen);
 
   return (
-    <div className="frame-aligned relative flex w-full items-center justify-between py-5 lg:hidden">
+    <div className="relative flex w-full items-center justify-between py-5 lg:hidden">
       <Flex gap="4" align="center">
         <button
           className="flex items-center gap-x-2 text-sm font-medium"
@@ -48,13 +48,13 @@ export function MobileMenu() {
       <nav
         className={cn(
           'bg-background fixed z-50 flex flex-col overflow-hidden shadow-2xl transition-all duration-300',
-          'inset-0 h-lvh w-full sm:inset-2 sm:h-[calc(100svh-1rem)] sm:w-95 sm:rounded-lg sm:border',
+          'border-rule inset-0 h-lvh w-full sm:inset-2 sm:h-[calc(100svh-1rem)] sm:w-95 sm:rounded-lg sm:border',
           isMenuOpen
             ? 'translate-x-0'
             : '-translate-x-full opacity-0 sm:translate-x-[calc(-90%-2rem)]',
         )}
       >
-        <div className="flex items-center justify-between px-6 py-4">
+        <div className="border-rule flex items-center justify-between border-b px-6 py-4">
           <div className="flex items-center gap-x-3">
             <button
               title="Go to home page"

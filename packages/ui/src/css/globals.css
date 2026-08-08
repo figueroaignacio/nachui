@@ -307,10 +307,6 @@
   padding-inline: var(--frame-gutter);
 }
 
-.frame-aligned {
-  padding-inline: var(--frame-bleed);
-}
-
 .page-frame {
   padding-inline: var(--frame-pad);
   border-inline: var(--frame-border) solid var(--rule);

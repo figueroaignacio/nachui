@@ -1,6 +1,6 @@
 import type { Message } from '@/lib/definitions';
 import { Container } from '@repo/ui/layout/container';
-import { AnimatePresence, motion, type Transition } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion, type Transition } from 'motion/react';
 import type { ToolName } from '../hooks/use-chat';
 import { ChatHeader } from '../ui/chat-header';
 import { ChatInput } from '../ui/chat-input';
@@ -25,14 +25,22 @@ interface ChatWindowProps {
   onToggleExpand: () => void;
 }
 
-const backdropTransition: Transition = { duration: 0.25, ease: [0.22, 1, 0.36, 1] };
+// Matches the mobile menu, which is a plain `transition-all duration-300`:
+// same 300ms, same default Tailwind easing curve, a full slide off-screen and
+// a fade — no spring and no scale.
+const PANEL_DURATION = 0.3;
+const PANEL_EASE = [0.4, 0, 0.2, 1] as const;
 
-const panelEnterTransition = {
-  type: 'spring' as const,
-  stiffness: 380,
-  damping: 34,
-  mass: 0.8,
+const backdropTransition: Transition = { duration: PANEL_DURATION, ease: PANEL_EASE };
+
+const panelEnterTransition: Transition = {
+  duration: PANEL_DURATION,
+  ease: PANEL_EASE,
 };
+
+/** The mobile menu slides out to its own edge; this panel sits on the right. */
+const panelHidden = { opacity: 0, x: '100%' };
+const panelVisible = { opacity: 1, x: 0 };
 
 const layoutTransition = {
   type: 'spring' as const,
@@ -63,6 +71,10 @@ export function ChatWindow(props: ChatWindowProps) {
     onSuggestionClick,
     onToggleExpand,
   } = props;
+
+  // The mobile menu animates in CSS, so the global prefers-reduced-motion rule
+  // already silences it. Motion runs off the main thread and needs telling.
+  const reduceMotion = useReducedMotion();
 
   const body = (
     <div className="bg-background relative z-10 flex h-full flex-col">
@@ -103,7 +115,7 @@ export function ChatWindow(props: ChatWindowProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={backdropTransition}
+            transition={reduceMotion ? { duration: 0 } : backdropTransition}
             className="bg-background/50 fixed inset-0 z-9999 backdrop-blur-[2px]"
             onClick={onClose}
           />
@@ -111,17 +123,16 @@ export function ChatWindow(props: ChatWindowProps) {
             key="chat-panel"
             layout
             style={panelStyle}
-            initial={{ opacity: 0, x: 80, scale: 0.97 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 60, scale: 0.97 }}
-            transition={{
-              layout: layoutTransition,
-              ...panelEnterTransition,
-            }}
+            initial={reduceMotion ? false : panelHidden}
+            animate={panelVisible}
+            exit={reduceMotion ? { opacity: 0 } : panelHidden}
+            transition={
+              reduceMotion ? { duration: 0 } : { layout: layoutTransition, ...panelEnterTransition }
+            }
             className={
               isExpanded
                 ? 'bg-background fixed inset-0 z-9999 flex'
-                : 'bg-background border-border fixed inset-y-0 right-0 z-9999 flex h-full w-full flex-col overflow-hidden border-l md:w-112.5 lg:w-175'
+                : 'bg-background border-rule fixed inset-y-0 right-0 z-9999 flex h-full w-full flex-col overflow-hidden border-l md:w-112.5 lg:w-175'
             }
           >
             {isExpanded ? <Container size="lg">{body}</Container> : body}
