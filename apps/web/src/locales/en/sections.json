@@ -109,10 +109,6 @@
       "cta": "Browse the docs"
     }
   },
-  "blog": {
-    "subtitle": "The latest updates from NachUI",
-    "postedBy": "Posted by:"
-  },
   "bricks": {
     "title": "Copy. Paste. Ship.",
     "subtitle": "",
@@ -131,7 +127,6 @@
       "docs": "Documentation",
       "components": "Components",
       "installation": "Installation",
-      "blog": "Blog",
       "about": "About"
     },
     "resources": {

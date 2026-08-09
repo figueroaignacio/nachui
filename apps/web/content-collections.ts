@@ -204,49 +204,6 @@ const docs = defineCollection({
   },
 });
 
-const posts = defineCollection({
-  name: 'posts',
-  directory: 'src/content/blog',
-  include: '**/*.mdx',
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    published: z.boolean().default(false),
-    date: z.coerce.date().default(new Date()),
-    label: labelSchema,
-    locale: localeSchema,
-    content: z.string(),
-    toc: z
-      .object({
-        visible: z.boolean().default(true),
-      })
-      .default({ visible: true }),
-  }),
-  transform: async (document, context) => {
-    let tocEntries: TocEntry[] = [];
-
-    const body = await compileMDX(context, document, {
-      remarkPlugins,
-      rehypePlugins: createRehypePlugins((toc) => {
-        tocEntries = toc;
-      }),
-    });
-
-    const slugFields = computeSlugFields(document._meta, document.locale);
-
-    return {
-      ...document,
-      ...slugFields,
-      body,
-      raw: document.content,
-      toc: {
-        content: tocEntries,
-        visible: document.toc?.visible ?? true,
-      },
-    };
-  },
-});
-
 const skills = defineCollection({
   name: 'skills',
   directory: 'src/content/skills',
@@ -281,5 +238,5 @@ const skills = defineCollection({
 });
 
 export default defineConfig({
-  content: [docs, posts, skills],
+  content: [docs, skills],
 });

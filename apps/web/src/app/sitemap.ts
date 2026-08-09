@@ -1,4 +1,4 @@
-import { allDocs as docs, allPosts as posts, allSkills as skills } from 'content-collections';
+import { allDocs as docs, allSkills as skills } from 'content-collections';
 import { BRICK_CATEGORIES } from '@/features/bricks/lib/bricks-registry';
 import { buildAlternates, getDomainForLocale, locales } from '@/lib/domains';
 import type { MetadataRoute } from 'next';
@@ -27,7 +27,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry(locale, '/', { changeFrequency: 'daily', priority: 1 }),
     entry(locale, '/docs', { changeFrequency: 'weekly', priority: 0.9 }),
     entry(locale, '/docs/components', { changeFrequency: 'weekly', priority: 0.9 }),
-    entry(locale, '/blog', { changeFrequency: 'daily', priority: 0.8 }),
     entry(locale, '/about', { changeFrequency: 'monthly', priority: 0.7 }),
     entry(locale, '/skills', { changeFrequency: 'weekly', priority: 0.8 }),
     entry(locale, '/bricks', { changeFrequency: 'daily', priority: 0.9 }),
@@ -44,21 +43,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
           changeFrequency: 'weekly',
           priority: 0.8,
           lastModified: localizedDoc?.date ? new Date(localizedDoc.date) : undefined,
-        });
-      });
-    });
-
-  const blogPages: MetadataRoute.Sitemap = posts
-    .filter((post) => post.published)
-    .flatMap((post) => {
-      return locales.map((locale) => {
-        const localizedPost = posts.find((p) => p.locale === locale && p.slug === post.slug);
-        const slugPath = localizedPost?.slugAsParams || post.slugAsParams || '';
-
-        return entry(locale, `/blog/${slugPath}`, {
-          changeFrequency: 'monthly',
-          priority: 0.7,
-          lastModified: localizedPost?.date ? new Date(localizedPost.date) : undefined,
         });
       });
     });
@@ -81,7 +65,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   });
 
-  const allPages = [...staticPages, ...docPages, ...blogPages, ...skillPages, ...brickPages];
+  const allPages = [...staticPages, ...docPages, ...skillPages, ...brickPages];
   const uniquePages = Array.from(new Map(allPages.map((page) => [page.url, page])).values());
 
   return uniquePages;

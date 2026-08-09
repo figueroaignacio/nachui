@@ -110,10 +110,6 @@
       "cta": "Ver la documentación"
     }
   },
-  "blog": {
-    "subtitle": "Las últimas actualizaciones de NachUI",
-    "postedBy": "Publicado por:"
-  },
   "bricks": {
     "title": "Copia. Pega. Lanza.",
     "subtitle": "",
@@ -132,7 +128,6 @@
       "docs": "Documentación",
       "components": "Componentes",
       "installation": "Instalación",
-      "blog": "Blog",
       "about": "Acerca de"
     },
     "resources": {

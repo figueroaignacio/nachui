@@ -38,7 +38,6 @@ export function Footer() {
                       ['/docs', t('footer.product.docs')],
                       ['/docs/components', t('footer.product.components')],
                       ['/docs/installation', t('footer.product.installation')],
-                      ['/blog', t('footer.product.blog')],
                       ['/about', t('footer.product.about')],
                     ] as [string, string][]
                   ).map(([href, label]) => (
