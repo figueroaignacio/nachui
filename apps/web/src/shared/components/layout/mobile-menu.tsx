@@ -4,7 +4,6 @@ import { Searcher } from '@/features/docs/components/searcher';
 import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { DocSection, Navigation } from '@/lib/definitions';
-import { getIcon } from '@/lib/get-icon';
 import { Cancel01Icon, PanelLeftIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Typography } from '@repo/ui/components/typography';
@@ -82,10 +81,8 @@ export function MobileMenu() {
         <div className="flex-1 overflow-y-auto px-6 py-6">
           {navigation && navigation.length > 0 && (
             <div className="mb-8">
-              <Typography className="text-muted-foreground mb-3 text-xs font-bold tracking-widest">
-                Menu
-              </Typography>
-              <ul className="space-y-1">
+              <Typography className="text-muted-foreground mb-2 px-2.5 text-xs">Menu</Typography>
+              <ul>
                 {navigation.map((item) => {
                   const isActive = pathname === item.href;
 
@@ -94,16 +91,15 @@ export function MobileMenu() {
                       <Link
                         href={item.href}
                         onClick={toggleMenu}
+                        aria-current={isActive ? 'page' : undefined}
                         className={cn(
-                          'hover:bg-card hover:text-primary flex items-center justify-between rounded-md px-2 py-2 text-sm font-medium transition-colors',
-                          isActive && 'text-foreground bg-card',
+                          'block rounded-md px-2.5 py-1.5 text-sm transition-colors',
+                          isActive
+                            ? 'bg-card text-foreground font-medium'
+                            : 'text-muted-foreground hover:text-foreground',
                         )}
                       >
-                        <div className="flex items-center gap-2">
-                          {getIcon(item.title, item.href)}
-                          {item.title}
-                        </div>
-                        {isActive && <div className="bg-foreground size-1.5 rounded-full" />}
+                        {item.title}
                       </Link>
                     </li>
                   );
@@ -112,12 +108,11 @@ export function MobileMenu() {
             </div>
           )}
           {docsNavigation.map((section, sectionIndex) => (
-            <div key={sectionIndex} className="mb-6 last:mb-0">
-              <Typography className="text-foreground font-heading mb-3 flex items-center gap-2 text-sm tracking-tight">
-                {getIcon(section.title)}
+            <div key={sectionIndex} className="mb-8 last:mb-0">
+              <Typography className="text-muted-foreground mb-2 px-2.5 text-xs">
                 {section.title}
               </Typography>
-              <ul className="ml-1.5 space-y-1 border-l pl-4">
+              <ul>
                 {section.items.map((item, itemIndex) => {
                   const isActive = pathname === item.href;
 
@@ -126,16 +121,15 @@ export function MobileMenu() {
                       <Link
                         href={item.href}
                         onClick={toggleMenu}
+                        aria-current={isActive ? 'page' : undefined}
                         className={cn(
-                          'text-muted-foreground hover:bg-card hover:text-primary flex items-center justify-between rounded-md px-2 py-1.5 text-xs transition-colors',
-                          isActive && 'bg-card text-foreground font-medium',
+                          'block rounded-md px-2.5 py-1.5 text-sm transition-colors',
+                          isActive
+                            ? 'bg-card text-foreground font-medium'
+                            : 'text-muted-foreground hover:text-foreground',
                         )}
                       >
-                        <div className="flex items-center gap-2">
-                          {getIcon(item.title, item.href)}
-                          {item.title}
-                        </div>
-                        {isActive && <div className="bg-foreground size-1.5 rounded-full" />}
+                        {item.title}
                       </Link>
                     </li>
                   );
