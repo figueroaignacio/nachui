@@ -1,6 +1,6 @@
 ---
 title: Tematización
-description: Personaliza colores, radios de borde y más para adaptar los componentes a tu proyecto.
+description: El sistema de diseño detrás de NachUI — tokens semánticos, el contrato de temas y cómo adaptarlos a tu marca.
 published: true
 toc:
   visible: true
@@ -8,412 +8,313 @@ date: 2024-03-14
 locale: es
 ---
 
-Los componentes están construidos usando variables CSS y Tailwind, lo que te permite personalizar fácilmente los colores y estilos de toda tu aplicación.
+NachUI no tiene colores hardcodeados. Cada componente se pinta con tokens semánticos — `bg-card`, `text-muted-foreground`, `border-rule` — y esos tokens son variables CSS que te pertenecen. Cambiás una variable y todo el sistema se mueve con ella, en claro y en oscuro, sin tocar un solo componente.
 
 ## Cómo funciona
 
-Usamos una convención simple: cada color tiene una variable `--background` para el fondo y una `--foreground` para el texto que va sobre ese fondo.
+La tematización pasa por tres capas. Entenderlas es casi todo lo que necesitás.
 
-Por ejemplo:
-
-- `--primary` define el color de fondo principal
-- `--primary-foreground` define el color del texto sobre ese fondo
-
-Esto garantiza automáticamente un buen contraste entre el fondo y el texto.
-
-```tsx
-<button className="bg-primary text-primary-foreground p-4">Mi botón</button>
-```
-
-## Colores disponibles
+**1. Una variable CSS guarda el valor.** Se declara en `:root` y se sobrescribe dentro de `.dark`.
 
 ```css
 :root {
-  --background: oklch(99.405% 0.00011 271.152);
-  --foreground: oklch(0% 0 0);
-  --primary: oklch(53.934% 0.2714 286.753);
-  --primary-foreground: oklch(100% 0.00011 271.152);
-  --secondary: oklch(95.4% 0.00637 255.746);
-  --secondary-foreground: oklch(13.441% 0.00002 271.152);
-  --muted: oklch(97.015% 0.00011 271.152);
-  --muted-foreground: oklch(43.861% 0.00005 271.152);
-  --accent: oklch(93.929% 0.02887 266.393);
-  --accent-foreground: oklch(54.456% 0.19041 259.501);
-  --destructive: oklch(62.902% 0.19024 23.052);
-  --destructive-foreground: oklch(100% 0.00011 271.152);
-  --border: oklch(88.09% 0.00941 258.48);
-  --input: oklch(93.1% 0.00011 271.152);
-  --ring: oklch(0% 0 0);
-}
-```
-
-### ¿Qué es OKLCH?
-
-OKLCH es un formato de color moderno que ofrece mejor control sobre el brillo y la saturación que HSL o RGB. La sintaxis es:
-
-```css
-oklch(lightness chroma hue)
-```
-
-- **Lightness**: 0% = negro, 100% = blanco
-- **Chroma**: 0 = gris, ~0.4 = muy saturado
-- **Hue**: 0-360 grados de color
-
-Puedes usar herramientas como [oklch.com](https://oklch.com/) para elegir colores visualmente.
-
-## Personalizar colores
-
-### Cambiar colores existentes
-
-Modifica las variables directamente en tu archivo CSS:
-
-```css
-:root {
-  --primary: oklch(65% 0.25 150); /* Verde */
-  --primary-foreground: oklch(100% 0 0); /* Blanco */
-}
-```
-
-### Agregar nuevos colores
-
-**1. Define las variables:**
-
-```css
-:root {
-  --success: oklch(75% 0.15 145);
-  --success-foreground: oklch(15% 0.01 145);
+  --primary: oklch(54.6% 0.245 262.881);
 }
 
 .dark {
-  --success: oklch(55% 0.12 145);
-  --success-foreground: oklch(95% 0.005 145);
+  --primary: oklch(61.6% 0.245 262.9);
 }
 ```
 
-**2. Extiende el `@theme`**
+**2. `@theme inline` la mapea al espacio de colores de Tailwind.** Esto es lo que convierte una variable en utilidades.
 
 ```css
 @theme inline {
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
+  --color-primary: var(--primary);
 }
 ```
 
-**3. Úsalas en tus componentes:**
+**3. Tailwind genera las utilidades.** Una vez que existe `--color-primary`, tenés `bg-primary`, `text-primary`, `border-primary`, `ring-primary` y todas las demás, gratis.
 
 ```tsx
-<Alert className="bg-success text-success-foreground">¡Operación exitosa!</Alert>
+<button className="bg-primary text-primary-foreground">Desplegar</button>
 ```
 
-## Radio de bordes
+Como el paso 2 usa `inline`, la utilidad resuelve la variable en el momento de uso en vez de hornear un valor fijo. Por eso alcanza con activar `.dark` en el `<html>` para recolorear toda la app, sin re-render.
 
-Controla qué tan redondeadas son las esquinas de todos los componentes:
+El modo oscuro se basa en una clase, declarada una sola vez:
+
+```css
+@custom-variant dark (&:where(.dark, .dark *));
+```
+
+<Callout variant="info" className="mt-4">
+  <Callout.Title>Un token no es un color</Callout.Title>
+  <Callout.Content>
+    Los tokens se nombran por rol, no por tono. `--destructive` significa "esta acción es
+    peligrosa", no "esto es rojo". Mantener los nombres semánticos es lo que permite que un tema
+    cambie todos los valores y siga teniendo sentido.
+  </Callout.Content>
+</Callout>
+
+## La convención foreground
+
+Cada token de superficie viene en par con un token `-foreground` para el contenido que va encima. La superficie se queda con el nombre pelado; su contenido lleva el sufijo.
+
+- `--card` es la superficie, `--card-foreground` es el texto sobre esa superficie
+- `--primary` es el relleno, `--primary-foreground` es la etiqueta sobre ese relleno
+
+```tsx
+<div className="bg-card text-card-foreground">
+  <button className="bg-primary text-primary-foreground">Confirmar</button>
+</div>
+```
+
+Si respetás el par, el contraste se resuelve solo: quien escribe el tema solo tiene que mantener cada par legible, y todos los componentes que usan ese par heredan esa garantía.
+
+## Referencia de tokens
+
+### Superficies
+
+El orden de apilado de la interfaz, desde el lienzo hasta las capas flotantes.
+
+| Token             | Utilidad           | Rol                                                |
+| ----------------- | ------------------ | -------------------------------------------------- |
+| `--background`    | `bg-background`    | El lienzo de la página                             |
+| `--card`          | `bg-card`          | Paneles y tarjetas elevadas sobre el lienzo        |
+| `--popover`       | `bg-popover`       | Capas flotantes: dropdowns, popovers, tooltips     |
+| `--surface-muted` | `bg-surface-muted` | Zonas hundidas: cabeceras de tabla, filas en hover |
+
+`--background`, `--card` y `--popover` tienen cada uno su `-foreground`.
+
+### Texto
+
+| Token                | Utilidad                | Rol                                                     |
+| -------------------- | ----------------------- | ------------------------------------------------------- |
+| `--foreground`       | `text-foreground`       | Texto principal                                         |
+| `--muted-strong`     | `text-muted-strong`     | Texto secundario que igual hay que poder leer           |
+| `--muted-foreground` | `text-muted-foreground` | Texto terciario: epígrafes, pistas, etiquetas inactivas |
+
+`--muted-strong` está a propósito entre los otros dos. Los párrafos largos lo usan para que el cuerpo se lea más suave que los títulos sin caer al contraste de un epígrafe.
+
+### Interacción
+
+| Token         | Utilidad       | Rol                                                   |
+| ------------- | -------------- | ----------------------------------------------------- |
+| `--primary`   | `bg-primary`   | La acción principal de una pantalla                   |
+| `--secondary` | `bg-secondary` | Acciones de apoyo                                     |
+| `--accent`    | `bg-accent`    | Estados de hover y resalte sobre superficies neutras  |
+| `--muted`     | `bg-muted`     | Zonas rellenas pero inertes                           |
+| `--inverse`   | `bg-inverse`   | Contraste invertido a propósito, por ejemplo tooltips |
+
+Los cinco tienen su contraparte `-foreground`.
+
+### Estructura y foco
+
+| Token                  | Utilidad                    | Rol                                                  |
+| ---------------------- | --------------------------- | ---------------------------------------------------- |
+| `--border`             | `border-border`             | Bordes por defecto de los componentes                |
+| `--border-interactive` | `border-border-interactive` | Bordes de controles con los que se puede interactuar |
+| `--input`              | `border-input`              | Bordes de campos de formulario                       |
+| `--ring`               | `ring-ring`                 | Anillos de foco                                      |
+| `--rule`               | `border-rule`               | Filetes editoriales: divisores de sección, rieles    |
+| `--grid-color`         | —                           | Fondos de puntos y grillas, usado directo en CSS     |
+
+`--border` y `--rule` suelen tener el mismo valor, pero están separados a propósito: uno es cromo de componente, el otro es estructura de página. Retocar los filetes de tu layout no debería tocar todas las tarjetas.
+
+### Feedback
+
+Cada uno de los cuatro tonos de feedback — `destructive`, `warning`, `success`, `info` — trae una escala de cinco roles en vez de un solo color. Eso es lo que permite que un botón sólido y una alerta suave compartan tono sin que uno de los dos falle el contraste.
+
+| Sufijo        | Ejemplo de utilidad           | Rol                                               |
+| ------------- | ----------------------------- | ------------------------------------------------- |
+| _(ninguno)_   | `bg-destructive`              | Relleno sólido, para botones                      |
+| `-foreground` | `text-destructive-foreground` | Contenido sobre ese relleno sólido                |
+| `-text`       | `text-destructive-text`       | El tono como texto legible sobre superficie clara |
+| `-surface`    | `bg-destructive-surface`      | Fondo teñido para alertas y badges                |
+| `-border`     | `border-destructive-border`   | Borde a juego con ese fondo teñido                |
+
+Sólido — el relleno lleva el significado:
+
+```tsx
+<Button variant="destructive">Eliminar cuenta</Button>
+```
+
+Suave — lo lleva el tinte, y el texto se mantiene legible:
+
+```tsx
+<div className="bg-destructive-surface text-destructive-text border-destructive-border border">
+  Esta acción no se puede deshacer.
+</div>
+```
+
+Usar `text-destructive` sobre un fondo claro es el error típico: ese es el relleno del botón, calibrado para texto blanco, no para leerse. Usá `-text` en su lugar.
+
+### Scrim, elevación y código
+
+| Token                                                                                                                                       | Utilidad                    | Rol                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | ----------------------------------------------------------- |
+| `--overlay`                                                                                                                                 | `bg-overlay`                | Velo detrás de diálogos y drawers                           |
+| `--elevation-sm` / `-md` / `-lg`                                                                                                            | `shadow-sm` / `-md` / `-lg` | La escala de sombras                                        |
+| `--code`                                                                                                                                    | `bg-code`                   | Superficie de los bloques de código                         |
+| `--code-plain`, `--code-keyword`, `--code-string`, `--code-function`, `--code-number`, `--code-tag`, `--code-comment`, `--code-punctuation` | —                           | Colores de sintaxis, leídos directo por el bloque de código |
+
+Las sombras son valores tematizables, no drop shadows fijas: un tema oscuro les sube la opacidad, porque una sombra calibrada para un lienzo blanco desaparece sobre uno casi negro.
+
+## Radio
+
+Un solo token base gobierna todas las esquinas del sistema.
 
 ```css
 :root {
-  --radius: 0.625rem; /* 10px por defecto */
+  --radius: 1.5rem;
 }
 ```
 
-Variantes disponibles:
+La escala se deriva de ahí, así que cambiar la base reforma toda la app de manera proporcional:
 
-- `rounded-sm` → 6px
-- `rounded-md` → 8px
-- `rounded-lg` → 10px (valor base)
-- `rounded-xl` → 14px
-- `rounded-2xl` → 18px
+| Utilidad      | Derivación                      | Con el `1.5rem` por defecto |
+| ------------- | ------------------------------- | --------------------------- |
+| `rounded-sm`  | `calc(var(--radius) - 0.75rem)` | 12px                        |
+| `rounded-md`  | `calc(var(--radius) - 0.5rem)`  | 16px                        |
+| `rounded-lg`  | `var(--radius)`                 | 24px                        |
+| `rounded-xl`  | `calc(var(--radius) + 0.5rem)`  | 32px                        |
+| `rounded-2xl` | `calc(var(--radius) + 1rem)`    | 40px                        |
 
-Para esquinas más redondeadas en toda tu app:
+Para esquinas más filosas en todos lados, bajá la base:
 
 ```css
 :root {
-  --radius: 1rem; /* 16px */
+  --radius: 0.5rem;
 }
 ```
 
-## Temas personalizados
+`--radius` es el único token declarado solo en `:root` — una esquina no tiene variante clara y oscura.
 
-Puedes crear múltiples temas más allá del claro y oscuro. Aquí tienes algunos temas predefinidos que puedes usar:
+## Tipografía
 
-### Ocean
+Hay cuatro ranuras de fuente conectadas a Tailwind, así que `font-sans`, `font-heading`, `font-serif` y `font-mono` resuelven a lo que vos cargues.
 
-Un tema azul calmado inspirado en el mar:
+```css
+@theme inline {
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+}
+```
+
+En Next.js, `next/font` define esas variables por vos:
+
+```ts
+import { Bricolage_Grotesque } from 'next/font/google';
+
+export const fontHeading = Bricolage_Grotesque({
+  subsets: ['latin'],
+  variable: '--font-heading',
+  display: 'swap',
+});
+```
+
+Después ponés la clase generada en el `<body>` y los títulos la toman solos.
+
+## Por qué OKLCH
+
+Todos los tokens están escritos en OKLCH:
+
+```css
+oklch(54.6% 0.245 262.881);
+/*    ↑      ↑     ↑
+      |      |     tono, 0–360°
+      |      croma, 0 = gris
+      luminosidad, 0% = negro, 100% = blanco */
+```
+
+Es perceptualmente uniforme, y eso importa cuando construís una escala. En HSL, `hsl(60 100% 50%)` y `hsl(240 100% 50%)` declaran la misma luminosidad mientras el amarillo se ve mucho más brillante que el azul. En OKLCH, luminosidad igual se ve igual de clara — así que mantener el valor L fijo entre tonos te da una paleta de feedback realmente equilibrada, en vez de una donde el badge de warning grita y el de info susurra.
+
+Además llega a colores que sRGB no puede expresar y degrada bien en navegadores viejos. [oklch.com](https://oklch.com/) es un buen lugar para elegir valores.
+
+## Personalizar tu tema
+
+### Sobrescribir un token
+
+Editá la variable en tu CSS. Cambiala en los dos bloques — un valor puesto solo en `:root` se filtra al modo oscuro.
 
 ```css
 :root {
-  --background: oklch(98% 0.008 230);
-  --foreground: oklch(20% 0.01 230);
-  --card: oklch(99% 0.005 230);
-  --card-foreground: oklch(20% 0.01 230);
-  --primary: oklch(55% 0.18 230);
+  --primary: oklch(65% 0.25 150);
   --primary-foreground: oklch(100% 0 0);
-  --secondary: oklch(87% 0.06 220);
-  --secondary-foreground: oklch(25% 0.01 220);
-  --muted: oklch(92% 0.025 230);
-  --muted-foreground: oklch(45% 0.02 230);
-  --accent: oklch(88% 0.09 210);
-  --accent-foreground: oklch(25% 0.01 210);
-  --destructive: oklch(62% 0.17 25);
-  --destructive-foreground: oklch(98% 0 0);
-  --border: oklch(87% 0.03 230);
-  --input: oklch(91% 0.025 230);
-  --ring: oklch(55% 0.18 230);
 }
 
 .dark {
-  --background: oklch(20% 0.02 230);
-  --foreground: oklch(96% 0.008 230);
-  --card: oklch(23% 0.018 230);
-  --card-foreground: oklch(96% 0.008 230);
-  --primary: oklch(70% 0.18 230);
-  --primary-foreground: oklch(15% 0.01 230);
-  --secondary: oklch(32% 0.04 230);
-  --secondary-foreground: oklch(95% 0.008 230);
-  --muted: oklch(28% 0.02 230);
-  --muted-foreground: oklch(75% 0.015 230);
-  --accent: oklch(40% 0.06 210);
-  --accent-foreground: oklch(95% 0.01 210);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(20% 0.01 25);
-  --border: oklch(30% 0.02 230);
-  --input: oklch(25% 0.018 230);
-  --ring: oklch(70% 0.18 230);
+  --primary: oklch(72% 0.22 150);
+  --primary-foreground: oklch(14.5% 0 0);
 }
 ```
 
-### Forest
+No hay nada más que actualizar. Todo botón, link y anillo de foco que referencie `--primary` va detrás.
 
-Un tema verde natural:
+### Agregar un token nuevo
+
+<Steps>
+
+#### Declaralo en ambos modos
 
 ```css
 :root {
-  --background: oklch(98% 0.008 140);
-  --foreground: oklch(18% 0.01 140);
-  --card: oklch(99% 0.005 140);
-  --card-foreground: oklch(18% 0.01 140);
-  --primary: oklch(48% 0.16 145);
-  --primary-foreground: oklch(100% 0 0);
-  --secondary: oklch(88% 0.07 130);
-  --secondary-foreground: oklch(25% 0.01 130);
-  --muted: oklch(92% 0.025 140);
-  --muted-foreground: oklch(45% 0.02 140);
-  --accent: oklch(88% 0.085 150);
-  --accent-foreground: oklch(25% 0.01 150);
-  --destructive: oklch(62% 0.16 25);
-  --destructive-foreground: oklch(98% 0 0);
-  --border: oklch(87% 0.03 140);
-  --input: oklch(91% 0.025 140);
-  --ring: oklch(48% 0.16 145);
+  --brand: oklch(62% 0.19 310);
+  --brand-foreground: oklch(99% 0 0);
 }
 
 .dark {
-  --background: oklch(18% 0.02 140);
-  --foreground: oklch(95% 0.01 140);
-  --card: oklch(22% 0.02 140);
-  --card-foreground: oklch(95% 0.01 140);
-  --primary: oklch(70% 0.16 145);
-  --primary-foreground: oklch(15% 0.01 145);
-  --secondary: oklch(30% 0.04 130);
-  --secondary-foreground: oklch(95% 0.01 130);
-  --muted: oklch(27% 0.02 140);
-  --muted-foreground: oklch(75% 0.015 140);
-  --accent: oklch(38% 0.06 150);
-  --accent-foreground: oklch(95% 0.01 150);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(20% 0.01 25);
-  --border: oklch(30% 0.02 140);
-  --input: oklch(25% 0.018 140);
-  --ring: oklch(70% 0.16 145);
+  --brand: oklch(70% 0.17 310);
+  --brand-foreground: oklch(14.5% 0 0);
 }
 ```
 
-### Sunset
-
-Un tema cálido de naranja y rosa:
+#### Exponelo a Tailwind
 
 ```css
-:root {
-  --background: oklch(98% 0.015 40);
-  --foreground: oklch(20% 0.01 40);
-  --card: oklch(99% 0.01 40);
-  --card-foreground: oklch(20% 0.01 40);
-  --primary: oklch(60% 0.2 30);
-  --primary-foreground: oklch(100% 0 0);
-  --secondary: oklch(88% 0.09 50);
-  --secondary-foreground: oklch(22% 0.01 50);
-  --muted: oklch(92% 0.03 40);
-  --muted-foreground: oklch(45% 0.02 40);
-  --accent: oklch(88% 0.11 20);
-  --accent-foreground: oklch(22% 0.01 20);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(98% 0 0);
-  --border: oklch(87% 0.04 40);
-  --input: oklch(91% 0.03 40);
-  --ring: oklch(60% 0.2 30);
-}
-
-.dark {
-  --background: oklch(20% 0.02 40);
-  --foreground: oklch(96% 0.015 40);
-  --card: oklch(23% 0.02 40);
-  --card-foreground: oklch(96% 0.015 40);
-  --primary: oklch(70% 0.2 30);
-  --primary-foreground: oklch(20% 0.01 30);
-  --secondary: oklch(32% 0.05 50);
-  --secondary-foreground: oklch(95% 0.01 50);
-  --muted: oklch(28% 0.02 40);
-  --muted-foreground: oklch(75% 0.015 40);
-  --accent: oklch(40% 0.07 20);
-  --accent-foreground: oklch(95% 0.01 20);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(20% 0.01 25);
-  --border: oklch(30% 0.02 40);
-  --input: oklch(25% 0.018 40);
-  --ring: oklch(70% 0.2 30);
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
 }
 ```
 
-### Midnight
+#### Usá las utilidades
 
-Un tema púrpura profundo perfecto para apps creativas:
-
-```css
-:root {
-  --background: oklch(97% 0.015 280);
-  --foreground: oklch(20% 0.01 280);
-  --card: oklch(98% 0.01 280);
-  --card-foreground: oklch(20% 0.01 280);
-  --primary: oklch(60% 0.22 290);
-  --primary-foreground: oklch(100% 0 0);
-  --secondary: oklch(88% 0.06 280);
-  --secondary-foreground: oklch(22% 0.01 280);
-  --muted: oklch(92% 0.025 280);
-  --muted-foreground: oklch(45% 0.02 280);
-  --accent: oklch(88% 0.09 270);
-  --accent-foreground: oklch(22% 0.01 270);
-  --destructive: oklch(62% 0.17 25);
-  --destructive-foreground: oklch(98% 0 0);
-  --border: oklch(87% 0.03 280);
-  --input: oklch(91% 0.025 280);
-  --ring: oklch(60% 0.22 290);
-}
-
-.dark {
-  --background: oklch(15% 0.02 280);
-  --foreground: oklch(96% 0.01 280);
-  --card: oklch(18% 0.02 280);
-  --card-foreground: oklch(96% 0.01 280);
-  --primary: oklch(70% 0.22 290);
-  --primary-foreground: oklch(20% 0.01 290);
-  --secondary: oklch(30% 0.05 280);
-  --secondary-foreground: oklch(95% 0.01 280);
-  --muted: oklch(25% 0.017 280);
-  --muted-foreground: oklch(70% 0.015 280);
-  --accent: oklch(35% 0.06 270);
-  --accent-foreground: oklch(96% 0.01 270);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(20% 0.01 25);
-  --border: oklch(25% 0.018 280);
-  --input: oklch(20% 0.015 280);
-  --ring: oklch(70% 0.22 290);
-}
+```tsx
+<Badge className="bg-brand text-brand-foreground">Nuevo</Badge>
 ```
 
-### Rose
+</Steps>
 
-Un tema rosa suave:
+Saltear el paso 2 es la falla habitual: la variable existe, pero `bg-brand` nunca se genera y el elemento queda sin estilo.
 
-```css
-:root {
-  --background: oklch(98% 0.02 350);
-  --foreground: oklch(20% 0.01 350);
-  --card: oklch(99% 0.015 350);
-  --card-foreground: oklch(20% 0.01 350);
-  --primary: oklch(58% 0.18 340);
-  --primary-foreground: oklch(100% 0 0);
-  --secondary: oklch(88% 0.07 355);
-  --secondary-foreground: oklch(22% 0.01 355);
-  --muted: oklch(92% 0.03 350);
-  --muted-foreground: oklch(45% 0.02 350);
-  --accent: oklch(88% 0.1 345);
-  --accent-foreground: oklch(22% 0.01 345);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(98% 0 0);
-  --border: oklch(87% 0.04 350);
-  --input: oklch(91% 0.03 350);
-  --ring: oklch(58% 0.18 340);
-}
+## El contrato de temas
 
-.dark {
-  --background: oklch(20% 0.02 350);
-  --foreground: oklch(96% 0.015 350);
-  --card: oklch(23% 0.02 350);
-  --card-foreground: oklch(96% 0.015 350);
-  --primary: oklch(70% 0.18 340);
-  --primary-foreground: oklch(20% 0.01 340);
-  --secondary: oklch(32% 0.05 355);
-  --secondary-foreground: oklch(95% 0.01 355);
-  --muted: oklch(28% 0.02 350);
-  --muted-foreground: oklch(75% 0.015 350);
-  --accent: oklch(40% 0.07 345);
-  --accent-foreground: oklch(95% 0.01 345);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(20% 0.01 25);
-  --border: oklch(30% 0.02 350);
-  --input: oklch(25% 0.018 350);
-  --ring: oklch(70% 0.18 340);
-}
+Un tema no es un puñado de colores: es el conjunto completo de tokens, declarado en **ambos** bloques, `:root` y `.dark`. Esa lista vive en `theme-contract.ts` y está cubierta por un test.
+
+La regla existe por cómo falla la cascada acá. Un tema que omite `--success-surface` no da error; hereda en silencio el valor de la paleta base, y terminás con un verde del tema por defecto filtrándose entre los colores de tu marca. Los tokens faltantes son invisibles hasta que alguien abre el único componente que los usa.
+
+Así que cuando escribas un tema, recorré el contrato:
+
+- **Superficies** — `background`, `card`, `popover`, `surface-muted` y sus foregrounds
+- **Interacción** — `primary`, `secondary`, `accent`, `muted`, `inverse` y sus foregrounds, más `muted-strong`
+- **Estructura** — `border`, `border-interactive`, `input`, `ring`, `rule`, `grid-color`
+- **Feedback** — los cinco roles de `destructive`, `warning`, `success` e `info`
+- **Scrim y elevación** — `overlay`, `elevation-sm`, `elevation-md`, `elevation-lg`
+- **Código** — `code` más los ocho tokens de sintaxis
+- **Radio** — `--radius`, solo en `:root`
+
+## Cambiar de tema
+
+`nachui init` trae los temas disponibles y escribe el que elijas en tu hoja de estilos global, debajo de un marcador `/* NachUI Tokens */`.
+
+```bash
+npx nachui init
 ```
 
-### Cyber
+Volver a ejecutarlo reemplaza ese bloque y deja el resto de tu CSS intacto, así que podés probar un tema y arrepentirte. Para conservar una paleta que editaste a mano, mantené tus overrides _debajo_ del marcador: todo lo que va después sobrevive.
 
-Un tema cian vibrante para productos tech:
-
-```css
-:root {
-  --background: oklch(97% 0.015 200);
-  --foreground: oklch(18% 0.01 200);
-  --card: oklch(98% 0.01 200);
-  --card-foreground: oklch(18% 0.01 200);
-  --primary: oklch(70% 0.23 195);
-  --primary-foreground: oklch(10% 0.01 195);
-  --secondary: oklch(88% 0.06 200);
-  --secondary-foreground: oklch(22% 0.01 200);
-  --muted: oklch(92% 0.025 200);
-  --muted-foreground: oklch(45% 0.02 200);
-  --accent: oklch(60% 0.18 180);
-  --accent-foreground: oklch(10% 0.01 180);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(98% 0 0);
-  --border: oklch(87% 0.03 200);
-  --input: oklch(91% 0.025 200);
-  --ring: oklch(70% 0.23 195);
-}
-
-.dark {
-  --background: oklch(10% 0.02 200);
-  --foreground: oklch(96% 0.01 200);
-  --card: oklch(13% 0.02 200);
-  --card-foreground: oklch(96% 0.01 200);
-  --primary: oklch(70% 0.23 195);
-  --primary-foreground: oklch(15% 0.01 195);
-  --secondary: oklch(25% 0.04 200);
-  --secondary-foreground: oklch(95% 0.01 200);
-  --muted: oklch(20% 0.02 200);
-  --muted-foreground: oklch(70% 0.015 200);
-  --accent: oklch(55% 0.18 180);
-  --accent-foreground: oklch(15% 0.01 180);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(20% 0.01 25);
-  --border: oklch(20% 0.018 200);
-  --input: oklch(15% 0.015 200);
-  --ring: oklch(70% 0.23 195);
-}
-```
-
-## Consejos
-
-- Mantén siempre la pareja `background` y `foreground` para buen contraste
-- Usa [oklch.com](https://oklch.com/) para elegir colores visualmente
-- Prueba tus colores en modo claro y oscuro
-- Verifica el contraste de accesibilidad (mínimo 4.5:1 para texto normal)
+Para ver cómo se aplica y se persiste la clase `.dark`, mirá [Modo Oscuro](/docs/concepts/dark-mode).

@@ -1,6 +1,6 @@
 ---
 title: Theming
-description: Customize colors, border radius, and more to adapt components to your project.
+description: The design system behind NachUI — semantic tokens, the theme contract, and how to bend both to your brand.
 published: true
 toc:
   visible: true
@@ -8,412 +8,313 @@ date: 2024-03-14
 locale: en
 ---
 
-Components are built using CSS variables and Tailwind, allowing you to easily customize the colors and styles of your entire application.
+NachUI has no hardcoded colors. Every component paints itself with semantic tokens — `bg-card`, `text-muted-foreground`, `border-rule` — and those tokens are CSS custom properties you own. Change a variable and the whole system moves with it, in both light and dark mode, without touching a single component.
 
 ## How it works
 
-We use a simple convention: each color has a `--background` variable for the background and a `--foreground` variable for the text that goes on that background.
+Theming runs through three layers. Understanding them is most of what you need.
 
-For example:
-
-- `--primary` defines the main background color
-- `--primary-foreground` defines the text color on that background
-
-This automatically ensures good contrast between the background and text.
-
-```tsx
-<button className="bg-primary text-primary-foreground p-4">My button</button>
-```
-
-## Available colors
+**1. A CSS custom property holds the value.** It is declared on `:root`, and overridden inside `.dark`.
 
 ```css
 :root {
-  --background: oklch(99.405% 0.00011 271.152);
-  --foreground: oklch(0% 0 0);
-  --primary: oklch(53.934% 0.2714 286.753);
-  --primary-foreground: oklch(100% 0.00011 271.152);
-  --secondary: oklch(95.4% 0.00637 255.746);
-  --secondary-foreground: oklch(13.441% 0.00002 271.152);
-  --muted: oklch(97.015% 0.00011 271.152);
-  --muted-foreground: oklch(43.861% 0.00005 271.152);
-  --accent: oklch(93.929% 0.02887 266.393);
-  --accent-foreground: oklch(54.456% 0.19041 259.501);
-  --destructive: oklch(62.902% 0.19024 23.052);
-  --destructive-foreground: oklch(100% 0.00011 271.152);
-  --border: oklch(88.09% 0.00941 258.48);
-  --input: oklch(93.1% 0.00011 271.152);
-  --ring: oklch(0% 0 0);
-}
-```
-
-### What is OKLCH?
-
-OKLCH is a modern color format that offers better control over brightness and saturation than HSL or RGB. The syntax is:
-
-```css
-oklch(lightness chroma hue)
-```
-
-- **Lightness**: 0% = black, 100% = white
-- **Chroma**: 0 = gray, ~0.4 = highly saturated
-- **Hue**: 0-360 degrees of color
-
-You can use tools like [oklch.com](https://oklch.com/) to choose colors visually.
-
-## Customizing colors
-
-### Changing existing colors
-
-Modify the variables directly in your CSS file:
-
-```css
-:root {
-  --primary: oklch(65% 0.25 150); /* Green */
-  --primary-foreground: oklch(100% 0 0); /* White */
-}
-```
-
-### Adding new colors
-
-**1. Define the variables:**
-
-```css
-:root {
-  --success: oklch(75% 0.15 145);
-  --success-foreground: oklch(15% 0.01 145);
+  --primary: oklch(54.6% 0.245 262.881);
 }
 
 .dark {
-  --success: oklch(55% 0.12 145);
-  --success-foreground: oklch(95% 0.005 145);
+  --primary: oklch(61.6% 0.245 262.9);
 }
 ```
 
-**2. Extend the `@theme`**
+**2. `@theme inline` maps it into Tailwind's color space.** This is what turns a variable into utilities.
 
 ```css
 @theme inline {
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
+  --color-primary: var(--primary);
 }
 ```
 
-**3. Use them in your components:**
+**3. Tailwind generates the utilities.** Once `--color-primary` exists, you get `bg-primary`, `text-primary`, `border-primary`, `ring-primary`, and every other color utility for free.
 
 ```tsx
-<Alert className="bg-success text-success-foreground">Operation successful!</Alert>
+<button className="bg-primary text-primary-foreground">Deploy</button>
 ```
 
-## Border radius
+Because step 2 uses `inline`, the utility resolves the variable at use time rather than baking in a value. That is why flipping `.dark` on the `<html>` element re-colors the entire app with no re-render.
 
-Control how rounded the corners of all components are:
+Dark mode is class-based, declared once:
+
+```css
+@custom-variant dark (&:where(.dark, .dark *));
+```
+
+<Callout variant="info" className="mt-4">
+  <Callout.Title>A token is not a color</Callout.Title>
+  <Callout.Content>
+    Tokens are named by role, not by hue. `--destructive` means "this action is dangerous", not
+    "this is red". Keeping the naming semantic is what lets a theme swap every value and still make
+    sense.
+  </Callout.Content>
+</Callout>
+
+## The foreground convention
+
+Every surface token pairs with a `-foreground` token for the content that sits on it. The surface keeps the bare name; its content gets the suffix.
+
+- `--card` is the surface, `--card-foreground` is the text on that surface
+- `--primary` is the fill, `--primary-foreground` is the label on that fill
+
+```tsx
+<div className="bg-card text-card-foreground">
+  <button className="bg-primary text-primary-foreground">Confirm</button>
+</div>
+```
+
+Follow the pairing and contrast takes care of itself: a theme author only has to keep each pair legible, and every component that uses the pair inherits that guarantee.
+
+## Token reference
+
+### Surfaces
+
+The stacking order of the interface, from the page backwards to floating layers.
+
+| Token             | Utility            | Role                                               |
+| ----------------- | ------------------ | -------------------------------------------------- |
+| `--background`    | `bg-background`    | The page canvas                                    |
+| `--card`          | `bg-card`          | Panels and cards raised off the canvas             |
+| `--popover`       | `bg-popover`       | Floating layers: dropdowns, popovers, tooltips     |
+| `--surface-muted` | `bg-surface-muted` | Recessed areas: table headers, hovered rows, wells |
+
+Each of `--background`, `--card` and `--popover` has a matching `-foreground`.
+
+### Text
+
+| Token                | Utility                 | Role                                            |
+| -------------------- | ----------------------- | ----------------------------------------------- |
+| `--foreground`       | `text-foreground`       | Primary text                                    |
+| `--muted-strong`     | `text-muted-strong`     | Secondary text that still needs to be read      |
+| `--muted-foreground` | `text-muted-foreground` | Tertiary text: captions, hints, disabled labels |
+
+`--muted-strong` sits deliberately between the other two. Long-form paragraphs use it so body copy reads softer than headings without dropping to caption contrast.
+
+### Interactive
+
+| Token         | Utility        | Role                                           |
+| ------------- | -------------- | ---------------------------------------------- |
+| `--primary`   | `bg-primary`   | The main action on a screen                    |
+| `--secondary` | `bg-secondary` | Supporting actions                             |
+| `--accent`    | `bg-accent`    | Hover and highlight states on neutral surfaces |
+| `--muted`     | `bg-muted`     | Inert filled areas                             |
+| `--inverse`   | `bg-inverse`   | Deliberately flipped contrast, e.g. tooltips   |
+
+All five have a `-foreground` counterpart.
+
+### Structure and focus
+
+| Token                  | Utility                     | Role                                              |
+| ---------------------- | --------------------------- | ------------------------------------------------- |
+| `--border`             | `border-border`             | Default component borders                         |
+| `--border-interactive` | `border-border-interactive` | Borders on controls the user can act on           |
+| `--input`              | `border-input`              | Form field borders                                |
+| `--ring`               | `ring-ring`                 | Focus rings                                       |
+| `--rule`               | `border-rule`               | Editorial hairlines: section dividers, page rails |
+| `--grid-color`         | —                           | Dot and grid backdrops, used directly in CSS      |
+
+`--border` and `--rule` often hold the same value, but they are separate on purpose: one is component chrome, the other is page structure. Restyling your layout rules should not touch every card.
+
+### Feedback
+
+Each of the four feedback hues — `destructive`, `warning`, `success`, `info` — ships a five-role scale rather than one color. This is what lets a solid button and a soft alert share a hue without one of them failing contrast.
+
+| Suffix        | Utility example               | Role                                       |
+| ------------- | ----------------------------- | ------------------------------------------ |
+| _(none)_      | `bg-destructive`              | Solid fill, for buttons                    |
+| `-foreground` | `text-destructive-foreground` | Content on that solid fill                 |
+| `-text`       | `text-destructive-text`       | The hue as readable text on a pale surface |
+| `-surface`    | `bg-destructive-surface`      | Tinted background for alerts and badges    |
+| `-border`     | `border-destructive-border`   | Border matched to that tinted background   |
+
+Solid — the fill carries the meaning:
+
+```tsx
+<Button variant="destructive">Delete account</Button>
+```
+
+Soft — the tint carries it, and the text stays legible:
+
+```tsx
+<div className="bg-destructive-surface text-destructive-text border-destructive-border border">
+  This action cannot be undone.
+</div>
+```
+
+Reaching for `text-destructive` on a pale background is the common mistake — that is the button fill, and it is tuned for white text, not for reading. Use `-text` instead.
+
+### Overlay, elevation and code
+
+| Token                                                                                                                                       | Utility                     | Role                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | ---------------------------------------------- |
+| `--overlay`                                                                                                                                 | `bg-overlay`                | Scrim behind dialogs and drawers               |
+| `--elevation-sm` / `-md` / `-lg`                                                                                                            | `shadow-sm` / `-md` / `-lg` | The shadow scale                               |
+| `--code`                                                                                                                                    | `bg-code`                   | Code block surface                             |
+| `--code-plain`, `--code-keyword`, `--code-string`, `--code-function`, `--code-number`, `--code-tag`, `--code-comment`, `--code-punctuation` | —                           | Syntax colors, read directly by the code block |
+
+Shadows are themeable values, not fixed drop shadows: a dark theme raises their opacity, because a shadow tuned for a white canvas disappears on a near-black one.
+
+## Radius
+
+One base token drives every corner in the system.
 
 ```css
 :root {
-  --radius: 0.625rem; /* 10px by default */
+  --radius: 1.5rem;
 }
 ```
 
-Available variants:
+The scale derives from it, so changing the base reshapes the whole app proportionally:
 
-- `rounded-sm` → 6px
-- `rounded-md` → 8px
-- `rounded-lg` → 10px (base value)
-- `rounded-xl` → 14px
-- `rounded-2xl` → 18px
+| Utility       | Derivation                      | With the default `1.5rem` |
+| ------------- | ------------------------------- | ------------------------- |
+| `rounded-sm`  | `calc(var(--radius) - 0.75rem)` | 12px                      |
+| `rounded-md`  | `calc(var(--radius) - 0.5rem)`  | 16px                      |
+| `rounded-lg`  | `var(--radius)`                 | 24px                      |
+| `rounded-xl`  | `calc(var(--radius) + 0.5rem)`  | 32px                      |
+| `rounded-2xl` | `calc(var(--radius) + 1rem)`    | 40px                      |
 
-For more rounded corners throughout your app:
+For sharper corners across the board, lower the base:
 
 ```css
 :root {
-  --radius: 1rem; /* 16px */
+  --radius: 0.5rem;
 }
 ```
 
-## Custom themes
+`--radius` is the one token declared only in `:root` — a corner has no light and dark variant.
 
-You can create multiple themes beyond light and dark. Here are some predefined themes you can use:
+## Typography
 
-### Ocean
+Four font slots are wired into Tailwind, so `font-sans`, `font-heading`, `font-serif` and `font-mono` all resolve to whatever you load.
 
-A calm blue theme inspired by the sea:
+```css
+@theme inline {
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+}
+```
+
+In Next.js, `next/font` defines those variables for you:
+
+```ts
+import { Bricolage_Grotesque } from 'next/font/google';
+
+export const fontHeading = Bricolage_Grotesque({
+  subsets: ['latin'],
+  variable: '--font-heading',
+  display: 'swap',
+});
+```
+
+Then put the generated class on `<body>` and headings pick it up automatically.
+
+## Why OKLCH
+
+Every token is written in OKLCH:
+
+```css
+oklch(54.6% 0.245 262.881);
+/*    ↑      ↑     ↑
+      |      |     hue, 0–360°
+      |      chroma, 0 = gray
+      lightness, 0% = black, 100% = white */
+```
+
+It is perceptually uniform, which matters when you build a scale. In HSL, `hsl(60 100% 50%)` and `hsl(240 100% 50%)` claim the same lightness while yellow reads far brighter than blue. In OKLCH, equal lightness looks equally light — so holding the L value steady across hues gives you a feedback palette that is genuinely balanced, instead of one where the warning badge screams and the info badge whispers.
+
+It also reaches colors sRGB cannot express, and degrades gracefully on older browsers. [oklch.com](https://oklch.com/) is a good place to pick values.
+
+## Customizing your theme
+
+### Override a token
+
+Edit the variable in your CSS. Change it in both blocks — a value set only in `:root` will leak into dark mode.
 
 ```css
 :root {
-  --background: oklch(98% 0.008 230);
-  --foreground: oklch(20% 0.01 230);
-  --card: oklch(99% 0.005 230);
-  --card-foreground: oklch(20% 0.01 230);
-  --primary: oklch(55% 0.18 230);
+  --primary: oklch(65% 0.25 150);
   --primary-foreground: oklch(100% 0 0);
-  --secondary: oklch(87% 0.06 220);
-  --secondary-foreground: oklch(25% 0.01 220);
-  --muted: oklch(92% 0.025 230);
-  --muted-foreground: oklch(45% 0.02 230);
-  --accent: oklch(88% 0.09 210);
-  --accent-foreground: oklch(25% 0.01 210);
-  --destructive: oklch(62% 0.17 25);
-  --destructive-foreground: oklch(98% 0 0);
-  --border: oklch(87% 0.03 230);
-  --input: oklch(91% 0.025 230);
-  --ring: oklch(55% 0.18 230);
 }
 
 .dark {
-  --background: oklch(20% 0.02 230);
-  --foreground: oklch(96% 0.008 230);
-  --card: oklch(23% 0.018 230);
-  --card-foreground: oklch(96% 0.008 230);
-  --primary: oklch(70% 0.18 230);
-  --primary-foreground: oklch(15% 0.01 230);
-  --secondary: oklch(32% 0.04 230);
-  --secondary-foreground: oklch(95% 0.008 230);
-  --muted: oklch(28% 0.02 230);
-  --muted-foreground: oklch(75% 0.015 230);
-  --accent: oklch(40% 0.06 210);
-  --accent-foreground: oklch(95% 0.01 210);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(20% 0.01 25);
-  --border: oklch(30% 0.02 230);
-  --input: oklch(25% 0.018 230);
-  --ring: oklch(70% 0.18 230);
+  --primary: oklch(72% 0.22 150);
+  --primary-foreground: oklch(14.5% 0 0);
 }
 ```
 
-### Forest
+Nothing else to update. Every button, link and focus ring that references `--primary` follows.
 
-A natural green theme:
+### Add a new token
+
+<Steps>
+
+#### Declare it in both modes
 
 ```css
 :root {
-  --background: oklch(98% 0.008 140);
-  --foreground: oklch(18% 0.01 140);
-  --card: oklch(99% 0.005 140);
-  --card-foreground: oklch(18% 0.01 140);
-  --primary: oklch(48% 0.16 145);
-  --primary-foreground: oklch(100% 0 0);
-  --secondary: oklch(88% 0.07 130);
-  --secondary-foreground: oklch(25% 0.01 130);
-  --muted: oklch(92% 0.025 140);
-  --muted-foreground: oklch(45% 0.02 140);
-  --accent: oklch(88% 0.085 150);
-  --accent-foreground: oklch(25% 0.01 150);
-  --destructive: oklch(62% 0.16 25);
-  --destructive-foreground: oklch(98% 0 0);
-  --border: oklch(87% 0.03 140);
-  --input: oklch(91% 0.025 140);
-  --ring: oklch(48% 0.16 145);
+  --brand: oklch(62% 0.19 310);
+  --brand-foreground: oklch(99% 0 0);
 }
 
 .dark {
-  --background: oklch(18% 0.02 140);
-  --foreground: oklch(95% 0.01 140);
-  --card: oklch(22% 0.02 140);
-  --card-foreground: oklch(95% 0.01 140);
-  --primary: oklch(70% 0.16 145);
-  --primary-foreground: oklch(15% 0.01 145);
-  --secondary: oklch(30% 0.04 130);
-  --secondary-foreground: oklch(95% 0.01 130);
-  --muted: oklch(27% 0.02 140);
-  --muted-foreground: oklch(75% 0.015 140);
-  --accent: oklch(38% 0.06 150);
-  --accent-foreground: oklch(95% 0.01 150);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(20% 0.01 25);
-  --border: oklch(30% 0.02 140);
-  --input: oklch(25% 0.018 140);
-  --ring: oklch(70% 0.16 145);
+  --brand: oklch(70% 0.17 310);
+  --brand-foreground: oklch(14.5% 0 0);
 }
 ```
 
-### Sunset
-
-A warm orange and pink theme:
+#### Expose it to Tailwind
 
 ```css
-:root {
-  --background: oklch(98% 0.015 40);
-  --foreground: oklch(20% 0.01 40);
-  --card: oklch(99% 0.01 40);
-  --card-foreground: oklch(20% 0.01 40);
-  --primary: oklch(60% 0.2 30);
-  --primary-foreground: oklch(100% 0 0);
-  --secondary: oklch(88% 0.09 50);
-  --secondary-foreground: oklch(22% 0.01 50);
-  --muted: oklch(92% 0.03 40);
-  --muted-foreground: oklch(45% 0.02 40);
-  --accent: oklch(88% 0.11 20);
-  --accent-foreground: oklch(22% 0.01 20);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(98% 0 0);
-  --border: oklch(87% 0.04 40);
-  --input: oklch(91% 0.03 40);
-  --ring: oklch(60% 0.2 30);
-}
-
-.dark {
-  --background: oklch(20% 0.02 40);
-  --foreground: oklch(96% 0.015 40);
-  --card: oklch(23% 0.02 40);
-  --card-foreground: oklch(96% 0.015 40);
-  --primary: oklch(70% 0.2 30);
-  --primary-foreground: oklch(20% 0.01 30);
-  --secondary: oklch(32% 0.05 50);
-  --secondary-foreground: oklch(95% 0.01 50);
-  --muted: oklch(28% 0.02 40);
-  --muted-foreground: oklch(75% 0.015 40);
-  --accent: oklch(40% 0.07 20);
-  --accent-foreground: oklch(95% 0.01 20);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(20% 0.01 25);
-  --border: oklch(30% 0.02 40);
-  --input: oklch(25% 0.018 40);
-  --ring: oklch(70% 0.2 30);
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
 }
 ```
 
-### Midnight
+#### Use the utilities
 
-A deep purple theme perfect for creative apps:
-
-```css
-:root {
-  --background: oklch(97% 0.015 280);
-  --foreground: oklch(20% 0.01 280);
-  --card: oklch(98% 0.01 280);
-  --card-foreground: oklch(20% 0.01 280);
-  --primary: oklch(60% 0.22 290);
-  --primary-foreground: oklch(100% 0 0);
-  --secondary: oklch(88% 0.06 280);
-  --secondary-foreground: oklch(22% 0.01 280);
-  --muted: oklch(92% 0.025 280);
-  --muted-foreground: oklch(45% 0.02 280);
-  --accent: oklch(88% 0.09 270);
-  --accent-foreground: oklch(22% 0.01 270);
-  --destructive: oklch(62% 0.17 25);
-  --destructive-foreground: oklch(98% 0 0);
-  --border: oklch(87% 0.03 280);
-  --input: oklch(91% 0.025 280);
-  --ring: oklch(60% 0.22 290);
-}
-
-.dark {
-  --background: oklch(15% 0.02 280);
-  --foreground: oklch(96% 0.01 280);
-  --card: oklch(18% 0.02 280);
-  --card-foreground: oklch(96% 0.01 280);
-  --primary: oklch(70% 0.22 290);
-  --primary-foreground: oklch(20% 0.01 290);
-  --secondary: oklch(30% 0.05 280);
-  --secondary-foreground: oklch(95% 0.01 280);
-  --muted: oklch(25% 0.017 280);
-  --muted-foreground: oklch(70% 0.015 280);
-  --accent: oklch(35% 0.06 270);
-  --accent-foreground: oklch(96% 0.01 270);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(20% 0.01 25);
-  --border: oklch(25% 0.018 280);
-  --input: oklch(20% 0.015 280);
-  --ring: oklch(70% 0.22 290);
-}
+```tsx
+<Badge className="bg-brand text-brand-foreground">New</Badge>
 ```
 
-### Rose
+</Steps>
 
-A soft pink theme:
+Skipping step 2 is the usual failure: the variable exists, but `bg-brand` never gets generated and the element renders unstyled.
 
-```css
-:root {
-  --background: oklch(98% 0.02 350);
-  --foreground: oklch(20% 0.01 350);
-  --card: oklch(99% 0.015 350);
-  --card-foreground: oklch(20% 0.01 350);
-  --primary: oklch(58% 0.18 340);
-  --primary-foreground: oklch(100% 0 0);
-  --secondary: oklch(88% 0.07 355);
-  --secondary-foreground: oklch(22% 0.01 355);
-  --muted: oklch(92% 0.03 350);
-  --muted-foreground: oklch(45% 0.02 350);
-  --accent: oklch(88% 0.1 345);
-  --accent-foreground: oklch(22% 0.01 345);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(98% 0 0);
-  --border: oklch(87% 0.04 350);
-  --input: oklch(91% 0.03 350);
-  --ring: oklch(58% 0.18 340);
-}
+## The theme contract
 
-.dark {
-  --background: oklch(20% 0.02 350);
-  --foreground: oklch(96% 0.015 350);
-  --card: oklch(23% 0.02 350);
-  --card-foreground: oklch(96% 0.015 350);
-  --primary: oklch(70% 0.18 340);
-  --primary-foreground: oklch(20% 0.01 340);
-  --secondary: oklch(32% 0.05 355);
-  --secondary-foreground: oklch(95% 0.01 355);
-  --muted: oklch(28% 0.02 350);
-  --muted-foreground: oklch(75% 0.015 350);
-  --accent: oklch(40% 0.07 345);
-  --accent-foreground: oklch(95% 0.01 345);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(20% 0.01 25);
-  --border: oklch(30% 0.02 350);
-  --input: oklch(25% 0.018 350);
-  --ring: oklch(70% 0.18 340);
-}
+A theme is not a handful of colors — it is the complete token set, declared in **both** `:root` and `.dark`. That full list lives in `theme-contract.ts` and is enforced by a test.
+
+The rule exists because of how the cascade fails here. A theme that omits `--success-surface` does not error; it silently inherits the value from the base palette, and you end up with a green tint from the default theme bleeding into your brand colors. Missing tokens are invisible until someone opens the one component that uses them.
+
+So when you write a theme, work down the contract:
+
+- **Surfaces** — `background`, `card`, `popover`, `surface-muted` and their foregrounds
+- **Interactive** — `primary`, `secondary`, `accent`, `muted`, `inverse` and their foregrounds, plus `muted-strong`
+- **Structure** — `border`, `border-interactive`, `input`, `ring`, `rule`, `grid-color`
+- **Feedback** — all five roles for each of `destructive`, `warning`, `success`, `info`
+- **Scrim and elevation** — `overlay`, `elevation-sm`, `elevation-md`, `elevation-lg`
+- **Code** — `code` plus the eight syntax tokens
+- **Radius** — `--radius`, in `:root` only
+
+## Switching themes
+
+`nachui init` fetches the available themes and writes the one you pick into your global stylesheet, between a `/* NachUI Tokens */` marker.
+
+```bash
+npx nachui init
 ```
 
-### Cyber
+Re-running it replaces that block and leaves the rest of your CSS alone, so you can try a theme on and change your mind. To go back to a palette you edited by hand, keep your overrides _below_ the marker — anything after it survives.
 
-A vibrant cyan theme for tech products:
-
-```css
-:root {
-  --background: oklch(97% 0.015 200);
-  --foreground: oklch(18% 0.01 200);
-  --card: oklch(98% 0.01 200);
-  --card-foreground: oklch(18% 0.01 200);
-  --primary: oklch(70% 0.23 195);
-  --primary-foreground: oklch(10% 0.01 195);
-  --secondary: oklch(88% 0.06 200);
-  --secondary-foreground: oklch(22% 0.01 200);
-  --muted: oklch(92% 0.025 200);
-  --muted-foreground: oklch(45% 0.02 200);
-  --accent: oklch(60% 0.18 180);
-  --accent-foreground: oklch(10% 0.01 180);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(98% 0 0);
-  --border: oklch(87% 0.03 200);
-  --input: oklch(91% 0.025 200);
-  --ring: oklch(70% 0.23 195);
-}
-
-.dark {
-  --background: oklch(10% 0.02 200);
-  --foreground: oklch(96% 0.01 200);
-  --card: oklch(13% 0.02 200);
-  --card-foreground: oklch(96% 0.01 200);
-  --primary: oklch(70% 0.23 195);
-  --primary-foreground: oklch(15% 0.01 195);
-  --secondary: oklch(25% 0.04 200);
-  --secondary-foreground: oklch(95% 0.01 200);
-  --muted: oklch(20% 0.02 200);
-  --muted-foreground: oklch(70% 0.015 200);
-  --accent: oklch(55% 0.18 180);
-  --accent-foreground: oklch(15% 0.01 180);
-  --destructive: oklch(60% 0.18 25);
-  --destructive-foreground: oklch(20% 0.01 25);
-  --border: oklch(20% 0.018 200);
-  --input: oklch(15% 0.015 200);
-  --ring: oklch(70% 0.23 195);
-}
-```
-
-## Tips
-
-- Always maintain the `background` and `foreground` pair for good contrast
-- Use [oklch.com](https://oklch.com/) to choose colors visually
-- Test your colors in both light and dark mode
-- Check accessibility contrast (minimum 4.5:1 for normal text)
+For how the `.dark` class gets applied and persisted, see [Dark Mode](/docs/concepts/dark-mode).
