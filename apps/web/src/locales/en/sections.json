@@ -101,6 +101,12 @@
         "description": "Contribution History is one Card composed of header, content and footer slots. The bars are plain divs sized from design tokens — read it top to bottom, change any line.",
         "meta": ["Card.Header", "Card.Content", "Card.Footer", "Button"]
       }
+    },
+    "catalog": {
+      "label": "Component registry",
+      "title": "{count} components, ready to copy",
+      "description": "Every primitive in NachUI — accessible, themeable, and owned by your codebase the moment you paste it.",
+      "cta": "Browse the docs"
     }
   },
   "blog": {

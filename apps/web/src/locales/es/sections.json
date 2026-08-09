@@ -102,6 +102,12 @@
         "description": "Contribution History es una sola Card compuesta por los slots de header, content y footer. Las barras son divs con alturas basadas en tokens: leelo de arriba a abajo y cambiá la línea que quieras.",
         "meta": ["Card.Header", "Card.Content", "Card.Footer", "Button"]
       }
+    },
+    "catalog": {
+      "label": "Registro de componentes",
+      "title": "{count} componentes, listos para copiar",
+      "description": "Todos los primitivos de NachUI — accesibles, personalizables y tuyos desde el momento en que los pegás.",
+      "cta": "Ver la documentación"
     }
   },
   "blog": {
