@@ -22,7 +22,7 @@ export function LandingShowcase() {
           <p className="text-muted-strong mt-2 text-[15px] leading-relaxed">{t('description')}</p>
         </div>
         <Link
-          href="/docs/components"
+          href="/docs/elements/ui"
           className="text-muted-foreground hover:text-foreground shrink-0 font-mono text-sm transition-colors"
         >
           {t('cta')} ↗

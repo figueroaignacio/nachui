@@ -14,7 +14,7 @@
       },
       {
         "label": "Ver componentes",
-        "href": "/docs/components",
+        "href": "/docs/elements/ui",
         "description": "Explora todos los componentes minimalistas de React listos para copiar y pegar.",
         "variant": "secondary"
       }

@@ -34,7 +34,7 @@ export function LandingHero() {
             <span aria-hidden="true">→</span>
           </Link>
           <Link
-            href={actions[1]?.href ?? '/docs/components'}
+            href={actions[1]?.href ?? '/docs/elements/ui'}
             className="text-muted-foreground hover:text-foreground font-mono text-sm transition-colors"
           >
             {actions[1]?.label ?? 'View components'} ↗

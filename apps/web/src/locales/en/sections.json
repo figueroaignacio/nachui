@@ -13,7 +13,7 @@
       },
       {
         "label": "View components",
-        "href": "/docs/components",
+        "href": "/docs/elements/ui",
         "description": "Explore all copy-paste ready minimalist React components.",
         "variant": "secondary"
       }

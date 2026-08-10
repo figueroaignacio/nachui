@@ -15,7 +15,8 @@ export function LandingCatalog() {
   const docsNavigation = tDocs.raw('navigation') as DocsNavigationSection[];
 
   const components =
-    docsNavigation.find((s) => s.title === 'Components' || s.title === 'Componentes')?.items ?? [];
+    docsNavigation.find((s) => s.title === 'UI Elements' || s.title === 'Elementos UI')?.items ??
+    [];
 
   if (components.length === 0) return null;
 
@@ -34,7 +35,7 @@ export function LandingCatalog() {
           <p className="text-muted-strong mt-2 text-[15px] leading-relaxed">{t('description')}</p>
         </div>
         <Link
-          href="/docs/components"
+          href="/docs/elements/ui"
           className="text-muted-foreground hover:text-foreground shrink-0 font-mono text-sm transition-colors"
         >
           {t('cta')} ↗

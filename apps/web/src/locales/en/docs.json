@@ -16,12 +16,12 @@
           "href": "/docs"
         },
         {
-          "title": "Components",
-          "href": "/docs/components"
+          "title": "UI Elements",
+          "href": "/docs/elements/ui"
         },
         {
-          "title": "Layout",
-          "href": "/docs/layout"
+          "title": "Layout Elements",
+          "href": "/docs/elements/layout"
         }
       ]
     },
@@ -51,187 +51,186 @@
       ]
     },
     {
-      "title": "Components",
+      "title": "UI Elements",
       "items": [
         {
           "title": "Accordion",
-          "href": "/docs/components/accordion",
+          "href": "/docs/elements/ui/accordion",
           "description": "Expandable and collapsible content panels."
         },
         {
           "title": "Avatar",
-          "href": "/docs/components/avatar",
+          "href": "/docs/elements/ui/avatar",
           "description": "An image element with a fallback for representing the user."
         },
         {
           "title": "Badge",
-          "href": "/docs/components/badge",
+          "href": "/docs/elements/ui/badge",
           "description": "Displays a badge or a component that looks like a badge."
         },
         {
           "title": "Banner",
-          "href": "/docs/components/banner",
+          "href": "/docs/elements/ui/banner",
           "description": "A banner to show important information to the user."
         },
         {
           "title": "Breadcrumb",
-          "href": "/docs/components/breadcrumb",
+          "href": "/docs/elements/ui/breadcrumb",
           "description": "Indicates the location within the site through a sequence of links."
         },
         {
           "title": "Button",
-          "href": "/docs/components/button",
+          "href": "/docs/elements/ui/button",
           "description": "Interactive buttons for user actions."
         },
         {
           "title": "Callout",
-          "href": "/docs/components/callout",
+          "href": "/docs/elements/ui/callout",
           "description": "Callout component to show additional content."
         },
         {
           "title": "Card",
-          "href": "/docs/components/card",
+          "href": "/docs/elements/ui/card",
           "description": "Flexible container with header, content, and footer."
         },
         {
           "title": "Checkbox",
-          "href": "/docs/components/checkbox",
+          "href": "/docs/elements/ui/checkbox",
           "description": "A control that allows the user to toggle between checked and not checked."
         },
         {
           "title": "Command",
-          "href": "/docs/components/command",
+          "href": "/docs/elements/ui/command",
           "description": "A component for displaying and copying CLI commands."
         },
         {
           "title": "Collapsible",
-          "href": "/docs/components/collapsible",
+          "href": "/docs/elements/ui/collapsible",
           "description": "Hide or show sections of content dynamically."
         },
         {
           "title": "Dialog",
-          "href": "/docs/components/dialog",
+          "href": "/docs/elements/ui/dialog",
           "description": "Modal windows for user notifications and interactions."
         },
         {
           "title": "Drawer",
-          "href": "/docs/components/drawer",
+          "href": "/docs/elements/ui/drawer",
           "description": "A panel that slides in from the edge of the screen to display supplementary content."
         },
         {
           "title": "Dropdown Menu",
-          "href": "/docs/components/dropdown-menu",
+          "href": "/docs/elements/ui/dropdown-menu",
           "description": "Menu that expands to reveal additional options."
         },
         {
           "title": "Files",
-          "href": "/docs/components/files",
+          "href": "/docs/elements/ui/files",
           "description": ""
         },
         {
           "title": "Input",
-          "href": "/docs/components/input",
+          "href": "/docs/elements/ui/input",
           "description": "A text input field with label, error handling, icon slots, and size variants."
         },
         {
           "title": "Kbd",
-          "href": "/docs/components/kbd",
+          "href": "/docs/elements/ui/kbd",
           "description": "A component to display keyboard shortcuts."
         },
         {
           "title": "Label",
-          "href": "/docs/components/label",
+          "href": "/docs/elements/ui/label",
           "description": "A label component with required indicator, optional text, and description support."
         },
         {
           "title": "Popover",
-          "href": "/docs/components/popover",
+          "href": "/docs/elements/ui/popover",
           "description": "A floating panel with interactive content, triggered by click."
         },
         {
           "title": "Progress",
-          "href": "/docs/components/progress",
+          "href": "/docs/elements/ui/progress",
           "description": "Displays an indicator showing the completion progress of a task."
         },
         {
           "title": "Radio",
-          "href": "/docs/components/radio",
+          "href": "/docs/elements/ui/radio",
           "description": "A control that allows the user to select one option from a set of mutually exclusive options."
         },
         {
           "title": "Select",
-          "href": "/docs/components/select",
+          "href": "/docs/elements/ui/select",
           "description": "Displays a list of options for the user to pick from."
         },
         {
           "title": "Separator",
-          "href": "/docs/components/separator",
+          "href": "/docs/elements/ui/separator",
           "description": "A visual divider for separating content with optional label."
         },
-
         {
           "title": "Skeleton",
-          "href": "/docs/components/skeleton",
+          "href": "/docs/elements/ui/skeleton",
           "description": "A placeholder loading component with pulse animation."
         },
         {
           "title": "Spinner",
-          "href": "/docs/components/spinner",
+          "href": "/docs/elements/ui/spinner",
           "description": "A continuously rotating element indicating loading state."
         },
         {
           "title": "Switch",
-          "href": "/docs/components/switch",
+          "href": "/docs/elements/ui/switch",
           "description": "A control that allows the user to toggle between checked and not checked."
         },
         {
           "title": "Table",
-          "href": "/docs/components/table",
+          "href": "/docs/elements/ui/table",
           "description": "A table component to display tabular data."
         },
         {
           "title": "Tabs",
-          "href": "/docs/components/tabs",
+          "href": "/docs/elements/ui/tabs",
           "description": "Switch between different content panels easily."
         },
         {
           "title": "Toast",
-          "href": "/docs/components/toast",
+          "href": "/docs/elements/ui/toast",
           "description": "A notification system with stackable toasts, variants, and auto-dismiss."
         },
         {
           "title": "Tooltip",
-          "href": "/docs/components/tooltip",
+          "href": "/docs/elements/ui/tooltip",
           "description": "A popup that displays contextual information associated with an element when it receives keyboard focus or when the user hovers over it with the mouse."
         },
         {
           "title": "Typography",
-          "href": "/docs/components/typography",
+          "href": "/docs/elements/ui/typography",
           "description": "A polymorphic text component for headings, paragraphs, and inline styles."
         }
       ]
     },
     {
-      "title": "Layout",
+      "title": "Layout Elements",
       "items": [
         {
           "title": "Flex",
-          "href": "/docs/layout/flex",
+          "href": "/docs/elements/layout/flex",
           "description": "Flexbox container for aligning items."
         },
         {
           "title": "Stack",
-          "href": "/docs/layout/stack",
+          "href": "/docs/elements/layout/stack",
           "description": "A vertical stack helper."
         },
         {
           "title": "Grid",
-          "href": "/docs/layout/grid",
+          "href": "/docs/elements/layout/grid",
           "description": "Grid layout configuration."
         },
         {
           "title": "Container",
-          "href": "/docs/layout/container",
+          "href": "/docs/elements/layout/container",
           "description": "Constrains and centers content."
         }
       ]

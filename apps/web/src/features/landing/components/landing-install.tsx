@@ -40,7 +40,7 @@ export function LandingInstall() {
               {t('primaryAction')} →
             </Link>
             <Link
-              href="/docs/components"
+              href="/docs/elements/ui"
               className="text-muted-foreground hover:text-foreground font-mono text-sm transition-colors"
             >
               {t('secondaryAction')} ↗

@@ -26,7 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = locales.flatMap((locale) => [
     entry(locale, '/', { changeFrequency: 'daily', priority: 1 }),
     entry(locale, '/docs', { changeFrequency: 'weekly', priority: 0.9 }),
-    entry(locale, '/docs/components', { changeFrequency: 'weekly', priority: 0.9 }),
+    entry(locale, '/docs/elements/ui', { changeFrequency: 'weekly', priority: 0.9 }),
     entry(locale, '/about', { changeFrequency: 'monthly', priority: 0.7 }),
     entry(locale, '/skills', { changeFrequency: 'weekly', priority: 0.8 }),
     entry(locale, '/bricks', { changeFrequency: 'daily', priority: 0.9 }),
