@@ -220,6 +220,7 @@
   --font-heading: var(--font-heading);
   --font-serif: var(--font-serif);
   --font-mono: var(--font-mono);
+  --font-hand: var(--font-hand);
   --animate-blink: blink 2s infinite;
 }
 

@@ -19,6 +19,7 @@
         "variant": "secondary"
       }
     ],
+    "annotations": ["completamente tuyo", "100% open source", "sin sistema de diseño externo"],
     "tech": {
       "title": "El Stack Técnico.",
       "subtitle": "Sin wrappers. Solo primitivas directas.",
@@ -100,7 +101,8 @@
       "label": "Registro de elementos UI",
       "title": "{count} elementos UI, listos para copiar",
       "description": "Todos los primitivos de NachUI — accesibles, personalizables y tuyos desde el momento en que los pegás.",
-      "cta": "Ver la documentación"
+      "cta": "Ver la documentación",
+      "annotation": "todos estos son tuyos"
     }
   },
   "bricks": {

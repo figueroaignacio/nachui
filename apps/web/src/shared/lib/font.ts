@@ -1,4 +1,4 @@
-import { Bricolage_Grotesque, JetBrains_Mono, Source_Serif_4 } from 'next/font/google';
+import { Bricolage_Grotesque, Caveat, JetBrains_Mono, Source_Serif_4 } from 'next/font/google';
 
 export const fontHeading = Bricolage_Grotesque({
   subsets: ['latin'],
@@ -19,6 +19,14 @@ export const fontCode = JetBrains_Mono({
   variable: '--font-mono',
   display: 'swap',
   weight: ['400', '500', '700'],
+  preload: false,
+});
+
+export const fontHand = Caveat({
+  subsets: ['latin'],
+  variable: '--font-hand',
+  display: 'swap',
+  weight: ['500', '600'],
   preload: false,
 });
 

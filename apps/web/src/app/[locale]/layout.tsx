@@ -5,7 +5,7 @@ import { PageFrame } from '@/components/layout/page-frame';
 import { Providers } from '@/components/providers';
 import { ThemeInitScript } from '@/components/common/theme-init-script';
 import { routing } from '@/i18n/routing';
-import { fontCode, fontHeading, fontSans, fontSerif } from '@/lib/font';
+import { fontCode, fontHand, fontHeading, fontSans, fontSerif } from '@/lib/font';
 import '@repo/ui/globals.css';
 
 import { Analytics } from '@vercel/analytics/next';
@@ -70,7 +70,7 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
         />
       </head>
       <body
-        className={`relative ${fontSans.variable} ${fontHeading.variable} ${fontSerif.variable} ${fontCode.variable}`}
+        className={`relative ${fontSans.variable} ${fontHeading.variable} ${fontSerif.variable} ${fontCode.variable} ${fontHand.variable}`}
       >
         <SkipLink />
         <NextIntlClientProvider>

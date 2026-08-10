@@ -18,6 +18,7 @@
         "variant": "secondary"
       }
     ],
+    "annotations": ["completely yours", "100% open source", "no external design system"],
     "tech": {
       "title": "The Tech Stack.",
       "subtitle": "No wrappers. Just direct primitives.",
@@ -99,7 +100,8 @@
       "label": "UI element registry",
       "title": "{count} UI elements, ready to copy",
       "description": "Every primitive in NachUI — accessible, themeable, and owned by your codebase the moment you paste it.",
-      "cta": "Browse the docs"
+      "cta": "Browse the docs",
+      "annotation": "all of these are yours"
     }
   },
   "bricks": {

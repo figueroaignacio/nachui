@@ -4,6 +4,8 @@ import { Link } from '@/i18n/navigation';
 import { ComponentGrid, type ComponentGridItem } from '@/shared/components/common/component-grid';
 import { useTranslations } from 'next-intl';
 
+import { Annotation } from './annotation';
+
 type DocsNavigationSection = {
   title: string;
   items: ComponentGridItem[];
@@ -42,7 +44,16 @@ export function LandingCatalog() {
         </Link>
       </div>
 
-      <ComponentGrid items={components} />
+      <div className="relative">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10">
+          <Annotation
+            label={t('annotation')}
+            arrow="down-left"
+            className="-top-9 right-[6%] rotate-3"
+          />
+        </div>
+        <ComponentGrid items={components} />
+      </div>
     </section>
   );
 }
