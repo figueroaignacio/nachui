@@ -84,13 +84,6 @@
         }
       ]
     },
-    "liveDemo": {
-      "badge": "En vivo",
-      "save": "Guardar cambios",
-      "saved": "Cambios guardados",
-      "idleHint": "Componentes reales: probá los switches, el select y guardá.",
-      "savedHint": "No se envió nada a ningún lado. Esto es el componente."
-    },
     "showcase": {
       "label": "Ejemplos en vivo",
       "title": "Hecho con NachUI",

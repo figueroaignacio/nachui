@@ -83,13 +83,6 @@
         }
       ]
     },
-    "liveDemo": {
-      "badge": "Live",
-      "save": "Save changes",
-      "saved": "Changes saved",
-      "idleHint": "Real components — toggle, select and save.",
-      "savedHint": "Nothing was sent anywhere. This is the component."
-    },
     "showcase": {
       "label": "Live examples",
       "title": "Built with NachUI",

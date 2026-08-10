@@ -3,7 +3,7 @@
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
-import { HeroLiveDemo } from './hero-live-demo';
+import { PreviewMasonry } from './preview-masonry';
 
 interface HomePageActions {
   href: string;
@@ -42,7 +42,7 @@ export function LandingHero() {
         </div>
       </div>
       <div className="mt-12 w-full md:mt-16">
-        <HeroLiveDemo />
+        <PreviewMasonry />
       </div>
     </section>
   );
