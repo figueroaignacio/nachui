@@ -55,14 +55,13 @@ export function MobileMenu() {
       >
         <div className="border-rule flex items-center justify-between border-b px-6 py-4">
           <div className="flex items-center gap-x-3">
-            <button
-              title="Go to home page"
-              aria-label="Go to home page"
-              type="button"
+            <Link
+              href="/"
+              onClick={toggleMenu}
               className="flex items-center gap-x-2 text-sm font-medium"
             >
-              nachui
-            </button>
+              {navigation[0]?.title ?? 'Home'}
+            </Link>
           </div>
           <div className="flex items-center gap-x-3">
             <ThemeToggle />
