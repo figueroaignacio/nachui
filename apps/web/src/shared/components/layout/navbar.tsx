@@ -18,13 +18,6 @@ export function Navbar() {
     <div>
       <div className="relative z-50 hidden w-full lg:flex">
         <div className="mx-auto flex w-full items-center justify-between py-4">
-          <Link
-            href="/"
-            className="text-foreground hover:text-muted-foreground font-mono text-sm font-medium transition-colors"
-            aria-label="NachUI home"
-          >
-            nachui
-          </Link>
           <nav className="flex items-center gap-6" aria-label="Main navigation">
             {navigation.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);

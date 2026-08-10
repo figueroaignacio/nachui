@@ -1,6 +1,10 @@
 {
   "navigation": [
     {
+      "title": "Home",
+      "href": "/"
+    },
+    {
       "title": "Docs",
       "href": "/docs"
     },

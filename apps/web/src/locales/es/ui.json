@@ -1,6 +1,10 @@
 {
   "navigation": [
     {
+      "title": "Inicio",
+      "href": "/"
+    },
+    {
       "title": "Documentación",
       "href": "/docs"
     },
