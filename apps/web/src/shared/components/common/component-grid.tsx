@@ -1,6 +1,8 @@
 import { Link } from '@/i18n/navigation';
+import { PlusSignIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { cn } from '@repo/ui/lib/cn';
+import { useTranslations } from 'next-intl';
 import { getComponentIcon } from './component-icons';
 
 export interface ComponentGridItem {
@@ -20,6 +22,8 @@ interface ComponentGridProps {
  * trailing column and row collapse into the container's border.
  */
 export function ComponentGrid({ items, className }: ComponentGridProps) {
+  const t = useTranslations('ui');
+
   return (
     <div
       className={cn(
@@ -52,6 +56,22 @@ export function ComponentGrid({ items, className }: ComponentGridProps) {
           </span>
         </Link>
       ))}
+      <div
+        aria-hidden="true"
+        className="border-rule [grid-column-end:-1] -mr-px -mb-px flex items-center gap-2.5 border-r border-b px-3 py-2.5 sm:px-4"
+      >
+        <span className="border-rule flex size-8 shrink-0 items-center justify-center rounded-md border border-dashed">
+          <HugeiconsIcon
+            icon={PlusSignIcon}
+            size={16}
+            strokeWidth={1.6}
+            className="text-muted-foreground"
+          />
+        </span>
+        <span className="text-muted-foreground truncate font-mono text-xs italic">
+          {t('componentGrid.wip')}
+        </span>
+      </div>
     </div>
   );
 }

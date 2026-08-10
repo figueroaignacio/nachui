@@ -24,5 +24,8 @@
       "title": "Skills",
       "href": "/skills"
     }
-  ]
+  ],
+  "componentGrid": {
+    "wip": "working on adding more…"
+  }
 }
