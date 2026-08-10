@@ -37,7 +37,7 @@ export function LandingHero() {
             href={actions[1]?.href ?? '/docs/elements/ui'}
             className="text-muted-foreground hover:text-foreground font-mono text-sm transition-colors"
           >
-            {actions[1]?.label ?? 'View components'} ↗
+            {actions[1]?.label ?? 'View UI elements'} ↗
           </Link>
         </div>
       </div>

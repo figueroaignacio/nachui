@@ -12,7 +12,7 @@
         "variant": "default"
       },
       {
-        "label": "View components",
+        "label": "View UI elements",
         "href": "/docs/elements/ui",
         "description": "Explore all copy-paste ready minimalist React components.",
         "variant": "secondary"
@@ -87,7 +87,7 @@
       "label": "Live examples",
       "title": "Built with NachUI",
       "description": "Every panel below is the real component running on this page, not a screenshot.",
-      "cta": "Browse all components",
+      "cta": "Browse all UI elements",
       "featured": {
         "badge": "Featured",
         "title": "A dashboard panel with four slots and no chart library",
@@ -96,8 +96,8 @@
       }
     },
     "catalog": {
-      "label": "Component registry",
-      "title": "{count} components, ready to copy",
+      "label": "UI element registry",
+      "title": "{count} UI elements, ready to copy",
       "description": "Every primitive in NachUI — accessible, themeable, and owned by your codebase the moment you paste it.",
       "cta": "Browse the docs"
     }
@@ -118,7 +118,7 @@
     "product": {
       "title": "Product",
       "docs": "Documentation",
-      "components": "Components",
+      "components": "UI Elements",
       "installation": "Installation",
       "about": "About"
     },

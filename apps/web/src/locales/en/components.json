@@ -107,7 +107,7 @@
     "line1": "Source code in your repo.",
     "line2": "No node_modules wrapper.",
     "primaryAction": "Read the install guide",
-    "secondaryAction": "Browse components",
+    "secondaryAction": "Browse UI elements",
     "license": "MIT",
     "description": "The CLI writes the component straight into your project. From that point on it is your file: no wrapper package, no upstream release to wait for.",
     "terminal": "terminal",

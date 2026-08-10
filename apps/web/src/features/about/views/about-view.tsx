@@ -16,7 +16,7 @@ const actions = [
 ];
 
 const stats = [
-  { value: '40+', label: 'Components' },
+  { value: '40+', label: 'UI elements' },
   { value: '2', label: 'Locales' },
   { value: '100%', label: 'Open source' },
   { value: '0', label: 'npm deps' },
