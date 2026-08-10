@@ -28,7 +28,7 @@ export function Navbar() {
                   target={item.target}
                   aria-current={isActive ? 'page' : undefined}
                   className={cn(
-                    'focus-visible:ring-ring rounded-sm font-mono text-xs transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                    'focus-visible:ring-ring rounded-sm font-mono text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                     isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
                   )}
                 >
