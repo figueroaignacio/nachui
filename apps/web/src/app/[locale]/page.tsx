@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: {
-      absolute: `NachUI | ${t('title')}`,
+      absolute: `NachUI · ${t('title')}`,
     },
     description: t('description'),
     openGraph: {

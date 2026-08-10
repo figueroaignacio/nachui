@@ -97,7 +97,7 @@ export async function generateMetadata({ params }: LocaleLayoutProps): Promise<M
     metadataBase: new URL(baseUrlVal),
     title: {
       default: 'NachUI',
-      template: `%s | NachUI`,
+      template: `%s · NachUI`,
     },
     description: t('description'),
     openGraph: {

@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: t('title'),
     description: t('subtitle'),
     openGraph: {
-      title: `${t('title')} | NachUI`,
+      title: `${t('title')} · NachUI`,
       description: t('subtitle'),
       type: 'website',
       locale,
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${t('title')} | NachUI`,
+      title: `${t('title')} · NachUI`,
       description: t('subtitle'),
       images: [getAbsoluteUrl(locale, '/images/og/og-about.png')],
     },
