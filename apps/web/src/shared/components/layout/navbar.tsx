@@ -3,6 +3,7 @@
 import { Searcher } from '@/features/docs/components/searcher';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { Navigation } from '@/lib/definitions';
+import { Separator } from '@repo/ui/components/separator';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 import { LocaleSwitcher } from '../common/locale-switcher';
@@ -45,7 +46,9 @@ export function Navbar() {
           </nav>
           <div className="flex items-center gap-3">
             <Searcher />
+            <Separator orientation="vertical" className="h-4" />
             <LocaleSwitcher />
+            <Separator orientation="vertical" className="h-4" />
             <ThemeToggle />
           </div>
         </div>
