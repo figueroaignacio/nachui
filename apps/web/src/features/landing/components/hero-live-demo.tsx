@@ -65,7 +65,7 @@ function DeploySettingsDemo() {
   }
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-md">
       <Card.Header compact>
         <div className="flex items-start justify-between gap-3">
           <div className="space-y-1">
@@ -121,7 +121,7 @@ function DeploySettingsDemo() {
 export function HeroLiveDemo() {
   return (
     <div className="border-rule overflow-hidden rounded-md border">
-      <div className="flex items-center justify-center p-6 sm:p-8">
+      <div className="flex items-center justify-center p-8 sm:p-12 lg:p-16">
         <DeploySettingsDemo />
       </div>
       <div className="border-rule border-t">
