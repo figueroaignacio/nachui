@@ -120,6 +120,7 @@
       "title": "Producto",
       "docs": "Documentación",
       "components": "Elementos UI",
+      "layout": "Elementos de layout",
       "installation": "Instalación",
       "about": "Acerca de"
     },

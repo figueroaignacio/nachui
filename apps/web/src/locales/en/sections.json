@@ -119,6 +119,7 @@
       "title": "Product",
       "docs": "Documentation",
       "components": "UI Elements",
+      "layout": "Layout Elements",
       "installation": "Installation",
       "about": "About"
     },
