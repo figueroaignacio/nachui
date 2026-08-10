@@ -49,11 +49,11 @@ export function Annotation({
       {arrow === 'down-left' ? (
         <>
           <span className="mt-4">{arrowEl}</span>
-          <span className="font-hand text-base leading-tight font-medium lg:text-xl">{label}</span>
+          <span className="font-mono text-xs leading-tight italic lg:text-sm">{label}</span>
         </>
       ) : (
         <>
-          <span className="font-hand text-base leading-tight font-medium lg:text-xl">{label}</span>
+          <span className="font-mono text-xs leading-tight italic lg:text-sm">{label}</span>
           <span className={arrow === 'up-right' ? 'mb-4 self-end' : 'mt-4'}>{arrowEl}</span>
         </>
       )}
