@@ -10,6 +10,7 @@ import { NavigationMenu } from '@repo/ui/components/navigation-menu';
 import { Separator } from '@repo/ui/components/separator';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import { LocaleSwitcher } from '../common/locale-switcher';
 import { ThemeToggle } from '../common/theme-toggle';
 
@@ -38,10 +39,17 @@ export function Navbar() {
           <div className="flex w-65 shrink-0 items-center justify-between border-r pr-3">
             <Link
               href="/"
-              className="text-foreground hover:text-muted-foreground font-mono text-sm font-medium transition-colors"
+              className="focus-visible:ring-ring rounded-md transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               aria-label="NachUI home"
             >
-              nachui
+              <Image
+                src="/icon-192.png"
+                alt="NachUI"
+                width={28}
+                height={28}
+                priority
+                className="rounded-md"
+              />
             </Link>
             <Searcher variant="icon" />
           </div>
