@@ -3,16 +3,29 @@
 import { Searcher } from '@/features/docs/components/searcher';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { Navigation } from '@/lib/definitions';
+import { DashboardSquare01Icon, Layout01Icon } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { NavigationMenu } from '@repo/ui/components/navigation-menu';
 import { Separator } from '@repo/ui/components/separator';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 import { LocaleSwitcher } from '../common/locale-switcher';
 import { ThemeToggle } from '../common/theme-toggle';
 
+type ElementsMenu = {
+  label: string;
+  items: { title: string; description: string; href: string }[];
+};
+
+const ELEMENT_ICONS = [DashboardSquare01Icon, Layout01Icon];
+
 export function Navbar() {
   const t = useTranslations('ui');
   const navigation: Navigation[] = t.raw('navigation');
+  const elementsMenu: ElementsMenu = t.raw('elementsMenu');
   const pathname = usePathname();
+
+  const isElementsActive = pathname.startsWith('/docs/elements');
 
   return (
     <div>
@@ -30,10 +43,10 @@ export function Navbar() {
             </Link>
             <Searcher variant="icon" />
           </div>
-          <nav className="flex items-center gap-6 pl-8" aria-label="Main navigation">
+          <NavigationMenu className="pl-8" aria-label="Main navigation">
             {navigation.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
-              return (
+              const link = (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -47,8 +60,43 @@ export function Navbar() {
                   {item.title}
                 </Link>
               );
+
+              if (item.href !== '/docs') return link;
+
+              return (
+                <div key={item.href} className="contents">
+                  {link}
+                  <NavigationMenu.Item className="flex items-center self-stretch">
+                    <NavigationMenu.Trigger
+                      className={cn('font-mono text-xs', isElementsActive && 'text-foreground')}
+                    >
+                      {elementsMenu.label}
+                    </NavigationMenu.Trigger>
+                    <NavigationMenu.Content>
+                      {elementsMenu.items.map((menuItem, index) => (
+                        <NavigationMenu.Link
+                          key={menuItem.href}
+                          asChild
+                          title={menuItem.title}
+                          description={menuItem.description}
+                          icon={
+                            <HugeiconsIcon
+                              icon={ELEMENT_ICONS[index] ?? DashboardSquare01Icon}
+                              size={16}
+                              strokeWidth={1.6}
+                              aria-hidden="true"
+                            />
+                          }
+                        >
+                          <Link href={menuItem.href} />
+                        </NavigationMenu.Link>
+                      ))}
+                    </NavigationMenu.Content>
+                  </NavigationMenu.Item>
+                </div>
+              );
             })}
-          </nav>
+          </NavigationMenu>
           <div className="ml-auto flex items-center gap-3">
             <LocaleSwitcher />
             <Separator orientation="vertical" className="h-4" />

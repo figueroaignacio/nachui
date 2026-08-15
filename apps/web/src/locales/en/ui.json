@@ -9,14 +9,6 @@
       "href": "/docs"
     },
     {
-      "title": "UI Elements",
-      "href": "/docs/elements/ui"
-    },
-    {
-      "title": "Layout Elements",
-      "href": "/docs/elements/layout"
-    },
-    {
       "title": "Bricks",
       "href": "/bricks/login"
     },
@@ -27,5 +19,20 @@
   ],
   "componentGrid": {
     "wip": "working on adding more…"
+  },
+  "elementsMenu": {
+    "label": "Elements",
+    "items": [
+      {
+        "title": "UI Elements",
+        "description": "Buttons, dialogs, tables and every interactive primitive.",
+        "href": "/docs/elements/ui"
+      },
+      {
+        "title": "Layout Elements",
+        "description": "Flex, Stack, Grid and Container to structure your pages.",
+        "href": "/docs/elements/layout"
+      }
+    ]
   }
 }
