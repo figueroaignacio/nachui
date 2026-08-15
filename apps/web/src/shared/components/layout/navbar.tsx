@@ -20,7 +20,7 @@ export function Navbar() {
         <div className="flex h-14 w-full items-stretch">
           {/* Brand + search segment: mirrors the docs sidebar column (260px) so
               its right rule joins the sidebar's border on docs pages. */}
-          <div className="flex w-[260px] shrink-0 items-center justify-between border-r pr-3">
+          <div className="flex w-65 shrink-0 items-center justify-between border-r pr-3">
             <Link
               href="/"
               className="text-foreground hover:text-muted-foreground font-mono text-sm font-medium transition-colors"
