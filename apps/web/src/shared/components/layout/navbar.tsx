@@ -39,7 +39,7 @@ export function Navbar() {
           <div className="flex w-65 shrink-0 items-center justify-between border-r pr-3">
             <Link
               href="/"
-              className="focus-visible:ring-ring flex items-center gap-2.5 rounded-md transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="group/brand focus-visible:ring-ring flex items-center gap-2.5 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               aria-label="NachUI home"
             >
               <Image
@@ -48,7 +48,7 @@ export function Navbar() {
                 width={28}
                 height={28}
                 priority
-                className="rounded-md"
+                className="rounded-md transition-transform duration-300 ease-out group-hover/brand:scale-110 group-hover/brand:-rotate-12 group-hover/brand:shadow-md motion-reduce:transform-none"
               />
               <span className="text-foreground font-mono text-sm font-medium">NachUI</span>
             </Link>
