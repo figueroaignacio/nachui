@@ -61,8 +61,14 @@ export function MobileMenu() {
       >
         <div className="border-rule flex items-center justify-between border-b px-6 py-4">
           <div className="flex items-center gap-x-3">
-            <Link href="/" onClick={toggleMenu} aria-label="NachUI home">
+            <Link
+              href="/"
+              onClick={toggleMenu}
+              aria-label="NachUI home"
+              className="flex items-center gap-x-2.5"
+            >
               <Image src="/icon-192.png" alt="" width={28} height={28} className="rounded-md" />
+              <span className="text-foreground font-mono text-sm font-medium">NachUI</span>
             </Link>
           </div>
           <div className="flex items-center gap-x-3">
