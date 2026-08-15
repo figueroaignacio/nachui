@@ -39,17 +39,18 @@ export function Navbar() {
           <div className="flex w-65 shrink-0 items-center justify-between border-r pr-3">
             <Link
               href="/"
-              className="focus-visible:ring-ring rounded-md transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="focus-visible:ring-ring flex items-center gap-2.5 rounded-md transition-opacity hover:opacity-80 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               aria-label="NachUI home"
             >
               <Image
                 src="/icon-192.png"
-                alt="NachUI"
+                alt=""
                 width={28}
                 height={28}
                 priority
                 className="rounded-md"
               />
+              <span className="text-foreground font-mono text-sm font-medium">NachUI</span>
             </Link>
             <Searcher variant="icon" />
           </div>
