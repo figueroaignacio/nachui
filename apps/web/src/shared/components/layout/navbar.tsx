@@ -64,7 +64,7 @@ export function Navbar() {
                   target={item.target}
                   aria-current={isActive ? 'page' : undefined}
                   className={cn(
-                    'focus-visible:ring-ring rounded-sm font-mono text-xs transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                    'focus-visible:ring-ring rounded-sm text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                     isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
                   )}
                 >
@@ -79,7 +79,7 @@ export function Navbar() {
                   {link}
                   <NavigationMenu.Item className="flex items-center self-stretch">
                     <NavigationMenu.Trigger
-                      className={cn('font-mono text-xs', isElementsActive && 'text-foreground')}
+                      className={cn('text-sm', isElementsActive && 'text-foreground')}
                     >
                       {elementsMenu.label}
                     </NavigationMenu.Trigger>
