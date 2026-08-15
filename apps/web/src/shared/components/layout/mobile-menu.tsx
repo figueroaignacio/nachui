@@ -6,10 +6,12 @@ import { Link, usePathname } from '@/i18n/navigation';
 import type { DocSection, Navigation } from '@/lib/definitions';
 import { Cancel01Icon, PanelLeftIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import { Separator } from '@repo/ui/components/separator';
 import { Typography } from '@repo/ui/components/typography';
 import { cn } from '@repo/ui/lib/cn';
 import { Flex } from '@repo/ui/src/layout/flex';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import { useState } from 'react';
 import { LocaleSwitcher } from '../common/locale-switcher';
 import { ThemeToggle } from '../common/theme-toggle';
@@ -28,7 +30,11 @@ export function MobileMenu() {
 
   return (
     <div className="relative flex w-full items-center justify-between py-5 lg:hidden">
-      <Flex gap="4" align="center">
+      <Flex gap="3" align="center">
+        <Link href="/" aria-label="NachUI home">
+          <Image src="/icon-192.png" alt="" width={28} height={28} className="rounded-md" />
+        </Link>
+        <Separator orientation="vertical" className="h-4" />
         <button
           className="flex items-center gap-x-2 text-sm font-medium"
           onClick={toggleMenu}
@@ -38,7 +44,7 @@ export function MobileMenu() {
           type="button"
         >
           <HugeiconsIcon icon={PanelLeftIcon} aria-hidden="true" />
-        </button>{' '}
+        </button>
       </Flex>
       <div className="flex items-center gap-x-5">
         <Searcher />
