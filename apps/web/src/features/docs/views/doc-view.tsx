@@ -10,7 +10,6 @@ import { Flex } from '@repo/ui/layout/flex';
 import { Stack } from '@repo/ui/layout/stack';
 import { Container } from '@repo/ui/src/layout/container';
 import type { Doc } from 'content-collections';
-import Image from 'next/image';
 
 type DocViewProps = {
   doc: Doc;
@@ -49,16 +48,6 @@ export function DocView({ doc }: DocViewProps) {
           <div className="mt-8 mb-10 sm:mt-10 sm:mb-12">
             <MobileToc toc={tocContent} />
             <div>
-              {doc.slugAsParams === '' && (
-                <Image
-                  src="/icon-192.png"
-                  alt="NachUI"
-                  width={56}
-                  height={56}
-                  priority
-                  className="border-border mb-6 rounded-xl border shadow-sm"
-                />
-              )}
               <p className="section-label mb-4">Documentation</p>
               <h1 className="font-heading text-foreground text-[2rem] leading-[1.05] font-semibold tracking-tight md:text-[2.5rem]">
                 {doc.title}
