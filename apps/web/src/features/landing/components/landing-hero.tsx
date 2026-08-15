@@ -3,7 +3,6 @@
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
-import { HeroAnnotations } from './hero-annotations';
 import { PreviewMasonry } from './preview-masonry';
 
 interface HomePageActions {
@@ -42,8 +41,7 @@ export function LandingHero() {
           </Link>
         </div>
       </div>
-      <div className="relative mt-12 w-full md:mt-16">
-        <HeroAnnotations />
+      <div className="mt-12 w-full md:mt-16">
         <PreviewMasonry />
       </div>
     </section>
