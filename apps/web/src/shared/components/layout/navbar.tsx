@@ -10,8 +10,8 @@ import { NavigationMenu } from '@repo/ui/components/navigation-menu';
 import { Separator } from '@repo/ui/components/separator';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 import { LocaleSwitcher } from '../common/locale-switcher';
+import { Logo } from '../common/logo';
 import { ThemeToggle } from '../common/theme-toggle';
 
 type ElementsMenu = {
@@ -39,18 +39,14 @@ export function Navbar() {
           <div className="flex w-65 shrink-0 items-center justify-between border-r pr-3">
             <Link
               href="/"
-              className="group/brand focus-visible:ring-ring flex items-center gap-2.5 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="group/brand focus-visible:ring-ring rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               aria-label="NachUI home"
             >
-              <Image
-                src="/icon-192.png"
-                alt=""
-                width={28}
-                height={28}
+              <Logo
+                withText
                 priority
-                className="rounded-md transition-transform duration-300 ease-out group-hover/brand:scale-110 group-hover/brand:-rotate-12 group-hover/brand:shadow-md motion-reduce:transform-none"
+                imageClassName="transition-transform duration-300 ease-out group-hover/brand:scale-110 group-hover/brand:-rotate-12 group-hover/brand:shadow-md motion-reduce:transform-none"
               />
-              <span className="text-foreground font-mono text-sm font-medium">NachUI</span>
             </Link>
             <Searcher variant="icon" />
           </div>

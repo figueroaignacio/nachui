@@ -11,9 +11,9 @@ import { Typography } from '@repo/ui/components/typography';
 import { cn } from '@repo/ui/lib/cn';
 import { Flex } from '@repo/ui/src/layout/flex';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 import { useState } from 'react';
 import { LocaleSwitcher } from '../common/locale-switcher';
+import { Logo } from '../common/logo';
 import { ThemeToggle } from '../common/theme-toggle';
 
 export function MobileMenu() {
@@ -32,7 +32,7 @@ export function MobileMenu() {
     <div className="relative flex w-full items-center justify-between py-5 lg:hidden">
       <Flex gap="3" align="center">
         <Link href="/" aria-label="NachUI home">
-          <Image src="/icon-192.png" alt="" width={28} height={28} className="rounded-md" />
+          <Logo />
         </Link>
         <Separator orientation="vertical" className="h-4" />
         <button
@@ -61,14 +61,8 @@ export function MobileMenu() {
       >
         <div className="border-rule flex items-center justify-between border-b px-6 py-4">
           <div className="flex items-center gap-x-3">
-            <Link
-              href="/"
-              onClick={toggleMenu}
-              aria-label="NachUI home"
-              className="flex items-center gap-x-2.5"
-            >
-              <Image src="/icon-192.png" alt="" width={28} height={28} className="rounded-md" />
-              <span className="text-foreground font-mono text-sm font-medium">NachUI</span>
+            <Link href="/" onClick={toggleMenu} aria-label="NachUI home">
+              <Logo withText />
             </Link>
           </div>
           <div className="flex items-center gap-x-3">
