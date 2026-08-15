@@ -6,7 +6,7 @@ import { Providers } from '@/components/providers';
 import { ThemeInitScript } from '@/components/common/theme-init-script';
 import { routing } from '@/i18n/routing';
 import { fontCode, fontHeading, fontSans, fontSerif } from '@/lib/font';
-import '@repo/ui/globals.css';
+import '@/app/globals.css';
 
 import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
