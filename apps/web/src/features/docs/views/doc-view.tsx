@@ -43,10 +43,7 @@ export function DocView({ doc }: DocViewProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(techArticleSchema) }}
       />
-      <Container
-        size="md"
-        className="border-rule bg-card min-w-0 rounded-lg border px-5 shadow-sm sm:px-8"
-      >
+      <Container size="md" className="px-0">
         <Stack as="article" className="w-full min-w-0">
           <div className="mt-8 mb-10 sm:mt-10 sm:mb-12">
             <MobileToc toc={tocContent} />
