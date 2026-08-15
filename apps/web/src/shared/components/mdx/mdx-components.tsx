@@ -198,6 +198,7 @@ function Image({ className, alt, src, ...props }: React.ImgHTMLAttributes<HTMLIm
   if (!src) return null;
   return (
     <img
+      src={src}
       className={cn('border-border/50 my-8 rounded-2xl border shadow-sm', className)}
       alt={alt || ''}
       sizes="100vw"
