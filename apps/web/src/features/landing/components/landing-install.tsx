@@ -23,8 +23,8 @@ export function LandingInstall() {
 
   return (
     <section className="w-full py-16 sm:py-20">
-      <div className="rule-bleed" />
-      <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-16">
+      <div className="rule-bleed rule-draw" />
+      <div className="scroll-reveal mt-10 flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-16">
         <div className="flex flex-col lg:w-[40%] lg:shrink-0">
           <p className="section-label">{t('version')}</p>
           <h2 className="font-heading text-foreground mt-3 text-[1.375rem] leading-tight font-semibold tracking-tight md:text-[1.625rem]">
@@ -79,7 +79,7 @@ export function LandingInstall() {
           </p>
         </div>
       </div>
-      <div className="rule-bleed mt-16" />
+      <div className="rule-bleed rule-draw mt-16" />
       <p className="text-muted-foreground mt-4 font-mono text-xs">{t('license')}</p>
     </section>
   );

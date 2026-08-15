@@ -9,8 +9,8 @@ export function LandingShowcase() {
 
   return (
     <section className="w-full pb-10" aria-labelledby="showcase-title">
-      <div className="rule-bleed" />
-      <div className="flex flex-col gap-3 pt-6 pb-10 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
+      <div className="rule-bleed rule-draw" />
+      <div className="scroll-reveal flex flex-col gap-3 pt-6 pb-10 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
         <div className="max-w-xl">
           <p className="section-label">{t('label')}</p>
           <h2
@@ -29,7 +29,7 @@ export function LandingShowcase() {
         </Link>
       </div>
 
-      <div className="border-rule bg-surface-muted/50 flex flex-col gap-8 rounded-lg border p-5 sm:p-8 lg:flex-row lg:items-center lg:gap-14">
+      <div className="scroll-reveal border-rule bg-surface-muted/50 flex flex-col gap-8 rounded-lg border p-5 sm:p-8 lg:flex-row lg:items-center lg:gap-14">
         <div className="flex flex-col lg:w-[42%] lg:shrink-0">
           <p className="section-label">{t('featured.badge')}</p>
           <h3 className="font-heading text-foreground mt-3 text-xl font-semibold tracking-tight">

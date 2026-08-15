@@ -1,8 +1,11 @@
+'use client';
+
 import { Link } from '@/i18n/navigation';
 import { PlusSignIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
+import { useEffect, useRef, useState } from 'react';
 import { getComponentIcon } from './component-icons';
 
 export interface ComponentGridItem {
@@ -16,6 +19,8 @@ interface ComponentGridProps {
   className?: string;
 }
 
+const cascadeIndex = (index: number) => ({ '--cascade-i': index }) as React.CSSProperties;
+
 /**
  * Dense, hairline-ruled catalog of components: one icon + name per cell.
  * Cells carry their own right/bottom rule and pull it back by 1px so the
@@ -23,19 +28,42 @@ interface ComponentGridProps {
  */
 export function ComponentGrid({ items, className }: ComponentGridProps) {
   const t = useTranslations('ui');
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '0px 0px -10% 0px' },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div
+      ref={containerRef}
       className={cn(
-        'border-rule grid grid-cols-2 overflow-hidden rounded-lg border sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5',
+        'grid-cascade border-rule grid grid-cols-2 overflow-hidden rounded-lg border sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5',
+        inView && 'grid-cascade-in',
         className,
       )}
     >
-      {items.map((item) => (
+      {items.map((item, index) => (
         <Link
           key={item.href}
           href={item.href}
           title={item.description || undefined}
+          style={cascadeIndex(index)}
           className={cn(
             'group/cell border-rule relative -mr-px -mb-px flex items-center overflow-hidden border-r border-b px-3 py-2.5 sm:px-4',
             'hover:bg-surface-muted focus-visible:ring-ring transition-colors duration-200 focus-visible:z-10 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
@@ -58,6 +86,7 @@ export function ComponentGrid({ items, className }: ComponentGridProps) {
       ))}
       <div
         aria-hidden="true"
+        style={cascadeIndex(items.length)}
         className="border-rule [grid-column-end:-1] -mr-px -mb-px flex items-center gap-2.5 border-r border-b px-3 py-2.5 sm:px-4"
       >
         <span className="border-rule flex size-8 shrink-0 items-center justify-center rounded-md border border-dashed">

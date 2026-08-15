@@ -33,7 +33,7 @@ const cards = [
 export function PreviewMasonry() {
   return (
     <div aria-hidden="true" className="relative max-h-[34rem] overflow-hidden lg:max-h-[40rem]">
-      <div className="[zoom:0.72] columns-2 gap-3 [column-fill:balance] sm:[zoom:1] lg:columns-3 lg:gap-5 xl:columns-4">
+      <div className="scroll-parallax [zoom:0.72] columns-2 gap-3 [column-fill:balance] sm:[zoom:1] lg:columns-3 lg:gap-5 xl:columns-4">
         {cards.map((card) => (
           <div key={card.key} className="mb-3 break-inside-avoid lg:mb-5">
             {card}
