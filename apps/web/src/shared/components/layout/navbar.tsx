@@ -17,8 +17,20 @@ export function Navbar() {
   return (
     <div>
       <div className="relative z-50 hidden w-full lg:flex">
-        <div className="mx-auto flex w-full items-center justify-between py-4">
-          <nav className="flex items-center gap-6" aria-label="Main navigation">
+        <div className="flex h-14 w-full items-stretch">
+          {/* Brand + search segment: mirrors the docs sidebar column (260px) so
+              its right rule joins the sidebar's border on docs pages. */}
+          <div className="flex w-[260px] shrink-0 items-center justify-between border-r pr-3">
+            <Link
+              href="/"
+              className="text-foreground hover:text-muted-foreground font-mono text-sm font-medium transition-colors"
+              aria-label="NachUI home"
+            >
+              nachui
+            </Link>
+            <Searcher variant="icon" />
+          </div>
+          <nav className="flex items-center gap-6 pl-8" aria-label="Main navigation">
             {navigation.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
@@ -28,7 +40,7 @@ export function Navbar() {
                   target={item.target}
                   aria-current={isActive ? 'page' : undefined}
                   className={cn(
-                    'focus-visible:ring-ring rounded-sm font-mono text-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                    'focus-visible:ring-ring rounded-sm font-mono text-xs transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                     isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
                   )}
                 >
@@ -37,9 +49,7 @@ export function Navbar() {
               );
             })}
           </nav>
-          <div className="flex items-center gap-3">
-            <Searcher />
-            <Separator orientation="vertical" className="h-4" />
+          <div className="ml-auto flex items-center gap-3">
             <LocaleSwitcher />
             <Separator orientation="vertical" className="h-4" />
             <ThemeToggle />

@@ -18,7 +18,7 @@ import { useCallback, useState } from 'react';
 import { SearchInput } from './search-input';
 import { SearchResults } from './search-results';
 
-export function Searcher() {
+export function Searcher({ variant = 'default' }: { variant?: 'default' | 'icon' }) {
   const t = useTranslations('components.searcher');
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -67,24 +67,34 @@ export function Searcher() {
       }}
     >
       <Dialog.Trigger asChild>
-        <button
-          className="group border-border/40 bg-secondary/30 text-muted-foreground hover:bg-secondary/60 hover:border-border/60 hover:text-foreground/80 flex h-8 w-full items-center gap-2.5 rounded-sm border px-3 text-xs transition-all duration-150 sm:w-48"
-          title={t('label')}
-          aria-label={t('label')}
-        >
-          <HugeiconsIcon
-            icon={Search02Icon}
-            size={13}
-            className="shrink-0 opacity-60 transition-opacity group-hover:opacity-80"
-            aria-hidden="true"
-          />
-          <span className="flex-1 text-left">{t('placeholder')}</span>
-          <div className="hidden items-center gap-0.5 sm:flex">
-            <Kbd size="sm">ctrl</Kbd>
-            <span className="text-muted-foreground/50 text-[9px]">+</span>
-            <Kbd size="sm">K</Kbd>
-          </div>
-        </button>
+        {variant === 'icon' ? (
+          <button
+            className="text-muted-foreground hover:text-foreground hover:bg-muted flex size-8 items-center justify-center rounded-md transition-colors"
+            title={t('label')}
+            aria-label={t('label')}
+          >
+            <HugeiconsIcon icon={Search02Icon} size={15} aria-hidden="true" />
+          </button>
+        ) : (
+          <button
+            className="group border-border/40 bg-secondary/30 text-muted-foreground hover:bg-secondary/60 hover:border-border/60 hover:text-foreground/80 flex h-8 w-full items-center gap-2.5 rounded-sm border px-3 text-xs transition-all duration-150 sm:w-48"
+            title={t('label')}
+            aria-label={t('label')}
+          >
+            <HugeiconsIcon
+              icon={Search02Icon}
+              size={13}
+              className="shrink-0 opacity-60 transition-opacity group-hover:opacity-80"
+              aria-hidden="true"
+            />
+            <span className="flex-1 text-left">{t('placeholder')}</span>
+            <div className="hidden items-center gap-0.5 sm:flex">
+              <Kbd size="sm">ctrl</Kbd>
+              <span className="text-muted-foreground/50 text-[9px]">+</span>
+              <Kbd size="sm">K</Kbd>
+            </div>
+          </button>
+        )}
       </Dialog.Trigger>
       <Dialog.Content className="border-border/60 max-w-lg overflow-hidden border p-0 shadow-2xl">
         <SearchInput
