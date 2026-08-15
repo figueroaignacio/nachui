@@ -33,6 +33,11 @@
         "description": "Flex, Stack, Grid and Container to structure your pages.",
         "href": "/docs/elements/layout"
       }
-    ]
+    ],
+    "comingSoon": {
+      "title": "AI Elements",
+      "description": "Chat, prompts and streaming primitives for AI apps.",
+      "badge": "Soon"
+    }
   }
 }

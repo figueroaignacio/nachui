@@ -3,8 +3,9 @@
 import { Searcher } from '@/features/docs/components/searcher';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { Navigation } from '@/lib/definitions';
-import { DashboardSquare01Icon, Layout01Icon } from '@hugeicons/core-free-icons';
+import { DashboardSquare01Icon, Layout01Icon, SparklesIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import { Badge } from '@repo/ui/components/badge';
 import { NavigationMenu } from '@repo/ui/components/navigation-menu';
 import { Separator } from '@repo/ui/components/separator';
 import { cn } from '@repo/ui/lib/cn';
@@ -15,6 +16,7 @@ import { ThemeToggle } from '../common/theme-toggle';
 type ElementsMenu = {
   label: string;
   items: { title: string; description: string; href: string }[];
+  comingSoon?: { title: string; description: string; badge: string };
 };
 
 const ELEMENT_ICONS = [DashboardSquare01Icon, Layout01Icon];
@@ -91,6 +93,31 @@ export function Navbar() {
                           <Link href={menuItem.href} />
                         </NavigationMenu.Link>
                       ))}
+                      {elementsMenu.comingSoon && (
+                        <div className="flex cursor-default items-start gap-3 rounded-md px-2.5 py-2.5 opacity-60">
+                          <span className="border-border bg-background text-muted-foreground flex size-9 shrink-0 items-center justify-center rounded-md border border-dashed">
+                            <HugeiconsIcon
+                              icon={SparklesIcon}
+                              size={16}
+                              strokeWidth={1.6}
+                              aria-hidden="true"
+                            />
+                          </span>
+                          <span className="min-w-0">
+                            <span className="flex items-center gap-2">
+                              <span className="text-foreground text-sm font-medium">
+                                {elementsMenu.comingSoon.title}
+                              </span>
+                              <Badge variant="outline" className="text-[10px]">
+                                {elementsMenu.comingSoon.badge}
+                              </Badge>
+                            </span>
+                            <span className="text-muted-foreground mt-0.5 block truncate text-xs">
+                              {elementsMenu.comingSoon.description}
+                            </span>
+                          </span>
+                        </div>
+                      )}
                     </NavigationMenu.Content>
                   </NavigationMenu.Item>
                 </div>
