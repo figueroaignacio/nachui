@@ -6,8 +6,8 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
   return (
     <Grid
       columns="1"
-      gap="3"
-      className="relative lg:grid-cols-[260px_1fr] xl:grid-cols-[260px_1fr_210px]"
+      gap="4"
+      className="relative py-6 lg:grid-cols-[260px_1fr] xl:grid-cols-[260px_1fr_210px]"
     >
       <Sidebar />
       {children}

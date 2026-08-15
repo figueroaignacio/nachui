@@ -34,7 +34,7 @@ function SkeletonItem({ width, subitems }: { width: number; subitems?: number[] 
 
 function TocSkeleton() {
   return (
-    <div className="sticky top-24 h-[calc(100vh-5rem)] space-y-4">
+    <div className="border-rule bg-card sticky top-20 max-h-[calc(100vh-8rem)] space-y-4 rounded-lg border p-4 shadow-sm">
       <div className="bg-secondary h-2 w-14 animate-pulse rounded-full" />
       <ul className="m-0 list-none space-y-0.5">
         <SkeletonItem width={88} />
@@ -77,7 +77,7 @@ export function Toc({ toc }: TocProps) {
 
   return (
     <motion.div
-      className="hide-scrollbar sticky top-24 h-[calc(100vh-5rem)] space-y-4 overflow-y-auto"
+      className="hide-scrollbar border-rule bg-card sticky top-20 max-h-[calc(100vh-8rem)] space-y-4 overflow-y-auto rounded-lg border p-4 shadow-sm"
       initial={{ opacity: 0, x: 8 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
