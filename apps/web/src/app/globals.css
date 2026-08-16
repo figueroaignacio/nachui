@@ -124,7 +124,6 @@ body {
       animation-range: cover 0% cover 35%;
     }
 
-    /* Lags slightly behind the scroll for a one-layer parallax. */
     /* The assistant leans out of the bottom-right corner along the diagonal.
        The timeline is named on the section: a bare view() would track the
        avatar's own 48px box, which barely moves through the viewport. */
@@ -138,6 +137,7 @@ body {
       animation-range: entry 25% entry 90%;
     }
 
+    /* Lags slightly behind the scroll for a one-layer parallax. */
     .scroll-parallax {
       animation: scroll-parallax linear both;
       animation-timeline: view();

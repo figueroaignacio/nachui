@@ -78,7 +78,10 @@ export function CodeBlock({
           long file from stretching the page — expanding swaps the clip for a
           scroll area, never for growth. */}
       <div
-        className={cn(isCollapsed ? 'max-h-52 overflow-y-hidden' : 'max-h-[32rem] overflow-y-auto')}
+        className={cn(
+          'transition-[max-height] duration-400 ease-out motion-reduce:transition-none',
+          isCollapsed ? 'max-h-52 overflow-y-hidden' : 'max-h-[32rem] overflow-y-auto',
+        )}
       >
         <div className="hide-scrollbar overflow-x-auto">
           <Highlight code={codeString} language={language} theme={codeTheme}>
