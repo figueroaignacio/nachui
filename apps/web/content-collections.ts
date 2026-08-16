@@ -1,4 +1,5 @@
 import { defineCollection, defineConfig } from '@content-collections/core';
+import GithubSlugger from 'github-slugger';
 import { compileMDX } from '@content-collections/mdx';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeKatex from 'rehype-katex';
@@ -27,53 +28,67 @@ type TocEntry = {
   items?: TocEntry[];
 };
 
-function rehypeExtractToc(options: { callback: (toc: TocEntry[]) => void }) {
-  return (tree: HastNode) => {
-    const headings: { depth: number; id: string; text: string }[] = [];
-
-    visit(tree, 'element', (node: HastNode) => {
-      if (node.tagName && ['h2', 'h3'].includes(node.tagName)) {
-        const id = node.properties?.id as string | undefined;
-        if (!id) return;
-
-        let text = '';
-        visit(node, 'text', (textNode: HastNode) => {
-          text += textNode.value || '';
-        });
-
-        headings.push({
-          depth: parseInt(node.tagName.charAt(1), 10),
-          id,
-          text: text.trim(),
-        });
-      }
-    });
-
-    const toc: TocEntry[] = [];
-    let currentH2: TocEntry | null = null;
-
-    for (const heading of headings) {
-      const entry: TocEntry = {
-        title: heading.text,
-        url: `#${heading.id}`,
-      };
-
-      if (heading.depth === 2) {
-        currentH2 = entry;
-        toc.push(entry);
-      } else if (heading.depth === 3 && currentH2) {
-        if (!currentH2.items) currentH2.items = [];
-        currentH2.items.push(entry);
-      } else {
-        toc.push(entry);
-      }
-    }
-
-    options.callback(toc);
-  };
+/** Strips the inline markdown that never survives into a heading's text. */
+function cleanHeadingText(raw: string) {
+  return raw
+    .replace(/`([^`]*)`/g, '$1')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/[*_]{1,3}([^*_]+)[*_]{1,3}/g, '$1')
+    .replace(/<[^>]+>/g, '')
+    .trim();
 }
 
-function createRehypePlugins(tocCallback: (toc: TocEntry[]) => void) {
+/**
+ * Builds the table of contents straight from the markdown source.
+ *
+ * It used to ride along with the MDX compilation as a rehype plugin, but
+ * `compileMDX` is cached: on a cache hit the plugins never run, the callback
+ * never fires, and every document ends up with an empty toc — which is why it
+ * only ever appeared on a cold build.
+ */
+function extractToc(content: string) {
+  const slugger = new GithubSlugger();
+  const headings: { depth: number; id: string; text: string }[] = [];
+  let inFence = false;
+
+  for (const line of content.split('\n')) {
+    if (/^\s*(```|~~~)/.test(line)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+
+    const match = line.match(/^(#{2,3})\s+(.*\S)\s*$/);
+    if (!match) continue;
+
+    const text = cleanHeadingText(match[2] ?? '');
+    if (!text) continue;
+
+    // rehype-slug uses the same slugger, so these ids match the rendered ones.
+    headings.push({ depth: match[1]?.length ?? 2, id: slugger.slug(text), text });
+  }
+
+  const toc: TocEntry[] = [];
+  let currentH2: TocEntry | null = null;
+
+  for (const heading of headings) {
+    const entry: TocEntry = { title: heading.text, url: `#${heading.id}` };
+
+    if (heading.depth === 2) {
+      currentH2 = entry;
+      toc.push(entry);
+    } else if (heading.depth === 3 && currentH2) {
+      currentH2.items ??= [];
+      currentH2.items.push(entry);
+    } else {
+      toc.push(entry);
+    }
+  }
+
+  return toc;
+}
+
+function createRehypePlugins() {
   return [
     rehypeSlug,
     rehypeKatex,
@@ -140,7 +155,6 @@ function createRehypePlugins(tocCallback: (toc: TocEntry[]) => void) {
         },
       },
     ],
-    [rehypeExtractToc, { callback: tocCallback }],
   ] as PluggableList;
 }
 
@@ -180,13 +194,9 @@ const docs = defineCollection({
       .default({ visible: true }),
   }),
   transform: async (document, context) => {
-    let tocEntries: TocEntry[] = [];
-
     const body = await compileMDX(context, document, {
       remarkPlugins,
-      rehypePlugins: createRehypePlugins((toc) => {
-        tocEntries = toc;
-      }),
+      rehypePlugins: createRehypePlugins(),
     });
 
     const slugFields = computeSlugFields(document._meta, document.locale);
@@ -197,7 +207,7 @@ const docs = defineCollection({
       body,
       raw: document.content,
       toc: {
-        content: tocEntries,
+        content: extractToc(document.content),
         visible: document.toc?.visible ?? true,
       },
     };
@@ -213,13 +223,9 @@ const skills = defineCollection({
     description: z.string(),
   }),
   transform: async (document, context) => {
-    let tocEntries: TocEntry[] = [];
-
     const body = await compileMDX(context, document, {
       remarkPlugins,
-      rehypePlugins: createRehypePlugins((toc) => {
-        tocEntries = toc;
-      }),
+      rehypePlugins: createRehypePlugins(),
     });
 
     const slug = document._meta.path;
@@ -230,7 +236,7 @@ const skills = defineCollection({
       body,
       raw: document.content,
       toc: {
-        content: tocEntries,
+        content: extractToc(document.content),
         visible: true,
       },
     };
