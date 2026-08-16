@@ -6,6 +6,20 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
   typedRoutes: true,
+  async rewrites() {
+    // Appending `.md` to a docs URL serves its raw markdown source, which
+    // `llms.txt` links to. Kept as rewrites so the URLs stay under /docs.
+    return [
+      {
+        source: '/:locale(en|es)/docs.md',
+        destination: '/api/docs-md/:locale',
+      },
+      {
+        source: '/:locale(en|es)/docs/:slug*.md',
+        destination: '/api/docs-md/:locale/:slug*',
+      },
+    ];
+  },
   async redirects() {
     return [
       {
