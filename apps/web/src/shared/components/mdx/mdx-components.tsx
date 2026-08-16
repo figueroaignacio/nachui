@@ -34,13 +34,15 @@ import {
 import { InlineCode } from './inline-code';
 import { PackageManagerTabs } from './package-manager-tabs';
 
+// Tight, quiet scale: headings carry the hierarchy through weight and spacing
+// rather than size jumps or rules, so a page reads as one column of text.
 const headingStyles = {
-  h1: 'font-heading mt-2 scroll-m-20 text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.1] tracking-tight text-foreground',
-  h2: 'font-heading mt-12 sm:mt-16 scroll-m-20 text-2xl sm:text-3xl font-semibold leading-snug tracking-tight first:mt-0 border-b border-border/40 pb-4 text-foreground/95',
-  h3: 'font-heading mt-10 sm:mt-12 mb-4 scroll-m-20 text-xl sm:text-2xl font-semibold tracking-tight text-foreground/90',
-  h4: 'font-heading mt-8 sm:mt-10 scroll-m-20 text-lg sm:text-xl font-semibold tracking-tight text-foreground/90',
-  h5: 'font-heading mt-8 scroll-m-20 text-base sm:text-lg font-medium text-foreground/80',
-  h6: 'font-heading mt-8 scroll-m-20 text-sm font-medium tracking-wide uppercase text-muted-foreground',
+  h1: 'font-heading mt-2 scroll-m-20 text-[2rem] font-semibold leading-tight tracking-tight text-foreground',
+  h2: 'font-heading mt-10 mb-3 scroll-m-20 text-2xl font-semibold tracking-tight first:mt-0 text-foreground',
+  h3: 'font-heading mt-8 mb-2 scroll-m-20 text-lg font-semibold tracking-tight text-foreground',
+  h4: 'font-heading mt-6 mb-2 scroll-m-20 text-base font-semibold tracking-tight text-foreground/90',
+  h5: 'font-heading mt-6 scroll-m-20 text-[15px] font-semibold text-foreground/90',
+  h6: 'font-heading mt-6 scroll-m-20 text-xs font-medium tracking-wide uppercase text-muted-foreground',
 } as const;
 
 function createHeading(Tag: keyof typeof headingStyles) {
@@ -59,11 +61,7 @@ const H6 = createHeading('h6');
 function Paragraph({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn(
-        'text-foreground/80 text-base leading-7 sm:text-[17px] sm:leading-8',
-        'not-first:mt-6',
-        className,
-      )}
+      className={cn('text-foreground/80 text-[15px] leading-[1.7]', 'not-first:mt-4', className)}
       {...props}
     />
   );
@@ -88,7 +86,7 @@ function Link({ className, children, ...props }: React.AnchorHTMLAttributes<HTML
 function UnorderedList({ className, ...props }: React.HTMLAttributes<HTMLUListElement>) {
   return (
     <ul
-      className={cn('marker:text-primary/60 my-6 ml-5 list-disc space-y-3', className)}
+      className={cn('marker:text-muted-foreground/60 my-4 ml-5 list-disc space-y-2', className)}
       {...props}
     />
   );
@@ -98,7 +96,7 @@ function OrderedList({ className, ...props }: React.HTMLAttributes<HTMLOListElem
   return (
     <ol
       className={cn(
-        'marker:text-foreground/70 my-6 ml-5 list-decimal space-y-3 marker:font-medium',
+        'marker:text-muted-foreground/70 my-4 ml-5 list-decimal space-y-2 marker:font-medium',
         className,
       )}
       {...props}
@@ -110,8 +108,8 @@ function ListItem({ className, ...props }: React.HTMLAttributes<HTMLLIElement>) 
   return (
     <li
       className={cn(
-        'text-foreground/80 pl-1 text-base leading-7 sm:text-[17px] sm:leading-8',
-        '[&>ol]:my-3 [&>ul]:my-3',
+        'text-foreground/80 pl-1 text-[15px] leading-[1.7]',
+        '[&>ol]:my-2 [&>ul]:my-2',
         className,
       )}
       {...props}
@@ -124,7 +122,7 @@ function Strong({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
 }
 
 function HorizontalRule({ className, ...props }: React.HTMLAttributes<HTMLHRElement>) {
-  return <hr className={cn('border-border/50 my-10 md:my-14', className)} {...props} />;
+  return <hr className={cn('border-border/50 my-8', className)} {...props} />;
 }
 
 const PLAIN_TEXT_FENCES = new Set(['tree', 'txt', 'text', 'plaintext']);
@@ -163,7 +161,7 @@ export function Pre({ children }: { children: React.ReactNode }) {
   const isPlainText = PLAIN_TEXT_FENCES.has(language);
 
   return (
-    <div className="my-6 w-full overflow-x-auto">
+    <div className="my-5 w-full overflow-x-auto">
       <CodeBlock
         code={code}
         language={language}
@@ -178,18 +176,16 @@ function Blockquote({ className, children, ...props }: React.HTMLAttributes<HTML
   return (
     <blockquote
       className={cn(
-        'border-primary/10 bg-primary/5 relative my-8 flex items-start gap-4 rounded-xl border p-5 sm:p-6',
+        'border-primary/10 bg-primary/5 relative my-6 flex items-start gap-3 rounded-lg border p-4',
         'text-foreground/90 hover:border-primary/20 hover:bg-primary/10 transition-colors',
         className,
       )}
       {...props}
     >
-      <div className="bg-background mt-0.5 shrink-0 rounded-lg p-2 shadow-sm ring-1 ring-black/5 dark:ring-white/10">
-        <HugeiconsIcon icon={Alert02Icon} className="stroke-primary size-5" />
+      <div className="bg-background mt-0.5 shrink-0 rounded-md p-1.5">
+        <HugeiconsIcon icon={Alert02Icon} className="stroke-primary size-4" />
       </div>
-      <div className="text-base leading-relaxed sm:text-[17px] [&>div]:mt-0 [&>p]:mt-0">
-        {children}
-      </div>
+      <div className="text-[15px] leading-[1.7] [&>div]:mt-0 [&>p]:mt-0">{children}</div>
     </blockquote>
   );
 }
@@ -199,7 +195,7 @@ function Image({ className, alt, src, ...props }: React.ImgHTMLAttributes<HTMLIm
   return (
     <img
       src={src}
-      className={cn('border-border/50 my-8 rounded-2xl border shadow-sm', className)}
+      className={cn('border-border/50 my-6 rounded-lg border', className)}
       alt={alt || ''}
       sizes="100vw"
       style={{ width: '100%', height: 'auto' }}

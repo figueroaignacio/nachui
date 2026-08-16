@@ -52,25 +52,20 @@ export function DocView({ doc }: DocViewProps) {
       />
       <Container size="md" className="px-0">
         <Stack as="article" className="w-full min-w-0">
-          <div className="mt-8 mb-10 sm:mt-10 sm:mb-12">
-            <MobileToc toc={tocContent} />
+          {/* Direct child of the article on purpose: a sticky element only
+              travels inside its own parent's box. */}
+          <MobileToc toc={tocContent} />
+          <div className="mt-6 mb-8">
             <div>
-              <p className="section-label mb-4">Documentation</p>
-              <h1 className="font-heading text-foreground text-[2rem] leading-[1.05] font-semibold tracking-tight md:text-[2.5rem]">
+              <h1 className="font-heading text-foreground text-[2.125rem] leading-tight font-semibold tracking-tight">
                 {doc.title}
               </h1>
               {doc.description && (
-                <p className="text-muted-strong mt-4 text-[17px] leading-relaxed">
+                <p className="text-muted-foreground mt-2 text-[15px] leading-relaxed">
                   {doc.description}
                 </p>
               )}
-              <Flex
-                wrap="wrap"
-                align="center"
-                justify="between"
-                gap="3"
-                className="border-border/40 mt-6 pt-5 pb-5"
-              >
+              <Flex wrap="wrap" align="center" justify="between" gap="3" className="mt-5">
                 <DocActions
                   page={doc.title}
                   url={docUrl}
