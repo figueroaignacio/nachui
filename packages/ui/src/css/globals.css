@@ -304,31 +304,7 @@
 }
 
 .page-frame-outer {
-  position: relative;
   padding-inline: var(--frame-gutter);
-}
-
-/* Diagonal hatching filling the outer gutters, viewport edge to rail. */
-.page-frame-outer::before,
-.page-frame-outer::after {
-  content: '';
-  position: absolute;
-  inset-block: 0;
-  width: var(--frame-gutter);
-  background: repeating-linear-gradient(
-    -45deg,
-    color-mix(in oklab, var(--rule) 50%, transparent) 0 1px,
-    transparent 1px 7px
-  );
-  pointer-events: none;
-}
-
-.page-frame-outer::before {
-  left: 0;
-}
-
-.page-frame-outer::after {
-  right: 0;
 }
 
 .page-frame {
