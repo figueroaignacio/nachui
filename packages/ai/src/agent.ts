@@ -5,7 +5,7 @@ import { getComponentCodeTool } from './tools/get-component-code-tool.js';
 import { searchKnowledgeBaseTool } from './tools/search-knowledge-base-tool.js';
 
 export const nachUIAgent = new ToolLoopAgent({
-  model: google(GOOGLE_MODELS.gemini25Flash),
+  model: google(GOOGLE_MODELS.geminiFlash),
   instructions: NACHUI_SYSTEM_PROMPT,
   tools: {
     searchKnowledgeBase: searchKnowledgeBaseTool,
