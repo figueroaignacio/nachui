@@ -96,6 +96,27 @@
         "meta": ["Card.Header", "Card.Content", "Card.Footer", "Button"]
       }
     },
+    "assistant": {
+      "label": "Asistente integrado",
+      "title": "Conocé al asistente de IA de NachUI",
+      "description": "Cada página de la documentación viene con un asistente que leyó todo el código. Preguntale qué hace un componente, cómo componerlo o por qué existe un token — responde desde el código real, no adivinando.",
+      "tooltip": "Sé todo sobre esto",
+      "cta": "Preguntale algo",
+      "roles": [
+        {
+          "title": "Lee el código",
+          "description": "Cada respuesta sale de los componentes, tokens y docs de este repo."
+        },
+        {
+          "title": "Explica en contexto",
+          "description": "Tocá “Explain this” en cualquier página y sigue justo donde estás leyendo."
+        },
+        {
+          "title": "Compone por vos",
+          "description": "Pedile un layout y te devuelve código que usa tus propios primitivos."
+        }
+      ]
+    },
     "catalog": {
       "label": "Registro de elementos UI",
       "title": "{count} elementos UI, listos para copiar",
