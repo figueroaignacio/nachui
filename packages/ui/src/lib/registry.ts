@@ -16,6 +16,7 @@ export const COMPONENT_REGISTRY = {
   files: 'packages/ui/src/components/files.tsx',
   input: 'packages/ui/src/components/input.tsx',
   label: 'packages/ui/src/components/label.tsx',
+  'navigation-menu': 'packages/ui/src/components/navigation-menu.tsx',
   popover: 'packages/ui/src/components/popover.tsx',
   progress: 'packages/ui/src/components/progress.tsx',
   select: 'packages/ui/src/components/select.tsx',
@@ -146,6 +147,10 @@ export const DEMO_REGISTRY = {
     required: 'packages/ui/src/demos/label/required.tsx',
   },
   // Popover demos
+  'navigation-menu': {
+    default: 'packages/ui/src/demos/navigation-menu/default.tsx',
+    badges: 'packages/ui/src/demos/navigation-menu/badges.tsx',
+  },
   popover: {
     default: 'packages/ui/src/demos/popover/default.tsx',
   },

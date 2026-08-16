@@ -144,6 +144,11 @@
           "description": "A label component with required indicator, optional text, and description support."
         },
         {
+          "title": "Navigation Menu",
+          "href": "/docs/elements/ui/navigation-menu",
+          "description": "A horizontal navigation bar with hover-triggered link panels."
+        },
+        {
           "title": "Popover",
           "href": "/docs/elements/ui/popover",
           "description": "A floating panel with interactive content, triggered by click."

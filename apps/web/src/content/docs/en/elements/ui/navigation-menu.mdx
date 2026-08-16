@@ -1,0 +1,130 @@
+---
+title: Navigation Menu
+description: A horizontal navigation bar with hover-triggered link panels.
+published: true
+date: 2026-08-15
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="navigation-menu" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="navigation-menu" />
+
+## Anatomy
+
+```tsx
+import { NavigationMenu } from '@/components/ui/navigation-menu';
+```
+
+```tsx
+<NavigationMenu>
+  <NavigationMenu.Item>
+    <NavigationMenu.Trigger>Products</NavigationMenu.Trigger>
+    <NavigationMenu.Content>
+      <NavigationMenu.Link
+        href="/components"
+        title="Components"
+        description="Accessible React primitives, ready to copy."
+      />
+    </NavigationMenu.Content>
+  </NavigationMenu.Item>
+  <a href="/docs">Docs</a>
+</NavigationMenu>
+```
+
+## Composition
+
+Use the following composition to build a `NavigationMenu`:
+
+```tree
+NavigationMenu
+├── NavigationMenu.Item
+│   ├── NavigationMenu.Trigger
+│   └── NavigationMenu.Content
+│       └── NavigationMenu.Link
+└── (plain links)
+```
+
+The root renders a `<nav>` and lays its children out in a row, so plain anchors
+and router links live side by side with dropdown items. Each `Item` owns its
+open state: it opens on hover (with a short close delay so the pointer can
+travel into the panel) or on click, and closes on `Escape`, on an outside
+click, or after following a link.
+
+## Router links
+
+`NavigationMenu.Link` renders an `<a>` by default. To keep client-side
+navigation (or locale-aware routing), pass `asChild` with your framework's
+`Link` as the only child — the row content is injected into it and the menu
+still closes after navigating:
+
+```tsx
+<NavigationMenu.Link
+  asChild
+  title="Components"
+  description="Accessible React primitives."
+  icon={<HugeiconsIcon icon={PuzzleIcon} size={16} />}
+>
+  <Link href="/docs/elements/ui" />
+</NavigationMenu.Link>
+```
+
+## Variants
+
+### With badges
+
+Rows accept a `badge` slot next to the title — and anything else you drop into
+`Content` renders as-is, like this non-interactive "coming soon" row:
+
+<ComponentPreview component="navigation-menu" demo="badges" />
+
+## API Reference
+
+### NavigationMenu
+
+Renders a `<nav>` element. Accepts every `HTMLElement` attribute.
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### NavigationMenu.Item
+
+Wraps one trigger + panel pair and owns its open state.
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### NavigationMenu.Trigger
+
+A button with a chevron that rotates while the panel is open.
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### NavigationMenu.Content
+
+The floating panel, anchored below the item and animated on open/close.
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### NavigationMenu.Link
+
+| Prop          | Type              | Default | Description                                  |
+| ------------- | ----------------- | ------- | -------------------------------------------- |
+| `title`       | `string`          | -       | Row title (required)                         |
+| `description` | `string`          | -       | Muted single-line description                |
+| `icon`        | `React.ReactNode` | -       | Rendered inside the leading icon box         |
+| `badge`       | `React.ReactNode` | -       | Rendered next to the title                   |
+| `asChild`     | `boolean`         | `false` | Inject the row into a child routing `<Link>` |
+| `href`        | `string`          | -       | Anchor target when not using `asChild`       |
+| `className`   | `string`          | -       | Additional CSS classes                       |

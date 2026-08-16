@@ -1,0 +1,131 @@
+---
+title: Navigation Menu
+description: Una barra de navegación horizontal con paneles de links al hacer hover.
+published: true
+date: 2026-08-15
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="navigation-menu" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="navigation-menu" />
+
+## Anatomía
+
+```tsx
+import { NavigationMenu } from '@/components/ui/navigation-menu';
+```
+
+```tsx
+<NavigationMenu>
+  <NavigationMenu.Item>
+    <NavigationMenu.Trigger>Productos</NavigationMenu.Trigger>
+    <NavigationMenu.Content>
+      <NavigationMenu.Link
+        href="/components"
+        title="Componentes"
+        description="Primitivos de React accesibles, listos para copiar."
+      />
+    </NavigationMenu.Content>
+  </NavigationMenu.Item>
+  <a href="/docs">Docs</a>
+</NavigationMenu>
+```
+
+## Composición
+
+Usa la siguiente composición para construir un `NavigationMenu`:
+
+```tree
+NavigationMenu
+├── NavigationMenu.Item
+│   ├── NavigationMenu.Trigger
+│   └── NavigationMenu.Content
+│       └── NavigationMenu.Link
+└── (links planos)
+```
+
+La raíz renderiza un `<nav>` y distribuye sus hijos en fila, así que los
+anchors comunes y los links del router conviven con los items desplegables.
+Cada `Item` maneja su propio estado: se abre con hover (con una pequeña demora
+al cerrar para que el puntero llegue al panel) o con click, y se cierra con
+`Escape`, con un click afuera, o al navegar por un link.
+
+## Links del router
+
+`NavigationMenu.Link` renderiza un `<a>` por defecto. Para mantener la
+navegación client-side (o el routing con locale), pasá `asChild` con el `Link`
+de tu framework como único hijo — el contenido de la fila se inyecta adentro y
+el menú igual se cierra al navegar:
+
+```tsx
+<NavigationMenu.Link
+  asChild
+  title="Componentes"
+  description="Primitivos de React accesibles."
+  icon={<HugeiconsIcon icon={PuzzleIcon} size={16} />}
+>
+  <Link href="/docs/elements/ui" />
+</NavigationMenu.Link>
+```
+
+## Variantes
+
+### Con badges
+
+Las filas aceptan un slot `badge` al lado del título — y cualquier otra cosa
+que pongas dentro de `Content` se renderiza tal cual, como esta fila
+"próximamente" no interactiva:
+
+<ComponentPreview component="navigation-menu" demo="badges" />
+
+## Referencia de API
+
+### NavigationMenu
+
+Renderiza un elemento `<nav>`. Acepta todos los atributos de `HTMLElement`.
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |
+
+### NavigationMenu.Item
+
+Envuelve un par trigger + panel y maneja su estado de apertura.
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |
+
+### NavigationMenu.Trigger
+
+Un botón con un chevron que rota mientras el panel está abierto.
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |
+
+### NavigationMenu.Content
+
+El panel flotante, anclado debajo del item y animado al abrir/cerrar.
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |
+
+### NavigationMenu.Link
+
+| Prop          | Type              | Default | Description                                    |
+| ------------- | ----------------- | ------- | ---------------------------------------------- |
+| `title`       | `string`          | -       | Título de la fila (requerido)                  |
+| `description` | `string`          | -       | Descripción de una línea en color muted        |
+| `icon`        | `React.ReactNode` | -       | Se renderiza dentro de la cajita de ícono      |
+| `badge`       | `React.ReactNode` | -       | Se renderiza al lado del título                |
+| `asChild`     | `boolean`         | `false` | Inyecta la fila en un `<Link>` de routing hijo |
+| `href`        | `string`          | -       | Destino del anchor cuando no se usa `asChild`  |
+| `className`   | `string`          | -       | Clases CSS adicionales                         |

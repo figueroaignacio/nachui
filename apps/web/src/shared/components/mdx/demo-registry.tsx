@@ -66,6 +66,8 @@ import { Variants as KbdVariants } from '@repo/ui/src/demos/kbd/variants';
 import { WithGroup as KbdWithGroup } from '@repo/ui/src/demos/kbd/with-group';
 import { Default as LabelDefault } from '@repo/ui/src/demos/label/default';
 import { Required as LabelRequired } from '@repo/ui/src/demos/label/required';
+import { Badges as NavigationMenuBadges } from '@repo/ui/src/demos/navigation-menu/badges';
+import { Default as NavigationMenuDefault } from '@repo/ui/src/demos/navigation-menu/default';
 import { Default as PopoverDefault } from '@repo/ui/src/demos/popover/default';
 import { Default as ProgressDefault } from '@repo/ui/src/demos/progress/default';
 import { Indeterminate as ProgressIndeterminate } from '@repo/ui/src/demos/progress/indeterminate';
@@ -196,6 +198,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
   label: {
     default: LabelDefault,
     required: LabelRequired,
+  },
+  'navigation-menu': {
+    default: NavigationMenuDefault,
+    badges: NavigationMenuBadges,
   },
   popover: {
     default: PopoverDefault,

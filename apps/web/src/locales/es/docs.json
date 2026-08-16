@@ -144,6 +144,11 @@
           "description": "Un componente label con indicador de obligatoriedad, texto opcional y descripción."
         },
         {
+          "title": "Navigation Menu",
+          "href": "/docs/elements/ui/navigation-menu",
+          "description": "Una barra de navegación horizontal con paneles de links al hacer hover."
+        },
+        {
           "title": "Popover",
           "href": "/docs/elements/ui/popover",
           "description": "Un panel flotante con contenido interactivo, activado por click."
