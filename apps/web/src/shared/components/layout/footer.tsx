@@ -1,6 +1,7 @@
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { LocaleSwitcher } from '../common/locale-switcher';
+import { RegistrationMark } from '../common/registration-mark';
 import { ThemeToggle } from '../common/theme-toggle';
 
 export function Footer() {
@@ -101,6 +102,8 @@ export function Footer() {
           {/* Crosses the rails to the viewport edge, like every other section
             rule, instead of stopping inside them. */}
           <div className="rule-bleed" />
+
+          <RegistrationMark />
 
           <div className="flex w-full flex-col gap-6 py-6 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
             <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-6">
