@@ -2,6 +2,7 @@
 
 import { useChatInput } from '@/features/chat/hooks/use-chat-input';
 import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll';
+import { useMediaQuery } from '@/hooks/use-media-query';
 import { AnimatePresence } from 'motion/react';
 import { useCallback, type RefObject } from 'react';
 import { useChatStore } from '../store/chat-store';
@@ -31,7 +32,10 @@ export function AiChat() {
     if (isExpanded) toggleExpanded();
   }, [setIsOpen, isExpanded, toggleExpanded]);
 
-  useLockBodyScroll(isOpen);
+  // Only the mobile panel covers the page; on desktop it docks beside the
+  // content, which has to stay scrollable.
+  const isMobile = useMediaQuery('(max-width: 47.99rem)');
+  useLockBodyScroll(isOpen && isMobile);
 
   const handleSuggestionClickWrapper = useCallback(
     (text: string) => {
@@ -42,8 +46,10 @@ export function AiChat() {
   );
 
   return (
-    <>
-      <div className="fixed right-6 bottom-6 z-500">
+    <div data-chat-open={isOpen ? 'true' : 'false'}>
+      {/* Sits on the frame gutter so it lines up with the content rails
+          instead of floating at an arbitrary offset. */}
+      <div className="fixed right-(--frame-bleed) bottom-6 z-500">
         <AnimatePresence>
           {!isOpen && !isExpanded && (
             <ChatToggleButton isOpen={isOpen} onClick={() => setIsOpen(true)} />
@@ -68,7 +74,7 @@ export function AiChat() {
         onSuggestionClick={handleSuggestionClickWrapper}
         onToggleExpand={toggleExpanded}
       />
-    </>
+    </div>
   );
 }
 

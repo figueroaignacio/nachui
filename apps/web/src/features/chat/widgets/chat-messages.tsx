@@ -4,7 +4,7 @@ import type { RefObject } from 'react';
 import { useEffect } from 'react';
 import type { ToolName } from '../hooks/use-chat';
 import { ChatError } from '../ui/chat-error';
-import { ChatLoading } from '../ui/chat-loading';
+import { ChatReasoning } from '../ui/chat-reasoning';
 import { ChatMessage } from '../ui/chat-message';
 import { ChatSuggestions } from '../ui/chat-suggestions';
 
@@ -33,7 +33,7 @@ export function ChatMessages({
 
   // State selection:
   // - empty    → suggestions
-  // - loading  → ChatLoading, tool-aware. Covers the submitted phase AND the
+  // - loading  → ChatReasoning, tool-aware. Covers the submitted phase AND the
   //   tool-execution phase — the stream is already "streaming" while a tool
   //   runs, but no text has arrived, which previously left the screen blank.
   // - error    → ChatError
@@ -53,7 +53,7 @@ export function ChatMessages({
   return (
     <div
       className={cn(
-        'flex-1 space-y-6 overflow-x-hidden overflow-y-auto px-6 py-2',
+        'flex-1 space-y-7 overflow-x-hidden overflow-y-auto px-5 py-6',
         messages.length === 0 && 'flex flex-col justify-center',
       )}
     >
@@ -61,14 +61,7 @@ export function ChatMessages({
         const isLastAssistant = idx === messages.length - 1 && msg.role === 'assistant';
         const isActiveStream = isLastAssistant && isStreaming;
 
-        return (
-          <div
-            key={msg.id ?? idx}
-            className={cn('flex flex-col', msg.role === 'user' ? 'items-end' : 'items-start')}
-          >
-            <ChatMessage message={msg} isStreaming={isActiveStream} />
-          </div>
-        );
+        return <ChatMessage key={msg.id ?? idx} message={msg} isStreaming={isActiveStream} />;
       })}
 
       {showError && (
@@ -81,7 +74,7 @@ export function ChatMessages({
 
       {showLoading && (
         <div>
-          <ChatLoading activeTool={activeTool} />
+          <ChatReasoning activeTool={activeTool} />
         </div>
       )}
 

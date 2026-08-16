@@ -109,6 +109,8 @@ export function ChatWindow(props: ChatWindowProps) {
     <AnimatePresence>
       {isOpen && (
         <>
+          {/* Only mobile gets a scrim: on desktop the panel docks and pushes
+              the page, so the content behind it stays usable. */}
           <motion.div
             key="chat-backdrop"
             style={backdropStyle}
@@ -116,7 +118,7 @@ export function ChatWindow(props: ChatWindowProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={reduceMotion ? { duration: 0 } : backdropTransition}
-            className="bg-background/50 fixed inset-0 z-9999 backdrop-blur-[2px]"
+            className="bg-background/50 fixed inset-0 z-9999 backdrop-blur-[2px] md:hidden"
             onClick={onClose}
           />
           <motion.div
@@ -132,7 +134,7 @@ export function ChatWindow(props: ChatWindowProps) {
             className={
               isExpanded
                 ? 'bg-background fixed inset-0 z-9999 flex'
-                : 'bg-background border-rule fixed inset-y-0 right-0 z-9999 flex h-full w-full flex-col overflow-hidden border-l md:w-112.5 lg:w-175'
+                : 'bg-background border-rule fixed inset-y-0 right-0 z-9999 flex h-full w-full flex-col overflow-hidden border-l md:w-(--chat-width)'
             }
           >
             {isExpanded ? <Container size="lg">{body}</Container> : body}

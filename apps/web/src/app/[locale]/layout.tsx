@@ -1,6 +1,7 @@
 import '@/app/globals.css';
 import { SkipLink } from '@/components/common/skip-link';
 import { ThemeInitScript } from '@/components/common/theme-init-script';
+import { AiChat } from '@/features/chat/containers/ai-chat';
 import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
 import { PageFrame } from '@/components/layout/page-frame';
@@ -82,6 +83,9 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
               </ViewTransition>
             </PageFrame>
             <Footer />
+            {/* Mounted app-wide: the landing section and the docs pages share
+                the same assistant. */}
+            <AiChat />
           </Providers>
         </NextIntlClientProvider>
       </body>

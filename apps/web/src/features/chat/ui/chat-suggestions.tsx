@@ -30,22 +30,24 @@ export function ChatSuggestions({ onSuggestionClick }: ChatSuggestionsProps) {
   ];
 
   return (
-    <div className="flex min-h-125 flex-col items-center justify-center space-y-5 py-6 text-center">
+    <div className="flex flex-col justify-center space-y-4 py-4">
       <div>
-        <Typography variant="h3" className="text-foreground mb-1.5 text-sm font-semibold">
+        <Typography variant="h3" className="text-foreground mb-1 text-sm font-semibold">
           {t('title')}
         </Typography>
         <Typography variant="p" className="text-muted-foreground text-xs">
           {t('subtitle')}
         </Typography>
       </div>
-      <div className="flex flex-wrap justify-center gap-2.5">
+      {/* One per row: the panel is narrow, and pills wrapping mid-question
+          read as broken rather than compact. */}
+      <div className="flex flex-col gap-2">
         {suggestions.map((suggestion, index) => (
           <button
             type="button"
             key={index}
             onClick={() => onSuggestionClick(suggestion.text)}
-            className="group border-border/50 bg-secondary/20 hover:border-border hover:bg-secondary/40 flex cursor-pointer items-center gap-2.5 rounded-full border px-4 py-2 transition-colors"
+            className="group border-border/50 bg-secondary/20 hover:border-border hover:bg-secondary/40 flex w-full cursor-pointer items-center gap-2.5 rounded-lg border px-3 py-2.5 text-left transition-colors"
           >
             <HugeiconsIcon
               icon={suggestion.icon}

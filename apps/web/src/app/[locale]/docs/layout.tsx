@@ -1,4 +1,3 @@
-import { AiChat } from '@/features/chat/containers/ai-chat';
 import { Sidebar } from '@/features/docs/components/sidebar';
 import { Grid } from '@repo/ui/layout/grid';
 
@@ -11,7 +10,6 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
     >
       <Sidebar />
       {children}
-      <AiChat />
     </Grid>
   );
 }

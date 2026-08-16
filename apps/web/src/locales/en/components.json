@@ -39,6 +39,7 @@
       "helperText": "Press Enter to send, Shift + Enter for new line",
       "tooltip": "Hey! I can help you",
       "thinking": "Thinking",
+      "reasoning": "Thought process",
       "tools": {
         "searchKnowledgeBase": "Searching the docs",
         "getComponentCode": "Reading the component source"

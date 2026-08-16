@@ -35,6 +35,33 @@
   }
 }
 
+/* --- Docked chat panel --------------------------------------------------- */
+/* On desktop the assistant docks to the right and pushes the page instead of
+   covering it, so you can keep reading what you are asking about. */
+/* Widens only where there is room to spare: the docs grid still has to fit a
+   260px sidebar and a 210px toc next to the article. */
+:root {
+  --chat-width: 24rem;
+}
+
+@media (min-width: 96rem) {
+  :root {
+    --chat-width: 28rem;
+  }
+}
+
+body {
+  transition: padding-right 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (min-width: 48rem) {
+  /* Short of the panel by one gutter, so the frame's right rail lands exactly
+     on the panel's left border and the two read as a single line. */
+  body:has([data-chat-open='true']) {
+    padding-right: calc(var(--chat-width) - var(--frame-gutter));
+  }
+}
+
 /* --- View transitions --------------------------------------------------- */
 /* Let clicks through while a transition runs, so navigation never swallows a
    tap mid-animation. */
@@ -90,6 +117,19 @@
     }
 
     /* Lags slightly behind the scroll for a one-layer parallax. */
+    /* The assistant leans out of the bottom-right corner along the diagonal.
+       The timeline is named on the section: a bare view() would track the
+       avatar's own 48px box, which barely moves through the viewport. */
+    .assistant-frame {
+      view-timeline-name: --assistant-section;
+    }
+
+    .assistant-peek {
+      animation: assistant-peek linear both;
+      animation-timeline: --assistant-section;
+      animation-range: entry 25% entry 90%;
+    }
+
     .scroll-parallax {
       animation: scroll-parallax linear both;
       animation-timeline: view();
@@ -143,6 +183,23 @@
 
   to {
     transform: translateY(2.5rem);
+  }
+}
+
+/* Resting state, and the fallback when scroll timelines don't run: already
+   leaning out of the corner. Only the wrapper translates — the tilt lives on
+   the avatar itself, so the tooltip never inherits the rotation. */
+.assistant-peek {
+  transform: translate(40%, 30%);
+}
+
+@keyframes assistant-peek {
+  from {
+    transform: translate(160%, 120%);
+  }
+
+  to {
+    transform: translate(40%, 30%);
   }
 }
 

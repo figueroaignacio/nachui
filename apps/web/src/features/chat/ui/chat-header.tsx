@@ -48,86 +48,87 @@ export function ChatHeader({ onClose, onReset, isExpanded, onToggleExpand }: Cha
 
   if (!onClose) return null;
 
+  // Mirrors the site header exactly: a 56px row *inside* the bordered box, so
+  // both border-bottoms land on the same pixel (with border-box, putting the
+  // height on the bordered element itself would sit this one 1px higher).
   return (
-    <header className="bg-background/80 border-rule flex items-center justify-between border-b px-6 py-3.5 backdrop-blur-md">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-3">
-          <AiAvatar size="sm" />
-        </div>
-      </div>
-      <div className="flex items-center gap-1">
-        {onToggleExpand && (
-          <Tooltip>
-            <Tooltip.Trigger>
-              <Button
-                onClick={onToggleExpand}
-                size="default"
-                variant="ghost"
-                className="hidden rounded-full transition-all lg:block"
-                aria-label={isExpanded ? 'Collapse chat' : 'Expand chat'}
-              >
-                <HugeiconsIcon
-                  icon={ExpandIcon}
-                  size={18}
+    <header className="bg-background/80 border-rule border-b backdrop-blur-md">
+      <div className="flex h-14 items-center justify-between px-4">
+        <AiAvatar size="sm" />
+        <div className="flex items-center gap-1">
+          {onToggleExpand && (
+            <Tooltip>
+              <Tooltip.Trigger>
+                <Button
+                  onClick={onToggleExpand}
+                  size="icon"
+                  variant="ghost"
+                  className="hidden size-8 rounded-md transition-all lg:flex"
+                  aria-label={isExpanded ? 'Collapse chat' : 'Expand chat'}
+                >
+                  <HugeiconsIcon
+                    icon={ExpandIcon}
+                    size={15}
+                    className={cn(
+                      'transition-transform duration-300 ease-out',
+                      isExpanded && 'rotate-180',
+                    )}
+                  />
+                </Button>
+              </Tooltip.Trigger>
+              <Tooltip.Content side="bottom">
+                <Typography variant="small" className="text-secondary">
+                  {isExpanded ? t('collapse') : t('expand')}
+                </Typography>
+              </Tooltip.Content>
+            </Tooltip>
+          )}
+          {onReset && (
+            <Tooltip>
+              <Tooltip.Trigger>
+                <Button
+                  onClick={handleResetClick}
+                  size="icon"
+                  variant="ghost"
                   className={cn(
-                    'transition-transform duration-300 ease-out',
-                    isExpanded && 'rotate-180',
+                    'size-8 rounded-md transition-all duration-200',
+                    confirming && 'bg-destructive/10 text-destructive hover:bg-destructive/20',
                   )}
-                />
-              </Button>
-            </Tooltip.Trigger>
-            <Tooltip.Content side="bottom">
-              <Typography variant="small" className="text-secondary">
-                {isExpanded ? t('collapse') : t('expand')}
-              </Typography>
-            </Tooltip.Content>
-          </Tooltip>
-        )}
-        {onReset && (
+                  aria-label={confirming ? 'Confirm reset' : 'Reset chat'}
+                >
+                  <HugeiconsIcon
+                    icon={confirming ? Tick02Icon : ChatAdd01Icon}
+                    size={15}
+                    className={cn('transition-transform duration-200', confirming && 'scale-110')}
+                  />
+                </Button>
+              </Tooltip.Trigger>
+              <Tooltip.Content side="bottom">
+                <Typography variant="small" className="text-secondary">
+                  {t('reset')}
+                </Typography>
+              </Tooltip.Content>
+            </Tooltip>
+          )}
           <Tooltip>
             <Tooltip.Trigger>
               <Button
-                onClick={handleResetClick}
-                size="default"
+                onClick={onClose}
+                size="icon"
                 variant="ghost"
-                className={cn(
-                  'rounded-full transition-all duration-200',
-                  confirming && 'bg-destructive/10 text-destructive hover:bg-destructive/20',
-                )}
-                aria-label={confirming ? 'Confirm reset' : 'Reset chat'}
+                className="size-8 rounded-md transition-all"
+                aria-label="Close chat"
               >
-                <HugeiconsIcon
-                  icon={confirming ? Tick02Icon : ChatAdd01Icon}
-                  size={18}
-                  className={cn('transition-transform duration-200', confirming && 'scale-110')}
-                />
+                <HugeiconsIcon icon={Cancel01Icon} size={15} />
               </Button>
             </Tooltip.Trigger>
             <Tooltip.Content side="bottom">
               <Typography variant="small" className="text-secondary">
-                {t('reset')}
+                {t('close')}
               </Typography>
             </Tooltip.Content>
           </Tooltip>
-        )}
-        <Tooltip>
-          <Tooltip.Trigger>
-            <Button
-              onClick={onClose}
-              size="default"
-              variant="ghost"
-              className="rounded-full transition-all"
-              aria-label="Close chat"
-            >
-              <HugeiconsIcon icon={Cancel01Icon} size={18} />
-            </Button>
-          </Tooltip.Trigger>
-          <Tooltip.Content side="bottom">
-            <Typography variant="small" className="text-secondary">
-              {t('close')}
-            </Typography>
-          </Tooltip.Content>
-        </Tooltip>
+        </div>
       </div>
     </header>
   );
