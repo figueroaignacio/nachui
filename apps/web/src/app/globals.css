@@ -35,6 +35,36 @@
   }
 }
 
+/* --- View transitions --------------------------------------------------- */
+/* Let clicks through while a transition runs, so navigation never swallows a
+   tap mid-animation. */
+::view-transition {
+  pointer-events: none;
+}
+
+/* The header is a fixed spatial anchor: it must not crossfade with the body. */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
 /* --- Scroll-driven enhancements ---------------------------------------- */
 /* Progressive enhancement: browsers without scroll timelines (or users with
    reduced motion) simply get the static page. The global reduced-motion

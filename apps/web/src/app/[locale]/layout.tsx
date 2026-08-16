@@ -1,18 +1,18 @@
+import '@/app/globals.css';
 import { SkipLink } from '@/components/common/skip-link';
+import { ThemeInitScript } from '@/components/common/theme-init-script';
 import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
 import { PageFrame } from '@/components/layout/page-frame';
 import { Providers } from '@/components/providers';
-import { ThemeInitScript } from '@/components/common/theme-init-script';
 import { routing } from '@/i18n/routing';
 import { fontCode, fontHeading, fontSans, fontSerif } from '@/lib/font';
-import '@/app/globals.css';
-
 import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { ViewTransition } from 'react';
 
 interface LocaleLayoutProps {
   children: React.ReactNode;
@@ -77,7 +77,9 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
           <Providers>
             <Header />
             <PageFrame>
-              <main id="main-content">{children}</main>
+              <ViewTransition>
+                <main id="main-content">{children}</main>
+              </ViewTransition>
             </PageFrame>
             <Footer />
           </Providers>
