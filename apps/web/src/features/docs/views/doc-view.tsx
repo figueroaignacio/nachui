@@ -5,7 +5,8 @@ import { DocsPagination } from '@/features/docs/components/docs-pagination';
 import { IssueCta } from '@/features/docs/components/issue-cta';
 import { MobileToc } from '@/features/docs/components/mobile-toc';
 import { Toc } from '@/features/docs/components/toc';
-import { getAbsoluteUrl } from '@/lib/domains';
+import { GITHUB_REPO_URL, getAbsoluteUrl } from '@/lib/domains';
+import { COMPONENT_REGISTRY } from '@repo/ui/registry';
 import { Flex } from '@repo/ui/layout/flex';
 import { Stack } from '@repo/ui/layout/stack';
 import { Container } from '@repo/ui/src/layout/container';
@@ -19,6 +20,12 @@ export function DocView({ doc }: DocViewProps) {
   const tocContent = Array.isArray(doc.toc?.content) ? doc.toc.content : [];
   const currentPath = `/docs${doc.slugAsParams ? `/${doc.slugAsParams}` : ''}`;
   const docUrl = getAbsoluteUrl(doc.locale || 'en', `/docs/${doc.slugAsParams}`);
+
+  // Element pages are named after their registry entry, so the last slug
+  // segment resolves to the component's source file. Other pages get nothing.
+  const componentPath =
+    COMPONENT_REGISTRY[doc.slugAsParams.split('/').at(-1) as keyof typeof COMPONENT_REGISTRY];
+  const sourceUrl = componentPath ? `${GITHUB_REPO_URL}/blob/main/${componentPath}` : undefined;
 
   const techArticleSchema = {
     '@context': 'https://schema.org',
@@ -69,6 +76,8 @@ export function DocView({ doc }: DocViewProps) {
                   url={docUrl}
                   filePath={doc.sourceFilePath}
                   rawContent={doc.raw}
+                  rawPath={`/${doc.locale || 'en'}${currentPath}.md`}
+                  sourceUrl={sourceUrl}
                 />
                 <DocsNavigationButtons currentPath={currentPath} />
               </Flex>

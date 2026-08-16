@@ -72,6 +72,12 @@
   "editOnGithub": {
     "label": "Edit this page"
   },
+  "viewRawMarkdown": {
+    "label": "View raw markdown"
+  },
+  "viewSource": {
+    "label": "Component source"
+  },
   "openIn": {
     "label": "Open in",
     "prompt": "Explain the content of this page: {page}. Context: {url}. Explain when to use it, why to use it, best practices, and alternatives based on the documentation provided. It could be a page about components, tools, libraries, concepts, etc. Do not provide unnecessary information. ALWAYS based on the documentation provided."

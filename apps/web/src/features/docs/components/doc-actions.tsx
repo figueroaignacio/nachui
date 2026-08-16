@@ -4,7 +4,12 @@ import { GitHubIcon } from '@/components/common/github-icon';
 import { AiAvatar } from '@/features/chat/ui/ai-avatar';
 import { useChatStore } from '@/features/chat/store/chat-store';
 import { useCopyToClipboard } from '@/features/docs/hooks/use-copy-to-clipboard';
-import { ArrowDown01Icon, Copy01Icon, Tick02Icon } from '@hugeicons/core-free-icons';
+import {
+  ArrowDown01Icon,
+  Copy01Icon,
+  SourceCodeIcon,
+  Tick02Icon,
+} from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '@repo/ui/components/button';
 import { DropdownMenu } from '@repo/ui/components/dropdown-menu';
@@ -16,9 +21,20 @@ type DocActionsProps = {
   url: string;
   filePath: string;
   rawContent: string;
+  /** Locale-prefixed path to this page's markdown source. */
+  rawPath: string;
+  /** GitHub URL of the component's source file, on element pages. */
+  sourceUrl?: string;
 };
 
-export function DocActions({ page, url, filePath, rawContent }: DocActionsProps) {
+export function DocActions({
+  page,
+  url,
+  filePath,
+  rawContent,
+  rawPath,
+  sourceUrl,
+}: DocActionsProps) {
   const t = useTranslations('components');
   const { triggerExplanation } = useChatStore();
   const { isCopied, copyToClipboard } = useCopyToClipboard(2000);
@@ -96,6 +112,30 @@ export function DocActions({ page, url, filePath, rawContent }: DocActionsProps)
           <DropdownMenu.Separator />
           <DropdownMenu.Item asChild className="gap-2">
             <a
+              href={rawPath}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full items-center gap-2"
+            >
+              <MarkdownIcon />
+              <span>{t('viewRawMarkdown.label')}</span>
+            </a>
+          </DropdownMenu.Item>
+          {sourceUrl && (
+            <DropdownMenu.Item asChild className="gap-2">
+              <a
+                href={sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-full items-center gap-2"
+              >
+                <HugeiconsIcon icon={SourceCodeIcon} size={16} />
+                <span>{t('viewSource.label')}</span>
+              </a>
+            </DropdownMenu.Item>
+          )}
+          <DropdownMenu.Item asChild className="gap-2">
+            <a
               href={githubEditUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -108,6 +148,22 @@ export function DocActions({ page, url, filePath, rawContent }: DocActionsProps)
         </DropdownMenu.Content>
       </DropdownMenu>
     </Button.Group>
+  );
+}
+
+function MarkdownIcon() {
+  return (
+    <svg
+      fill="currentColor"
+      width={16}
+      height={16}
+      viewBox="0 0 24 24"
+      role="img"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <title>Markdown</title>
+      <path d="M20.56 18H3.44C1.54 18 0 16.46 0 14.56V9.44C0 7.54 1.54 6 3.44 6h17.12C22.46 6 24 7.54 24 9.44v5.12c0 1.9-1.54 3.44-3.44 3.44zM6.81 15.19v-3.66l1.92 2.35 1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35-1.92-2.35H4.89v6.38h1.92zM19.69 12h-1.92V8.81h-1.92V12h-1.93l2.89 3.28L19.69 12z" />
+    </svg>
   );
 }
 

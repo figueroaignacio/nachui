@@ -1,5 +1,7 @@
 export const baseUrl = 'https://nachui.tech';
 
+export const GITHUB_REPO_URL = 'https://github.com/figueroaignacio/ui';
+
 export const locales = ['en', 'es'] as const;
 export type SupportedLocale = (typeof locales)[number];
 

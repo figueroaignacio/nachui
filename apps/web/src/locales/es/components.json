@@ -72,6 +72,12 @@
   "editOnGithub": {
     "label": "Editar esta página"
   },
+  "viewRawMarkdown": {
+    "label": "Ver markdown crudo"
+  },
+  "viewSource": {
+    "label": "Código fuente"
+  },
   "openIn": {
     "label": "Abrir en",
     "prompt": "Explícame el contenido de esta página: {page}. Contexto: {url}. Ayúdame a entender cómo usarla. Prepárate para explicar conceptos, dar ejemplos o ayudar a depurar basándote en ella. Puede ser una página sobre componentes, herramientas, bibliotecas, conceptos, etc. No des información innecesaria. SIEMPRE basandote en la documentación proporcionada."
