@@ -26,6 +26,14 @@
   }
 }
 
+@layer base {
+  /* Anchor jumps have to clear the sticky header and the mobile toc bar,
+     otherwise the heading lands underneath them. */
+  main :is(h1, h2, h3, h4)[id] {
+    scroll-margin-top: 7rem;
+  }
+}
+
 @layer utilities {
   .break-words-safe {
     word-wrap: break-word;

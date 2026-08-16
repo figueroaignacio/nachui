@@ -28,8 +28,10 @@ export function MobileMenu() {
 
   useLockBodyScroll(isMenuOpen);
 
+  // The 56px row matches the desktop navbar, so the header is one known height
+  // at every breakpoint and the sticky offsets below it line up.
   return (
-    <div className="relative flex w-full items-center justify-between py-5 lg:hidden">
+    <div className="relative flex h-14 w-full items-center justify-between lg:hidden">
       <Flex gap="3" align="center">
         <Link href="/" aria-label="NachUI home">
           <Logo />

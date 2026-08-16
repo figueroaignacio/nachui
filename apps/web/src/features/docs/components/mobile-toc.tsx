@@ -28,13 +28,25 @@ export function MobileToc({ toc }: TocProps) {
   const entries = useMemo(() => (toc ? flatten(toc) : []), [toc]);
   const activeHeading = useActiveItem(entries.map((entry) => entry.id));
 
-  // Closing on scroll keeps the bar from hiding the section it just jumped to.
   useEffect(() => {
     if (!open) return;
     const close = () => setOpen(false);
     window.addEventListener('scroll', close, { passive: true });
     return () => window.removeEventListener('scroll', close);
   }, [open]);
+
+  /**
+   * Scrolls explicitly instead of leaving it to the anchor: the panel collapses
+   * on the same click, and the layout shift that causes cancels the browser's
+   * own jump. `scroll-margin-top` on the headings keeps them clear of the bar.
+   */
+  const handleSelect = (url: string) => {
+    setOpen(false);
+    const id = decodeURIComponent(url.split('#')[1] ?? '');
+    const target = id ? document.getElementById(id) : null;
+    if (!target) return;
+    requestAnimationFrame(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  };
 
   if (!toc || toc.length === 0) return null;
 
@@ -45,6 +57,9 @@ export function MobileToc({ toc }: TocProps) {
 
   return (
     <div className="bg-background/90 border-rule sticky top-14 z-40 -mx-4 mb-8 border-b backdrop-blur-md xl:hidden">
+      {/* The expanded list floats over the prose rather than pushing it: the
+          bar is sticky, so displacing the content would move the very section
+          you are trying to reach. */}
       <button
         type="button"
         onClick={() => setOpen((previous) => !previous)}
@@ -71,10 +86,10 @@ export function MobileToc({ toc }: TocProps) {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="overflow-hidden"
+            className="bg-background/95 border-rule absolute inset-x-0 top-full overflow-hidden border-b shadow-lg backdrop-blur-md"
           >
-            <div className="border-rule max-h-[50vh] overflow-y-auto border-t px-3 py-3">
-              <Tree tree={toc} activeItem={activeHeading} onItemClick={() => setOpen(false)} />
+            <div className="max-h-[60vh] overflow-y-auto px-3 py-3">
+              <Tree tree={toc} activeItem={activeHeading} onItemClick={handleSelect} />
             </div>
           </motion.div>
         )}
