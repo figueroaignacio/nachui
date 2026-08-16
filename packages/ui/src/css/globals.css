@@ -304,7 +304,31 @@
 }
 
 .page-frame-outer {
+  position: relative;
   padding-inline: var(--frame-gutter);
+}
+
+/* Diagonal hatching filling the outer gutters, viewport edge to rail. */
+.page-frame-outer::before,
+.page-frame-outer::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  width: var(--frame-gutter);
+  background: repeating-linear-gradient(
+    -45deg,
+    color-mix(in oklab, var(--rule) 50%, transparent) 0 1px,
+    transparent 1px 7px
+  );
+  pointer-events: none;
+}
+
+.page-frame-outer::before {
+  left: 0;
+}
+
+.page-frame-outer::after {
+  right: 0;
 }
 
 .page-frame {
@@ -313,8 +337,36 @@
 }
 
 .rule-bleed {
+  position: relative;
   border-block-start: 1px solid var(--rule);
   margin-inline: calc(-1 * var(--frame-bleed));
+}
+
+/* Editorial cross marking each intersection between a bleeding rule and the
+   vertical rails. Only where the rails exist (sm and up). */
+@media (min-width: 40rem) {
+  .rule-bleed::before,
+  .rule-bleed::after {
+    content: '';
+    position: absolute;
+    top: 0.5px;
+    width: 9px;
+    height: 9px;
+    color: var(--border-interactive);
+    background:
+      linear-gradient(currentColor, currentColor) center / 1px 9px no-repeat,
+      linear-gradient(currentColor, currentColor) center / 9px 1px no-repeat;
+  }
+
+  .rule-bleed::before {
+    left: calc(var(--frame-gutter) + var(--frame-border) / 2);
+    transform: translate(-50%, -50%);
+  }
+
+  .rule-bleed::after {
+    right: calc(var(--frame-gutter) + var(--frame-border) / 2);
+    transform: translate(50%, -50%);
+  }
 }
 
 .bleed-x {
