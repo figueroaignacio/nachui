@@ -9,6 +9,22 @@ type ComponentCodeResult = {
 };
 
 /**
+ * Rewrites the imports of a demo so the snippet compiles once pasted.
+ *
+ * Demos import their siblings by relative path inside packages/ui, from more
+ * than one family directory: `../../components/` for UI primitives and
+ * `../../layout/` for Flex, Stack, Grid and Container. The CLI writes every
+ * component to `aliases.components` regardless of family, so both collapse to
+ * the same target here.
+ *
+ * Exported so a test can assert that no demo escapes the rewrite. When a new
+ * family directory appears in packages/ui, it has to be added to this list.
+ */
+export function rewriteDemoImports(code: string): string {
+  return code.replaceAll(/from ['"]\.\.\/\.\.\/(components|layout)\//g, "from '@/components/ui/");
+}
+
+/**
  * Get source code for a component
  */
 export async function getComponentSourceCode(componentName: string): Promise<ComponentCodeResult> {
@@ -67,9 +83,7 @@ export async function getDemoCode(
   const filePath = path.join(process.cwd(), '../../', demoPath);
 
   try {
-    let code = await fs.promises.readFile(filePath, 'utf-8');
-    // Update import paths to use @/components/ui/
-    code = code.replaceAll(/from ['"]\.\.\/\.\.\/components\//g, "from '@/components/ui/");
+    const code = rewriteDemoImports(await fs.promises.readFile(filePath, 'utf-8'));
     return { code, filePath: demoPath };
   } catch (error) {
     console.error('❌ Error reading demo file:', error);
