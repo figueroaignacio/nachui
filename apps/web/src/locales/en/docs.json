@@ -47,6 +47,10 @@
         {
           "title": "CLI",
           "href": "/docs/concepts/cli"
+        },
+        {
+          "title": "llms.txt",
+          "href": "/docs/concepts/llms-txt"
         }
       ]
     },

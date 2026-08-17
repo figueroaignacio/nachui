@@ -1,0 +1,112 @@
+---
+title: llms.txt
+description: How to point Claude, Cursor, Windsurf or any other coding agent at the NachUI docs, using llms.txt, raw markdown and installable skills.
+published: true
+toc:
+  visible: true
+date: 2026-08-17
+locale: en
+---
+
+Most of the time you are not reading these docs alone. There is an agent in your editor that needs to know what a `Card` looks like too, and if nobody tells it, it will happily invent an API that does not exist.
+
+So every page here is published twice. Once as the page you are looking at, and once as plain markdown a model can read. An [llms.txt](https://llmstxt.org/) file indexes all of it.
+
+## Available files
+
+| File                                              | What it contains                                                                                              |
+| :------------------------------------------------ | :------------------------------------------------------------------------------------------------------------ |
+| [`/llms.txt`](https://nachui.tech/llms.txt)       | An index of every published page, grouped by section, each entry linking to its markdown source.              |
+| [`/api/docs`](https://nachui.tech/api/docs)       | The same catalog as JSON, with titles, descriptions, slugs and raw content, if you want to index it yourself. |
+| `/{locale}/docs/**.md`                            | The markdown source of a single page.                                                                         |
+| [`/sitemap.xml`](https://nachui.tech/sitemap.xml) | Every URL on the site, including the pages that are not documentation.                                        |
+
+<Callout variant="info" className="mt-4">
+  <Callout.Title>Locales</Callout.Title>
+  <Callout.Content>
+    `llms.txt` indexes the English documentation. The Spanish source lives at the same URLs with
+    `/es/` in place of `/en/`.
+  </Callout.Content>
+</Callout>
+
+## Raw markdown for any page
+
+Add `.md` to the end of any docs URL and you get the source of that page: the title and description from the frontmatter, then the body exactly as it was written, code fences and all.
+
+| Page         | Markdown source                                     |
+| :----------- | :-------------------------------------------------- |
+| Introduction | `https://nachui.tech/en/docs.md`                    |
+| Installation | `https://nachui.tech/en/docs/installation.md`       |
+| Theming      | `https://nachui.tech/en/docs/concepts/theming.md`   |
+| Button       | `https://nachui.tech/en/docs/elements/ui/button.md` |
+
+Which is handy when you want to pipe a page into something instead of copying it out of the browser:
+
+```bash
+curl https://nachui.tech/en/docs/elements/ui/button.md
+```
+
+## Integration
+
+### Claude Code
+
+Give Claude the index and let it follow whatever links it needs:
+
+```text
+Use the NachUI documentation from https://nachui.tech/llms.txt
+```
+
+If this is a project you work on every day, write that line into your `CLAUDE.md` or `AGENTS.md` so you are not typing it again on every session.
+
+### Cursor
+
+Register the index with the `@Docs` feature:
+
+```text
+@Docs https://nachui.tech/llms.txt
+```
+
+### Windsurf
+
+Add the index to your `.windsurfrules` file:
+
+```text
+#docs https://nachui.tech/llms.txt
+```
+
+### Anything else
+
+Most assistants take a documentation URL as context. Give them the index, and if you already know which component you are working on, its markdown page as well:
+
+```text
+https://nachui.tech/llms.txt
+https://nachui.tech/en/docs/elements/ui/dialog.md
+```
+
+## Without leaving the page
+
+You do not have to copy URLs around. The toolbar under every title does it for you:
+
+- **Explain this** asks the built-in assistant about the page you are on, with the context already loaded.
+- **Copy Markdown** puts the source of the page in your clipboard.
+- **Open in** sends the page to ChatGPT, Claude or v0 with the prompt already written.
+- **View raw markdown** opens the `.md` version of whatever you are reading.
+- **Component source** takes you to the component file on GitHub, on element pages.
+
+## Agent skills
+
+The markdown files describe the system. [Skills](/docs/concepts/skills) go a step further and teach an agent how to work inside it: how to add a component, how to compose the APIs, how to use the CLI, how to write docs that look like the rest of them.
+
+<div className="my-12">
+  <Command command="npx skills add github:figueroaignacio/ui-skills/skills/nachui-usage" />
+</div>
+
+Each skill declares when it should trigger, so the agent picks the right one on its own. The full set is documented under [Skills](/docs/concepts/skills).
+
+## Why this works at all
+
+An npm component library keeps its implementation inside a compiled package. Ask an agent to change a button and it ends up wrapping something it cannot see. NachUI copies the source into your repository instead, so the file your agent needs to read is already sitting in your project, and the page explaining it is one `curl` away.
+
+## Contributing
+
+If an assistant gave you a wrong answer while using these files, that is a documentation bug and it is worth reporting. Open an issue on [GitHub](https://github.com/figueroaignacio/ui) with the prompt you used and what came back.

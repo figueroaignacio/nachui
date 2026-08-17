@@ -1,0 +1,112 @@
+---
+title: llms.txt
+description: Cómo conectar Claude, Cursor, Windsurf o cualquier otro agente de código con la documentación de NachUI, usando llms.txt, markdown crudo y skills instalables.
+published: true
+toc:
+  visible: true
+date: 2026-08-17
+locale: es
+---
+
+La mayoría de las veces no estás leyendo esta documentación solo. Hay un agente en tu editor que también necesita saber cómo es una `Card`, y si nadie se lo dice, se va a inventar una API que no existe.
+
+Por eso cada página acá se publica dos veces. Una como la página que estás viendo, y otra como markdown plano que un modelo puede leer. Un archivo [llms.txt](https://llmstxt.org/) indexa todo eso.
+
+## Archivos disponibles
+
+| Archivo                                           | Qué contiene                                                                                                  |
+| :------------------------------------------------ | :------------------------------------------------------------------------------------------------------------ |
+| [`/llms.txt`](https://nachui.tech/llms.txt)       | Un índice de todas las páginas publicadas, agrupadas por sección, cada una enlazando a su fuente en markdown. |
+| [`/api/docs`](https://nachui.tech/api/docs)       | El mismo catálogo en JSON, con títulos, descripciones, slugs y contenido crudo, por si querés indexarlo vos.  |
+| `/{locale}/docs/**.md`                            | La fuente en markdown de una sola página.                                                                     |
+| [`/sitemap.xml`](https://nachui.tech/sitemap.xml) | Todas las URLs del sitio, incluidas las páginas que no son documentación.                                     |
+
+<Callout variant="info" className="mt-4">
+  <Callout.Title>Idiomas</Callout.Title>
+  <Callout.Content>
+    `llms.txt` indexa la documentación en inglés. La fuente en español vive en las mismas URLs
+    cambiando `/en/` por `/es/`.
+  </Callout.Content>
+</Callout>
+
+## Markdown crudo de cualquier página
+
+Agregá `.md` al final de cualquier URL de la documentación y obtenés la fuente de esa página: el título y la descripción del frontmatter, y después el cuerpo tal cual fue escrito, con los bloques de código incluidos.
+
+| Página       | Fuente en markdown                                  |
+| :----------- | :-------------------------------------------------- |
+| Introducción | `https://nachui.tech/es/docs.md`                    |
+| Instalación  | `https://nachui.tech/es/docs/installation.md`       |
+| Tematización | `https://nachui.tech/es/docs/concepts/theming.md`   |
+| Button       | `https://nachui.tech/es/docs/elements/ui/button.md` |
+
+Lo cual es cómodo cuando querés pasarle una página a otra herramienta en vez de copiarla desde el navegador:
+
+```bash
+curl https://nachui.tech/es/docs/elements/ui/button.md
+```
+
+## Integración
+
+### Claude Code
+
+Pasale a Claude el índice y dejá que siga los enlaces que necesite:
+
+```text
+Usá la documentación de NachUI desde https://nachui.tech/llms.txt
+```
+
+Si es un proyecto en el que trabajás todos los días, escribí esa línea en tu `CLAUDE.md` o `AGENTS.md` así no la tipeás en cada sesión.
+
+### Cursor
+
+Registrá el índice con la función `@Docs`:
+
+```text
+@Docs https://nachui.tech/llms.txt
+```
+
+### Windsurf
+
+Agregá el índice a tu archivo `.windsurfrules`:
+
+```text
+#docs https://nachui.tech/llms.txt
+```
+
+### Cualquier otra herramienta
+
+Casi todos los asistentes aceptan una URL de documentación como contexto. Pasales el índice y, si ya sabés en qué componente estás trabajando, también su página en markdown:
+
+```text
+https://nachui.tech/llms.txt
+https://nachui.tech/es/docs/elements/ui/dialog.md
+```
+
+## Sin salir de la página
+
+No hace falta que andes copiando URLs. La barra de acciones debajo de cada título lo hace por vos:
+
+- **Explain this** le pregunta al asistente integrado sobre la página en la que estás, con el contexto ya cargado.
+- **Copy Markdown** te deja la fuente de la página en el portapapeles.
+- **Open in** manda la página a ChatGPT, Claude o v0 con el prompt ya escrito.
+- **View raw markdown** abre la versión `.md` de lo que estés leyendo.
+- **Component source** te lleva al archivo del componente en GitHub, en las páginas de elementos.
+
+## Skills para agentes
+
+Los archivos markdown describen el sistema. Las [skills](/docs/concepts/skills) van un paso más allá y le enseñan a un agente a trabajar adentro: cómo agregar un componente, cómo componer las APIs, cómo usar el CLI, cómo escribir documentación que se parezca al resto.
+
+<div className="my-12">
+  <Command command="npx skills add github:figueroaignacio/ui-skills/skills/nachui-usage" />
+</div>
+
+Cada skill declara cuándo debería activarse, así el agente elige la correcta por su cuenta. El set completo está documentado en [Skills](/docs/concepts/skills).
+
+## Por qué esto funciona
+
+Una librería de componentes en npm guarda su implementación dentro de un paquete compilado. Le pedís a un agente que cambie un botón y termina envolviendo algo que no puede ver. NachUI copia el código fuente en tu repositorio, así que el archivo que tu agente necesita leer ya está en tu proyecto, y la página que lo explica está a un `curl` de distancia.
+
+## Contribuir
+
+Si un asistente te dio una respuesta incorrecta usando estos archivos, eso es un bug de documentación y vale la pena reportarlo. Abrí un issue en [GitHub](https://github.com/figueroaignacio/ui) con el prompt que usaste y lo que te respondió.
