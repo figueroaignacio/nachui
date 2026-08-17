@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "pnpm checks && next build",
-    "checks": "node scripts/check-navigation.mjs && node scripts/check-demos.mjs",
+    "checks": "node ../../packages/ui/scripts/generate-registry.mjs --check && node scripts/check-navigation.mjs && node scripts/check-demos.mjs",
     "start": "next start",
     "lint": "eslint src",
     "check-types": "tsc --noEmit"
