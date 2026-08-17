@@ -1,9 +1,9 @@
-import { components, db } from '@repo/db';
+import { components, db, type ComponentFamily } from '@repo/db';
 import fs from 'node:fs';
 import path from 'node:path';
+import { FAMILIES } from '../packages/ui/src/lib/registry';
 
-const UI_COMPONENTS_ROOT = path.resolve(process.cwd(), 'packages/ui/src/components');
-const LAYOUT_COMPONENTS_ROOT = path.resolve(process.cwd(), 'packages/ui/src/layout');
+const UI_PACKAGE_ROOT = path.resolve(process.cwd(), 'packages/ui');
 
 function extractDependencies(code: string): string[] {
   const dependencies: string[] = [];
@@ -35,20 +35,25 @@ function extractDependencies(code: string): string[] {
   return [...new Set(dependencies)];
 }
 
-async function processDirectory(dirPath: string, type: 'ui' | 'layout') {
+function toSlug(family: ComponentFamily, name: string): string {
+  return `${family}/${name.toLowerCase()}`;
+}
+
+async function processFamily(family: ComponentFamily, codeDir: string) {
+  const dirPath = path.join(UI_PACKAGE_ROOT, codeDir);
+
   if (!fs.existsSync(dirPath)) {
     console.error(`❌ Error: Root path not found: ${dirPath}`);
-    return;
+    return 0;
   }
 
-  const items = fs.readdirSync(dirPath);
+  let synced = 0;
 
-  for (const item of items) {
+  for (const item of fs.readdirSync(dirPath)) {
     const itemPath = path.join(dirPath, item);
     const stats = fs.statSync(itemPath);
 
     let code = '',
-      slug = '',
       name = '';
 
     if (stats.isDirectory()) {
@@ -57,15 +62,14 @@ async function processDirectory(dirPath: string, type: 'ui' | 'layout') {
       if (!componentFile) continue;
       code = fs.readFileSync(path.join(itemPath, componentFile), 'utf8');
       name = item;
-      slug = item.toLowerCase();
     } else if (item.endsWith('.tsx') && !item.includes('.test.')) {
       code = fs.readFileSync(itemPath, 'utf8');
       name = item.replace('.tsx', '');
-      slug = name.toLowerCase();
     } else continue;
 
+    const slug = toSlug(family, name);
     const deps = extractDependencies(code);
-    console.log(`📦 Syncing: ${name}...`);
+    console.log(`📦 Syncing: ${slug}...`);
 
     try {
       await db
@@ -74,33 +78,45 @@ async function processDirectory(dirPath: string, type: 'ui' | 'layout') {
           name,
           slug,
           code,
-          type,
+          type: family,
           dependencies: deps,
           registryDependencies: [],
         })
         .onConflictDoUpdate({
           target: components.slug,
           set: {
+            name,
             code,
+            type: family,
             dependencies: deps,
             updatedAt: new Date(),
           },
         });
 
-      console.log(`✅ ${name} ready. (Deps: ${deps.join(', ') || 'none'})`);
+      synced++;
+      console.log(`✅ ${slug} ready. (Deps: ${deps.join(', ') || 'none'})`);
     } catch (error) {
-      console.error(`❌ Error syncing ${name}:`, error);
+      console.error(`❌ Error syncing ${slug}:`, error);
     }
   }
+
+  return synced;
 }
 
 async function syncRegistry() {
   console.log('🚀 Starting sync registry...');
 
-  await processDirectory(UI_COMPONENTS_ROOT, 'ui');
-  await processDirectory(LAYOUT_COMPONENTS_ROOT, 'ui'); // Keeping type 'ui' as per DB schema if it doesn't have 'layout'
+  let total = 0;
+  for (const family of FAMILIES) {
+    console.log(`\n── ${family.id} (${family.codeDir})`);
+    total += await processFamily(family.id, family.codeDir);
+  }
 
-  console.log('\n✨ Syncing finished successfully.');
+  console.log(
+    `\n✨ Syncing finished successfully. ${total} components across ${FAMILIES.length} families.`,
+  );
+  console.log('   Rows whose slug is not yet qualified are left untouched.');
+  console.log('   Run `pnpm registry:migrate-slugs` once to convert them.');
   process.exit(0);
 }
 
