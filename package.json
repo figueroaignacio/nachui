@@ -11,7 +11,8 @@
     "test": "turbo run test",
     "format": "prettier --write .",
     "prepare": "husky",
-    "registry:sync": "tsx --env-file=packages/db/.env scripts/sync-registry.ts"
+    "registry:sync": "tsx --env-file=packages/db/.env scripts/sync-registry.ts",
+    "registry:migrate-slugs": "tsx --env-file=packages/db/.env scripts/migrate-slugs.ts"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
