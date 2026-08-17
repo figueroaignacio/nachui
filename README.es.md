@@ -2,9 +2,11 @@
 
 [English](./README.md) | [Español]
 
-### Componentes de sistema de diseño que realmente te pertenecen.
+### Componentes de sistema de diseño que realmente te pertenecen, y que tu IA puede leer.
 
 **NachUI** es un conjunto de componentes de UI **copy-paste y sin dependencias**, construido con **React**, **Next.js**, **Tailwind** y **Motion**. Ofrece una base de código de alta propiedad y fácil mantenimiento, en lugar de librerías externas infladas.
+
+También está escrito para el agente que tengas abierto al lado. Nada queda compilado, así que un asistente de código trabaja sobre el mismo código plano que vos, y la documentación se publica en un formato que puede leer de verdad.
 
 ## La Visión
 
@@ -13,6 +15,7 @@ El desarrollo estándar suele sacrificar la propiedad del código por la velocid
 - **Propiedad total del código**: Sin bloqueos por `node_modules`. Eres el dueño del código fuente de las primitivas.
 - **Sin wrappers de paquetes**: Diseñado con **Tailwind CSS v4** y animado con **Framer Motion** sin sobrecarga de dependencias en tiempo de ejecución.
 - **Estrategia sin exceso**: Cada componente es independiente, legible y está listo para ser modificado.
+- **Legible para la IA por diseño**: Archivos fuente locales, un índice `llms.txt`, documentación en markdown crudo y skills instalables para agentes. No hay ninguna caja negra que un asistente tenga que adivinar.
 
 ## Stack Tecnológico
 
@@ -44,6 +47,19 @@ El proyecto está estructurado como un **monorepo de Turborepo** con límites ar
 ## Documentación Asistida por IA
 
 NachUI incluye un **asistente potenciado por Gemini**. Construido con el Vercel AI SDK, ofrece orientación contextual, proporcionando una experiencia de programación en pareja centrada en los patrones arquitectónicos de NachUI y la personalización de componentes.
+
+## También hecho para agentes de IA
+
+La documentación no es solo un sitio web. Cada página también se sirve en un formato que tu propio agente puede leer:
+
+| Recurso                                               | Qué le da a un agente                                                  |
+| :---------------------------------------------------- | :--------------------------------------------------------------------- |
+| [`/llms.txt`](https://nachui.tech/llms.txt)           | Un índice de todas las páginas publicadas, cada una con su markdown.   |
+| `/{locale}/docs/**.md`                                | La fuente en markdown de una página. Agregá `.md` a cualquier URL.     |
+| [`/api/docs`](https://nachui.tech/api/docs)           | El mismo catálogo en JSON, por si querés armar tu propio índice.       |
+| [Skills](https://nachui.tech/es/docs/concepts/skills) | Instrucciones instalables que le enseñan las convenciones a un agente. |
+
+Solo tenés que apuntar Claude Code, Cursor o Windsurf al índice una vez. La [guía de llms.txt](https://nachui.tech/es/docs/concepts/llms-txt) tiene la configuración de cada herramienta.
 
 ## Inicio Rápido
 

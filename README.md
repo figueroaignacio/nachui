@@ -2,9 +2,11 @@
 
 [English] | [Español](./README.es.md)
 
-### Design System Components You Actually Own.
+### Design System Components You Actually Own, and Your AI Can Read.
 
 **NachUI** is a set of **copy-paste, dependency-free** UI components built with **React**, **Next.js**, **Tailwind**, and **Motion**. It provides a high-ownership, maintainable codebase instead of bloated external dependencies.
+
+It is also written for whatever agent you have open next to it. Nothing gets compiled away, so a coding assistant works from the same plain source you do, and the documentation is published in a form it can actually read.
 
 ## The Vision
 
@@ -13,6 +15,7 @@ Standard development often sacrifices ownership for speed. **NachUI** provides b
 - **Full Code Ownership**: No `node_modules` lock-in. You own the primitive source code.
 - **Zero Wrappers**: Styled with **Tailwind CSS v4** and animated with **Framer Motion** with zero runtime package overhead.
 - **Zero-Bloat Strategy**: Each component is independent, readable, and ready for customization.
+- **AI-Readable by Design**: Local source files, an `llms.txt` index, raw markdown docs, and installable agent skills. There is no black box for an assistant to guess around.
 
 ## The Tech Stack
 
@@ -44,6 +47,19 @@ The project is structured as a **Turborepo monorepo** with clean architectural b
 ## AI-Powered Documentation
 
 NachUI features an integrated **Gemini-powered assistant**. Built with the Vercel AI SDK, it offers context-aware guidance, providing a technical pair-programming experience focused on NachUI's architectural patterns and component customization.
+
+## Built for AI Agents Too
+
+The docs are not only a website. Every page is also served in a form your own agent can read:
+
+| Surface                                               | What it gives an agent                                          |
+| :---------------------------------------------------- | :-------------------------------------------------------------- |
+| [`/llms.txt`](https://nachui.tech/llms.txt)           | An index of every published page, each linking to its markdown. |
+| `/{locale}/docs/**.md`                                | The markdown source of a page. Add `.md` to any docs URL.       |
+| [`/api/docs`](https://nachui.tech/api/docs)           | The same catalog as JSON, if you want to index it yourself.     |
+| [Skills](https://nachui.tech/en/docs/concepts/skills) | Installable instructions that teach an agent the conventions.   |
+
+You only have to point Claude Code, Cursor or Windsurf at the index once. The [llms.txt guide](https://nachui.tech/en/docs/concepts/llms-txt) has the setup for each tool.
 
 ## Quick Start
 
