@@ -42,6 +42,18 @@ const nextConfig: NextConfig = {
         destination: '/docs/elements/layout/:path*',
         permanent: true,
       },
+      // Skills used to be a section of their own. They are documentation now,
+      // so the old URLs all land on the page that replaced them.
+      {
+        source: '/:locale(en|es)/skills/:path*',
+        destination: '/:locale/docs/concepts/skills',
+        permanent: true,
+      },
+      {
+        source: '/skills/:path*',
+        destination: '/docs/concepts/skills',
+        permanent: true,
+      },
     ];
   },
   outputFileTracingIncludes: {
