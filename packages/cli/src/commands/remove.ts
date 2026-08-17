@@ -2,14 +2,16 @@ import * as p from '@clack/prompts';
 import fs from 'fs';
 import kleur from 'kleur';
 import path from 'path';
+import { componentFileName } from '../lib/slug.js';
 
 export const removeCommand = async (slug: string) => {
   const s = p.spinner();
   const componentsDir = path.resolve(process.cwd(), 'src', 'components', 'ui');
 
-  const fileName = slug.endsWith('.tsx') ? slug : `${slug}.tsx`;
-  const filePath = path.join(componentsDir, fileName);
-  const folderPath = path.join(componentsDir, slug);
+  // Accepts `button` and `ui/button`; only the last segment hits the disk.
+  const name = componentFileName(slug).replace(/\.tsx$/, '');
+  const filePath = path.join(componentsDir, `${name}.tsx`);
+  const folderPath = path.join(componentsDir, name);
 
   s.start(`Searching for ${kleur.cyan(slug)}...`);
 

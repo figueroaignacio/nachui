@@ -8,10 +8,15 @@ const headers = {
 
 export interface RegistryComponent {
   name: string;
+  /** Qualified slug, `ui/button`. Bare names still resolve server side. */
   slug: string;
+  type?: string;
   code: string;
   dependencies: string[];
 }
+
+/** Thrown when a bare name exists in more than one family. */
+export class AmbiguousComponentError extends Error {}
 
 export const api = {
   async getComponents(): Promise<RegistryComponent[]> {
@@ -31,8 +36,18 @@ export const api = {
 
   async getComponent(slug: string): Promise<RegistryComponent> {
     const response = await fetch(`${API_URL}/registry/${slug}`, { headers });
-    if (!response.ok) throw new Error('Component not found or unauthorized.');
-    return response.json();
+
+    if (response.ok) return response.json();
+
+    // 409 means the name exists in several families and the API listed them.
+    // That message is the whole point of qualified slugs, so it is surfaced
+    // instead of being flattened into a generic failure.
+    if (response.status === 409) {
+      const body = (await response.json().catch(() => null)) as { message?: string } | null;
+      throw new AmbiguousComponentError(body?.message ?? `'${slug}' is ambiguous.`);
+    }
+
+    throw new Error('Component not found or unauthorized.');
   },
 
   async getTheme(theme: string = 'default') {

@@ -3,8 +3,9 @@ import kleur from 'kleur';
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { api } from '../lib/api.js';
+import { AmbiguousComponentError, api } from '../lib/api.js';
 import { detectPackageManager, getInstallCommand } from '../lib/package-manager.js';
+import { componentFileName } from '../lib/slug.js';
 
 export async function addCommand(componentSlug: string) {
   const s = p.spinner();
@@ -26,7 +27,8 @@ export async function addCommand(componentSlug: string) {
 
     const targetBaseDir = config.aliases.components.replace('@/', 'src/');
     const targetDir = path.join(process.cwd(), targetBaseDir);
-    const targetPath = path.join(targetDir, `${componentSlug}.tsx`);
+    // Never the raw slug: `ui/button` would write into a nested `ui/` folder.
+    const targetPath = path.join(targetDir, `${componentFileName(componentSlug)}.tsx`);
 
     if (!fs.existsSync(targetDir)) {
       fs.mkdirSync(targetDir, { recursive: true });
@@ -74,7 +76,13 @@ export async function addCommand(componentSlug: string) {
     }
 
     p.outro(kleur.bgGreen().black(' NachUI ') + ' Component ready to use!');
-  } catch {
+  } catch (error) {
+    if (error instanceof AmbiguousComponentError) {
+      s.stop(kleur.yellow(`${componentSlug} exists in more than one family.`));
+      p.log.error(error.message);
+      return;
+    }
+
     s.stop(kleur.red('Error getting the component.'));
     p.log.error('Make sure the slug is correct or the API is online.');
   }
