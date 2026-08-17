@@ -2,6 +2,20 @@ export const baseUrl = 'https://nachui.tech';
 
 export const GITHUB_REPO_URL = 'https://github.com/figueroaignacio/ui';
 
+/** Where the docs collection lives, relative to the repository root. */
+const DOCS_CONTENT_ROOT = 'apps/web/src/content/docs';
+
+/**
+ * GitHub edit URL for a docs page.
+ *
+ * `sourceFilePath` comes from content-collections and is relative to the
+ * collection directory, extension included ("en/concepts/cli.mdx"), so this
+ * only prepends the repository path. Appending `.mdx` here would double it.
+ */
+export function getDocEditUrl(sourceFilePath: string): string {
+  return `${GITHUB_REPO_URL}/edit/main/${DOCS_CONTENT_ROOT}/${sourceFilePath}`;
+}
+
 export const locales = ['en', 'es'] as const;
 export type SupportedLocale = (typeof locales)[number];
 

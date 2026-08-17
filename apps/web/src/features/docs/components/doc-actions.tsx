@@ -4,6 +4,7 @@ import { GitHubIcon } from '@/components/common/github-icon';
 import { AiAvatar } from '@/features/chat/ui/ai-avatar';
 import { useChatStore } from '@/features/chat/store/chat-store';
 import { useCopyToClipboard } from '@/features/docs/hooks/use-copy-to-clipboard';
+import { getDocEditUrl } from '@/lib/domains';
 import {
   ArrowDown01Icon,
   Copy01Icon,
@@ -66,7 +67,7 @@ export function DocActions({
     ];
   }, [t, page, url]);
 
-  const githubEditUrl = `https://github.com/figueroaignacio/ui/edit/main/apps/docs/src/content/${filePath}.mdx`;
+  const githubEditUrl = getDocEditUrl(filePath);
 
   return (
     <Button.Group attached>
