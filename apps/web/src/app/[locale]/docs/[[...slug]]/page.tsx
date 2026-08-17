@@ -1,7 +1,7 @@
 import { DocView } from '@/features/docs/views/doc-view';
 import type { Locale } from '@/i18n/routing';
 import { ContentRepository } from '@/lib/content-repository';
-import { buildAlternates, getAbsoluteUrl } from '@/lib/domains';
+import { buildAlternates, getAbsoluteUrl, getAssetUrl } from '@/lib/domains';
 import { allDocs as docs } from 'content-collections';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -48,7 +48,7 @@ export async function generateMetadata({
   const section = parameters.slug?.[0] ?? 'Docs';
   const canonicalUrl = getAbsoluteUrl(locale, `/docs/${slugPath}`);
 
-  const ogUrl = new URL(getAbsoluteUrl(locale, '/api/og/docs'));
+  const ogUrl = new URL(getAssetUrl('/api/og/docs'));
   ogUrl.searchParams.set('title', metaTitle);
   ogUrl.searchParams.set('description', metaDescription);
   ogUrl.searchParams.set('section', section);

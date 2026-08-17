@@ -1,6 +1,6 @@
 import { getAllCategorySlugs, getBrickCategory } from '@/features/bricks/lib/bricks-registry';
 import { BrickCategoryView } from '@/features/bricks/views/brick-category-view';
-import { buildAlternates, getAbsoluteUrl, locales } from '@/lib/domains';
+import { buildAlternates, getAbsoluteUrl, getAssetUrl, locales } from '@/lib/domains';
 import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const canonicalUrl = getAbsoluteUrl(locale, `/bricks/${category}`);
   const count = brickCategory.bricks.length;
   const ogImageUrl =
-    `${getAbsoluteUrl(locale, '/api/og/bricks')}` +
+    `${getAssetUrl('/api/og/bricks')}` +
     `?name=${encodeURIComponent(brickCategory.name)}` +
     `&description=${encodeURIComponent(brickCategory.description)}` +
     `&count=${count}`;

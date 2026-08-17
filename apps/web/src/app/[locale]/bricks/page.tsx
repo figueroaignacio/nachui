@@ -1,5 +1,5 @@
 import { BricksView } from '@/features/bricks/views/bricks-view';
-import { buildAlternates, getAbsoluteUrl } from '@/lib/domains';
+import { buildAlternates, getAbsoluteUrl, getAssetUrl } from '@/lib/domains';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       siteName: 'NachUI',
       images: [
         {
-          url: getAbsoluteUrl(locale, '/images/og/og-bricks.png'),
+          url: getAssetUrl('/images/og/og-bricks.png'),
           width: 1200,
           height: 630,
           alt: 'Bricks · NachUI',
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: 'summary_large_image',
       title: 'Bricks · NachUI',
       description: t('description'),
-      images: [getAbsoluteUrl(locale, '/images/og/og-bricks.png')],
+      images: [getAssetUrl('/images/og/og-bricks.png')],
     },
     alternates: {
       canonical: canonicalUrl,

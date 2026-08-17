@@ -1,5 +1,5 @@
 import { HomeView } from '@/features/landing/views/home-view';
-import { buildAlternates, getAbsoluteUrl } from '@/lib/domains';
+import { buildAlternates, getAbsoluteUrl, getAssetUrl } from '@/lib/domains';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       siteName: 'NachUI',
       images: [
         {
-          url: getAbsoluteUrl(locale, '/images/og/og-home.png'),
+          url: getAssetUrl('/images/og/og-home.png'),
           width: 1200,
           height: 630,
           alt: t('description'),
@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: 'summary_large_image',
       title: t('title'),
       description: t('description'),
-      images: [getAbsoluteUrl(locale, '/images/og/og-home.png')],
+      images: [getAssetUrl('/images/og/og-home.png')],
     },
     alternates: {
       canonical: canonicalUrl,

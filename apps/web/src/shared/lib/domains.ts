@@ -11,10 +11,24 @@ export function getDomainForLocale(locale: string): string {
   return `${baseUrl}/${locale}`;
 }
 
-export function getAbsoluteUrl(locale: string, path = ''): string {
+function normalizePath(path: string): string {
   const cleaned = path === '/' ? '/' : path.replace(/\/+$/, '');
-  const cleanPath = cleaned.startsWith('/') ? cleaned : `/${cleaned}`;
-  return `${baseUrl}/${locale}${cleanPath}`;
+  return cleaned.startsWith('/') ? cleaned : `/${cleaned}`;
+}
+
+/** Absolute URL of a *page*, which always lives under a locale segment. */
+export function getAbsoluteUrl(locale: string, path = ''): string {
+  return `${baseUrl}/${locale}${normalizePath(path)}`;
+}
+
+/**
+ * Absolute URL of something that is not a page: a file in `public/` or a route
+ * handler under `app/api/`. Neither lives under the locale segment, so passing
+ * these through `getAbsoluteUrl` produces a 404 that only shows up when a
+ * crawler tries to fetch the og:image.
+ */
+export function getAssetUrl(path: string): string {
+  return `${baseUrl}${normalizePath(path)}`;
 }
 
 export function buildAlternates(path = '') {
