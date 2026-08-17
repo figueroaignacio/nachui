@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "pnpm checks && next build",
+    "checks": "node scripts/check-navigation.mjs",
     "start": "next start",
     "lint": "eslint src",
     "check-types": "tsc --noEmit"
