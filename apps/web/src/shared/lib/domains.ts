@@ -2,6 +2,8 @@ export const baseUrl = 'https://nachui.tech';
 
 export const GITHUB_REPO_URL = 'https://github.com/figueroaignacio/ui';
 
+export const GITHUB_ISSUES_URL = `${GITHUB_REPO_URL}/issues/new`;
+
 /** Where the docs collection lives, relative to the repository root. */
 const DOCS_CONTENT_ROOT = 'apps/web/src/content/docs';
 

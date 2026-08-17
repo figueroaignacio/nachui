@@ -1,6 +1,7 @@
 'use client';
 
 import { GitHubIcon } from '@/components/common/github-icon';
+import { GITHUB_ISSUES_URL } from '@/lib/domains';
 import { buttonVariants } from '@repo/ui/components/button';
 import { Card } from '@repo/ui/components/card';
 import { Typography } from '@repo/ui/components/typography';
@@ -16,7 +17,7 @@ type IssueCtaProps = {
 export function IssueCta({ pageTitle, pageUrl }: IssueCtaProps) {
   const t = useTranslations('components.issueCta');
 
-  const githubIssueUrl = `https://github.com/figueroaignacio/ui/issues/new?title=${encodeURIComponent(
+  const githubIssueUrl = `${GITHUB_ISSUES_URL}?title=${encodeURIComponent(
     `Docs: Feedback on "${pageTitle}"`,
   )}&body=${encodeURIComponent(
     `Feedback for page: [${pageTitle}](${pageUrl})\n\n### Describe the issue or suggestion\n\n`,

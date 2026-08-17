@@ -1,17 +1,16 @@
 import { GitHubIcon } from '@/components/common/github-icon';
+import { GITHUB_REPO_URL } from '@/lib/domains';
 import { StarIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Card } from '@repo/ui/components/card';
 import { useTranslations } from 'next-intl';
-
-const GITHUB_URL = 'https://github.com/figueroaignacio/ui';
 
 export function GitHubStarTocCta() {
   const t = useTranslations('components.githubStar');
   return (
     <div className="border-border/40 mt-6 border-t pt-5">
       <a
-        href={GITHUB_URL}
+        href={GITHUB_REPO_URL}
         target="_blank"
         rel="noopener noreferrer"
         className="group block no-underline"

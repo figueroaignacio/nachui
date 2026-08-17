@@ -1,3 +1,4 @@
+import { GITHUB_REPO_URL } from '@/lib/domains';
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { LocaleSwitcher } from '../common/locale-switcher';
@@ -19,7 +20,7 @@ export function Footer() {
                 {t('home.description')}
               </p>
               <a
-                href="https://github.com/figueroaignacio/ui"
+                href={GITHUB_REPO_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-foreground inline-block font-mono text-xs transition-colors"
@@ -87,7 +88,7 @@ export function Footer() {
                 <ul className="space-y-2">
                   <li>
                     <a
-                      href="https://github.com/figueroaignacio/ui"
+                      href={GITHUB_REPO_URL}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-muted-foreground hover:text-foreground text-[13px] transition-colors"
