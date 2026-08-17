@@ -1,8 +1,10 @@
-import { Spinner } from '@repo/ui/components/spinner';
+'use client';
+
+import { Spinner } from '../../components/spinner';
 
 const variants = ['default', 'muted', 'success', 'destructive', 'warning', 'info'] as const;
 
-export default function SpinnerVariants() {
+export function Variants() {
   return (
     <div className="flex flex-wrap justify-center gap-4 py-8">
       {variants.map((variant) => (

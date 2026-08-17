@@ -81,9 +81,9 @@ import { Default as SeparatorDefault } from '@repo/ui/src/demos/separator/defaul
 import { WithLabel as SeparatorWithLabel } from '@repo/ui/src/demos/separator/with-label';
 import { Card as SkeletonCard } from '@repo/ui/src/demos/skeleton/card';
 import { Default as SkeletonDefault } from '@repo/ui/src/demos/skeleton/default';
-import SpinnerDefault from '@repo/ui/src/demos/spinner/default';
-import SpinnerSizes from '@repo/ui/src/demos/spinner/sizes';
-import SpinnerVariants from '@repo/ui/src/demos/spinner/variants';
+import { Default as SpinnerDefault } from '@repo/ui/src/demos/spinner/default';
+import { Sizes as SpinnerSizes } from '@repo/ui/src/demos/spinner/sizes';
+import { Variants as SpinnerVariants } from '@repo/ui/src/demos/spinner/variants';
 import { Default as StackDefault } from '@repo/ui/src/demos/stack/default';
 import { Default as SwitchDefault } from '@repo/ui/src/demos/switch/default';
 import { Disabled as SwitchDisabled } from '@repo/ui/src/demos/switch/disabled';
