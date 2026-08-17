@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "pnpm checks && next build",
-    "checks": "node scripts/check-navigation.mjs",
+    "checks": "node scripts/check-navigation.mjs && node scripts/check-demos.mjs",
     "start": "next start",
     "lint": "eslint src",
     "check-types": "tsc --noEmit"
