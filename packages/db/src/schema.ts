@@ -1,5 +1,7 @@
 import { index, integer, jsonb, pgTable, text, timestamp, uuid, vector } from 'drizzle-orm/pg-core';
 
+export type ComponentFamily = 'ui' | 'layout' | 'ai';
+
 export const components = pgTable('components', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: text('name').notNull(),
@@ -7,7 +9,7 @@ export const components = pgTable('components', {
   code: text('code').notNull(),
   dependencies: jsonb('dependencies').$type<string[]>().default([]),
   registryDependencies: jsonb('registry_dependencies').$type<string[]>().default([]),
-  type: text('type').$type<'ui' | 'hook' | 'utils'>().default('ui'),
+  type: text('type').$type<ComponentFamily>().default('ui'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
