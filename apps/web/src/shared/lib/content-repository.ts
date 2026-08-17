@@ -16,8 +16,4 @@ export const ContentRepository = {
     const skills = Array.isArray(allSkills) ? allSkills : [];
     return skills;
   },
-
-  getSkillBySlug(slug: string): Skill | undefined {
-    return this.getSkills().find((skill) => skill.slug === slug);
-  },
 };

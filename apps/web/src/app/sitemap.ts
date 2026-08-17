@@ -1,4 +1,4 @@
-import { allDocs as docs, allSkills as skills } from 'content-collections';
+import { allDocs as docs } from 'content-collections';
 import { BRICK_CATEGORIES } from '@/features/bricks/lib/bricks-registry';
 import { buildAlternates, getDomainForLocale, locales } from '@/lib/domains';
 import type { MetadataRoute } from 'next';
@@ -28,7 +28,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry(locale, '/docs', { changeFrequency: 'weekly', priority: 0.9 }),
     entry(locale, '/docs/elements/ui', { changeFrequency: 'weekly', priority: 0.9 }),
     entry(locale, '/about', { changeFrequency: 'monthly', priority: 0.7 }),
-    entry(locale, '/skills', { changeFrequency: 'weekly', priority: 0.8 }),
     entry(locale, '/bricks', { changeFrequency: 'daily', priority: 0.9 }),
   ]);
 
@@ -47,15 +46,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       });
     });
 
-  const skillPages: MetadataRoute.Sitemap = skills.flatMap((skill) => {
-    return locales.map((locale) => {
-      return entry(locale, `/skills/${skill.slug}`, {
-        changeFrequency: 'weekly',
-        priority: 0.7,
-      });
-    });
-  });
-
   const brickPages: MetadataRoute.Sitemap = BRICK_CATEGORIES.flatMap((category) => {
     return locales.map((locale) => {
       return entry(locale, `/bricks/${category.slug}`, {
@@ -65,7 +55,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   });
 
-  const allPages = [...staticPages, ...docPages, ...skillPages, ...brickPages];
+  const allPages = [...staticPages, ...docPages, ...brickPages];
   const uniquePages = Array.from(new Map(allPages.map((page) => [page.url, page])).values());
 
   return uniquePages;

@@ -124,24 +124,5 @@
     "question": "¿Encontraste algo que mejorar?",
     "description": "¿Notaste un error, tipografía o detalle faltante en esta página? Ayúdanos a mejorar la documentación abriendo un issue en GitHub.",
     "button": "Crear un Issue"
-  },
-  "skillsList": {
-    "title": "NachUI Skills",
-    "description": "Habilidades personalizadas de agentes de IA diseñadas para el ecosistema de componentes de NachUI.",
-    "subtitle": "figueroaignacio/ui-skills · {count} skills",
-    "searchLabel": "Buscar skills",
-    "searchPlaceholder": "Buscar skills...",
-    "columns": {
-      "skill": "Skill",
-      "install": "Instalar"
-    },
-    "noResults": "No hay skills que coincidan con “{query}”",
-    "copy": "Copiar",
-    "copied": "Copiado",
-    "syncedFrom": "Sincronizado desde"
-  },
-  "skillDetail": {
-    "viewSource": "Ver fuente",
-    "triggersWhen": "Se activa cuando: “{description}”"
   }
 }

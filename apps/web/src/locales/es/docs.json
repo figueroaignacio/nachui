@@ -272,35 +272,6 @@
           "href": "/bricks/settings"
         }
       ]
-    },
-    {
-      "title": "Skills",
-      "items": [
-        {
-          "title": "nachui-cli-development",
-          "href": "/skills/nachui-cli-development"
-        },
-        {
-          "title": "nachui-component-development",
-          "href": "/skills/nachui-component-development"
-        },
-        {
-          "title": "nachui-compound-components",
-          "href": "/skills/nachui-compound-components"
-        },
-        {
-          "title": "nachui-design",
-          "href": "/skills/nachui-design"
-        },
-        {
-          "title": "nachui-usage",
-          "href": "/skills/nachui-usage"
-        },
-        {
-          "title": "nachui-docs-management",
-          "href": "/skills/nachui-docs-management"
-        }
-      ]
     }
   ]
 }

@@ -222,25 +222,13 @@ const skills = defineCollection({
     name: z.string(),
     description: z.string(),
   }),
-  transform: async (document, context) => {
-    const body = await compileMDX(context, document, {
-      remarkPlugins,
-      rehypePlugins: createRehypePlugins(),
-    });
-
-    const slug = document._meta.path;
-
-    return {
-      ...document,
-      slug,
-      body,
-      raw: document.content,
-      toc: {
-        content: extractToc(document.content),
-        visible: true,
-      },
-    };
-  },
+  // Skills are documented as a list on /docs/concepts/skills, not as pages of
+  // their own, so only the frontmatter is needed. The bodies live in
+  // figueroaignacio/ui-skills and are never rendered here.
+  transform: (document) => ({
+    ...document,
+    slug: document._meta.path,
+  }),
 });
 
 export default defineConfig({
