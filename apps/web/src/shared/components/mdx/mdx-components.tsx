@@ -33,6 +33,7 @@ import {
 } from './compound-components';
 import { InlineCode } from './inline-code';
 import { PackageManagerTabs } from './package-manager-tabs';
+import { SkillsList } from './skills-list';
 
 // Tight, quiet scale: headings carry the hierarchy through weight and spacing
 // rather than size jumps or rules, so a page reads as one column of text.
@@ -238,6 +239,7 @@ export const mdxComponents = {
   ComponentsList,
   ComponentSource,
   PackageManagerTabs,
+  SkillsList,
   Accordion: MdxAccordion,
   AccordionContent: MdxAccordionContent,
   AccordionItem: MdxAccordionItem,

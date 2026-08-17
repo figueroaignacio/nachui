@@ -1,6 +1,6 @@
 ---
 name: 'nachui-compound-components'
-description: 'Use when building, extending, or consuming compound components — components made of multiple sub-parts assembled via dot notation (e.g. Dialog.Trigger, Card.Header, Accordion.Item).'
+description: 'Use when building, extending, or consuming compound components, meaning components made of multiple sub-parts assembled via dot notation (e.g. Dialog.Trigger, Card.Header, Accordion.Item).'
 ---
 
 # NachUI Compound Components

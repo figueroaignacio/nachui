@@ -1,0 +1,68 @@
+---
+title: Skills
+description: Instrucciones instalables que le enseñan a un asistente de IA cómo se construyen, componen y documentan los componentes de NachUI, para que el código que escribe se parezca al resto del proyecto.
+published: true
+toc:
+  visible: true
+date: 2026-08-17
+locale: es
+---
+
+Un asistente que puede leer tus componentes igual no conoce tus convenciones. Con un archivo suelto no se entera de que una `Card` se compone con dot notation, de que las variantes van en una config de CVA declarada fuera del componente, o de que los colores siempre pasan por un token en vez de un hex. Va a adivinar, y lo que adivine va a quedar casi bien.
+
+Las skills cubren ese hueco. Cada una es un archivo markdown que instalás en tu proyecto y que describe cómo se trabaja una parte específica de NachUI. El asistente carga la que corresponde a lo que estás haciendo.
+
+## Instalación
+
+Cada skill se instala por separado con el CLI de [skills](https://skills.sh):
+
+<div className="my-8">
+  <Command command="npx skills add github:figueroaignacio/ui-skills/skills/nachui-usage" />
+</div>
+
+El archivo queda en `.agents/skills/<nombre>/SKILL.md` dentro de tu proyecto y se registra en `skills-lock.json`, así que se commitea junto con todo lo demás y todo tu equipo recibe las mismas instrucciones.
+
+## Skills disponibles
+
+<SkillsList />
+
+Se sincronizan desde [github.com/figueroaignacio/ui-skills](https://github.com/figueroaignacio/ui-skills), que es donde se editan.
+
+## Cuál te sirve
+
+La mayoría de las veces te alcanza con la primera.
+
+- **nachui-usage** es para consumir NachUI en una app. Rutas de importación, qué primitivo usar en cada caso, cómo componerlos. Es la que querés si estás construyendo con los componentes y no sobre ellos.
+- **nachui-component-development** es para escribir o refactorizar los primitivos: estructura de archivos, configs de CVA, refs, display names.
+- **nachui-compound-components** cubre el patrón de dot notation, el contexto compartido y cómo agregar un sub componente sin romper el tipado.
+- **nachui-design** cubre tokens, espaciado, tipografía y las reglas visuales, para que un asistente deje de inventar valores hex.
+- **nachui-cli-development** es para trabajar dentro de `packages/cli`, en comandos, prompts y llamadas al registro.
+- **nachui-docs-management** es para la app de documentación: esquemas MDX, ruteo, traducciones.
+
+## Cómo funcionan
+
+Cada skill declara en su frontmatter cuándo debería usarse:
+
+```markdown
+---
+name: 'nachui-compound-components'
+description: 'Use when building, extending, or consuming compound components.'
+---
+```
+
+El asistente lee esas descripciones, las compara con lo que le pediste y carga el archivo que corresponde antes de empezar a escribir. No hace falta que nombres la skill vos, aunque nada te impide hacerlo.
+
+<Callout variant="info" className="mt-4">
+  <Callout.Title>Las skills y llms.txt hacen cosas distintas</Callout.Title>
+  <Callout.Content>
+    [llms.txt](/docs/concepts/llms-txt) le da al asistente la documentación. Las skills le dan las
+    convenciones. Lo primero le dice qué es un `Dialog`, lo segundo le dice cómo espera este
+    proyecto que se escriba un `Dialog`.
+  </Callout.Content>
+</Callout>
+
+## Relacionado
+
+- [llms.txt](/docs/concepts/llms-txt) para apuntar un agente a la documentación misma.
+- [Componentes compuestos](/docs/concepts/compound-components) para el patrón que la skill hace cumplir.
+- [CLI](/docs/concepts/cli) para los comandos que ponen los componentes en tu proyecto.

@@ -51,6 +51,10 @@
         {
           "title": "llms.txt",
           "href": "/docs/concepts/llms-txt"
+        },
+        {
+          "title": "Skills",
+          "href": "/docs/concepts/skills"
         }
       ]
     },
