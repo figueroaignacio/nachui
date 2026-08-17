@@ -1,6 +1,6 @@
 ---
 title: Introduction
-description: Learn how to build, customize, and own your React design system with NachUI.
+description: Learn how to build, customize, and own your React design system with NachUI. The same source your team reads is the source your AI agents read.
 published: true
 toc:
   visible: true
@@ -16,12 +16,15 @@ NachUI is a design system toolkit, not a packaged component library. We give you
 
 Conventional UI libraries work until you need custom behavior. Then you're stuck writing hacky wrappers, overriding styles, and fighting `node_modules`. NachUI solves this by shipping the actual source code directly to your repository. You own the components, the design tokens, and the patterns. Customize them however you want, without limits.
 
+You are probably not the only one reading it. The agent in your editor needs the same information you do, and since nothing here gets compiled away, it works from the same plain React and CSS. The documentation is published for it too, through [llms.txt](/docs/concepts/llms-txt).
+
 - **Full Ownership**: The component code is copied directly into your repository, giving you total freedom to refactor, debug, and customize it without waiting for upstream package updates.
 - **Open Code**: With no compiled files or black-box dependencies, you can audit, trace, and modify every line of CSS and React to match your security and performance standards.
 - **Unified Design**: Standardized design tokens ensure every component you copy shares the same typography, colors, and layout structure, keeping your UI consistent across pages.
 - **Compound Components**: Compose complex interfaces using modular dot-notation (like `<Card.Header>`), keeping your JSX readable and avoiding monolithic components cluttered with endless boolean flags.
 - **CLI Distribution**: Use our command-line utility to pull clean component source files into your project instantly, bypassing npm package management entirely.
 - **AI-Native**: Structured patterns and clean code allow AI coding assistants to easily read, extend, and refactor your components to match new requirements without breaking style integrity.
+- **Machine-Readable Docs**: An `llms.txt` index, raw markdown behind every page, a JSON catalog and installable agent skills, so your assistant learns the system from the source instead of guessing at it.
 
 ## Code Ownership over npm Dependencies
 
@@ -63,6 +66,14 @@ Avoid monolithic components with endless boolean flags. Compose UI using semanti
 ## AI-Native by Design
 
 Because every component lives directly in your repository as plain React and CSS code, AI agents can read, extend, and refactor your design system just like any other file in your project. There are no black-box node_modules hiding the implementation. The clean, standardized patterns ensure your AI coding assistant can generate new views and variations that perfectly match your design system's rules without losing coherence.
+
+The components are only half of it. The documentation is published for agents as well:
+
+- **[llms.txt](/docs/concepts/llms-txt)** is an index of every page, in the format assistants expect.
+- **Raw markdown** comes from adding `.md` to any docs URL, which returns the source of that page.
+- **[Skills](/docs/concepts/skills)** are installable instructions that teach an agent the conventions of this project before it writes a line.
+
+Point Claude, Cursor or Windsurf at the index once and they stop inventing APIs that were never there.
 
 ## Everything you need to know
 

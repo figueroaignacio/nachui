@@ -1,6 +1,6 @@
 {
-  "title": "Minimalist React design system you actually own.",
-  "description": "Editorial, zero-dependency React components copy-pasted directly into your repository. Clean typography, high signal, zero bundle bloat.",
+  "title": "Minimalist React design system that you own and your AI can read.",
+  "description": "Editorial, zero-dependency React components copy-pasted directly into your repository. Built so you and your AI assistant read the same thing: plain source, an llms.txt index, raw markdown docs and installable skills.",
   "openGraph": {
     "type": "website",
     "siteName": "NachUI",
@@ -9,7 +9,7 @@
         "url": "/opengraph-image",
         "width": 1200,
         "height": 630,
-        "alt": "Editorial, zero-dependency React components copy-pasted directly into your repository. Clean typography, high signal, zero bundle bloat."
+        "alt": "Editorial, zero-dependency React components copy-pasted directly into your repository. Built so you and your AI assistant read the same thing: plain source, an llms.txt index, raw markdown docs and installable skills."
       }
     ]
   },

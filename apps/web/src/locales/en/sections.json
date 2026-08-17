@@ -1,9 +1,9 @@
 {
   "home": {
     "badge": "Minimalism in code & design",
-    "subheading1": "Designed minimal for modern developers",
+    "subheading1": "Designed minimal for modern developers and their AI agents",
     "subheading2": "",
-    "description": "React components to build your own design system in a simple way.",
+    "description": "React components to build your own design system in a simple way. The source lives in your repo, so your AI reads it like any other file.",
     "actions": [
       {
         "label": "Get started",
@@ -113,13 +113,17 @@
         {
           "title": "Composes for you",
           "description": "Ask for a layout and it returns code that uses your own primitives."
+        },
+        {
+          "title": "Or bring your own agent",
+          "description": "The same docs are served as llms.txt and raw markdown, so Claude, Cursor or Windsurf can read them straight from the source."
         }
       ]
     },
     "catalog": {
       "label": "UI element registry",
       "title": "{count} UI elements, ready to copy",
-      "description": "Every primitive in NachUI — accessible, themeable, and owned by your codebase the moment you paste it.",
+      "description": "Every primitive in NachUI. Accessible, themeable, yours the moment you paste it, and readable by any agent working in your code.",
       "cta": "Browse the docs"
     }
   },
@@ -149,6 +153,7 @@
       "theming": "Theming",
       "darkMode": "Dark Mode",
       "cli": "CLI",
+      "llmsTxt": "llms.txt",
       "examples": "Examples"
     },
     "community": {
@@ -193,7 +198,11 @@
       },
       {
         "question": "How does it work with AI tools like Cursor or Claude?",
-        "answer": "Because every component is copied directly into your repository, AI coding assistants can read, extend, and refactor your design system like any other local file. No black boxes."
+        "answer": "Because every component is copied directly into your repository, AI coding assistants can read, extend, and refactor your design system like any other local file. No black boxes. The docs are built for them too. There is an llms.txt index, every page is also served as raw markdown, and you can install skills that teach an agent the conventions before it writes anything."
+      },
+      {
+        "question": "Is NachUI built for AI agents as well as developers?",
+        "answer": "Yes, and that was on purpose. Nothing is hidden behind a compiled package, so an agent reads exactly the same source you do. Add .md to any docs URL to get that page as markdown, point your assistant at nachui.tech/llms.txt for the whole index, or install a skill so it already knows how the components are put together. The llms.txt page has the setup for each tool."
       },
       {
         "question": "Is it accessible?",

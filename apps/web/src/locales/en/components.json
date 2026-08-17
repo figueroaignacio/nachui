@@ -112,11 +112,11 @@
   "landingLogoCta": {
     "version": "v1.0",
     "line1": "Source code in your repo.",
-    "line2": "No node_modules wrapper.",
+    "line2": "Readable by you and your agent.",
     "primaryAction": "Read the install guide",
     "secondaryAction": "Browse UI elements",
     "license": "MIT",
-    "description": "The CLI writes the component straight into your project. From that point on it is your file: no wrapper package, no upstream release to wait for.",
+    "description": "The CLI writes the component straight into your project. From that point on it is your file: no wrapper package, no upstream release to wait for, and nothing hidden from the AI agent editing it next to you.",
     "terminal": "terminal",
     "outputNote": "One file per component, in the path your nachui.json points to."
   },

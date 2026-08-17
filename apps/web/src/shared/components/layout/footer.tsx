@@ -65,6 +65,7 @@ export function Footer() {
                       ['/docs/concepts/theming', t('footer.resources.theming')],
                       ['/docs/concepts/dark-mode', t('footer.resources.darkMode')],
                       ['/docs/concepts/cli', t('footer.resources.cli')],
+                      ['/docs/concepts/llms-txt', t('footer.resources.llmsTxt')],
                     ] as [string, string][]
                   ).map(([href, label]) => (
                     <li key={href}>

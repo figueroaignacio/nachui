@@ -24,7 +24,7 @@ export async function GET() {
   };
 
   const blocks = [
-    '# NachUI\n\n> Editorial, zero-dependency React components you copy straight into your repository. No npm wrapper, no black boxes — you own the source, the design tokens and the patterns.\n\nEach link below serves the raw markdown of that page. Append `.md` to any docs URL to get its source.',
+    '# NachUI\n\n> Editorial, zero-dependency React components you copy straight into your repository. No npm wrapper and no black boxes, so you own the source, the design tokens and the patterns. Written to be read by the developer and by whatever agent is helping them.\n\nEach link below serves the raw markdown of that page. Append `.md` to any docs URL to get its source.',
     section('Getting started', ''),
     section('Concepts', 'concepts/'),
     section('UI elements', 'elements/ui'),

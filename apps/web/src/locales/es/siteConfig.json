@@ -1,6 +1,6 @@
 {
-  "title": "Sistema de diseño React minimalista que realmente te pertenece.",
-  "description": "Componentes de React editoriales y sin dependencias. Copia componentes minimalistas directamente a tu repositorio sin wrappers ni exceso de código.",
+  "title": "Sistema de diseño React minimalista que te pertenece y que tu IA puede leer.",
+  "description": "Componentes de React editoriales y sin dependencias, copiados directamente a tu repositorio. Hecho para que vos y tu asistente de IA lean lo mismo: código plano, un índice llms.txt, documentación en markdown y skills instalables.",
   "openGraph": {
     "type": "website",
     "siteName": "NachUI",
@@ -9,7 +9,7 @@
         "url": "/opengraph-image",
         "width": 1200,
         "height": 630,
-        "alt": "Componentes de React editoriales y sin dependencias. Copia componentes minimalistas directamente a tu repositorio sin wrappers ni exceso de código."
+        "alt": "Componentes de React editoriales y sin dependencias, copiados directamente a tu repositorio. Hecho para que vos y tu asistente de IA lean lo mismo: código plano, un índice llms.txt, documentación en markdown y skills instalables."
       }
     ]
   },

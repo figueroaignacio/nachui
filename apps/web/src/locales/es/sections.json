@@ -1,9 +1,9 @@
 {
   "home": {
     "badge": "Minimalismo en código y diseño",
-    "subheading1": "Diseñado de manera minimalista para desarrolladores modernos",
+    "subheading1": "Diseñado de manera minimalista para desarrolladores modernos y sus agentes de IA",
     "subheading2": "",
-    "description": "Componentes de React para crear tu propio sistema de diseño de manera sencilla.",
+    "description": "Componentes de React para crear tu propio sistema de diseño de manera sencilla. El código vive en tu repo, así que tu IA lo lee como cualquier otro archivo.",
     "github": "Código abierto, el código es tuyo",
     "actions": [
       {
@@ -114,13 +114,17 @@
         {
           "title": "Compone por vos",
           "description": "Pedile un layout y te devuelve código que usa tus propios primitivos."
+        },
+        {
+          "title": "O traé tu propio agente",
+          "description": "La misma documentación se sirve como llms.txt y markdown crudo, así Claude, Cursor o Windsurf pueden leerla directo desde la fuente."
         }
       ]
     },
     "catalog": {
       "label": "Registro de elementos UI",
       "title": "{count} elementos UI, listos para copiar",
-      "description": "Todos los primitivos de NachUI — accesibles, personalizables y tuyos desde el momento en que los pegás.",
+      "description": "Todos los primitivos de NachUI. Accesibles, personalizables, tuyos desde el momento en que los pegás y legibles para cualquier agente que trabaje en tu código.",
       "cta": "Ver la documentación"
     }
   },
@@ -150,6 +154,7 @@
       "theming": "Tematización",
       "darkMode": "Modo Oscuro",
       "cli": "CLI",
+      "llmsTxt": "llms.txt",
       "examples": "Ejemplos"
     },
     "community": {
@@ -194,7 +199,11 @@
       },
       {
         "question": "¿Cómo funciona con herramientas de IA como Cursor o Claude?",
-        "answer": "Dado que cada componente se copia directamente en tu repositorio, los asistentes de IA pueden leer, extender y refactorizar tu sistema de diseño como cualquier otro archivo local. Sin cajas negras."
+        "answer": "Dado que cada componente se copia directamente en tu repositorio, los asistentes de IA pueden leer, extender y refactorizar tu sistema de diseño como cualquier otro archivo local. Sin cajas negras. La documentación también está hecha para ellos. Hay un índice llms.txt, cada página se sirve además como markdown crudo, y podés instalar skills que le enseñan las convenciones a un agente antes de que escriba nada."
+      },
+      {
+        "question": "¿NachUI está pensado tanto para agentes de IA como para desarrolladores?",
+        "answer": "Sí, y fue a propósito. No hay nada escondido detrás de un paquete compilado, así que un agente lee exactamente el mismo código que vos. Agregá .md a cualquier URL de la documentación para obtener esa página en markdown, apuntá tu asistente a nachui.tech/llms.txt para el índice completo, o instalá una skill para que ya sepa cómo están armados los componentes. La página de llms.txt tiene la configuración para cada herramienta."
       },
       {
         "question": "¿Es accesible?",

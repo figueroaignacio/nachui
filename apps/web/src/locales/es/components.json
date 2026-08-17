@@ -112,11 +112,11 @@
   "landingLogoCta": {
     "version": "v1.0",
     "line1": "Código fuente en tu repositorio.",
-    "line2": "Sin wrappers en node_modules.",
+    "line2": "Legible para vos y para tu agente.",
     "primaryAction": "Ver la guía de instalación",
     "secondaryAction": "Ver elementos UI",
     "license": "MIT",
-    "description": "La CLI escribe el componente directo en tu proyecto. Desde ahí el archivo es tuyo: sin paquete wrapper y sin esperar una release ajena.",
+    "description": "La CLI escribe el componente directo en tu proyecto. Desde ahí el archivo es tuyo: sin paquete wrapper, sin esperar una release ajena y sin nada oculto para el agente de IA que edita al lado tuyo.",
     "terminal": "terminal",
     "outputNote": "Un archivo por componente, en la ruta que indica tu nachui.json."
   },

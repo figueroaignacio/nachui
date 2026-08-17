@@ -1,6 +1,6 @@
 ---
 title: Introducción
-description: Aprende a construir, personalizar y adueñarte de tu sistema de diseño en React con NachUI.
+description: Aprende a construir, personalizar y adueñarte de tu sistema de diseño en React con NachUI. El mismo código que lee tu equipo es el que leen tus agentes de IA.
 published: true
 toc:
   visible: true
@@ -16,12 +16,15 @@ NachUI es un kit de herramientas para sistemas de diseño, no una librería empa
 
 Las librerías de componentes convencionales funcionan hasta que necesitas un comportamiento a medida. Ahí es cuando terminas escribiendo wrappers complejos, sobreescribiendo estilos y peleando con `node_modules`. NachUI soluciona esto enviando el código fuente real directo a tu repositorio. Eres el dueño de los componentes, los tokens de diseño y los patrones. Personalízalos como quieras, sin límites.
 
+Probablemente no seas el único que lo lee. El agente de tu editor necesita la misma información que vos y, como acá no hay nada compilado, trabaja sobre el mismo React y CSS plano. La documentación también se publica para él, a través de [llms.txt](/docs/concepts/llms-txt).
+
 - **Propiedad total**: El código de los componentes se copia directamente en tu repositorio, permitiéndote refactorizar, depurar y personalizar sin depender de actualizaciones de terceros.
 - **Código abierto**: Sin archivos compilados ni dependencias de caja negra; puedes auditar, rastrear y modificar cada línea de React y CSS de acuerdo a tus necesidades de seguridad y rendimiento.
 - **Diseño unificado**: Los tokens de diseño estandarizados garantizan que cada componente copiado comparta la misma tipografía, colores y estructura, manteniendo la consistencia visual en todo tu sitio.
 - **Componentes compuestos**: Construye interfaces complejas usando composición semántica (como `<Card.Header>`), evitando componentes monolíticos sobrecargados con infinidad de flags booleanos.
 - **Distribución vía CLI**: Utiliza nuestra herramienta de terminal para descargar el código limpio directamente a tu carpeta de componentes, omitiendo el gestor de paquetes de npm.
 - **Nativo para IA**: El código estructurado y con patrones consistentes permite que los asistentes de IA entiendan, extiendan y refactoricen tus componentes sin romper la coherencia del diseño.
+- **Documentación legible por máquinas**: Un índice `llms.txt`, markdown crudo detrás de cada página, un catálogo JSON y skills instalables, para que tu asistente aprenda el sistema desde la fuente en lugar de adivinarlo.
 
 ## Propiedad del código sobre dependencias de npm
 
@@ -63,6 +66,14 @@ Evitá componentes monolíticos con infinitos flags booleanos. Componé tu UI us
 ## Nativo para IA por Diseño
 
 Dado que cada componente vive directamente en tu repositorio como código plano de React y CSS, los asistentes de IA pueden leer, extender y refactorizar tu sistema de diseño como cualquier otro archivo de tu proyecto. No hay cajas negras en `node_modules` que oculten el funcionamiento interno. Los patrones limpios y estandarizados aseguran que tu asistente de IA pueda generar nuevas vistas y variaciones respetando las reglas de diseño sin perder coherencia.
+
+Los componentes son solo la mitad. La documentación también se publica para agentes:
+
+- **[llms.txt](/docs/concepts/llms-txt)** es un índice de todas las páginas, en el formato que los asistentes esperan.
+- **Markdown crudo** sale de agregar `.md` a cualquier URL de la documentación, que devuelve la fuente de esa página.
+- **[Skills](/docs/concepts/skills)** son instrucciones instalables que le enseñan a un agente las convenciones del proyecto antes de que escriba una línea.
+
+Apuntá Claude, Cursor o Windsurf al índice una sola vez y dejan de inventar APIs que nunca existieron.
 
 ## Todo lo que necesitas saber
 
