@@ -1,3 +1,4 @@
+import { AiPerch } from '@/features/chat/ui/ai-perch';
 import { GITHUB_REPO_URL } from '@/lib/domains';
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
@@ -103,7 +104,10 @@ export function Footer() {
 
           {/* Crosses the rails to the viewport edge, like every other section
             rule, instead of stopping inside them. */}
-          <div className="rule-bleed" />
+          <div className="relative">
+            <div className="rule-bleed" />
+            <AiPerch className="ai-edge-perch" expression="asleep" />
+          </div>
 
           <RegistrationMark />
 
