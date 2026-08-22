@@ -1,6 +1,7 @@
 'use client';
 
 import { CopyButton } from '@/components/mdx/copy-button';
+import { AiWalker } from '@/features/chat/ui/ai-walker';
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
@@ -79,7 +80,12 @@ export function LandingInstall() {
           </p>
         </div>
       </div>
-      <div className="rule-bleed rule-draw mt-16" />
+      <div className="relative mt-16">
+        <div className="rule-bleed" />
+        <div className="ai-walk-track" aria-hidden="true">
+          <AiWalker />
+        </div>
+      </div>
       <p className="text-muted-foreground mt-4 font-mono text-xs">{t('license')}</p>
     </section>
   );
