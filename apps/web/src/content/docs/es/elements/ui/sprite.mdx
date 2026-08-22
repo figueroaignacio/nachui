@@ -20,6 +20,15 @@ hereda las animaciones sin trabajo extra.
 
 <ComponentInstallTabs component="sprite" />
 
+Instalarlo a mano funciona como con cualquier otro componente: copiá el archivo
+de la pestaña Manual y ajustá los imports. Las animaciones viajan adentro del
+archivo como `SPRITE_CSS`, así que no hay nada más que copiar — renderizá con
+`withStyles` o inyectá el string una sola vez:
+
+```tsx
+<style>{SPRITE_CSS}</style>
+```
+
 ## Anatomía
 
 ```tsx

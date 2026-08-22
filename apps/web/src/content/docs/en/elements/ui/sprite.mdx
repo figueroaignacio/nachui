@@ -20,6 +20,15 @@ free.
 
 <ComponentInstallTabs component="sprite" />
 
+Installing by hand works the same as any other component: copy the file from
+the Manual tab and adjust the import paths. The animations travel inside the
+file as `SPRITE_CSS`, so nothing else needs copying — either render with
+`withStyles` or inject the string once:
+
+```tsx
+<style>{SPRITE_CSS}</style>
+```
+
 ## Anatomy
 
 ```tsx

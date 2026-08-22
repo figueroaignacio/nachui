@@ -1,3 +1,4 @@
+import { CopyButton } from '@/components/mdx/copy-button';
 import { Link } from '@/i18n/navigation';
 import { Sprite, type SpriteState } from '@repo/ui/components/sprite';
 import { getTranslations } from 'next-intl/server';
@@ -11,6 +12,25 @@ export async function SpriteView({ id }: { id: string }) {
   if (!member) notFound();
 
   const t = await getTranslations('sections.sprites');
+
+  const snippet = [
+    '<Sprite',
+    `  seed="${member.seed}"`,
+    '  parts={{',
+    `    skin: '${member.parts.skin}',`,
+    `    hair: '${member.parts.hair}',`,
+    `    hairColor: '${member.parts.hairColor}',`,
+    `    eyes: '${member.parts.eyes}',`,
+    `    outfit: '${member.parts.outfit}',`,
+    `    outfitMain: '${member.parts.outfitMain}',`,
+    `    outfitTrim: '${member.parts.outfitTrim}',`,
+    `    accessory: '${member.parts.accessory}',`,
+    '  }}',
+    '  state="loop"',
+    '/>',
+  ].join('\n');
+  const endpoint = `/api/sprite/${member.id}.svg?state=loop&size=96`;
+
   const recipe = [
     ['skin', member.parts.skin, null],
     ['hair', `${member.parts.hair} · ${member.parts.hairColor}`, null],
@@ -82,6 +102,27 @@ export async function SpriteView({ id }: { id: string }) {
             </div>
           ))}
         </dl>
+
+        <h2 className="text-muted-foreground mt-12 mb-4 font-mono text-[0.68rem] tracking-widest uppercase">
+          {t('codeTitle')}
+        </h2>
+        <div className="border-border bg-card overflow-hidden rounded-lg border">
+          <div className="border-border flex items-center justify-between border-b px-4 py-2">
+            <span className="text-muted-foreground font-mono text-[0.68rem]">{'<Sprite />'}</span>
+            <CopyButton value={snippet} />
+          </div>
+          <div className="overflow-x-auto p-4">
+            <pre className="font-mono text-[12px] leading-[1.7]">{snippet}</pre>
+          </div>
+        </div>
+        <div className="border-border bg-card mt-3 overflow-hidden rounded-lg border">
+          <div className="flex items-center justify-between gap-4 px-4 py-2.5">
+            <code className="text-muted-foreground overflow-x-auto font-mono text-[12px] whitespace-nowrap">
+              {endpoint}
+            </code>
+            <CopyButton value={endpoint} className="shrink-0" />
+          </div>
+        </div>
       </div>
     </section>
   );
