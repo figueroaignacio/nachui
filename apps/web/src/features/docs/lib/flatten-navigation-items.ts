@@ -6,6 +6,7 @@ export function flattenNavigationItems(sections: NavigationSection[]): SearchRes
       title: item.title,
       href: item.href,
       category: section.title,
+      badge: item.badge,
     })),
   );
 }

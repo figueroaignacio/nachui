@@ -1,5 +1,6 @@
 'use client';
 
+import { NavBadge } from '@/components/common/nav-badge';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { DocItem, DocSection } from '@/lib/definitions';
 import { cn } from '@repo/ui/lib/cn';
@@ -27,13 +28,14 @@ export function Sidebar() {
                       rel={item.target ? 'noopener noreferrer' : undefined}
                       aria-current={isActive ? 'page' : undefined}
                       className={cn(
-                        'block rounded-md px-2.5 py-1.5 text-sm transition-colors',
+                        'flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors',
                         isActive
                           ? 'bg-card text-foreground font-medium'
                           : 'text-muted-foreground hover:text-foreground',
                       )}
                     >
                       {item.title}
+                      <NavBadge badge={item.badge} />
                     </Link>
                   </li>
                 );

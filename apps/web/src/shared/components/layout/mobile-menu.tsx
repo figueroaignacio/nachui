@@ -1,5 +1,6 @@
 'use client';
 
+import { NavBadge } from '@/components/common/nav-badge';
 import { Searcher } from '@/features/docs/components/searcher';
 import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll';
 import { Link, usePathname } from '@/i18n/navigation';
@@ -96,13 +97,14 @@ export function MobileMenu() {
                         onClick={toggleMenu}
                         aria-current={isActive ? 'page' : undefined}
                         className={cn(
-                          'block rounded-md px-2.5 py-1.5 text-sm transition-colors',
+                          'flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors',
                           isActive
                             ? 'bg-card text-foreground font-medium'
                             : 'text-muted-foreground hover:text-foreground',
                         )}
                       >
                         {item.title}
+                        <NavBadge badge={item.badge} />
                       </Link>
                     </li>
                   );
@@ -126,13 +128,14 @@ export function MobileMenu() {
                         onClick={toggleMenu}
                         aria-current={isActive ? 'page' : undefined}
                         className={cn(
-                          'block rounded-md px-2.5 py-1.5 text-sm transition-colors',
+                          'flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors',
                           isActive
                             ? 'bg-card text-foreground font-medium'
                             : 'text-muted-foreground hover:text-foreground',
                         )}
                       >
                         {item.title}
+                        <NavBadge badge={item.badge} />
                       </Link>
                     </li>
                   );

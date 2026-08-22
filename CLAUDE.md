@@ -53,6 +53,8 @@ The component catalog is described by generated files, and the web build fails i
 
 So a new component typically touches: the component in `packages/ui/src/components/` (or `layout/`), a demo in `packages/ui/src/demos/`, regenerated registry files, and MDX docs in `apps/web/src/content/docs/{en,es}/`. Both locales exist for every page.
 
+Nav items in `apps/web/src/locales/{en,es}/docs.json` accept an optional `"badge": "new" | "updated"` that renders a chip in the sidebar, mobile menu, and search results (labels under `docs.badges`). Set it in both locales when shipping or reworking a component and remove it once it is no longer recent; `check-navigation.mjs` fails the build on invalid values or locale mismatches.
+
 ## AI/RAG pipeline
 
 `pnpm --filter @repo/ai ingest` fetches the docs catalog from the running web app's `/api/docs`, chunks and embeds pages with Gemini (rate-limited in batches), and upserts into the `docChunks` table keyed by content hash. The API `chat`/`rag` modules answer over those embeddings. Env: `GOOGLE_GENERATIVE_AI_API_KEY` (apps/web/.env), `POSTGRES_URL` (packages/db/.env).

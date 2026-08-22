@@ -154,7 +154,8 @@
         {
           "title": "Navigation Menu",
           "href": "/docs/elements/ui/navigation-menu",
-          "description": "Una barra de navegación horizontal con paneles de links al hacer hover."
+          "description": "Una barra de navegación horizontal con paneles de links al hacer hover.",
+          "badge": "new"
         },
         {
           "title": "Popover",
@@ -194,7 +195,8 @@
         {
           "title": "Sprite",
           "href": "/docs/elements/ui/sprite",
-          "description": "Un personaje pixel armado con partes intercambiables, que camina, se sienta y programa."
+          "description": "Un personaje pixel armado con partes intercambiables, que camina, se sienta y programa.",
+          "badge": "new"
         },
         {
           "title": "Switch",
@@ -278,5 +280,9 @@
         }
       ]
     }
-  ]
+  ],
+  "badges": {
+    "new": "Nuevo",
+    "updated": "Actualizado"
+  }
 }

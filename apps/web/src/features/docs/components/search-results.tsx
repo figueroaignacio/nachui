@@ -1,6 +1,7 @@
+import { NavBadge } from '@/components/common/nav-badge';
 import { AiAvatar } from '@/features/chat/ui/ai-avatar';
 import { Link } from '@/i18n/navigation';
-import type { NavigationSection, SearchResultItem } from '@/lib/definitions';
+import type { DocBadge, NavigationSection, SearchResultItem } from '@/lib/definitions';
 import { Dialog } from '@repo/ui/components/dialog';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
@@ -18,11 +19,13 @@ function ResultItem({
   title,
   isActive,
   meta,
+  badge,
 }: {
   href: string;
   title: string;
   isActive: boolean;
   meta?: string;
+  badge?: DocBadge;
 }) {
   return (
     <li>
@@ -47,6 +50,7 @@ function ResultItem({
               )}
             />
             <span className={cn('truncate', isActive && 'font-medium')}>{title}</span>
+            <NavBadge badge={badge} />
           </div>
           {meta && (
             <span className="text-muted-foreground/40 shrink-0 text-[10px] font-medium tracking-wide uppercase">
@@ -103,6 +107,7 @@ export function SearchResults({ query, results, navigation, selectedIndex }: Sea
               title={item.title}
               isActive={index === selectedIndex}
               meta={item.category}
+              badge={item.badge}
             />
           ))}
         </ul>
@@ -127,6 +132,7 @@ export function SearchResults({ query, results, navigation, selectedIndex }: Sea
                   href={item.href}
                   title={item.title}
                   isActive={isActive}
+                  badge={item.badge}
                 />
               );
             })}

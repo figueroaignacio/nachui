@@ -46,6 +46,50 @@ function collectHrefs(locale) {
   return found;
 }
 
+const VALID_BADGES = new Set(['new', 'updated']);
+
+/** href -> badge for one locale's docs navigation, reporting invalid values. */
+function collectBadges(locale, problems) {
+  const badges = new Map();
+
+  const docs = JSON.parse(readFileSync(join(APP_ROOT, `src/locales/${locale}/docs.json`), 'utf8'));
+  for (const section of docs.navigation ?? []) {
+    for (const item of section.items ?? []) {
+      if (item.badge === undefined) continue;
+      if (!VALID_BADGES.has(item.badge)) {
+        problems.push(
+          `[${locale}] ${item.href} has badge "${item.badge}"; ` +
+            `valid values: ${[...VALID_BADGES].join(', ')}  (docs.json > ${section.title} > ${item.title})`,
+        );
+        continue;
+      }
+      badges.set(item.href, item.badge);
+    }
+  }
+
+  for (const badge of VALID_BADGES) {
+    if (!docs.badges?.[badge]) {
+      problems.push(`[${locale}] docs.json is missing the "badges.${badge}" label`);
+    }
+  }
+
+  return badges;
+}
+
+/** The same item must carry the same badge in every locale, or the chip
+ * silently differs per language. */
+function checkBadgeParity(byLocale, problems) {
+  const hrefs = new Set(byLocale.flatMap(([, badges]) => [...badges.keys()]));
+
+  for (const href of hrefs) {
+    const values = byLocale.map(([locale, badges]) => `${locale}=${badges.get(href) ?? 'none'}`);
+    const unique = new Set(byLocale.map(([, badges]) => badges.get(href)));
+    if (unique.size > 1) {
+      problems.push(`${href} has mismatched badges across locales: ${values.join(', ')}`);
+    }
+  }
+}
+
 function readFrontmatter(filePath) {
   const raw = readFileSync(filePath, 'utf8');
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -142,6 +186,11 @@ function main() {
       unchecked.push(`[${locale}] ${href}  (${source})`);
     }
   }
+
+  checkBadgeParity(
+    LOCALES.map((locale) => [locale, collectBadges(locale, problems)]),
+    problems,
+  );
 
   // Docs that never got linked can still be invisible by accident, so the same
   // run reports a missing flag anywhere in the collection.
