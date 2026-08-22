@@ -158,6 +158,12 @@ body {
     animation: cell-cascade 0.35s ease-out both;
     animation-delay: calc(var(--cascade-i, 0) * 18ms);
   }
+
+  .chat-welcome-item {
+    opacity: 0;
+    animation: cell-cascade 0.35s ease-out both;
+    animation-delay: calc(var(--welcome-cue) + var(--cascade-i, 0) * 70ms);
+  }
 }
 
 @keyframes scroll-reveal {
@@ -222,5 +228,679 @@ body {
     opacity: 1;
     transform: none;
     filter: blur(0);
+  }
+}
+
+.ai-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ai-blink 3s infinite;
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ai-eyes {
+  animation: ai-glance 9s infinite;
+  transition: translate 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-expression='asleep'] .ai-eye {
+  animation: none;
+  transform: scaleY(0.25);
+}
+
+[data-expression='startled'] .ai-eye {
+  animation: none;
+  transform: scaleY(1.7);
+}
+
+[data-expression='reading'] .ai-eyes {
+  animation: none;
+  translate: 0 1.2px;
+}
+
+[data-expression='reading'] .ai-eye {
+  animation: none;
+  transform: scaleY(0.6);
+}
+
+.ai-scene {
+  --ai-cue: 0ms;
+
+  overflow: visible;
+}
+
+.ai-breathe {
+  animation: ai-breathe 3.6s ease-in-out infinite;
+}
+
+.ai-headset {
+  animation: ai-headset-on 420ms cubic-bezier(0.34, 1.4, 0.64, 1) var(--ai-cue) both;
+}
+
+.ai-laptop {
+  animation: ai-laptop-in 600ms cubic-bezier(0.25, 0.9, 0.35, 1) calc(var(--ai-cue) + 500ms) both;
+}
+
+.ai-lid {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: ai-lid-open 450ms ease-out calc(var(--ai-cue) + 1000ms) both;
+}
+
+.ai-mark {
+  animation: ai-mark-on 400ms steps(1, end) calc(var(--ai-cue) + 1450ms) both;
+}
+
+.ai-spill {
+  opacity: 0;
+  animation: ai-spill-on 900ms ease-out calc(var(--ai-cue) + 1450ms) both;
+}
+
+.ai-glow {
+  opacity: 0;
+  animation: ai-face-lit 900ms ease-out calc(var(--ai-cue) + 1450ms) both;
+}
+
+.ai-glint {
+  opacity: 0;
+  animation: ai-glint-on 300ms steps(1, end) calc(var(--ai-cue) + 1450ms) both;
+}
+
+.ai-lean {
+  animation: ai-lean-in 500ms ease-out calc(var(--ai-cue) + 1400ms) both;
+}
+
+.ai-hands {
+  opacity: 0;
+  animation: ai-hands-in 350ms ease-out calc(var(--ai-cue) + 1600ms) both;
+}
+
+.ai-hand {
+  animation: ai-key-tap 300ms steps(2, end) infinite;
+}
+
+.ai-hand:nth-child(2) {
+  animation-delay: 150ms;
+}
+
+[data-expression='working'] .ai-eyes {
+  animation: ai-read-code 3.4s steps(1, end) infinite;
+}
+
+[data-gaze='true'] .ai-eyes {
+  animation: none;
+  translate: calc(var(--gaze-x, 0) * 1.5px) calc(var(--gaze-y, 0) * 0.9px);
+}
+
+.ai-perch {
+  overflow: visible;
+}
+
+.chat-welcome {
+  --welcome-cue: 60ms;
+}
+
+.ai-leg-dangle {
+  animation: ai-leg-swing 2.4s ease-in-out infinite;
+}
+
+.ai-leg-dangle + .ai-leg-dangle {
+  animation-delay: 320ms;
+}
+
+[data-expression='asleep'] .ai-leg-dangle {
+  animation: none;
+}
+
+.ai-edge-perch {
+  position: absolute;
+  inset-block-end: 100%;
+  inset-inline-end: 10%;
+  pointer-events: none;
+}
+
+.ai-walk-track {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 3.5rem;
+  overflow: clip visible;
+  pointer-events: none;
+}
+
+.ai-walking {
+  --ai-leg-span: 13s;
+
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  overflow: visible;
+  animation: ai-pace calc(var(--ai-leg-span) * 2) linear infinite;
+}
+
+.ai-walking .ai-sit {
+  animation: ai-stretch-sit var(--ai-leg-span) ease-out infinite;
+}
+
+.ai-walking .ai-gait {
+  animation:
+    ai-gait-bob 480ms steps(1, end) infinite,
+    ai-stretch-bob var(--ai-leg-span) steps(1, end) infinite;
+}
+
+.ai-walking .ai-legs-walk {
+  animation: ai-stretch-legs-walk var(--ai-leg-span) steps(1, end) infinite;
+}
+
+.ai-walking .ai-legs-sit {
+  animation: ai-stretch-legs-sit var(--ai-leg-span) steps(1, end) infinite;
+}
+
+.ai-walking .ai-headset {
+  animation: ai-stretch-headset var(--ai-leg-span) cubic-bezier(0.34, 1.4, 0.64, 1) infinite;
+}
+
+.ai-walking .ai-laptop {
+  animation: ai-stretch-laptop var(--ai-leg-span) ease-out infinite;
+}
+
+.ai-walking .ai-lid {
+  animation: ai-stretch-lid var(--ai-leg-span) ease-out infinite;
+}
+
+.ai-walking .ai-mark {
+  animation: ai-stretch-mark var(--ai-leg-span) steps(1, end) infinite;
+}
+
+.ai-walking .ai-spill {
+  animation: ai-stretch-spill var(--ai-leg-span) ease-out infinite;
+}
+
+.ai-walking .ai-glow {
+  animation: ai-stretch-glow var(--ai-leg-span) ease-out infinite;
+}
+
+.ai-walking .ai-glint {
+  animation: ai-stretch-glint var(--ai-leg-span) steps(1, end) infinite;
+}
+
+.ai-walking .ai-lean {
+  animation: ai-stretch-lean var(--ai-leg-span) ease-out infinite;
+}
+
+.ai-walking .ai-hands {
+  animation: ai-stretch-hands var(--ai-leg-span) ease-out infinite;
+}
+
+.ai-gait {
+  animation: ai-gait-bob 480ms steps(1, end) infinite;
+}
+
+.ai-leg-frame {
+  animation: ai-frame-toggle 480ms steps(1, end) infinite;
+}
+
+.ai-leg-frame + .ai-leg-frame {
+  animation-delay: 240ms;
+}
+
+@keyframes ai-blink {
+  0%,
+  80% {
+    transform: scaleY(1);
+  }
+  82%,
+  84% {
+    transform: scaleY(0);
+  }
+  86%,
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes ai-glance {
+  0%,
+  60%,
+  100% {
+    translate: 0 0;
+  }
+  64%,
+  70% {
+    translate: 1.4px 0;
+  }
+  76%,
+  82% {
+    translate: -1.4px 0;
+  }
+}
+
+@keyframes ai-breathe {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 0.22px;
+  }
+}
+
+@keyframes ai-laptop-in {
+  from {
+    translate: 0 15px;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    translate: 0 -0.8px;
+  }
+  to {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+
+@keyframes ai-lid-open {
+  from {
+    scale: 1 0;
+  }
+  70% {
+    scale: 1 1.12;
+  }
+  to {
+    scale: 1 1;
+  }
+}
+
+@keyframes ai-face-lit {
+  from {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  55% {
+    opacity: 0.16;
+  }
+  to {
+    opacity: 0.16;
+  }
+}
+
+@keyframes ai-glint-on {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ai-lean-in {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 0.55px;
+  }
+}
+
+@keyframes ai-hands-in {
+  from {
+    opacity: 0;
+    translate: 0 3px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes ai-read-code {
+  0% {
+    translate: 0 1.2px;
+  }
+  15% {
+    translate: -1.4px 1.2px;
+  }
+  35% {
+    translate: 1.4px 1.2px;
+  }
+  55% {
+    translate: -1.4px 1.2px;
+  }
+  75% {
+    translate: 1.1px 1.2px;
+  }
+  90% {
+    translate: -1.4px 1.2px;
+  }
+  100% {
+    translate: 0 1.2px;
+  }
+}
+
+@keyframes ai-key-tap {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -1px;
+  }
+}
+
+@keyframes ai-pace {
+  0% {
+    inset-inline-start: calc(100% - 3.5rem);
+  }
+  20%,
+  50% {
+    inset-inline-start: 0;
+  }
+  70%,
+  100% {
+    inset-inline-start: calc(100% - 3.5rem);
+  }
+}
+
+@keyframes ai-gait-bob {
+  0% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 var(--bob, -1px);
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+@keyframes ai-frame-toggle {
+  0% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ai-leg-swing {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -0.6px;
+  }
+}
+
+@keyframes ai-stretch-sit {
+  0%,
+  40% {
+    translate: 0 0;
+  }
+  46%,
+  93% {
+    translate: 0 4px;
+  }
+  98%,
+  100% {
+    translate: 0 0;
+  }
+}
+
+@keyframes ai-stretch-bob {
+  0%,
+  39% {
+    --bob: -1px;
+  }
+  40%,
+  96% {
+    --bob: 0px;
+  }
+  97%,
+  100% {
+    --bob: -1px;
+  }
+}
+
+@keyframes ai-stretch-legs-walk {
+  0%,
+  40% {
+    opacity: 1;
+  }
+  41%,
+  92% {
+    opacity: 0;
+  }
+  93%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes ai-stretch-legs-sit {
+  0%,
+  40% {
+    opacity: 0;
+  }
+  41%,
+  92% {
+    opacity: 1;
+  }
+  93%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ai-stretch-headset {
+  0%,
+  47% {
+    translate: 0 -9px;
+    opacity: 0;
+  }
+  49% {
+    opacity: 1;
+  }
+  53%,
+  89% {
+    translate: 0 0;
+    opacity: 1;
+  }
+  92%,
+  100% {
+    translate: 0 -9px;
+    opacity: 0;
+  }
+}
+
+@keyframes ai-stretch-laptop {
+  0%,
+  55% {
+    translate: 0 15px;
+    opacity: 0;
+  }
+  58% {
+    translate: 0 -0.8px;
+    opacity: 1;
+  }
+  60%,
+  87% {
+    translate: 0 0;
+    opacity: 1;
+  }
+  91%,
+  100% {
+    translate: 0 15px;
+    opacity: 0;
+  }
+}
+
+@keyframes ai-stretch-lid {
+  0%,
+  61% {
+    scale: 1 0;
+  }
+  65% {
+    scale: 1 1.12;
+  }
+  67%,
+  88% {
+    scale: 1 1;
+  }
+  90%,
+  100% {
+    scale: 1 0;
+  }
+}
+
+@keyframes ai-stretch-glow {
+  0%,
+  65% {
+    opacity: 0;
+  }
+  67% {
+    opacity: 0.5;
+  }
+  70%,
+  87% {
+    opacity: 0.16;
+  }
+  90%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ai-stretch-glint {
+  0%,
+  65% {
+    opacity: 0;
+  }
+  66%,
+  88% {
+    opacity: 1;
+  }
+  89%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes ai-stretch-lean {
+  0%,
+  56% {
+    translate: 0 0;
+  }
+  64%,
+  87% {
+    translate: 0 0.55px;
+  }
+  92%,
+  100% {
+    translate: 0 0;
+  }
+}
+
+@keyframes ai-stretch-hands {
+  0%,
+  67% {
+    opacity: 0;
+    translate: 0 3px;
+  }
+  70%,
+  87% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  90%,
+  100% {
+    opacity: 0;
+    translate: 0 3px;
+  }
+}
+
+@keyframes ai-headset-on {
+  from {
+    translate: 0 -9px;
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  to {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+
+@keyframes ai-mark-on {
+  from {
+    fill: #2f2f2f;
+  }
+  20% {
+    fill: #d8f5ec;
+  }
+  45% {
+    fill: #a8e6d7;
+  }
+  to {
+    fill: #a8e6d7;
+  }
+}
+
+@keyframes ai-spill-on {
+  from {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.9;
+  }
+  55% {
+    opacity: 0.45;
+  }
+  to {
+    opacity: 0.45;
+  }
+}
+
+@keyframes ai-stretch-mark {
+  0%,
+  65% {
+    fill: #2f2f2f;
+  }
+  66% {
+    fill: #d8f5ec;
+  }
+  68%,
+  88% {
+    fill: #a8e6d7;
+  }
+  89%,
+  100% {
+    fill: #2f2f2f;
+  }
+}
+
+@keyframes ai-stretch-spill {
+  0%,
+  65% {
+    opacity: 0;
+  }
+  67% {
+    opacity: 0.9;
+  }
+  70%,
+  87% {
+    opacity: 0.45;
+  }
+  90%,
+  100% {
+    opacity: 0;
   }
 }
