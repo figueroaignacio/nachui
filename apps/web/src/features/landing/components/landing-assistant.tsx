@@ -81,7 +81,7 @@ export function LandingAssistant() {
             className="focus-visible:ring-ring block cursor-pointer rounded-2xl transition-transform duration-300 ease-out hover:-translate-y-2 focus-visible:ring-2 focus-visible:outline-none motion-reduce:transform-none"
           >
             <span className="block -rotate-8">
-              <AiAvatar size="xl" />
+              <AiAvatar size="xl" follow />
             </span>
           </button>
         </div>
