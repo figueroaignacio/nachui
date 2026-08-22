@@ -1,6 +1,8 @@
 'use client';
 
-import React from 'react';
+import { Avatar } from '../../components/avatar';
+import { Badge } from '../../components/badge';
+import { Button } from '../../components/button';
 import { Flex } from '../../layout/flex';
 
 export function Default() {
@@ -10,17 +12,23 @@ export function Default() {
       align="center"
       justify="between"
       gap="4"
-      className="border-border bg-card w-full rounded-xl border p-4"
+      className="border-border bg-card w-full max-w-lg rounded-xl border p-4"
     >
-      <div className="bg-primary/20 text-primary border-primary/30 flex h-20 w-20 items-center justify-center rounded-lg border font-medium">
-        Box 1
-      </div>
-      <div className="bg-secondary/20 text-secondary-foreground border-border flex h-20 w-20 items-center justify-center rounded-lg border font-medium">
-        Box 2
-      </div>
-      <div className="bg-muted text-muted-foreground border-border flex h-20 w-20 items-center justify-center rounded-lg border font-medium">
-        Box 3
-      </div>
+      <Flex align="center" gap="3">
+        <Avatar>
+          <Avatar.Fallback>LM</Avatar.Fallback>
+        </Avatar>
+        <div>
+          <p className="text-sm font-medium">Lucia Mendez</p>
+          <p className="text-muted-foreground text-xs">lucia@acmestudio.dev</p>
+        </div>
+      </Flex>
+      <Flex align="center" gap="2">
+        <Badge variant="secondary">Owner</Badge>
+        <Button variant="secondary" size="sm">
+          Manage
+        </Button>
+      </Flex>
     </Flex>
   );
 }
