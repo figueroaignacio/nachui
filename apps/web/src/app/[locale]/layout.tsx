@@ -7,6 +7,7 @@ import { Header } from '@/components/layout/header';
 import { PageFrame } from '@/components/layout/page-frame';
 import { Providers } from '@/components/providers';
 import { routing } from '@/i18n/routing';
+import { SPRITE_CSS } from '@repo/ui/components/sprite';
 import { fontCode, fontHeading, fontSans, fontSerif } from '@/lib/font';
 import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
@@ -69,6 +70,7 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
         />
+        <style>{SPRITE_CSS}</style>
       </head>
       <body
         className={`relative ${fontSans.variable} ${fontHeading.variable} ${fontSerif.variable} ${fontCode.variable}`}
