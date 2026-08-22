@@ -17,11 +17,17 @@ type ComponentCodeResult = {
  * component to `aliases.components` regardless of family, so both collapse to
  * the same target here.
  *
+ * `../../lib/` is the exception, because it is not a component. It holds the
+ * `cn` helper that the installation guide has the reader create at `lib/cn.ts`,
+ * so it keeps its own target.
+ *
  * Exported so a test can assert that no demo escapes the rewrite. When a new
  * family directory appears in packages/ui, it has to be added to this list.
  */
 export function rewriteDemoImports(code: string): string {
-  return code.replaceAll(/from ['"]\.\.\/\.\.\/(components|layout)\//g, "from '@/components/ui/");
+  return code
+    .replaceAll(/from ['"]\.\.\/\.\.\/(components|layout)\//g, "from '@/components/ui/")
+    .replaceAll(/from ['"]\.\.\/\.\.\/lib\//g, "from '@/lib/");
 }
 
 /**

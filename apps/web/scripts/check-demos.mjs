@@ -1,6 +1,7 @@
 /**
  * Fails the build when a demo would be copied out of the docs with an import
- * that does not resolve in the reader's project.
+ * that does not resolve in the reader's project, or when it would render as
+ * `undefined` because it reads a compound component across the server boundary.
  *
  * The docs show demo source after rewriting its relative imports to the alias
  * the CLI installs into (see rewriteDemoImports in
@@ -13,16 +14,56 @@
  * Runs on plain node with no dependencies.
  */
 
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const APP_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const DEMOS_ROOT = resolve(APP_ROOT, '../../packages/ui/src/demos');
+const UI_SRC = resolve(APP_ROOT, '../../packages/ui/src');
+const DEMOS_ROOT = join(UI_SRC, 'demos');
 
 // Must stay in sync with rewriteDemoImports. A new family directory in
 // packages/ui has to be added in both places, and this check is what says so.
-const REWRITTEN_FAMILIES = ['components', 'layout'];
+const REWRITTEN_FAMILIES = ['components', 'layout', 'lib'];
+
+const hasClientDirective = (source) => /^\s*(['"])use client\1/.test(source);
+
+/**
+ * ComponentPreview builds `<DemoComponent />` on the server, so a demo with no
+ * `'use client'` is a server component. Importing a client component from one
+ * is fine, but reading a property off it is not: the import is a client
+ * reference, `Tabs.List` on it is undefined, and React fails at prerender with
+ * "Element type is invalid", naming neither the demo nor the component.
+ *
+ * Ten demos hit this at once when their directive was dropped as unnecessary.
+ * A demo needs the directive whenever it reaches for a subcomponent.
+ */
+function findServerBoundaryReads(source) {
+  if (hasClientDirective(source)) return [];
+
+  const importedFrom = new Map();
+  for (const [, names, dir, file] of source.matchAll(
+    /import\s+\{([^}]+)\}\s+from\s+['"]\.\.\/\.\.\/(components|layout)\/([^'"]+)['"]/g,
+  )) {
+    for (const name of names.split(',')) {
+      const local = name
+        .trim()
+        .split(/\s+as\s+/)
+        .pop();
+      if (local) importedFrom.set(local, join(UI_SRC, dir, `${file}.tsx`));
+    }
+  }
+
+  const found = new Set();
+  for (const [, local] of source.matchAll(/\b([A-Z][A-Za-z0-9]*)\.[A-Z][A-Za-z0-9]*/g)) {
+    const path = importedFrom.get(local);
+    if (path && existsSync(path) && hasClientDirective(readFileSync(path, 'utf8'))) {
+      found.add(local);
+    }
+  }
+
+  return [...found];
+}
 
 function walk(dir) {
   const files = [];
@@ -53,6 +94,13 @@ function main() {
       problems.push(`${rel}: uses "export default", the registry expects a named export`);
     }
 
+    for (const component of findServerBoundaryReads(source)) {
+      problems.push(
+        `${rel}: reads ${component}.* but has no "use client". ${component} is a client ` +
+          'component, so its subcomponents are undefined here. Add the directive.',
+      );
+    }
+
     for (const [, spec] of source.matchAll(/from ['"]([^'"]+)['"]/g)) {
       if (spec.startsWith('@repo/ui')) {
         problems.push(
@@ -80,7 +128,7 @@ function main() {
   }
 
   console.error('check-demos FAILED\n');
-  console.error('Demos that would be copied with a broken import:');
+  console.error('Demos that would ship broken:');
   for (const problem of problems) console.error(`  ${problem}`);
   console.error('');
   process.exit(1);
