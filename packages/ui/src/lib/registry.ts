@@ -39,6 +39,7 @@ export const COMPONENT_REGISTRY = {
   skeleton: 'packages/ui/src/components/skeleton.tsx',
   snippet: 'packages/ui/src/components/snippet.tsx',
   spinner: 'packages/ui/src/components/spinner.tsx',
+  sprite: 'packages/ui/src/components/sprite.tsx',
   stack: 'packages/ui/src/layout/stack.tsx',
   steps: 'packages/ui/src/components/steps.tsx',
   switch: 'packages/ui/src/components/switch.tsx',
@@ -81,6 +82,7 @@ export const COMPONENT_FAMILY = {
   skeleton: 'ui',
   snippet: 'ui',
   spinner: 'ui',
+  sprite: 'ui',
   stack: 'layout',
   steps: 'ui',
   switch: 'ui',
@@ -238,6 +240,12 @@ export const DEMO_REGISTRY = {
     default: 'packages/ui/src/demos/spinner/default.tsx',
     sizes: 'packages/ui/src/demos/spinner/sizes.tsx',
     variants: 'packages/ui/src/demos/spinner/variants.tsx',
+  },
+  sprite: {
+    default: 'packages/ui/src/demos/sprite/default.tsx',
+    parts: 'packages/ui/src/demos/sprite/parts.tsx',
+    seeds: 'packages/ui/src/demos/sprite/seeds.tsx',
+    states: 'packages/ui/src/demos/sprite/states.tsx',
   },
   stack: {
     default: 'packages/ui/src/demos/stack/default.tsx',

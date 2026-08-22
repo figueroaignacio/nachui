@@ -46,6 +46,7 @@ import { Default as SelectDefault } from '@repo/ui/src/demos/select/default';
 import { Default as SeparatorDefault } from '@repo/ui/src/demos/separator/default';
 import { Default as SkeletonDefault } from '@repo/ui/src/demos/skeleton/default';
 import { Default as SpinnerDefault } from '@repo/ui/src/demos/spinner/default';
+import { Default as SpriteDefault } from '@repo/ui/src/demos/sprite/default';
 import { Default as StackDefault } from '@repo/ui/src/demos/stack/default';
 import { Default as SwitchDefault } from '@repo/ui/src/demos/switch/default';
 import { Default as TableDefault } from '@repo/ui/src/demos/table/default';
@@ -74,6 +75,7 @@ import { Multiple as AccordionMultiple } from '@repo/ui/src/demos/accordion/mult
 import { Outline as BadgeOutline } from '@repo/ui/src/demos/badge/outline';
 import { Outline as ButtonOutline } from '@repo/ui/src/demos/button/outline';
 import { Outline as CardOutline } from '@repo/ui/src/demos/card/outline';
+import { Parts as SpriteParts } from '@repo/ui/src/demos/sprite/parts';
 import { Positions as DrawerPositions } from '@repo/ui/src/demos/drawer/positions';
 import { Positions as ToastPositions } from '@repo/ui/src/demos/toast/positions';
 import { Positions as TooltipPositions } from '@repo/ui/src/demos/tooltip/positions';
@@ -81,11 +83,13 @@ import { RadioGroup as DropdownMenuRadioGroup } from '@repo/ui/src/demos/dropdow
 import { Required as LabelRequired } from '@repo/ui/src/demos/label/required';
 import { Secondary as BadgeSecondary } from '@repo/ui/src/demos/badge/secondary';
 import { Secondary as ButtonSecondary } from '@repo/ui/src/demos/button/secondary';
+import { Seeds as SpriteSeeds } from '@repo/ui/src/demos/sprite/seeds';
 import { Sizes as AvatarSizes } from '@repo/ui/src/demos/avatar/sizes';
 import { Sizes as ButtonSizes } from '@repo/ui/src/demos/button/sizes';
 import { Sizes as InputSizes } from '@repo/ui/src/demos/input/sizes';
 import { Sizes as KbdSizes } from '@repo/ui/src/demos/kbd/sizes';
 import { Sizes as SpinnerSizes } from '@repo/ui/src/demos/spinner/sizes';
+import { States as SpriteStates } from '@repo/ui/src/demos/sprite/states';
 import { Striped as TableStriped } from '@repo/ui/src/demos/table/striped';
 import { Success as BannerSuccess } from '@repo/ui/src/demos/banner/success';
 import { Success as CalloutSuccess } from '@repo/ui/src/demos/callout/success';
@@ -259,6 +263,12 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
     default: SpinnerDefault,
     sizes: SpinnerSizes,
     variants: SpinnerVariants,
+  },
+  sprite: {
+    default: SpriteDefault,
+    parts: SpriteParts,
+    seeds: SpriteSeeds,
+    states: SpriteStates,
   },
   stack: {
     default: StackDefault,

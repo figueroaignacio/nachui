@@ -380,6 +380,562 @@
   }
 }
 
+.sprite {
+  display: block;
+  overflow: visible;
+}
+
+.sprite-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: sprite-blink 3s infinite;
+}
+
+.sprite-eyes {
+  animation: sprite-glance 9s infinite;
+}
+
+.sprite-breathe {
+  animation: sprite-breathe 3.6s ease-in-out infinite;
+}
+
+.sprite-idle .sprite-legs-sit,
+.sprite-walk .sprite-legs-sit {
+  display: none;
+}
+
+.sprite-walk .sprite-gait {
+  animation: sprite-bob 480ms steps(1, end) infinite;
+}
+
+.sprite-leg-frame {
+  animation: sprite-frame 480ms steps(1, end) infinite;
+}
+
+.sprite-leg-frame + .sprite-leg-frame {
+  animation-delay: 240ms;
+}
+
+.sprite-leg-dangle {
+  animation: sprite-swing 2.4s ease-in-out infinite;
+}
+
+.sprite-leg-dangle + .sprite-leg-dangle {
+  animation-delay: 320ms;
+}
+
+.sprite-work .sprite-laptop {
+  animation: sprite-laptop-in 600ms cubic-bezier(0.25, 0.9, 0.35, 1) 500ms both;
+}
+
+.sprite-work .sprite-lid {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: sprite-lid 450ms ease-out 1000ms both;
+}
+
+.sprite-work .sprite-mark {
+  animation: sprite-mark 400ms steps(1, end) 1450ms both;
+}
+
+.sprite-work .sprite-spill {
+  opacity: 0;
+  animation: sprite-spill 900ms ease-out 1450ms both;
+}
+
+.sprite-work .sprite-glow {
+  opacity: 0;
+  animation: sprite-lit 900ms ease-out 1450ms both;
+}
+
+.sprite-work .sprite-glint {
+  opacity: 0;
+  animation: sprite-on 300ms steps(1, end) 1450ms both;
+}
+
+.sprite-work .sprite-lean {
+  animation: sprite-lean 500ms ease-out 1400ms both;
+}
+
+.sprite-work .sprite-hands {
+  opacity: 0;
+  animation: sprite-hands 350ms ease-out 1600ms both;
+}
+
+.sprite-work .sprite-eyes {
+  animation: sprite-read 3.4s steps(1, end) infinite;
+}
+
+.sprite-hand {
+  animation: sprite-tap 300ms steps(2, end) infinite;
+}
+
+.sprite-hand + .sprite-hand {
+  animation-delay: 150ms;
+}
+
+.sprite-loop {
+  --sprite-leg: 13s;
+}
+
+.sprite-loop .sprite-sit {
+  animation: sprite-cycle-sit var(--sprite-leg) ease-out infinite;
+}
+
+.sprite-loop .sprite-gait {
+  animation:
+    sprite-bob 480ms steps(1, end) infinite,
+    sprite-cycle-bob var(--sprite-leg) steps(1, end) infinite;
+}
+
+.sprite-loop .sprite-legs-walk {
+  animation: sprite-cycle-walk var(--sprite-leg) steps(1, end) infinite;
+}
+
+.sprite-loop .sprite-legs-sit {
+  animation: sprite-cycle-dangle var(--sprite-leg) steps(1, end) infinite;
+}
+
+.sprite-loop .sprite-laptop {
+  animation: sprite-cycle-laptop var(--sprite-leg) ease-out infinite;
+}
+
+.sprite-loop .sprite-lid {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: sprite-cycle-lid var(--sprite-leg) ease-out infinite;
+}
+
+.sprite-loop .sprite-mark {
+  animation: sprite-cycle-mark var(--sprite-leg) steps(1, end) infinite;
+}
+
+.sprite-loop .sprite-spill {
+  animation: sprite-cycle-spill var(--sprite-leg) ease-out infinite;
+}
+
+.sprite-loop .sprite-glow {
+  animation: sprite-cycle-glow var(--sprite-leg) ease-out infinite;
+}
+
+.sprite-loop .sprite-glint {
+  animation: sprite-cycle-glint var(--sprite-leg) steps(1, end) infinite;
+}
+
+.sprite-loop .sprite-lean {
+  animation: sprite-cycle-lean var(--sprite-leg) ease-out infinite;
+}
+
+.sprite-loop .sprite-hands {
+  animation: sprite-cycle-hands var(--sprite-leg) ease-out infinite;
+}
+
+@keyframes sprite-blink {
+  0%,
+  80% {
+    transform: scaleY(1);
+  }
+  82%,
+  84% {
+    transform: scaleY(0);
+  }
+  86%,
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes sprite-glance {
+  0%,
+  60%,
+  100% {
+    translate: 0 0;
+  }
+  64%,
+  70% {
+    translate: 1.4px 0;
+  }
+  76%,
+  82% {
+    translate: -1.4px 0;
+  }
+}
+
+@keyframes sprite-breathe {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 0.22px;
+  }
+}
+
+@keyframes sprite-bob {
+  0% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 var(--sprite-bob, -1px);
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+@keyframes sprite-frame {
+  0% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes sprite-swing {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -0.6px;
+  }
+}
+
+@keyframes sprite-laptop-in {
+  from {
+    translate: 0 15px;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    translate: 0 -0.8px;
+  }
+  to {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+
+@keyframes sprite-lid {
+  from {
+    scale: 1 0;
+  }
+  70% {
+    scale: 1 1.12;
+  }
+  to {
+    scale: 1 1;
+  }
+}
+
+@keyframes sprite-mark {
+  from {
+    fill: #2f2f2f;
+  }
+  20% {
+    fill: #d8f5ec;
+  }
+  45%,
+  to {
+    fill: #a8e6d7;
+  }
+}
+
+@keyframes sprite-spill {
+  from {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.9;
+  }
+  55%,
+  to {
+    opacity: 0.45;
+  }
+}
+
+@keyframes sprite-lit {
+  from {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  55%,
+  to {
+    opacity: 0.16;
+  }
+}
+
+@keyframes sprite-on {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sprite-lean {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 0.55px;
+  }
+}
+
+@keyframes sprite-hands {
+  from {
+    opacity: 0;
+    translate: 0 3px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes sprite-tap {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -1px;
+  }
+}
+
+@keyframes sprite-read {
+  0% {
+    translate: 0 1.2px;
+  }
+  15% {
+    translate: -1.4px 1.2px;
+  }
+  35% {
+    translate: 1.4px 1.2px;
+  }
+  55% {
+    translate: -1.4px 1.2px;
+  }
+  75% {
+    translate: 1.1px 1.2px;
+  }
+  90% {
+    translate: -1.4px 1.2px;
+  }
+  100% {
+    translate: 0 1.2px;
+  }
+}
+
+@keyframes sprite-cycle-sit {
+  0%,
+  40% {
+    translate: 0 0;
+  }
+  46%,
+  93% {
+    translate: 0 4px;
+  }
+  98%,
+  100% {
+    translate: 0 0;
+  }
+}
+
+@keyframes sprite-cycle-bob {
+  0%,
+  39% {
+    --sprite-bob: -1px;
+  }
+  40%,
+  96% {
+    --sprite-bob: 0px;
+  }
+  97%,
+  100% {
+    --sprite-bob: -1px;
+  }
+}
+
+@keyframes sprite-cycle-walk {
+  0%,
+  40% {
+    opacity: 1;
+  }
+  41%,
+  92% {
+    opacity: 0;
+  }
+  93%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes sprite-cycle-dangle {
+  0%,
+  40% {
+    opacity: 0;
+  }
+  41%,
+  92% {
+    opacity: 1;
+  }
+  93%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes sprite-cycle-laptop {
+  0%,
+  55% {
+    translate: 0 15px;
+    opacity: 0;
+  }
+  58% {
+    translate: 0 -0.8px;
+    opacity: 1;
+  }
+  60%,
+  87% {
+    translate: 0 0;
+    opacity: 1;
+  }
+  91%,
+  100% {
+    translate: 0 15px;
+    opacity: 0;
+  }
+}
+
+@keyframes sprite-cycle-lid {
+  0%,
+  61% {
+    scale: 1 0;
+  }
+  65% {
+    scale: 1 1.12;
+  }
+  67%,
+  88% {
+    scale: 1 1;
+  }
+  90%,
+  100% {
+    scale: 1 0;
+  }
+}
+
+@keyframes sprite-cycle-mark {
+  0%,
+  65% {
+    fill: #2f2f2f;
+  }
+  66% {
+    fill: #d8f5ec;
+  }
+  68%,
+  88% {
+    fill: #a8e6d7;
+  }
+  89%,
+  100% {
+    fill: #2f2f2f;
+  }
+}
+
+@keyframes sprite-cycle-spill {
+  0%,
+  65% {
+    opacity: 0;
+  }
+  67% {
+    opacity: 0.9;
+  }
+  70%,
+  87% {
+    opacity: 0.45;
+  }
+  90%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes sprite-cycle-glow {
+  0%,
+  65% {
+    opacity: 0;
+  }
+  67% {
+    opacity: 0.5;
+  }
+  70%,
+  87% {
+    opacity: 0.16;
+  }
+  90%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes sprite-cycle-glint {
+  0%,
+  65% {
+    opacity: 0;
+  }
+  66%,
+  88% {
+    opacity: 1;
+  }
+  89%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes sprite-cycle-lean {
+  0%,
+  56% {
+    translate: 0 0;
+  }
+  64%,
+  87% {
+    translate: 0 0.55px;
+  }
+  92%,
+  100% {
+    translate: 0 0;
+  }
+}
+
+@keyframes sprite-cycle-hands {
+  0%,
+  67% {
+    opacity: 0;
+    translate: 0 3px;
+  }
+  70%,
+  87% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  90%,
+  100% {
+    opacity: 0;
+    translate: 0 3px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -388,5 +944,29 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sprite-loop .sprite-legs-walk {
+    opacity: 0;
+  }
+
+  .sprite-loop .sprite-sit {
+    translate: 0 4px;
+  }
+
+  .sprite-loop .sprite-mark {
+    fill: #a8e6d7;
+  }
+
+  .sprite-loop .sprite-glow {
+    opacity: 0.16;
+  }
+
+  .sprite-loop .sprite-spill,
+  .sprite-loop .sprite-glint,
+  .sprite-loop .sprite-hands {
+    opacity: 1;
   }
 }
