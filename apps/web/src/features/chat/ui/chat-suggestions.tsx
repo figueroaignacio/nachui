@@ -1,5 +1,3 @@
-import { BulbIcon, CodeIcon, Comment01Icon, SparklesIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Typography } from '@repo/ui/components/typography';
 import { useTranslations } from 'next-intl';
 
@@ -10,28 +8,11 @@ interface ChatSuggestionsProps {
 export function ChatSuggestions({ onSuggestionClick }: ChatSuggestionsProps) {
   const t = useTranslations('components.chat.suggestions');
 
-  const suggestions = [
-    {
-      icon: Comment01Icon,
-      text: t('howWorks'),
-    },
-    {
-      icon: CodeIcon,
-      text: t('technologies'),
-    },
-    {
-      icon: SparklesIcon,
-      text: t('features'),
-    },
-    {
-      icon: BulbIcon,
-      text: t('getStarted'),
-    },
-  ];
+  const suggestions = [t('howWorks'), t('technologies'), t('features'), t('getStarted')];
 
   return (
-    <div className="flex flex-col justify-center space-y-4 py-4">
-      <div>
+    <div className="chat-welcome flex flex-col justify-center space-y-4 py-4">
+      <div className="chat-welcome-item" style={{ '--cascade-i': 0 } as React.CSSProperties}>
         <Typography variant="h3" className="text-foreground mb-1 text-sm font-semibold">
           {t('title')}
         </Typography>
@@ -39,26 +20,24 @@ export function ChatSuggestions({ onSuggestionClick }: ChatSuggestionsProps) {
           {t('subtitle')}
         </Typography>
       </div>
-      {/* One per row: the panel is narrow, and pills wrapping mid-question
-          read as broken rather than compact. */}
-      <div className="flex flex-col gap-2">
-        {suggestions.map((suggestion, index) => (
+
+      <div className="flex flex-col">
+        {suggestions.map((text, index) => (
           <button
             type="button"
-            key={index}
-            onClick={() => onSuggestionClick(suggestion.text)}
-            className="group border-border/50 bg-secondary/20 hover:border-border hover:bg-secondary/40 flex w-full cursor-pointer items-center gap-2.5 rounded-lg border px-3 py-2.5 text-left transition-colors"
+            key={text}
+            onClick={() => onSuggestionClick(text)}
+            style={{ '--cascade-i': index + 1 } as React.CSSProperties}
+            className="chat-welcome-item group border-rule/60 flex w-full cursor-pointer items-baseline gap-3 border-b py-2.5 text-left last:border-b-0"
           >
-            <HugeiconsIcon
-              icon={suggestion.icon}
-              size={14}
-              className="text-muted-foreground group-hover:text-foreground transition-colors"
-            />
+            <span className="text-muted-foreground/40 group-hover:text-foreground/60 font-mono text-[10px] tracking-[0.12em] tabular-nums transition-colors">
+              {String(index + 1).padStart(2, '0')}
+            </span>
             <Typography
               variant="small"
-              className="text-foreground/70 group-hover:text-foreground text-left text-[13px] leading-snug font-medium transition-colors"
+              className="text-foreground/70 group-hover:text-foreground text-left text-[13px] leading-snug font-medium transition-[color,translate] group-hover:translate-x-0.5"
             >
-              {suggestion.text}
+              {text}
             </Typography>
           </button>
         ))}
