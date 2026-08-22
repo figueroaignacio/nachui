@@ -192,6 +192,11 @@
           "description": "Un elemento en rotación continua indicando estado de carga."
         },
         {
+          "title": "Sprite",
+          "href": "/docs/elements/ui/sprite",
+          "description": "Un personaje pixel armado con partes intercambiables, que camina, se sienta y programa."
+        },
+        {
           "title": "Switch",
           "href": "/docs/elements/ui/switch",
           "description": "Un control que permite al usuario alternar entre encendido y apagado."

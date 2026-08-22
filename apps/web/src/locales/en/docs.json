@@ -192,6 +192,11 @@
           "description": "A continuously rotating element indicating loading state."
         },
         {
+          "title": "Sprite",
+          "href": "/docs/elements/ui/sprite",
+          "description": "A pixel character built from swappable parts, that walks, sits and works."
+        },
+        {
           "title": "Switch",
           "href": "/docs/elements/ui/switch",
           "description": "A control that allows the user to toggle between checked and not checked."
