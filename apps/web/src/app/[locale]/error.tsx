@@ -1,5 +1,6 @@
 'use client';
 
+import { AiAvatar } from '@/features/chat/ui/ai-avatar';
 import { Typography } from '@repo/ui/components/typography';
 import { useEffect } from 'react';
 import { Flex } from '@repo/ui/layout/flex';
@@ -17,6 +18,7 @@ export default function ErrorBoundary({
 
   return (
     <Flex direction="column" align="center" justify="center" className="min-h-[50vh] space-y-4">
+      <AiAvatar size="xl" expression="startled" follow />
       <Typography variant="h2" className="text-2xl font-bold tracking-tight">
         Something went wrong!
       </Typography>

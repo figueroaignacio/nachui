@@ -1,5 +1,6 @@
 'use client';
 
+import { AiPerch } from '@/features/chat/ui/ai-perch';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { ArrowLeft01Icon, Home01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -82,7 +83,8 @@ export default function NotFound() {
             </Button>
           </Flex>
 
-          <div className="w-full pt-4">
+          <div className="relative w-full pt-4">
+            <AiPerch className="ai-edge-perch" expression="reading" />
             <div className="border-border/60 w-full overflow-hidden rounded-lg border bg-neutral-900/90 text-left font-mono text-[11px] shadow-lg backdrop-blur-md dark:bg-neutral-950/90">
               <div className="flex items-center gap-1.5 border-b border-white/5 bg-neutral-800/40 px-4 py-2.5">
                 <div className="size-2 rounded-full bg-[#ff5f56]" />
