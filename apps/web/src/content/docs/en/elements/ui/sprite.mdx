@@ -1,0 +1,66 @@
+---
+title: Sprite
+description: A pixel character built from swappable parts, that walks, sits and works.
+published: true
+date: 2026-08-22
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="sprite" demo="default" />
+
+Every sprite is five slots — skin, hair, eyes, outfit, accessory — drawn on one
+fixed skeleton: the face box, the eye line, the shoulders and the hip. Because
+the skeleton never moves, any combination of parts inherits the animations for
+free.
+
+## Installation
+
+<ComponentInstallTabs component="sprite" />
+
+## Anatomy
+
+```tsx
+import { Sprite } from '@/components/ui/sprite';
+```
+
+```tsx
+<Sprite seed="nachui" />
+```
+
+## Seeds
+
+Any string builds a sprite, and the same string always builds the same one — so
+a username or an email works as an avatar with nothing stored.
+
+<ComponentPreview component="sprite" demo="seeds" />
+
+## States
+
+`idle` breathes and blinks, `walk` runs the two-frame walk cycle, `work` opens a
+laptop, and `loop` plays the whole thing: walk in, sit down, work, get up.
+
+<ComponentPreview component="sprite" demo="states" />
+
+## Parts
+
+Pass `parts` to override whatever the seed picked, slot by slot. Colour is a
+separate axis from shape, so six hair shapes and five colours are thirty heads.
+
+<ComponentPreview component="sprite" demo="parts" />
+
+## Props
+
+| Prop    | Type                                   | Default  | Description                                         |
+| ------- | -------------------------------------- | -------- | --------------------------------------------------- |
+| `seed`  | `string`                               | `nachui` | Any string. The same string builds the same sprite. |
+| `parts` | `Partial<SpriteParts>`                 | —        | Overrides the seed, slot by slot.                   |
+| `state` | `bust \| idle \| walk \| work \| loop` | `idle`   | What it is doing.                                   |
+| `size`  | `number`                               | `48`     | Width in pixels; height follows the grid.           |
+
+## Accessibility
+
+The sprite is decorative and carries no label of its own. When it stands for a
+person, put the name next to it in text rather than inside the drawing.

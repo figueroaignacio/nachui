@@ -1,0 +1,67 @@
+---
+title: Sprite
+description: Un personaje pixel armado con partes intercambiables, que camina, se sienta y programa.
+published: true
+date: 2026-08-22
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="sprite" demo="default" />
+
+Cada sprite son cinco ranuras — piel, pelo, ojos, ropa y accesorio — dibujadas
+sobre un mismo esqueleto fijo: la caja de la cara, la línea de ojos, los hombros
+y la cadera. Como el esqueleto no se mueve, cualquier combinación de partes
+hereda las animaciones sin trabajo extra.
+
+## Instalación
+
+<ComponentInstallTabs component="sprite" />
+
+## Anatomía
+
+```tsx
+import { Sprite } from '@/components/ui/sprite';
+```
+
+```tsx
+<Sprite seed="nachui" />
+```
+
+## Semillas
+
+Cualquier string arma un sprite, y el mismo string arma siempre el mismo — así
+que un usuario o un email sirven de avatar sin guardar nada.
+
+<ComponentPreview component="sprite" demo="seeds" />
+
+## Estados
+
+`idle` respira y parpadea, `walk` corre el ciclo de caminata de dos cuadros,
+`work` saca la laptop, y `loop` juega todo: llega caminando, se sienta, laburea
+y se levanta.
+
+<ComponentPreview component="sprite" demo="states" />
+
+## Partes
+
+Pasá `parts` para pisar lo que eligió la semilla, ranura por ranura. El color es
+un eje aparte de la forma: seis peinados y cinco colores son treinta cabezas.
+
+<ComponentPreview component="sprite" demo="parts" />
+
+## Props
+
+| Prop    | Tipo                                   | Default  | Descripción                                           |
+| ------- | -------------------------------------- | -------- | ----------------------------------------------------- |
+| `seed`  | `string`                               | `nachui` | Cualquier string. El mismo string da el mismo sprite. |
+| `parts` | `Partial<SpriteParts>`                 | —        | Pisa la semilla, ranura por ranura.                   |
+| `state` | `bust \| idle \| walk \| work \| loop` | `idle`   | Qué está haciendo.                                    |
+| `size`  | `number`                               | `48`     | Ancho en píxeles; el alto sale de la grilla.          |
+
+## Accesibilidad
+
+El sprite es decorativo y no lleva etiqueta propia. Cuando represente a una
+persona, poné el nombre al lado en texto y no adentro del dibujo.
