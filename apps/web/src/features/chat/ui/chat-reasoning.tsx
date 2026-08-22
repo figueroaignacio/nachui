@@ -6,6 +6,7 @@ import { motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import type { ToolName } from '../hooks/use-chat';
+import { AiWorking } from './ai-working';
 
 interface ChatReasoningProps {
   /** When the agent is running a tool, name it instead of the generic label. */
@@ -32,7 +33,8 @@ export function ChatReasoning({ activeTool }: ChatReasoningProps) {
   return (
     <div className="w-full min-w-0">
       <div>
-        <p className="text-muted-foreground/70 font-mono text-[10px] tracking-[0.15em] uppercase">
+        <AiWorking width={60} />
+        <p className="text-muted-foreground/70 mt-3 font-mono text-[10px] tracking-[0.15em] uppercase">
           {t('reasoning')}
         </p>
         <ol className="mt-2 space-y-2">
