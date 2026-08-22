@@ -1,0 +1,437 @@
+PROMPT A: nachui, apps/web + packages/ui (SOLID y DRY)
+
+Pegar en el agente parado en la raíz del monorepo.
+Estado del repo de referencia: commit dbdb9f2f.
+
+===============================================================================
+ANTES DE EMPEZAR: DOS COSAS QUE TE VAN A FRENAR
+===============================================================================
+
+--- 1. `pnpm lint` no corre en este repo ---
+
+eslint 10.4.1 crashea con:
+
+    TypeError: Cannot read properties of undefined (reading 'Cjs')
+    at @typescript-eslint/typescript-estree/dist/create-program/shared.js
+
+typescript-eslint 8.61.0 no soporta el TypeScript 7.0.2 que está instalado.
+Falla en cualquier archivo, incluidos los que no vas a tocar. Comprobalo con
+`npx eslint apps/web/src/shared/components/mdx/copy-button.tsx` antes de
+suponer que rompiste algo.
+
+El hook de pre-commit corre `eslint --max-warnings 0 --fix` sobre ts y tsx, así
+que cualquier commit que toque TypeScript se bloquea.
+
+Decidí explícitamente qué hacés y avisá cuál elegiste:
+
+  a. Arreglar el desfasaje. Es una decisión de dependencias: bajar a
+     TypeScript 6 o esperar una versión de typescript-eslint con soporte para
+     7. No la tomes solo, preguntá.
+  b. Seguir con --no-verify y verificar por otro lado. `pnpm build` tipa el
+     proyecto y `prettier --check` cubre el formato, que es lo único que el
+     hook realmente aportaba mientras eslint esté roto.
+
+No dejes esto sin mencionar en la entrega. Es la razón por la que el paso 2 de
+la verificación de este prompt no se puede cumplir como está escrito.
+
+--- 2. AGENTS.md te manda a una carpeta que no existe ---
+
+Dice `apps/docs` y `pnpm --filter docs dev` en todo el documento. La app se
+llama apps/web y el paquete es `web`, así que el comando real es
+`pnpm --filter web dev`. Los README de la raíz y de apps/web repiten el error y
+además nombran Velite como content engine cuando el repo usa
+@content-collections desde hace tiempo.
+
+Corregilo como parte del trabajo. No es documentación decorativa: es lo primero
+que lee el próximo agente que abra el repo, y ya mandó a este a la carpeta
+equivocada.
+
+===============================================================================
+YA RESUELTO, NO LO VUELVAS A TOCAR
+===============================================================================
+
+Si algo más abajo parece pedir esto, es un error de lectura:
+
+- El blog fue eliminado por completo, sin código huérfano.
+- component-list-previews.tsx ya no existe; component-preview.tsx resuelve
+  contra DEMO_COMPONENTS.
+- El rename de /docs/components/* a /docs/elements/ui/* ya tiene redirects en
+  next.config.ts, con y sin prefijo de locale. Ojo que son `permanent: true`,
+  que Next emite como 308, no como 301.
+- packages/ui/scripts/contrast.ts mide contraste WCAG sobre los tokens OKLCH y
+  está cubierto por test.
+- Skills dejó de ser una sección propia. Se borraron /[locale]/skills,
+  /[locale]/skills/[slug], la carpeta features/skills, la ruta api/og/skills y
+  og-skills.png. Ahora es documentación en /docs/concepts/skills, que lista las
+  skills con un componente SkillsList que lee la colección de contenido. Las
+  URLs viejas redirigen con 308. La colección `skills` sigue existiendo porque
+  esa página la lee, pero su transform ya no compila MDX ni arma toc.
+- Existe /docs/concepts/llms-txt, que documenta el índice llms.txt, el .md de
+  cada página y el setup por herramienta.
+- en/installation.mdx ya tiene `published: true`. Era la causa del 404 de
+  /en/docs/installation. Lo que queda de ese tema es el guard de la fase 0, no
+  el frontmatter.
+
+===============================================================================
+CONTEXTO
+===============================================================================
+
+Sos un ingeniero en nachui, un monorepo Turborepo con apps/web (Next.js 16,
+docs con content-collections), apps/api (NestJS), packages/ui, packages/ai,
+packages/db y packages/cli.
+
+Este prompt cubre apps/web y packages/ui. NO toques apps/api.
+
+Trabajá en fases, un commit atómico por fase como mínimo.
+
+===============================================================================
+FASE 0: EL GUARD QUE NO EXISTE (el 404 que lo destapó ya está arreglado)
+===============================================================================
+
+Lo que pasó, porque explica qué hay que construir:
+
+apps/web/src/content/docs/en/installation.mdx no tenía `published` en el
+frontmatter. El schema de content-collections lo define como
+`z.boolean().default(false)`, así que el documento quedaba sin publicar y
+/en/docs/installation devolvía 404, mientras la versión en español sí tenía
+`published: true` y funcionaba.
+
+No era un rincón perdido del sitio:
+
+  - El CTA principal del landing en inglés apunta ahí. LandingInstall linkea a
+    /docs/installation con el texto "Read the install guide".
+  - El footer lo linkea en la columna Product.
+  - El sidebar de la documentación lo lista en Concepts.
+
+El camino de entrada más importante del sitio en inglés caía en un 404. Estuvo
+así por lo menos 48 commits y nada lo detectó: no rompe el build, no rompe los
+tipos, y el link se ve igual en la navegación.
+
+El frontmatter ya está corregido y verificado (los 92 mdx tienen ahora
+`published: true`, y /en/docs/installation aparece en el prerender-manifest).
+Lo que falta es lo que importa:
+
+  1. El guard. Un test que recorra la navegación y falle si un href apunta a un
+     documento que no existe o no está publicado. La navegación vive en
+     apps/web/src/locales/{en,es}/docs.json y es data pura, así que se puede
+     recorrer contra la colección de content-collections sin levantar el sitio.
+     Cubrí también los href que no son de docs (/bricks/*, y cualquier otro que
+     aparezca ahí), porque el prompt B documenta un 404 de ese tipo que sigue
+     vivo.
+
+  2. La decisión de fondo. Un default de `published` en false significa que
+     toda página nueva nace invisible y el autor no se entera hasta que alguien
+     abre la URL. Evaluá si el default correcto es true con un `draft: true`
+     explícito para lo que no se quiere mostrar, y justificá la elección. Si lo
+     cambiás, el guard del punto 1 pasa a ser la red que hace seguro el cambio.
+
+===============================================================================
+FASE 1: NORMALIZAR LOS DEMOS (desbloquea la fase 2)
+===============================================================================
+
+De los 109 archivos en packages/ui/src/demos/, 106 usan export nombrado y 3
+usan `export default`: los tres del spinner. Esos mismos 3 son también los
+únicos que importan con `from '@repo/ui/components/spinner'`; de los demás, 102
+usan `from '../../components/...'` y 4 `from '../../layout/...'`.
+
+Es un bug en producción, no un detalle de estilo. getDemoCode en
+apps/web/src/features/docs/lib/get-component-code.ts:72 reescribe los imports
+antes de mostrar el código:
+
+    code.replaceAll(/from ['"]\.\.\/\.\.\/components\//g, "from '@/components/ui/")
+
+El patrón no matchea con '@repo/ui/components/', así que quien copia el demo
+del spinner desde la documentación se lleva un import que no resuelve en su
+proyecto.
+
+Fijate también que el rewrite solo cubre '../../components/'. Los 4 demos de
+layout salen con `from '../../layout/...'` sin reescribir, y ese import tampoco
+resuelve en el proyecto del usuario. Son dos casos del mismo bug.
+
+Normalizá los tres archivos del spinner: export nombrado e import relativo,
+igual que el resto. Cubrí el caso de layout en el rewrite. Después verificá que
+ningún otro demo se salga del patrón, y dejá un test que lo garantice en vez de
+una revisión manual.
+
+===============================================================================
+FASE 2: TAXONOMÍA Y GENERACIÓN DE REGISTRIES
+===============================================================================
+
+Esta fase tiene un paso de diseño antes del paso de implementación. NO
+implementes el generador hasta que las tres decisiones del paso 2.1 estén
+resueltas.
+
+--- 2.1 El problema de taxonomía (PROPONER, NO IMPLEMENTAR) ---
+
+Hoy conviven tres vocabularios para el mismo concepto:
+
+  Contenido docs : elements/ui, elements/layout, y en el futuro elements/ai
+  Código         : packages/ui/src/components/, src/layout/, src/bricks/
+  Base de datos  : type: 'ui' | 'hook' | 'utils'
+
+La columna `type` en packages/db/src/schema.ts:10 no contempla 'layout' ni
+'ai', y 'hook'/'utils' no los popula nada. Eso ya está forzando un parche en
+scripts/sync-registry.ts:101:
+
+    await processDirectory(LAYOUT_COMPONENTS_ROOT, 'ui');
+    // Keeping type 'ui' as per DB schema if it doesn't have 'layout'
+
+El script sabe que layout es una familia distinta, la calcula (la firma de
+processDirectory es `type: 'ui' | 'layout'`), y la fuerza a 'ui' porque el enum
+no la contempla.
+
+Hay una tercera familia planificada, elements/ai. Antes de que exista hay un
+riesgo concreto: `slug` es .unique() global en el schema (schema.ts:6), y toda
+la interfaz del CLI es `nachui add <slug>` sobre ese namespace plano. Los
+nombres probables de elementos de IA (message, prompt-input, chat, avatar,
+card, input) incluyen varios que YA EXISTEN como componentes de UI. El día que
+se agregue el primero, el constraint de unicidad hace fallar el sync o
+sobreescribe el componente existente, y `nachui add input` queda ambiguo.
+
+Presentá al usuario las opciones y sus trade-offs para estas tres decisiones,
+y esperá su respuesta:
+
+  1. ¿`slug` sigue siendo global, o pasa a ser compuesto (ui/button,
+     ai/message)? Si es compuesto, el CLI tiene que aceptar las dos formas y
+     desambiguar solo ante colisión. Detallá qué implica para
+     `nachui add`, `nachui list` y `nachui remove`.
+
+  2. ¿`type` en la DB pasa a ser la lista real de familias? Es una migración
+     chica ahora y una con datos en producción después.
+
+  3. ¿Los directorios de código se renombran para coincidir con la taxonomía
+     de los docs? ¿elements/ai vive dentro de packages/ui o el paquete se
+     separa?
+
+--- 2.2 El generador (implementar después de 2.1) ---
+
+Quedan tres catálogos del mismo dominio mantenidos a mano:
+
+  COMPONENT_REGISTRY  packages/ui/src/lib/registry.ts
+                      componente -> path
+  DEMO_REGISTRY       mismo archivo, 290 líneas entre los dos
+                      componente -> variante -> path
+  DEMO_COMPONENTS     apps/web/src/shared/components/mdx/demo-registry.tsx
+                      componente -> variante -> componente React  (288 líneas)
+
+DEMO_REGISTRY y DEMO_COMPONENTS tienen las mismas claves en la misma
+estructura anidada; uno guarda el path, el otro el import. Agregar una
+variante hoy son tres ediciones y ninguna falla en compilación si te olvidás
+una. navigation-menu, el componente más nuevo, entró así.
+
+Escribí un script de codegen en packages/ui que escanee el filesystem y emita
+los tres. Enganchalo al build de Turbo y hacé que falle si el archivo generado
+quedó desactualizado respecto del disco, para que CI lo detecte.
+
+CRÍTICO: el generador debe estar dirigido por una lista de familias declarada
+en UN SOLO LUGAR, no por directorios hardcodeados. Algo del estilo:
+
+    const FAMILIES = [
+      { id: 'ui',     codeDir: 'src/components', docsSegment: 'elements/ui' },
+      { id: 'layout', codeDir: 'src/layout',     docsSegment: 'elements/layout' },
+    ];
+
+Agregar 'ai' tiene que ser una línea en ese array, no una edición del scanner.
+La forma exacta depende de lo que se resuelva en 2.1.
+
+Antes de empezar, leé scripts/sync-registry.ts en la raíz del monorepo. Ya
+hace este escaneo para poblar la tabla components de Postgres, incluida la
+extracción de dependencias desde los imports. Reusá esa lógica en vez de
+reescribirla; idealmente extraé el escaneo a un módulo compartido que usen los
+dos.
+
+Tres cosas que NO podés romper:
+
+  - `as const` es obligatorio. get-component-code.ts hace
+    COMPONENT_REGISTRY[name as keyof typeof COMPONENT_REGISTRY]. Si el
+    generador emite Record<string, string>, ese keyof colapsa a string, el
+    narrowing desaparece sin un solo error de compilación y el único guard que
+    queda es el chequeo en runtime. Emití un objeto literal cerrado con
+    `as const`.
+
+  - Los componentes viven en más de un directorio. flex, stack, grid y
+    container salen de packages/ui/src/layout/, el resto de src/components/.
+
+  - El CLI no usa este registry. Resuelve componentes contra
+    ${API_URL}/registry, que sirve desde Postgres. Confirmá que sigue así.
+
+===============================================================================
+FASE 3: SACAR EL PUENTE _sync DEL CHAT
+===============================================================================
+
+apps/web/src/features/chat/store/chat-engine.tsx:48 espeja TODO el estado del
+hook useChat dentro de un store de Zustand, vía un useEffect con once
+dependencias que escribe diez campos.
+
+Tres problemas concretos:
+
+  - Doble fuente de verdad, siempre un render atrasada. Durante el streaming
+    cada token dispara el efecto y re-renderiza a todos los suscriptores.
+
+  - Falla silenciosa: los valores iniciales del store son stubs
+    (chat-store.ts:49, `sendMessage: async () => {}`). Si ChatEngine no está
+    montado, o monta después de un consumidor, triggerExplanation desde
+    doc-actions.tsx llama al no-op. Sin error, sin warning: el botón no hace
+    nada.
+
+  - messagesEndRef, que es un RefObject de React, vive en un store global
+    (chat-store.ts:20).
+
+Rediseñalo: Zustand se queda solo con isOpen, isExpanded y una cola de prompts
+pendientes. El estado del chat se queda en el hook y se expone por Context.
+triggerExplanation empuja a la cola y el componente del chat la drena cuando
+monta. Eso elimina el _sync, los stubs y la carrera de montaje.
+
+No toques hooks/use-chat.ts más de lo necesario: está bien hecho, usa las
+partes tipadas del AI SDK y es la referencia.
+
+Aviso: la UI del chat cambió bastante desde la última vez que se miró esto
+(chat-loading.tsx se borró, chat-reasoning.tsx es nuevo, chat-header y
+chat-message se reescribieron). El store y el engine no se tocaron, así que el
+diagnóstico sigue igual, pero revisá quién consume el store hoy antes de
+cambiarle la forma.
+
+===============================================================================
+FASE 4: BUILD Y FILESYSTEM
+===============================================================================
+
+outputFileTracingIncludes apunta a un directorio que no existe. En
+next.config.ts:59 incluye '../../packages/ui/src/samples/**'; los directorios
+reales son demos/, components/, layout/ y bricks/. Parece un rename a medias.
+
+Importa porque get-component-code.ts y get-brick-source.ts leen archivos con
+fs.readFile en runtime y la página de docs tiene revalidate = 3600: pasada una
+hora, la regeneración corre en la función serverless y busca fuentes que el
+tracing no empaquetó. Arreglá los paths y verificá EN PRODUCCIÓN que el tab de
+código siga funcionando después de una revalidación.
+
+Centralizá la resolución de la raíz del monorepo. Hoy hay dos formas del mismo
+cálculo:
+
+    get-component-code.ts:25 y :67   path.join(process.cwd(), '../../', rel)
+    get-brick-source.ts:36           path.join(process.cwd(), '..', '..', rel)
+
+Eso acopla el runtime al layout físico del repo: mover apps/web un nivel rompe
+la lectura de código sin ningún error de tipos. Resolvé la raíz en un solo
+módulo.
+
+Turbopack ya se queja de estos dos archivos en cada build, con seis warnings de
+"Dynamic filesystem access causes tracing of the whole project". Mientras el
+path se arme con process.cwd() el tracing incluye todo el proyecto, public/
+incluido. Si resolvés la raíz en un módulo, aprovechá para que el path quede
+estáticamente acotado a un subdirectorio y los warnings desaparezcan.
+
+===============================================================================
+FASE 5: DRY E HIGIENE
+===============================================================================
+
+--- Las rutas OG ---
+
+Quedan dos rutas, api/og/docs (173 líneas) y api/og/bricks (188). Entre las dos
+hay 155 líneas idénticas ignorando espacios: la grilla de fondo, los colores,
+el cálculo de fontSize por largo del título, el truncado. Extraé un
+createOgImage({ eyebrow, title, description }) a shared/lib y dejá dos rutas de
+diez líneas.
+
+NOTA: el prompt B arregla el bug por el que estas rutas hoy no se invocan nunca
+(getAbsoluteUrl le mete el locale a /api/og/..., que no vive bajo el segmento
+de locale). Si vas a correr los dos, hacé el B primero. El bug sigue vivo en
+docs/[[...slug]]/page.tsx:51 y bricks/[category]/page.tsx:46.
+
+--- El filtro `published` está fuera del repositorio ---
+
+ContentRepository.getDocs no filtra, y el filtro aparece repetido en cinco
+lugares:
+
+    app/[locale]/docs/[[...slug]]/page.tsx:25   y :98
+    app/sitemap.ts:35
+    app/llms.txt/route.ts:6
+    app/api/docs-md/[locale]/[[...slug]]/route.ts:16
+
+Depende de que cada caller se acuerde, y ya hay un caller que no se acordó:
+app/api/docs/route.ts devuelve `ContentRepository.getDocs()` sin filtrar. Ese
+endpoint no es decorativo, lo consumen dos cosas fuera de la web:
+
+  - apps/api DocsService le hace fetch para servir /docs.
+  - packages/ai/src/scripts/ingest.ts lo lee para armar los embeddings del RAG.
+
+O sea que los borradores entran al índice del asistente y salen citados en las
+respuestas. Con installation.mdx sin publicar (fase 0) eso ya está pasando.
+
+Metelo en el repositorio o hacelo un parámetro explícito, y cubrilo con test.
+
+--- Alias ---
+
+@/lib/* apunta a src/shared/lib/* y @/* a src/*, así que
+@/lib/content-repository y @/shared/lib/content-repository son el mismo archivo
+por dos caminos. Esto ya está casi unificado: queda un solo import por el
+camino largo (@/shared/components/common/component-grid en
+features/landing/components/landing-catalog.tsx) contra ~120 por el corto.
+Migrá ese y dejá el alias largo fuera de uso, o sacá la ruta duplicada del
+tsconfig para que no vuelva a entrar.
+
+--- Copy muerto en los locales ---
+
+sections.home.features (8 items con título y descripción) y sections.home.tech
+(5 tecnologías) no los lee ningún componente. Se quedaron cuando el landing se
+rediseñó. En es/sections.json hay además un home.github sin consumidores.
+
+Son ~60 líneas de copy por locale que alguien va a mantener y traducir sin que
+se rendericen nunca. Borralas, o si el plan es volver a usarlas, dejá el
+componente que las consuma. Verificá con grep antes de borrar, no de memoria.
+
+--- Tests ---
+
+apps/web tiene cero. packages/ui tiene 38 con vitest, y
+scripts/contrast.test.ts demuestra que el patrón de "test que lee un artefacto
+real y falla ante una regresión" ya está instalado en el repo.
+
+Aplicá el mismo enfoque acá y empezá por lo que este prompt deja expuesto:
+
+  - la navegación contra los documentos que existen (fase 0)
+  - el rewrite de imports de get-component-code (fase 1)
+  - el generador de registries (fase 2)
+  - el filtro published en el repositorio (fase 5)
+
+===============================================================================
+RESTRICCIONES
+===============================================================================
+
+- No cambies la API pública de los componentes de packages/ui.
+- No rompas el contrato del CLI con ${API_URL}/registry.
+- El código generado va marcado como generado y se commitea (no se genera solo
+  en dev).
+- No agregues dependencias sin justificarlo.
+- Prettier y commitlint se respetan. Con ESLint, ver el punto 1 de arriba.
+- No uses rayas (guiones largos) en el copy ni en la documentación que escribas.
+
+===============================================================================
+VERIFICACIÓN
+===============================================================================
+
+1. pnpm build en la raíz, sin errores ni warnings nuevos. Los seis warnings de
+   tracing que ya existen deberían bajar si hiciste la fase 4.
+2. pnpm test en packages/ui sigue en verde, incluidos los tests de contraste.
+   `pnpm lint` no se puede correr hasta que se resuelva el punto 1 de arriba;
+   decí en la entrega qué usaste en su lugar.
+3. /en/docs/installation carga. Comprobalo en el prerender-manifest, no solo en
+   dev.
+4. El registry generado es idéntico en claves al que había a mano. Hacé el diff
+   y explicá cualquier diferencia.
+5. /en/docs/elements/ui/spinner muestra código copiable con imports que
+   resuelven. Mismo chequeo en un demo de layout, por ejemplo
+   /en/docs/elements/layout/stack.
+6. nachui add button desde el CLI sigue funcionando contra la API.
+
+===============================================================================
+ENTREGA
+===============================================================================
+
+Qué se arregló, qué decidiste y por qué, qué no hiciste y el motivo, y qué
+queda pendiente que requiera una decisión de producto.
+
+Al principio del resumen, sin excepción:
+
+  - qué hiciste con el ESLint roto
+  - las tres preguntas de taxonomía del paso 2.1, si todavía no fueron
+    respondidas

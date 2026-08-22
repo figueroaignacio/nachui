@@ -64,7 +64,11 @@ import { BullModule } from '@nestjs/bullmq';
         },
       },
     }),
-    BullModule.registerQueue({ name: 'email' }, { name: 'reports' }, { name: 'notifications' }),
+    BullModule.registerQueue(
+      { name: 'email' },
+      { name: 'reports' },
+      { name: 'notifications' },
+    ),
   ],
 })
 export class QueueModule {}
@@ -72,7 +76,9 @@ export class QueueModule {}
 // Producer: Add jobs to queue
 @Injectable()
 export class ReportsService {
-  constructor(@InjectQueue('reports') private reportsQueue: Queue) {}
+  constructor(
+    @InjectQueue('reports') private reportsQueue: Queue,
+  ) {}
 
   async requestReport(dto: GenerateReportDto): Promise<{ jobId: string }> {
     // Return immediately, process in background

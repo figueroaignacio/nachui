@@ -7,7 +7,7 @@ const userRouter = express.Router();
 
 // GET all users (with pagination)
 userRouter.get(
-  '/',
+  "/",
   authenticateToken,
   asyncHandler(async (req, res) => {
     const { page = 1, limit = 20 } = req.query;
@@ -25,18 +25,18 @@ userRouter.get(
 
 // GET single user
 userRouter.get(
-  '/:id',
+  "/:id",
   authenticateToken,
   asyncHandler(async (req, res) => {
     const user = await User.findByPk(req.params.id);
-    if (!user) return res.status(404).json({ error: 'Not found' });
+    if (!user) return res.status(404).json({ error: "Not found" });
     res.json({ data: user });
   }),
 );
 
 // POST create user
 userRouter.post(
-  '/',
+  "/",
   asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -52,14 +52,14 @@ userRouter.post(
 
 // PATCH update user
 userRouter.patch(
-  '/:id',
+  "/:id",
   authenticateToken,
   asyncHandler(async (req, res) => {
     const user = await User.findByPk(req.params.id);
-    if (!user) return res.status(404).json({ error: 'Not found' });
+    if (!user) return res.status(404).json({ error: "Not found" });
 
     await user.update(req.body, {
-      fields: ['email', 'role'],
+      fields: ["email", "role"],
     });
 
     res.json({ data: user });
@@ -68,16 +68,16 @@ userRouter.patch(
 
 // DELETE user
 userRouter.delete(
-  '/:id',
+  "/:id",
   authenticateToken,
   asyncHandler(async (req, res) => {
     const user = await User.findByPk(req.params.id);
-    if (!user) return res.status(404).json({ error: 'Not found' });
+    if (!user) return res.status(404).json({ error: "Not found" });
 
     await user.destroy();
     res.status(204).send();
   }),
 );
 
-app.use('/api/users', userRouter);
+app.use("/api/users", userRouter);
 ```

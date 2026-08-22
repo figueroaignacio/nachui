@@ -24,7 +24,6 @@ tags: section-prefix, technique, tool, related-concepts
 ```
 
 **When NOT to use this pattern:**
-
 - Exception 1
 - Exception 2
 

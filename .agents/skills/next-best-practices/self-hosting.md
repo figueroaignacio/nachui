@@ -77,12 +77,12 @@ services:
   web:
     build: .
     ports:
-      - '3000:3000'
+      - "3000:3000"
     environment:
       - NODE_ENV=production
     restart: unless-stopped
     healthcheck:
-      test: ['CMD', 'wget', '-q', '--spider', 'http://localhost:3000/api/health']
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -95,18 +95,16 @@ For traditional server deployments:
 ```js
 // ecosystem.config.js
 module.exports = {
-  apps: [
-    {
-      name: 'nextjs',
-      script: '.next/standalone/server.js',
-      instances: 'max',
-      exec_mode: 'cluster',
-      env: {
-        NODE_ENV: 'production',
-        PORT: 3000,
-      },
+  apps: [{
+    name: 'nextjs',
+    script: '.next/standalone/server.js',
+    instances: 'max',
+    exec_mode: 'cluster',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 3000,
     },
-  ],
+  }],
 };
 ```
 
@@ -170,7 +168,11 @@ module.exports = class CacheHandler {
 
     // Set TTL based on revalidate option
     if (ctx?.revalidate) {
-      await redis.setex(CACHE_PREFIX + key, ctx.revalidate, JSON.stringify(cacheData));
+      await redis.setex(
+        CACHE_PREFIX + key,
+        ctx.revalidate,
+        JSON.stringify(cacheData)
+      );
     } else {
       await redis.set(CACHE_PREFIX + key, JSON.stringify(cacheData));
     }
@@ -195,12 +197,10 @@ const BUCKET = process.env.CACHE_BUCKET;
 module.exports = class CacheHandler {
   async get(key) {
     try {
-      const response = await s3.send(
-        new GetObjectCommand({
-          Bucket: BUCKET,
-          Key: `cache/${key}`,
-        }),
-      );
+      const response = await s3.send(new GetObjectCommand({
+        Bucket: BUCKET,
+        Key: `cache/${key}`,
+      }));
       const body = await response.Body.transformToString();
       return JSON.parse(body);
     } catch (err) {
@@ -210,34 +210,32 @@ module.exports = class CacheHandler {
   }
 
   async set(key, data, ctx) {
-    await s3.send(
-      new PutObjectCommand({
-        Bucket: BUCKET,
-        Key: `cache/${key}`,
-        Body: JSON.stringify({
-          value: data,
-          lastModified: Date.now(),
-        }),
-        ContentType: 'application/json',
+    await s3.send(new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: `cache/${key}`,
+      Body: JSON.stringify({
+        value: data,
+        lastModified: Date.now(),
       }),
-    );
+      ContentType: 'application/json',
+    }));
   }
 };
 ```
 
 ## What Works vs What Needs Setup
 
-| Feature              | Single Instance | Multi-Instance      | Notes                       |
-| -------------------- | --------------- | ------------------- | --------------------------- |
-| SSR                  | Yes             | Yes                 | No special setup            |
-| SSG                  | Yes             | Yes                 | Built at deploy time        |
-| ISR                  | Yes             | Needs cache handler | Filesystem cache breaks     |
-| Image Optimization   | Yes             | Yes                 | CPU-intensive, consider CDN |
-| Middleware           | Yes             | Yes                 | Runs on Node.js             |
-| Edge Runtime         | Limited         | Limited             | Some features Node-only     |
-| `revalidatePath/Tag` | Yes             | Needs cache handler | Must share cache            |
-| `next/font`          | Yes             | Yes                 | Fonts bundled at build      |
-| Draft Mode           | Yes             | Yes                 | Cookie-based                |
+| Feature | Single Instance | Multi-Instance | Notes |
+|---------|----------------|----------------|-------|
+| SSR | Yes | Yes | No special setup |
+| SSG | Yes | Yes | Built at deploy time |
+| ISR | Yes | Needs cache handler | Filesystem cache breaks |
+| Image Optimization | Yes | Yes | CPU-intensive, consider CDN |
+| Middleware | Yes | Yes | Runs on Node.js |
+| Edge Runtime | Limited | Limited | Some features Node-only |
+| `revalidatePath/Tag` | Yes | Needs cache handler | Must share cache |
+| `next/font` | Yes | Yes | Fonts bundled at build |
+| Draft Mode | Yes | Yes | Cookie-based |
 
 ## Image Optimization
 
@@ -246,7 +244,6 @@ Next.js Image Optimization works out of the box but is CPU-intensive.
 ### Option 1: Built-in (Simple)
 
 Works automatically, but consider:
-
 - Set `deviceSizes` and `imageSizes` in config to limit variants
 - Use `minimumCacheTTL` to reduce regeneration
 
@@ -320,7 +317,6 @@ npx @opennextjs/aws build
 ```
 
 Supports:
-
 - AWS Lambda + CloudFront
 - Cloudflare Workers
 - Netlify Functions

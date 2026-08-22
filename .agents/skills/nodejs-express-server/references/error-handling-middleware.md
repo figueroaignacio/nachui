@@ -14,14 +14,14 @@ class AppError extends Error {
 app.use((err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
 
-  if (err.name === 'SequelizeValidationError') {
+  if (err.name === "SequelizeValidationError") {
     return res.status(400).json({
-      error: 'Validation failed',
+      error: "Validation failed",
       details: err.errors.map((e) => ({ field: e.path, message: e.message })),
     });
   }
 
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     return res.status(err.statusCode).json({
       error: err.message,
       requestId: req.id,
@@ -35,6 +35,6 @@ app.use((err, req, res, next) => {
 });
 
 app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
+  res.status(404).json({ error: "Route not found" });
 });
 ```

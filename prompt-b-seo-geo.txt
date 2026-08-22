@@ -1,0 +1,348 @@
+PROMPT B: nachui, apps/web (SEO y GEO)
+
+Pegar en el agente parado en la raíz del monorepo.
+Estado del repo de referencia: commit dbdb9f2f.
+
+===============================================================================
+ANTES DE EMPEZAR
+===============================================================================
+
+--- `pnpm lint` no corre en este repo ---
+
+eslint 10.4.1 crashea con:
+
+    TypeError: Cannot read properties of undefined (reading 'Cjs')
+    at @typescript-eslint/typescript-estree/dist/create-program/shared.js
+
+typescript-eslint 8.61.0 no soporta el TypeScript 7.0.2 que está instalado.
+Falla en cualquier archivo, incluidos los que no vas a tocar. El hook de
+pre-commit corre eslint sobre ts y tsx, así que todo commit que toque
+TypeScript se bloquea.
+
+Verificá con `pnpm build`, que tipa el proyecto, más `prettier --check`, y decí
+en la entrega qué usaste. Si querés arreglar el desfasaje de versiones,
+preguntá primero: afecta a todo el monorepo.
+
+===============================================================================
+CONTEXTO
+===============================================================================
+
+Sos un ingeniero en apps/web de nachui: Next.js 16 App Router, next-intl
+(en/es), docs en MDX vía content-collections, desplegado en
+https://nachui.tech.
+
+El sitio ya tiene una base decente: canonical y hreflang con x-default por
+página, TechArticle por doc, FAQPage en el índice de docs, robots.ts, sitemap
+con alternates, manifest, apple-touch-icon, y en la UI un botón de "Copy
+Markdown" más accesos directos a ChatGPT, Claude y v0. NO reconstruyas nada de
+eso.
+
+Tampoco toques los redirects existentes de /docs/components/*, /docs/layout/* y
+/skills/*: están bien hechos.
+
+===============================================================================
+YA RESUELTO, NO LO VUELVAS A HACER
+===============================================================================
+
+Buena parte de la fase 3 de la versión anterior de este prompt ya está
+implementada. Si algo abajo parece pedirla, es un error de lectura:
+
+- /llms.txt existe (app/llms.txt/route.ts). Indexa todas las páginas
+  publicadas agrupadas por sección, cada entrada apuntando a su markdown.
+- El markdown crudo por página existe. Agregando `.md` a cualquier URL de docs
+  se sirve la fuente, vía rewrites en next.config.ts hacia
+  app/api/docs-md/[locale]/[[...slug]].
+- Existe /docs/concepts/llms-txt, que documenta el índice, el .md por página y
+  el setup por herramienta (Claude Code, Cursor, Windsurf).
+- Existe /docs/concepts/skills, que reemplazó a la sección /skills. Las rutas
+  /skills y /skills/[slug], la carpeta features/skills y la ruta api/og/skills
+  se borraron, y las URLs viejas redirigen con 308. Tenelo en cuenta: la
+  versión anterior de este prompt listaba archivos de skills que ya no existen.
+- manifest.ts y apple-icon.png existen, más icon1/2/3.png e icon-192/512.png en
+  public. El "falta manifest y apple-touch-icon" de la versión anterior ya no
+  aplica.
+- en/installation.mdx tenía `published` faltante y devolvía 404; ya está
+  corregido. El guard que lo habría detectado sigue sin existir, y es parte de
+  la fase 1 de este prompt.
+
+Lo que sigue pendiente de esa fase 3: llms-full.txt, el FAQPage fuera del
+índice de docs, la página de comparación, el h1 de la home y los bots de IA en
+robots.ts. Están abajo.
+
+===============================================================================
+FASE 1: ENLACES ROTOS
+===============================================================================
+
+--- Todas las imágenes OG del sitio devuelven 404 ---
+
+Verificalo: https://nachui.tech/en/images/og/og-home.png es un 404.
+
+La causa es getAbsoluteUrl(locale, path) en src/shared/lib/domains.ts, que
+antepone el locale a todo. Está bien para URLs de página, pero se usa también
+para assets y rutas de API, que no viven bajo el segmento de locale:
+
+    getAbsoluteUrl(locale, '/images/og/og-home.png')
+    -> https://nachui.tech/en/images/og/og-home.png
+       INCORRECTO: public/ se sirve en la raíz
+
+    new URL(getAbsoluteUrl(locale, '/api/og/docs'))
+    -> https://nachui.tech/en/api/og/docs
+       INCORRECTO: la ruta está en app/api/, y proxy.ts excluye `api`
+
+Alcanza a la home, about, bricks y todas las páginas de docs. Ninguna URL del
+sitio genera preview al compartirse en Twitter, LinkedIn, Slack o Discord. Para
+una librería de componentes, donde compartir un link es el canal principal de
+descubrimiento, es el problema más caro del sitio.
+
+Agregá un helper separado, getAssetUrl(path), que devuelva ${baseUrl}${path}
+sin locale, y usalo en todos los sitios que hoy piden /images/... o /api/og/...
+Los archivos afectados son page.tsx de home, about, bricks,
+bricks/[category] y docs/[[...slug]].
+
+Los dos puntos de invocación de las rutas OG dinámicas son
+docs/[[...slug]]/page.tsx:51 y bricks/[category]/page.tsx:46.
+
+--- El botón "Edit this page" está roto en TODAS las páginas de docs ---
+
+doc-actions.tsx:69 arma la URL así:
+
+    `https://github.com/figueroaignacio/ui/edit/main/apps/docs/src/content/${filePath}.mdx`
+
+Con filePath = doc.sourceFilePath, que vale "en/concepts/cli.mdx". O sea que
+produce:
+
+    .../edit/main/apps/docs/src/content/en/concepts/cli.mdx.mdx
+
+Tres errores en una línea:
+
+  1. apps/docs no existe, el directorio es apps/web.
+  2. Falta el segmento docs/. sourceFilePath es relativo a src/content/docs,
+     que es el `directory` de la colección.
+  3. El .mdx queda duplicado, porque sourceFilePath ya lo trae.
+
+La URL correcta para ese ejemplo es:
+
+    .../edit/main/apps/web/src/content/docs/en/concepts/cli.mdx
+
+Arreglalo derivando la ruta de un solo lugar, no concatenando a mano en el
+componente. Es el mismo tipo de acoplamiento al layout físico del repo que el
+prompt A ataca en su fase 4.
+
+--- /en/bricks/Dashboard es un 404 ---
+
+Y está en la navegación lateral, o sea que todas las páginas del sitio linkean
+a él. Está hardcodeado en src/locales/en/docs.json:268 y
+src/locales/es/docs.json:268 con mayúscula, mientras BRICK_CATEGORIES
+(features/bricks/lib/bricks-registry.ts:82) genera el slug en minúscula:
+'dashboard'.
+
+Arreglá el dato y agregá la verificación que falta: un test que recorra los
+href de la navegación y falle si alguno no resuelve a una ruta que existe. La
+navegación es data en locales/{en,es}/docs.json, así que se puede recorrer sin
+levantar el sitio: los href de /docs/* se comparan contra la colección de
+content-collections y los de /bricks/* contra BRICK_CATEGORIES.
+
+Ese mismo guard es el que habría detectado el 404 de /en/docs/installation, que
+estuvo roto 48 commits sin que nada lo notara. El prompt A lo pide en su fase 0.
+Escribilo una sola vez, cubriendo los dos casos, y decidí en cuál de los dos
+prompts vive para no duplicarlo.
+
+--- Los links a GitHub apuntan a figueroaignacio/ui ---
+
+GitHub redirige a nachui porque maneja los renames, así que no están rotos,
+pero pasás por un redirect innecesario y el link de "Create an Issue" hereda el
+nombre viejo. Están en:
+
+    shared/lib/domains.ts:3                    GITHUB_REPO_URL
+    shared/components/layout/footer.tsx:22 y :90
+    shared/components/common/github-star-cta.tsx:7
+    features/docs/components/issue-cta.tsx:19
+    features/docs/components/doc-actions.tsx:69
+
+Cuatro de esos seis no usan la constante GITHUB_REPO_URL que ya existe en
+domains.ts, la repiten como string. Unificá contra la constante y después
+actualizá el nombre en un solo lugar.
+
+Aparte, el repo de skills se referencia como figueroaignacio/ui-skills en
+shared/components/mdx/skills-list.tsx y en las cuatro páginas nuevas de docs
+(concepts/skills y concepts/llms-txt, en los dos idiomas). Verificá si ese repo
+también se renombró antes de tocarlo, es uno distinto.
+
+===============================================================================
+FASE 2: DATOS ESTRUCTURADOS
+===============================================================================
+
+El SoftwareApplication se repite idéntico en todas las páginas. Está en
+[locale]/layout.tsx:45, así que la página del Button declara ser la aplicación
+NachUI igual que la home. Eso diluye la entidad. Movelo a la home y a /about,
+dale un @id estable (https://nachui.tech/#software), y que el resto de las
+páginas lo referencien desde isPartOf en vez de duplicar el objeto.
+
+El TechArticle de cada doc (doc-view.tsx:32) no tiene fechas. doc.date existe,
+lo usás en sitemap.ts, pero el schema no lleva datePublished ni dateModified.
+La frescura pesa fuerte cuando un motor generativo elige qué citar.
+
+No hay BreadcrumbList, aunque la jerarquía Docs > Elements > UI > Button es
+explícita en la ruta y ya la mostrás visualmente.
+
+El sitemap puede declarar URLs que no existen. En docPages, si un doc solo está
+en un idioma, el fallback doc.slugAsParams genera igual la entrada para el
+otro. Y buildAlternates declara hreflang para los dos idiomas siempre, haya
+traducción o no. Emparejá los documentos por locale de verdad y no declares
+alternates que no existen.
+
+Hoy los 92 documentos están en los dos idiomas, así que el bug no se ve. Es
+justamente por eso que conviene arreglarlo ahora: la primera página que se
+escriba en un solo idioma lo destapa en producción, y el sitemap es lo último
+que alguien revisa.
+
+Menores:
+  - og:locale emite en/es cuando el formato de Open Graph es en_US/es_ES. Sale
+    de pasar `locale` directo, por ejemplo en [locale]/page.tsx:31.
+  - metadataBase está seteado ([locale]/layout.tsx:103) pero no se usa nunca
+    porque todas las URLs se arman absolutas a mano, que es justamente el
+    mecanismo que habría evitado el bug de la fase 1. Evaluá apoyarte en él.
+
+===============================================================================
+FASE 3: GEO (Generative Engine Optimization)
+===============================================================================
+
+El principio: un modelo solo puede citar hechos que pueda extraer sin
+ambigüedad, y no puede apretar botones.
+
+Leé primero el bloque YA RESUELTO. llms.txt y el markdown por página existen;
+lo que queda es esto.
+
+--- llms-full.txt ---
+
+Falta el compañero de /llms.txt: un solo archivo con el markdown completo
+concatenado, para pegar de una vez en una ventana de contexto. El índice
+existente ya recorre la colección filtrando por published, así que la ruta es
+casi la misma; lo que hay que decidir es el orden, si se corta por tamaño y si
+se sirve una versión por idioma.
+
+Mientras estés ahí: fijate si conviene una variante solo de componentes, que es
+lo que pide la consulta más común ("qué componentes tiene y cómo se instalan").
+No la agregues por default, proponela con el costo de mantenerla.
+
+--- Expandí el FAQPage ---
+
+Hoy hay un solo bloque, renderizado por DocsFaq dentro de docs/index.mdx en los
+dos idiomas. El contenido vive en locales/{en,es}/sections.json bajo `faq` y
+son 8 preguntas.
+
+Las preguntas que la gente realmente escribe (cómo instalo un componente, en
+qué se diferencia de shadcn/ui, necesito instalar un paquete, puedo modificar
+el código después) merecen estar también en la home y en /about, que es donde
+un motor las va a buscar. Server-rendered, no detrás de un acordeón que solo
+monta en cliente. Ojo con eso último: DocsFaq es 'use client' y el JSON-LD lo
+inyecta con dangerouslySetInnerHTML dentro del componente cliente. Verificá que
+el schema salga en el HTML del servidor, no solo después de hidratar.
+
+--- Escribí una página de comparación ---
+
+No existe ninguna. El diferencial es concreto y explicable: el CLI escribe el
+archivo en el repo del usuario, no hay wrapper, no se espera un release
+upstream. Es exactamente lo que la gente pregunta comparando contra shadcn/ui.
+Una comparación honesta, que también diga dónde la alternativa conviene más, es
+el contenido más citable que se puede escribir para este proyecto. Sin
+superlativos ni marketing.
+
+--- El h1 de la home no menciona React ni componentes ---
+
+Dice "Designed minimal for modern developers and their AI agents"
+(sections.home.subheading1). El title y la meta description sí dicen "React
+design system". El h1 es la señal más fuerte de la página y hoy no nombra el
+dominio: podría ser de cualquier producto.
+
+Proponé una versión que mantenga el tono editorial, nombre lo que el proyecto
+es, y no pierda el ángulo de que también está hecho para que lo lea una IA, que
+es lo que dice el copy actual del resto del landing. Va en los dos idiomas.
+
+--- Declará explícitamente los bots de IA en robots.ts ---
+
+Hoy solo hay una regla `*` (robots.ts:9), que técnicamente los permite a todos.
+Antes de agregar agentes, explicá brevemente qué habilita cada uno, porque no
+son la misma decisión: algunos son consentimiento de entrenamiento y otros son
+retrieval en tiempo real. Dejá que se decida caso por caso. NO los agregues por
+default.
+
+Notá la tensión con el resto del proyecto: el sitio publica llms.txt, markdown
+crudo y skills instalables, o sea que la postura declarada es "queremos que los
+agentes lean esto". Cualquier regla que agregues tiene que ser coherente con
+eso, y si proponés bloquear algo, explicá por qué ese caso es distinto.
+
+===============================================================================
+FASE 4: CONSISTENCIA DE ENTIDAD
+===============================================================================
+
+El README.md de la raíz contradice al sitio en varios puntos, y es una de las
+fuentes primarias que los modelos leen sobre el proyecto:
+
+  - Dice apps/docs; el directorio real es apps/web.
+  - Dice que el contenido usa Velite; usa content-collections.
+  - No menciona apps/api, packages/db ni packages/cli en la estructura.
+  - Describe el proyecto como React + Next + Tailwind + Motion sin mencionar el
+    CLI, que es el diferencial central y sí aparece en la descripción del repo
+    en GitHub.
+
+El README de apps/web repite los dos primeros errores y además describe
+features que no existen así.
+
+AGENTS.md tiene el mismo problema y es peor, porque lo leen los agentes que
+trabajan en el repo: dice apps/docs y `pnpm --filter docs dev` cuando el
+paquete se llama `web`.
+
+Actualizá los tres para que coincidan con el sitio y entre sí. Las
+contradicciones entre fuentes bajan la confianza del modelo y hacen que termine
+sin citar ninguna.
+
+Lo que sí está actualizado en los README, no lo pises: los dos tienen una
+sección sobre las superficies legibles por agentes (llms.txt, el .md por
+página, /api/docs y las skills) que refleja el estado real.
+
+Nota: la documentación se reorganizó a elements/ui y elements/layout, con
+elements/ai planificado. Cualquier texto nuevo debe usar esa taxonomía, no la
+vieja de "components" y "layout".
+
+===============================================================================
+RESTRICCIONES
+===============================================================================
+
+- No cambies el diseño visual.
+- Todo texto nuevo va en locales/en/ Y locales/es/.
+- Nada de keyword stuffing ni de texto escrito para bots. Si una oración no la
+  leería bien una persona, está mal.
+- No toques los redirects existentes.
+- No uses rayas (guiones largos) en el copy ni en la documentación que escribas.
+
+===============================================================================
+VERIFICACIÓN
+===============================================================================
+
+1. pnpm build sin errores. Para lint, ver el bloque del principio.
+2. curl -I sobre la og:image de la home, de un doc y de bricks: las tres
+   devuelven 200.
+3. Ningún href de la navegación devuelve 404. Verificá /en/bricks/dashboard en
+   particular, y que el test nuevo falle si lo volvés a poner con mayúscula.
+4. El "Edit this page" de /en/docs/concepts/cli abre el archivo real en GitHub,
+   sin 404 y sin .mdx duplicado.
+5. /llms.txt, /llms-full.txt y /en/docs/elements/ui/button.md responden 200 con
+   el contenido esperado.
+6. Todo el JSON-LD generado es válido y no quedan @id colgando. El FAQPage sale
+   en el HTML del servidor, comprobalo con curl y no con el inspector.
+7. Ninguna URL del sitemap devuelve 404 o redirect.
+
+===============================================================================
+ENTREGA
+===============================================================================
+
+Qué se arregló, qué decisiones tomaste, y qué queda pendiente que requiera
+decisión.
+
+Al principio del resumen, sin excepción:
+
+  - qué hiciste con el ESLint roto
+  - qué bots de IA propones permitir o bloquear, y por qué
+  - qué versión del h1 elegís
+  - en qué prompt vive el guard de navegación, para no escribirlo dos veces

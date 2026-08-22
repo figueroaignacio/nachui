@@ -51,7 +51,9 @@ export class UsersService {
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        stores: [new KeyvRedis(config.get('REDIS_URL'))],
+        stores: [
+          new KeyvRedis(config.get('REDIS_URL')),
+        ],
         ttl: 60 * 1000, // Default 60s
       }),
     }),

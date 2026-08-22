@@ -79,7 +79,9 @@ export class DatabaseService implements OnApplicationShutdown {
     console.log(`Database service shutting down on ${signal}`);
 
     // Close all connections gracefully
-    await Promise.all(this.connections.map((conn) => conn.close()));
+    await Promise.all(
+      this.connections.map((conn) => conn.close()),
+    );
 
     console.log('All database connections closed');
   }
@@ -148,7 +150,9 @@ export class HealthController {
       throw new ServiceUnavailableException('Shutting down');
     }
 
-    return this.health.check([() => this.db.pingCheck('database')]);
+    return this.health.check([
+      () => this.db.pingCheck('database'),
+    ]);
   }
 }
 

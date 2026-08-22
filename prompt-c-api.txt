@@ -1,0 +1,252 @@
+PROMPT C: nachui, apps/api
+
+Pegar en el agente parado en la raíz del monorepo.
+Estado del repo de referencia: commit dbdb9f2f.
+
+===============================================================================
+ANTES DE EMPEZAR
+===============================================================================
+
+--- `pnpm lint` no corre en este repo ---
+
+eslint 10.4.1 crashea con:
+
+    TypeError: Cannot read properties of undefined (reading 'Cjs')
+    at @typescript-eslint/typescript-estree/dist/create-program/shared.js
+
+typescript-eslint 8.61.0 no soporta el TypeScript 7.0.2 que está instalado.
+Falla en cualquier archivo, incluidos los que no vas a tocar. El hook de
+pre-commit corre `eslint --max-warnings 0 --fix` sobre ts, así que todo commit
+que toque TypeScript se bloquea.
+
+Esto rompe el paso 1 de la verificación de este prompt tal como está escrito.
+Decidí explícitamente qué hacés y avisá cuál elegiste:
+
+  a. Arreglar el desfasaje de versiones. Es una decisión de dependencias que
+     afecta a todo el monorepo (bajar a TypeScript 6 o esperar
+     typescript-eslint con soporte para 7). No la tomes solo, preguntá.
+  b. Seguir con --no-verify y verificar con `pnpm build` más
+     `prettier --check`.
+
+--- AGENTS.md está desactualizado ---
+
+Dice `apps/docs` donde la app se llama apps/web, y `pnpm --filter docs dev`
+donde el paquete es `web`. Lo de apps/api que documenta sí es correcto. Si
+tocás ese archivo, arreglá lo otro de paso.
+
+===============================================================================
+CONTEXTO
+===============================================================================
+
+Sos un ingeniero en la API de nachui: NestJS, Drizzle sobre Postgres con
+pgvector, agente del AI SDK en packages/ai.
+
+La estructura está bien: módulos separados (chat, docs, rag, registry, themes),
+repositorios inyectados, ValidationPipe con whitelist, throttler global con
+override en chat, filtro de excepciones centralizado, y theme-contract.ts
+documenta el contrato de tokens con su spec. NO la reorganices. Los problemas
+son puntuales.
+
+Un commit por punto.
+
+===============================================================================
+1. DEPENDENCIA CIRCULAR ENTRE LA WEB Y LA API
+===============================================================================
+
+DocsService hace fetch a ${FRONTEND_URL}/api/docs (docs.service.ts:26), y el
+chat de la web pega contra esta API. El grafo queda web -> api -> web. Si el
+frontend está caído, la API no puede servir docs.
+packages/ai/src/scripts/ingest.ts:29 tiene el mismo problema: sale a buscar
+frontendUrl/api/docs para armar los embeddings.
+
+Los MDX están en apps/web/src/content/, a dos carpetas de distancia dentro del
+mismo monorepo. Proponé y aplicá una de estas dos, justificando la elección:
+
+  - Mover el contenido a un packages/content que consuman la web, la API y el
+    script de ingest directamente.
+  - Que la web publique los docs a la API en el build, invirtiendo la
+    dirección de la dependencia.
+
+Hay un agravante que resolver en el camino, cualquiera sea la opción que
+elijas. apps/web/src/app/api/docs/route.ts devuelve
+`ContentRepository.getDocs()` sin filtrar por `published`, mientras el resto de
+los consumidores de docs en la web sí filtran. O sea que este endpoint sirve
+borradores, y los dos clientes de arriba se los llevan:
+
+  - la API los expone en /docs
+  - el ingest los mete en los embeddings, así que salen citados en las
+    respuestas del asistente
+
+Hoy hay al menos un documento afectado: apps/web/src/content/docs/en/
+installation.mdx no tiene `published` en el frontmatter y el default del schema
+es false. El prompt A lo arregla en su fase 0, pero el filtro faltante es un
+problema de este contrato, no de ese archivo. Cerralo acá.
+
+===============================================================================
+2. EL DTO DEL CHAT VALIDA MENOS DE LO QUE PARECE
+===============================================================================
+
+create-chat.dto.ts completo:
+
+    @IsArray()
+    @IsNotEmpty()
+    messages!: UIMessage[];
+
+Verifica que sea un array no vacío y nada más. Sin @ValidateNested() +
+@Type(), los items no se validan, whitelist: true no los limpia y llegan
+objetos arbitrarios a pipeAgentUIStreamToResponse. Tampoco hay tope de largo
+del array ni de tamaño por mensaje.
+
+Agregá validación de los items, un máximo de mensajes en el historial y un
+máximo de caracteres por mensaje. Ojo que UIMessage viene del AI SDK y es un
+type, no una clase: vas a necesitar una clase DTO propia que lo represente para
+que class-validator pueda recorrerla.
+
+===============================================================================
+3. EL RATE LIMIT PUEDE ESTAR MIDIENDO LA ENTIDAD EQUIVOCADA
+===============================================================================
+
+main.ts:15 tiene app.set('trust proxy', 'loopback'), que confía solo en
+127.0.0.1. Si esto corre detrás de un proxy de Render, Railway o un CDN, req.ip
+va a ser la IP del proxy y el ThrottlerGuard va a limitar a 10/min GLOBALMENTE
+en vez de por cliente. Verificá el entorno de deploy real y configurá trust
+proxy en consecuencia.
+
+Dejá un test o al menos un log que permita distinguir los dos casos sin tener
+que adivinar en producción.
+
+===============================================================================
+4. LA TAXONOMÍA DE `type` NO REFLEJA LA REALIDAD
+===============================================================================
+
+En packages/db/src/schema.ts:10:
+
+    type: text('type').$type<'ui' | 'hook' | 'utils'>().default('ui')
+
+Ese enum no contempla 'layout' ni 'ai'. Los valores 'hook' y 'utils' no los
+popula nada. Y ya está forzando un parche en scripts/sync-registry.ts:101:
+
+    await processDirectory(LAYOUT_COMPONENTS_ROOT, 'ui');
+    // Keeping type 'ui' as per DB schema if it doesn't have 'layout'
+
+El script sabe que layout es una familia distinta (la firma de processDirectory
+es `type: 'ui' | 'layout'`), la calcula, y la fuerza a 'ui' porque el enum no la
+contempla.
+
+Contexto: la documentación ya se reorganizó en elements/ui y elements/layout,
+con elements/ai planificado. Además, `slug` es .unique() global (schema.ts:6), y
+toda la interfaz del CLI es `nachui add <slug>` sobre ese namespace plano. Los
+nombres probables de elementos de IA (message, prompt-input, chat, avatar,
+card, input) incluyen varios que YA EXISTEN como componentes de UI. Cuando se
+agregue el primero, el constraint de unicidad hace fallar el sync o
+sobreescribe el componente existente.
+
+NO implementes todavía. Presentá al usuario las opciones y trade-offs para:
+
+  a. Si `type` pasa a ser la lista real de familias, y qué migración implica.
+  b. Si `slug` sigue siendo global o pasa a ser compuesto (ui/button,
+     ai/message), y qué implica para nachui add / list / remove.
+
+Esperá la decisión antes de tocar el schema. Es una migración chica hoy y una
+con datos en producción después.
+
+Este punto es el mismo que el paso 2.1 del prompt A. Si los dos prompts se
+corren, la decisión se toma una sola vez y los dos la respetan.
+
+===============================================================================
+5. CAMPOS Y MÉTODOS MUERTOS
+===============================================================================
+
+registryDependencies está en packages/db/src/schema.ts:9, findBySlug lo
+devuelve porque hace `select()` sin proyección, y scripts/sync-registry.ts:79
+lo escribe siempre como []. Nunca se popula. Es lo que le permitiría al CLI
+resolver dependencias entre componentes, por ejemplo instalar button cuando el
+usuario pide dialog. Implementalo o sacalo, decidí y justificá.
+
+Si lo implementás, el escaneo de imports que ya hace sync-registry para
+`dependencies` es el mismo mecanismo: lo que hoy descarta como import relativo
+a otro componente es justamente la dependencia de registro que falta.
+
+RegistryRepository.upsert() (registry.repository.ts:25) no lo llama nadie: el
+script de sync escribe directo con db.insert(components), duplicando el
+onConflictDoUpdate. Unificá.
+
+===============================================================================
+6. cn DUPLICADO COMO TEMPLATE LITERAL
+===============================================================================
+
+themes.service.ts:16 tiene la función cn hardcodeada dentro de un string, y es
+lo que el CLI le escribe al usuario en su proyecto. Dos copias, una de ellas
+donde ningún linter la mira.
+
+La copia ya empezó a divergir del original, que es exactamente el modo en que
+esto falla:
+
+    packages/ui/src/lib/cn.ts   import { clsx, type ClassValue } from 'clsx';
+    themes.service.ts:16        import { type ClassValue, clsx } from 'clsx';
+
+Por ahora es solo el orden del import, o sea inofensivo. Pero nada avisa si
+mañana la divergencia es el cuerpo de la función.
+
+Leela del paquete. Fijate que theme-contract.ts ya resolvió un problema análogo
+con los tokens y dejó documentado el razonamiento (código que se copia al
+proyecto del usuario no puede tener imports colgando). Si acá hay una razón
+parecida para mantener la copia, documentala igual y agregá un test que compare
+las dos contra el archivo real; si no, unificá.
+
+===============================================================================
+7. CORS CON localhost HARDCODEADO
+===============================================================================
+
+main.ts:24 incluye 'http://localhost:3000' en los orígenes permitidos, también
+en producción. Condicionalo al entorno.
+
+===============================================================================
+8. TESTS
+===============================================================================
+
+Hay uno solo (apps/api/src/modules/themes/theme-contract.spec.ts), que además
+es un buen modelo: valida un artefacto real contra un contrato y falla ante una
+regresión. Extendé el mismo enfoque a RegistryRepository, RagRepository y la
+validación del DTO del chat.
+
+El del DTO es el más valioso de los tres, porque el punto 2 es el único de este
+prompt que se puede verificar sin base de datos: un POST con basura tiene que
+dar 400.
+
+===============================================================================
+RESTRICCIONES
+===============================================================================
+
+- No cambies la forma de las respuestas de /registry ni de /themes sin
+  verificar antes cómo las consume packages/cli.
+- No agregues dependencias sin justificarlo.
+- Prettier y commitlint se respetan. Con ESLint, ver el bloque de arriba.
+- No uses rayas (guiones largos) en el copy ni en la documentación que escribas.
+
+===============================================================================
+VERIFICACIÓN
+===============================================================================
+
+1. pnpm build en apps/api. Para lint, ver el bloque del principio y decir en la
+   entrega qué usaste en su lugar.
+2. GET /registry y /registry/:slug devuelven lo mismo que antes. Compará contra
+   la respuesta guardada, no de memoria.
+3. nachui add button, nachui list y nachui init siguen funcionando contra la
+   API.
+4. Un POST a /chat con un array de basura devuelve 400, no un 500 ni un stream
+   a medias.
+5. Si tocaste el punto 1: la API sirve /docs con el frontend apagado, y no
+   devuelve documentos sin publicar.
+
+===============================================================================
+ENTREGA
+===============================================================================
+
+Qué elegiste para el punto 1 y por qué, y qué decidiste con
+registryDependencies.
+
+Al principio del resumen, sin excepción:
+
+  - qué hiciste con el ESLint roto
+  - las preguntas del punto 4, si todavía no fueron respondidas

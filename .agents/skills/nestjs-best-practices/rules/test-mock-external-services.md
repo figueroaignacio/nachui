@@ -84,7 +84,9 @@ describe('WeatherService', () => {
   });
 
   it('should handle API timeout', async () => {
-    httpService.get.mockReturnValue(throwError(() => new Error('ETIMEDOUT')));
+    httpService.get.mockReturnValue(
+      throwError(() => new Error('ETIMEDOUT')),
+    );
 
     await expect(service.getWeather('NYC')).rejects.toThrow('Weather service unavailable');
   });
@@ -115,7 +117,10 @@ describe('UsersService', () => {
     };
 
     const module = await Test.createTestingModule({
-      providers: [UsersService, { provide: getRepositoryToken(User), useValue: mockRepo }],
+      providers: [
+        UsersService,
+        { provide: getRepositoryToken(User), useValue: mockRepo },
+      ],
     }).compile();
 
     service = module.get(UsersService);

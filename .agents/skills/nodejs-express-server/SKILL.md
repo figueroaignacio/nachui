@@ -34,7 +34,7 @@ Create robust Express.js applications with proper routing, middleware chains, au
 Minimal working example:
 
 ```javascript
-const express = require('express');
+const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -43,8 +43,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.get('/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+app.get("/health", (req, res) => {
+  res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
 // Error handling
@@ -65,15 +65,15 @@ app.listen(PORT, () => {
 
 Detailed implementations in the `references/` directory:
 
-| Guide                                                                                                            | Contents                                         |
-| ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| [Basic Express Setup](references/basic-express-setup.md)                                                         | Basic Express Setup                              |
-| [Middleware Chain Implementation](references/middleware-chain-implementation.md)                                 | Middleware Chain Implementation                  |
+| Guide | Contents |
+|---|---|
+| [Basic Express Setup](references/basic-express-setup.md) | Basic Express Setup |
+| [Middleware Chain Implementation](references/middleware-chain-implementation.md) | Middleware Chain Implementation |
 | [Database Integration (PostgreSQL with Sequelize)](references/database-integration-postgresql-with-sequelize.md) | Database Integration (PostgreSQL with Sequelize) |
-| [Authentication with JWT](references/authentication-with-jwt.md)                                                 | Authentication with JWT                          |
-| [RESTful Routes with CRUD Operations](references/restful-routes-with-crud-operations.md)                         | RESTful Routes with CRUD Operations              |
-| [Error Handling Middleware](references/error-handling-middleware.md)                                             | Error Handling Middleware                        |
-| [Environment Configuration](references/environment-configuration.md)                                             | Environment Configuration                        |
+| [Authentication with JWT](references/authentication-with-jwt.md) | Authentication with JWT |
+| [RESTful Routes with CRUD Operations](references/restful-routes-with-crud-operations.md) | RESTful Routes with CRUD Operations |
+| [Error Handling Middleware](references/error-handling-middleware.md) | Error Handling Middleware |
+| [Environment Configuration](references/environment-configuration.md) | Environment Configuration |
 
 ## Best Practices
 
