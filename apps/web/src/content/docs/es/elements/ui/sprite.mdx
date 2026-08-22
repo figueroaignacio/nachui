@@ -52,6 +52,20 @@ un eje aparte de la forma: seis peinados y cinco colores son treinta cabezas.
 
 <ComponentPreview component="sprite" demo="parts" />
 
+## Suelto
+
+`spriteToSvg` devuelve el sprite entero como un string SVG, animaciones
+incluidas, así que funciona donde la hoja de estilos de una página no llega — una
+respuesta de servidor, un archivo guardado, un README. En este sitio, además,
+cada sprite es una URL:
+
+```
+/api/sprite/{semilla}.svg?state=loop&size=96
+```
+
+La misma semilla responde siempre la misma imagen, así que la respuesta se
+cachea como inmutable.
+
 ## Props
 
 | Prop    | Tipo                                   | Default  | Descripción                                           |

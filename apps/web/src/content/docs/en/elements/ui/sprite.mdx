@@ -51,6 +51,19 @@ separate axis from shape, so six hair shapes and five colours are thirty heads.
 
 <ComponentPreview component="sprite" demo="parts" />
 
+## Standalone
+
+`spriteToSvg` returns the whole sprite as one SVG string, animations included, so
+it works anywhere a page's stylesheet cannot reach — a server response, a saved
+file, a README. On this site every sprite is also a URL:
+
+```
+/api/sprite/{seed}.svg?state=loop&size=96
+```
+
+The same seed always answers with the same image, so the response is cached as
+immutable.
+
 ## Props
 
 | Prop    | Type                                   | Default  | Description                                         |

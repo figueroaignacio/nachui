@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { partsFromSeed, Sprite } from './sprite';
+import { partsFromSeed, Sprite, spriteToSvg } from './sprite';
 
 const svgOf = (ui: React.ReactElement) => render(ui).container.innerHTML;
 
@@ -60,5 +60,26 @@ describe('part combinations that would clash', () => {
   it('never puts glasses on a visor', () => {
     const svg = svgOf(<Sprite seed="x" parts={{ eyes: 'visor', accessory: 'glasses' }} />);
     expect(svg).not.toContain('M11 9h2v1h-2Z');
+  });
+});
+
+describe('spriteToSvg', () => {
+  it('is a standalone svg that carries its own animations', () => {
+    const svg = spriteToSvg({ seed: 'nacho', state: 'loop' });
+    expect(svg.startsWith('<svg xmlns=')).toBe(true);
+    expect(svg).toContain('<style>');
+    expect(svg).toContain('sprite-cycle-sit');
+  });
+
+  it('is deterministic', () => {
+    expect(spriteToSvg({ seed: 'nacho' })).toBe(spriteToSvg({ seed: 'nacho' }));
+  });
+
+  it('respects the state grid', () => {
+    expect(spriteToSvg({ seed: 'nacho', state: 'work' })).toContain('viewBox="0 0 32 30"');
+  });
+
+  it('can skip the stylesheet when the page already has one', () => {
+    expect(spriteToSvg({ seed: 'nacho', withStyles: false })).not.toContain('<style>');
   });
 });
