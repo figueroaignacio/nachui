@@ -217,5 +217,66 @@
     "content2": "What started as just a couple of basic components quickly evolved. Curiosity drove me to integrate native AI capabilities, develop a full backend, build a smart CLI, and implement comprehensive testing.",
     "content3": "But beyond the technical growth, my goal was always to create something genuinely useful. Something free of bloat, free of lock-in, and built with absolute care.",
     "content4": "This project is a labor of love—what we call in Spanish \"amor al arte\""
+  },
+  "sprites": {
+    "eyebrow": "NachUI · Sprite",
+    "title": "Eight that walk",
+    "subtitle": "All of them come out of the same parts table and the same skeleton: the face box, the eye line, the shoulders and the hip. That is why any of them inherits the animations for free.",
+    "explainer": "Every character is a row of data, not a drawing: five slots and a short seed that packs them. Adding a haircut is eleven lines, and all eight inherit it.",
+    "back": "Back to the roster",
+    "statesTitle": "States",
+    "recipeTitle": "Recipe",
+    "states": {
+      "idle": {
+        "title": "Idle",
+        "note": "Breathes, blinks and looks around."
+      },
+      "walk": {
+        "title": "Walking",
+        "note": "Two frames of legs and a one-pixel bob."
+      },
+      "work": {
+        "title": "Working",
+        "note": "Opens a laptop; the lid faces away from you."
+      },
+      "loop": {
+        "title": "The whole cycle",
+        "note": "Walks in, sits down, works, gets up, carries on."
+      }
+    },
+    "cast": {
+      "nacho": {
+        "name": "Nacho",
+        "note": "The first one, from the portfolio."
+      },
+      "mate": {
+        "name": "Mate",
+        "note": "The NachUI agent. Never takes the headset off."
+      },
+      "vera": {
+        "name": "Vera",
+        "note": "Reads everything twice before answering."
+      },
+      "bit": {
+        "name": "Bit",
+        "note": "Does not blink. Scans."
+      },
+      "chispa": {
+        "name": "Chispa",
+        "note": "Always about to break something."
+      },
+      "lupe": {
+        "name": "Lupe",
+        "note": "Fixes whatever Chispa breaks."
+      },
+      "tero": {
+        "name": "Tero",
+        "note": "Codes at night, screen dimmed all the way down."
+      },
+      "nieve": {
+        "name": "Nieve",
+        "note": "Works at dawn and tells no one about it."
+      }
+    }
   }
 }

@@ -218,5 +218,66 @@
     "content2": "Lo que empezó como un par de componentes básicos evolucionó rápidamente. La curiosidad me llevó a integrar capacidades nativas de Inteligencia Artificial, desarrollar un backend completo, construir una CLI inteligente y establecer tests exhaustivos.",
     "content3": "Pero más allá del crecimiento técnico, mi meta siempre fue crear algo genuinamente útil. Algo sin dependencias innecesarias, sin restricciones y construido con cuidado absoluto.",
     "content4": "Este proyecto está hecho por puro \"amor al arte\"."
+  },
+  "sprites": {
+    "eyebrow": "NachUI · Sprite",
+    "title": "Ocho que caminan",
+    "subtitle": "Todos salen de la misma tabla de partes y del mismo esqueleto: la caja de la cara, la línea de ojos, los hombros y la cadera. Por eso cualquiera hereda las animaciones sin trabajo extra.",
+    "explainer": "Cada personaje es una fila de datos, no un dibujo: cinco ranuras y una semilla corta que las empaqueta. Agregar un peinado son once líneas y lo heredan los ocho.",
+    "back": "Volver al roster",
+    "statesTitle": "Estados",
+    "recipeTitle": "Receta",
+    "states": {
+      "idle": {
+        "title": "En reposo",
+        "note": "Respira, parpadea y mira alrededor."
+      },
+      "walk": {
+        "title": "Caminando",
+        "note": "Dos cuadros de piernas y un rebote de un píxel."
+      },
+      "work": {
+        "title": "Programando",
+        "note": "Saca la laptop; la tapa mira para su lado."
+      },
+      "loop": {
+        "title": "El ciclo entero",
+        "note": "Camina, se sienta, laburea, se para y sigue."
+      }
+    },
+    "cast": {
+      "nacho": {
+        "name": "Nacho",
+        "note": "El primero, el del portfolio."
+      },
+      "mate": {
+        "name": "Mate",
+        "note": "El agente de NachUI. No se saca los auriculares."
+      },
+      "vera": {
+        "name": "Vera",
+        "note": "Lee todo dos veces antes de contestar."
+      },
+      "bit": {
+        "name": "Bit",
+        "note": "No parpadea. Escanea."
+      },
+      "chispa": {
+        "name": "Chispa",
+        "note": "Siempre a punto de romper algo."
+      },
+      "lupe": {
+        "name": "Lupe",
+        "note": "Arregla lo que Chispa rompe."
+      },
+      "tero": {
+        "name": "Tero",
+        "note": "Programa de noche, con la pantalla al mínimo."
+      },
+      "nieve": {
+        "name": "Nieve",
+        "note": "Trabaja de madrugada y no se lo cuenta a nadie."
+      }
+    }
   }
 }
