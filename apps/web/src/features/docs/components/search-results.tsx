@@ -1,3 +1,4 @@
+import { AiAvatar } from '@/features/chat/ui/ai-avatar';
 import { Link } from '@/i18n/navigation';
 import type { NavigationSection, SearchResultItem } from '@/lib/definitions';
 import { Dialog } from '@repo/ui/components/dialog';
@@ -83,7 +84,7 @@ export function SearchResults({ query, results, navigation, selectedIndex }: Sea
   if (query && results.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 py-12">
-        <span className="text-2xl">⌕</span>
+        <AiAvatar size="lg" />
         <p className="text-muted-foreground/60 text-sm">{t('noResults')}</p>
         <p className="text-muted-foreground/35 text-xs">Try a different keyword</p>
       </div>
