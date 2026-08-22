@@ -1,39 +1,17 @@
-'use client';
-
 import { Typography } from '../../components/typography';
-
-const items = [
-  {
-    label: 'Lead Text',
-    variant: 'lead' as const,
-    content: 'A tall paragraph text style designed to introduce an article or section.',
-  },
-  {
-    label: 'Large Text',
-    variant: 'large' as const,
-    content: 'Slightly larger copy designed for subheaders, callouts, or featured content.',
-  },
-  {
-    label: 'Small & Muted Text',
-    variant: 'muted' as const,
-    content: 'De-emphasized descriptive text, perfect for captions or legal copy.',
-  },
-];
 
 export function LeadMuted() {
   return (
-    <div className="flex w-full flex-col gap-4">
-      {items.map(({ label, variant, content }) => (
-        <div key={variant}>
-          <Typography
-            variant="small"
-            className="text-primary mb-1 block font-bold tracking-wider uppercase"
-          >
-            {label}
-          </Typography>
-          <Typography variant={variant}>{content}</Typography>
-        </div>
-      ))}
-    </div>
+    <article className="flex w-full max-w-md flex-col gap-3">
+      <Typography variant="h3">Rebuilding search on a small budget</Typography>
+      <Typography variant="muted">By Lucia Mendez, 6 min read, updated Mar 14</Typography>
+      <Typography variant="lead">
+        Our old search ran on a managed cluster that cost more than the rest of the stack combined.
+        We replaced it with Postgres full text search and kept the results people actually clicked.
+      </Typography>
+      <Typography variant="large">
+        Queries got 40ms slower. The bill went from $1,900 a month to $60.
+      </Typography>
+    </article>
   );
 }

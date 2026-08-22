@@ -1,23 +1,24 @@
-'use client';
-
+import { Label } from '../../components/label';
 import { Select } from '../../components/select';
 
-const options = [
-  { value: '1', label: 'Option 1' },
-  { value: '2', label: 'Option 2' },
-  { value: '3', label: 'Option 3' },
+const regions = [
+  { value: 'us-east-1', label: 'US East, Virginia' },
+  { value: 'us-west-2', label: 'US West, Oregon' },
+  { value: 'eu-central-1', label: 'Europe, Frankfurt' },
+  { value: 'sa-east-1', label: 'South America, Sao Paulo' },
+  { value: 'ap-southeast-1', label: 'Asia Pacific, Singapore' },
 ];
 
 export function Default() {
   return (
-    <div className="w-full max-w-xs">
-      <Select defaultValue="" aria-label="Select an option">
-        <option value="" disabled>
-          Select an option
-        </option>
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
+    <div className="flex w-full max-w-sm flex-col gap-1.5">
+      <Label htmlFor="deploy-region" description="Your database is created in the same region.">
+        Deployment region
+      </Label>
+      <Select id="deploy-region" defaultValue="eu-central-1">
+        {regions.map((region) => (
+          <option key={region.value} value={region.value}>
+            {region.label}
           </option>
         ))}
       </Select>

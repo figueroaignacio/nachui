@@ -2,34 +2,36 @@
 
 import { Accordion } from '../../components/accordion';
 
-const items = [
+const causes = [
   {
-    value: 'item-1',
-    trigger: 'Can I open multiple items?',
+    value: 'module-not-found',
+    trigger: 'Module not found during the build step',
     content:
-      'Yes! When using type="multiple", you can have multiple accordion items open at the same time.',
+      'The package resolves locally but not on the build machine. Move it out of devDependencies, commit the lockfile, and rerun the build with a cleared cache.',
   },
   {
-    value: 'item-2',
-    trigger: 'How does it work?',
+    value: 'out-of-memory',
+    trigger: 'Build ran out of memory',
     content:
-      'Simply set the type prop to "multiple" and users can expand as many sections as they want simultaneously.',
+      'Node stops at the default heap limit on large bundles. Set NODE_OPTIONS to --max-old-space-size=4096 in the project settings, then split the largest entry point if it happens again.',
   },
   {
-    value: 'item-3',
-    trigger: 'Is this useful?',
+    value: 'missing-env',
+    trigger: 'Environment variable was undefined at build time',
     content:
-      "Absolutely! It's perfect for FAQ sections where users might want to compare multiple answers at once.",
+      'Variables scoped to Preview are not injected into Production builds. Check the scope column in Settings, Environment Variables, and remember that only NEXT_PUBLIC_ values reach the browser bundle.',
   },
 ];
 
 export function Multiple() {
   return (
-    <Accordion type="multiple" className="w-full">
-      {items.map((item) => (
-        <Accordion.Item key={item.value} value={item.value}>
-          <Accordion.Trigger value={item.value}>{item.trigger}</Accordion.Trigger>
-          <Accordion.Content value={item.value}>{item.content}</Accordion.Content>
+    <Accordion type="multiple" className="w-full max-w-md">
+      {causes.map((cause) => (
+        <Accordion.Item key={cause.value} value={cause.value}>
+          <Accordion.Trigger value={cause.value}>{cause.trigger}</Accordion.Trigger>
+          <Accordion.Content value={cause.value} className="text-muted-foreground text-sm">
+            {cause.content}
+          </Accordion.Content>
         </Accordion.Item>
       ))}
     </Accordion>

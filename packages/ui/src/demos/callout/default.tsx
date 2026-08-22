@@ -2,9 +2,12 @@ import { Callout } from '../../components/callout';
 
 export function Default() {
   return (
-    <Callout>
-      <Callout.Title>Default Callout</Callout.Title>
-      <Callout.Content>This is a default callout without any specific variant.</Callout.Content>
+    <Callout className="max-w-lg">
+      <Callout.Title>Note</Callout.Title>
+      <Callout.Content>
+        The CLI reads NACHUI_TOKEN from your shell first, then falls back to .env.local. Values in
+        the shell always win.
+      </Callout.Content>
     </Callout>
   );
 }

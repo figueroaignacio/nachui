@@ -1,20 +1,30 @@
-'use client';
-
 import { Card } from '../../components/card';
+
+const channels = [
+  { name: 'Deploy failures', detail: 'Email and Slack' },
+  { name: 'New comments', detail: 'Slack only' },
+  { name: 'Weekly usage report', detail: 'Email, every Monday' },
+];
 
 export function Ghost() {
   return (
-    <Card variant="ghost" className="w-[350px]">
-      <Card.Header>
-        <Card.Title>Ghost Card</Card.Title>
-        <Card.Description>Subtle and unobtrusive</Card.Description>
-      </Card.Header>
-      <Card.Content>
-        <p>
-          Ghost cards are perfect for minimalist designs where you want grouping without visual
-          weight.
-        </p>
-      </Card.Content>
-    </Card>
+    <div className="border-border bg-card w-full max-w-sm rounded-xl border p-2">
+      <Card variant="ghost">
+        <Card.Header>
+          <Card.Title>Notifications</Card.Title>
+          <Card.Description>How this workspace reaches you.</Card.Description>
+        </Card.Header>
+        <Card.Content className="text-sm">
+          <ul className="space-y-2">
+            {channels.map((channel) => (
+              <li key={channel.name} className="flex items-baseline justify-between gap-3">
+                <span>{channel.name}</span>
+                <span className="text-muted-foreground text-xs">{channel.detail}</span>
+              </li>
+            ))}
+          </ul>
+        </Card.Content>
+      </Card>
+    </div>
   );
 }

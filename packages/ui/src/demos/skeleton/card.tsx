@@ -1,24 +1,25 @@
-'use client';
-
 import { Skeleton } from '../../components/skeleton';
 
-const lines = [{ className: 'h-5 w-3/4' }, { className: 'h-4 w-full' }, { className: 'h-4 w-5/6' }];
-
-const actions = [{ className: 'h-9 w-24 rounded-md' }, { className: 'h-9 w-24 rounded-md' }];
+// Placeholder for a project card: preview image, title, two lines of summary,
+// then the owner row and the deploy status at the bottom.
+const summaryLines = ['h-3.5 w-full', 'h-3.5 w-4/5'];
 
 export function Card() {
   return (
-    <div className="border-border w-full max-w-sm space-y-4 rounded-xl border p-6">
+    <div className="border-border bg-card w-full max-w-sm rounded-xl border p-4">
       <Skeleton className="h-[140px] w-full rounded-lg" />
-      <div className="space-y-2">
-        {lines.map((line, i) => (
-          <Skeleton key={i} className={line.className} />
+      <div className="mt-4 space-y-2">
+        <Skeleton className="h-5 w-40" />
+        {summaryLines.map((line) => (
+          <Skeleton key={line} className={line} />
         ))}
       </div>
-      <div className="flex gap-2 pt-2">
-        {actions.map((action, i) => (
-          <Skeleton key={i} className={action.className} />
-        ))}
+      <div className="border-border mt-4 flex items-center justify-between border-t pt-4">
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-6 w-6 rounded-full" />
+          <Skeleton className="h-3 w-24" />
+        </div>
+        <Skeleton className="h-5 w-16 rounded-sm" />
       </div>
     </div>
   );

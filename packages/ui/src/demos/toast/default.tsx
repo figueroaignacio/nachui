@@ -11,12 +11,12 @@ function ToastDemo() {
       variant="outline"
       onClick={() =>
         toast({
-          title: 'Event created',
-          description: 'Your event has been created successfully.',
+          title: 'Invitation sent',
+          description: 'Lucia Mendez gets access to Acme Studio once she accepts.',
         })
       }
     >
-      Show Toast
+      Invite teammate
     </Button>
   );
 }

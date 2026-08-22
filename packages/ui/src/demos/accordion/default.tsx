@@ -2,62 +2,41 @@
 
 import { Accordion } from '../../components/accordion';
 
-const accordionItems = [
+const faq = [
   {
-    value: 'item-1',
-    title: 'Life Hacks for Coders',
-    content: (
-      <>
-        <p>
-          Want to survive 12-hour coding sessions? Always keep snacks nearby and caffeine on
-          standby. Bonus points for comfy socks and a chair that doesn't destroy your back.
-        </p>
-        <p>
-          Remember: comments are your friend. Future you will thank past you for writing clear
-          notes.
-        </p>
-      </>
-    ),
+    value: 'seats',
+    question: 'How are seats billed?',
+    answer:
+      'Every teammate you invite takes a seat. New seats are prorated for the days left in the billing period, and seats you remove come back as credit on the next invoice.',
   },
   {
-    value: 'item-2',
-    title: 'Debugging Secrets',
-    content: (
-      <>
-        <p>
-          Debugging is basically detective work, but your suspects are lines of code. Breakpoints
-          are your magnifying glass.
-        </p>
-        <p>
-          Pro tip: if it compiles but doesn't work, stare at the screen, whisper "why won't you
-          work?," then Google like your life depends on it.
-        </p>
-      </>
-    ),
+    value: 'plan-change',
+    question: 'Can I switch plans in the middle of a cycle?',
+    answer:
+      'Yes. Upgrades apply right away and you pay the difference for the rest of the month. Downgrades take effect on the renewal date so you keep what you already paid for.',
   },
   {
-    value: 'item-3',
-    title: 'Random Productivity Tips',
-    content: (
-      <>
-        <p>
-          Sometimes the best way to get code done is to step away. Take a walk, pet your cat, or
-          pretend to meditate.
-        </p>
-        <p>And remember: Ctrl+S is life. Save often, panic never.</p>
-      </>
-    ),
+    value: 'invoices',
+    question: 'Where do I find past invoices?',
+    answer:
+      'Open Settings, then Billing. Every invoice is there as a PDF, and the billing contact gets a copy by email within a few minutes of each charge.',
+  },
+  {
+    value: 'overage',
+    question: 'What happens if we go over the included usage?',
+    answer:
+      'We keep serving traffic and add the extra usage to your next invoice at the rate listed on your plan. You get an email as soon as you pass 80% of the included quota.',
   },
 ];
 
 export function Default() {
   return (
-    <Accordion type="single" className="w-full" defaultValue="item-1">
-      {accordionItems.map((item) => (
+    <Accordion type="single" className="w-full max-w-md" defaultValue="seats">
+      {faq.map((item) => (
         <Accordion.Item key={item.value} value={item.value}>
-          <Accordion.Trigger value={item.value}>{item.title}</Accordion.Trigger>
-          <Accordion.Content value={item.value} className="flex flex-col gap-4 text-balance">
-            {item.content}
+          <Accordion.Trigger value={item.value}>{item.question}</Accordion.Trigger>
+          <Accordion.Content value={item.value} className="text-muted-foreground text-sm">
+            {item.answer}
           </Accordion.Content>
         </Accordion.Item>
       ))}

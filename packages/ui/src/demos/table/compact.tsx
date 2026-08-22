@@ -1,41 +1,64 @@
-'use client';
-
+import { Badge } from '../../components/badge';
 import { Table } from '../../components/table';
 
-const invoices = [
+const deployments = [
   {
-    invoice: 'INV001',
-    paymentStatus: 'Paid',
-    totalAmount: '$250.00',
-    paymentMethod: 'Credit Card',
+    id: 'dpl_9fk2ax',
+    branch: 'main',
+    status: 'Ready',
+    tone: 'success',
+    duration: '42s',
   },
-  { invoice: 'INV002', paymentStatus: 'Pending', totalAmount: '$150.00', paymentMethod: 'PayPal' },
   {
-    invoice: 'INV003',
-    paymentStatus: 'Unpaid',
-    totalAmount: '$350.00',
-    paymentMethod: 'Bank Transfer',
+    id: 'dpl_7ta1mv',
+    branch: 'feat/checkout-v2',
+    status: 'Building',
+    tone: 'info',
+    duration: '1m 12s',
   },
-];
+  {
+    id: 'dpl_5qr8bd',
+    branch: 'fix/webhook-retry',
+    status: 'Failed',
+    tone: 'destructive',
+    duration: '18s',
+  },
+  {
+    id: 'dpl_3nz6yk',
+    branch: 'main',
+    status: 'Ready',
+    tone: 'success',
+    duration: '39s',
+  },
+  {
+    id: 'dpl_2hb4lp',
+    branch: 'chore/bump-deps',
+    status: 'Canceled',
+    tone: 'secondary',
+    duration: '6s',
+  },
+] as const;
 
 export function Compact() {
   return (
     <Table>
       <Table.Header>
         <Table.Row>
-          <Table.Head className="h-auto py-2 text-xs">Invoice</Table.Head>
+          <Table.Head className="h-auto py-2 text-xs">Deployment</Table.Head>
+          <Table.Head className="h-auto py-2 text-xs">Branch</Table.Head>
           <Table.Head className="h-auto py-2 text-xs">Status</Table.Head>
-          <Table.Head className="h-auto py-2 text-xs">Method</Table.Head>
-          <Table.Head className="h-auto py-2 text-right text-xs">Amount</Table.Head>
+          <Table.Head className="h-auto py-2 text-right text-xs">Duration</Table.Head>
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {invoices.map((invoice) => (
-          <Table.Row key={invoice.invoice}>
-            <Table.Cell className="py-2 font-medium">{invoice.invoice}</Table.Cell>
-            <Table.Cell className="py-2">{invoice.paymentStatus}</Table.Cell>
-            <Table.Cell className="py-2">{invoice.paymentMethod}</Table.Cell>
-            <Table.Cell className="py-2 text-right">{invoice.totalAmount}</Table.Cell>
+        {deployments.map((deployment) => (
+          <Table.Row key={deployment.id}>
+            <Table.Cell className="py-2 font-mono font-medium">{deployment.id}</Table.Cell>
+            <Table.Cell className="text-muted-foreground py-2">{deployment.branch}</Table.Cell>
+            <Table.Cell className="py-2">
+              <Badge variant={deployment.tone}>{deployment.status}</Badge>
+            </Table.Cell>
+            <Table.Cell className="py-2 text-right tabular-nums">{deployment.duration}</Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>

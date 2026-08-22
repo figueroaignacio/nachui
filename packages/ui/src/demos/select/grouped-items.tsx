@@ -1,38 +1,44 @@
-'use client';
-
+import { Label } from '../../components/label';
 import { Select } from '../../components/select';
 
-const groups = [
+const teams = [
   {
-    label: 'Citrus',
-    options: [
-      { value: 'orange', label: 'Orange' },
-      { value: 'lemon', label: 'Lemon' },
-      { value: 'lime', label: 'Lime' },
+    label: 'Engineering',
+    members: [
+      { value: 'lucia', label: 'Lucia Mendez' },
+      { value: 'marco', label: 'Marco Rivas' },
+      { value: 'priya', label: 'Priya Nair' },
     ],
   },
   {
-    label: 'Berries',
-    options: [
-      { value: 'strawberry', label: 'Strawberry' },
-      { value: 'blueberry', label: 'Blueberry' },
-      { value: 'raspberry', label: 'Raspberry' },
+    label: 'Design',
+    members: [
+      { value: 'ines', label: 'Ines Duarte' },
+      { value: 'tomas', label: 'Tomas Fuentes' },
     ],
   },
-] as const;
+  {
+    label: 'Support',
+    members: [
+      { value: 'noa', label: 'Noa Bergman' },
+      { value: 'hugo', label: 'Hugo Salas' },
+    ],
+  },
+];
 
 export function GroupedItems() {
   return (
-    <div className="w-full max-w-xs">
-      <Select defaultValue="" aria-label="Select a fruit">
+    <div className="flex w-full max-w-sm flex-col gap-1.5">
+      <Label htmlFor="assignee">Assign ticket to</Label>
+      <Select id="assignee" defaultValue="">
         <option value="" disabled>
-          Select a fruit
+          Unassigned
         </option>
-        {groups.map((group) => (
-          <optgroup key={group.label} label={group.label}>
-            {group.options.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
+        {teams.map((team) => (
+          <optgroup key={team.label} label={team.label}>
+            {team.members.map((member) => (
+              <option key={member.value} value={member.value}>
+                {member.label}
               </option>
             ))}
           </optgroup>

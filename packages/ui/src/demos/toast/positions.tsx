@@ -19,12 +19,13 @@ function PositionsInner() {
       variant="outline"
       onClick={() =>
         toast({
-          title: 'Notification',
-          description: 'Check the position of this toast.',
+          title: 'Backup finished',
+          description: 'Nightly snapshot of acme-prod stored in eu-central-1.',
+          variant: 'success',
         })
       }
     >
-      Show Toast
+      Run backup now
     </Button>
   );
 }

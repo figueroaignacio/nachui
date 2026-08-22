@@ -6,37 +6,40 @@ import { Toast, useToast } from '../../components/toast';
 const variants = [
   {
     label: 'Default',
-    options: { title: 'Default notification', description: 'This is a default toast.' },
+    options: {
+      title: 'Invitation sent',
+      description: 'Lucia Mendez gets access to Acme Studio once she accepts.',
+    },
   },
   {
     label: 'Success',
     options: {
-      title: 'Success!',
-      description: 'Your changes have been saved.',
+      title: 'Deployed to production',
+      description: 'checkout-flow built in 42s and is serving traffic.',
       variant: 'success' as const,
     },
   },
   {
     label: 'Error',
     options: {
-      title: 'Error',
-      description: 'Something went wrong. Please try again.',
+      title: 'Payment declined',
+      description: 'Visa ending 4242 was rejected by the issuing bank.',
       variant: 'error' as const,
     },
   },
   {
     label: 'Info',
     options: {
-      title: 'Info',
-      description: 'A new version is available.',
+      title: 'Export is being prepared',
+      description: 'We will email a download link to lucia@acmestudio.dev when it is ready.',
       variant: 'info' as const,
     },
   },
   {
     label: 'Warning',
     options: {
-      title: 'Warning',
-      description: 'Your session is about to expire.',
+      title: 'Approaching the rate limit',
+      description: 'You have used 9,400 of 10,000 requests this hour.',
       variant: 'warning' as const,
     },
   },

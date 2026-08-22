@@ -1,42 +1,56 @@
 'use client';
 
+import { Button } from '../../components/button';
 import { Drawer } from '../../components/drawer';
 import { Input } from '../../components/input';
 import { Label } from '../../components/label';
-
-const fields = [
-  { id: 'name', label: 'Name', defaultValue: 'Ignacio Figueroa', type: 'text' },
-  { id: 'username', label: 'Username', defaultValue: '@figueroaignacio', type: 'text' },
-] as const;
+import { Select } from '../../components/select';
 
 export function Form() {
   return (
     <Drawer>
-      <Drawer.Trigger variant="outline">Edit Profile</Drawer.Trigger>
+      <Drawer.Trigger variant="outline">New API key</Drawer.Trigger>
       <Drawer.Content side="bottom">
         <Drawer.Header>
-          <Drawer.Title>Edit profile</Drawer.Title>
+          <Drawer.Title>Create an API key</Drawer.Title>
           <Drawer.Description>
-            Make changes to your profile here. Click save when you&apos;re done.
+            The secret is shown once, right after you create it. Store it in your CI provider before
+            you close this panel.
           </Drawer.Description>
         </Drawer.Header>
-        <div className="grid gap-4 py-4">
-          {fields.map((field) => (
-            <div key={field.id} className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor={field.id} className="text-right">
-                {field.label}
-              </Label>
-              <Input
-                id={field.id}
-                type={field.type}
-                defaultValue={field.defaultValue}
-                className="col-span-3"
-              />
+
+        <div className="mx-auto grid w-full max-w-md gap-4 py-2">
+          <Input
+            id="key-name"
+            label="Key name"
+            defaultValue="ci-deploy-prod"
+            description="Shown in the audit log next to every request."
+          />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-1.5">
+              <Label htmlFor="key-scope">Scope</Label>
+              <Select id="key-scope" defaultValue="deploy">
+                <option value="read">Read only</option>
+                <option value="deploy">Deploy and read logs</option>
+                <option value="admin">Full workspace access</option>
+              </Select>
             </div>
-          ))}
+            <div className="grid gap-1.5">
+              <Label htmlFor="key-expiry">Expires</Label>
+              <Select id="key-expiry" defaultValue="90">
+                <option value="30">In 30 days</option>
+                <option value="90">In 90 days</option>
+                <option value="never">Never</option>
+              </Select>
+            </div>
+          </div>
         </div>
-        <div className="flex justify-end">
-          <Drawer.Close>Save changes</Drawer.Close>
+
+        <div className="mx-auto flex w-full max-w-md items-center justify-end gap-2">
+          <Drawer.Close className="text-muted-foreground hover:text-foreground text-sm transition-colors">
+            Cancel
+          </Drawer.Close>
+          <Button size="sm">Create key</Button>
         </div>
       </Drawer.Content>
     </Drawer>

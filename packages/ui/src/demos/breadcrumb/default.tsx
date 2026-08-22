@@ -1,29 +1,28 @@
-'use client';
-
 import { Fragment } from 'react';
 
 import { Breadcrumb } from '../../components/breadcrumb';
 
-const items = [
-  { label: 'Home', href: '/' },
-  { label: 'Documentation', href: '/docs' },
-  { label: 'Components', isPage: true },
+const crumbs = [
+  { label: 'Dashboard', href: '/dashboard' },
+  { label: 'Projects', href: '/dashboard/projects' },
+  { label: 'storefront-api', href: '/dashboard/projects/storefront-api' },
+  { label: 'Deployments', href: null },
 ];
 
 export function Default() {
   return (
     <Breadcrumb>
       <Breadcrumb.List>
-        {items.map((item, index) => (
-          <Fragment key={index}>
+        {crumbs.map((crumb, index) => (
+          <Fragment key={crumb.label}>
             <Breadcrumb.Item>
-              {item.isPage ? (
-                <Breadcrumb.Page>{item.label}</Breadcrumb.Page>
+              {crumb.href ? (
+                <Breadcrumb.Link href={crumb.href}>{crumb.label}</Breadcrumb.Link>
               ) : (
-                <Breadcrumb.Link href={item.href}>{item.label}</Breadcrumb.Link>
+                <Breadcrumb.Page>{crumb.label}</Breadcrumb.Page>
               )}
             </Breadcrumb.Item>
-            {index < items.length - 1 && <Breadcrumb.Separator />}
+            {index < crumbs.length - 1 && <Breadcrumb.Separator />}
           </Fragment>
         ))}
       </Breadcrumb.List>

@@ -1,25 +1,34 @@
 'use client';
 
 import * as React from 'react';
+
+import { cn } from '../../lib/cn';
 import { Progress } from '../../components/progress';
 
+const TOTAL_MB = 24.6;
+
 export function WithValue() {
-  const [value, setValue] = React.useState(0);
+  const [percent, setPercent] = React.useState(12);
 
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      setValue((v) => (v >= 100 ? 0 : v + 10));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    if (percent >= 100) return;
+    const timer = setTimeout(() => setPercent((current) => Math.min(current + 11, 100)), 700);
+    return () => clearTimeout(timer);
+  }, [percent]);
+
+  const done = percent >= 100;
+  const uploaded = ((TOTAL_MB * percent) / 100).toFixed(1);
 
   return (
-    <div className="flex w-[60%] flex-col gap-2">
-      <div className="flex justify-between text-sm font-medium">
-        <span>Downloading...</span>
-        <span>{value}%</span>
+    <div className="border-border bg-card w-full max-w-sm rounded-xl border p-5">
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="truncate text-sm font-medium">q3-report.pdf</p>
+        <p className="text-muted-foreground shrink-0 text-xs">{percent}%</p>
       </div>
-      <Progress value={value} />
+      <Progress value={percent} max={100} className="mt-3" />
+      <p className={cn('mt-3 text-xs', done ? 'text-success-text' : 'text-muted-foreground')}>
+        {done ? 'Upload complete, ready to share' : `${uploaded} MB of ${TOTAL_MB} MB uploaded`}
+      </p>
     </div>
   );
 }

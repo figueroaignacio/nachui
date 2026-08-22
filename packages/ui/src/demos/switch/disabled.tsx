@@ -1,19 +1,38 @@
-'use client';
-
 import { Label } from '../../components/label';
 import { Switch } from '../../components/switch';
 
-const switches = [{ id: 'disabled-switch', label: 'Airplane Mode' }];
+const features = [
+  {
+    id: 'nightly-backups',
+    label: 'Nightly backups',
+    hint: 'Always on for production projects.',
+    defaultChecked: true,
+  },
+  {
+    id: 'audit-log',
+    label: 'Audit log export',
+    hint: 'Available on the Enterprise plan.',
+    defaultChecked: false,
+  },
+];
 
 export function Disabled() {
   return (
-    <div className="flex flex-col gap-3">
-      {switches.map((item) => (
-        <div key={item.id} className="flex items-center gap-2">
-          <Switch id={item.id} disabled />
-          <Label htmlFor={item.id} className="opacity-50">
-            {item.label}
-          </Label>
+    <div className="flex w-full max-w-md flex-col gap-4">
+      {features.map((feature) => (
+        <div key={feature.id} className="flex items-start justify-between gap-4">
+          <div className="flex flex-col gap-1">
+            <Label htmlFor={feature.id} className="opacity-50">
+              {feature.label}
+            </Label>
+            <span className="text-muted-foreground text-xs">{feature.hint}</span>
+          </div>
+          <Switch
+            id={feature.id}
+            defaultChecked={feature.defaultChecked}
+            className="mt-0.5"
+            disabled
+          />
         </div>
       ))}
     </div>

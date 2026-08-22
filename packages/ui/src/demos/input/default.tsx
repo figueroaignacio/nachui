@@ -1,7 +1,9 @@
-'use client';
-
 import { Input } from '../../components/input';
 
 export function Default() {
-  return <Input placeholder="Enter your email" />;
+  return (
+    <div className="w-full max-w-sm">
+      <Input aria-label="Workspace name" placeholder="Northwind Labs" />
+    </div>
+  );
 }

@@ -1,15 +1,12 @@
-'use client';
-
-import { SlashIcon } from 'lucide-react';
-
 import { Fragment } from 'react';
 
 import { Breadcrumb } from '../../components/breadcrumb';
 
 const crumbs = [
-  { label: 'Home', href: '/' },
-  { label: 'Components', href: '/components' },
-  { label: 'Breadcrumb', href: null },
+  { label: 'acme-studio', href: '/acme-studio' },
+  { label: 'storefront-api', href: '/acme-studio/storefront-api' },
+  { label: 'Settings', href: '/acme-studio/storefront-api/settings' },
+  { label: 'Environment Variables', href: null },
 ] as const;
 
 export function CustomSeparator() {
@@ -27,7 +24,7 @@ export function CustomSeparator() {
             </Breadcrumb.Item>
             {index < crumbs.length - 1 && (
               <Breadcrumb.Separator>
-                <SlashIcon className="h-3.5 w-3.5" />
+                <span aria-hidden="true">/</span>
               </Breadcrumb.Separator>
             )}
           </Fragment>

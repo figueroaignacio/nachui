@@ -5,34 +5,34 @@ import { Banner } from '../../components/banner';
 const variants = [
   {
     variant: 'default' as const,
-    title: 'New feature available',
-    description: 'Check out the latest updates we just shipped.',
+    title: 'Deploy previews are now free on every plan',
+    description: 'Every pull request gets its own preview URL, with no extra build minutes.',
   },
   {
     variant: 'info' as const,
-    title: 'Info',
-    description: 'This is an informational banner.',
+    title: 'Scheduled maintenance on Mar 14',
+    description: 'The dashboard is read only from 02:00 to 04:00 UTC.',
   },
   {
     variant: 'success' as const,
-    title: 'Success',
-    description: 'This is a success banner.',
+    title: 'acmestudio.dev is verified',
+    description: 'DNS records propagated and production traffic is live.',
   },
   {
     variant: 'warning' as const,
-    title: 'Warning',
-    description: 'This is a warning banner.',
+    title: 'Your API key expires in 5 days',
+    description: 'The key ending in 8f21 stops working on Mar 28.',
   },
   {
     variant: 'danger' as const,
-    title: 'Danger',
-    description: 'This is a danger banner.',
+    title: 'We could not charge your card',
+    description: 'Invoice INV-2043 was declined. Update your billing details before Mar 20.',
   },
 ];
 
 export function Variants() {
   return (
-    <div className="flex w-full flex-col gap-3">
+    <div className="flex w-full max-w-lg flex-col gap-3">
       {variants.map((item) => (
         <Banner key={item.variant} variant={item.variant}>
           <Banner.Content>

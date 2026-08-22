@@ -4,9 +4,15 @@ import { Avatar } from '../../components/avatar';
 
 export function Default() {
   return (
-    <Avatar>
-      <Avatar.Image src="https://github.com/figueroaignacio.png" alt="@figueroaignacio" />
-      <Avatar.Fallback>US</Avatar.Fallback>
-    </Avatar>
+    <div className="flex items-center gap-3">
+      <Avatar>
+        <Avatar.Image src="https://github.com/figueroaignacio.png" alt="Ignacio Figueroa" />
+        <Avatar.Fallback>IF</Avatar.Fallback>
+      </Avatar>
+      <div>
+        <p className="text-sm font-medium">Ignacio Figueroa</p>
+        <p className="text-muted-foreground text-xs">Signed in as owner</p>
+      </div>
+    </div>
   );
 }

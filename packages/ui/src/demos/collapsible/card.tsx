@@ -1,63 +1,58 @@
 'use client';
 
-import type { ReactNode } from 'react';
-
+import { Badge } from '../../components/badge';
 import { Collapsible } from '../../components/collapsible';
 
-const items: { title: string; content: ReactNode }[] = [
+const incidents = [
   {
-    title: '🚀 Getting Started',
-    content: (
-      <div className="space-y-2 pt-3">
-        <p className="text-muted-foreground text-sm">
-          Welcome to our platform! Here's everything you need to know to get started with your first
-          project.
-        </p>
-        <ul className="text-muted-foreground list-disc space-y-1 pl-5 text-sm">
-          <li>Create your account</li>
-          <li>Set up your workspace</li>
-          <li>Invite team members</li>
-          <li>Start building!</li>
-        </ul>
-      </div>
-    ),
+    title: 'Elevated API latency in eu-central',
+    date: 'Mar 14',
+    status: 'Resolved',
+    tone: 'success',
+    updates: [
+      { time: '09:12', text: 'Investigating slow responses on /v1/orders.' },
+      { time: '09:41', text: 'Traced to a saturated read replica, traffic shifted to iad1.' },
+      { time: '10:05', text: 'Latency back to normal, replica replaced.' },
+    ],
   },
   {
-    title: '📚 Documentation',
-    content: (
-      <div className="space-y-2 pt-3">
-        <p className="text-muted-foreground text-sm">
-          Explore our comprehensive documentation to learn about all features and capabilities.
-        </p>
-        <div className="flex flex-wrap gap-2 pt-2">
-          <code className="bg-secondary rounded px-2 py-1 text-xs">API Reference</code>
-          <code className="bg-secondary rounded px-2 py-1 text-xs">Guides</code>
-          <code className="bg-secondary rounded px-2 py-1 text-xs">Examples</code>
-        </div>
-      </div>
-    ),
+    title: 'Webhook deliveries delayed',
+    date: 'Mar 12',
+    status: 'Monitoring',
+    tone: 'warning',
+    updates: [
+      { time: '17:20', text: 'Delivery queue backed up behind a retry storm.' },
+      { time: '17:55', text: 'Queue drained, watching retry rates for the next few hours.' },
+    ],
   },
-  {
-    title: '⚙️ Settings',
-    content: (
-      <div className="space-y-2 pt-3">
-        <p className="text-muted-foreground text-sm">
-          Customize your experience with our flexible settings and preferences.
-        </p>
-      </div>
-    ),
-  },
-];
+] as const;
 
 export function Card() {
   return (
-    <div className="space-y-3">
-      {items.map((item, index) => (
-        <Collapsible key={item.title} variant="card" defaultOpen={index === 0}>
+    <div className="w-full max-w-md space-y-3">
+      {incidents.map((incident, index) => (
+        <Collapsible key={incident.title} variant="card" defaultOpen={index === 0}>
           <Collapsible.Trigger>
-            <span className="text-lg font-semibold">{item.title}</span>
+            <span className="flex flex-col items-start gap-1">
+              <span className="flex items-center gap-2">
+                <Badge variant={incident.tone}>{incident.status}</Badge>
+                <span className="text-muted-foreground text-xs">{incident.date}</span>
+              </span>
+              <span className="text-left text-sm font-medium">{incident.title}</span>
+            </span>
           </Collapsible.Trigger>
-          <Collapsible.Content>{item.content}</Collapsible.Content>
+          <Collapsible.Content>
+            <ol className="border-border ml-1 space-y-3 border-l pt-1 pl-4">
+              {incident.updates.map((update) => (
+                <li key={update.time} className="text-sm">
+                  <span className="text-muted-foreground mr-2 font-mono text-xs">
+                    {update.time}
+                  </span>
+                  {update.text}
+                </li>
+              ))}
+            </ol>
+          </Collapsible.Content>
         </Collapsible>
       ))}
     </div>

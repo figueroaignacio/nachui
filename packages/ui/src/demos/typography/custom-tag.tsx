@@ -1,48 +1,19 @@
-'use client';
-
 import { Typography } from '../../components/typography';
-
-const examples = [
-  {
-    label: 'Paragraph rendered as Span',
-    element: (
-      <Typography as="span" variant="p" className="bg-secondary/20 rounded p-2">
-        This uses paragraph styling but is rendered as a inline `span` tag in the DOM.
-      </Typography>
-    ),
-  },
-  {
-    label: 'Heading rendered as Div',
-    element: (
-      <Typography as="div" variant="h3">
-        This looks like an H3, but it&apos;s actually a `div` element.
-      </Typography>
-    ),
-  },
-  {
-    label: 'Code block rendering',
-    element: (
-      <Typography variant="code">
-        console.log(&quot;This automatically renders as a code tag by variant inference&quot;);
-      </Typography>
-    ),
-  },
-];
 
 export function CustomTag() {
   return (
-    <div className="flex w-full flex-col gap-6">
-      {examples.map(({ label, element }) => (
-        <div key={label}>
-          <Typography
-            variant="small"
-            className="text-primary mb-1 block font-bold tracking-wider uppercase"
-          >
-            {label}
-          </Typography>
-          {element}
-        </div>
-      ))}
+    <div className="border-border bg-card flex w-full max-w-md flex-col gap-2 rounded-xl border p-5">
+      {/* Looks like a heading, but stays a div so the page outline is untouched. */}
+      <Typography as="div" variant="h4">
+        Release 2.4.0
+      </Typography>
+      <Typography as="span" variant="muted">
+        Published Mar 14, 214 downloads in the first hour
+      </Typography>
+      <Typography variant="p" className="[&:not(:first-child)]:mt-3">
+        Dialogs now restore focus to the element that opened them. Run{' '}
+        <Typography variant="code">pnpm add @acme/ui@2.4.0</Typography> to pick up the fix.
+      </Typography>
     </div>
   );
 }

@@ -1,48 +1,66 @@
-'use client';
-
+import { Badge } from '../../components/badge';
 import { Table } from '../../components/table';
+import { cn } from '../../lib/cn';
 
-const invoices = [
+const endpoints = [
   {
-    invoice: 'INV001',
-    paymentStatus: 'Paid',
-    totalAmount: '$250.00',
-    paymentMethod: 'Credit Card',
-  },
-  { invoice: 'INV002', paymentStatus: 'Pending', totalAmount: '$150.00', paymentMethod: 'PayPal' },
-  {
-    invoice: 'INV003',
-    paymentStatus: 'Unpaid',
-    totalAmount: '$350.00',
-    paymentMethod: 'Bank Transfer',
+    route: 'GET /v1/orders',
+    requests: '128,402',
+    errorRate: '0.02%',
+    status: 'Healthy',
+    tone: 'success',
   },
   {
-    invoice: 'INV004',
-    paymentStatus: 'Paid',
-    totalAmount: '$450.00',
-    paymentMethod: 'Credit Card',
+    route: 'POST /v1/orders',
+    requests: '41,908',
+    errorRate: '0.11%',
+    status: 'Healthy',
+    tone: 'success',
   },
-];
+  {
+    route: 'GET /v1/customers',
+    requests: '96,120',
+    errorRate: '0.04%',
+    status: 'Healthy',
+    tone: 'success',
+  },
+  {
+    route: 'POST /v1/webhooks/stripe',
+    requests: '8,441',
+    errorRate: '2.40%',
+    status: 'Degraded',
+    tone: 'warning',
+  },
+  {
+    route: 'DELETE /v1/sessions',
+    requests: '3,204',
+    errorRate: '5.80%',
+    status: 'Failing',
+    tone: 'destructive',
+  },
+] as const;
 
 export function Striped() {
   return (
     <Table>
-      <Table.Caption>A striped list of your recent invoices.</Table.Caption>
+      <Table.Caption>Traffic by endpoint over the last 24 hours.</Table.Caption>
       <Table.Header>
         <Table.Row>
-          <Table.Head className="w-[100px]">Invoice</Table.Head>
+          <Table.Head>Endpoint</Table.Head>
+          <Table.Head className="text-right">Requests</Table.Head>
+          <Table.Head className="text-right">Error rate</Table.Head>
           <Table.Head>Status</Table.Head>
-          <Table.Head>Method</Table.Head>
-          <Table.Head className="text-right">Amount</Table.Head>
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {invoices.map((invoice, index) => (
-          <Table.Row key={invoice.invoice} className={index % 2 === 0 ? 'bg-muted/30' : ''}>
-            <Table.Cell className="font-medium">{invoice.invoice}</Table.Cell>
-            <Table.Cell>{invoice.paymentStatus}</Table.Cell>
-            <Table.Cell>{invoice.paymentMethod}</Table.Cell>
-            <Table.Cell className="text-right">{invoice.totalAmount}</Table.Cell>
+        {endpoints.map((endpoint, index) => (
+          <Table.Row key={endpoint.route} className={cn(index % 2 === 0 && 'bg-muted/30')}>
+            <Table.Cell className="font-mono font-medium">{endpoint.route}</Table.Cell>
+            <Table.Cell className="text-right tabular-nums">{endpoint.requests}</Table.Cell>
+            <Table.Cell className="text-right tabular-nums">{endpoint.errorRate}</Table.Cell>
+            <Table.Cell>
+              <Badge variant={endpoint.tone}>{endpoint.status}</Badge>
+            </Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>
