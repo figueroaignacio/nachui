@@ -51,11 +51,12 @@ export function ChatEngine() {
       isLoading: chatState.isLoading,
       isStreaming: chatState.isStreaming,
       activeTool: chatState.activeTool,
-      error: chatState.error,
+      errorCode: chatState.errorCode,
       messagesEndRef: chatState.messagesEndRef,
       sendMessage: chatState.sendMessage,
       handleSuggestionClick: chatState.handleSuggestionClick,
       stop: chatState.stop,
+      retry: chatState.retry,
       resetChat: chatState.resetChat,
     });
   }, [
@@ -63,11 +64,12 @@ export function ChatEngine() {
     chatState.isLoading,
     chatState.isStreaming,
     chatState.activeTool,
-    chatState.error,
+    chatState.errorCode,
     chatState.messagesEndRef,
     chatState.sendMessage,
     chatState.handleSuggestionClick,
     chatState.stop,
+    chatState.retry,
     chatState.resetChat,
     sync,
   ]);

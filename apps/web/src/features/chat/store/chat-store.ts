@@ -1,5 +1,6 @@
 import type { Message } from '@/lib/definitions';
 import type { ToolName } from '../hooks/use-chat';
+import type { ChatErrorCode } from '../lib/chat-error';
 import { create } from 'zustand';
 
 interface ChatStore {
@@ -16,12 +17,13 @@ interface ChatStore {
   isLoading: boolean;
   isStreaming: boolean;
   activeTool: ToolName | null;
-  error: Error | undefined;
+  errorCode: ChatErrorCode | null;
   messagesEndRef: React.RefObject<HTMLDivElement | null> | null;
 
   sendMessage: (content: string) => Promise<void>;
   handleSuggestionClick: (text: string) => void;
   stop: () => void;
+  retry: () => void;
   resetChat: () => void;
 
   triggerExplanation: (componentName: string, promptTemplate: string) => void;
@@ -43,12 +45,13 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   isLoading: false,
   isStreaming: false,
   activeTool: null,
-  error: undefined,
+  errorCode: null,
   messagesEndRef: null,
 
   sendMessage: async () => {},
   handleSuggestionClick: () => {},
   stop: () => {},
+  retry: () => {},
   resetChat: () => {},
 
   triggerExplanation: (componentName, promptTemplate) => {

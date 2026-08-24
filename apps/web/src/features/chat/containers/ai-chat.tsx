@@ -21,10 +21,11 @@ export function AiChat() {
     isLoading,
     isStreaming,
     activeTool,
-    error,
+    errorCode,
     messagesEndRef,
     sendMessage,
     handleSuggestionClick,
+    retry,
     resetChat,
   } = useChatStore();
 
@@ -103,7 +104,7 @@ export function AiChat() {
         isLoading={isLoading}
         isStreaming={isStreaming}
         activeTool={activeTool}
-        error={error}
+        errorCode={errorCode}
         messagesEndRef={messagesEndRef as RefObject<HTMLDivElement>}
         message={message}
         onMessageChange={setMessage}
@@ -112,6 +113,7 @@ export function AiChat() {
         onClose={handleClose}
         onReset={resetChat}
         onSuggestionClick={handleSuggestionClickWrapper}
+        onRetry={retry}
         onToggleExpand={toggleExpanded}
       />
     </div>

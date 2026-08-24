@@ -36,9 +36,6 @@
     },
     "messages": {
       "initial": "How can I assist you today?",
-      "error": "I'm sorry, I encountered an error. Please try again.",
-      "errorTitle": "Error",
-      "errorContent": "An error occurred while generating the response. Please try again later.",
       "thinking": "Thinking",
       "reasoning": "Thought process",
       "tools": {
@@ -49,6 +46,33 @@
       "copied": "Copied",
       "explainRequest": "Explain {component}",
       "promptSent": "Prompt sent"
+    },
+    "errors": {
+      "retry": "Try again",
+      "offline": {
+        "title": "No connection",
+        "body": "Your device looks offline. Check the connection and try again."
+      },
+      "rate_limit": {
+        "title": "Too many questions",
+        "body": "The assistant hit its request limit. Give it a minute and ask again."
+      },
+      "auth": {
+        "title": "Assistant unavailable",
+        "body": "The assistant is not set up correctly on the server. This one is on us, not on you."
+      },
+      "timeout": {
+        "title": "Took too long",
+        "body": "The answer did not arrive in time. Trying again usually works."
+      },
+      "upstream": {
+        "title": "Assistant unreachable",
+        "body": "We could not reach the assistant. It may be a blip, so try again in a moment."
+      },
+      "unknown": {
+        "title": "Something broke",
+        "body": "The answer could not be generated. Your question is still here, so you can retry it."
+      }
     },
     "suggestions": {
       "title": "Try asking:",

@@ -36,9 +36,6 @@
     },
     "messages": {
       "initial": "¿Cómo puedo ayudarte hoy?",
-      "error": "Lo siento, encontré un error. Por favor, intenta de nuevo.",
-      "errorTitle": "Error",
-      "errorContent": "Un error generando la respuesta. Por favor, intenta de nuevo más tarde.",
       "thinking": "Pensando",
       "reasoning": "Proceso de pensamiento",
       "tools": {
@@ -49,6 +46,33 @@
       "copied": "Copiado",
       "explainRequest": "Explicar {component}",
       "promptSent": "Prompt enviado"
+    },
+    "errors": {
+      "retry": "Reintentar",
+      "offline": {
+        "title": "Sin conexión",
+        "body": "Tu dispositivo parece estar sin internet. Revisá la conexión y probá de nuevo."
+      },
+      "rate_limit": {
+        "title": "Demasiadas preguntas",
+        "body": "El asistente llegó a su límite de consultas. Esperá un minuto y volvé a preguntar."
+      },
+      "auth": {
+        "title": "Asistente no disponible",
+        "body": "El asistente no está bien configurado en el servidor. Es cosa nuestra, no tuya."
+      },
+      "timeout": {
+        "title": "Tardó demasiado",
+        "body": "La respuesta no llegó a tiempo. Reintentar suele alcanzar."
+      },
+      "upstream": {
+        "title": "No se pudo contactar al asistente",
+        "body": "No pudimos llegar al asistente. Puede ser algo pasajero, probá de nuevo en un momento."
+      },
+      "unknown": {
+        "title": "Algo falló",
+        "body": "No se pudo generar la respuesta. Tu pregunta sigue acá, así que podés reintentarla."
+      }
     },
     "suggestions": {
       "title": "Prueba con:",

@@ -3,9 +3,10 @@ import { cn } from '@repo/ui/lib/cn';
 import type { RefObject } from 'react';
 import { useEffect } from 'react';
 import type { ToolName } from '../hooks/use-chat';
+import { isDisplayedChatError, type ChatErrorCode } from '../lib/chat-error';
 import { ChatError } from '../ui/chat-error';
-import { ChatReasoning } from '../ui/chat-reasoning';
 import { ChatMessage } from '../ui/chat-message';
+import { ChatReasoning } from '../ui/chat-reasoning';
 import { ChatSuggestions } from '../ui/chat-suggestions';
 
 interface ChatMessagesProps {
@@ -13,9 +14,10 @@ interface ChatMessagesProps {
   isLoading: boolean;
   isStreaming: boolean;
   activeTool: ToolName | null;
-  error: Error | undefined;
+  errorCode: ChatErrorCode | null;
   endRef: RefObject<HTMLDivElement>;
   onSuggestionClick: (text: string) => void;
+  onRetry: () => void;
 }
 
 export function ChatMessages({
@@ -23,24 +25,19 @@ export function ChatMessages({
   isLoading,
   isStreaming,
   activeTool,
-  error,
+  errorCode,
   endRef,
   onSuggestionClick,
+  onRetry,
 }: ChatMessagesProps) {
   const lastMsg = messages[messages.length - 1];
   const lastContent = lastMsg?.content ?? '';
   const lastRole = lastMsg?.role;
 
-  // State selection:
-  // - empty    → suggestions
-  // - loading  → ChatReasoning, tool-aware. Covers the submitted phase AND the
-  //   tool-execution phase — the stream is already "streaming" while a tool
-  //   runs, but no text has arrived, which previously left the screen blank.
-  // - error    → ChatError
-  // - data     → the messages themselves
-  const showSuggestions = messages.length === 0 && !isLoading;
+  const showError = isDisplayedChatError(errorCode) && !isLoading;
+
+  const showSuggestions = messages.length === 0 && !isLoading && !showError;
   const showLoading = activeTool !== null || (isLoading && lastRole !== 'assistant');
-  const showError = error !== undefined && !isLoading;
 
   useEffect(() => {
     if (!endRef.current) return;
@@ -66,7 +63,7 @@ export function ChatMessages({
 
       {showError && (
         <div>
-          <ChatError />
+          <ChatError code={errorCode} onRetry={messages.length > 0 ? onRetry : undefined} />
         </div>
       )}
 

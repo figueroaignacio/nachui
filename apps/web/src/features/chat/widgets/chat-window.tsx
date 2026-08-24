@@ -2,6 +2,7 @@ import type { Message } from '@/lib/definitions';
 import { Container } from '@repo/ui/layout/container';
 import { AnimatePresence, motion, useReducedMotion, type Transition } from 'motion/react';
 import type { ToolName } from '../hooks/use-chat';
+import type { ChatErrorCode } from '../lib/chat-error';
 import { ChatHeader } from '../ui/chat-header';
 import { ChatInput } from '../ui/chat-input';
 import { ChatMessages } from './chat-messages';
@@ -13,7 +14,7 @@ interface ChatWindowProps {
   isLoading: boolean;
   isStreaming: boolean;
   activeTool: ToolName | null;
-  error: Error | undefined;
+  errorCode: ChatErrorCode | null;
   messagesEndRef: React.RefObject<HTMLDivElement>;
   message: string;
   onMessageChange: (value: string) => void;
@@ -22,6 +23,7 @@ interface ChatWindowProps {
   onClose: () => void;
   onReset: () => void;
   onSuggestionClick: (text: string) => void;
+  onRetry: () => void;
   onToggleExpand: () => void;
 }
 
@@ -56,7 +58,7 @@ export function ChatWindow(props: ChatWindowProps) {
     isLoading,
     isStreaming,
     activeTool,
-    error,
+    errorCode,
     messagesEndRef,
     message,
     onMessageChange,
@@ -65,6 +67,7 @@ export function ChatWindow(props: ChatWindowProps) {
     onClose,
     onReset,
     onSuggestionClick,
+    onRetry,
     onToggleExpand,
   } = props;
 
@@ -84,9 +87,10 @@ export function ChatWindow(props: ChatWindowProps) {
           isLoading={isLoading}
           isStreaming={isStreaming}
           activeTool={activeTool}
-          error={error}
+          errorCode={errorCode}
           endRef={messagesEndRef}
           onSuggestionClick={onSuggestionClick}
+          onRetry={onRetry}
         />
       </div>
       <ChatInput
