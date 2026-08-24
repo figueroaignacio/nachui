@@ -64,7 +64,9 @@ export function useChat() {
   const messages: Message[] = useMemo(() => {
     return uiMessages
       .map((m) => {
-        const content = m.parts
+        const meta = m.metadata as { quote?: string; question?: string } | undefined;
+
+        const text = m.parts
           .filter((p) => p.type === 'text')
           .map((p) => p.text ?? '')
           .join('');
@@ -72,7 +74,8 @@ export function useChat() {
         return {
           id: m.id,
           role: m.role as Message['role'],
-          content,
+          content: meta?.question ?? text,
+          quote: meta?.quote,
         };
       })
       .filter((m) => m.role !== 'assistant' || m.content.length > 0);
@@ -100,9 +103,20 @@ export function useChat() {
   const errorCode = useMemo(() => classifyChatError(error), [error]);
 
   const sendMessage = useCallback(
-    async (content: string) => {
-      if (!content.trim() || isLoading) return;
-      await sendAIMessage({ text: content.trim() });
+    async (content: string, quote?: string) => {
+      const question = content.trim();
+      if (!question || isLoading) return;
+
+      const excerpt = quote?.trim();
+      if (!excerpt) {
+        await sendAIMessage({ text: question });
+        return;
+      }
+
+      await sendAIMessage({
+        text: `<selection>\n${excerpt}\n</selection>\n\n${question}`,
+        metadata: { quote: excerpt, question },
+      });
     },
     [isLoading, sendAIMessage],
   );

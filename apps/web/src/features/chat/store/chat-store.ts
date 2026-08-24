@@ -20,7 +20,11 @@ interface ChatStore {
   errorCode: ChatErrorCode | null;
   messagesEndRef: React.RefObject<HTMLDivElement | null> | null;
 
-  sendMessage: (content: string) => Promise<void>;
+  attachment: string | null;
+  setAttachment: (text: string | null) => void;
+  attachSelection: (text: string) => void;
+
+  sendMessage: (content: string, quote?: string) => Promise<void>;
   handleSuggestionClick: (text: string) => void;
   stop: () => void;
   retry: () => void;
@@ -47,6 +51,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   activeTool: null,
   errorCode: null,
   messagesEndRef: null,
+
+  attachment: null,
+  setAttachment: (attachment) => set({ attachment }),
+  attachSelection: (text) => set({ attachment: text, isOpen: true }),
 
   sendMessage: async () => {},
   handleSuggestionClick: () => {},

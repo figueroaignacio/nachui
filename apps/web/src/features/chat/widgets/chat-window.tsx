@@ -17,6 +17,8 @@ interface ChatWindowProps {
   errorCode: ChatErrorCode | null;
   messagesEndRef: React.RefObject<HTMLDivElement>;
   message: string;
+  attachment: string | null;
+  onRemoveAttachment: () => void;
   onMessageChange: (value: string) => void;
   onSubmit: (e?: React.FormEvent) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
@@ -61,6 +63,8 @@ export function ChatWindow(props: ChatWindowProps) {
     errorCode,
     messagesEndRef,
     message,
+    attachment,
+    onRemoveAttachment,
     onMessageChange,
     onSubmit,
     onKeyDown,
@@ -96,6 +100,8 @@ export function ChatWindow(props: ChatWindowProps) {
       <ChatInput
         message={message}
         isLoading={isLoading || isStreaming}
+        attachment={attachment}
+        onRemoveAttachment={onRemoveAttachment}
         onMessageChange={onMessageChange}
         onSubmit={onSubmit}
         onKeyDown={onKeyDown}

@@ -30,5 +30,6 @@ export interface Message {
   id?: string;
   role: 'system' | 'user' | 'assistant';
   content: string;
+  quote?: string;
   timestamp?: string | number;
 }

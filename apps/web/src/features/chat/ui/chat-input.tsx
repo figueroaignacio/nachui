@@ -3,17 +3,28 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { ChatAttachment } from './chat-attachment';
 
 interface ChatInputProps {
   message: string;
   isLoading: boolean;
+  attachment: string | null;
+  onRemoveAttachment: () => void;
   onMessageChange: (value: string) => void;
   onSubmit: (e?: React.FormEvent) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
 }
 
 export function ChatInput(props: ChatInputProps) {
-  const { message, isLoading, onMessageChange, onSubmit, onKeyDown } = props;
+  const {
+    message,
+    isLoading,
+    attachment,
+    onRemoveAttachment,
+    onMessageChange,
+    onSubmit,
+    onKeyDown,
+  } = props;
   const t = useTranslations('components.chat');
   const [isFocused, setIsFocused] = useState(false);
 
@@ -27,6 +38,11 @@ export function ChatInput(props: ChatInputProps) {
           isFocused && 'border-foreground/25',
         )}
       >
+        {attachment && (
+          <div className="mb-2">
+            <ChatAttachment text={attachment} onRemove={onRemoveAttachment} />
+          </div>
+        )}
         <textarea
           rows={1}
           value={message}

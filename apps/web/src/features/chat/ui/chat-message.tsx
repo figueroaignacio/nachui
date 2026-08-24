@@ -1,5 +1,6 @@
 import type { Message } from '@/lib/definitions';
 import { Typography } from '@repo/ui/components/typography';
+import { ChatAttachment } from './chat-attachment';
 import { ChatExplanationRequest } from './chat-explanation-request';
 import { ChatMarkdownContent } from './chat-markdown-content';
 
@@ -24,7 +25,8 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
 
   if (isUser) {
     return (
-      <div className="flex justify-end">
+      <div className="flex flex-col items-end gap-1.5">
+        {message.quote && <ChatAttachment text={message.quote} className="max-w-[85%]" />}
         {isExplanation ? (
           <ChatExplanationRequest componentName={componentName} />
         ) : (

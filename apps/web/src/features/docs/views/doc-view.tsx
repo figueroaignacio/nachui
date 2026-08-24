@@ -6,9 +6,9 @@ import { IssueCta } from '@/features/docs/components/issue-cta';
 import { MobileToc } from '@/features/docs/components/mobile-toc';
 import { Toc } from '@/features/docs/components/toc';
 import { GITHUB_REPO_URL, getAbsoluteUrl } from '@/lib/domains';
-import { COMPONENT_REGISTRY } from '@repo/ui/registry';
 import { Flex } from '@repo/ui/layout/flex';
 import { Stack } from '@repo/ui/layout/stack';
+import { COMPONENT_REGISTRY } from '@repo/ui/registry';
 import { Container } from '@repo/ui/src/layout/container';
 import type { Doc } from 'content-collections';
 
@@ -78,7 +78,7 @@ export function DocView({ doc }: DocViewProps) {
               </Flex>
             </div>
           </div>
-          <div className="min-w-0 flex-1">
+          <div data-doc-prose className="min-w-0 flex-1">
             {doc.body ? <MDXContent code={doc.body} /> : <div>Error</div>}
           </div>
           <IssueCta pageTitle={doc.title} pageUrl={docUrl} />

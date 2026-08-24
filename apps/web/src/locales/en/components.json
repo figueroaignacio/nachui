@@ -34,6 +34,10 @@
       "shortcut": "Ctrl+I",
       "send": "Send message"
     },
+    "selection": {
+      "add": "Add to assistant",
+      "remove": "Remove selection"
+    },
     "messages": {
       "initial": "How can I assist you today?",
       "thinking": "Thinking",

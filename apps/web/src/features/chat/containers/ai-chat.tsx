@@ -7,8 +7,10 @@ import { useMediaQuery } from '@/hooks/use-media-query';
 import { AnimatePresence } from 'motion/react';
 import { useCallback, useRef, type RefObject } from 'react';
 import { useFooterInView } from '../hooks/use-footer-in-view';
+import { useTextSelection } from '../hooks/use-text-selection';
 import { useChatStore } from '../store/chat-store';
 import { ChatLauncher } from '../ui/chat-launcher';
+import { SelectionPrompt } from '../ui/selection-prompt';
 import { ChatWindow } from '../widgets/chat-window';
 
 export function AiChat() {
@@ -27,6 +29,9 @@ export function AiChat() {
     handleSuggestionClick,
     retry,
     resetChat,
+    attachment,
+    setAttachment,
+    attachSelection,
   } = useChatStore();
 
   const launcherRef = useRef<HTMLTextAreaElement>(null);
@@ -35,17 +40,26 @@ export function AiChat() {
 
   const hasConversation = messages.length > 0;
 
-  const submitAndOpen = useCallback(
+  const { selection, clear: clearSelection } = useTextSelection('[data-doc-prose]');
+
+  const submit = useCallback(
     (text: string) => {
-      setIsOpen(true);
-      void sendMessage(text);
+      const quote = attachment ?? undefined;
+      setAttachment(null);
+      if (!isOpen) setIsOpen(true);
+      void sendMessage(text, quote);
     },
-    [setIsOpen, sendMessage],
+    [attachment, setAttachment, isOpen, setIsOpen, sendMessage],
   );
 
-  const { message, setMessage, handleSubmit, handleKeyPress } = useChatInput(
-    isOpen ? sendMessage : submitAndOpen,
-  );
+  const { message, setMessage, handleSubmit, handleKeyPress } = useChatInput(submit);
+
+  const handleAddSelection = useCallback(() => {
+    if (!selection) return;
+    attachSelection(selection.text);
+    clearSelection();
+    window.getSelection()?.removeAllRanges();
+  }, [selection, attachSelection, clearSelection]);
 
   const handleClose = useCallback(() => {
     setIsOpen(false);
@@ -97,6 +111,9 @@ export function AiChat() {
           )}
         </AnimatePresence>
       </div>
+      <AnimatePresence>
+        {selection && <SelectionPrompt selection={selection} onAdd={handleAddSelection} />}
+      </AnimatePresence>
       <ChatWindow
         isOpen={isOpen}
         isExpanded={isExpanded}
@@ -112,6 +129,8 @@ export function AiChat() {
         onKeyDown={handleKeyPress}
         onClose={handleClose}
         onReset={resetChat}
+        attachment={attachment}
+        onRemoveAttachment={() => setAttachment(null)}
         onSuggestionClick={handleSuggestionClickWrapper}
         onRetry={retry}
         onToggleExpand={toggleExpanded}
