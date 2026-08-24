@@ -139,15 +139,33 @@
     "ariaLabel": "Dar estrella a NachUI en GitHub"
   },
   "landingLogoCta": {
-    "version": "v1.0",
-    "line1": "Código fuente en tu repositorio.",
-    "line2": "Legible para vos y para tu agente.",
+    "label": "mcp",
+    "line1": "Conectalo una vez.",
+    "line2": "Tu agente se queda con todo el catálogo.",
     "primaryAction": "Ver la guía de instalación",
     "secondaryAction": "Ver elementos UI",
     "license": "MIT",
-    "description": "La CLI escribe el componente directo en tu proyecto. Desde ahí el archivo es tuyo: sin paquete wrapper, sin esperar una release ajena y sin nada oculto para el agente de IA que edita al lado tuyo.",
-    "terminal": "terminal",
-    "outputNote": "Un archivo por componente, en la ruta que indica tu nachui.json."
+    "description": "Apuntá cualquier cliente MCP al servidor y tu agente puede listar el catálogo, traer el código real de un componente y leer la documentación antes de escribir una línea. El mismo copiar y pegar de siempre, sin la parte donde inventa un componente que no existe.",
+    "configFile": "mcp.json",
+    "tools": [
+      {
+        "name": "list_components",
+        "description": "Todos los componentes del registro, con los paquetes npm que necesitan."
+      },
+      {
+        "name": "get_component",
+        "description": "El código de un componente, el mismo archivo que copiarías a mano."
+      },
+      {
+        "name": "search_docs",
+        "description": "Búsqueda semántica sobre la documentación, en inglés o español."
+      },
+      {
+        "name": "get_doc",
+        "description": "Una página entera de la documentación en markdown, cuando un fragmento no alcanza."
+      }
+    ],
+    "outputNote": "No instala nada ni deja nada corriendo. Cuatro herramientas de lectura sobre el mismo registro que usa la documentación."
   },
   "issueCta": {
     "question": "¿Encontraste algo que mejorar?",
