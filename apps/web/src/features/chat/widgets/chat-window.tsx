@@ -18,16 +18,13 @@ interface ChatWindowProps {
   message: string;
   onMessageChange: (value: string) => void;
   onSubmit: (e?: React.FormEvent) => void;
-  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   onClose: () => void;
   onReset: () => void;
   onSuggestionClick: (text: string) => void;
   onToggleExpand: () => void;
 }
 
-// Matches the mobile menu, which is a plain `transition-all duration-300`:
-// same 300ms, same default Tailwind easing curve, a full slide off-screen and
-// a fade — no spring and no scale.
 const PANEL_DURATION = 0.3;
 const PANEL_EASE = [0.4, 0, 0.2, 1] as const;
 
@@ -38,7 +35,6 @@ const panelEnterTransition: Transition = {
   ease: PANEL_EASE,
 };
 
-/** The mobile menu slides out to its own edge; this panel sits on the right. */
 const panelHidden = { opacity: 0, x: '100%' };
 const panelVisible = { opacity: 1, x: 0 };
 
@@ -72,8 +68,6 @@ export function ChatWindow(props: ChatWindowProps) {
     onToggleExpand,
   } = props;
 
-  // The mobile menu animates in CSS, so the global prefers-reduced-motion rule
-  // already silences it. Motion runs off the main thread and needs telling.
   const reduceMotion = useReducedMotion();
 
   const body = (
@@ -109,8 +103,6 @@ export function ChatWindow(props: ChatWindowProps) {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Only mobile gets a scrim: on desktop the panel docks and pushes
-              the page, so the content behind it stays usable. */}
           <motion.div
             key="chat-backdrop"
             style={backdropStyle}

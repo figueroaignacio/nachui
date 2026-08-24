@@ -1,6 +1,6 @@
 import { AiPerch } from '@/features/chat/ui/ai-perch';
-import { GITHUB_REPO_URL } from '@/lib/domains';
 import { Link } from '@/i18n/navigation';
+import { GITHUB_REPO_URL } from '@/lib/domains';
 import { useTranslations } from 'next-intl';
 import { LocaleSwitcher } from '../common/locale-switcher';
 import { RegistrationMark } from '../common/registration-mark';
@@ -11,7 +11,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-rule border-t">
+    <footer data-site-footer className="border-rule border-t">
       <div className="page-frame-outer">
         <div className="page-frame">
           <div className="flex w-full flex-col gap-8 pt-12 pb-10 md:flex-row md:items-start md:justify-between">
@@ -102,8 +102,6 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Crosses the rails to the viewport edge, like every other section
-            rule, instead of stopping inside them. */}
           <div className="relative">
             <div className="rule-bleed" />
             <AiPerch className="ai-edge-perch" expression="asleep" />

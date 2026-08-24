@@ -28,16 +28,17 @@
     "input": {
       "placeholder": "Type a message..."
     },
-    "button": {
-      "label": "Ask AI"
+    "launcher": {
+      "placeholder": "Ask a question...",
+      "resume": "Back to the chat",
+      "shortcut": "Ctrl+I",
+      "send": "Send message"
     },
     "messages": {
       "initial": "How can I assist you today?",
       "error": "I'm sorry, I encountered an error. Please try again.",
       "errorTitle": "Error",
       "errorContent": "An error occurred while generating the response. Please try again later.",
-      "helperText": "Press Enter to send, Shift + Enter for new line",
-      "tooltip": "Hey! I can help you",
       "thinking": "Thinking",
       "reasoning": "Thought process",
       "tools": {
