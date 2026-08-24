@@ -1,12 +1,20 @@
 import {
-  ExceptionFilter,
-  Catch,
   ArgumentsHost,
+  Catch,
+  ExceptionFilter,
   HttpException,
   HttpStatus,
   Logger,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
+
+function codeForStatus(status: number): string {
+  if (status === 429) return 'rate_limit';
+  if (status === 401 || status === 403) return 'auth';
+  if (status === 408) return 'timeout';
+  if (status >= 500) return 'upstream';
+  return 'bad_request';
+}
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -37,10 +45,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? (exceptionResponse as Record<string, unknown>).message
         : exceptionResponse;
 
+    if (response.headersSent) {
+      return;
+    }
+
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
+      code: codeForStatus(status),
       message,
     });
   }

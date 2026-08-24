@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { nachUIAgent } from '@repo/ai';
 import { pipeAgentUIStreamToResponse } from 'ai';
 import type { Response } from 'express';
+import { chatErrorMessage, classifyChatError, formatChatError, isAbortError } from './chat-error';
 
 @Injectable()
 export class ChatService {
@@ -24,10 +25,17 @@ export class ChatService {
         }
       },
       onError: (err: unknown) => {
-        const error = err instanceof Error ? err : new Error(String(err));
-        this.logger.error(`Chat stream error: ${error.message}`, error.stack);
+        if (isAbortError(err)) {
+          this.logger.log('Chat stream aborted by the client');
+          return formatChatError('aborted', chatErrorMessage('aborted'));
+        }
 
-        return 'An error occurred processing your request. Please try again.';
+        const error = err instanceof Error ? err : new Error(String(err));
+        const code = classifyChatError(err);
+
+        this.logger.error(`Chat stream error [${code}]: ${error.message}`, error.stack);
+
+        return formatChatError(code, chatErrorMessage(code));
       },
     });
   }
