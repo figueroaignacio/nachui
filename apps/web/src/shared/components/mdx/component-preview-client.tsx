@@ -29,7 +29,9 @@ export function ComponentPreviewClient({
   return (
     <div data-no-select className={className}>
       <div className="border-rule mt-5 overflow-hidden rounded-md border">
-        <div className={`flex min-h-100 items-center ${alignmentClasses[align]} p-8 sm:p-12`}>
+        <div
+          className={`flex min-h-100 items-center ${alignmentClasses[align]} p-8 *:min-w-0 sm:p-12`}
+        >
           {componentPreview}
         </div>
         {description && (
