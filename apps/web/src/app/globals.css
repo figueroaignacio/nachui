@@ -70,6 +70,20 @@ body {
   }
 }
 
+@media (min-width: 80rem) {
+  [data-docs-grid] {
+    transition: grid-template-columns 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  body:has([data-chat-open='true']) [data-docs-grid] {
+    grid-template-columns: 260px 1fr 0px;
+  }
+
+  body:has([data-chat-open='true']) [data-doc-toc] {
+    display: none;
+  }
+}
+
 /* --- View transitions --------------------------------------------------- */
 /* Let clicks through while a transition runs, so navigation never swallows a
    tap mid-animation. */

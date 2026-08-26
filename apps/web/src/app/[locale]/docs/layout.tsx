@@ -6,6 +6,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
     <Grid
       columns="1"
       gap="3"
+      data-docs-grid
       className="relative lg:grid-cols-[260px_1fr] xl:grid-cols-[260px_1fr_210px]"
     >
       <Sidebar />

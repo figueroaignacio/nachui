@@ -50,7 +50,7 @@ export function DocView({ doc }: DocViewProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(techArticleSchema) }}
       />
-      <Container size="md" className="px-0">
+      <Container size="lg" className="px-0">
         <Stack as="article" className="w-full min-w-0">
           {/* Direct child of the article on purpose: a sticky element only
               travels inside its own parent's box. */}
@@ -85,7 +85,7 @@ export function DocView({ doc }: DocViewProps) {
           <DocsPagination currentPath={currentPath} />
         </Stack>
       </Container>
-      <div className="hidden xl:block">
+      <div data-doc-toc className="hidden xl:block">
         <Toc toc={tocContent} />
       </div>
     </>
