@@ -2,6 +2,7 @@
 
 import { NavBadge } from '@/components/common/nav-badge';
 import { Searcher } from '@/features/docs/components/searcher';
+import { useDialogBehavior } from '@/hooks/use-dialog-behavior';
 import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { DocSection, Navigation } from '@/lib/definitions';
@@ -12,7 +13,7 @@ import { Typography } from '@repo/ui/components/typography';
 import { cn } from '@repo/ui/lib/cn';
 import { Flex } from '@repo/ui/src/layout/flex';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { LocaleSwitcher } from '../common/locale-switcher';
 import { Logo } from '../common/logo';
 import { ThemeToggle } from '../common/theme-toggle';
@@ -25,9 +26,13 @@ export function MobileMenu() {
   const docsNavigation = t.raw('docs.navigation') as DocSection[];
   const navigation = t.raw('ui.navigation') as Navigation[];
 
+  const menuRef = useRef<HTMLElement>(null);
+
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+  const closeMenu = useCallback(() => setIsMenuOpen(false), []);
 
   useLockBodyScroll(isMenuOpen);
+  useDialogBehavior({ open: isMenuOpen, onClose: closeMenu, ref: menuRef });
 
   // The 56px row matches the desktop navbar, so the header is one known height
   // at every breakpoint and the sticky offsets below it line up.
@@ -41,9 +46,10 @@ export function MobileMenu() {
         <button
           className="flex items-center gap-x-2 text-sm font-medium"
           onClick={toggleMenu}
-          title="Open menu"
-          aria-label="Open menu"
+          title={isMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={isMenuOpen}
+          aria-controls="mobile-menu"
           type="button"
         >
           <HugeiconsIcon icon={PanelLeftIcon} aria-hidden="true" />
@@ -54,6 +60,11 @@ export function MobileMenu() {
         <LocaleSwitcher />
       </div>
       <nav
+        ref={menuRef}
+        id="mobile-menu"
+        aria-label="Site"
+        tabIndex={-1}
+        inert={!isMenuOpen}
         className={cn(
           'bg-background fixed z-50 flex flex-col overflow-hidden shadow-2xl transition-all duration-300',
           'border-rule inset-0 h-lvh w-full sm:inset-2 sm:h-[calc(100svh-1rem)] sm:w-95 sm:rounded-lg sm:border',
@@ -71,6 +82,7 @@ export function MobileMenu() {
           <div className="flex items-center gap-x-3">
             <ThemeToggle />
             <button
+              data-autofocus
               onClick={toggleMenu}
               title="Close menu"
               aria-label="Close menu"
