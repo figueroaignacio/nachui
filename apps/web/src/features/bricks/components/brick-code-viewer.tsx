@@ -112,15 +112,18 @@ function FileNode({
         className={cn(
           'transition-colors',
           isActive
-            ? 'bg-white/10 font-medium text-white'
-            : 'text-white/60 hover:bg-white/5 hover:text-white',
+            ? 'bg-foreground/10 text-foreground font-medium'
+            : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground',
         )}
       />
     );
   }
 
   return (
-    <Files.Folder name={node.name} className="text-white/80 transition-colors hover:text-white">
+    <Files.Folder
+      name={node.name}
+      className="text-muted-strong hover:text-foreground transition-colors"
+    >
       {node.children?.map((child) => (
         <FileNode key={child.path} node={child} activeFile={activeFile} onSelect={onSelect} />
       ))}
@@ -143,7 +146,7 @@ export function BrickCodeViewer({ files }: BrickCodeViewerProps) {
         <div className="p-3">
           <Typography
             variant="h4"
-            className="text-xs font-semibold tracking-wider text-white/80 uppercase"
+            className="text-muted-strong text-xs font-semibold tracking-wider uppercase"
           >
             Files
           </Typography>

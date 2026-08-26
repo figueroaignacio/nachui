@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
       style={{
         width: 1200,
         height: 630,
-        backgroundColor: '#09090b',
+        backgroundColor: '#0b0c0f',
         display: 'flex',
         flexDirection: 'column',
         padding: '72px 80px',
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
             bottom: 0,
             left: ((i + 1) * 1200) / 9,
             width: 1,
-            backgroundColor: '#18181b',
+            backgroundColor: '#14161a',
           }}
         />
       ))}
@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
             right: 0,
             top: ((i + 1) * 630) / 5,
             height: 1,
-            backgroundColor: '#18181b',
+            backgroundColor: '#14161a',
           }}
         />
       ))}
@@ -61,13 +61,13 @@ export async function GET(req: NextRequest) {
           fontFamily: 'monospace',
         }}
       >
-        <span style={{ color: '#6366f1', fontSize: 13, letterSpacing: '0.12em' }}>NACHUI</span>
-        <span style={{ color: '#3f3f46', fontSize: 13 }}>/</span>
-        <span style={{ color: '#52525b', fontSize: 13, letterSpacing: '0.08em' }}>DOCS</span>
+        <span style={{ color: '#679dfb', fontSize: 13, letterSpacing: '0.12em' }}>NACHUI</span>
+        <span style={{ color: '#3a3d44', fontSize: 13 }}>/</span>
+        <span style={{ color: '#52555d', fontSize: 13, letterSpacing: '0.08em' }}>DOCS</span>
         {section.toUpperCase() !== 'DOCS' && (
           <>
-            <span style={{ color: '#3f3f46', fontSize: 13 }}>/</span>
-            <span style={{ color: '#52525b', fontSize: 13, letterSpacing: '0.08em' }}>
+            <span style={{ color: '#3a3d44', fontSize: 13 }}>/</span>
+            <span style={{ color: '#52555d', fontSize: 13, letterSpacing: '0.08em' }}>
               {section.toUpperCase()}
             </span>
           </>
@@ -84,8 +84,8 @@ export async function GET(req: NextRequest) {
       >
         <div
           style={{
-            backgroundColor: '#052e16',
-            border: '1px solid #14532d',
+            backgroundColor: '#172410',
+            border: '1px solid #254016',
             borderRadius: 6,
             padding: '4px 12px',
             display: 'flex',
@@ -93,10 +93,10 @@ export async function GET(req: NextRequest) {
             gap: 6,
           }}
         >
-          <div style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#4ade80' }} />
+          <div style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#95cd77' }} />
           <span
             style={{
-              color: '#4ade80',
+              color: '#95cd77',
               fontSize: 12,
               fontFamily: 'monospace',
               letterSpacing: '0.1em',
@@ -107,13 +107,13 @@ export async function GET(req: NextRequest) {
         </div>
       </div>
 
-      <div style={{ width: 44, height: 2, backgroundColor: '#6366f1', marginBottom: 32 }} />
+      <div style={{ width: 44, height: 2, backgroundColor: '#679dfb', marginBottom: 32 }} />
 
       <div
         style={{
           fontSize,
           fontWeight: 600,
-          color: '#f4f4f5',
+          color: '#f2f3f5',
           lineHeight: 1.12,
           letterSpacing: '-0.025em',
           marginBottom: 24,
@@ -128,7 +128,7 @@ export async function GET(req: NextRequest) {
         <div
           style={{
             fontSize: 21,
-            color: '#71717a',
+            color: '#9fa3ab',
             lineHeight: 1.55,
             maxWidth: 800,
             fontFamily: 'sans-serif',
@@ -150,7 +150,7 @@ export async function GET(req: NextRequest) {
           fontFamily: 'monospace',
         }}
       >
-        <span style={{ color: '#3f3f46', fontSize: 13, letterSpacing: '0.05em' }}>
+        <span style={{ color: '#3a3d44', fontSize: 13, letterSpacing: '0.05em' }}>
           nachui.tech/docs
         </span>
         <div style={{ display: 'flex', gap: 7 }}>
@@ -161,7 +161,7 @@ export async function GET(req: NextRequest) {
                 width: 7,
                 height: 7,
                 borderRadius: 4,
-                backgroundColor: accent ? '#6366f1' : '#27272a',
+                backgroundColor: accent ? '#679dfb' : '#26292f',
               }}
             />
           ))}
