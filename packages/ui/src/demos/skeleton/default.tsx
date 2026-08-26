@@ -13,17 +13,17 @@ export function Default() {
       </div>
       <div className="flex flex-col gap-4">
         {rows.map((row) => (
-          <div key={row} className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-10 w-10 rounded-full" />
-              <div className="space-y-2">
-                <Skeleton className="h-3.5 w-32" />
-                <Skeleton className="h-3 w-44" />
+          <div key={row} className="flex items-center justify-between gap-3 sm:gap-4">
+            <div className="flex min-w-0 flex-1 items-center gap-3">
+              <Skeleton className="h-10 w-10 shrink-0 rounded-full" />
+              <div className="min-w-0 flex-1 space-y-2">
+                <Skeleton className="h-3.5 w-full max-w-32" />
+                <Skeleton className="h-3 w-full max-w-44" />
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex shrink-0 items-center gap-2">
               <Skeleton className="h-5 w-14 rounded-sm" />
-              <Skeleton className="h-8 w-20 rounded-md" />
+              <Skeleton className="hidden h-8 w-20 rounded-md sm:block" />
             </div>
           </div>
         ))}
