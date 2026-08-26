@@ -2,7 +2,7 @@
 
 import { Cancel01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { AnimatePresence, HTMLMotionProps, motion } from 'motion/react';
+import { AnimatePresence, HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cloneElement } from 'react';
 import { createPortal } from 'react-dom';
@@ -68,6 +68,12 @@ const DIALOG_TRANSITION = {
 
 const DIALOG_EXIT_TRANSITION = { duration: 0.2, ease: 'easeIn' } as const;
 const DIALOG_STYLE = { willChange: 'opacity, transform, filter' } as const;
+const REDUCED_MOTION_PROPS = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  transition: { duration: 0.12 },
+} as const;
 
 // --- Context ---
 
@@ -245,15 +251,15 @@ const DialogOverlay = ({
   ...props
 }: DialogOverlayProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const { setOpen } = useDialogContext();
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <motion.div
       ref={ref}
-      variants={OVERLAY_VARIANTS}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={OVERLAY_TRANSITION}
+      initial={shouldReduceMotion ? REDUCED_MOTION_PROPS.initial : OVERLAY_VARIANTS.initial}
+      animate={shouldReduceMotion ? REDUCED_MOTION_PROPS.animate : OVERLAY_VARIANTS.animate}
+      exit={shouldReduceMotion ? REDUCED_MOTION_PROPS.exit : OVERLAY_VARIANTS.exit}
+      transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : OVERLAY_TRANSITION}
       style={OVERLAY_STYLE}
       className={cn('bg-overlay fixed inset-0 z-200', className)}
       onClick={() => setOpen(false)}
@@ -276,6 +282,7 @@ const DialogContent = ({
   const { id, open, setOpen, hasTitle, hasDescription } = useDialogContext();
   const contentRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLElement | null>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   React.useEffect(() => {
     if (!open) return;
@@ -349,11 +356,14 @@ const DialogContent = ({
             aria-describedby={hasDescription ? `${id}-description` : undefined}
             tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
-            variants={DIALOG_VARIANTS}
-            initial="initial"
-            animate="animate"
-            exit={{ ...DIALOG_VARIANTS.exit, transition: DIALOG_EXIT_TRANSITION }}
-            transition={DIALOG_TRANSITION}
+            initial={shouldReduceMotion ? REDUCED_MOTION_PROPS.initial : DIALOG_VARIANTS.initial}
+            animate={shouldReduceMotion ? REDUCED_MOTION_PROPS.animate : DIALOG_VARIANTS.animate}
+            exit={
+              shouldReduceMotion
+                ? REDUCED_MOTION_PROPS.exit
+                : { ...DIALOG_VARIANTS.exit, transition: DIALOG_EXIT_TRANSITION }
+            }
+            transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : DIALOG_TRANSITION}
             style={DIALOG_STYLE}
             className={cn(
               'bg-background fixed top-[50%] left-[50%] z-500 grid w-full max-w-xl translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 outline-none',

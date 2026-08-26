@@ -2,7 +2,7 @@
 
 import { ArrowDown01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { AnimatePresence, type HTMLMotionProps, motion } from 'motion/react';
+import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 
@@ -16,6 +16,12 @@ const MENU_ANIMATION = {
 
 const MENU_TRANSITION = { duration: 0.18, ease: 'easeOut' } as const;
 const MENU_STYLE = { willChange: 'opacity, transform, filter' } as const;
+const REDUCED_MOTION_PROPS = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  transition: { duration: 0.12 },
+} as const;
 
 const CLOSE_DELAY_MS = 150;
 
@@ -186,16 +192,17 @@ NavigationMenuTrigger.displayName = 'NavigationMenuTrigger';
 
 const NavigationMenuContent = ({ className, children, ...props }: HTMLMotionProps<'div'>) => {
   const { open, id } = useNavigationMenuItem();
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <AnimatePresence>
       {open && (
         <motion.div
           id={id}
-          initial={MENU_ANIMATION.initial}
-          animate={MENU_ANIMATION.animate}
-          exit={MENU_ANIMATION.exit}
-          transition={MENU_TRANSITION}
+          initial={shouldReduceMotion ? REDUCED_MOTION_PROPS.initial : MENU_ANIMATION.initial}
+          animate={shouldReduceMotion ? REDUCED_MOTION_PROPS.animate : MENU_ANIMATION.animate}
+          exit={shouldReduceMotion ? REDUCED_MOTION_PROPS.exit : MENU_ANIMATION.exit}
+          transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : MENU_TRANSITION}
           style={MENU_STYLE}
           className={cn(
             'border-border bg-popover absolute top-full left-0 z-50 mt-2 w-72 rounded-lg border p-1.5 shadow-lg',

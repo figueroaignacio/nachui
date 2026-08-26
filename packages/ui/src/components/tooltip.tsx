@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, type HTMLMotionProps, motion } from 'motion/react';
+import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 
@@ -33,6 +33,12 @@ const TOOLTIP_ANIMATION_VARIANTS = {
 } as const;
 
 const TOOLTIP_TRANSITION = { duration: 0.2, ease: 'easeOut' } as const;
+const REDUCED_MOTION_PROPS = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  transition: { duration: 0.12 },
+} as const;
 
 const TOOLTIP_STYLE = { willChange: 'opacity, transform, filter' } as const;
 
@@ -202,6 +208,7 @@ const TooltipContent = ({
   ...props
 }: TooltipContentProps) => {
   const { open, id } = useTooltip();
+  const shouldReduceMotion = useReducedMotion();
 
   const sideOffsetStyle = React.useMemo(
     () => ({
@@ -220,10 +227,22 @@ const TooltipContent = ({
         <motion.div
           id={id}
           role="tooltip"
-          initial={TOOLTIP_ANIMATION_VARIANTS[side].initial}
-          animate={TOOLTIP_ANIMATION_VARIANTS[side].animate}
-          exit={TOOLTIP_ANIMATION_VARIANTS[side].initial}
-          transition={TOOLTIP_TRANSITION}
+          initial={
+            shouldReduceMotion
+              ? REDUCED_MOTION_PROPS.initial
+              : TOOLTIP_ANIMATION_VARIANTS[side].initial
+          }
+          animate={
+            shouldReduceMotion
+              ? REDUCED_MOTION_PROPS.animate
+              : TOOLTIP_ANIMATION_VARIANTS[side].animate
+          }
+          exit={
+            shouldReduceMotion
+              ? REDUCED_MOTION_PROPS.exit
+              : TOOLTIP_ANIMATION_VARIANTS[side].initial
+          }
+          transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : TOOLTIP_TRANSITION}
           style={sideOffsetStyle}
           className={cn(
             'bg-foreground text-background absolute z-50 rounded-sm px-2.5 py-1 text-xs whitespace-nowrap',

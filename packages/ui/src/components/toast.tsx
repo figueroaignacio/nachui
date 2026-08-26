@@ -9,7 +9,7 @@ import {
 } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
@@ -47,6 +47,12 @@ const TOAST_TRANSITION = {
 } as const;
 
 const TOAST_EXIT_TRANSITION = { duration: 0.2, ease: 'easeIn' } as const;
+const REDUCED_MOTION_PROPS = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  transition: { duration: 0.12 },
+} as const;
 
 // --- CVA variants ---
 
@@ -124,6 +130,7 @@ interface ToastItemProps {
 function ToastItem({ toast: t, onDismiss, position }: ToastItemProps) {
   const [paused, setPaused] = React.useState(false);
   const isUrgent = t.variant === 'error' || t.variant === 'warning';
+  const shouldReduceMotion = useReducedMotion();
 
   React.useEffect(() => {
     const duration = t.duration ?? 5000;
@@ -141,10 +148,14 @@ function ToastItem({ toast: t, onDismiss, position }: ToastItemProps) {
   return (
     <motion.div
       layout
-      initial={TOAST_ENTER.initial}
-      animate={TOAST_ENTER.animate}
-      exit={{ ...TOAST_EXIT_BY_POSITION[position], transition: TOAST_EXIT_TRANSITION }}
-      transition={TOAST_TRANSITION}
+      initial={shouldReduceMotion ? REDUCED_MOTION_PROPS.initial : TOAST_ENTER.initial}
+      animate={shouldReduceMotion ? REDUCED_MOTION_PROPS.animate : TOAST_ENTER.animate}
+      exit={
+        shouldReduceMotion
+          ? REDUCED_MOTION_PROPS.exit
+          : { ...TOAST_EXIT_BY_POSITION[position], transition: TOAST_EXIT_TRANSITION }
+      }
+      transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : TOAST_TRANSITION}
       role={isUrgent ? 'alert' : 'status'}
       aria-live={isUrgent ? 'assertive' : 'polite'}
       onMouseEnter={() => setPaused(true)}

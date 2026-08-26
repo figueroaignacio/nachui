@@ -2,7 +2,7 @@
 
 import { CheckmarkCircleIcon, CopyIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 
@@ -15,6 +15,12 @@ const ICON_VARIANTS = {
 } as const;
 
 const ICON_TRANSITION = { duration: 0.18, ease: 'easeOut' } as const;
+const REDUCED_MOTION_PROPS = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  transition: { duration: 0.12 },
+} as const;
 
 // --- Types ---
 
@@ -37,6 +43,7 @@ export const Command = ({
   ...props
 }: CommandProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const [copied, setCopied] = React.useState(false);
+  const shouldReduceMotion = useReducedMotion();
   const resetTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   React.useEffect(() => {
@@ -104,11 +111,10 @@ export const Command = ({
           {copied ? (
             <motion.span
               key="check"
-              variants={ICON_VARIANTS}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              transition={ICON_TRANSITION}
+              initial={shouldReduceMotion ? REDUCED_MOTION_PROPS.initial : ICON_VARIANTS.initial}
+              animate={shouldReduceMotion ? REDUCED_MOTION_PROPS.animate : ICON_VARIANTS.animate}
+              exit={shouldReduceMotion ? REDUCED_MOTION_PROPS.exit : ICON_VARIANTS.exit}
+              transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : ICON_TRANSITION}
               className="flex"
               aria-hidden="true"
             >
@@ -117,11 +123,10 @@ export const Command = ({
           ) : (
             <motion.span
               key="copy"
-              variants={ICON_VARIANTS}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              transition={ICON_TRANSITION}
+              initial={shouldReduceMotion ? REDUCED_MOTION_PROPS.initial : ICON_VARIANTS.initial}
+              animate={shouldReduceMotion ? REDUCED_MOTION_PROPS.animate : ICON_VARIANTS.animate}
+              exit={shouldReduceMotion ? REDUCED_MOTION_PROPS.exit : ICON_VARIANTS.exit}
+              transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : ICON_TRANSITION}
               className="flex"
               aria-hidden="true"
             >

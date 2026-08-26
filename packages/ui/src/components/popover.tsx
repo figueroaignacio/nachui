@@ -2,7 +2,7 @@
 
 import { Cancel01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { AnimatePresence, type HTMLMotionProps, motion } from 'motion/react';
+import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 
@@ -36,6 +36,12 @@ const POPOVER_ANIMATION_VARIANTS = {
 
 const POPOVER_TRANSITION = { duration: 0.2, ease: 'easeOut' } as const;
 const POPOVER_STYLE = { willChange: 'opacity, transform, filter' } as const;
+const REDUCED_MOTION_PROPS = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  transition: { duration: 0.12 },
+} as const;
 
 // --- Context ---
 
@@ -231,6 +237,7 @@ const PopoverContent = ({
 }: PopoverContentProps) => {
   const { open, id, setOpen } = usePopoverContext();
   const contentRef = React.useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   // Move focus into the popover when it opens so keyboard users can reach its content.
   React.useEffect(() => {
@@ -260,10 +267,22 @@ const PopoverContent = ({
           id={id}
           role="dialog"
           tabIndex={-1}
-          initial={POPOVER_ANIMATION_VARIANTS[side].initial}
-          animate={POPOVER_ANIMATION_VARIANTS[side].animate}
-          exit={POPOVER_ANIMATION_VARIANTS[side].initial}
-          transition={POPOVER_TRANSITION}
+          initial={
+            shouldReduceMotion
+              ? REDUCED_MOTION_PROPS.initial
+              : POPOVER_ANIMATION_VARIANTS[side].initial
+          }
+          animate={
+            shouldReduceMotion
+              ? REDUCED_MOTION_PROPS.animate
+              : POPOVER_ANIMATION_VARIANTS[side].animate
+          }
+          exit={
+            shouldReduceMotion
+              ? REDUCED_MOTION_PROPS.exit
+              : POPOVER_ANIMATION_VARIANTS[side].initial
+          }
+          transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : POPOVER_TRANSITION}
           style={sideOffsetStyle}
           className={cn(
             'bg-popover text-popover-foreground absolute z-50 w-72 rounded-md border p-4 shadow-sm outline-none',

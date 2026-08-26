@@ -9,7 +9,7 @@ import {
 } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 
@@ -80,6 +80,12 @@ const BANNER_EXIT = {
 } as const;
 
 const BANNER_EXIT_TRANSITION = { duration: 0.2, ease: 'easeIn' } as const;
+const REDUCED_MOTION_PROPS = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  transition: { duration: 0.12 },
+} as const;
 
 // --- Sub-components ---
 
@@ -133,6 +139,7 @@ const BannerRoot = ({
   ref,
 }: BannerProps) => {
   const [visible, setVisible] = React.useState(true);
+  const shouldReduceMotion = useReducedMotion();
   const resolvedVariant: BannerVariant = variant ?? 'default';
   const role = resolvedVariant === 'danger' || resolvedVariant === 'warning' ? 'alert' : 'status';
   const variantIcon = icon === undefined ? VARIANT_ICONS[resolvedVariant] : null;
@@ -148,8 +155,12 @@ const BannerRoot = ({
         <motion.div
           ref={ref}
           role={role}
-          exit={{ ...BANNER_EXIT, transition: BANNER_EXIT_TRANSITION }}
-          transition={BANNER_TRANSITION}
+          exit={
+            shouldReduceMotion
+              ? { ...BANNER_EXIT, transition: REDUCED_MOTION_PROPS.transition }
+              : { ...BANNER_EXIT, transition: BANNER_EXIT_TRANSITION }
+          }
+          transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : BANNER_TRANSITION}
           className={cn(
             bannerVariants({ variant: resolvedVariant }),
             sticky && 'sticky top-0 z-50',

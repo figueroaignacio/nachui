@@ -3,7 +3,13 @@
 import { Cancel01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { AnimatePresence, type HTMLMotionProps, motion, useMotionValue } from 'motion/react';
+import {
+  AnimatePresence,
+  type HTMLMotionProps,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+} from 'motion/react';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
@@ -43,6 +49,12 @@ const DRAWER_OVERLAY_VARIANTS = {
 } as const;
 
 const DRAWER_OVERLAY_TRANSITION = { duration: 0.2 } as const;
+const REDUCED_MOTION_PROPS = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  transition: { duration: 0.12 },
+} as const;
 const DRAWER_OVERLAY_STYLE = { willChange: 'opacity' } as const;
 const DRAWER_CONTENT_STYLE = { willChange: 'transform' } as const;
 const CLOSE_BUTTON_TAP = { scale: 0.9 } as const;
@@ -176,14 +188,14 @@ const DrawerTrigger = ({ children, className, variant, size, onClick, ...props }
 
 const DrawerOverlay = ({ className }: { className?: string }) => {
   const { setOpen } = useDrawerContext();
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <motion.div
-      variants={DRAWER_OVERLAY_VARIANTS}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={DRAWER_OVERLAY_TRANSITION}
+      initial={shouldReduceMotion ? REDUCED_MOTION_PROPS.initial : DRAWER_OVERLAY_VARIANTS.initial}
+      animate={shouldReduceMotion ? REDUCED_MOTION_PROPS.animate : DRAWER_OVERLAY_VARIANTS.animate}
+      exit={shouldReduceMotion ? REDUCED_MOTION_PROPS.exit : DRAWER_OVERLAY_VARIANTS.exit}
+      transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : DRAWER_OVERLAY_TRANSITION}
       style={DRAWER_OVERLAY_STYLE}
       className={cn('bg-overlay fixed inset-0 z-300 backdrop-blur-xs', className)}
       onClick={() => setOpen(false)}
@@ -230,6 +242,7 @@ const DrawerContent = ({
 
   const dragY = useMotionValue(0);
   const dragX = useMotionValue(0);
+  const shouldReduceMotion = useReducedMotion();
 
   React.useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- SSR-safe portal mount flag
@@ -344,10 +357,22 @@ const DrawerContent = ({
               ...(isVertical ? { y: dragY } : { x: dragX }),
               ...DRAWER_CONTENT_STYLE,
             }}
-            initial={slideVariants[side as keyof typeof slideVariants].initial}
-            animate={slideVariants[side as keyof typeof slideVariants].animate}
-            exit={slideVariants[side as keyof typeof slideVariants].exit}
-            transition={DRAWER_SPRING}
+            initial={
+              shouldReduceMotion
+                ? REDUCED_MOTION_PROPS.initial
+                : slideVariants[side as keyof typeof slideVariants].initial
+            }
+            animate={
+              shouldReduceMotion
+                ? REDUCED_MOTION_PROPS.animate
+                : slideVariants[side as keyof typeof slideVariants].animate
+            }
+            exit={
+              shouldReduceMotion
+                ? REDUCED_MOTION_PROPS.exit
+                : slideVariants[side as keyof typeof slideVariants].exit
+            }
+            transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : DRAWER_SPRING}
             className={cn(drawerVariants({ side }), className)}
             {...props}
           >
@@ -361,7 +386,7 @@ const DrawerContent = ({
               {/* Close button */}
               <div className="flex justify-end px-4 pt-2 pb-0">
                 <motion.button
-                  whileTap={CLOSE_BUTTON_TAP}
+                  whileTap={shouldReduceMotion ? undefined : CLOSE_BUTTON_TAP}
                   onClick={() => setOpen(false)}
                   className="hover:bg-muted rounded-full p-2 transition-colors"
                   aria-label="Close"

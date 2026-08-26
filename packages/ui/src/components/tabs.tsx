@@ -1,13 +1,14 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 
 // --- Animation constants (module level) ---
 
 const TABS_INDICATOR_TRANSITION = { type: 'spring', bounce: 0.2, duration: 0.6 } as const;
+const STILL_TRANSITION = { duration: 0 } as const;
 
 // --- CVA ---
 
@@ -187,6 +188,7 @@ const TabsTrigger = ({
   const isActive = activeTab === value;
   const finalVariant = variant || contextVariant;
   const buttonRef = React.useRef<HTMLButtonElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const parent = buttonRef.current?.parentElement;
@@ -269,7 +271,7 @@ const TabsTrigger = ({
               ? 'bg-foreground top-auto bottom-0 h-[1.5px]'
               : 'bg-background border-border/30 rounded-sm border',
           )}
-          transition={TABS_INDICATOR_TRANSITION}
+          transition={shouldReduceMotion ? STILL_TRANSITION : TABS_INDICATOR_TRANSITION}
         />
       )}
     </button>
