@@ -230,7 +230,7 @@ const DialogOverlay = ({
       exit="exit"
       transition={OVERLAY_TRANSITION}
       style={OVERLAY_STYLE}
-      className={cn('fixed inset-0 z-200 bg-black/20 dark:bg-black/50', className)}
+      className={cn('bg-overlay fixed inset-0 z-200', className)}
       onClick={() => setOpen(false)}
       {...props}
     />

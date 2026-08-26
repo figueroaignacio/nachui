@@ -164,7 +164,7 @@ const DrawerOverlay = ({ className }: { className?: string }) => {
       exit="exit"
       transition={DRAWER_OVERLAY_TRANSITION}
       style={DRAWER_OVERLAY_STYLE}
-      className={cn('fixed inset-0 z-300 bg-black/50 backdrop-blur-xs', className)}
+      className={cn('bg-overlay fixed inset-0 z-300 backdrop-blur-xs', className)}
       onClick={() => setOpen(false)}
     />
   );
