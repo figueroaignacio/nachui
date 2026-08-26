@@ -39,7 +39,7 @@ export function Default() {
       <DropdownMenu.Trigger asChild>
         <Button variant="outline">Daniela Rojas</Button>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content className="w-64" align="start">
+      <DropdownMenu.Content className="w-64 max-w-[calc(100vw-2rem)]" align="start">
         <div className="flex items-center gap-3 px-3 py-2">
           <Avatar size="sm">
             <Avatar.Fallback>DR</Avatar.Fallback>

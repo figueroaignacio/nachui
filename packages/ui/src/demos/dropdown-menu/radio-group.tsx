@@ -20,7 +20,7 @@ export function RadioGroup() {
       <DropdownMenu.Trigger asChild>
         <Button variant="outline">Sort: {active?.label}</Button>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content className="w-56" align="start">
+      <DropdownMenu.Content className="w-56 max-w-[calc(100vw-2rem)]" align="start">
         <DropdownMenu.Label>Sort 240 orders by</DropdownMenu.Label>
         <DropdownMenu.Separator />
         {SORT_OPTIONS.map((option) => (

@@ -35,7 +35,7 @@ export function Checkboxes() {
           Columns ({shownCount}/{COLUMNS.length})
         </Button>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content className="w-56" align="start">
+      <DropdownMenu.Content className="w-56 max-w-[calc(100vw-2rem)]" align="start">
         <DropdownMenu.Label>Show in orders table</DropdownMenu.Label>
         <DropdownMenu.Separator />
         {COLUMNS.map(({ id, label }) => (

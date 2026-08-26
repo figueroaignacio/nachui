@@ -10,7 +10,7 @@ export function Default() {
       <Popover.Trigger asChild>
         <Button variant="ghost">acme-web</Button>
       </Popover.Trigger>
-      <Popover.Content className="w-80">
+      <Popover.Content className="w-80 max-w-[calc(100vw-2rem)]">
         <div className="grid gap-4">
           <div className="space-y-1">
             <h4 className="text-sm leading-none font-medium">Rename project</h4>
