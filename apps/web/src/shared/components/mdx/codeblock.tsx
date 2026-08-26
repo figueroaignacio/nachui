@@ -83,7 +83,12 @@ export function CodeBlock({
           isCollapsed ? 'max-h-52 overflow-y-hidden' : 'max-h-[32rem] overflow-y-auto',
         )}
       >
-        <div className="hide-scrollbar overflow-x-auto">
+        <div
+          tabIndex={0}
+          role="region"
+          aria-label={t('region')}
+          className="hide-scrollbar focus-visible:ring-ring overflow-x-auto rounded-md focus-visible:ring-2 focus-visible:outline-none"
+        >
           <Highlight code={codeString} language={language} theme={codeTheme}>
             {({ style, tokens, getLineProps, getTokenProps }) => (
               <pre

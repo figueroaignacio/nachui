@@ -24,7 +24,8 @@
   },
   "codeblockWrapper": {
     "expand": "View full code",
-    "collapse": "Collapse"
+    "collapse": "Collapse",
+    "region": "Code block, scrollable"
   },
   "chat": {
     "label": "Assistant",

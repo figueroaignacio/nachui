@@ -24,7 +24,8 @@
   },
   "codeblockWrapper": {
     "expand": "Ver código completo",
-    "collapse": "Contraer"
+    "collapse": "Contraer",
+    "region": "Bloque de código, desplazable"
   },
   "chat": {
     "label": "Asistente",
