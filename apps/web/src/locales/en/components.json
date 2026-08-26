@@ -1,4 +1,8 @@
 {
+  "localeSwitcher": {
+    "label": "Language",
+    "heading": "Choose a language"
+  },
   "searcher": {
     "clear": "Clear search",
     "results": "Search results",
@@ -28,6 +32,7 @@
     "region": "Code block, scrollable"
   },
   "chat": {
+    "ask": "Ask AI",
     "label": "Assistant",
     "input": {
       "placeholder": "Type a message..."

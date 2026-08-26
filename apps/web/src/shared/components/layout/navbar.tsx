@@ -1,5 +1,6 @@
 'use client';
 
+import { AskAiButton } from '@/features/chat/ui/ask-ai-button';
 import { Searcher } from '@/features/docs/components/searcher';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { Navigation } from '@/lib/definitions';
@@ -10,6 +11,7 @@ import { NavigationMenu } from '@repo/ui/components/navigation-menu';
 import { Separator } from '@repo/ui/components/separator';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
+import { GitHubLink } from '../common/github-link';
 import { LocaleSwitcher } from '../common/locale-switcher';
 import { Logo } from '../common/logo';
 import { ThemeToggle } from '../common/theme-toggle';
@@ -130,8 +132,10 @@ export function Navbar() {
             })}
           </NavigationMenu>
           <div className="ml-auto flex items-center gap-3">
-            <LocaleSwitcher />
+            <AskAiButton />
             <Separator orientation="vertical" className="h-4" />
+            <GitHubLink />
+            <LocaleSwitcher />
             <ThemeToggle />
           </div>
         </div>

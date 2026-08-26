@@ -1,4 +1,8 @@
 {
+  "localeSwitcher": {
+    "label": "Idioma",
+    "heading": "Elegí un idioma"
+  },
   "searcher": {
     "clear": "Limpiar búsqueda",
     "results": "Resultados de búsqueda",
@@ -28,6 +32,7 @@
     "region": "Bloque de código, desplazable"
   },
   "chat": {
+    "ask": "Preguntar a la IA",
     "label": "Asistente",
     "input": {
       "placeholder": "Escribe un mensaje..."
