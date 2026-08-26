@@ -44,6 +44,7 @@ export function ChatInput(props: ChatInputProps) {
           </div>
         )}
         <textarea
+          data-autofocus
           rows={1}
           value={message}
           onChange={(e) => onMessageChange(e.target.value)}

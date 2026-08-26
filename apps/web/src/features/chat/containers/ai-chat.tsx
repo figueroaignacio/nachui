@@ -134,6 +134,7 @@ export function AiChat() {
         onSuggestionClick={handleSuggestionClickWrapper}
         onRetry={retry}
         onToggleExpand={toggleExpanded}
+        isModal={isMobile || isExpanded}
       />
     </div>
   );

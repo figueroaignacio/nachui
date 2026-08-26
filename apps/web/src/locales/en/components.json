@@ -25,6 +25,7 @@
     "collapse": "Collapse"
   },
   "chat": {
+    "label": "Assistant",
     "input": {
       "placeholder": "Type a message..."
     },

@@ -1,6 +1,9 @@
+import { useDialogBehavior } from '@/hooks/use-dialog-behavior';
 import type { Message } from '@/lib/definitions';
 import { Container } from '@repo/ui/layout/container';
 import { AnimatePresence, motion, useReducedMotion, type Transition } from 'motion/react';
+import { useTranslations } from 'next-intl';
+import { useRef } from 'react';
 import type { ToolName } from '../hooks/use-chat';
 import type { ChatErrorCode } from '../lib/chat-error';
 import { ChatHeader } from '../ui/chat-header';
@@ -27,6 +30,7 @@ interface ChatWindowProps {
   onSuggestionClick: (text: string) => void;
   onRetry: () => void;
   onToggleExpand: () => void;
+  isModal: boolean;
 }
 
 const PANEL_DURATION = 0.3;
@@ -73,9 +77,14 @@ export function ChatWindow(props: ChatWindowProps) {
     onSuggestionClick,
     onRetry,
     onToggleExpand,
+    isModal,
   } = props;
 
   const reduceMotion = useReducedMotion();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations('components.chat');
+
+  useDialogBehavior({ open: isOpen, onClose, ref: panelRef, trap: isModal });
 
   const body = (
     <div className="bg-background relative z-10 flex h-full flex-col">
@@ -125,6 +134,11 @@ export function ChatWindow(props: ChatWindowProps) {
           />
           <motion.div
             key="chat-panel"
+            ref={panelRef}
+            role="dialog"
+            aria-modal={isModal}
+            aria-label={t('label')}
+            tabIndex={-1}
             layout
             style={panelStyle}
             initial={reduceMotion ? false : panelHidden}

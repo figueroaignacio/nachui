@@ -25,6 +25,7 @@
     "collapse": "Contraer"
   },
   "chat": {
+    "label": "Asistente",
     "input": {
       "placeholder": "Escribe un mensaje..."
     },
