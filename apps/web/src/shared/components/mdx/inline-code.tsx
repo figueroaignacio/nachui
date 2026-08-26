@@ -38,7 +38,8 @@ export function InlineCode({ className, children, language = 'tsx', ...props }: 
           {...props}
         >
           {tokens[0].map((token, i) => {
-            const { ...tokenProps } = getTokenProps({ token, key: i });
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { key: _key, ...tokenProps } = getTokenProps({ token });
             return <span key={i} {...tokenProps} />;
           })}
         </code>
