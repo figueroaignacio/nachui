@@ -12,15 +12,19 @@ interface SearchResultsProps {
   results: SearchResultItem[];
   navigation: NavigationSection[];
   selectedIndex: number;
+  listboxId: string;
+  optionId: (index: number) => string;
 }
 
 function ResultItem({
+  id,
   href,
   title,
   isActive,
   meta,
   badge,
 }: {
+  id: string;
   href: string;
   title: string;
   isActive: boolean;
@@ -28,7 +32,7 @@ function ResultItem({
   badge?: DocBadge;
 }) {
   return (
-    <li>
+    <li id={id} role="option" aria-selected={isActive}>
       <Dialog.Close className="h-full w-full text-left outline-none">
         <Link
           href={href}
@@ -74,7 +78,14 @@ function SectionHeader({ label }: { label: string }) {
   );
 }
 
-export function SearchResults({ query, results, navigation, selectedIndex }: SearchResultsProps) {
+export function SearchResults({
+  query,
+  results,
+  navigation,
+  selectedIndex,
+  listboxId,
+  optionId,
+}: SearchResultsProps) {
   const t = useTranslations('components.searcher');
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -97,12 +108,19 @@ export function SearchResults({ query, results, navigation, selectedIndex }: Sea
 
   if (results.length > 0) {
     return (
-      <div ref={containerRef} className="max-h-[320px] overflow-y-auto px-2 pb-2">
+      <div
+        ref={containerRef}
+        id={listboxId}
+        role="listbox"
+        aria-label={t('results')}
+        className="max-h-[320px] overflow-y-auto px-2 pb-2"
+      >
         <SectionHeader label="Results" />
-        <ul className="space-y-0.5">
+        <ul role="presentation" className="space-y-0.5">
           {results.map((item, index) => (
             <ResultItem
               key={item.href}
+              id={optionId(index)}
               href={item.href}
               title={item.title}
               isActive={index === selectedIndex}
@@ -118,17 +136,25 @@ export function SearchResults({ query, results, navigation, selectedIndex }: Sea
   let globalIndex = 0;
 
   return (
-    <div ref={containerRef} className="max-h-[320px] overflow-y-auto px-2 pb-2">
+    <div
+      ref={containerRef}
+      id={listboxId}
+      role="listbox"
+      aria-label={t('results')}
+      className="max-h-[320px] overflow-y-auto px-2 pb-2"
+    >
       {navigation.map((section) => (
-        <div key={section.title}>
+        <div key={section.title} role="group" aria-label={section.title}>
           <SectionHeader label={section.title} />
-          <ul className="space-y-0.5">
+          <ul role="presentation" className="space-y-0.5">
             {section.items.map((item) => {
-              const isActive = globalIndex === selectedIndex;
+              const index = globalIndex;
+              const isActive = index === selectedIndex;
               globalIndex++;
               return (
                 <ResultItem
                   key={item.href}
+                  id={optionId(index)}
                   href={item.href}
                   title={item.title}
                   isActive={isActive}

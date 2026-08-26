@@ -8,6 +8,11 @@ interface SearchInputProps {
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   placeholder?: string;
   inputRef?: React.RefObject<HTMLInputElement | null>;
+  label: string;
+  clearLabel: string;
+  listboxId: string;
+  activeOptionId?: string;
+  expanded: boolean;
 }
 
 export function SearchInput({
@@ -17,6 +22,11 @@ export function SearchInput({
   onKeyDown,
   placeholder = 'Type a command or search...',
   inputRef,
+  label,
+  clearLabel,
+  listboxId,
+  activeOptionId,
+  expanded,
 }: SearchInputProps) {
   return (
     <div className="border-border/40 flex items-center gap-3 border-b px-4 py-3">
@@ -28,18 +38,23 @@ export function SearchInput({
       <input
         ref={inputRef}
         type="text"
+        role="combobox"
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={onKeyDown}
         className="text-foreground placeholder:text-muted-foreground/50 flex h-10 w-full bg-transparent text-sm focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-        aria-label="Search documentation"
+        aria-label={label}
+        aria-autocomplete="list"
+        aria-controls={listboxId}
+        aria-expanded={expanded}
+        aria-activedescendant={activeOptionId}
       />
       {value && (
         <button
           onClick={onClear}
           className="text-muted-foreground/50 hover:text-foreground flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded transition-colors"
-          aria-label="Clear search"
+          aria-label={clearLabel}
         >
           <HugeiconsIcon icon={Cancel01Icon} className="h-3.5 w-3.5" aria-hidden="true" />
         </button>

@@ -1,5 +1,7 @@
 {
   "searcher": {
+    "clear": "Limpiar búsqueda",
+    "results": "Resultados de búsqueda",
     "label": "Buscar",
     "placeholder": "Buscar...",
     "noResults": "No se encontraron resultados",

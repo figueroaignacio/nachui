@@ -14,7 +14,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { Dialog } from '@repo/ui/components/dialog';
 import { Kbd } from '@repo/ui/components/kbd';
 import { useTranslations } from 'next-intl';
-import { useCallback, useState } from 'react';
+import { useCallback, useId, useState } from 'react';
 import { SearchInput } from './search-input';
 import { SearchResults } from './search-results';
 
@@ -34,6 +34,10 @@ export function Searcher({ variant = 'default' }: { variant?: 'default' | 'icon'
     activeItems,
   } = useSearch();
   const { inputRef, handleOpenChange } = useDialogFocus();
+
+  const listboxId = useId();
+  const optionId = useCallback((index: number) => `${listboxId}-option-${index}`, [listboxId]);
+  const hasOptions = activeItems.length > 0;
 
   useKbdShortcut(['cmd', 'k'], () => setIsOpen((prev) => !prev));
 
@@ -104,12 +108,19 @@ export function Searcher({ variant = 'default' }: { variant?: 'default' | 'icon'
           onKeyDown={handleKeyDown}
           inputRef={inputRef}
           placeholder={t('placeholder')}
+          label={t('label')}
+          clearLabel={t('clear')}
+          listboxId={listboxId}
+          expanded={hasOptions}
+          activeOptionId={hasOptions ? optionId(selectedIndex) : undefined}
         />
         <SearchResults
           query={query}
           results={results}
           navigation={navigation}
           selectedIndex={selectedIndex}
+          listboxId={listboxId}
+          optionId={optionId}
         />
         <div className="border-border/30 flex items-center justify-between border-t px-4 py-2.5">
           <div className="flex items-center gap-3">
