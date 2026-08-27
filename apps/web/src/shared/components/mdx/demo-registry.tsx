@@ -12,6 +12,7 @@ import { Checkboxes as DropdownMenuCheckboxes } from '@repo/ui/src/demos/dropdow
 import { Collapsed as AccordionCollapsed } from '@repo/ui/src/demos/accordion/collapsed';
 import { Collapsed as BreadcrumbCollapsed } from '@repo/ui/src/demos/breadcrumb/collapsed';
 import { Compact as CardCompact } from '@repo/ui/src/demos/card/compact';
+import { Compact as PaginationCompact } from '@repo/ui/src/demos/pagination/compact';
 import { Compact as TableCompact } from '@repo/ui/src/demos/table/compact';
 import { CustomSeparator as BreadcrumbCustomSeparator } from '@repo/ui/src/demos/breadcrumb/custom-separator';
 import { CustomTag as TypographyCustomTag } from '@repo/ui/src/demos/typography/custom-tag';
@@ -22,6 +23,7 @@ import { Default as AvatarDefault } from '@repo/ui/src/demos/avatar/default';
 import { Default as BadgeDefault } from '@repo/ui/src/demos/badge/default';
 import { Default as BannerDefault } from '@repo/ui/src/demos/banner/default';
 import { Default as BreadcrumbDefault } from '@repo/ui/src/demos/breadcrumb/default';
+import { Default as BubbleDefault } from '@repo/ui/src/demos/bubble/default';
 import { Default as ButtonDefault } from '@repo/ui/src/demos/button/default';
 import { Default as CalloutDefault } from '@repo/ui/src/demos/callout/default';
 import { Default as CardDefault } from '@repo/ui/src/demos/card/default';
@@ -29,16 +31,21 @@ import { Default as CheckboxDefault } from '@repo/ui/src/demos/checkbox/default'
 import { Default as CollapsibleDefault } from '@repo/ui/src/demos/collapsible/default';
 import { Default as CommandDefault } from '@repo/ui/src/demos/command/default';
 import { Default as ContainerDefault } from '@repo/ui/src/demos/container/default';
+import { Default as ContextMenuDefault } from '@repo/ui/src/demos/context-menu/default';
 import { Default as DialogDefault } from '@repo/ui/src/demos/dialog/default';
 import { Default as DrawerDefault } from '@repo/ui/src/demos/drawer/default';
 import { Default as DropdownMenuDefault } from '@repo/ui/src/demos/dropdown-menu/default';
+import { Default as EmptyDefault } from '@repo/ui/src/demos/empty/default';
 import { Default as FilesDefault } from '@repo/ui/src/demos/files/default';
 import { Default as FlexDefault } from '@repo/ui/src/demos/flex/default';
+import { Default as FrameDefault } from '@repo/ui/src/demos/frame/default';
 import { Default as GridDefault } from '@repo/ui/src/demos/grid/default';
 import { Default as InputDefault } from '@repo/ui/src/demos/input/default';
 import { Default as KbdDefault } from '@repo/ui/src/demos/kbd/default';
 import { Default as LabelDefault } from '@repo/ui/src/demos/label/default';
+import { Default as MessageDefault } from '@repo/ui/src/demos/message/default';
 import { Default as NavigationMenuDefault } from '@repo/ui/src/demos/navigation-menu/default';
+import { Default as PaginationDefault } from '@repo/ui/src/demos/pagination/default';
 import { Default as PopoverDefault } from '@repo/ui/src/demos/popover/default';
 import { Default as ProgressDefault } from '@repo/ui/src/demos/progress/default';
 import { Default as RadioDefault } from '@repo/ui/src/demos/radio/default';
@@ -64,6 +71,7 @@ import { Dismissible as BannerDismissible } from '@repo/ui/src/demos/banner/dism
 import { Form as DrawerForm } from '@repo/ui/src/demos/drawer/form';
 import { Ghost as ButtonGhost } from '@repo/ui/src/demos/button/ghost';
 import { Ghost as CardGhost } from '@repo/ui/src/demos/card/ghost';
+import { Grouped as MessageGrouped } from '@repo/ui/src/demos/message/grouped';
 import { GroupedItems as SelectGroupedItems } from '@repo/ui/src/demos/select/grouped-items';
 import { Headings as TypographyHeadings } from '@repo/ui/src/demos/typography/headings';
 import { Indeterminate as ProgressIndeterminate } from '@repo/ui/src/demos/progress/indeterminate';
@@ -75,6 +83,7 @@ import { Multiple as AccordionMultiple } from '@repo/ui/src/demos/accordion/mult
 import { Outline as BadgeOutline } from '@repo/ui/src/demos/badge/outline';
 import { Outline as ButtonOutline } from '@repo/ui/src/demos/button/outline';
 import { Outline as CardOutline } from '@repo/ui/src/demos/card/outline';
+import { Outline as EmptyOutline } from '@repo/ui/src/demos/empty/outline';
 import { Parts as SpriteParts } from '@repo/ui/src/demos/sprite/parts';
 import { Positions as DrawerPositions } from '@repo/ui/src/demos/drawer/positions';
 import { Positions as ToastPositions } from '@repo/ui/src/demos/toast/positions';
@@ -89,11 +98,13 @@ import { Sizes as ButtonSizes } from '@repo/ui/src/demos/button/sizes';
 import { Sizes as InputSizes } from '@repo/ui/src/demos/input/sizes';
 import { Sizes as KbdSizes } from '@repo/ui/src/demos/kbd/sizes';
 import { Sizes as SpinnerSizes } from '@repo/ui/src/demos/spinner/sizes';
+import { Stacked as FrameStacked } from '@repo/ui/src/demos/frame/stacked';
 import { States as SpriteStates } from '@repo/ui/src/demos/sprite/states';
 import { Striped as TableStriped } from '@repo/ui/src/demos/table/striped';
 import { Success as BannerSuccess } from '@repo/ui/src/demos/banner/success';
 import { Success as CalloutSuccess } from '@repo/ui/src/demos/callout/success';
 import { Variants as BannerVariants } from '@repo/ui/src/demos/banner/variants';
+import { Variants as BubbleVariants } from '@repo/ui/src/demos/bubble/variants';
 import { Variants as ButtonVariants } from '@repo/ui/src/demos/button/variants';
 import { Variants as CalloutVariants } from '@repo/ui/src/demos/callout/variants';
 import { Variants as KbdVariants } from '@repo/ui/src/demos/kbd/variants';
@@ -149,6 +160,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
     'custom-separator': BreadcrumbCustomSeparator,
     default: BreadcrumbDefault,
   },
+  bubble: {
+    default: BubbleDefault,
+    variants: BubbleVariants,
+  },
   button: {
     default: ButtonDefault,
     destructive: ButtonDestructive,
@@ -189,6 +204,9 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
   container: {
     default: ContainerDefault,
   },
+  'context-menu': {
+    default: ContextMenuDefault,
+  },
   dialog: {
     alert: DialogAlert,
     default: DialogDefault,
@@ -203,11 +221,19 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
     default: DropdownMenuDefault,
     'radio-group': DropdownMenuRadioGroup,
   },
+  empty: {
+    default: EmptyDefault,
+    outline: EmptyOutline,
+  },
   files: {
     default: FilesDefault,
   },
   flex: {
     default: FlexDefault,
+  },
+  frame: {
+    default: FrameDefault,
+    stacked: FrameStacked,
   },
   grid: {
     default: GridDefault,
@@ -230,9 +256,17 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
     default: LabelDefault,
     required: LabelRequired,
   },
+  message: {
+    default: MessageDefault,
+    grouped: MessageGrouped,
+  },
   'navigation-menu': {
     badges: NavigationMenuBadges,
     default: NavigationMenuDefault,
+  },
+  pagination: {
+    compact: PaginationCompact,
+    default: PaginationDefault,
   },
   popover: {
     default: PopoverDefault,
