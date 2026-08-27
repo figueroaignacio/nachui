@@ -87,6 +87,12 @@
           "description": "Indicates the location within the site through a sequence of links."
         },
         {
+          "title": "Bubble",
+          "href": "/docs/elements/ui/bubble",
+          "description": "The message surface for chat interfaces, with variants and reactions.",
+          "badge": "new"
+        },
+        {
           "title": "Button",
           "href": "/docs/elements/ui/button",
           "description": "Interactive buttons for user actions."
@@ -117,6 +123,12 @@
           "description": "Hide or show sections of content dynamically."
         },
         {
+          "title": "Context Menu",
+          "href": "/docs/elements/ui/context-menu",
+          "description": "A right-click menu with actions, shortcuts and keyboard navigation.",
+          "badge": "new"
+        },
+        {
           "title": "Dialog",
           "href": "/docs/elements/ui/dialog",
           "description": "Modal windows for user notifications and interactions."
@@ -132,9 +144,21 @@
           "description": "Menu that expands to reveal additional options."
         },
         {
+          "title": "Empty",
+          "href": "/docs/elements/ui/empty",
+          "description": "Empty states with media, copy and a clear next step.",
+          "badge": "new"
+        },
+        {
           "title": "Files",
           "href": "/docs/elements/ui/files",
           "description": ""
+        },
+        {
+          "title": "Frame",
+          "href": "/docs/elements/ui/frame",
+          "description": "A structured container that nests panels, like a card inside a card.",
+          "badge": "new"
         },
         {
           "title": "Input",
@@ -152,9 +176,21 @@
           "description": "A label component with required indicator, optional text, and description support."
         },
         {
+          "title": "Message",
+          "href": "/docs/elements/ui/message",
+          "description": "Conversation row layout with avatar, header, footer and alignment.",
+          "badge": "new"
+        },
+        {
           "title": "Navigation Menu",
           "href": "/docs/elements/ui/navigation-menu",
           "description": "A horizontal navigation bar with hover-triggered link panels.",
+          "badge": "new"
+        },
+        {
+          "title": "Pagination",
+          "href": "/docs/elements/ui/pagination",
+          "description": "Page navigation with previous and next links, numbers and ellipses.",
           "badge": "new"
         },
         {

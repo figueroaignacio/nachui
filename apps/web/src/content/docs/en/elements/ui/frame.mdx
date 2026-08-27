@@ -1,0 +1,79 @@
+---
+title: Frame
+description: A structured container that nests panels, like a card inside a card.
+published: true
+date: 2026-08-27
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="frame" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="frame" />
+
+## Anatomy
+
+```tsx
+import { Frame } from '@/components/ui/frame';
+```
+
+```tsx
+<Frame>
+  <Frame.Header>
+    <Frame.Title>Workspace</Frame.Title>
+    <Frame.Description>Plan and usage for the acme team.</Frame.Description>
+  </Frame.Header>
+  <Frame.Panel>Panel content</Frame.Panel>
+  <Frame.Footer>Actions</Frame.Footer>
+</Frame>
+```
+
+The frame is a muted surface and each panel is a card sitting on it, with a smaller radius so the corners stay concentric. Panels take any content, including a `Card` or another `Frame`, which is how you get the card inside a card look.
+
+## Composition
+
+Use the following composition to build a `Frame`:
+
+```tree
+Frame
+├── Frame.Header
+│   ├── Frame.Title
+│   └── Frame.Description
+├── Frame.Panel
+└── Frame.Footer
+```
+
+## Variants
+
+### Stacked
+
+`stacked` removes the gaps and connects consecutive panels into one block with shared borders. Add `dense` to strip the panel padding and control it from your own content, useful for list rows.
+
+<ComponentPreview component="frame" demo="stacked" />
+
+## API Reference
+
+### Frame
+
+| Prop        | Type                        | Default     | Description                                     |
+| ----------- | --------------------------- | ----------- | ----------------------------------------------- |
+| `variant`   | `'default' \| 'ghost'`      | `'default'` | `ghost` drops the outer border and background   |
+| `spacing`   | `'sm' \| 'default' \| 'lg'` | `'default'` | Padding of the frame and gap between panels     |
+| `stacked`   | `boolean`                   | `false`     | Connects consecutive panels with shared borders |
+| `dense`     | `boolean`                   | `false`     | Removes the default panel padding               |
+| `className` | `string`                    | -           | Additional CSS classes                          |
+
+### Frame.Title
+
+| Prop        | Type                                   | Default | Description            |
+| ----------- | -------------------------------------- | ------- | ---------------------- |
+| `as`        | `'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6'` | `'h3'`  | Heading level          |
+| `className` | `string`                               | -       | Additional CSS classes |
+
+### Frame.Header, Frame.Description, Frame.Panel, Frame.Footer
+
+Layout parts of the frame. Each accepts `className` and standard div props.

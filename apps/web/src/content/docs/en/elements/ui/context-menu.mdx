@@ -1,0 +1,92 @@
+---
+title: Context Menu
+description: A right-click menu with items, shortcuts and keyboard navigation.
+published: true
+date: 2026-08-27
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="context-menu" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="context-menu" />
+
+## Anatomy
+
+```tsx
+import { ContextMenu } from '@/components/ui/context-menu';
+```
+
+```tsx
+<ContextMenu>
+  <ContextMenu.Trigger>Right click here</ContextMenu.Trigger>
+  <ContextMenu.Content>
+    <ContextMenu.Label>Actions</ContextMenu.Label>
+    <ContextMenu.Separator />
+    <ContextMenu.Item>
+      Copy
+      <ContextMenu.Shortcut>Ctrl C</ContextMenu.Shortcut>
+    </ContextMenu.Item>
+    <ContextMenu.Item variant="destructive">Delete</ContextMenu.Item>
+  </ContextMenu.Content>
+</ContextMenu>
+```
+
+The menu opens at the pointer on right click, on long press on touch devices, and from the keyboard with Shift F10 or the context menu key. It clamps itself to the viewport, and arrow keys, Home, End and Escape work as in any menu.
+
+## Composition
+
+Use the following composition to build a `ContextMenu`:
+
+```tree
+ContextMenu
+├── ContextMenu.Trigger
+└── ContextMenu.Content
+    ├── ContextMenu.Label
+    ├── ContextMenu.Item
+    │   └── ContextMenu.Shortcut
+    └── ContextMenu.Separator
+```
+
+## API Reference
+
+### ContextMenu
+
+| Prop           | Type                      | Default | Description                      |
+| -------------- | ------------------------- | ------- | -------------------------------- |
+| `onOpenChange` | `(open: boolean) => void` | -       | Callback when open state changes |
+| `className`    | `string`                  | -       | Additional CSS classes           |
+
+### ContextMenu.Trigger
+
+| Prop        | Type      | Default | Description                        |
+| ----------- | --------- | ------- | ---------------------------------- |
+| `disabled`  | `boolean` | `false` | Ignore right clicks and long press |
+| `className` | `string`  | -       | Additional CSS classes             |
+
+### ContextMenu.Item
+
+| Prop        | Type                         | Default     | Description            |
+| ----------- | ---------------------------- | ----------- | ---------------------- |
+| `disabled`  | `boolean`                    | `false`     | Disable the item       |
+| `variant`   | `'default' \| 'destructive'` | `'default'` | Visual style           |
+| `onSelect`  | `() => void`                 | -           | Callback when selected |
+| `className` | `string`                     | -           | Additional CSS classes |
+
+### ContextMenu.Label
+
+| Prop       | Type        | Default | Description |
+| ---------- | ----------- | ------- | ----------- |
+| `children` | `ReactNode` | -       | Label text  |
+
+### ContextMenu.Shortcut
+
+Right-aligned hint inside an item. Purely visual, it does not register the shortcut.
+
+### ContextMenu.Separator
+
+Visual separator between menu items. No props.

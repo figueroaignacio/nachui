@@ -87,6 +87,12 @@
           "description": "Indica la ubicación actual dentro del sitio a través de una secuencia de enlaces."
         },
         {
+          "title": "Bubble",
+          "href": "/docs/elements/ui/bubble",
+          "description": "La superficie del mensaje en interfaces de chat, con variantes y reacciones.",
+          "badge": "new"
+        },
+        {
           "title": "Button",
           "href": "/docs/elements/ui/button",
           "description": "Botones interactivos con distintos estilos y tamaños."
@@ -117,6 +123,12 @@
           "description": "Secciones plegables con animaciones suaves."
         },
         {
+          "title": "Context Menu",
+          "href": "/docs/elements/ui/context-menu",
+          "description": "Un menú de clic derecho con acciones, atajos y navegación por teclado.",
+          "badge": "new"
+        },
+        {
           "title": "Dialog",
           "href": "/docs/elements/ui/dialog",
           "description": "Ventanas modales para interacción con el usuario."
@@ -132,9 +144,21 @@
           "description": "Menús desplegables para acciones o navegación."
         },
         {
+          "title": "Empty",
+          "href": "/docs/elements/ui/empty",
+          "description": "Estados vacíos con medios, texto y un siguiente paso claro.",
+          "badge": "new"
+        },
+        {
           "title": "Files",
           "href": "/docs/elements/ui/files",
           "description": "Un componente de árbol de archivos interactivo para mostrar estructuras jerárquicas de carpetas y archivos."
+        },
+        {
+          "title": "Frame",
+          "href": "/docs/elements/ui/frame",
+          "description": "Un contenedor estructurado que anida paneles, como una card dentro de una card.",
+          "badge": "new"
         },
         {
           "title": "Input",
@@ -152,9 +176,21 @@
           "description": "Un componente label con indicador de obligatoriedad, texto opcional y descripción."
         },
         {
+          "title": "Message",
+          "href": "/docs/elements/ui/message",
+          "description": "Layout de fila de conversación con avatar, cabecera, pie y alineación.",
+          "badge": "new"
+        },
+        {
           "title": "Navigation Menu",
           "href": "/docs/elements/ui/navigation-menu",
           "description": "Una barra de navegación horizontal con paneles de links al hacer hover.",
+          "badge": "new"
+        },
+        {
+          "title": "Pagination",
+          "href": "/docs/elements/ui/pagination",
+          "description": "Navegación entre páginas con enlaces anterior y siguiente, números y elipsis.",
           "badge": "new"
         },
         {

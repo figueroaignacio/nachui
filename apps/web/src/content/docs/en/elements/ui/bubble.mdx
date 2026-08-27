@@ -1,0 +1,82 @@
+---
+title: Bubble
+description: The message surface for chat interfaces, with variants and reactions.
+published: true
+date: 2026-08-27
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="bubble" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="bubble" />
+
+## Anatomy
+
+```tsx
+import { Bubble } from '@/components/ui/bubble';
+```
+
+```tsx
+<Bubble variant="secondary" align="start">
+  <Bubble.Content>Hey, how is the release going?</Bubble.Content>
+  <Bubble.Reactions>
+    <span>👍</span>
+  </Bubble.Reactions>
+</Bubble>
+```
+
+Bubble is deliberately scoped to the surface itself. Sender name, timestamps, avatars and actions belong to [Message](/docs/elements/ui/message), which composes bubbles into a full conversation row.
+
+## Composition
+
+Use the following composition to build a `Bubble`:
+
+```tree
+Bubble.Group
+└── Bubble
+    ├── Bubble.Content
+    └── Bubble.Reactions
+```
+
+## Variants
+
+Seven variants cover both sides of a conversation and the states around it: `default` for the current user, `secondary` and `muted` for the other side, `tinted` for a subtle primary wash, `outline` and `ghost` for quiet content, and `destructive` for errors.
+
+<ComponentPreview component="bubble" demo="variants" />
+
+## API Reference
+
+### Bubble
+
+| Prop        | Type                                                                                       | Default     | Description                     |
+| ----------- | ------------------------------------------------------------------------------------------ | ----------- | ------------------------------- |
+| `variant`   | `'default' \| 'secondary' \| 'muted' \| 'tinted' \| 'outline' \| 'ghost' \| 'destructive'` | `'default'` | Visual treatment of the surface |
+| `align`     | `'start' \| 'end'`                                                                         | `'start'`   | Which side the bubble hugs      |
+| `className` | `string`                                                                                   | -           | Additional CSS classes          |
+
+### Bubble.Content
+
+| Prop        | Type      | Default | Description                                      |
+| ----------- | --------- | ------- | ------------------------------------------------ |
+| `asChild`   | `boolean` | `false` | Merge styles into the child element, e.g. a link |
+| `className` | `string`  | -       | Additional CSS classes                           |
+
+### Bubble.Reactions
+
+| Prop        | Type                | Default    | Description                       |
+| ----------- | ------------------- | ---------- | --------------------------------- |
+| `side`      | `'top' \| 'bottom'` | `'bottom'` | Edge the pill overlaps            |
+| `align`     | `'start' \| 'end'`  | `'end'`    | Horizontal anchor along that edge |
+| `className` | `string`            | -          | Additional CSS classes            |
+
+### Bubble.Group
+
+| Prop        | Type               | Default   | Description                      |
+| ----------- | ------------------ | --------- | -------------------------------- |
+| `align`     | `'start' \| 'end'` | `'start'` | Alignment of the stacked bubbles |
+| `className` | `string`           | -         | Additional CSS classes           |

@@ -1,0 +1,79 @@
+---
+title: Frame
+description: Un contenedor estructurado que anida paneles, como una card dentro de una card.
+published: true
+date: 2026-08-27
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="frame" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="frame" />
+
+## Anatomía
+
+```tsx
+import { Frame } from '@/components/ui/frame';
+```
+
+```tsx
+<Frame>
+  <Frame.Header>
+    <Frame.Title>Workspace</Frame.Title>
+    <Frame.Description>Plan y uso del equipo acme.</Frame.Description>
+  </Frame.Header>
+  <Frame.Panel>Contenido del panel</Frame.Panel>
+  <Frame.Footer>Acciones</Frame.Footer>
+</Frame>
+```
+
+El frame es una superficie muted y cada panel es una card apoyada sobre ella, con un radio menor para que las esquinas queden concéntricas. Los paneles aceptan cualquier contenido, incluida una `Card` u otro `Frame`, y así se logra el efecto de card dentro de card.
+
+## Composición
+
+Usa la siguiente composición para construir un `Frame`:
+
+```tree
+Frame
+├── Frame.Header
+│   ├── Frame.Title
+│   └── Frame.Description
+├── Frame.Panel
+└── Frame.Footer
+```
+
+## Variantes
+
+### Apilado
+
+`stacked` elimina los espacios y conecta los paneles consecutivos en un solo bloque con bordes compartidos. Agrega `dense` para quitar el padding del panel y controlarlo desde tu propio contenido, útil para filas de lista.
+
+<ComponentPreview component="frame" demo="stacked" />
+
+## Referencia de API
+
+### Frame
+
+| Prop        | Type                        | Default     | Description                                         |
+| ----------- | --------------------------- | ----------- | --------------------------------------------------- |
+| `variant`   | `'default' \| 'ghost'`      | `'default'` | `ghost` quita el borde exterior y el fondo          |
+| `spacing`   | `'sm' \| 'default' \| 'lg'` | `'default'` | Padding del frame y separación entre paneles        |
+| `stacked`   | `boolean`                   | `false`     | Conecta paneles consecutivos con bordes compartidos |
+| `dense`     | `boolean`                   | `false`     | Quita el padding por defecto del panel              |
+| `className` | `string`                    | -           | Clases CSS adicionales                              |
+
+### Frame.Title
+
+| Prop        | Type                                   | Default | Description            |
+| ----------- | -------------------------------------- | ------- | ---------------------- |
+| `as`        | `'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6'` | `'h3'`  | Nivel de encabezado    |
+| `className` | `string`                               | -       | Clases CSS adicionales |
+
+### Frame.Header, Frame.Description, Frame.Panel, Frame.Footer
+
+Partes de layout del frame. Cada una acepta `className` y las props estándar de div.

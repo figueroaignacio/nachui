@@ -1,0 +1,85 @@
+---
+title: Empty
+description: Empty states with media, copy and a clear next step.
+published: true
+date: 2026-08-27
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="empty" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="empty" />
+
+## Anatomy
+
+```tsx
+import { Empty } from '@/components/ui/empty';
+```
+
+```tsx
+<Empty>
+  <Empty.Header>
+    <Empty.Media variant="icon">
+      <FolderIcon />
+    </Empty.Media>
+    <Empty.Title>No projects yet</Empty.Title>
+    <Empty.Description>Create your first project to get started.</Empty.Description>
+  </Empty.Header>
+  <Empty.Content>
+    <Button>Create project</Button>
+  </Empty.Content>
+</Empty>
+```
+
+## Composition
+
+Use the following composition to build an `Empty`:
+
+```tree
+Empty
+├── Empty.Header
+│   ├── Empty.Media
+│   ├── Empty.Title
+│   └── Empty.Description
+└── Empty.Content
+```
+
+## Variants
+
+### Outline
+
+A dashed border frames the empty state, useful inside dense layouts where the blank area needs an edge.
+
+<ComponentPreview component="empty" demo="outline" />
+
+## API Reference
+
+### Empty
+
+| Prop        | Type                               | Default     | Description                                     |
+| ----------- | ---------------------------------- | ----------- | ----------------------------------------------- |
+| `variant`   | `'default' \| 'outline' \| 'card'` | `'default'` | Frame around the state: dashed border or a card |
+| `className` | `string`                           | -           | Additional CSS classes                          |
+
+### Empty.Media
+
+| Prop        | Type                  | Default     | Description                                   |
+| ----------- | --------------------- | ----------- | --------------------------------------------- |
+| `variant`   | `'default' \| 'icon'` | `'default'` | `icon` wraps the child in a muted square tile |
+| `className` | `string`              | -           | Additional CSS classes                        |
+
+### Empty.Title
+
+| Prop        | Type                                   | Default | Description            |
+| ----------- | -------------------------------------- | ------- | ---------------------- |
+| `as`        | `'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6'` | `'h3'`  | Heading level          |
+| `className` | `string`                               | -       | Additional CSS classes |
+
+### Empty.Header, Empty.Description, Empty.Content
+
+Layout wrappers for the copy and the actions. Each accepts `className`.

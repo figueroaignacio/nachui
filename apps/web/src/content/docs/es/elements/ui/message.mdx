@@ -1,0 +1,92 @@
+---
+title: Message
+description: Layout de fila de conversación con avatar, cabecera, pie y alineación.
+published: true
+date: 2026-08-27
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="message" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="message" />
+
+## Anatomía
+
+```tsx
+import { Message } from '@/components/ui/message';
+```
+
+```tsx
+<Message align="start">
+  <Message.Avatar>
+    <Avatar size="sm">
+      <Avatar.Fallback>LR</Avatar.Fallback>
+    </Avatar>
+  </Message.Avatar>
+  <Message.Content>
+    <Message.Header>Lucia</Message.Header>
+    <Bubble variant="secondary">
+      <Bubble.Content>¿En qué puedo ayudar?</Bubble.Content>
+    </Bubble>
+    <Message.Footer>10:24</Message.Footer>
+  </Message.Content>
+</Message>
+```
+
+Message resuelve el layout alrededor de un mensaje: quién lo envió, cuándo y en qué lado va. La superficie es un [Bubble](/docs/elements/ui/bubble). Cada parte es un elemento plano, así que toda la fila se renderiza en el servidor.
+
+## Composición
+
+Usa la siguiente composición para construir un `Message`:
+
+```tree
+Message.Group
+└── Message
+    ├── Message.Avatar
+    └── Message.Content
+        ├── Message.Header
+        ├── Bubble
+        └── Message.Footer
+```
+
+## Variantes
+
+### Agrupado
+
+Envuelve los mensajes consecutivos del mismo remitente en `Message.Group` y apila sus burbujas con `Bubble.Group`, de modo que el avatar y la cabecera aparecen una sola vez.
+
+<ComponentPreview component="message" demo="grouped" />
+
+## Referencia de API
+
+### Message
+
+| Prop        | Type               | Default   | Description                                     |
+| ----------- | ------------------ | --------- | ----------------------------------------------- |
+| `align`     | `'start' \| 'end'` | `'start'` | Lado de la conversación; `end` invierte la fila |
+| `className` | `string`           | -         | Clases CSS adicionales                          |
+
+### Message.Avatar
+
+Ancla su hijo a la parte inferior de la fila. Acepta `className`.
+
+### Message.Content
+
+Columna que sigue la alineación de la raíz. Acepta `className`.
+
+### Message.Header
+
+Nombre del remitente y metadatos sobre la burbuja. Acepta `className`.
+
+### Message.Footer
+
+Línea de estado bajo la burbuja, por ejemplo hora y confirmación de lectura. Acepta `className`.
+
+### Message.Group
+
+Apila mensajes consecutivos del mismo remitente. Acepta `className`.

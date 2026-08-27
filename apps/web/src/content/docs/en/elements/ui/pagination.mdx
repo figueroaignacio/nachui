@@ -1,0 +1,108 @@
+---
+title: Pagination
+description: Page navigation with previous and next links, numbers and ellipses.
+published: true
+date: 2026-08-27
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="pagination" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="pagination" />
+
+## Anatomy
+
+```tsx
+import { Pagination } from '@/components/ui/pagination';
+```
+
+```tsx
+<Pagination>
+  <Pagination.Content>
+    <Pagination.Item>
+      <Pagination.Previous href="#" />
+    </Pagination.Item>
+    <Pagination.Item>
+      <Pagination.Link href="#">1</Pagination.Link>
+    </Pagination.Item>
+    <Pagination.Item>
+      <Pagination.Link href="#" isActive>
+        2
+      </Pagination.Link>
+    </Pagination.Item>
+    <Pagination.Item>
+      <Pagination.Ellipsis />
+    </Pagination.Item>
+    <Pagination.Item>
+      <Pagination.Next href="#" />
+    </Pagination.Item>
+  </Pagination.Content>
+</Pagination>
+```
+
+`Pagination.Link` renders an anchor when you pass `href` and a button when you leave it out, so the same markup works for routed pages and for client state. With Next.js, wrap the link parts or swap the anchor for `next/link` in your copy of the component.
+
+## Composition
+
+Use the following composition to build a `Pagination`:
+
+```tree
+Pagination
+└── Pagination.Content
+    ├── Pagination.Item
+    │   └── Pagination.Previous
+    ├── Pagination.Item
+    │   └── Pagination.Link
+    ├── Pagination.Item
+    │   └── Pagination.Ellipsis
+    └── Pagination.Item
+        └── Pagination.Next
+```
+
+## Variants
+
+### Compact
+
+Icon-only previous and next around a page indicator, for toolbars and tight spaces.
+
+<ComponentPreview component="pagination" demo="compact" />
+
+## API Reference
+
+### Pagination
+
+| Prop        | Type     | Default        | Description                   |
+| ----------- | -------- | -------------- | ----------------------------- |
+| `label`     | `string` | `'Pagination'` | Accessible name for the `nav` |
+| `className` | `string` | -              | Additional CSS classes        |
+
+### Pagination.Link
+
+| Prop        | Type                  | Default  | Description                                |
+| ----------- | --------------------- | -------- | ------------------------------------------ |
+| `href`      | `string`              | -        | Renders an anchor; omit to render a button |
+| `isActive`  | `boolean`             | `false`  | Marks the current page with `aria-current` |
+| `disabled`  | `boolean`             | `false`  | Disables the control                       |
+| `size`      | `'default' \| 'icon'` | `'icon'` | Square page number or padded text link     |
+| `className` | `string`              | -        | Additional CSS classes                     |
+
+### Pagination.Previous / Pagination.Next
+
+| Prop       | Type        | Default                 | Description                  |
+| ---------- | ----------- | ----------------------- | ---------------------------- |
+| `iconOnly` | `boolean`   | `false`                 | Hide the text label visually |
+| `children` | `ReactNode` | `'Previous'` / `'Next'` | Label text                   |
+
+Both also accept every `Pagination.Link` prop except `size`.
+
+### Pagination.Ellipsis
+
+| Prop        | Type     | Default        | Description            |
+| ----------- | -------- | -------------- | ---------------------- |
+| `label`     | `string` | `'More pages'` | Screen reader text     |
+| `className` | `string` | -              | Additional CSS classes |

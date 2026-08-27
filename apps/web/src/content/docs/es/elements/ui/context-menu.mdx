@@ -1,0 +1,92 @@
+---
+title: Context Menu
+description: Un menú de clic derecho con acciones, atajos y navegación por teclado.
+published: true
+date: 2026-08-27
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="context-menu" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="context-menu" />
+
+## Anatomía
+
+```tsx
+import { ContextMenu } from '@/components/ui/context-menu';
+```
+
+```tsx
+<ContextMenu>
+  <ContextMenu.Trigger>Haz clic derecho aquí</ContextMenu.Trigger>
+  <ContextMenu.Content>
+    <ContextMenu.Label>Acciones</ContextMenu.Label>
+    <ContextMenu.Separator />
+    <ContextMenu.Item>
+      Copiar
+      <ContextMenu.Shortcut>Ctrl C</ContextMenu.Shortcut>
+    </ContextMenu.Item>
+    <ContextMenu.Item variant="destructive">Eliminar</ContextMenu.Item>
+  </ContextMenu.Content>
+</ContextMenu>
+```
+
+El menú se abre en el puntero con clic derecho, con pulsación larga en pantallas táctiles, y desde el teclado con Shift F10 o la tecla de menú contextual. Se ajusta solo al viewport, y las flechas, Home, End y Escape funcionan como en cualquier menú.
+
+## Composición
+
+Usa la siguiente composición para construir un `ContextMenu`:
+
+```tree
+ContextMenu
+├── ContextMenu.Trigger
+└── ContextMenu.Content
+    ├── ContextMenu.Label
+    ├── ContextMenu.Item
+    │   └── ContextMenu.Shortcut
+    └── ContextMenu.Separator
+```
+
+## Referencia de API
+
+### ContextMenu
+
+| Prop           | Type                      | Default | Description                              |
+| -------------- | ------------------------- | ------- | ---------------------------------------- |
+| `onOpenChange` | `(open: boolean) => void` | -       | Callback cuando cambia el estado abierto |
+| `className`    | `string`                  | -       | Clases CSS adicionales                   |
+
+### ContextMenu.Trigger
+
+| Prop        | Type      | Default | Description                                 |
+| ----------- | --------- | ------- | ------------------------------------------- |
+| `disabled`  | `boolean` | `false` | Ignora el clic derecho y la pulsación larga |
+| `className` | `string`  | -       | Clases CSS adicionales                      |
+
+### ContextMenu.Item
+
+| Prop        | Type                         | Default     | Description             |
+| ----------- | ---------------------------- | ----------- | ----------------------- |
+| `disabled`  | `boolean`                    | `false`     | Deshabilita el elemento |
+| `variant`   | `'default' \| 'destructive'` | `'default'` | Estilo visual           |
+| `onSelect`  | `() => void`                 | -           | Callback al seleccionar |
+| `className` | `string`                     | -           | Clases CSS adicionales  |
+
+### ContextMenu.Label
+
+| Prop       | Type        | Default | Description       |
+| ---------- | ----------- | ------- | ----------------- |
+| `children` | `ReactNode` | -       | Texto de etiqueta |
+
+### ContextMenu.Shortcut
+
+Pista alineada a la derecha dentro de un elemento. Es solo visual, no registra el atajo.
+
+### ContextMenu.Separator
+
+Separador visual entre elementos del menú. Sin props.

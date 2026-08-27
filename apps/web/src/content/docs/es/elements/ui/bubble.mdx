@@ -1,0 +1,82 @@
+---
+title: Bubble
+description: La superficie del mensaje en interfaces de chat, con variantes y reacciones.
+published: true
+date: 2026-08-27
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="bubble" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="bubble" />
+
+## Anatomía
+
+```tsx
+import { Bubble } from '@/components/ui/bubble';
+```
+
+```tsx
+<Bubble variant="secondary" align="start">
+  <Bubble.Content>Hola, ¿cómo va el release?</Bubble.Content>
+  <Bubble.Reactions>
+    <span>👍</span>
+  </Bubble.Reactions>
+</Bubble>
+```
+
+Bubble se limita a la superficie del mensaje. El nombre del remitente, la hora, los avatares y las acciones pertenecen a [Message](/docs/elements/ui/message), que compone burbujas en una fila de conversación completa.
+
+## Composición
+
+Usa la siguiente composición para construir un `Bubble`:
+
+```tree
+Bubble.Group
+└── Bubble
+    ├── Bubble.Content
+    └── Bubble.Reactions
+```
+
+## Variantes
+
+Siete variantes cubren ambos lados de una conversación y los estados alrededor: `default` para el usuario actual, `secondary` y `muted` para el otro lado, `tinted` para un lavado sutil del color primario, `outline` y `ghost` para contenido discreto, y `destructive` para errores.
+
+<ComponentPreview component="bubble" demo="variants" />
+
+## Referencia de API
+
+### Bubble
+
+| Prop        | Type                                                                                       | Default     | Description                         |
+| ----------- | ------------------------------------------------------------------------------------------ | ----------- | ----------------------------------- |
+| `variant`   | `'default' \| 'secondary' \| 'muted' \| 'tinted' \| 'outline' \| 'ghost' \| 'destructive'` | `'default'` | Tratamiento visual de la superficie |
+| `align`     | `'start' \| 'end'`                                                                         | `'start'`   | Lado al que se pega la burbuja      |
+| `className` | `string`                                                                                   | -           | Clases CSS adicionales              |
+
+### Bubble.Content
+
+| Prop        | Type      | Default | Description                                           |
+| ----------- | --------- | ------- | ----------------------------------------------------- |
+| `asChild`   | `boolean` | `false` | Fusiona los estilos en el hijo, por ejemplo un enlace |
+| `className` | `string`  | -       | Clases CSS adicionales                                |
+
+### Bubble.Reactions
+
+| Prop        | Type                | Default    | Description                     |
+| ----------- | ------------------- | ---------- | ------------------------------- |
+| `side`      | `'top' \| 'bottom'` | `'bottom'` | Borde que superpone la píldora  |
+| `align`     | `'start' \| 'end'`  | `'end'`    | Anclaje horizontal en ese borde |
+| `className` | `string`            | -          | Clases CSS adicionales          |
+
+### Bubble.Group
+
+| Prop        | Type               | Default   | Description                         |
+| ----------- | ------------------ | --------- | ----------------------------------- |
+| `align`     | `'start' \| 'end'` | `'start'` | Alineación de las burbujas apiladas |
+| `className` | `string`           | -         | Clases CSS adicionales              |

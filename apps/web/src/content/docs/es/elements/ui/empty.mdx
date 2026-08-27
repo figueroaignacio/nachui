@@ -1,0 +1,85 @@
+---
+title: Empty
+description: Estados vacíos con medios, texto y un siguiente paso claro.
+published: true
+date: 2026-08-27
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="empty" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="empty" />
+
+## Anatomía
+
+```tsx
+import { Empty } from '@/components/ui/empty';
+```
+
+```tsx
+<Empty>
+  <Empty.Header>
+    <Empty.Media variant="icon">
+      <FolderIcon />
+    </Empty.Media>
+    <Empty.Title>Aún no hay proyectos</Empty.Title>
+    <Empty.Description>Crea tu primer proyecto para empezar.</Empty.Description>
+  </Empty.Header>
+  <Empty.Content>
+    <Button>Crear proyecto</Button>
+  </Empty.Content>
+</Empty>
+```
+
+## Composición
+
+Usa la siguiente composición para construir un `Empty`:
+
+```tree
+Empty
+├── Empty.Header
+│   ├── Empty.Media
+│   ├── Empty.Title
+│   └── Empty.Description
+└── Empty.Content
+```
+
+## Variantes
+
+### Outline
+
+Un borde discontinuo enmarca el estado vacío, útil en layouts densos donde el área en blanco necesita un límite.
+
+<ComponentPreview component="empty" demo="outline" />
+
+## Referencia de API
+
+### Empty
+
+| Prop        | Type                               | Default     | Description                                       |
+| ----------- | ---------------------------------- | ----------- | ------------------------------------------------- |
+| `variant`   | `'default' \| 'outline' \| 'card'` | `'default'` | Marco del estado: borde discontinuo o una tarjeta |
+| `className` | `string`                           | -           | Clases CSS adicionales                            |
+
+### Empty.Media
+
+| Prop        | Type                  | Default     | Description                                         |
+| ----------- | --------------------- | ----------- | --------------------------------------------------- |
+| `variant`   | `'default' \| 'icon'` | `'default'` | `icon` envuelve el hijo en un cuadro de fondo muted |
+| `className` | `string`              | -           | Clases CSS adicionales                              |
+
+### Empty.Title
+
+| Prop        | Type                                   | Default | Description            |
+| ----------- | -------------------------------------- | ------- | ---------------------- |
+| `as`        | `'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6'` | `'h3'`  | Nivel de encabezado    |
+| `className` | `string`                               | -       | Clases CSS adicionales |
+
+### Empty.Header, Empty.Description, Empty.Content
+
+Contenedores de layout para el texto y las acciones. Cada uno acepta `className`.

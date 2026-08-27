@@ -1,0 +1,108 @@
+---
+title: Pagination
+description: Navegación entre páginas con enlaces anterior y siguiente, números y elipsis.
+published: true
+date: 2026-08-27
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="pagination" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="pagination" />
+
+## Anatomía
+
+```tsx
+import { Pagination } from '@/components/ui/pagination';
+```
+
+```tsx
+<Pagination>
+  <Pagination.Content>
+    <Pagination.Item>
+      <Pagination.Previous href="#">Anterior</Pagination.Previous>
+    </Pagination.Item>
+    <Pagination.Item>
+      <Pagination.Link href="#">1</Pagination.Link>
+    </Pagination.Item>
+    <Pagination.Item>
+      <Pagination.Link href="#" isActive>
+        2
+      </Pagination.Link>
+    </Pagination.Item>
+    <Pagination.Item>
+      <Pagination.Ellipsis />
+    </Pagination.Item>
+    <Pagination.Item>
+      <Pagination.Next href="#">Siguiente</Pagination.Next>
+    </Pagination.Item>
+  </Pagination.Content>
+</Pagination>
+```
+
+`Pagination.Link` renderiza un ancla cuando pasas `href` y un botón cuando lo omites, así el mismo markup sirve para páginas con rutas y para estado del cliente. Con Next.js, envuelve las partes de enlace o cambia el ancla por `next/link` en tu copia del componente.
+
+## Composición
+
+Usa la siguiente composición para construir una `Pagination`:
+
+```tree
+Pagination
+└── Pagination.Content
+    ├── Pagination.Item
+    │   └── Pagination.Previous
+    ├── Pagination.Item
+    │   └── Pagination.Link
+    ├── Pagination.Item
+    │   └── Pagination.Ellipsis
+    └── Pagination.Item
+        └── Pagination.Next
+```
+
+## Variantes
+
+### Compacta
+
+Anterior y siguiente solo con iconos alrededor de un indicador de página, para barras de herramientas y espacios reducidos.
+
+<ComponentPreview component="pagination" demo="compact" />
+
+## Referencia de API
+
+### Pagination
+
+| Prop        | Type     | Default        | Description                |
+| ----------- | -------- | -------------- | -------------------------- |
+| `label`     | `string` | `'Pagination'` | Nombre accesible del `nav` |
+| `className` | `string` | -              | Clases CSS adicionales     |
+
+### Pagination.Link
+
+| Prop        | Type                  | Default  | Description                                   |
+| ----------- | --------------------- | -------- | --------------------------------------------- |
+| `href`      | `string`              | -        | Renderiza un ancla; omítelo para un botón     |
+| `isActive`  | `boolean`             | `false`  | Marca la página actual con `aria-current`     |
+| `disabled`  | `boolean`             | `false`  | Deshabilita el control                        |
+| `size`      | `'default' \| 'icon'` | `'icon'` | Número cuadrado o enlace de texto con padding |
+| `className` | `string`              | -        | Clases CSS adicionales                        |
+
+### Pagination.Previous / Pagination.Next
+
+| Prop       | Type        | Default                 | Description                    |
+| ---------- | ----------- | ----------------------- | ------------------------------ |
+| `iconOnly` | `boolean`   | `false`                 | Oculta visualmente la etiqueta |
+| `children` | `ReactNode` | `'Previous'` / `'Next'` | Texto de la etiqueta           |
+
+Ambos aceptan además todas las props de `Pagination.Link` excepto `size`.
+
+### Pagination.Ellipsis
+
+| Prop        | Type     | Default        | Description                     |
+| ----------- | -------- | -------------- | ------------------------------- |
+| `label`     | `string` | `'More pages'` | Texto para lectores de pantalla |
+| `className` | `string` | -              | Clases CSS adicionales          |
