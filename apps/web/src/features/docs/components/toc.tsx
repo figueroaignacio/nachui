@@ -82,10 +82,7 @@ export function Toc({ toc }: TocProps) {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
     >
-      <Typography
-        variant="p"
-        className="text-muted-foreground/60 text-[10px] font-semibold tracking-[0.15em] uppercase"
-      >
+      <Typography variant="p" className="section-label">
         {t('label')}
       </Typography>
 

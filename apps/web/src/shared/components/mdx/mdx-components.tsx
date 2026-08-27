@@ -62,7 +62,11 @@ const H6 = createHeading('h6');
 function Paragraph({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('text-foreground/80 text-[15px] leading-[1.7]', 'not-first:mt-4', className)}
+      className={cn(
+        'text-foreground/80 font-serif text-[17px] leading-[1.75]',
+        'not-first:mt-4',
+        className,
+      )}
       {...props}
     />
   );
@@ -109,7 +113,7 @@ function ListItem({ className, ...props }: React.HTMLAttributes<HTMLLIElement>) 
   return (
     <li
       className={cn(
-        'text-foreground/80 pl-1 text-[15px] leading-[1.7]',
+        'text-foreground/80 pl-1 font-serif text-[17px] leading-[1.75]',
         '[&>ol]:my-2 [&>ul]:my-2',
         className,
       )}

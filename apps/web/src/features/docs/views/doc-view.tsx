@@ -50,10 +50,8 @@ export function DocView({ doc }: DocViewProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(techArticleSchema) }}
       />
-      <Container size="lg" className="px-0">
+      <Container size="md" className="px-0">
         <Stack as="article" className="w-full min-w-0">
-          {/* Direct child of the article on purpose: a sticky element only
-              travels inside its own parent's box. */}
           <MobileToc toc={tocContent} />
           <div className="mt-6 mb-8">
             <div>
