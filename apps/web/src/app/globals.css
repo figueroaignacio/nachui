@@ -63,8 +63,8 @@ body {
 }
 
 @media (min-width: 48rem) {
-  /* Short of the panel by one gutter, so the frame's right rail lands exactly
-     on the panel's left border and the two read as a single line. */
+  /* Short of the panel by one gutter, so the content keeps its usual breathing
+     room on the right instead of being squeezed against the panel. */
   body:has([data-chat-open='true']) {
     padding-right: calc(var(--chat-width) - var(--frame-gutter));
   }
@@ -76,7 +76,7 @@ body {
   }
 
   body:has([data-chat-open='true']) [data-docs-grid] {
-    grid-template-columns: 260px 1fr 0px;
+    grid-template-columns: 260px minmax(0, 1fr) 0px;
   }
 
   body:has([data-chat-open='true']) [data-doc-toc] {

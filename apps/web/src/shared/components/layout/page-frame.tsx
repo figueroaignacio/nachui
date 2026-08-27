@@ -6,9 +6,10 @@ type PageFrameProps = {
 };
 
 /**
- * Full-width page frame: keeps the fluid layout but draws a hairline rail down
- * each side of the content. Horizontal separators inside it should use the
- * `rule-bleed` utility so they cross the rails out to the viewport edges.
+ * Full-width page frame: sets the gutter and the padding that everything on the
+ * page aligns to. It draws nothing itself. Horizontal separators inside it
+ * should use the `rule-bleed` utility so they run out to the viewport edges,
+ * which is where the layout's structure now comes from.
  */
 export function PageFrame({ children, className }: PageFrameProps) {
   return (
