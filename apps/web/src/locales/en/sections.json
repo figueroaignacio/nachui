@@ -85,20 +85,20 @@
     },
     "showcase": {
       "label": "Live examples",
-      "title": "Built with NachUI",
-      "description": "Every panel below is the real component running on this page, not a screenshot.",
+      "title": "There is no library underneath",
+      "description": "Most catalogs are a styling layer over a headless kit you also have to install. These are written from scratch, and every panel below is the real component running on this page.",
       "cta": "Browse all UI elements",
       "featured": {
         "badge": "Featured",
         "title": "A dashboard panel with four slots and no chart library",
-        "description": "Contribution History is one Card composed of header, content and footer slots. The bars are plain divs sized from design tokens — read it top to bottom, change any line.",
+        "description": "Contribution History is one Card composed of header, content and footer slots. The bars are plain divs sized from design tokens. Read it top to bottom, change any line.",
         "meta": ["Card.Header", "Card.Content", "Card.Footer", "Button"]
       }
     },
     "assistant": {
       "label": "Built-in assistant",
       "title": "Meet the NachUI AI Assistant",
-      "description": "Every docs page ships with an assistant that has read the whole codebase. Ask it what a component does, how to compose it, or why a token exists — it answers from the actual source, not from a guess.",
+      "description": "Every docs page ships with an assistant that has read the whole codebase. Ask it what a component does, how to compose it, or why a token exists. It answers from the actual source, not from a guess.",
       "tooltip": "I know everything about this",
       "cta": "Ask it something",
       "roles": [
@@ -182,7 +182,7 @@
       },
       {
         "question": "What makes NachUI different from other libraries?",
-        "answer": "No black boxes. Unlike traditional libraries that hide logic behind abstractions, NachUI gives you the raw source code. It's a complete Design System—tokens, patterns, and guides—that you can audit, modify, and extend as your project evolves."
+        "answer": "No black boxes. Unlike traditional libraries that hide logic behind abstractions, NachUI gives you the raw source code. It's a complete Design System with tokens, patterns and guides, and you can audit, modify and extend all of it as your project evolves."
       },
       {
         "question": "Can I use NachUI in commercial projects?",
@@ -216,7 +216,7 @@
     "content1": "I built NachUI with a simple goal: to learn.",
     "content2": "What started as just a couple of basic components quickly evolved. Curiosity drove me to integrate native AI capabilities, develop a full backend, build a smart CLI, and implement comprehensive testing.",
     "content3": "But beyond the technical growth, my goal was always to create something genuinely useful. Something free of bloat, free of lock-in, and built with absolute care.",
-    "content4": "This project is a labor of love—what we call in Spanish \"amor al arte\""
+    "content4": "This project is a labor of love, what we call in Spanish \"amor al arte\""
   },
   "sprites": {
     "eyebrow": "NachUI · Sprite",

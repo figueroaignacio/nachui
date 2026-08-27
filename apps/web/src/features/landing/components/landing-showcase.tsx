@@ -1,4 +1,3 @@
-import { AiWalker } from '@/features/chat/ui/ai-walker';
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
@@ -10,12 +9,7 @@ export function LandingShowcase() {
 
   return (
     <section className="w-full pb-10" aria-labelledby="showcase-title">
-      <div className="relative">
-        <div className="rule-bleed" />
-        <div className="ai-walk-track" aria-hidden="true">
-          <AiWalker width={48} />
-        </div>
-      </div>
+      <div className="rule-bleed" />
       <div className="scroll-reveal flex flex-col gap-3 pt-6 pb-10 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
         <div className="max-w-xl">
           <p className="section-label">{t('label')}</p>

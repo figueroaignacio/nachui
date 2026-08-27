@@ -86,8 +86,8 @@
     },
     "showcase": {
       "label": "Ejemplos en vivo",
-      "title": "Hecho con NachUI",
-      "description": "Cada panel de abajo es el componente real corriendo en esta página, no una captura.",
+      "title": "No hay una librería abajo",
+      "description": "La mayoría de los catálogos son una capa de estilos sobre un kit headless que también tenés que instalar. Estos están escritos desde cero, y cada panel de abajo es el componente real corriendo en esta página.",
       "cta": "Ver todos los elementos UI",
       "featured": {
         "badge": "Destacado",
@@ -99,7 +99,7 @@
     "assistant": {
       "label": "Asistente integrado",
       "title": "Conocé al asistente de IA de NachUI",
-      "description": "Cada página de la documentación viene con un asistente que leyó todo el código. Preguntale qué hace un componente, cómo componerlo o por qué existe un token — responde desde el código real, no adivinando.",
+      "description": "Cada página de la documentación viene con un asistente que leyó todo el código. Preguntale qué hace un componente, cómo componerlo o por qué existe un token. Responde desde el código real, no adivinando.",
       "tooltip": "Sé todo sobre esto",
       "cta": "Preguntale algo",
       "roles": [
