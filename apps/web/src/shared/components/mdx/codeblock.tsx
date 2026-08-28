@@ -1,6 +1,7 @@
 'use client';
 
 import { fontCode } from '@/lib/font';
+import { Frame } from '@repo/ui/components/frame';
 import { cn } from '@repo/ui/lib/cn';
 import { Highlight, type PrismTheme } from 'prism-react-renderer';
 import { useTranslations } from 'next-intl';
@@ -47,6 +48,10 @@ interface CodeBlockProps {
   showLineNumbers?: boolean;
   /** Start clipped behind a fade, with a button that expands into a scroll area. */
   collapsible?: boolean;
+  /** Opt-in: wrap the block in a Frame with a header row and copy button. */
+  framed?: boolean;
+  /** Optional file name shown in the framed header. */
+  title?: string;
 }
 
 export function CodeBlock({
@@ -55,6 +60,8 @@ export function CodeBlock({
   className,
   showLineNumbers = true,
   collapsible = false,
+  framed = false,
+  title,
 }: CodeBlockProps) {
   const t = useTranslations('components.codeblockWrapper');
   const [isExpanded, setIsExpanded] = useState(false);
@@ -62,14 +69,19 @@ export function CodeBlock({
   const codeString = code.trim();
   const isCollapsed = collapsible && !isExpanded;
 
-  return (
+  const block = (
     <div
-      className={cn('border-rule bg-code relative overflow-hidden rounded-md border', className)}
+      className={cn(
+        'bg-code relative overflow-hidden',
+        framed ? 'rounded-lg' : cn('border-rule rounded-md border', className),
+      )}
     >
-      <CopyButton
-        value={codeString}
-        className="bg-code/80 absolute top-2.5 right-2.5 z-20 rounded-sm p-1.5 backdrop-blur-sm"
-      />
+      {!framed && (
+        <CopyButton
+          value={codeString}
+          className="bg-code/80 absolute top-2.5 right-2.5 z-20 rounded-sm p-1.5 backdrop-blur-sm"
+        />
+      )}
 
       {/* Two nested scrollports, one per axis. The outer keeps its vertical
           scrollbar (the only hint that a long file continues below); the inner
@@ -130,6 +142,20 @@ export function CodeBlock({
           </div>
         ))}
     </div>
+  );
+
+  if (!framed) return block;
+
+  return (
+    <Frame spacing="sm" className={className}>
+      <Frame.Header className="min-h-0 flex-row items-center justify-between gap-3 py-1 pr-1 pl-3">
+        <span className="text-muted-foreground min-w-0 truncate font-mono text-[11px]">
+          {title}
+        </span>
+        <CopyButton value={codeString} className="rounded-sm p-1.5" />
+      </Frame.Header>
+      <Frame.Panel className="bg-code border-border p-0">{block}</Frame.Panel>
+    </Frame>
   );
 }
 

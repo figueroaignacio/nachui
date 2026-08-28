@@ -1,6 +1,8 @@
 'use client';
 
+import { Frame } from '@repo/ui/components/frame';
 import { Typography } from '@repo/ui/components/typography';
+import { cn } from '@repo/ui/lib/cn';
 import { CodeBlock } from './codeblock';
 
 interface ComponentPreviewClientProps {
@@ -28,21 +30,22 @@ export function ComponentPreviewClient({
 
   return (
     <div data-no-select className={className}>
-      <div className="border-rule mt-5 overflow-hidden rounded-md border">
-        <div
-          className={`flex min-h-100 items-center ${alignmentClasses[align]} p-8 *:min-w-0 sm:p-12`}
+      <Frame className="mt-5">
+        <Frame.Panel
+          className={cn(
+            'flex min-h-100 items-center p-8 *:min-w-0 sm:p-12',
+            alignmentClasses[align],
+          )}
         >
           {componentPreview}
-        </div>
+        </Frame.Panel>
         {description && (
-          <div className="border-rule bg-muted/30 border-t px-6 py-4">
-            <Typography variant="p" className="text-muted-foreground text-sm">
-              {description}
-            </Typography>
-          </div>
+          <Frame.Header className="py-2">
+            <Frame.Description className="text-sm">{description}</Frame.Description>
+          </Frame.Header>
         )}
-        <div className="border-rule border-t">
-          {code ? (
+        {code ? (
+          <Frame.Panel className="bg-code p-0">
             <CodeBlock
               code={code}
               language="tsx"
@@ -50,15 +53,15 @@ export function ComponentPreviewClient({
               collapsible
               className="rounded-none border-0"
             />
-          ) : (
-            <div className="border-border bg-destructive/10 p-6">
-              <Typography variant="p" className="text-destructive text-sm font-medium">
-                ⚠️ Error al leer el archivo: {filePath || 'No especificado'}
-              </Typography>
-            </div>
-          )}
-        </div>
-      </div>
+          </Frame.Panel>
+        ) : (
+          <Frame.Panel className="bg-destructive-surface border-destructive-border">
+            <Typography variant="p" className="text-destructive-text text-sm font-medium">
+              No se pudo leer el archivo: {filePath || 'sin ruta'}
+            </Typography>
+          </Frame.Panel>
+        )}
+      </Frame>
     </div>
   );
 }
