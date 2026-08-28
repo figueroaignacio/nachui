@@ -36,7 +36,6 @@ import { Default as DialogDefault } from '@repo/ui/src/demos/dialog/default';
 import { Default as DrawerDefault } from '@repo/ui/src/demos/drawer/default';
 import { Default as DropdownMenuDefault } from '@repo/ui/src/demos/dropdown-menu/default';
 import { Default as EmptyDefault } from '@repo/ui/src/demos/empty/default';
-import { Default as FilesDefault } from '@repo/ui/src/demos/files/default';
 import { Default as FlexDefault } from '@repo/ui/src/demos/flex/default';
 import { Default as FrameDefault } from '@repo/ui/src/demos/frame/default';
 import { Default as GridDefault } from '@repo/ui/src/demos/grid/default';
@@ -60,6 +59,7 @@ import { Default as TableDefault } from '@repo/ui/src/demos/table/default';
 import { Default as TabsDefault } from '@repo/ui/src/demos/tabs/default';
 import { Default as ToastDefault } from '@repo/ui/src/demos/toast/default';
 import { Default as TooltipDefault } from '@repo/ui/src/demos/tooltip/default';
+import { Default as TreeDefault } from '@repo/ui/src/demos/tree/default';
 import { Default as TypographyDefault } from '@repo/ui/src/demos/typography/default';
 import { Destructive as BadgeDestructive } from '@repo/ui/src/demos/badge/destructive';
 import { Destructive as ButtonDestructive } from '@repo/ui/src/demos/button/destructive';
@@ -74,10 +74,12 @@ import { Ghost as CardGhost } from '@repo/ui/src/demos/card/ghost';
 import { Grouped as MessageGrouped } from '@repo/ui/src/demos/message/grouped';
 import { GroupedItems as SelectGroupedItems } from '@repo/ui/src/demos/select/grouped-items';
 import { Headings as TypographyHeadings } from '@repo/ui/src/demos/typography/headings';
+import { Icons as TreeIcons } from '@repo/ui/src/demos/tree/icons';
 import { Indeterminate as ProgressIndeterminate } from '@repo/ui/src/demos/progress/indeterminate';
 import { Info as BannerInfo } from '@repo/ui/src/demos/banner/info';
 import { Info as CalloutInfo } from '@repo/ui/src/demos/callout/info';
 import { LeadMuted as TypographyLeadMuted } from '@repo/ui/src/demos/typography/lead-muted';
+import { Lines as TreeLines } from '@repo/ui/src/demos/tree/lines';
 import { Link as ButtonLink } from '@repo/ui/src/demos/button/link';
 import { Multiple as AccordionMultiple } from '@repo/ui/src/demos/accordion/multiple';
 import { Outline as BadgeOutline } from '@repo/ui/src/demos/badge/outline';
@@ -85,6 +87,7 @@ import { Outline as ButtonOutline } from '@repo/ui/src/demos/button/outline';
 import { Outline as CardOutline } from '@repo/ui/src/demos/card/outline';
 import { Outline as EmptyOutline } from '@repo/ui/src/demos/empty/outline';
 import { Parts as SpriteParts } from '@repo/ui/src/demos/sprite/parts';
+import { PlusMinus as TreePlusMinus } from '@repo/ui/src/demos/tree/plus-minus';
 import { Positions as DrawerPositions } from '@repo/ui/src/demos/drawer/positions';
 import { Positions as ToastPositions } from '@repo/ui/src/demos/toast/positions';
 import { Positions as TooltipPositions } from '@repo/ui/src/demos/tooltip/positions';
@@ -225,9 +228,6 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
     default: EmptyDefault,
     outline: EmptyOutline,
   },
-  files: {
-    default: FilesDefault,
-  },
   flex: {
     default: FlexDefault,
   },
@@ -331,6 +331,12 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
   tooltip: {
     default: TooltipDefault,
     positions: TooltipPositions,
+  },
+  tree: {
+    default: TreeDefault,
+    icons: TreeIcons,
+    lines: TreeLines,
+    'plus-minus': TreePlusMinus,
   },
   typography: {
     'custom-tag': TypographyCustomTag,

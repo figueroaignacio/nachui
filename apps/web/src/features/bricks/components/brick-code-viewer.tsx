@@ -2,9 +2,11 @@
 
 import { CodeBlock } from '@/components/mdx/codeblock';
 import type { BrickSourceFile } from '@/features/bricks/lib/get-brick-source';
-import { Files } from '@repo/ui/components/files';
+import { File01Icon, Folder01Icon, Folder02Icon } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Tree } from '@repo/ui/components/tree';
 import { Typography } from '@repo/ui/components/typography';
-import { cn } from '@repo/ui/lib/cn';
+import type * as React from 'react';
 import { useMemo, useState } from 'react';
 
 interface BrickCodeViewerProps {
@@ -92,42 +94,40 @@ function buildTree(files: BrickSourceFile[]): TreeNode[] {
   return root;
 }
 
-function FileNode({
-  node,
-  activeFile,
-  onSelect,
-}: {
-  node: TreeNode;
-  activeFile: string;
-  onSelect: (path: string) => void;
-}) {
-  const isFile = node.type === 'file';
-  const isActive = isFile && node.path === activeFile;
+const folderClosed = <HugeiconsIcon icon={Folder01Icon} size={16} />;
+const folderOpen = <HugeiconsIcon icon={Folder02Icon} size={16} />;
+const fileIcon = <HugeiconsIcon icon={File01Icon} size={16} />;
 
-  if (isFile) {
+function collectFolderPaths(nodes: TreeNode[]): string[] {
+  return nodes.flatMap((node) =>
+    node.type === 'folder' ? [node.path, ...collectFolderPaths(node.children ?? [])] : [],
+  );
+}
+
+function renderNode(node: TreeNode): React.ReactNode {
+  if (node.type === 'file') {
     return (
-      <Files.File
-        name={node.name}
-        onClick={() => onSelect(node.path)}
-        className={cn(
-          'transition-colors',
-          isActive
-            ? 'bg-foreground/10 text-foreground font-medium'
-            : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground',
-        )}
+      <Tree.Item
+        key={node.path}
+        value={node.path}
+        label={node.name}
+        icon={fileIcon}
+        className="text-muted-foreground aria-selected:text-foreground"
       />
     );
   }
 
   return (
-    <Files.Folder
-      name={node.name}
-      className="text-muted-strong hover:text-foreground transition-colors"
+    <Tree.Item
+      key={node.path}
+      value={node.path}
+      label={node.name}
+      icon={folderClosed}
+      iconOpen={folderOpen}
+      className="text-muted-strong"
     >
-      {node.children?.map((child) => (
-        <FileNode key={child.path} node={child} activeFile={activeFile} onSelect={onSelect} />
-      ))}
-    </Files.Folder>
+      {node.children?.map(renderNode)}
+    </Tree.Item>
   );
 }
 
@@ -152,18 +152,14 @@ export function BrickCodeViewer({ files }: BrickCodeViewerProps) {
           </Typography>
         </div>
         <div className="flex-1 overflow-auto py-2">
-          <Files
-            defaultValue={activeFile.replace(getCommonPathPrefix(files.map((f) => f.filePath)), '')}
+          <Tree
+            selected={activeFile}
+            onSelectedChange={setActiveFile}
+            defaultExpanded={collectFolderPaths(tree)}
+            label="Brick files"
           >
-            {tree.map((node) => (
-              <FileNode
-                key={node.path}
-                node={node}
-                activeFile={activeFile}
-                onSelect={setActiveFile}
-              />
-            ))}
-          </Files>
+            {tree.map(renderNode)}
+          </Tree>
         </div>
       </div>
       <div className="relative flex-1 overflow-hidden">

@@ -156,32 +156,32 @@ Agrega las variables de color en tu archivo CSS global (típicamente `globals.cs
 Aquí está la estructura de carpetas recomendada para organizar los componentes de NachUI en tu proyecto:
 
 <div className="mt-6">
-  <Files defaultValue="src/components/ui">
-    <Folder name="src">
-      <Folder name="app">
-        <File name="layout.tsx" />
-        <File name="page.tsx" />
-        <File name="globals.css" />
-      </Folder>
-      <Folder name="components">
-        <Folder name="ui">
-          <File name="button.tsx" />
-          <File name="card.tsx" />
-          <File name="tabs.tsx" />
-          <File name="..." />
-        </Folder>
-        <File name="header.tsx" />
-        <File name="footer.tsx" />
-      </Folder>
-      <Folder name="lib">
-        <File name="cn.ts" />
-        <File name="utils.ts" />
-      </Folder>
-    </Folder>
-    <File name="package.json" />
-    <File name="tailwind.config.ts" />
-    <File name="tsconfig.json" />
-  </Files>
+  <Tree defaultExpanded={['src', 'src/components', 'src/components/ui']}>
+    <TreeItem value="src" label="src">
+      <TreeItem value="src/app" label="app">
+        <TreeItem value="src/app/layout.tsx" label="layout.tsx" />
+        <TreeItem value="src/app/page.tsx" label="page.tsx" />
+        <TreeItem value="src/app/globals.css" label="globals.css" />
+      </TreeItem>
+      <TreeItem value="src/components" label="components">
+        <TreeItem value="src/components/ui" label="ui">
+          <TreeItem value="src/components/ui/button.tsx" label="button.tsx" />
+          <TreeItem value="src/components/ui/card.tsx" label="card.tsx" />
+          <TreeItem value="src/components/ui/tabs.tsx" label="tabs.tsx" />
+          <TreeItem value="src/components/ui/more" label="..." />
+        </TreeItem>
+        <TreeItem value="src/components/header.tsx" label="header.tsx" />
+        <TreeItem value="src/components/footer.tsx" label="footer.tsx" />
+      </TreeItem>
+      <TreeItem value="src/lib" label="lib">
+        <TreeItem value="src/lib/cn.ts" label="cn.ts" />
+        <TreeItem value="src/lib/utils.ts" label="utils.ts" />
+      </TreeItem>
+    </TreeItem>
+    <TreeItem value="package.json" label="package.json" />
+    <TreeItem value="tailwind.config.ts" label="tailwind.config.ts" />
+    <TreeItem value="tsconfig.json" label="tsconfig.json" />
+  </Tree>
 </div>
 
 **Directorios clave:**

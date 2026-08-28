@@ -1,0 +1,91 @@
+---
+title: Tree
+description: Hierarchical data with expandable nodes, selection and keyboard navigation.
+published: true
+date: 2026-08-27
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="tree" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="tree" />
+
+## Anatomy
+
+```tsx
+import { Tree } from '@/components/ui/tree';
+```
+
+```tsx
+<Tree defaultExpanded={['src']}>
+  <Tree.Item value="src" label="src">
+    <Tree.Item value="src/index.ts" label="index.ts" />
+  </Tree.Item>
+  <Tree.Item value="package.json" label="package.json" />
+</Tree>
+```
+
+An item with children is a branch: clicking it toggles expansion. An item without children is a leaf: clicking it selects it and fires `onSelectedChange` on the root. Arrow keys walk the visible rows, ArrowRight expands, ArrowLeft collapses or jumps to the parent, Home and End jump to the edges.
+
+## Composition
+
+Use the following composition to build a `Tree`:
+
+```tree
+Tree
+└── Tree.Item
+    └── Tree.Item
+```
+
+## Variants
+
+### Lines
+
+`showLines` draws a guide line along each level.
+
+<ComponentPreview component="tree" demo="lines" />
+
+### Icons
+
+Pass `icon` for every node and `iconOpen` for branches that change while expanded, like folders.
+
+<ComponentPreview component="tree" demo="icons" />
+
+### Plus and minus
+
+`toggleIcon="plus-minus"` swaps the chevron for plus and minus toggles.
+
+<ComponentPreview component="tree" demo="plus-minus" />
+
+## API Reference
+
+### Tree
+
+| Prop               | Type                        | Default     | Description                      |
+| ------------------ | --------------------------- | ----------- | -------------------------------- |
+| `defaultExpanded`  | `string[]`                  | `[]`        | Branch values expanded on mount  |
+| `defaultSelected`  | `string`                    | -           | Initially selected leaf          |
+| `selected`         | `string`                    | -           | Controlled selected leaf         |
+| `onSelectedChange` | `(value: string) => void`   | -           | Callback when a leaf is selected |
+| `indent`           | `number`                    | `16`        | Pixels of indentation per level  |
+| `toggleIcon`       | `'chevron' \| 'plus-minus'` | `'chevron'` | Expand and collapse icon style   |
+| `showLines`        | `boolean`                   | `false`     | Draw guide lines between levels  |
+| `label`            | `string`                    | `'Tree'`    | Accessible name for the tree     |
+| `className`        | `string`                    | -           | Additional CSS classes           |
+
+### Tree.Item
+
+| Prop        | Type         | Default | Description                                    |
+| ----------- | ------------ | ------- | ---------------------------------------------- |
+| `value`     | `string`     | -       | Unique value, used for expansion and selection |
+| `label`     | `ReactNode`  | -       | Row content                                    |
+| `icon`      | `ReactNode`  | -       | Leading icon                                   |
+| `iconOpen`  | `ReactNode`  | -       | Icon while the branch is expanded              |
+| `disabled`  | `boolean`    | `false` | Disable the row                                |
+| `onSelect`  | `() => void` | -       | Callback when this leaf is selected            |
+| `className` | `string`     | -       | Additional CSS classes                         |

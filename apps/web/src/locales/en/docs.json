@@ -150,11 +150,6 @@
           "badge": "new"
         },
         {
-          "title": "Files",
-          "href": "/docs/elements/ui/files",
-          "description": ""
-        },
-        {
           "title": "Frame",
           "href": "/docs/elements/ui/frame",
           "description": "A structured container that nests panels, like a card inside a card.",
@@ -258,6 +253,12 @@
           "title": "Tooltip",
           "href": "/docs/elements/ui/tooltip",
           "description": "A popup that displays contextual information associated with an element when it receives keyboard focus or when the user hovers over it with the mouse."
+        },
+        {
+          "title": "Tree",
+          "href": "/docs/elements/ui/tree",
+          "description": "Hierarchical data with expandable nodes, selection and keyboard navigation.",
+          "badge": "new"
         },
         {
           "title": "Typography",

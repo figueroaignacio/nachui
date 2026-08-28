@@ -27,7 +27,6 @@ export const COMPONENT_REGISTRY = {
   drawer: 'packages/ui/src/components/drawer.tsx',
   'dropdown-menu': 'packages/ui/src/components/dropdown-menu.tsx',
   empty: 'packages/ui/src/components/empty.tsx',
-  files: 'packages/ui/src/components/files.tsx',
   flex: 'packages/ui/src/layout/flex.tsx',
   frame: 'packages/ui/src/components/frame.tsx',
   grid: 'packages/ui/src/layout/grid.tsx',
@@ -53,6 +52,7 @@ export const COMPONENT_REGISTRY = {
   tabs: 'packages/ui/src/components/tabs.tsx',
   toast: 'packages/ui/src/components/toast.tsx',
   tooltip: 'packages/ui/src/components/tooltip.tsx',
+  tree: 'packages/ui/src/components/tree.tsx',
   typography: 'packages/ui/src/components/typography.tsx',
 } as const;
 
@@ -76,7 +76,6 @@ export const COMPONENT_FAMILY = {
   drawer: 'ui',
   'dropdown-menu': 'ui',
   empty: 'ui',
-  files: 'ui',
   flex: 'layout',
   frame: 'ui',
   grid: 'layout',
@@ -102,6 +101,7 @@ export const COMPONENT_FAMILY = {
   tabs: 'ui',
   toast: 'ui',
   tooltip: 'ui',
+  tree: 'ui',
   typography: 'ui',
 } as const;
 
@@ -202,9 +202,6 @@ export const DEMO_REGISTRY = {
   empty: {
     default: 'packages/ui/src/demos/empty/default.tsx',
     outline: 'packages/ui/src/demos/empty/outline.tsx',
-  },
-  files: {
-    default: 'packages/ui/src/demos/files/default.tsx',
   },
   flex: {
     default: 'packages/ui/src/demos/flex/default.tsx',
@@ -309,6 +306,12 @@ export const DEMO_REGISTRY = {
   tooltip: {
     default: 'packages/ui/src/demos/tooltip/default.tsx',
     positions: 'packages/ui/src/demos/tooltip/positions.tsx',
+  },
+  tree: {
+    default: 'packages/ui/src/demos/tree/default.tsx',
+    icons: 'packages/ui/src/demos/tree/icons.tsx',
+    lines: 'packages/ui/src/demos/tree/lines.tsx',
+    'plus-minus': 'packages/ui/src/demos/tree/plus-minus.tsx',
   },
   typography: {
     'custom-tag': 'packages/ui/src/demos/typography/custom-tag.tsx',

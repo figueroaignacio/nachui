@@ -150,11 +150,6 @@
           "badge": "new"
         },
         {
-          "title": "Files",
-          "href": "/docs/elements/ui/files",
-          "description": "Un componente de árbol de archivos interactivo para mostrar estructuras jerárquicas de carpetas y archivos."
-        },
-        {
           "title": "Frame",
           "href": "/docs/elements/ui/frame",
           "description": "Un contenedor estructurado que anida paneles, como una card dentro de una card.",
@@ -258,6 +253,12 @@
           "title": "Tooltip",
           "href": "/docs/elements/ui/tooltip",
           "description": "Un popup que muestra información contextual asociada a un elemento."
+        },
+        {
+          "title": "Tree",
+          "href": "/docs/elements/ui/tree",
+          "description": "Datos jerárquicos con nodos expandibles, selección y navegación por teclado.",
+          "badge": "new"
         },
         {
           "title": "Typography",

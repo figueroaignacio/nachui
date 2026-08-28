@@ -1,7 +1,7 @@
 'use client';
 
 import { Accordion } from '@repo/ui/components/accordion';
-import { Files } from '@repo/ui/components/files';
+import { Tree } from '@repo/ui/components/tree';
 import { Table } from '@repo/ui/components/table';
 import { Tabs } from '@repo/ui/components/tabs';
 
@@ -22,6 +22,5 @@ export const MdxTableRow = Table.Row;
 export const MdxTableHead = Table.Head;
 export const MdxTableCell = Table.Cell;
 
-export const MdxFiles = Files;
-export const MdxFolder = Files.Folder;
-export const MdxFile = Files.File;
+export const MdxTree = Tree;
+export const MdxTreeItem = Tree.Item;

@@ -1,0 +1,91 @@
+---
+title: Tree
+description: Datos jerárquicos con nodos expandibles, selección y navegación por teclado.
+published: true
+date: 2026-08-27
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="tree" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="tree" />
+
+## Anatomía
+
+```tsx
+import { Tree } from '@/components/ui/tree';
+```
+
+```tsx
+<Tree defaultExpanded={['src']}>
+  <Tree.Item value="src" label="src">
+    <Tree.Item value="src/index.ts" label="index.ts" />
+  </Tree.Item>
+  <Tree.Item value="package.json" label="package.json" />
+</Tree>
+```
+
+Un item con hijos es una rama: al hacer clic alterna la expansión. Un item sin hijos es una hoja: al hacer clic se selecciona y dispara `onSelectedChange` en la raíz. Las flechas recorren las filas visibles, ArrowRight expande, ArrowLeft colapsa o salta al padre, Home y End van a los extremos.
+
+## Composición
+
+Usa la siguiente composición para construir un `Tree`:
+
+```tree
+Tree
+└── Tree.Item
+    └── Tree.Item
+```
+
+## Variantes
+
+### Líneas
+
+`showLines` dibuja una guía a lo largo de cada nivel.
+
+<ComponentPreview component="tree" demo="lines" />
+
+### Iconos
+
+Pasa `icon` en cada nodo y `iconOpen` en las ramas que cambian al expandirse, como las carpetas.
+
+<ComponentPreview component="tree" demo="icons" />
+
+### Más y menos
+
+`toggleIcon="plus-minus"` cambia el chevron por conmutadores de más y menos.
+
+<ComponentPreview component="tree" demo="plus-minus" />
+
+## Referencia de API
+
+### Tree
+
+| Prop               | Type                        | Default     | Description                             |
+| ------------------ | --------------------------- | ----------- | --------------------------------------- |
+| `defaultExpanded`  | `string[]`                  | `[]`        | Ramas expandidas al montar              |
+| `defaultSelected`  | `string`                    | -           | Hoja seleccionada inicialmente          |
+| `selected`         | `string`                    | -           | Hoja seleccionada en modo controlado    |
+| `onSelectedChange` | `(value: string) => void`   | -           | Callback al seleccionar una hoja        |
+| `indent`           | `number`                    | `16`        | Píxeles de sangría por nivel            |
+| `toggleIcon`       | `'chevron' \| 'plus-minus'` | `'chevron'` | Estilo del icono de expandir y colapsar |
+| `showLines`        | `boolean`                   | `false`     | Dibuja guías entre niveles              |
+| `label`            | `string`                    | `'Tree'`    | Nombre accesible del árbol              |
+| `className`        | `string`                    | -           | Clases CSS adicionales                  |
+
+### Tree.Item
+
+| Prop        | Type         | Default | Description                                   |
+| ----------- | ------------ | ------- | --------------------------------------------- |
+| `value`     | `string`     | -       | Valor único, usado para expansión y selección |
+| `label`     | `ReactNode`  | -       | Contenido de la fila                          |
+| `icon`      | `ReactNode`  | -       | Icono inicial                                 |
+| `iconOpen`  | `ReactNode`  | -       | Icono mientras la rama está expandida         |
+| `disabled`  | `boolean`    | `false` | Deshabilita la fila                           |
+| `onSelect`  | `() => void` | -       | Callback al seleccionar esta hoja             |
+| `className` | `string`     | -       | Clases CSS adicionales                        |
