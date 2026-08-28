@@ -3,9 +3,7 @@
     "title": "Page not found",
     "description": "Sorry, the page you are looking for does not exist or has been moved to another location.",
     "goHome": "Go home",
-    "goDocs": "View documentation",
-    "codeBlockTitle": "docs-router",
-    "codeBlockContent": "// 404: Document not found\n// The router attempted to resolve the page, but {filename} was not found.\n\nconst page = await resolveDoc(''{query}'');\nif (!page) '{'\n  throw new Error(''Documentation page \"{filename}\" not found.'');\n'}'"
+    "goDocs": "View documentation"
   },
   "navigation": [
     {
