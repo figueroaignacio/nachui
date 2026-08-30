@@ -3,16 +3,11 @@
 import { fontCode } from '@/lib/font';
 import { Frame } from '@repo/ui/components/frame';
 import { cn } from '@repo/ui/lib/cn';
-import { Highlight, type PrismTheme } from 'prism-react-renderer';
 import { useTranslations } from 'next-intl';
+import { Highlight, type PrismTheme } from 'prism-react-renderer';
 import { useState } from 'react';
 import { CopyButton } from './copy-button';
 
-/**
- * Token colours resolve from CSS variables rather than a bundled Prism theme,
- * so a block follows light/dark instantly — no `useTheme()`, no mounted gate,
- * and no flash of the wrong palette on hydration.
- */
 const codeTheme: PrismTheme = {
   plain: { color: 'var(--code-plain)', backgroundColor: 'transparent' },
   styles: [
@@ -46,11 +41,8 @@ interface CodeBlockProps {
   language?: string;
   className?: string;
   showLineNumbers?: boolean;
-  /** Start clipped behind a fade, with a button that expands into a scroll area. */
   collapsible?: boolean;
-  /** Opt-in: wrap the block in a Frame with a header row and copy button. */
   framed?: boolean;
-  /** Optional file name shown in the framed header. */
   title?: string;
 }
 
@@ -82,17 +74,10 @@ export function CodeBlock({
           className="bg-code/80 absolute top-2.5 right-2.5 z-20 rounded-sm p-1.5 backdrop-blur-sm"
         />
       )}
-
-      {/* Two nested scrollports, one per axis. The outer keeps its vertical
-          scrollbar (the only hint that a long file continues below); the inner
-          hides the horizontal one while staying fully scrollable by wheel,
-          trackpad, touch and keyboard. Capping the height here is what keeps a
-          long file from stretching the page — expanding swaps the clip for a
-          scroll area, never for growth. */}
       <div
         className={cn(
           'transition-[max-height] duration-400 ease-out motion-reduce:transition-none',
-          isCollapsed ? 'max-h-52 overflow-y-hidden' : 'max-h-[32rem] overflow-y-auto',
+          isCollapsed ? 'max-h-52 overflow-y-hidden' : 'max-h-128 overflow-y-auto',
         )}
       >
         <div
