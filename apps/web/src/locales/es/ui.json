@@ -1,10 +1,6 @@
 {
   "navigation": [
     {
-      "title": "Inicio",
-      "href": "/"
-    },
-    {
       "title": "Documentación",
       "href": "/docs"
     }
@@ -36,5 +32,23 @@
       "description": "Chat, prompts y primitivos de streaming para apps con IA.",
       "badge": "Próximamente"
     }
+  },
+  "resourcesMenu": {
+    "label": "Recursos",
+    "badge": "Pronto",
+    "items": [
+      {
+        "title": "llms.txt",
+        "description": "Todo el catálogo en texto plano para cualquier modelo."
+      },
+      {
+        "title": "MCP Server",
+        "description": "Explora e instala componentes desde tu agente."
+      },
+      {
+        "title": "Agent Skills",
+        "description": "Skills que enseñan a los agentes a construir con NachUI."
+      }
+    ]
   }
 }

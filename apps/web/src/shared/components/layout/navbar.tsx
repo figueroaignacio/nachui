@@ -6,9 +6,11 @@ import { Link, usePathname } from '@/i18n/navigation';
 import type { Navigation } from '@/lib/definitions';
 import {
   DashboardSquare01Icon,
+  File01Icon,
   Layout01Icon,
   PackageIcon,
   PuzzleIcon,
+  ServerStack01Icon,
   SparklesIcon,
 } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -28,12 +30,50 @@ type ElementsMenu = {
   comingSoon?: { title: string; description: string; badge: string };
 };
 
+type ResourcesMenu = {
+  label: string;
+  badge: string;
+  items: { title: string; description: string }[];
+};
+
+const RESOURCE_ICONS = [File01Icon, ServerStack01Icon, SparklesIcon];
+
+function ComingSoonRow({
+  title,
+  description,
+  badge,
+  icon,
+}: {
+  title: string;
+  description: string;
+  badge: string;
+  icon: typeof SparklesIcon;
+}) {
+  return (
+    <div className="flex cursor-default items-start gap-3 rounded-md px-2.5 py-2.5 opacity-60">
+      <span className="border-border bg-background text-muted-foreground flex size-9 shrink-0 items-center justify-center rounded-md border border-dashed">
+        <HugeiconsIcon icon={icon} size={16} strokeWidth={1.6} aria-hidden="true" />
+      </span>
+      <span className="min-w-0">
+        <span className="flex items-center gap-2">
+          <span className="text-foreground text-sm font-medium">{title}</span>
+          <Badge variant="outline" className="text-[10px]">
+            {badge}
+          </Badge>
+        </span>
+        <span className="text-muted-foreground mt-0.5 block truncate text-xs">{description}</span>
+      </span>
+    </div>
+  );
+}
+
 const ELEMENT_ICONS = [DashboardSquare01Icon, Layout01Icon, PuzzleIcon, PackageIcon];
 
 export function Navbar() {
   const t = useTranslations('ui');
   const navigation: Navigation[] = t.raw('navigation');
   const elementsMenu: ElementsMenu = t.raw('elementsMenu');
+  const resourcesMenu: ResourcesMenu = t.raw('resourcesMenu');
   const pathname = usePathname();
 
   const isElementsActive =
@@ -62,9 +102,60 @@ export function Navbar() {
             <Searcher variant="icon" />
           </div>
           <NavigationMenu className="pl-8" aria-label="Main navigation">
+            <NavigationMenu.Item className="flex items-center self-stretch">
+              <NavigationMenu.Trigger
+                className={cn('text-sm', isElementsActive && 'text-foreground')}
+              >
+                {elementsMenu.label}
+              </NavigationMenu.Trigger>
+              <NavigationMenu.Content>
+                {elementsMenu.items.map((menuItem, index) => (
+                  <NavigationMenu.Link
+                    key={menuItem.href}
+                    asChild
+                    title={menuItem.title}
+                    description={menuItem.description}
+                    icon={
+                      <HugeiconsIcon
+                        icon={ELEMENT_ICONS[index] ?? DashboardSquare01Icon}
+                        size={16}
+                        strokeWidth={1.6}
+                        aria-hidden="true"
+                      />
+                    }
+                  >
+                    <Link href={menuItem.href} />
+                  </NavigationMenu.Link>
+                ))}
+                {elementsMenu.comingSoon && (
+                  <ComingSoonRow
+                    title={elementsMenu.comingSoon.title}
+                    description={elementsMenu.comingSoon.description}
+                    badge={elementsMenu.comingSoon.badge}
+                    icon={SparklesIcon}
+                  />
+                )}
+              </NavigationMenu.Content>
+            </NavigationMenu.Item>
+            <NavigationMenu.Item className="flex items-center self-stretch">
+              <NavigationMenu.Trigger className="text-sm">
+                {resourcesMenu.label}
+              </NavigationMenu.Trigger>
+              <NavigationMenu.Content>
+                {resourcesMenu.items.map((item, index) => (
+                  <ComingSoonRow
+                    key={item.title}
+                    title={item.title}
+                    description={item.description}
+                    badge={resourcesMenu.badge}
+                    icon={RESOURCE_ICONS[index] ?? SparklesIcon}
+                  />
+                ))}
+              </NavigationMenu.Content>
+            </NavigationMenu.Item>
             {navigation.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
-              const link = (
+              return (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -77,66 +168,6 @@ export function Navbar() {
                 >
                   {item.title}
                 </Link>
-              );
-
-              if (item.href !== '/docs') return link;
-
-              return (
-                <div key={item.href} className="contents">
-                  {link}
-                  <NavigationMenu.Item className="flex items-center self-stretch">
-                    <NavigationMenu.Trigger
-                      className={cn('text-sm', isElementsActive && 'text-foreground')}
-                    >
-                      {elementsMenu.label}
-                    </NavigationMenu.Trigger>
-                    <NavigationMenu.Content>
-                      {elementsMenu.items.map((menuItem, index) => (
-                        <NavigationMenu.Link
-                          key={menuItem.href}
-                          asChild
-                          title={menuItem.title}
-                          description={menuItem.description}
-                          icon={
-                            <HugeiconsIcon
-                              icon={ELEMENT_ICONS[index] ?? DashboardSquare01Icon}
-                              size={16}
-                              strokeWidth={1.6}
-                              aria-hidden="true"
-                            />
-                          }
-                        >
-                          <Link href={menuItem.href} />
-                        </NavigationMenu.Link>
-                      ))}
-                      {elementsMenu.comingSoon && (
-                        <div className="flex cursor-default items-start gap-3 rounded-md px-2.5 py-2.5 opacity-60">
-                          <span className="border-border bg-background text-muted-foreground flex size-9 shrink-0 items-center justify-center rounded-md border border-dashed">
-                            <HugeiconsIcon
-                              icon={SparklesIcon}
-                              size={16}
-                              strokeWidth={1.6}
-                              aria-hidden="true"
-                            />
-                          </span>
-                          <span className="min-w-0">
-                            <span className="flex items-center gap-2">
-                              <span className="text-foreground text-sm font-medium">
-                                {elementsMenu.comingSoon.title}
-                              </span>
-                              <Badge variant="outline" className="text-[10px]">
-                                {elementsMenu.comingSoon.badge}
-                              </Badge>
-                            </span>
-                            <span className="text-muted-foreground mt-0.5 block truncate text-xs">
-                              {elementsMenu.comingSoon.description}
-                            </span>
-                          </span>
-                        </div>
-                      )}
-                    </NavigationMenu.Content>
-                  </NavigationMenu.Item>
-                </div>
               );
             })}
           </NavigationMenu>

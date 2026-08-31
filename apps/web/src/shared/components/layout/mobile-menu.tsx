@@ -1,6 +1,7 @@
 'use client';
 
 import { NavBadge } from '@/components/common/nav-badge';
+import { Badge } from '@repo/ui/components/badge';
 import { Searcher } from '@/features/docs/components/searcher';
 import { useDialogBehavior } from '@/hooks/use-dialog-behavior';
 import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll';
@@ -26,7 +27,12 @@ export function MobileMenu() {
   const docsNavigation = t.raw('docs.navigation') as DocSection[];
   const navigation = t.raw('ui.navigation') as Navigation[];
   const elementsMenu = t.raw('ui.elementsMenu') as { items: Navigation[] };
-  const menuLinks = [...navigation, ...elementsMenu.items];
+  const resourcesMenu = t.raw('ui.resourcesMenu') as {
+    label: string;
+    badge: string;
+    items: { title: string; description: string }[];
+  };
+  const menuLinks = [...elementsMenu.items, ...navigation];
 
   const menuRef = useRef<HTMLElement>(null);
 
@@ -126,6 +132,24 @@ export function MobileMenu() {
               </ul>
             </div>
           )}
+          <div className="mb-8">
+            <Typography className="text-muted-foreground mb-2 px-2.5 text-xs">
+              {resourcesMenu.label}
+            </Typography>
+            <ul>
+              {resourcesMenu.items.map((item) => (
+                <li
+                  key={item.title}
+                  className="text-muted-foreground flex items-center gap-2 px-2.5 py-1.5 text-sm opacity-60"
+                >
+                  {item.title}
+                  <Badge variant="outline" className="text-[10px]">
+                    {resourcesMenu.badge}
+                  </Badge>
+                </li>
+              ))}
+            </ul>
+          </div>
           {docsNavigation.map((section, sectionIndex) => (
             <div key={sectionIndex} className="mb-8 last:mb-0">
               <Typography className="text-muted-foreground mb-2 px-2.5 text-xs">
