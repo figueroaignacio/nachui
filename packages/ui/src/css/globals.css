@@ -67,7 +67,7 @@
   --elevation-md: 0 4px 12px -4px oklch(25% 0.01 75 / 0.11);
   --elevation-lg: 0 12px 32px -12px oklch(25% 0.01 75 / 0.17);
 
-  --code: oklch(96.5% 0.0045 85);
+  --code: oklch(99.1% 0.003 85);
   --code-plain: oklch(20.5% 0.005 75);
   --code-comment: oklch(53% 0.0065 75);
   --code-punctuation: oklch(45% 0.006 75);
