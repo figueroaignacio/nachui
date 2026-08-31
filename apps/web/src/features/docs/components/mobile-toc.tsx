@@ -8,7 +8,6 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import { TocEntry, TocProps, Tree, useActiveItem } from './toc-tree';
 
-/** Flattens the tree to `{ id, title }`, so the bar can name the active one. */
 function flatten(toc: TocEntry[]): { id: string; title: string }[] {
   return toc.flatMap((item) => {
     const id = item.url.split('#')[1];
@@ -16,11 +15,6 @@ function flatten(toc: TocEntry[]): { id: string; title: string }[] {
   });
 }
 
-/**
- * Sticky heading bar: names the section you are reading and expands into the
- * full table of contents. Docked under the site header rather than floating,
- * so it never covers the prose.
- */
 export function MobileToc({ toc }: TocProps) {
   const t = useTranslations('components.mobileToc');
   const [open, setOpen] = useState(false);
@@ -35,11 +29,6 @@ export function MobileToc({ toc }: TocProps) {
     return () => window.removeEventListener('scroll', close);
   }, [open]);
 
-  /**
-   * Scrolls explicitly instead of leaving it to the anchor: the panel collapses
-   * on the same click, and the layout shift that causes cancels the browser's
-   * own jump. `scroll-margin-top` on the headings keeps them clear of the bar.
-   */
   const handleSelect = (url: string) => {
     setOpen(false);
     const id = decodeURIComponent(url.split('#')[1] ?? '');
@@ -57,9 +46,6 @@ export function MobileToc({ toc }: TocProps) {
 
   return (
     <div className="bg-background/90 border-rule sticky top-14 z-40 -mx-4 mb-8 border-b backdrop-blur-md xl:hidden">
-      {/* The expanded list floats over the prose rather than pushing it: the
-          bar is sticky, so displacing the content would move the very section
-          you are trying to reach. */}
       <button
         type="button"
         onClick={() => setOpen((previous) => !previous)}
@@ -98,7 +84,6 @@ export function MobileToc({ toc }: TocProps) {
   );
 }
 
-/** Reading progress through the headings, as a ring around the bar's dot. */
 function ProgressRing({ progress }: { progress: number }) {
   const radius = 6;
   const circumference = 2 * Math.PI * radius;
