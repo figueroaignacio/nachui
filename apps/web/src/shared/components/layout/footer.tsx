@@ -14,7 +14,7 @@ export function Footer() {
     <footer data-site-footer className="border-rule border-t">
       <div className="page-frame-outer">
         <div className="page-frame">
-          <div className="flex w-full flex-col gap-8 pt-16 pb-10 md:flex-row md:items-start md:justify-between md:pt-24">
+          <div className="flex w-full flex-col gap-6 pt-10 pb-8 md:flex-row md:items-start md:justify-between md:pt-14">
             <div className="max-w-xs space-y-3">
               <span className="text-foreground font-mono text-sm font-medium">nachui</span>
               <p className="text-muted-foreground text-[13px] leading-relaxed">

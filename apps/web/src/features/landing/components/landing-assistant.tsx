@@ -37,16 +37,16 @@ export function LandingAssistant() {
           frame below — otherwise the overflow that makes it bleed is cut. */}
       <div className="rule-bleed rule-draw" />
 
-      <div className="assistant-frame relative overflow-hidden pt-10 pb-16">
+      <div className="assistant-frame relative overflow-hidden pt-8 pb-10">
         <div className="scroll-reveal max-w-2xl">
           <p className="section-label">{t('label')}</p>
           <h2
             id="assistant-title"
-            className="font-heading text-foreground mt-3 text-[1.375rem] font-semibold tracking-tight md:text-[1.625rem]"
+            className="font-heading text-foreground mt-3 text-xl font-semibold tracking-tight md:text-[1.375rem]"
           >
             {t('title')}
           </h2>
-          <p className="text-muted-strong mt-3 text-[15px] leading-relaxed">{t('description')}</p>
+          <p className="text-muted-strong mt-2 text-sm leading-relaxed">{t('description')}</p>
 
           <dl className="mt-8 space-y-5">
             {roles.map((role) => (
@@ -62,7 +62,7 @@ export function LandingAssistant() {
           <button
             type="button"
             onClick={openChat}
-            className="bg-foreground text-background mt-8 inline-flex items-center gap-2 rounded-md px-4 py-2 font-mono text-sm transition-all hover:opacity-80 active:scale-[0.98]"
+            className="bg-foreground text-background mt-6 inline-flex items-center gap-2 rounded-md px-4 py-2 font-mono text-sm transition-all hover:opacity-80 active:scale-[0.98]"
           >
             {t('cta')}
             <span aria-hidden="true">→</span>

@@ -48,7 +48,7 @@ export async function AboutView() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(profileSchema) }}
       />
 
-      <section className="min-h-svh px-6 py-28">
+      <section className="min-h-svh px-6 py-16">
         <div className="mx-auto max-w-2xl">
           <div className="mb-12 space-y-5">
             <div className="border-border size-16 shrink-0 overflow-hidden rounded-lg border">
@@ -76,7 +76,7 @@ export async function AboutView() {
           <hr className="border-border mb-10" />
 
           {/* ── Prose ── */}
-          <div className="text-foreground/80 mb-14 flex flex-col gap-5 text-base leading-relaxed">
+          <div className="text-foreground/80 mb-10 flex flex-col gap-4 text-[15px] leading-relaxed">
             <p>{t('content1')}</p>
             <p>{t('content2')}</p>
             <p>{t('content3')}</p>
@@ -102,7 +102,7 @@ export async function AboutView() {
           </div>
 
           {/* ── Links ── */}
-          <nav className="border-border border-t pt-7" aria-label="External profiles">
+          <nav className="border-border border-t pt-5" aria-label="External profiles">
             {actions.map((action) => (
               <a
                 key={action.href}

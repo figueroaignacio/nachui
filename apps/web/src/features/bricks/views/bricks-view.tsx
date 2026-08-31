@@ -10,16 +10,16 @@ import { Stack } from '@repo/ui/layout/stack';
 
 export function BricksView() {
   return (
-    <div className="bg-background relative min-h-svh overflow-hidden pb-24">
+    <div className="bg-background relative min-h-svh overflow-hidden pb-16">
       <BricksHero />
-      <Grid columns="1" gap="6" className="md:grid-cols-2 lg:grid-cols-3">
+      <Grid columns="1" gap="4" className="md:grid-cols-2 lg:grid-cols-3">
         {BRICK_CATEGORIES.map((category) => (
           <Link
             key={category.slug}
             href={`/bricks/${category.slug}`}
-            className="group border-border bg-background hover:bg-surface-muted hover:border-foreground/30 relative overflow-hidden rounded-2xl border transition-all duration-300"
+            className="group border-border bg-background hover:bg-surface-muted hover:border-foreground/30 relative overflow-hidden rounded-xl border transition-all duration-300"
           >
-            <Stack className="justify-between p-6">
+            <Stack className="justify-between p-5">
               <Stack gap="4">
                 <Flex
                   align="center"
@@ -31,7 +31,7 @@ export function BricksView() {
                 <div>
                   <Typography
                     variant="h3"
-                    className="text-foreground text-xl font-semibold tracking-tight"
+                    className="text-foreground text-lg font-semibold tracking-tight"
                   >
                     {category.name}
                   </Typography>
@@ -43,7 +43,7 @@ export function BricksView() {
                   </Typography>
                 </div>
               </Stack>
-              <Flex align="center" className="mt-8 text-sm font-medium">
+              <Flex align="center" className="mt-6 text-sm font-medium">
                 <span className="text-muted-foreground group-hover:text-foreground transition-colors">
                   {category.bricks.length} component{category.bricks.length !== 1 ? 's' : ''}
                 </span>

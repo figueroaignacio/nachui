@@ -46,16 +46,16 @@ export function LandingInstall() {
   const tools: Tool[] = t.raw('tools');
 
   return (
-    <section className="w-full py-16 sm:py-20">
+    <section className="w-full py-10 sm:py-14">
       <div className="rule-bleed rule-draw" />
-      <div className="scroll-reveal mt-10 flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-16">
+      <div className="scroll-reveal mt-8 flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-12">
         <div className="flex flex-col lg:w-[40%] lg:shrink-0">
           <p className="section-label">{t('label')}</p>
-          <h2 className="font-heading text-foreground mt-3 text-[1.375rem] leading-tight font-semibold tracking-tight md:text-[1.625rem]">
+          <h2 className="font-heading text-foreground mt-3 text-xl leading-tight font-semibold tracking-tight md:text-[1.375rem]">
             {t('line1')}
             <span className="text-muted-foreground block">{t('line2')}</span>
           </h2>
-          <p className="text-muted-strong mt-4 text-[15px] leading-relaxed">{t('description')}</p>
+          <p className="text-muted-strong mt-3 text-sm leading-relaxed">{t('description')}</p>
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
             <Link
               href="/docs/installation"

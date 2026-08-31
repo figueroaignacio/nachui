@@ -19,7 +19,7 @@ export async function BrickCategoryView({ category }: BrickCategoryViewProps) {
   return (
     <div className="bg-background min-h-svh">
       <BricksHero activeSlug={category.slug} />
-      <div className="flex flex-col gap-16">
+      <div className="flex flex-col gap-10">
         {bricksWithCode.map((brick) => {
           const Component = BRICK_COMPONENTS[brick.component];
 

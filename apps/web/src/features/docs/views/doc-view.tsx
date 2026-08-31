@@ -53,17 +53,17 @@ export function DocView({ doc }: DocViewProps) {
       <Container size="md" className="px-0">
         <Stack as="article" className="w-full min-w-0">
           <MobileToc toc={tocContent} />
-          <div className="mt-6 mb-8">
+          <div className="mt-4 mb-6">
             <div>
-              <h1 className="font-heading text-foreground text-[2.125rem] leading-tight font-semibold tracking-tight">
+              <h1 className="font-heading text-foreground text-[1.75rem] leading-tight font-semibold tracking-tight">
                 {doc.title}
               </h1>
               {doc.description && (
-                <p className="text-muted-foreground mt-2 text-[15px] leading-relaxed">
+                <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
                   {doc.description}
                 </p>
               )}
-              <Flex wrap="wrap" align="center" justify="between" gap="3" className="mt-5">
+              <Flex wrap="wrap" align="center" justify="between" gap="3" className="mt-4">
                 <DocActions
                   page={doc.title}
                   url={docUrl}

@@ -21,18 +21,18 @@ export function LandingCatalog() {
   if (components.length === 0) return null;
 
   return (
-    <section className="w-full pt-10 pb-4" aria-labelledby="catalog-title">
+    <section className="w-full pt-6 pb-2" aria-labelledby="catalog-title">
       <div className="rule-bleed rule-draw" />
-      <div className="scroll-reveal flex flex-col gap-3 pt-6 pb-8 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
+      <div className="scroll-reveal flex flex-col gap-3 pt-4 pb-6 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
         <div className="max-w-xl">
           <p className="section-label">{t('label')}</p>
           <h2
             id="catalog-title"
-            className="font-heading text-foreground mt-3 text-[1.375rem] font-semibold tracking-tight md:text-[1.625rem]"
+            className="font-heading text-foreground mt-3 text-xl font-semibold tracking-tight md:text-[1.375rem]"
           >
             {t('title', { count: components.length })}
           </h2>
-          <p className="text-muted-strong mt-2 text-[15px] leading-relaxed">{t('description')}</p>
+          <p className="text-muted-strong mt-2 text-sm leading-relaxed">{t('description')}</p>
         </div>
         <Link
           href="/docs/elements/ui"

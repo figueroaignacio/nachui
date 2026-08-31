@@ -10,12 +10,12 @@ export function BricksHero({ activeSlug }: BricksHeroProps) {
   const t = useTranslations('sections.bricks');
 
   return (
-    <section className="bg-background relative pt-16 pb-0 sm:pt-24">
-      <div className="max-w-2xl pb-10">
-        <h1 className="font-heading text-foreground text-[2rem] leading-[1.1] font-semibold tracking-tight md:text-[2.75rem]">
+    <section className="bg-background relative pt-8 pb-0 sm:pt-12">
+      <div className="max-w-2xl pb-6">
+        <h1 className="font-heading text-foreground text-2xl leading-tight font-semibold tracking-tight md:text-3xl">
           {t('title')}
         </h1>
-        <p className="text-muted-strong mt-4 text-[15px] leading-relaxed">{t('description')}</p>
+        <p className="text-muted-strong mt-2 text-sm leading-relaxed">{t('description')}</p>
       </div>
 
       <nav aria-label="Brick categories" className="border-border bleed-x border-b">
