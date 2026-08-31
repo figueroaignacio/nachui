@@ -13,6 +13,13 @@ const TOOLTIP_POSITION_CLASSES = {
   right: 'left-full top-1/2 -translate-y-1/2 ml-2',
 } as const;
 
+const TOOLTIP_ARROW_CLASSES = {
+  top: '-bottom-1 left-1/2 -translate-x-1/2',
+  bottom: '-top-1 left-1/2 -translate-x-1/2',
+  left: '-right-1 top-1/2 -translate-y-1/2',
+  right: '-left-1 top-1/2 -translate-y-1/2',
+} as const;
+
 const TOOLTIP_ANIMATION_VARIANTS = {
   top: {
     initial: { opacity: 0, y: 5, filter: 'blur(4px)' },
@@ -251,7 +258,14 @@ const TooltipContent = ({
           )}
           {...props}
         >
-          {children}
+          <span
+            aria-hidden="true"
+            className={cn(
+              'bg-foreground absolute size-2 rotate-45 rounded-[1px]',
+              TOOLTIP_ARROW_CLASSES[side],
+            )}
+          />
+          {children as React.ReactNode}
         </motion.div>
       )}
     </AnimatePresence>
