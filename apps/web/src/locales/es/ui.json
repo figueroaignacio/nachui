@@ -7,27 +7,28 @@
     {
       "title": "Documentación",
       "href": "/docs"
-    },
-    {
-      "title": "Bloques",
-      "href": "/bricks/login"
     }
   ],
   "componentGrid": {
     "wip": "trabajando para agregar más…"
   },
   "elementsMenu": {
-    "label": "Elementos",
+    "label": "Producto",
     "items": [
       {
         "title": "Elementos UI",
-        "description": "Botones, diálogos, tablas y todos los primitivos interactivos.",
+        "description": "Botones, diálogos, tablas y todas las primitivas interactivas.",
         "href": "/docs/elements/ui"
       },
       {
-        "title": "Elementos de layout",
+        "title": "Elementos de Layout",
         "description": "Flex, Stack, Grid y Container para estructurar tus páginas.",
         "href": "/docs/elements/layout"
+      },
+      {
+        "title": "Bloques",
+        "description": "Secciones de página completas listas para copiar en tu app.",
+        "href": "/bricks/login"
       }
     ],
     "comingSoon": {

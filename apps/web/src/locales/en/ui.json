@@ -7,17 +7,13 @@
     {
       "title": "Docs",
       "href": "/docs"
-    },
-    {
-      "title": "Bricks",
-      "href": "/bricks/login"
     }
   ],
   "componentGrid": {
     "wip": "working on adding more…"
   },
   "elementsMenu": {
-    "label": "Elements",
+    "label": "Product",
     "items": [
       {
         "title": "UI Elements",
@@ -28,6 +24,11 @@
         "title": "Layout Elements",
         "description": "Flex, Stack, Grid and Container to structure your pages.",
         "href": "/docs/elements/layout"
+      },
+      {
+        "title": "Bricks",
+        "description": "Full page sections ready to copy into your app.",
+        "href": "/bricks/login"
       }
     ],
     "comingSoon": {

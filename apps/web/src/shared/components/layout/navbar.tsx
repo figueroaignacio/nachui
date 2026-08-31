@@ -4,7 +4,13 @@ import { AskAiButton } from '@/features/chat/ui/ask-ai-button';
 import { Searcher } from '@/features/docs/components/searcher';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { Navigation } from '@/lib/definitions';
-import { DashboardSquare01Icon, Layout01Icon, SparklesIcon } from '@hugeicons/core-free-icons';
+import {
+  DashboardSquare01Icon,
+  Layout01Icon,
+  PackageIcon,
+  PuzzleIcon,
+  SparklesIcon,
+} from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Badge } from '@repo/ui/components/badge';
 import { NavigationMenu } from '@repo/ui/components/navigation-menu';
@@ -22,7 +28,7 @@ type ElementsMenu = {
   comingSoon?: { title: string; description: string; badge: string };
 };
 
-const ELEMENT_ICONS = [DashboardSquare01Icon, Layout01Icon];
+const ELEMENT_ICONS = [DashboardSquare01Icon, Layout01Icon, PuzzleIcon, PackageIcon];
 
 export function Navbar() {
   const t = useTranslations('ui');
@@ -30,7 +36,10 @@ export function Navbar() {
   const elementsMenu: ElementsMenu = t.raw('elementsMenu');
   const pathname = usePathname();
 
-  const isElementsActive = pathname.startsWith('/docs/elements');
+  const isElementsActive =
+    pathname.startsWith('/docs/elements') ||
+    pathname.startsWith('/components') ||
+    pathname.startsWith('/bricks');
 
   return (
     <div>

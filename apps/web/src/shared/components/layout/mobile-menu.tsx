@@ -25,6 +25,8 @@ export function MobileMenu() {
 
   const docsNavigation = t.raw('docs.navigation') as DocSection[];
   const navigation = t.raw('ui.navigation') as Navigation[];
+  const elementsMenu = t.raw('ui.elementsMenu') as { items: Navigation[] };
+  const menuLinks = [...navigation, ...elementsMenu.items];
 
   const menuRef = useRef<HTMLElement>(null);
 
@@ -95,11 +97,11 @@ export function MobileMenu() {
           </div>
         </div>
         <div className="flex-1 overflow-y-auto px-6 py-6">
-          {navigation && navigation.length > 0 && (
+          {menuLinks.length > 0 && (
             <div className="mb-8">
               <Typography className="text-muted-foreground mb-2 px-2.5 text-xs">Menu</Typography>
               <ul>
-                {navigation.map((item) => {
+                {menuLinks.map((item) => {
                   const isActive = pathname === item.href;
 
                   return (
