@@ -122,20 +122,7 @@ const NavigationMenuItem = ({
     <NavigationMenuItemContext
       value={{ open, setOpen, scheduleClose, cancelClose, id, triggerRef }}
     >
-      <div
-        ref={mergedRef}
-        className={cn('relative', className)}
-        onPointerEnter={(e) => {
-          if (e.pointerType === 'mouse') {
-            cancelClose();
-            setOpen(true);
-          }
-        }}
-        onPointerLeave={(e) => {
-          if (e.pointerType === 'mouse') scheduleClose();
-        }}
-        {...props}
-      >
+      <div ref={mergedRef} className={cn('relative', className)} {...props}>
         {children}
       </div>
     </NavigationMenuItemContext>
@@ -210,7 +197,11 @@ const NavigationMenuContent = ({ className, children, ...props }: HTMLMotionProp
           )}
           {...props}
         >
-          {children}
+          <span
+            aria-hidden="true"
+            className="border-border bg-popover absolute -top-[5.5px] left-5 size-2.5 rotate-45 rounded-[1px] border-t border-l"
+          />
+          {children as React.ReactNode}
         </motion.div>
       )}
     </AnimatePresence>

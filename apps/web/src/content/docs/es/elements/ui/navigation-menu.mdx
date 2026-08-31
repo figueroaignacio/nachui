@@ -1,6 +1,6 @@
 ---
 title: Navigation Menu
-description: Una barra de navegación horizontal con paneles de links al hacer hover.
+description: Una barra de navegación horizontal con paneles de links que se abren al hacer clic.
 published: true
 date: 2026-08-15
 label: New
@@ -52,9 +52,10 @@ NavigationMenu
 
 La raíz renderiza un `<nav>` y distribuye sus hijos en fila, así que los
 anchors comunes y los links del router conviven con los items desplegables.
-Cada `Item` maneja su propio estado: se abre con hover (con una pequeña demora
-al cerrar para que el puntero llegue al panel) o con click, y se cierra con
-`Escape`, con un click afuera, o al navegar por un link.
+Cada `Item` maneja su propio estado: se abre con clic, nunca con hover, así los
+paneles solo aparecen cuando el lector los pide, y se cierra con `Escape`, con
+un clic afuera, o al navegar por un link. El panel lleva una pequeña flecha que
+apunta al trigger que lo abrió.
 
 ## Links del router
 

@@ -177,7 +177,7 @@
         {
           "title": "Navigation Menu",
           "href": "/docs/elements/ui/navigation-menu",
-          "description": "Una barra de navegación horizontal con paneles de links al hacer hover.",
+          "description": "Una barra de navegación horizontal con paneles de links que se abren al hacer clic.",
           "badge": "new"
         },
         {

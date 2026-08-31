@@ -1,6 +1,6 @@
 ---
 title: Navigation Menu
-description: A horizontal navigation bar with hover-triggered link panels.
+description: A horizontal navigation bar with click-triggered link panels.
 published: true
 date: 2026-08-15
 label: New
@@ -52,9 +52,10 @@ NavigationMenu
 
 The root renders a `<nav>` and lays its children out in a row, so plain anchors
 and router links live side by side with dropdown items. Each `Item` owns its
-open state: it opens on hover (with a short close delay so the pointer can
-travel into the panel) or on click, and closes on `Escape`, on an outside
-click, or after following a link.
+open state: it opens on click, never on hover, so panels only show up when
+the reader asks for them, and it closes on `Escape`, on an outside click, or
+after following a link. The panel carries a small caret pointing back at the
+trigger that opened it.
 
 ## Router links
 
