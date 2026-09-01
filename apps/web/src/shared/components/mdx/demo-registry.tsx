@@ -3,6 +3,8 @@
 // a demo or a brick. The build fails if this file is out of date.
 
 import { Alert as DialogAlert } from '@repo/ui/src/demos/dialog/alert';
+import { Alternate as TimelineAlternate } from '@repo/ui/src/demos/timeline/alternate';
+import { Avatar as FileUploadAvatar } from '@repo/ui/src/demos/file-upload/avatar';
 import { AvatarGroup as AvatarGroupDemo } from '@repo/ui/src/demos/avatar/avatar-group';
 import { Badges as NavigationMenuBadges } from '@repo/ui/src/demos/navigation-menu/badges';
 import { Bordered as CollapsibleBordered } from '@repo/ui/src/demos/collapsible/bordered';
@@ -12,6 +14,7 @@ import { Checkboxes as DropdownMenuCheckboxes } from '@repo/ui/src/demos/dropdow
 import { Collapsed as AccordionCollapsed } from '@repo/ui/src/demos/accordion/collapsed';
 import { Collapsed as BreadcrumbCollapsed } from '@repo/ui/src/demos/breadcrumb/collapsed';
 import { Compact as CardCompact } from '@repo/ui/src/demos/card/compact';
+import { Compact as FileUploadCompact } from '@repo/ui/src/demos/file-upload/compact';
 import { Compact as PaginationCompact } from '@repo/ui/src/demos/pagination/compact';
 import { Compact as TableCompact } from '@repo/ui/src/demos/table/compact';
 import { CustomSeparator as BreadcrumbCustomSeparator } from '@repo/ui/src/demos/breadcrumb/custom-separator';
@@ -36,9 +39,11 @@ import { Default as DialogDefault } from '@repo/ui/src/demos/dialog/default';
 import { Default as DrawerDefault } from '@repo/ui/src/demos/drawer/default';
 import { Default as DropdownMenuDefault } from '@repo/ui/src/demos/dropdown-menu/default';
 import { Default as EmptyDefault } from '@repo/ui/src/demos/empty/default';
+import { Default as FileUploadDefault } from '@repo/ui/src/demos/file-upload/default';
 import { Default as FlexDefault } from '@repo/ui/src/demos/flex/default';
 import { Default as FrameDefault } from '@repo/ui/src/demos/frame/default';
 import { Default as GridDefault } from '@repo/ui/src/demos/grid/default';
+import { Default as IconTileDefault } from '@repo/ui/src/demos/icon-tile/default';
 import { Default as InputDefault } from '@repo/ui/src/demos/input/default';
 import { Default as KbdDefault } from '@repo/ui/src/demos/kbd/default';
 import { Default as LabelDefault } from '@repo/ui/src/demos/label/default';
@@ -57,6 +62,7 @@ import { Default as StackDefault } from '@repo/ui/src/demos/stack/default';
 import { Default as SwitchDefault } from '@repo/ui/src/demos/switch/default';
 import { Default as TableDefault } from '@repo/ui/src/demos/table/default';
 import { Default as TabsDefault } from '@repo/ui/src/demos/tabs/default';
+import { Default as TimelineDefault } from '@repo/ui/src/demos/timeline/default';
 import { Default as ToastDefault } from '@repo/ui/src/demos/toast/default';
 import { Default as TooltipDefault } from '@repo/ui/src/demos/tooltip/default';
 import { Default as TreeDefault } from '@repo/ui/src/demos/tree/default';
@@ -74,14 +80,19 @@ import { Ghost as CardGhost } from '@repo/ui/src/demos/card/ghost';
 import { Grouped as MessageGrouped } from '@repo/ui/src/demos/message/grouped';
 import { GroupedItems as SelectGroupedItems } from '@repo/ui/src/demos/select/grouped-items';
 import { Headings as TypographyHeadings } from '@repo/ui/src/demos/typography/headings';
+import { Horizontal as TimelineHorizontal } from '@repo/ui/src/demos/timeline/horizontal';
+import { Icons as TimelineIcons } from '@repo/ui/src/demos/timeline/icons';
 import { Icons as TreeIcons } from '@repo/ui/src/demos/tree/icons';
+import { Images as FileUploadImages } from '@repo/ui/src/demos/file-upload/images';
 import { Indeterminate as ProgressIndeterminate } from '@repo/ui/src/demos/progress/indeterminate';
 import { Info as BannerInfo } from '@repo/ui/src/demos/banner/info';
 import { Info as CalloutInfo } from '@repo/ui/src/demos/callout/info';
 import { LeadMuted as TypographyLeadMuted } from '@repo/ui/src/demos/typography/lead-muted';
+import { LeftDates as TimelineLeftDates } from '@repo/ui/src/demos/timeline/left-dates';
 import { Lines as TreeLines } from '@repo/ui/src/demos/tree/lines';
 import { Link as ButtonLink } from '@repo/ui/src/demos/button/link';
 import { Multiple as AccordionMultiple } from '@repo/ui/src/demos/accordion/multiple';
+import { Multiple as FileUploadMultiple } from '@repo/ui/src/demos/file-upload/multiple';
 import { Outline as BadgeOutline } from '@repo/ui/src/demos/badge/outline';
 import { Outline as ButtonOutline } from '@repo/ui/src/demos/button/outline';
 import { Outline as CardOutline } from '@repo/ui/src/demos/card/outline';
@@ -92,12 +103,14 @@ import { Positions as DrawerPositions } from '@repo/ui/src/demos/drawer/position
 import { Positions as ToastPositions } from '@repo/ui/src/demos/toast/positions';
 import { Positions as TooltipPositions } from '@repo/ui/src/demos/tooltip/positions';
 import { RadioGroup as DropdownMenuRadioGroup } from '@repo/ui/src/demos/dropdown-menu/radio-group';
+import { Radius as IconTileRadius } from '@repo/ui/src/demos/icon-tile/radius';
 import { Required as LabelRequired } from '@repo/ui/src/demos/label/required';
 import { Secondary as BadgeSecondary } from '@repo/ui/src/demos/badge/secondary';
 import { Secondary as ButtonSecondary } from '@repo/ui/src/demos/button/secondary';
 import { Seeds as SpriteSeeds } from '@repo/ui/src/demos/sprite/seeds';
 import { Sizes as AvatarSizes } from '@repo/ui/src/demos/avatar/sizes';
 import { Sizes as ButtonSizes } from '@repo/ui/src/demos/button/sizes';
+import { Sizes as IconTileSizes } from '@repo/ui/src/demos/icon-tile/sizes';
 import { Sizes as InputSizes } from '@repo/ui/src/demos/input/sizes';
 import { Sizes as KbdSizes } from '@repo/ui/src/demos/kbd/sizes';
 import { Sizes as SpinnerSizes } from '@repo/ui/src/demos/spinner/sizes';
@@ -106,10 +119,14 @@ import { States as SpriteStates } from '@repo/ui/src/demos/sprite/states';
 import { Striped as TableStriped } from '@repo/ui/src/demos/table/striped';
 import { Success as BannerSuccess } from '@repo/ui/src/demos/banner/success';
 import { Success as CalloutSuccess } from '@repo/ui/src/demos/callout/success';
+import { Text as IconTileText } from '@repo/ui/src/demos/icon-tile/text';
+import { Tones as IconTileTones } from '@repo/ui/src/demos/icon-tile/tones';
+import { UploadProgress as FileUploadUploadProgress } from '@repo/ui/src/demos/file-upload/upload-progress';
 import { Variants as BannerVariants } from '@repo/ui/src/demos/banner/variants';
 import { Variants as BubbleVariants } from '@repo/ui/src/demos/bubble/variants';
 import { Variants as ButtonVariants } from '@repo/ui/src/demos/button/variants';
 import { Variants as CalloutVariants } from '@repo/ui/src/demos/callout/variants';
+import { Variants as IconTileVariants } from '@repo/ui/src/demos/icon-tile/variants';
 import { Variants as KbdVariants } from '@repo/ui/src/demos/kbd/variants';
 import { Variants as SpinnerVariants } from '@repo/ui/src/demos/spinner/variants';
 import { Variants as ToastVariants } from '@repo/ui/src/demos/toast/variants';
@@ -228,6 +245,14 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
     default: EmptyDefault,
     outline: EmptyOutline,
   },
+  'file-upload': {
+    avatar: FileUploadAvatar,
+    compact: FileUploadCompact,
+    default: FileUploadDefault,
+    images: FileUploadImages,
+    multiple: FileUploadMultiple,
+    'upload-progress': FileUploadUploadProgress,
+  },
   flex: {
     default: FlexDefault,
   },
@@ -237,6 +262,14 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
   },
   grid: {
     default: GridDefault,
+  },
+  'icon-tile': {
+    default: IconTileDefault,
+    radius: IconTileRadius,
+    sizes: IconTileSizes,
+    text: IconTileText,
+    tones: IconTileTones,
+    variants: IconTileVariants,
   },
   input: {
     default: InputDefault,
@@ -321,6 +354,13 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
   tabs: {
     default: TabsDefault,
     vertical: TabsVertical,
+  },
+  timeline: {
+    alternate: TimelineAlternate,
+    default: TimelineDefault,
+    horizontal: TimelineHorizontal,
+    icons: TimelineIcons,
+    'left-dates': TimelineLeftDates,
   },
   toast: {
     default: ToastDefault,
