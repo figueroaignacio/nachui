@@ -28,7 +28,7 @@ export function LandingCatalog() {
           <p className="section-label">{t('label')}</p>
           <h2
             id="catalog-title"
-            className="font-heading text-foreground mt-3 text-xl font-semibold tracking-tight md:text-[1.375rem]"
+            className="font-heading text-foreground mt-3 text-lg font-semibold tracking-tight md:text-xl"
           >
             {t('title', { count: components.length })}
           </h2>

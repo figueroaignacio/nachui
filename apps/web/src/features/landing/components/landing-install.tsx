@@ -3,6 +3,9 @@
 import { CopyButton } from '@/components/mdx/copy-button';
 import { AiWalker } from '@/features/chat/ui/ai-walker';
 import { Link } from '@/i18n/navigation';
+import { buttonVariants } from '@repo/ui/components/button';
+import { cn } from '@repo/ui/lib/cn';
+import { Frame } from '@repo/ui/components/frame';
 import { useTranslations } from 'next-intl';
 
 type Tool = { name: string; description: string };
@@ -51,7 +54,7 @@ export function LandingInstall() {
       <div className="scroll-reveal mt-8 flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-12">
         <div className="flex flex-col lg:w-[40%] lg:shrink-0">
           <p className="section-label">{t('label')}</p>
-          <h2 className="font-heading text-foreground mt-3 text-xl leading-tight font-semibold tracking-tight md:text-[1.375rem]">
+          <h2 className="font-heading text-foreground mt-3 text-lg leading-tight font-semibold tracking-tight md:text-xl">
             {t('line1')}
             <span className="text-muted-foreground block">{t('line2')}</span>
           </h2>
@@ -59,13 +62,16 @@ export function LandingInstall() {
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
             <Link
               href="/docs/installation"
-              className="bg-foreground text-background inline-flex items-center gap-2 rounded-md px-4 py-2 font-mono text-sm transition-all hover:opacity-80 active:scale-[0.98]"
+              className={cn(buttonVariants({ variant: 'default', size: 'sm' }), 'font-mono')}
             >
               {t('primaryAction')} →
             </Link>
             <Link
               href="/docs/elements/ui"
-              className="text-muted-foreground hover:text-foreground font-mono text-sm transition-colors"
+              className={cn(
+                buttonVariants({ variant: 'link', size: 'sm' }),
+                'text-muted-foreground hover:text-foreground font-mono',
+              )}
             >
               {t('secondaryAction')} ↗
             </Link>
@@ -73,15 +79,17 @@ export function LandingInstall() {
         </div>
 
         <div className="min-w-0 lg:flex-1">
-          <div className="border-border bg-card/40 overflow-hidden rounded-lg border">
-            <div className="border-border flex items-center justify-between gap-4 border-b px-3 py-2">
-              <span className="text-muted-foreground font-mono text-[11px]">{t('configFile')}</span>
+          <Frame spacing="sm">
+            <Frame.Header className="flex-row items-center justify-between gap-4 py-1 pr-1 pl-3">
+              <Frame.Title className="text-muted-foreground font-mono text-[11px] font-normal">
+                {t('configFile')}
+              </Frame.Title>
               <CopyButton
                 value={config}
                 className="text-muted-foreground hover:text-foreground transition-colors"
               />
-            </div>
-            <div className="overflow-x-auto p-4 sm:p-5">
+            </Frame.Header>
+            <Frame.Panel className="overflow-x-auto sm:p-5">
               <pre className="font-mono text-[12px] leading-[1.8]">
                 <code>
                   {config.split('\n').map((line, index) => (
@@ -89,8 +97,8 @@ export function LandingInstall() {
                   ))}
                 </code>
               </pre>
-            </div>
-          </div>
+            </Frame.Panel>
+          </Frame>
           <ul className="mt-5 space-y-2.5">
             {tools.map((tool) => (
               <li

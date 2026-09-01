@@ -2,6 +2,7 @@
 
 import { useChatStore } from '@/features/chat/store/chat-store';
 import { AiAvatar } from '@/features/chat/ui/ai-avatar';
+import { Button } from '@repo/ui/components/button';
 import { useTranslations } from 'next-intl';
 
 type Role = { title: string; description: string };
@@ -42,7 +43,7 @@ export function LandingAssistant() {
           <p className="section-label">{t('label')}</p>
           <h2
             id="assistant-title"
-            className="font-heading text-foreground mt-3 text-xl font-semibold tracking-tight md:text-[1.375rem]"
+            className="font-heading text-foreground mt-3 text-lg font-semibold tracking-tight md:text-xl"
           >
             {t('title')}
           </h2>
@@ -59,14 +60,14 @@ export function LandingAssistant() {
             ))}
           </dl>
 
-          <button
-            type="button"
+          <Button
+            size="sm"
             onClick={openChat}
-            className="bg-foreground text-background mt-6 inline-flex items-center gap-2 rounded-md px-4 py-2 font-mono text-sm transition-all hover:opacity-80 active:scale-[0.98]"
+            rightIcon={<span aria-hidden="true">→</span>}
+            className="mt-6 font-mono"
           >
             {t('cta')}
-            <span aria-hidden="true">→</span>
-          </button>
+          </Button>
         </div>
 
         <div className="assistant-peek absolute right-6 bottom-0 hidden md:block">

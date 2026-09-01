@@ -1,4 +1,5 @@
 import { Link } from '@/i18n/navigation';
+import { Badge } from '@repo/ui/components/badge';
 import { useTranslations } from 'next-intl';
 
 import { PreviewContributionHistory } from './preview-cards/preview-contribution-history';
@@ -15,7 +16,7 @@ export function LandingShowcase() {
           <p className="section-label">{t('label')}</p>
           <h2
             id="showcase-title"
-            className="font-heading text-foreground mt-3 text-xl font-semibold tracking-tight md:text-[1.375rem]"
+            className="font-heading text-foreground mt-3 text-lg font-semibold tracking-tight md:text-xl"
           >
             {t('title')}
           </h2>
@@ -40,11 +41,13 @@ export function LandingShowcase() {
           </p>
           <ul className="mt-6 flex flex-wrap gap-x-2 gap-y-2">
             {featuredMeta.map((item) => (
-              <li
-                key={item}
-                className="border-rule text-muted-foreground rounded-sm border px-2 py-0.5 font-mono text-[11px]"
-              >
-                {item}
+              <li key={item}>
+                <Badge
+                  variant="outline"
+                  className="border-rule text-muted-foreground font-mono font-normal tracking-normal"
+                >
+                  {item}
+                </Badge>
               </li>
             ))}
           </ul>
