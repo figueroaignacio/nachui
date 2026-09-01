@@ -1,5 +1,7 @@
+'use client';
+
+import { Avatar } from '@repo/ui/components/avatar';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 
 const GITHUB_USERNAME = 'figueroaignacio';
 
@@ -8,15 +10,13 @@ export function DeveloperWatermark() {
 
   return (
     <div className="flex items-center gap-3">
-      <div className="ring-border relative h-10 w-10 overflow-hidden rounded-full ring-2">
-        <Image
+      <Avatar className="ring-border ring-2">
+        <Avatar.Image
           src={`https://github.com/${GITHUB_USERNAME}.png`}
           alt={`${GITHUB_USERNAME} avatar`}
-          width={48}
-          height={48}
-          className="size-12 object-cover"
         />
-      </div>
+        <Avatar.Fallback>IF</Avatar.Fallback>
+      </Avatar>
       <div className="flex flex-col">
         <span className="text-foreground text-sm font-semibold">{GITHUB_USERNAME}</span>
         <span className="text-muted-foreground text-xs">{t('headline')}</span>

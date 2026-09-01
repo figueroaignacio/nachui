@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { ArrowLeft01Icon, Home01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
 import { Empty } from '@repo/ui/components/empty';
 import { Frame } from '@repo/ui/components/frame';
@@ -21,9 +22,12 @@ export default function NotFound() {
           <Empty className="px-4 py-8">
             <Empty.Header>
               <Empty.Media>
-                <span className="border-border text-muted-foreground rounded-md border px-2.5 py-1 font-mono text-sm tracking-widest">
+                <Badge
+                  variant="outline"
+                  className="text-muted-foreground px-2.5 py-1 font-mono text-sm tracking-widest"
+                >
                   404
-                </span>
+                </Badge>
               </Empty.Media>
               <Empty.Title as="h2" className="text-xl">
                 {t('title')}

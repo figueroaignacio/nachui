@@ -1,5 +1,6 @@
 'use client';
 
+import { Callout } from '@repo/ui/components/callout';
 import { Frame } from '@repo/ui/components/frame';
 import { Typography } from '@repo/ui/components/typography';
 import { cn } from '@repo/ui/lib/cn';
@@ -55,10 +56,11 @@ export function ComponentPreviewClient({
             />
           </Frame.Panel>
         ) : (
-          <Frame.Panel className="bg-destructive-surface border-destructive-border">
-            <Typography variant="p" className="text-destructive-text text-sm font-medium">
-              No se pudo leer el archivo: {filePath || 'sin ruta'}
-            </Typography>
+          <Frame.Panel className="p-0">
+            <Callout variant="danger" className="rounded-none border-0">
+              <Callout.Title>Unable to read the file</Callout.Title>
+              <Callout.Content>{filePath || 'No path provided'}</Callout.Content>
+            </Callout>
           </Frame.Panel>
         )}
       </Frame>

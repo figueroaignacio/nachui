@@ -2,6 +2,7 @@
 
 import { NavBadge } from '@/components/common/nav-badge';
 import { Badge } from '@repo/ui/components/badge';
+import { Button } from '@repo/ui/components/button';
 import { Searcher } from '@/features/docs/components/searcher';
 import { useDialogBehavior } from '@/hooks/use-dialog-behavior';
 import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll';
@@ -51,17 +52,18 @@ export function MobileMenu() {
           <Logo />
         </Link>
         <Separator orientation="vertical" className="h-4" />
-        <button
-          className="flex items-center gap-x-2 text-sm font-medium"
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-8"
           onClick={toggleMenu}
           title={isMenuOpen ? 'Close menu' : 'Open menu'}
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={isMenuOpen}
           aria-controls="mobile-menu"
-          type="button"
         >
           <HugeiconsIcon icon={PanelLeftIcon} aria-hidden="true" />
-        </button>
+        </Button>
       </Flex>
       <div className="flex items-center gap-x-5">
         <Searcher />
@@ -89,17 +91,17 @@ export function MobileMenu() {
           </div>
           <div className="flex items-center gap-x-3">
             <ThemeToggle />
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               data-autofocus
               onClick={toggleMenu}
               title="Close menu"
               aria-label="Close menu"
               aria-expanded={isMenuOpen}
-              type="button"
-              className="hover:bg-card rounded-md p-2 transition-colors"
             >
               <HugeiconsIcon icon={Cancel01Icon} size={20} aria-hidden="true" />
-            </button>
+            </Button>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto px-6 py-6">

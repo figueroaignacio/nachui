@@ -1,5 +1,5 @@
 import { ContentRepository } from '@/lib/content-repository';
-import { CopyButton } from './copy-button';
+import { Command } from '@repo/ui/components/command';
 
 const SKILLS_REPO = 'https://github.com/figueroaignacio/ui-skills';
 
@@ -37,12 +37,7 @@ export function SkillsList() {
             <p className="text-muted-foreground mt-1.5 text-[13px] leading-relaxed">
               {skill.description}
             </p>
-            <div className="border-border bg-card/40 mt-3 flex items-center gap-3 rounded-md border px-3 py-2">
-              <code className="text-muted-strong min-w-0 flex-1 overflow-x-auto font-mono text-[11px] whitespace-nowrap">
-                {command}
-              </code>
-              <CopyButton value={command} className="shrink-0" />
-            </div>
+            <Command command={command} className="text-muted-strong mt-3 px-3 py-2 text-[11px]" />
           </div>
         );
       })}

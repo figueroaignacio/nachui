@@ -1,6 +1,7 @@
 import { AiPerch } from '@/features/chat/ui/ai-perch';
 import { Link } from '@/i18n/navigation';
 import { GITHUB_REPO_URL } from '@/lib/domains';
+import { Separator } from '@repo/ui/components/separator';
 import { useTranslations } from 'next-intl';
 import { LocaleSwitcher } from '../common/locale-switcher';
 import { RegistrationMark } from '../common/registration-mark';
@@ -141,7 +142,7 @@ export function Footer() {
                   rss
                 </Link>
               </div>
-              <div className="border-rule hidden h-4 border-l sm:block" aria-hidden="true" />
+              <Separator orientation="vertical" className="hidden h-4 sm:block" />
               <div className="flex items-center gap-3">
                 <LocaleSwitcher />
                 <ThemeToggle />

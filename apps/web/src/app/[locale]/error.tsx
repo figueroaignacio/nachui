@@ -1,6 +1,7 @@
 'use client';
 
 import { AiAvatar } from '@/features/chat/ui/ai-avatar';
+import { Button } from '@repo/ui/components/button';
 import { Typography } from '@repo/ui/components/typography';
 import { useEffect } from 'react';
 import { Flex } from '@repo/ui/layout/flex';
@@ -25,12 +26,7 @@ export default function ErrorBoundary({
       <Typography variant="p" className="text-muted-foreground max-w-md text-center">
         An unexpected error occurred. You can try recovering by clicking the button below.
       </Typography>
-      <button
-        onClick={() => reset()}
-        className="bg-foreground text-background hover:bg-foreground/90 rounded-md px-4 py-2 font-medium transition-colors"
-      >
-        Try again
-      </button>
+      <Button onClick={() => reset()}>Try again</Button>
     </Flex>
   );
 }

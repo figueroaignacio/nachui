@@ -4,6 +4,7 @@ import { usePathname, useRouter } from '@/i18n/navigation';
 import { locales } from '@/i18n/routing';
 import { Tick02Icon, TranslateIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import { Button } from '@repo/ui/components/button';
 import { DropdownMenu } from '@repo/ui/components/dropdown-menu';
 import type { Locale } from 'next-intl';
 import { useLocale, useTranslations } from 'next-intl';
@@ -32,14 +33,15 @@ export function LocaleSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="icon"
           title={t('label')}
           aria-label={`${t('label')}: ${localeName(locale)}`}
-          className="text-muted-foreground hover:text-foreground focus-visible:ring-ring flex items-center justify-center rounded-md p-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="text-muted-foreground hover:text-foreground size-8"
         >
           <HugeiconsIcon icon={TranslateIcon} size={16} aria-hidden="true" />
-        </button>
+        </Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content align="end" className="min-w-44">
         <DropdownMenu.Label className="tracking-normal normal-case">

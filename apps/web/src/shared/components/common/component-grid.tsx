@@ -3,6 +3,7 @@
 import { Link } from '@/i18n/navigation';
 import { PlusSignIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import { IconTile } from '@repo/ui/components/icon-tile';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
@@ -70,14 +71,18 @@ export function ComponentGrid({ items, className }: ComponentGridProps) {
           )}
         >
           <span className="flex min-w-0 origin-left items-center gap-2.5 transition-transform duration-200 ease-out group-hover/cell:scale-[1.03] motion-reduce:transform-none">
-            <span className="group-hover/cell:border-rule group-hover/cell:bg-background flex size-8 shrink-0 items-center justify-center rounded-md border border-transparent transition-all duration-200 ease-out group-hover/cell:scale-110 group-hover/cell:-rotate-6 group-hover/cell:shadow-sm motion-reduce:transform-none">
+            <IconTile
+              size="sm"
+              tone="muted"
+              className="group-hover/cell:border-rule group-hover/cell:bg-background border-transparent bg-transparent transition-all duration-200 ease-out group-hover/cell:scale-110 group-hover/cell:-rotate-6 group-hover/cell:shadow-sm motion-reduce:transform-none"
+            >
               <HugeiconsIcon
                 icon={getComponentIcon(item.href)}
                 size={16}
                 strokeWidth={1.6}
                 className="text-muted-foreground group-hover/cell:text-foreground transition-colors duration-200"
               />
-            </span>
+            </IconTile>
             <span className="text-foreground/90 group-hover/cell:text-foreground truncate text-sm transition-colors duration-200">
               {item.title}
             </span>
@@ -89,14 +94,9 @@ export function ComponentGrid({ items, className }: ComponentGridProps) {
         style={cascadeIndex(items.length)}
         className="border-rule [grid-column-end:-1] -mr-px -mb-px flex items-center gap-2.5 border-r border-b px-3 py-2.5 sm:px-4"
       >
-        <span className="border-rule flex size-8 shrink-0 items-center justify-center rounded-md border border-dashed">
-          <HugeiconsIcon
-            icon={PlusSignIcon}
-            size={16}
-            strokeWidth={1.6}
-            className="text-muted-foreground"
-          />
-        </span>
+        <IconTile size="sm" tone="muted" className="border-rule border-dashed bg-transparent">
+          <HugeiconsIcon icon={PlusSignIcon} size={16} strokeWidth={1.6} />
+        </IconTile>
         <span className="text-muted-foreground truncate font-mono text-xs italic">
           {t('componentGrid.wip')}
         </span>

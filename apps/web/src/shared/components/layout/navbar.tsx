@@ -15,6 +15,7 @@ import {
 } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Badge } from '@repo/ui/components/badge';
+import { IconTile } from '@repo/ui/components/icon-tile';
 import { NavigationMenu } from '@repo/ui/components/navigation-menu';
 import { Separator } from '@repo/ui/components/separator';
 import { cn } from '@repo/ui/lib/cn';
@@ -51,9 +52,9 @@ function ComingSoonRow({
 }) {
   return (
     <div className="flex cursor-default items-start gap-3 rounded-md px-2.5 py-2.5 opacity-60">
-      <span className="border-border bg-background text-muted-foreground flex size-9 shrink-0 items-center justify-center rounded-md border border-dashed">
+      <IconTile tone="muted" className="size-9 border-dashed">
         <HugeiconsIcon icon={icon} size={16} strokeWidth={1.6} aria-hidden="true" />
-      </span>
+      </IconTile>
       <span className="min-w-0">
         <span className="flex items-center gap-2">
           <span className="text-foreground text-sm font-medium">{title}</span>

@@ -1,5 +1,9 @@
+'use client';
+
 import { GitHubIcon } from '@/components/common/github-icon';
 import { GITHUB_REPO_URL } from '@/lib/domains';
+import { buttonVariants } from '@repo/ui/components/button';
+import { cn } from '@repo/ui/lib/cn';
 
 export function GitHubLink() {
   return (
@@ -9,7 +13,10 @@ export function GitHubLink() {
       rel="noreferrer"
       title="GitHub"
       aria-label="NachUI on GitHub"
-      className="text-muted-foreground hover:text-foreground focus-visible:ring-ring flex items-center justify-center rounded-md p-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+      className={cn(
+        buttonVariants({ variant: 'ghost', size: 'icon' }),
+        'text-muted-foreground hover:text-foreground size-8',
+      )}
     >
       <GitHubIcon size={16} />
     </a>

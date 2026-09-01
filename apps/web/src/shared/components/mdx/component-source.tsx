@@ -1,4 +1,5 @@
 // Components
+import { Callout } from '@repo/ui/components/callout';
 import { ComponentSourceClient } from './component-source-client';
 
 // Utils
@@ -14,9 +15,10 @@ export async function ComponentSource({ component, className }: ComponentSourceP
 
   if (error) {
     return (
-      <div className="rounded border border-red-300 p-4 text-red-500">
-        {error ?? `Error: Component "${component}" not found.`}
-      </div>
+      <Callout variant="danger" className="my-4">
+        <Callout.Title>Unable to load source</Callout.Title>
+        <Callout.Content>{error ?? `Error: Component "${component}" not found.`}</Callout.Content>
+      </Callout>
     );
   }
 

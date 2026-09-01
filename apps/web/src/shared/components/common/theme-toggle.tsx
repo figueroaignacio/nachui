@@ -2,16 +2,18 @@
 
 import { Moon02Icon, SunIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import { Button } from '@repo/ui/components/button';
 import { useTheme } from 'nach-themes';
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="ghost"
+      size="icon"
       onClick={(e) => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark', e)}
-      className="text-muted-foreground hover:text-foreground focus-visible:ring-ring flex items-center justify-center rounded-md p-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+      className="text-muted-foreground hover:text-foreground size-8"
       aria-label="Toggle theme"
     >
       {/* Both icons render; the active theme decides which one shows, so server and client markup match. */}
@@ -21,6 +23,6 @@ export function ThemeToggle() {
       <span className="hidden dark:block">
         <HugeiconsIcon icon={Moon02Icon} size={16} aria-hidden="true" />
       </span>
-    </button>
+    </Button>
   );
 }

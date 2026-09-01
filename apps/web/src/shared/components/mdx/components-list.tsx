@@ -1,5 +1,6 @@
 'use client';
 
+import { Empty } from '@repo/ui/components/empty';
 import { useTranslations } from 'next-intl';
 import { ComponentGrid, type ComponentGridItem } from '../common/component-grid';
 
@@ -19,7 +20,16 @@ export function ComponentsList({ section }: { section?: string }) {
   );
 
   if (!componentsSection) {
-    return <div>No components found for section "{section || 'Components'}"</div>;
+    return (
+      <Empty variant="outline" className="my-6">
+        <Empty.Header>
+          <Empty.Title>No components found</Empty.Title>
+          <Empty.Description>
+            There is no section named &quot;{section || 'Components'}&quot; in the navigation.
+          </Empty.Description>
+        </Empty.Header>
+      </Empty>
+    );
   }
 
   return <ComponentGrid items={componentsSection.items} className="mt-6" />;

@@ -1,6 +1,7 @@
 'use client';
 
 // Components
+import { Callout } from '@repo/ui/components/callout';
 import { CodeBlockWrapper } from './code-block-wrapper';
 import { CodeBlock } from './codeblock';
 
@@ -22,9 +23,10 @@ export function ComponentSourceClient({
           <CodeBlock code={code} language="tsx" />
         </CodeBlockWrapper>
       ) : (
-        <div className="rounded border border-red-300 p-4 text-red-500">
-          Error al leer el archivo: {filePath || 'No especificado'}
-        </div>
+        <Callout variant="danger">
+          <Callout.Title>Unable to read the file</Callout.Title>
+          <Callout.Content>{filePath || 'No path provided'}</Callout.Content>
+        </Callout>
       )}
     </div>
   );

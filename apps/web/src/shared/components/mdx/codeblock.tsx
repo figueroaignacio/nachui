@@ -1,6 +1,7 @@
 'use client';
 
 import { fontCode } from '@/lib/font';
+import { Button } from '@repo/ui/components/button';
 import { Frame } from '@repo/ui/components/frame';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
@@ -146,12 +147,13 @@ export function CodeBlock({
 
 function ExpandButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
   return (
-    <button
-      type="button"
+    <Button
+      variant="ghost"
+      size="sm"
       onClick={onClick}
-      className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-sm px-3 py-1 font-mono text-xs transition-colors"
+      className="text-muted-foreground hover:text-foreground hover:bg-muted/50 h-7 rounded-sm font-mono"
     >
       {children}
-    </button>
+    </Button>
   );
 }
