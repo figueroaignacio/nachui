@@ -1,0 +1,114 @@
+---
+title: Timeline
+description: Events in order, vertical or horizontal, with indicators, dates and a completed state.
+published: true
+date: 2026-08-31
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="timeline" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="timeline" />
+
+## Anatomy
+
+```tsx
+import { Timeline } from '@/components/ui/timeline';
+```
+
+```tsx
+<Timeline value={2}>
+  <Timeline.Item step={1}>
+    <Timeline.Header>
+      <Timeline.Date>Mar 12</Timeline.Date>
+      <Timeline.Title>Project created</Timeline.Title>
+    </Timeline.Header>
+    <Timeline.Indicator />
+    <Timeline.Separator />
+    <Timeline.Content>Repository initialised from the starter template.</Timeline.Content>
+  </Timeline.Item>
+</Timeline>
+```
+
+Every item declares its `step`. Items whose step is at or below the timeline `value` are completed: their indicator fills with the primary color and the separator leading out of them follows. The item at `value` also gets `data-active`, so you can style the current step on its own. The root renders an ordered list and each item a list item.
+
+## Composition
+
+Use the following composition to build a `Timeline`:
+
+```tree
+Timeline
+└── Timeline.Item
+    ├── Timeline.Header
+    │   ├── Timeline.Date
+    │   └── Timeline.Title
+    ├── Timeline.Indicator
+    ├── Timeline.Separator
+    └── Timeline.Content
+```
+
+## Variants
+
+### Horizontal
+
+`orientation="horizontal"` lays the steps out left to right with the line above the content. Items share the width evenly.
+
+<ComponentPreview component="timeline" demo="horizontal" />
+
+### Icons
+
+Pass an icon as the indicator's children and size it with `className`. Add padding to the item so the content clears the larger marker.
+
+<ComponentPreview component="timeline" demo="icons" />
+
+### Alternate
+
+`alternate` mirrors every other item across the line, for roadmaps and history pages.
+
+<ComponentPreview component="timeline" demo="alternate" />
+
+### Left-aligned dates
+
+Push the item in with a margin and position the date in the gutter. The pieces are plain elements, so a couple of classes are enough.
+
+<ComponentPreview component="timeline" demo="left-dates" />
+
+## API Reference
+
+### Timeline
+
+| Prop          | Type                         | Default      | Description                                        |
+| ------------- | ---------------------------- | ------------ | -------------------------------------------------- |
+| `value`       | `number`                     | `1`          | Steps at or below this value are completed         |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Layout direction                                   |
+| `alternate`   | `boolean`                    | `false`      | Mirror every other item across the line (vertical) |
+| `className`   | `string`                     | -            | Additional CSS classes                             |
+
+### Timeline.Item
+
+| Prop        | Type     | Default | Description                                    |
+| ----------- | -------- | ------- | ---------------------------------------------- |
+| `step`      | `number` | -       | Position of the item, compared against `value` |
+| `className` | `string` | -       | Additional CSS classes                         |
+
+Exposes `data-completed` and `data-active` for styling.
+
+### Timeline.Title
+
+| Prop        | Type                                   | Default | Description            |
+| ----------- | -------------------------------------- | ------- | ---------------------- |
+| `as`        | `'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6'` | `'h3'`  | Heading level          |
+| `className` | `string`                               | -       | Additional CSS classes |
+
+### Timeline.Date
+
+Renders a `time` element and accepts `dateTime` plus `className`.
+
+### Timeline.Header, Timeline.Indicator, Timeline.Separator, Timeline.Content
+
+Layout parts of an item. Each accepts `className` and standard div props. The indicator takes children for a custom marker.

@@ -148,9 +148,21 @@
           "badge": "new"
         },
         {
+          "title": "File Upload",
+          "href": "/docs/elements/ui/file-upload",
+          "description": "Arrastra y suelta o busca archivos, con validación, previews y un hook para interfaces propias.",
+          "badge": "new"
+        },
+        {
           "title": "Frame",
           "href": "/docs/elements/ui/frame",
           "description": "Un contenedor estructurado que anida paneles, como una card dentro de una card.",
+          "badge": "new"
+        },
+        {
+          "title": "Icon Tile",
+          "href": "/docs/elements/ui/icon-tile",
+          "description": "Una superficie cuadrada y consistente para un ícono, iniciales o una etiqueta corta.",
           "badge": "new"
         },
         {
@@ -241,6 +253,12 @@
           "title": "Tabs",
           "href": "/docs/elements/ui/tabs",
           "description": "Organiza contenido en pestañas intercambiables."
+        },
+        {
+          "title": "Timeline",
+          "href": "/docs/elements/ui/timeline",
+          "description": "Eventos en orden, vertical u horizontal, con indicadores, fechas y estado completado.",
+          "badge": "new"
         },
         {
           "title": "Toast",

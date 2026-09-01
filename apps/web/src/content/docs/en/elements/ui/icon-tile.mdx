@@ -1,0 +1,76 @@
+---
+title: Icon Tile
+description: A consistent square surface for an icon, initials or a short label.
+published: true
+date: 2026-08-31
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="icon-tile" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="icon-tile" />
+
+## Anatomy
+
+```tsx
+import { IconTile } from '@/components/ui/icon-tile';
+```
+
+```tsx
+<IconTile variant="soft" tone="primary">
+  <SparklesIcon />
+</IconTile>
+```
+
+The tile fixes the box and the glyph size so icons line up across list rows, feature cards and empty states no matter which icon set you use. It takes an icon, initials or a short label as children. Color comes from a `tone`, which sets a `--tile-color` and `--tile-contrast` pair that every variant reads, so a custom color is one class away: `className="[--tile-color:var(--color-pink-500)]"`.
+
+## Variants
+
+### Surfaces
+
+`outline` is a bordered surface, `elevated` a muted fill with a background ring, `soft` a tinted surface with a faint halo, `solid` a filled tile with a contrasting glyph and `frame` a card inset inside a muted ring.
+
+<ComponentPreview component="icon-tile" demo="variants" />
+
+### Sizes
+
+Five sizes, each with a matching glyph size: 24, 32, 40, 48 and 56px.
+
+<ComponentPreview component="icon-tile" demo="sizes" />
+
+### Tones
+
+Semantic tones map to the theme tokens. The same tone works across every surface.
+
+<ComponentPreview component="icon-tile" demo="tones" />
+
+### Circular
+
+`radius="full"` turns the tile into a circle, handy next to avatars.
+
+<ComponentPreview component="icon-tile" demo="radius" />
+
+### Text
+
+Initials or a short count fit in the same box as an icon.
+
+<ComponentPreview component="icon-tile" demo="text" />
+
+## API Reference
+
+### IconTile
+
+| Prop        | Type                                                                                     | Default     | Description                                      |
+| ----------- | ---------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------ |
+| `variant`   | `'outline' \| 'elevated' \| 'soft' \| 'solid' \| 'frame'`                                | `'outline'` | Surface treatment                                |
+| `size`      | `'xs' \| 'sm' \| 'default' \| 'lg' \| 'xl'`                                              | `'default'` | Tile and glyph size                              |
+| `radius`    | `'default' \| 'full'`                                                                    | `'default'` | Rounded corners or a full circle                 |
+| `tone`      | `'default' \| 'muted' \| 'primary' \| 'success' \| 'warning' \| 'info' \| 'destructive'` | `'default'` | Color pair used by the surface and the glyph     |
+| `className` | `string`                                                                                 | -           | Additional CSS classes or CSS variable overrides |
+
+Renders a `span` and accepts every standard span attribute.

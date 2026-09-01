@@ -148,9 +148,21 @@
           "badge": "new"
         },
         {
+          "title": "File Upload",
+          "href": "/docs/elements/ui/file-upload",
+          "description": "Drag and drop or browse for files, with validation, previews and a hook for custom UIs.",
+          "badge": "new"
+        },
+        {
           "title": "Frame",
           "href": "/docs/elements/ui/frame",
           "description": "A structured container that nests panels, like a card inside a card.",
+          "badge": "new"
+        },
+        {
+          "title": "Icon Tile",
+          "href": "/docs/elements/ui/icon-tile",
+          "description": "A consistent square surface for an icon, initials or a short label.",
           "badge": "new"
         },
         {
@@ -241,6 +253,12 @@
           "title": "Tabs",
           "href": "/docs/elements/ui/tabs",
           "description": "Switch between different content panels easily."
+        },
+        {
+          "title": "Timeline",
+          "href": "/docs/elements/ui/timeline",
+          "description": "Events in order, vertical or horizontal, with indicators, dates and a completed state.",
+          "badge": "new"
         },
         {
           "title": "Toast",

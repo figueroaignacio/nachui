@@ -1,0 +1,76 @@
+---
+title: Icon Tile
+description: Una superficie cuadrada y consistente para un ícono, iniciales o una etiqueta corta.
+published: true
+date: 2026-08-31
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="icon-tile" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="icon-tile" />
+
+## Anatomía
+
+```tsx
+import { IconTile } from '@/components/ui/icon-tile';
+```
+
+```tsx
+<IconTile variant="soft" tone="primary">
+  <SparklesIcon />
+</IconTile>
+```
+
+El tile fija el tamaño de la caja y del glifo para que los íconos queden alineados en filas de lista, tarjetas de features y estados vacíos, sin importar el set de íconos que uses. Acepta un ícono, iniciales o una etiqueta corta como children. El color viene de un `tone`, que define el par `--tile-color` y `--tile-contrast` que leen todas las variantes, así que un color propio está a una clase de distancia: `className="[--tile-color:var(--color-pink-500)]"`.
+
+## Variantes
+
+### Superficies
+
+`outline` es una superficie con borde, `elevated` un relleno muted con un anillo del color del fondo, `soft` una superficie teñida con un halo tenue, `solid` un tile relleno con el glifo en contraste y `frame` una card encajada dentro de un anillo muted.
+
+<ComponentPreview component="icon-tile" demo="variants" />
+
+### Tamaños
+
+Cinco tamaños, cada uno con su glifo a escala: 24, 32, 40, 48 y 56px.
+
+<ComponentPreview component="icon-tile" demo="sizes" />
+
+### Tonos
+
+Los tonos semánticos se mapean a los tokens del tema. El mismo tono funciona en todas las superficies.
+
+<ComponentPreview component="icon-tile" demo="tones" />
+
+### Circular
+
+`radius="full"` convierte el tile en un círculo, útil junto a avatares.
+
+<ComponentPreview component="icon-tile" demo="radius" />
+
+### Texto
+
+Iniciales o un contador corto entran en la misma caja que un ícono.
+
+<ComponentPreview component="icon-tile" demo="text" />
+
+## Referencia de API
+
+### IconTile
+
+| Prop        | Type                                                                                     | Default     | Description                                         |
+| ----------- | ---------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------- |
+| `variant`   | `'outline' \| 'elevated' \| 'soft' \| 'solid' \| 'frame'`                                | `'outline'` | Tratamiento de la superficie                        |
+| `size`      | `'xs' \| 'sm' \| 'default' \| 'lg' \| 'xl'`                                              | `'default'` | Tamaño del tile y del glifo                         |
+| `radius`    | `'default' \| 'full'`                                                                    | `'default'` | Esquinas redondeadas o círculo completo             |
+| `tone`      | `'default' \| 'muted' \| 'primary' \| 'success' \| 'warning' \| 'info' \| 'destructive'` | `'default'` | Par de colores que usan la superficie y el glifo    |
+| `className` | `string`                                                                                 | -           | Clases CSS adicionales o overrides de variables CSS |
+
+Renderiza un `span` y acepta todos los atributos estándar de span.

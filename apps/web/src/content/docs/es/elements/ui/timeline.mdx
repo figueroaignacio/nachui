@@ -1,0 +1,114 @@
+---
+title: Timeline
+description: Eventos en orden, vertical u horizontal, con indicadores, fechas y estado completado.
+published: true
+date: 2026-08-31
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="timeline" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="timeline" />
+
+## Anatomía
+
+```tsx
+import { Timeline } from '@/components/ui/timeline';
+```
+
+```tsx
+<Timeline value={2}>
+  <Timeline.Item step={1}>
+    <Timeline.Header>
+      <Timeline.Date>12 mar</Timeline.Date>
+      <Timeline.Title>Proyecto creado</Timeline.Title>
+    </Timeline.Header>
+    <Timeline.Indicator />
+    <Timeline.Separator />
+    <Timeline.Content>Repositorio inicializado desde la plantilla base.</Timeline.Content>
+  </Timeline.Item>
+</Timeline>
+```
+
+Cada item declara su `step`. Los items cuyo step es menor o igual al `value` del timeline están completados: su indicador se rellena con el color primario y el separador que sale de ellos lo acompaña. El item en `value` además recibe `data-active`, así puedes darle estilo propio al paso actual. La raíz renderiza una lista ordenada y cada item un elemento de lista.
+
+## Composición
+
+Usa la siguiente composición para construir un `Timeline`:
+
+```tree
+Timeline
+└── Timeline.Item
+    ├── Timeline.Header
+    │   ├── Timeline.Date
+    │   └── Timeline.Title
+    ├── Timeline.Indicator
+    ├── Timeline.Separator
+    └── Timeline.Content
+```
+
+## Variantes
+
+### Horizontal
+
+`orientation="horizontal"` distribuye los pasos de izquierda a derecha con la línea sobre el contenido. Los items reparten el ancho en partes iguales.
+
+<ComponentPreview component="timeline" demo="horizontal" />
+
+### Íconos
+
+Pasa un ícono como children del indicador y ajusta su tamaño con `className`. Agrega padding al item para que el contenido no choque con el marcador más grande.
+
+<ComponentPreview component="timeline" demo="icons" />
+
+### Alternado
+
+`alternate` refleja un item sí y otro no a cada lado de la línea, para roadmaps y páginas de historial.
+
+<ComponentPreview component="timeline" demo="alternate" />
+
+### Fechas a la izquierda
+
+Desplaza el item con un margen y posiciona la fecha en el canal libre. Las piezas son elementos simples, así que con un par de clases alcanza.
+
+<ComponentPreview component="timeline" demo="left-dates" />
+
+## Referencia de API
+
+### Timeline
+
+| Prop          | Type                         | Default      | Description                                                 |
+| ------------- | ---------------------------- | ------------ | ----------------------------------------------------------- |
+| `value`       | `number`                     | `1`          | Los pasos menores o iguales a este valor están completados  |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Dirección del layout                                        |
+| `alternate`   | `boolean`                    | `false`      | Refleja un item de cada dos a través de la línea (vertical) |
+| `className`   | `string`                     | -            | Clases CSS adicionales                                      |
+
+### Timeline.Item
+
+| Prop        | Type     | Default | Description                                  |
+| ----------- | -------- | ------- | -------------------------------------------- |
+| `step`      | `number` | -       | Posición del item, se compara contra `value` |
+| `className` | `string` | -       | Clases CSS adicionales                       |
+
+Expone `data-completed` y `data-active` para estilos.
+
+### Timeline.Title
+
+| Prop        | Type                                   | Default | Description            |
+| ----------- | -------------------------------------- | ------- | ---------------------- |
+| `as`        | `'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6'` | `'h3'`  | Nivel de encabezado    |
+| `className` | `string`                               | -       | Clases CSS adicionales |
+
+### Timeline.Date
+
+Renderiza un elemento `time` y acepta `dateTime` además de `className`.
+
+### Timeline.Header, Timeline.Indicator, Timeline.Separator, Timeline.Content
+
+Partes de layout de un item. Cada una acepta `className` y las props estándar de div. El indicador acepta children para un marcador personalizado.

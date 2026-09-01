@@ -1,0 +1,151 @@
+---
+title: File Upload
+description: Arrastra y suelta o busca archivos, con validación, previews y un hook para interfaces propias.
+published: true
+date: 2026-08-31
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="file-upload" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="file-upload" />
+
+## Anatomía
+
+```tsx
+import { FileUpload } from '@/components/ui/file-upload';
+```
+
+```tsx
+<FileUpload multiple maxFiles={3} maxSize={2 * 1024 * 1024} accept="image/*,.pdf">
+  <FileUpload.Dropzone>
+    <UploadIcon />
+    <p>Suelta archivos aquí o haz clic para buscar</p>
+  </FileUpload.Dropzone>
+  <FileUpload.List />
+  <FileUpload.Errors />
+  <FileUpload.Clear>Quitar todos</FileUpload.Clear>
+</FileUpload>
+```
+
+La raíz es dueña del input de archivos oculto y del estado: los archivos aceptados, los errores de validación y si hay algo arrastrándose encima. El dropzone abre el selector con clic, Enter o Espacio y acepta drops. `List` renderiza un `Item` por archivo con preview, nombre, tamaño y un botón para quitarlo, y acepta una función de render cuando quieres tu propia fila. Las imágenes reciben un preview con object URL que se libera cuando el archivo sale de la lista.
+
+## Composición
+
+Usa la siguiente composición para construir un `FileUpload`:
+
+```tree
+FileUpload
+├── FileUpload.Dropzone
+├── FileUpload.Trigger
+├── FileUpload.List
+│   └── FileUpload.Item
+│       ├── FileUpload.ItemPreview
+│       ├── FileUpload.ItemInfo
+│       └── FileUpload.ItemRemove
+├── FileUpload.Errors
+└── FileUpload.Clear
+```
+
+## Variantes
+
+### Múltiple con límites
+
+`multiple` sigue agregando a la lista. `maxFiles`, `maxSize` y `accept` rechazan lo que no encaja y los motivos aparecen en `Errors`. Un lote que superaría `maxFiles` se rechaza completo.
+
+<ComponentPreview component="file-upload" demo="multiple" />
+
+### Avatar
+
+Una sola imagen con el preview dentro del propio dropzone. `useFileUploadContext` lee el estado desde cualquier hijo, así que el preview son unas pocas líneas.
+
+<ComponentPreview component="file-upload" demo="avatar" />
+
+### Compacto
+
+`Trigger` es un botón que abre el selector, para formularios donde un dropzone ocupa demasiado. La lista se acomoda como chips mediante `className`.
+
+<ComponentPreview component="file-upload" demo="compact" />
+
+### Progreso
+
+Pasa una función de render a `List` y compón las partes del item alrededor de tu propia lógica de subida. Esta demo simula la subida con un timer y una barra `Progress`.
+
+<ComponentPreview component="file-upload" demo="upload-progress" />
+
+### Grilla de imágenes
+
+Las mismas partes acomodadas como una grilla de miniaturas, con el botón de quitar visible al pasar el mouse.
+
+<ComponentPreview component="file-upload" demo="images" />
+
+## Hook
+
+`useFileUpload` es el motor detrás del componente y se exporta por separado para interfaces que no encajan con las partes de arriba. Recibe las mismas opciones que la raíz y devuelve el estado más los handlers para conectar a cualquier elemento.
+
+```tsx
+import { useFileUpload, formatBytes } from '@/components/ui/file-upload';
+
+const { files, errors, isDragging, openFileDialog, getInputProps, getDropzoneProps, removeFile } =
+  useFileUpload({ multiple: true, maxSize: 5 * 1024 * 1024 });
+
+<input {...getInputProps()} className="sr-only" />
+<div {...getDropzoneProps()} data-dragging={isDragging || undefined}>...</div>
+```
+
+| Return             | Type                                  | Description                                            |
+| ------------------ | ------------------------------------- | ------------------------------------------------------ |
+| `files`            | `FileWithPreview[]`                   | Archivos aceptados con un `id` y un `preview` opcional |
+| `errors`           | `string[]`                            | Mensajes de la última validación                       |
+| `isDragging`       | `boolean`                             | Hay un arrastre sobre el dropzone                      |
+| `addFiles`         | `(files: FileList \| File[]) => void` | Valida y agrega archivos por código                    |
+| `removeFile`       | `(id: string) => void`                | Quita un archivo                                       |
+| `clearFiles`       | `() => void`                          | Quita todos los archivos                               |
+| `clearErrors`      | `() => void`                          | Limpia la lista de errores                             |
+| `openFileDialog`   | `() => void`                          | Abre el selector nativo                                |
+| `getInputProps`    | `() => InputProps`                    | Props para el input de archivos oculto                 |
+| `getDropzoneProps` | `() => DragHandlers`                  | Handlers de drag enter, leave, over y drop             |
+
+`formatBytes(bytes, decimals?)` convierte una cantidad de bytes en `1.5 MB`.
+
+## Referencia de API
+
+### FileUpload
+
+| Prop            | Type                                 | Default    | Description                                                   |
+| --------------- | ------------------------------------ | ---------- | ------------------------------------------------------------- |
+| `accept`        | `string`                             | -          | Tipos aceptados, como el atributo nativo `accept`             |
+| `multiple`      | `boolean`                            | `false`    | Sigue agregando archivos en vez de reemplazar                 |
+| `maxFiles`      | `number`                             | `Infinity` | Cantidad máxima de archivos cuando es `multiple`              |
+| `maxSize`       | `number`                             | `Infinity` | Tamaño máximo por archivo, en bytes                           |
+| `initialFiles`  | `FileMetadata[]`                     | `[]`       | Archivos ya subidos, con `id`, `name`, `size`, `type` y `url` |
+| `disabled`      | `boolean`                            | `false`    | Deshabilita el dropzone, el trigger y las acciones            |
+| `name`          | `string`                             | -          | Nombre del input oculto para envíos de formulario             |
+| `onFilesChange` | `(files: FileWithPreview[]) => void` | -          | Se llama con la lista completa después de cada cambio         |
+| `onFilesAdded`  | `(files: FileWithPreview[]) => void` | -          | Se llama con los archivos aceptados en un lote                |
+| `onError`       | `(errors: string[]) => void`         | -          | Se llama cuando un lote produce errores de validación         |
+| `className`     | `string`                             | -          | Clases CSS adicionales                                        |
+
+### FileUpload.List
+
+| Prop        | Type                                                | Default | Description                                                         |
+| ----------- | --------------------------------------------------- | ------- | ------------------------------------------------------------------- |
+| `children`  | `ReactNode \| (file: FileWithPreview) => ReactNode` | -       | Filas personalizadas. Sin children cada archivo renderiza un `Item` |
+| `className` | `string`                                            | -       | Clases CSS adicionales                                              |
+
+### FileUpload.Item
+
+| Prop        | Type              | Default | Description                                                          |
+| ----------- | ----------------- | ------- | -------------------------------------------------------------------- |
+| `file`      | `FileWithPreview` | -       | El archivo a renderizar                                              |
+| `children`  | `ReactNode`       | -       | Partes personalizadas. Sin children renderiza preview, info y quitar |
+| `className` | `string`          | -       | Clases CSS adicionales                                               |
+
+### FileUpload.Dropzone, FileUpload.Trigger, FileUpload.ItemPreview, FileUpload.ItemInfo, FileUpload.ItemRemove, FileUpload.Errors, FileUpload.Clear
+
+Partes conectadas al estado compartido. Cada una acepta `className` y los atributos estándar del elemento que renderiza. `ItemRemove` trae un `aria-label` en inglés que puedes sobrescribir.
