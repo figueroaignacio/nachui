@@ -1,6 +1,8 @@
 'use client';
 
 import { Link } from '@/i18n/navigation';
+import { ArrowRight02Icon, ArrowUpRight01Icon } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
 import { buttonVariants } from '@repo/ui/components/button';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
@@ -19,7 +21,7 @@ export function LandingHero() {
   const actions: HomePageActions[] = t.raw('actions');
 
   return (
-    <section className="flex w-full flex-col pt-8 md:pt-10 lg:pt-14">
+    <section className="flex w-full flex-col items-center pt-8 text-center md:pt-10 lg:pt-14">
       <p className="section-label">{t('badge')}</p>
       <h1 className="font-heading text-foreground mt-4 max-w-3xl text-[1.75rem] leading-[1.1] font-semibold tracking-[-0.02em] md:text-[2rem] lg:text-[2.25rem]">
         {t('subheading1')}
@@ -27,7 +29,7 @@ export function LandingHero() {
       <p className="text-muted-strong mt-4 max-w-[54ch] text-[15px] leading-relaxed md:text-base">
         {t('description')}
       </p>
-      <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+      <div className="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
         <Link
           href={actions[0]?.href ?? '/docs'}
           className={cn(
@@ -36,7 +38,7 @@ export function LandingHero() {
           )}
         >
           {actions[0]?.label ?? 'Get started'}
-          <span aria-hidden="true">→</span>
+          <HugeiconsIcon icon={ArrowRight02Icon} size={14} aria-hidden="true" />
         </Link>
         <Link
           href={actions[1]?.href ?? '/docs/elements/ui'}
@@ -45,7 +47,8 @@ export function LandingHero() {
             'text-muted-foreground hover:text-foreground font-mono',
           )}
         >
-          {actions[1]?.label ?? 'View UI elements'} ↗
+          {actions[1]?.label ?? 'View UI elements'}
+          <HugeiconsIcon icon={ArrowUpRight01Icon} size={14} aria-hidden="true" />
         </Link>
       </div>
 

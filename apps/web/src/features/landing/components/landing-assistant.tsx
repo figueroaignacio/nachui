@@ -2,6 +2,8 @@
 
 import { useChatStore } from '@/features/chat/store/chat-store';
 import { AiAvatar } from '@/features/chat/ui/ai-avatar';
+import { ArrowRight02Icon } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '@repo/ui/components/button';
 import { useTranslations } from 'next-intl';
 
@@ -63,7 +65,7 @@ export function LandingAssistant() {
           <Button
             size="sm"
             onClick={openChat}
-            rightIcon={<span aria-hidden="true">→</span>}
+            rightIcon={<HugeiconsIcon icon={ArrowRight02Icon} size={14} aria-hidden="true" />}
             className="mt-6 font-mono"
           >
             {t('cta')}

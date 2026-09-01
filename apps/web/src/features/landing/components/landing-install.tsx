@@ -3,6 +3,8 @@
 import { CopyButton } from '@/components/mdx/copy-button';
 import { AiWalker } from '@/features/chat/ui/ai-walker';
 import { Link } from '@/i18n/navigation';
+import { ArrowRight02Icon, ArrowUpRight01Icon } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
 import { buttonVariants } from '@repo/ui/components/button';
 import { cn } from '@repo/ui/lib/cn';
 import { Frame } from '@repo/ui/components/frame';
@@ -64,7 +66,8 @@ export function LandingInstall() {
               href="/docs/installation"
               className={cn(buttonVariants({ variant: 'default', size: 'sm' }), 'font-mono')}
             >
-              {t('primaryAction')} →
+              {t('primaryAction')}
+              <HugeiconsIcon icon={ArrowRight02Icon} size={14} aria-hidden="true" />
             </Link>
             <Link
               href="/docs/elements/ui"
@@ -73,7 +76,8 @@ export function LandingInstall() {
                 'text-muted-foreground hover:text-foreground font-mono',
               )}
             >
-              {t('secondaryAction')} ↗
+              {t('secondaryAction')}
+              <HugeiconsIcon icon={ArrowUpRight01Icon} size={14} aria-hidden="true" />
             </Link>
           </div>
         </div>
