@@ -19,12 +19,14 @@ export function LoginForm() {
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <Label htmlFor="login-01-password">Password</Label>
-              <button
+              <Button
                 type="button"
-                className="text-muted-foreground hover:text-foreground text-xs underline-offset-4 hover:underline"
+                variant="link"
+                size="sm"
+                className="text-muted-foreground hover:text-foreground"
               >
                 Forgot your password?
-              </button>
+              </Button>
             </div>
             <Input id="login-01-password" type="password" autoComplete="current-password" />
           </div>

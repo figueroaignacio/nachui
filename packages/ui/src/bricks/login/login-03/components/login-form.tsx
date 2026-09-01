@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '../../../../components/button';
+import { Card } from '../../../../components/card';
 import { Input } from '../../../../components/input';
 import { Label } from '../../../../components/label';
 import { Separator } from '../../../../components/separator';
@@ -51,7 +52,7 @@ function GoogleIcon() {
 
 export function Login03() {
   return (
-    <div className="bg-card border-border flex w-full overflow-hidden rounded-xl border shadow-sm">
+    <Card className="w-full flex-row overflow-hidden rounded-xl shadow-sm">
       <div className="bg-muted/30 hidden w-1/2 flex-col justify-between p-10 lg:flex">
         <div className="text-foreground text-lg font-bold tracking-tight">NachUI</div>
         <div className="space-y-3">
@@ -67,14 +68,12 @@ export function Login03() {
       </div>
       <div className="flex w-full flex-col items-center justify-center p-8 lg:w-1/2 lg:p-12">
         <div className="w-full max-w-sm space-y-6">
-          <div className="space-y-1 text-center">
-            <h2 className="text-foreground text-2xl font-bold tracking-tight">
+          <Card.Header compact className="items-center p-0 text-center">
+            <Card.Title as="h2" className="text-2xl font-bold">
               Login to your account
-            </h2>
-            <p className="text-muted-foreground text-sm">
-              Enter your email and password to continue
-            </p>
-          </div>
+            </Card.Title>
+            <Card.Description>Enter your email and password to continue</Card.Description>
+          </Card.Header>
           <div className="grid grid-cols-2 gap-3">
             <Button variant="outline" leftIcon={<GitHubIcon />}>
               GitHub
@@ -89,12 +88,14 @@ export function Login03() {
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <Label htmlFor="login-03-password">Password</Label>
-                <button
+                <Button
                   type="button"
-                  className="text-muted-foreground hover:text-foreground text-xs underline-offset-4 hover:underline"
+                  variant="link"
+                  size="sm"
+                  className="text-muted-foreground hover:text-foreground"
                 >
                   Forgot password?
-                </button>
+                </Button>
               </div>
               <Input id="login-03-password" type="password" autoComplete="current-password" />
             </div>
@@ -113,6 +114,6 @@ export function Login03() {
           </p>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

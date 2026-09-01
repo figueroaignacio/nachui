@@ -3,6 +3,7 @@
 import { Button } from '../../../../components/button';
 import { Card } from '../../../../components/card';
 import { Drawer } from '../../../../components/drawer';
+import { Frame } from '../../../../components/frame';
 import { Label } from '../../../../components/label';
 import { Select } from '../../../../components/select';
 import { Switch } from '../../../../components/switch';
@@ -37,13 +38,13 @@ export function Settings02() {
                     </Select>
                   </div>
 
-                  <div className="border-border flex items-center justify-between rounded-xl border p-4">
-                    <div className="space-y-0.5">
-                      <p className="text-foreground text-sm font-medium">Quiet hours</p>
-                      <p className="text-muted-foreground text-xs">Mute notifications overnight.</p>
+                  <Frame.Panel className="flex items-center justify-between gap-4">
+                    <div className="space-y-1">
+                      <Frame.Title>Quiet hours</Frame.Title>
+                      <Frame.Description>Mute notifications overnight.</Frame.Description>
                     </div>
                     <Switch />
-                  </div>
+                  </Frame.Panel>
 
                   <div className="flex items-center justify-end gap-2">
                     <Drawer.Close>
@@ -60,35 +61,29 @@ export function Settings02() {
         </Card.Header>
         <Card.Content>
           <div className="space-y-3">
-            <div className="border-border flex items-center justify-between rounded-xl border p-4">
-              <div className="space-y-0.5">
-                <p className="text-foreground text-sm font-medium">Product updates</p>
-                <p className="text-muted-foreground text-xs">
-                  New components, bricks, and releases.
-                </p>
+            <Frame.Panel className="flex items-center justify-between gap-4">
+              <div className="space-y-1">
+                <Frame.Title>Product updates</Frame.Title>
+                <Frame.Description>New components, bricks, and releases.</Frame.Description>
               </div>
               <Switch defaultChecked />
-            </div>
+            </Frame.Panel>
 
-            <div className="border-border flex items-center justify-between rounded-xl border p-4">
-              <div className="space-y-0.5">
-                <p className="text-foreground text-sm font-medium">Security alerts</p>
-                <p className="text-muted-foreground text-xs">
-                  Important account and access changes.
-                </p>
+            <Frame.Panel className="flex items-center justify-between gap-4">
+              <div className="space-y-1">
+                <Frame.Title>Security alerts</Frame.Title>
+                <Frame.Description>Important account and access changes.</Frame.Description>
               </div>
               <Switch defaultChecked />
-            </div>
+            </Frame.Panel>
 
-            <div className="border-border flex items-center justify-between rounded-xl border p-4">
-              <div className="space-y-0.5">
-                <p className="text-foreground text-sm font-medium">Mentions</p>
-                <p className="text-muted-foreground text-xs">
-                  When someone mentions you in a thread.
-                </p>
+            <Frame.Panel className="flex items-center justify-between gap-4">
+              <div className="space-y-1">
+                <Frame.Title>Mentions</Frame.Title>
+                <Frame.Description>When someone mentions you in a thread.</Frame.Description>
               </div>
               <Switch />
-            </div>
+            </Frame.Panel>
           </div>
         </Card.Content>
         <Card.Footer align="end">

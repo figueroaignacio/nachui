@@ -3,6 +3,7 @@
 import { Button } from '../../../../components/button';
 import { Card } from '../../../../components/card';
 import { Checkbox } from '../../../../components/checkbox';
+import { Frame } from '../../../../components/frame';
 import { Input } from '../../../../components/input';
 import { Label } from '../../../../components/label';
 import { Select } from '../../../../components/select';
@@ -39,15 +40,15 @@ export function Settings01() {
                   />
                 </div>
                 <Input label="Company" placeholder="NachUI" autoComplete="organization" />
-                <div className="border-border flex items-center justify-between rounded-xl border p-4">
-                  <div className="space-y-0.5">
-                    <p className="text-foreground text-sm font-medium">Public profile</p>
-                    <p className="text-muted-foreground text-xs">
+                <Frame.Panel className="flex items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <Frame.Title>Public profile</Frame.Title>
+                    <Frame.Description>
                       Show your name and avatar on public bricks.
-                    </p>
+                    </Frame.Description>
                   </div>
                   <Switch defaultChecked />
-                </div>
+                </Frame.Panel>
                 <div className="flex justify-end">
                   <Button type="submit">Save changes</Button>
                 </div>
@@ -60,13 +61,13 @@ export function Settings01() {
                   <Input label="Current password" type="password" autoComplete="current-password" />
                   <Input label="New password" type="password" autoComplete="new-password" />
                 </div>
-                <div className="border-border flex items-center justify-between rounded-xl border p-4">
-                  <div className="space-y-0.5">
-                    <p className="text-foreground text-sm font-medium">Two-factor authentication</p>
-                    <p className="text-muted-foreground text-xs">Add an extra layer of security.</p>
+                <Frame.Panel className="flex items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <Frame.Title>Two-factor authentication</Frame.Title>
+                    <Frame.Description>Add an extra layer of security.</Frame.Description>
                   </div>
                   <Switch />
-                </div>
+                </Frame.Panel>
                 <div className="flex items-start gap-2">
                   <Checkbox id="settings-01-logout" defaultChecked />
                   <div className="space-y-0.5">
