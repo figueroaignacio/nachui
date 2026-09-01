@@ -3,6 +3,8 @@ import { AiAvatar } from '@/features/chat/ui/ai-avatar';
 import { Link } from '@/i18n/navigation';
 import type { DocBadge, NavigationSection, SearchResultItem } from '@/lib/definitions';
 import { Dialog } from '@repo/ui/components/dialog';
+import { Empty } from '@repo/ui/components/empty';
+import { Separator } from '@repo/ui/components/separator';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef } from 'react';
@@ -69,12 +71,10 @@ function ResultItem({
 
 function SectionHeader({ label }: { label: string }) {
   return (
-    <div className="flex items-center gap-2 px-3 pt-3 pb-1 first:pt-0">
-      <span className="text-muted-foreground/40 text-[10px] font-semibold tracking-widest uppercase">
-        {label}
-      </span>
-      <span className="border-border/30 flex-1 border-t" />
-    </div>
+    <Separator
+      label={label}
+      className="[&>span:last-child]:bg-border/30 [&>span:nth-child(2)]:text-muted-foreground/40 px-3 pt-3 pb-1 first:pt-0 [&>span:first-child]:hidden [&>span:nth-child(2)]:text-[10px] [&>span:nth-child(2)]:font-semibold [&>span:nth-child(2)]:tracking-widest [&>span:nth-child(2)]:uppercase"
+    />
   );
 }
 
@@ -98,11 +98,19 @@ export function SearchResults({
 
   if (query && results.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-2 py-12">
-        <AiAvatar size="lg" />
-        <p className="text-muted-foreground/60 text-sm">{t('noResults')}</p>
-        <p className="text-muted-foreground/35 text-xs">Try a different keyword</p>
-      </div>
+      <Empty className="gap-2 py-12">
+        <Empty.Header className="gap-2">
+          <Empty.Media className="mb-0">
+            <AiAvatar size="lg" />
+          </Empty.Media>
+          <Empty.Title className="text-muted-foreground/60 text-sm font-normal">
+            {t('noResults')}
+          </Empty.Title>
+          <Empty.Description className="text-muted-foreground/35 text-xs">
+            Try a different keyword
+          </Empty.Description>
+        </Empty.Header>
+      </Empty>
     );
   }
 

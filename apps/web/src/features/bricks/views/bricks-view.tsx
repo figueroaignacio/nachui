@@ -3,6 +3,7 @@ import { BRICK_CATEGORIES } from '@/features/bricks/lib/bricks-registry';
 import { Link } from '@/i18n/navigation';
 import { ArrowRight02Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import { IconTile } from '@repo/ui/components/icon-tile';
 import { Typography } from '@repo/ui/components/typography';
 import { Flex } from '@repo/ui/layout/flex';
 import { Grid } from '@repo/ui/layout/grid';
@@ -21,13 +22,12 @@ export function BricksView() {
           >
             <Stack className="justify-between p-5">
               <Stack gap="4">
-                <Flex
-                  align="center"
-                  justify="center"
-                  className="bg-surface-muted text-foreground border-border size-12 rounded-xl border shadow-sm"
+                <IconTile
+                  size="lg"
+                  className="bg-surface-muted rounded-xl text-lg font-bold shadow-sm"
                 >
-                  <span className="text-lg font-bold">{category.name.charAt(0)}</span>
-                </Flex>
+                  {category.name.charAt(0)}
+                </IconTile>
                 <div>
                   <Typography
                     variant="h3"

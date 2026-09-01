@@ -4,6 +4,7 @@ import type { BrickSourceFile } from '@/features/bricks/lib/get-brick-source';
 import { useCopyToClipboard } from '@/features/docs/hooks/use-copy-to-clipboard';
 import { LaptopIcon, Tick02Icon, Copy01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import { Callout } from '@repo/ui/components/callout';
 import { Tabs } from '@repo/ui/components/tabs';
 import { cn } from '@repo/ui/lib/cn';
 import { useState } from 'react';
@@ -151,11 +152,11 @@ export function BrickPreview({
           {files && files.length > 0 ? (
             <BrickCodeViewer files={files} />
           ) : (
-            <div className="border-border border p-6">
-              <p className="text-destructive font-mono text-sm">
-                ⚠ Source code not available for brick &ldquo;{name}&rdquo;.
-              </p>
-            </div>
+            <Callout variant="danger">
+              <Callout.Title className="font-mono">
+                Source code not available for brick &ldquo;{name}&rdquo;.
+              </Callout.Title>
+            </Callout>
           )}
         </Tabs.Content>
       </Tabs>

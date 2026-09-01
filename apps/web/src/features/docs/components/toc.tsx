@@ -3,6 +3,7 @@
 import { GitHubStarTocCta } from '@/components/common/github-star-cta';
 import { useMounted } from '@/hooks/use-mounted';
 import { Typography } from '@repo/ui/components/typography';
+import { Skeleton } from '@repo/ui/components/skeleton';
 import { motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
@@ -12,15 +13,15 @@ function SkeletonItem({ width, subitems }: { width: number; subitems?: number[] 
   return (
     <li>
       <div className="flex items-center gap-2.5 px-2 py-1.5">
-        <div className="bg-secondary animate-pulse rounded-full" style={{ height: 9, width }} />
+        <Skeleton className="bg-secondary rounded-full" style={{ height: 9, width }} />
       </div>
       {subitems && (
         <ul className="m-0 mt-0.5 ml-3 list-none space-y-0.5">
           {subitems.map((subWidth, i) => (
             <li key={i}>
               <div className="flex items-center gap-2.5 px-2 py-1.5">
-                <div
-                  className="bg-secondary animate-pulse rounded-full"
+                <Skeleton
+                  className="bg-secondary rounded-full"
                   style={{ height: 8, width: subWidth }}
                 />
               </div>
@@ -35,7 +36,7 @@ function SkeletonItem({ width, subitems }: { width: number; subitems?: number[] 
 function TocSkeleton() {
   return (
     <div className="sticky top-24 h-[calc(100vh-5rem)] space-y-4">
-      <div className="bg-secondary h-2 w-14 animate-pulse rounded-full" />
+      <Skeleton className="bg-secondary h-2 w-14 rounded-full" />
       <ul className="m-0 list-none space-y-0.5">
         <SkeletonItem width={88} />
         <SkeletonItem width={72} subitems={[96, 80]} />

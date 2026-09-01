@@ -2,6 +2,7 @@
 
 import { ArrowUp01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import { Button } from '@repo/ui/components/button';
 import { cn } from '@repo/ui/lib/cn';
 import { motion, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
@@ -83,14 +84,16 @@ export function ChatLauncher(props: ChatLauncherProps) {
                 {t('shortcut')}
               </span>
             )}
-            <button
+            <Button
               type="submit"
+              variant="ghost"
+              size="icon"
               disabled={!canSend}
               aria-label={t('send')}
-              className="text-muted-foreground hover:text-foreground flex size-5 shrink-0 items-center justify-center transition-colors disabled:pointer-events-none disabled:opacity-40"
+              className="text-muted-foreground hover:text-foreground size-5 rounded-sm hover:bg-transparent"
             >
               <HugeiconsIcon icon={ArrowUp01Icon} size={16} aria-hidden="true" />
-            </button>
+            </Button>
           </div>
         </form>
       )}

@@ -1,5 +1,6 @@
 import { ArrowUp01Icon, StopIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import { Button } from '@repo/ui/components/button';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -56,18 +57,20 @@ export function ChatInput(props: ChatInputProps) {
           className="placeholder:text-muted-foreground/80 max-h-32 w-full resize-none bg-transparent text-sm leading-relaxed outline-none"
         />
         <div className="mt-1 flex items-center justify-end">
-          <button
+          <Button
             type="submit"
+            variant="ghost"
+            size="icon"
             disabled={!canSend}
             aria-label={t('launcher.send')}
-            className="text-muted-foreground hover:text-foreground flex size-5 shrink-0 items-center justify-center transition-colors disabled:pointer-events-none disabled:opacity-40"
+            className="text-muted-foreground hover:text-foreground size-5 rounded-sm hover:bg-transparent"
           >
             <HugeiconsIcon
               icon={isLoading ? StopIcon : ArrowUp01Icon}
               size={16}
               aria-hidden="true"
             />
-          </button>
+          </Button>
         </div>
       </div>
     </form>

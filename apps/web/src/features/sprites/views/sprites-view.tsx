@@ -1,5 +1,6 @@
 import { Link } from '@/i18n/navigation';
 import { Sprite } from '@repo/ui/components/sprite';
+import { Separator } from '@repo/ui/components/separator';
 import { getTranslations } from 'next-intl/server';
 import { CAST } from '../lib/cast';
 
@@ -19,7 +20,7 @@ export async function SpritesView() {
           {t('subtitle')}
         </p>
 
-        <hr className="border-border my-10" />
+        <Separator className="my-10" />
 
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {CAST.map((member) => (

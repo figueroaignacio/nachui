@@ -1,5 +1,7 @@
 import { CopyButton } from '@/components/mdx/copy-button';
 import { Link } from '@/i18n/navigation';
+import { Command } from '@repo/ui/components/command';
+import { Frame } from '@repo/ui/components/frame';
 import { Sprite, type SpriteState } from '@repo/ui/components/sprite';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -106,23 +108,18 @@ export async function SpriteView({ id }: { id: string }) {
         <h2 className="text-muted-foreground mt-12 mb-4 font-mono text-[0.68rem] tracking-widest uppercase">
           {t('codeTitle')}
         </h2>
-        <div className="border-border bg-card overflow-hidden rounded-lg border">
-          <div className="border-border flex items-center justify-between border-b px-4 py-2">
-            <span className="text-muted-foreground font-mono text-[0.68rem]">{'<Sprite />'}</span>
+        <Frame spacing="sm">
+          <Frame.Header className="flex-row items-center justify-between py-1 pr-1 pl-3">
+            <Frame.Title className="text-muted-foreground font-mono text-[0.68rem] font-normal">
+              {'<Sprite />'}
+            </Frame.Title>
             <CopyButton value={snippet} />
-          </div>
-          <div className="overflow-x-auto p-4">
+          </Frame.Header>
+          <Frame.Panel className="overflow-x-auto">
             <pre className="font-mono text-[12px] leading-[1.7]">{snippet}</pre>
-          </div>
-        </div>
-        <div className="border-border bg-card mt-3 overflow-hidden rounded-lg border">
-          <div className="flex items-center justify-between gap-4 px-4 py-2.5">
-            <code className="text-muted-foreground overflow-x-auto font-mono text-[12px] whitespace-nowrap">
-              {endpoint}
-            </code>
-            <CopyButton value={endpoint} className="shrink-0" />
-          </div>
-        </div>
+          </Frame.Panel>
+        </Frame>
+        <Command command={endpoint} className="mt-3 text-[12px]" />
       </div>
     </section>
   );

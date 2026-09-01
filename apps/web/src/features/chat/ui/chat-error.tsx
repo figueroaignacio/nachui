@@ -1,5 +1,6 @@
 import { RefreshIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import { Button } from '@repo/ui/components/button';
 import { Callout } from '@repo/ui/components/callout';
 import { useTranslations } from 'next-intl';
 import type { ChatErrorCode } from '../lib/chat-error';
@@ -27,14 +28,15 @@ export function ChatError({ code, onRetry }: ChatErrorProps) {
         <Callout.Content>
           <p>{t(`${key}.body`)}</p>
           {canRetry && (
-            <button
-              type="button"
+            <Button
+              variant="link"
+              size="sm"
               onClick={onRetry}
-              className="text-foreground/80 hover:text-foreground mt-3 inline-flex items-center gap-1.5 text-xs font-medium underline underline-offset-4 transition-colors"
+              leftIcon={<HugeiconsIcon icon={RefreshIcon} size={13} aria-hidden="true" />}
+              className="text-foreground/80 hover:text-foreground mt-3 underline"
             >
-              <HugeiconsIcon icon={RefreshIcon} size={13} aria-hidden="true" />
               {t('retry')}
-            </button>
+            </Button>
           )}
         </Callout.Content>
       </Callout>

@@ -1,3 +1,5 @@
+import { Badge } from '@repo/ui/components/badge';
+import { Separator } from '@repo/ui/components/separator';
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 
@@ -73,7 +75,7 @@ export async function AboutView() {
               </p>
             </div>
           </div>
-          <hr className="border-border mb-10" />
+          <Separator className="mb-10" />
 
           {/* ── Prose ── */}
           <div className="text-foreground/80 mb-10 flex flex-col gap-4 text-[15px] leading-relaxed">
@@ -112,9 +114,12 @@ export async function AboutView() {
                 className="border-border group flex items-center justify-between border-b py-3 last:border-b-0"
               >
                 <span className="flex items-center gap-3">
-                  <span className="border-border bg-muted text-muted-foreground rounded px-2 py-0.5 font-mono text-[0.63rem] tracking-widest uppercase">
+                  <Badge
+                    variant="outline"
+                    className="bg-muted text-muted-foreground font-mono text-[0.63rem] tracking-widest uppercase"
+                  >
                     {action.meta}
-                  </span>
+                  </Badge>
                   <span className="text-muted-foreground group-hover:text-foreground text-sm transition-colors">
                     {action.label}
                   </span>

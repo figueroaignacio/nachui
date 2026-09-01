@@ -1,5 +1,6 @@
 import { Cancel01Icon, File01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import { Badge } from '@repo/ui/components/badge';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 
@@ -19,10 +20,11 @@ export function ChatAttachment({ text, onRemove, className }: ChatAttachmentProp
     collapsed.length > MAX_CHARS ? `${collapsed.slice(0, MAX_CHARS).trimEnd()}...` : collapsed;
 
   return (
-    <span
+    <Badge
+      variant="outline"
       title={collapsed}
       className={cn(
-        'border-rule text-muted-foreground inline-flex max-w-full items-center gap-1.5 rounded-md border px-2 py-1 text-[11px]',
+        'border-rule text-muted-foreground max-w-full gap-1.5 rounded-md px-2 py-1 font-normal tracking-normal',
         className,
       )}
     >
@@ -38,6 +40,6 @@ export function ChatAttachment({ text, onRemove, className }: ChatAttachmentProp
           <HugeiconsIcon icon={Cancel01Icon} size={11} aria-hidden="true" />
         </button>
       )}
-    </span>
+    </Badge>
   );
 }

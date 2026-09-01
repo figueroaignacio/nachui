@@ -11,6 +11,7 @@ import {
   Search02Icon,
 } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import { Button } from '@repo/ui/components/button';
 import { Dialog } from '@repo/ui/components/dialog';
 import { Kbd } from '@repo/ui/components/kbd';
 import { useTranslations } from 'next-intl';
@@ -72,13 +73,15 @@ export function Searcher({ variant = 'default' }: { variant?: 'default' | 'icon'
     >
       <Dialog.Trigger asChild>
         {variant === 'icon' ? (
-          <button
-            className="text-muted-foreground hover:text-foreground hover:bg-muted flex size-8 items-center justify-center rounded-md transition-colors"
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-muted-foreground hover:text-foreground size-8"
             title={t('label')}
             aria-label={t('label')}
           >
             <HugeiconsIcon icon={Search02Icon} size={15} aria-hidden="true" />
-          </button>
+          </Button>
         ) : (
           <button
             className="group border-border/40 bg-secondary/30 text-muted-foreground hover:bg-secondary/60 hover:border-border/60 hover:text-foreground/80 flex h-8 w-full items-center gap-2.5 rounded-sm border px-3 text-xs transition-all duration-150 sm:w-48"

@@ -6,6 +6,7 @@ import { IssueCta } from '@/features/docs/components/issue-cta';
 import { MobileToc } from '@/features/docs/components/mobile-toc';
 import { Toc } from '@/features/docs/components/toc';
 import { GITHUB_REPO_URL, getAbsoluteUrl } from '@/lib/domains';
+import { Callout } from '@repo/ui/components/callout';
 import { Flex } from '@repo/ui/layout/flex';
 import { Stack } from '@repo/ui/layout/stack';
 import { COMPONENT_REGISTRY } from '@repo/ui/registry';
@@ -77,7 +78,13 @@ export function DocView({ doc }: DocViewProps) {
             </div>
           </div>
           <div data-doc-prose className="min-w-0 flex-1">
-            {doc.body ? <MDXContent code={doc.body} /> : <div>Error</div>}
+            {doc.body ? (
+              <MDXContent code={doc.body} />
+            ) : (
+              <Callout variant="danger">
+                <Callout.Title>Unable to render this page</Callout.Title>
+              </Callout>
+            )}
           </div>
           <IssueCta pageTitle={doc.title} pageUrl={docUrl} />
           <DocsPagination currentPath={currentPath} />
