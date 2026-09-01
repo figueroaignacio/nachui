@@ -334,35 +334,6 @@
   margin-inline: calc(-1 * var(--frame-bleed));
 }
 
-/* Registration marks where a bleeding rule crosses the gutter, like the crop
-   marks on a press sheet. There is no rail to intersect any more: they stand on
-   their own as the only vertical accent in the layout. Only from sm up, where
-   the gutter exists. */
-@media (min-width: 40rem) {
-  .rule-bleed::before,
-  .rule-bleed::after {
-    content: '';
-    position: absolute;
-    top: 0.5px;
-    width: 9px;
-    height: 9px;
-    color: var(--border-interactive);
-    background:
-      linear-gradient(currentColor, currentColor) center / 1px 9px no-repeat,
-      linear-gradient(currentColor, currentColor) center / 9px 1px no-repeat;
-  }
-
-  .rule-bleed::before {
-    left: var(--frame-gutter);
-    transform: translate(-50%, -50%);
-  }
-
-  .rule-bleed::after {
-    right: var(--frame-gutter);
-    transform: translate(50%, -50%);
-  }
-}
-
 .bleed-x {
   margin-inline: calc(-1 * var(--frame-bleed));
   padding-inline: var(--frame-bleed);
