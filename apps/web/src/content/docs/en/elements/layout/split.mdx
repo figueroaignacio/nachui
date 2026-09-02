@@ -1,0 +1,65 @@
+---
+title: Split
+description: Two columns at a set proportion that stack below a breakpoint. Sidebars, settings pages and media with text.
+published: true
+date: 2026-09-01
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="split" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="split" />
+
+## Anatomy
+
+```tsx
+import { Split } from '@/components/ui/split';
+```
+
+```tsx
+<Split ratio="1/3" collapse="md" gap="8">
+  <nav>Sidebar</nav>
+  <main>Content</main>
+</Split>
+```
+
+`Split` is a two column grid. `ratio` is the share of the first column, `collapse` is the breakpoint below which the columns stack into one. Both children keep `min-width: 0`, so long content wraps instead of pushing the layout wider. It is different from `Separator`, which draws a line.
+
+## Examples
+
+### Default
+
+A settings page: navigation on the left at one third, content on the right.
+
+<ComponentPreview component="split" demo="default" />
+
+### Ratios
+
+`auto` sizes the first column to its content, `auto-end` does the same for the second.
+
+<ComponentPreview component="split" demo="ratios" />
+
+### Reverse
+
+`reverse` moves the first child below the second when the columns stack, for an image that should lead on mobile but sit beside the text on desktop.
+
+<ComponentPreview component="split" demo="reverse" />
+
+## API Reference
+
+### Split
+
+| Prop        | Type                                                                | Default     | Description                             |
+| ----------- | ------------------------------------------------------------------- | ----------- | --------------------------------------- |
+| `ratio`     | `'1/2' \| '1/3' \| '2/3' \| '1/4' \| '3/4' \| 'auto' \| 'auto-end'` | `'1/2'`     | Share of the first column               |
+| `collapse`  | `'none' \| 'sm' \| 'md' \| 'lg'`                                    | `'md'`      | Below this breakpoint the columns stack |
+| `gap`       | `'0' \| '2' \| '3' \| '4' \| '6' \| '8' \| '10' \| '12' \| '16'`    | `'6'`       | Gap between the columns                 |
+| `align`     | `'start' \| 'center' \| 'end' \| 'stretch'`                         | `'stretch'` | Vertical alignment of the columns       |
+| `reverse`   | `boolean`                                                           | `false`     | Put the first child last while stacked  |
+| `as`        | `React.ElementType`                                                 | `'div'`     | Element to render                       |
+| `className` | `string`                                                            | -           | Additional CSS classes                  |

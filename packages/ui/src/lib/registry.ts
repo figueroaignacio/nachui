@@ -10,6 +10,7 @@ export const FAMILIES = [
 
 export const COMPONENT_REGISTRY = {
   accordion: 'packages/ui/src/components/accordion.tsx',
+  'aspect-ratio': 'packages/ui/src/layout/aspect-ratio.tsx',
   attachment: 'packages/ui/src/components/attachment.tsx',
   avatar: 'packages/ui/src/components/avatar.tsx',
   badge: 'packages/ui/src/components/badge.tsx',
@@ -19,6 +20,7 @@ export const COMPONENT_REGISTRY = {
   button: 'packages/ui/src/components/button.tsx',
   callout: 'packages/ui/src/components/callout.tsx',
   card: 'packages/ui/src/components/card.tsx',
+  center: 'packages/ui/src/layout/center.tsx',
   checkbox: 'packages/ui/src/components/checkbox.tsx',
   collapsible: 'packages/ui/src/components/collapsible.tsx',
   command: 'packages/ui/src/components/command.tsx',
@@ -47,11 +49,14 @@ export const COMPONENT_REGISTRY = {
   rating: 'packages/ui/src/components/rating.tsx',
   resizable: 'packages/ui/src/components/resizable.tsx',
   'scroll-area': 'packages/ui/src/components/scroll-area.tsx',
+  section: 'packages/ui/src/layout/section.tsx',
   select: 'packages/ui/src/components/select.tsx',
   separator: 'packages/ui/src/components/separator.tsx',
   skeleton: 'packages/ui/src/components/skeleton.tsx',
   snippet: 'packages/ui/src/components/snippet.tsx',
+  spacer: 'packages/ui/src/layout/spacer.tsx',
   spinner: 'packages/ui/src/components/spinner.tsx',
+  split: 'packages/ui/src/layout/split.tsx',
   sprite: 'packages/ui/src/components/sprite.tsx',
   stack: 'packages/ui/src/layout/stack.tsx',
   steps: 'packages/ui/src/components/steps.tsx',
@@ -69,6 +74,7 @@ export const COMPONENT_REGISTRY = {
 /** Which family each component belongs to. */
 export const COMPONENT_FAMILY = {
   accordion: 'ui',
+  'aspect-ratio': 'layout',
   attachment: 'ui',
   avatar: 'ui',
   badge: 'ui',
@@ -78,6 +84,7 @@ export const COMPONENT_FAMILY = {
   button: 'ui',
   callout: 'ui',
   card: 'ui',
+  center: 'layout',
   checkbox: 'ui',
   collapsible: 'ui',
   command: 'ui',
@@ -106,11 +113,14 @@ export const COMPONENT_FAMILY = {
   rating: 'ui',
   resizable: 'ui',
   'scroll-area': 'ui',
+  section: 'layout',
   select: 'ui',
   separator: 'ui',
   skeleton: 'ui',
   snippet: 'ui',
+  spacer: 'layout',
   spinner: 'ui',
+  split: 'layout',
   sprite: 'ui',
   stack: 'layout',
   steps: 'ui',
@@ -130,6 +140,10 @@ export const DEMO_REGISTRY = {
     collapsed: 'packages/ui/src/demos/accordion/collapsed.tsx',
     default: 'packages/ui/src/demos/accordion/default.tsx',
     multiple: 'packages/ui/src/demos/accordion/multiple.tsx',
+  },
+  'aspect-ratio': {
+    default: 'packages/ui/src/demos/aspect-ratio/default.tsx',
+    ratios: 'packages/ui/src/demos/aspect-ratio/ratios.tsx',
   },
   attachment: {
     cards: 'packages/ui/src/demos/attachment/cards.tsx',
@@ -191,6 +205,10 @@ export const DEMO_REGISTRY = {
     default: 'packages/ui/src/demos/card/default.tsx',
     ghost: 'packages/ui/src/demos/card/ghost.tsx',
     outline: 'packages/ui/src/demos/card/outline.tsx',
+  },
+  center: {
+    axis: 'packages/ui/src/demos/center/axis.tsx',
+    default: 'packages/ui/src/demos/center/default.tsx',
   },
   checkbox: {
     default: 'packages/ui/src/demos/checkbox/default.tsx',
@@ -325,6 +343,11 @@ export const DEMO_REGISTRY = {
     default: 'packages/ui/src/demos/scroll-area/default.tsx',
     horizontal: 'packages/ui/src/demos/scroll-area/horizontal.tsx',
   },
+  section: {
+    backgrounds: 'packages/ui/src/demos/section/backgrounds.tsx',
+    centered: 'packages/ui/src/demos/section/centered.tsx',
+    default: 'packages/ui/src/demos/section/default.tsx',
+  },
   select: {
     default: 'packages/ui/src/demos/select/default.tsx',
     'grouped-items': 'packages/ui/src/demos/select/grouped-items.tsx',
@@ -337,10 +360,19 @@ export const DEMO_REGISTRY = {
     card: 'packages/ui/src/demos/skeleton/card.tsx',
     default: 'packages/ui/src/demos/skeleton/default.tsx',
   },
+  spacer: {
+    default: 'packages/ui/src/demos/spacer/default.tsx',
+    fixed: 'packages/ui/src/demos/spacer/fixed.tsx',
+  },
   spinner: {
     default: 'packages/ui/src/demos/spinner/default.tsx',
     sizes: 'packages/ui/src/demos/spinner/sizes.tsx',
     variants: 'packages/ui/src/demos/spinner/variants.tsx',
+  },
+  split: {
+    default: 'packages/ui/src/demos/split/default.tsx',
+    ratios: 'packages/ui/src/demos/split/ratios.tsx',
+    reverse: 'packages/ui/src/demos/split/reverse.tsx',
   },
   sprite: {
     default: 'packages/ui/src/demos/sprite/default.tsx',

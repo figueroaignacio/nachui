@@ -7,12 +7,15 @@ import { Alternate as TimelineAlternate } from '@repo/ui/src/demos/timeline/alte
 import { AutoResize as TextareaAutoResize } from '@repo/ui/src/demos/textarea/auto-resize';
 import { Avatar as FileUploadAvatar } from '@repo/ui/src/demos/file-upload/avatar';
 import { AvatarGroup as AvatarGroupDemo } from '@repo/ui/src/demos/avatar/avatar-group';
+import { Axis as CenterAxis } from '@repo/ui/src/demos/center/axis';
+import { Backgrounds as SectionBackgrounds } from '@repo/ui/src/demos/section/backgrounds';
 import { Badges as NavigationMenuBadges } from '@repo/ui/src/demos/navigation-menu/badges';
 import { Bordered as CollapsibleBordered } from '@repo/ui/src/demos/collapsible/bordered';
 import { Both as ScrollAreaBoth } from '@repo/ui/src/demos/scroll-area/both';
 import { Card as CollapsibleCard } from '@repo/ui/src/demos/collapsible/card';
 import { Card as SkeletonCard } from '@repo/ui/src/demos/skeleton/card';
 import { Cards as AttachmentCards } from '@repo/ui/src/demos/attachment/cards';
+import { Centered as SectionCentered } from '@repo/ui/src/demos/section/centered';
 import { Checkboxes as DropdownMenuCheckboxes } from '@repo/ui/src/demos/dropdown-menu/checkboxes';
 import { Chips as AttachmentChips } from '@repo/ui/src/demos/attachment/chips';
 import { Collapsed as AccordionCollapsed } from '@repo/ui/src/demos/accordion/collapsed';
@@ -27,6 +30,7 @@ import { CustomTag as TypographyCustomTag } from '@repo/ui/src/demos/typography/
 import { Danger as BannerDanger } from '@repo/ui/src/demos/banner/danger';
 import { Danger as CalloutDanger } from '@repo/ui/src/demos/callout/danger';
 import { Default as AccordionDefault } from '@repo/ui/src/demos/accordion/default';
+import { Default as AspectRatioDefault } from '@repo/ui/src/demos/aspect-ratio/default';
 import { Default as AttachmentDefault } from '@repo/ui/src/demos/attachment/default';
 import { Default as AvatarDefault } from '@repo/ui/src/demos/avatar/default';
 import { Default as BadgeDefault } from '@repo/ui/src/demos/badge/default';
@@ -36,6 +40,7 @@ import { Default as BubbleDefault } from '@repo/ui/src/demos/bubble/default';
 import { Default as ButtonDefault } from '@repo/ui/src/demos/button/default';
 import { Default as CalloutDefault } from '@repo/ui/src/demos/callout/default';
 import { Default as CardDefault } from '@repo/ui/src/demos/card/default';
+import { Default as CenterDefault } from '@repo/ui/src/demos/center/default';
 import { Default as CheckboxDefault } from '@repo/ui/src/demos/checkbox/default';
 import { Default as CollapsibleDefault } from '@repo/ui/src/demos/collapsible/default';
 import { Default as CommandDefault } from '@repo/ui/src/demos/command/default';
@@ -64,10 +69,13 @@ import { Default as RadioDefault } from '@repo/ui/src/demos/radio/default';
 import { Default as RatingDefault } from '@repo/ui/src/demos/rating/default';
 import { Default as ResizableDefault } from '@repo/ui/src/demos/resizable/default';
 import { Default as ScrollAreaDefault } from '@repo/ui/src/demos/scroll-area/default';
+import { Default as SectionDefault } from '@repo/ui/src/demos/section/default';
 import { Default as SelectDefault } from '@repo/ui/src/demos/select/default';
 import { Default as SeparatorDefault } from '@repo/ui/src/demos/separator/default';
 import { Default as SkeletonDefault } from '@repo/ui/src/demos/skeleton/default';
+import { Default as SpacerDefault } from '@repo/ui/src/demos/spacer/default';
 import { Default as SpinnerDefault } from '@repo/ui/src/demos/spinner/default';
+import { Default as SplitDefault } from '@repo/ui/src/demos/split/default';
 import { Default as SpriteDefault } from '@repo/ui/src/demos/sprite/default';
 import { Default as StackDefault } from '@repo/ui/src/demos/stack/default';
 import { Default as SwitchDefault } from '@repo/ui/src/demos/switch/default';
@@ -87,6 +95,7 @@ import { Disabled as RadioDisabled } from '@repo/ui/src/demos/radio/disabled';
 import { Disabled as SwitchDisabled } from '@repo/ui/src/demos/switch/disabled';
 import { Dismissible as BannerDismissible } from '@repo/ui/src/demos/banner/dismissible';
 import { Fieldset as FieldFieldset } from '@repo/ui/src/demos/field/fieldset';
+import { Fixed as SpacerFixed } from '@repo/ui/src/demos/spacer/fixed';
 import { Form as DrawerForm } from '@repo/ui/src/demos/drawer/form';
 import { Ghost as ButtonGhost } from '@repo/ui/src/demos/button/ghost';
 import { Ghost as CardGhost } from '@repo/ui/src/demos/card/ghost';
@@ -122,8 +131,11 @@ import { Positions as ToastPositions } from '@repo/ui/src/demos/toast/positions'
 import { Positions as TooltipPositions } from '@repo/ui/src/demos/tooltip/positions';
 import { RadioGroup as DropdownMenuRadioGroup } from '@repo/ui/src/demos/dropdown-menu/radio-group';
 import { Radius as IconTileRadius } from '@repo/ui/src/demos/icon-tile/radius';
+import { Ratios as AspectRatioRatios } from '@repo/ui/src/demos/aspect-ratio/ratios';
+import { Ratios as SplitRatios } from '@repo/ui/src/demos/split/ratios';
 import { ReadOnly as RatingReadOnly } from '@repo/ui/src/demos/rating/read-only';
 import { Required as LabelRequired } from '@repo/ui/src/demos/label/required';
+import { Reverse as SplitReverse } from '@repo/ui/src/demos/split/reverse';
 import { Secondary as BadgeSecondary } from '@repo/ui/src/demos/badge/secondary';
 import { Secondary as ButtonSecondary } from '@repo/ui/src/demos/button/secondary';
 import { Seeds as SpriteSeeds } from '@repo/ui/src/demos/sprite/seeds';
@@ -178,6 +190,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
     collapsed: AccordionCollapsed,
     default: AccordionDefault,
     multiple: AccordionMultiple,
+  },
+  'aspect-ratio': {
+    default: AspectRatioDefault,
+    ratios: AspectRatioRatios,
   },
   attachment: {
     cards: AttachmentCards,
@@ -239,6 +255,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
     default: CardDefault,
     ghost: CardGhost,
     outline: CardOutline,
+  },
+  center: {
+    axis: CenterAxis,
+    default: CenterDefault,
   },
   checkbox: {
     default: CheckboxDefault,
@@ -373,6 +393,11 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
     default: ScrollAreaDefault,
     horizontal: ScrollAreaHorizontal,
   },
+  section: {
+    backgrounds: SectionBackgrounds,
+    centered: SectionCentered,
+    default: SectionDefault,
+  },
   select: {
     default: SelectDefault,
     'grouped-items': SelectGroupedItems,
@@ -385,10 +410,19 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
     card: SkeletonCard,
     default: SkeletonDefault,
   },
+  spacer: {
+    default: SpacerDefault,
+    fixed: SpacerFixed,
+  },
   spinner: {
     default: SpinnerDefault,
     sizes: SpinnerSizes,
     variants: SpinnerVariants,
+  },
+  split: {
+    default: SplitDefault,
+    ratios: SplitRatios,
+    reverse: SplitReverse,
   },
   sprite: {
     default: SpriteDefault,

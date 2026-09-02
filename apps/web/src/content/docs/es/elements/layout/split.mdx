@@ -1,0 +1,65 @@
+---
+title: Split
+description: Dos columnas con una proporción fija que se apilan debajo de un breakpoint. Sidebars, páginas de ajustes y medios con texto.
+published: true
+date: 2026-09-01
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="split" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="split" />
+
+## Anatomía
+
+```tsx
+import { Split } from '@/components/ui/split';
+```
+
+```tsx
+<Split ratio="1/3" collapse="md" gap="8">
+  <nav>Sidebar</nav>
+  <main>Contenido</main>
+</Split>
+```
+
+`Split` es una grilla de dos columnas. `ratio` es la parte de la primera columna, `collapse` es el breakpoint por debajo del cual las columnas se apilan en una. Ambos hijos conservan `min-width: 0`, así que el contenido largo se envuelve en lugar de ensanchar el layout. Es distinto de `Separator`, que dibuja una línea.
+
+## Ejemplos
+
+### Predeterminado (Default)
+
+Una página de ajustes: navegación a la izquierda a un tercio, contenido a la derecha.
+
+<ComponentPreview component="split" demo="default" />
+
+### Proporciones
+
+`auto` ajusta la primera columna a su contenido, `auto-end` hace lo mismo con la segunda.
+
+<ComponentPreview component="split" demo="ratios" />
+
+### Invertido
+
+`reverse` mueve el primer hijo debajo del segundo cuando las columnas se apilan, para una imagen que debe ir primero en móvil pero al lado del texto en escritorio.
+
+<ComponentPreview component="split" demo="reverse" />
+
+## Referencia de API
+
+### Split
+
+| Prop        | Tipo                                                                | Por defecto | Descripción                                          |
+| ----------- | ------------------------------------------------------------------- | ----------- | ---------------------------------------------------- |
+| `ratio`     | `'1/2' \| '1/3' \| '2/3' \| '1/4' \| '3/4' \| 'auto' \| 'auto-end'` | `'1/2'`     | Parte de la primera columna                          |
+| `collapse`  | `'none' \| 'sm' \| 'md' \| 'lg'`                                    | `'md'`      | Debajo de este breakpoint las columnas se apilan     |
+| `gap`       | `'0' \| '2' \| '3' \| '4' \| '6' \| '8' \| '10' \| '12' \| '16'`    | `'6'`       | Separación entre columnas                            |
+| `align`     | `'start' \| 'center' \| 'end' \| 'stretch'`                         | `'stretch'` | Alineación vertical de las columnas                  |
+| `reverse`   | `boolean`                                                           | `false`     | Pone el primer hijo al final mientras están apiladas |
+| `as`        | `React.ElementType`                                                 | `'div'`     | Elemento a renderizar                                |
+| `className` | `string`                                                            | -           | Clases CSS adicionales                               |

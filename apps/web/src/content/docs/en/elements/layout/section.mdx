@@ -1,0 +1,100 @@
+---
+title: Section
+description: Page sections with consistent vertical rhythm, background tones and a header with eyebrow, title, description and actions.
+published: true
+date: 2026-09-01
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="section" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="section" />
+
+## Anatomy
+
+```tsx
+import { Section } from '@/components/ui/section';
+```
+
+```tsx
+<Section size="lg" background="muted">
+  <Section.Header align="center">
+    <Section.Eyebrow>Platform</Section.Eyebrow>
+    <Section.Title>Ship from a pull request</Section.Title>
+    <Section.Description>Everything between git push and production.</Section.Description>
+    <Section.Actions>
+      <Button>Start deploying</Button>
+    </Section.Actions>
+  </Section.Header>
+  <FeatureGrid />
+</Section>
+```
+
+`Section` renders a `section` with vertical padding from `size` and a tone from `background`. By default it wraps its children in a `Container`, so the background runs edge to edge while the content stays on the page grid. Pass `contained={false}` to lay the content out yourself, or a container size such as `"md"` to narrow it. The header parts give every section on a landing page the same hierarchy.
+
+## Composition
+
+```tree
+Section
+├── Section.Header
+│   ├── Section.Eyebrow
+│   ├── Section.Title
+│   ├── Section.Description
+│   └── Section.Actions
+└── your content
+```
+
+## Examples
+
+### Default
+
+A feature section with a left aligned header.
+
+<ComponentPreview component="section" demo="default" />
+
+### Backgrounds
+
+Each tone sets both background and foreground, so text and buttons inside stay readable.
+
+<ComponentPreview component="section" demo="backgrounds" />
+
+### Centered
+
+`Header` with `align="center"` and `bordered` on the section.
+
+<ComponentPreview component="section" demo="centered" />
+
+## API Reference
+
+### Section
+
+| Prop         | Type                                                        | Default     | Description                                            |
+| ------------ | ----------------------------------------------------------- | ----------- | ------------------------------------------------------ |
+| `size`       | `'sm' \| 'md' \| 'lg' \| 'xl'`                              | `'md'`      | Vertical padding                                       |
+| `background` | `'default' \| 'muted' \| 'card' \| 'primary' \| 'inverted'` | `'default'` | Background and matching foreground                     |
+| `bordered`   | `boolean`                                                   | `false`     | Top and bottom border                                  |
+| `contained`  | `boolean \| ContainerSize`                                  | `true`      | Wrap children in a `Container`, optionally with a size |
+| `as`         | `React.ElementType`                                         | `'section'` | Element to render                                      |
+| `className`  | `string`                                                    | -           | Additional CSS classes                                 |
+
+### Section.Header
+
+| Prop      | Type                   | Default   | Description                   |
+| --------- | ---------------------- | --------- | ----------------------------- |
+| `align`   | `'start' \| 'center'`  | `'start'` | Alignment of the header parts |
+| `spacing` | `'sm' \| 'md' \| 'lg'` | `'md'`    | Space below the header        |
+
+### Section.Title
+
+| Prop | Type                           | Default | Description   |
+| ---- | ------------------------------ | ------- | ------------- |
+| `as` | `'h1' \| 'h2' \| 'h3' \| 'h4'` | `'h2'`  | Heading level |
+
+### Section.Eyebrow, Section.Description, Section.Actions
+
+Presentational parts. Each accepts `className` and the attributes of the element it renders.

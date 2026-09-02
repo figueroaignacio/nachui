@@ -1,0 +1,52 @@
+---
+title: Aspect Ratio
+description: Keep a box at a fixed proportion for images, video and embeds.
+published: true
+date: 2026-09-01
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="aspect-ratio" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="aspect-ratio" />
+
+## Anatomy
+
+```tsx
+import { AspectRatio } from '@/components/ui/aspect-ratio';
+```
+
+```tsx
+<AspectRatio ratio={16 / 9} className="rounded-lg">
+  <img src="/cover.jpg" alt="Cover" />
+</AspectRatio>
+```
+
+The box takes the full width of its parent and derives its height from `ratio` through the CSS `aspect-ratio` property, so nothing jumps while the media loads. A direct `img` or `video` child fills the box with `object-cover`, and an `iframe` is stretched to cover it.
+
+## Examples
+
+### Default
+
+<ComponentPreview component="aspect-ratio" demo="default" />
+
+### Ratios
+
+Any number works: `1`, `4 / 3`, `3 / 4`, `21 / 9`.
+
+<ComponentPreview component="aspect-ratio" demo="ratios" />
+
+## API Reference
+
+### AspectRatio
+
+| Prop        | Type                | Default  | Description                                |
+| ----------- | ------------------- | -------- | ------------------------------------------ |
+| `ratio`     | `number`            | `16 / 9` | Width divided by height                    |
+| `as`        | `React.ElementType` | `'div'`  | Element to render                          |
+| `className` | `string`            | -        | Additional CSS classes, rounding goes here |

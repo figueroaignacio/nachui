@@ -1,0 +1,57 @@
+---
+title: Spacer
+description: Flexible or fixed space between siblings. Pushes items apart in a Flex, or adds a gap in a Stack.
+published: true
+date: 2026-09-01
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="spacer" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="spacer" />
+
+## Anatomy
+
+```tsx
+import { Spacer } from '@/components/ui/spacer';
+```
+
+```tsx
+<Flex align="center">
+  <Logo />
+  <Spacer />
+  <Button>Sign in</Button>
+</Flex>
+```
+
+Without `size` the spacer is `flex-1` and takes whatever room is left, so it pushes the siblings after it to the far edge. With `size` it becomes a fixed block on the given axis, which reads better than a stray `mt-6` in long layouts. It is hidden from assistive tech either way.
+
+## Examples
+
+### Flexible
+
+A toolbar where the actions sit at the end.
+
+<ComponentPreview component="spacer" demo="default" />
+
+### Fixed
+
+Named gaps in a stacked layout, vertical and horizontal.
+
+<ComponentPreview component="spacer" demo="fixed" />
+
+## API Reference
+
+### Spacer
+
+| Prop        | Type                                                                                            | Default      | Description                                   |
+| ----------- | ----------------------------------------------------------------------------------------------- | ------------ | --------------------------------------------- |
+| `size`      | `'1' \| '2' \| '3' \| '4' \| '5' \| '6' \| '8' \| '10' \| '12' \| '16' \| '20' \| '24' \| '32'` | -            | Fixed size on the spacing scale. Omit to flex |
+| `axis`      | `'vertical' \| 'horizontal'`                                                                    | `'vertical'` | Direction of a fixed spacer                   |
+| `as`        | `React.ElementType`                                                                             | `'div'`      | Element to render                             |
+| `className` | `string`                                                                                        | -            | Additional CSS classes                        |

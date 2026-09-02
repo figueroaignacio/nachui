@@ -347,6 +347,36 @@
           "title": "Container",
           "href": "/docs/elements/layout/container",
           "description": "Constrains and centers content."
+        },
+        {
+          "title": "Aspect Ratio",
+          "href": "/docs/elements/layout/aspect-ratio",
+          "description": "Keep a box at a fixed proportion for images, video and embeds.",
+          "badge": "new"
+        },
+        {
+          "title": "Center",
+          "href": "/docs/elements/layout/center",
+          "description": "Center children on one or both axes.",
+          "badge": "new"
+        },
+        {
+          "title": "Spacer",
+          "href": "/docs/elements/layout/spacer",
+          "description": "Flexible or fixed space between siblings.",
+          "badge": "new"
+        },
+        {
+          "title": "Split",
+          "href": "/docs/elements/layout/split",
+          "description": "Two columns at a set proportion that stack below a breakpoint.",
+          "badge": "new"
+        },
+        {
+          "title": "Section",
+          "href": "/docs/elements/layout/section",
+          "description": "Page sections with consistent rhythm, background tones and a header.",
+          "badge": "new"
         }
       ]
     },

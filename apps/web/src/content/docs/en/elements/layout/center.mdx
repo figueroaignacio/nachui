@@ -1,0 +1,56 @@
+---
+title: Center
+description: Center children on one or both axes without writing the flex classes again.
+published: true
+date: 2026-09-01
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="center" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="center" />
+
+## Anatomy
+
+```tsx
+import { Center } from '@/components/ui/center';
+```
+
+```tsx
+<Center className="h-64">
+  <p>Nothing here yet</p>
+</Center>
+```
+
+`Center` is a flex container with `items-center` and `justify-center`. Give it a height, or let it fill a parent that has one, and whatever is inside sits in the middle. Add `flex-col` and `gap-*` through `className` when there are several children.
+
+## Examples
+
+### Default
+
+An empty state centered in a card. `text` also centers the text inside.
+
+<ComponentPreview component="center" demo="default" />
+
+### Axis
+
+`axis` limits centering to one direction.
+
+<ComponentPreview component="center" demo="axis" />
+
+## API Reference
+
+### Center
+
+| Prop        | Type                                   | Default  | Description                         |
+| ----------- | -------------------------------------- | -------- | ----------------------------------- |
+| `axis`      | `'both' \| 'horizontal' \| 'vertical'` | `'both'` | Which axes to center on             |
+| `inline`    | `boolean`                              | `false`  | Use `inline-flex` instead of `flex` |
+| `text`      | `boolean`                              | `false`  | Also apply `text-center`            |
+| `as`        | `React.ElementType`                    | `'div'`  | Element to render                   |
+| `className` | `string`                               | -        | Additional CSS classes              |

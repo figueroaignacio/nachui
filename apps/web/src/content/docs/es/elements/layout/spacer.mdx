@@ -1,0 +1,57 @@
+---
+title: Spacer
+description: Espacio flexible o fijo entre hermanos. Separa elementos en un Flex o agrega un hueco en un Stack.
+published: true
+date: 2026-09-01
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="spacer" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="spacer" />
+
+## Anatomía
+
+```tsx
+import { Spacer } from '@/components/ui/spacer';
+```
+
+```tsx
+<Flex align="center">
+  <Logo />
+  <Spacer />
+  <Button>Iniciar sesión</Button>
+</Flex>
+```
+
+Sin `size` el spacer es `flex-1` y ocupa el espacio que sobra, así que empuja a los hermanos que le siguen hasta el borde. Con `size` se convierte en un bloque fijo en el eje indicado, que se lee mejor que un `mt-6` suelto en layouts largos. En ambos casos queda oculto para la tecnología asistiva.
+
+## Ejemplos
+
+### Flexible
+
+Una barra de herramientas con las acciones al final.
+
+<ComponentPreview component="spacer" demo="default" />
+
+### Fijo
+
+Huecos con nombre en un layout apilado, vertical y horizontal.
+
+<ComponentPreview component="spacer" demo="fixed" />
+
+## Referencia de API
+
+### Spacer
+
+| Prop        | Tipo                                                                                            | Por defecto  | Descripción                                            |
+| ----------- | ----------------------------------------------------------------------------------------------- | ------------ | ------------------------------------------------------ |
+| `size`      | `'1' \| '2' \| '3' \| '4' \| '5' \| '6' \| '8' \| '10' \| '12' \| '16' \| '20' \| '24' \| '32'` | -            | Tamaño fijo en la escala de espaciado. Omite para flex |
+| `axis`      | `'vertical' \| 'horizontal'`                                                                    | `'vertical'` | Dirección de un spacer fijo                            |
+| `as`        | `React.ElementType`                                                                             | `'div'`      | Elemento a renderizar                                  |
+| `className` | `string`                                                                                        | -            | Clases CSS adicionales                                 |

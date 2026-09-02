@@ -1,0 +1,100 @@
+---
+title: Section
+description: Secciones de página con ritmo vertical consistente, tonos de fondo y un encabezado con eyebrow, título, descripción y acciones.
+published: true
+date: 2026-09-01
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="section" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="section" />
+
+## Anatomía
+
+```tsx
+import { Section } from '@/components/ui/section';
+```
+
+```tsx
+<Section size="lg" background="muted">
+  <Section.Header align="center">
+    <Section.Eyebrow>Plataforma</Section.Eyebrow>
+    <Section.Title>Despliega desde un pull request</Section.Title>
+    <Section.Description>Todo lo que hay entre git push y producción.</Section.Description>
+    <Section.Actions>
+      <Button>Empezar a desplegar</Button>
+    </Section.Actions>
+  </Section.Header>
+  <FeatureGrid />
+</Section>
+```
+
+`Section` renderiza un `section` con padding vertical según `size` y un tono según `background`. Por defecto envuelve a sus hijos en un `Container`, así el fondo va de borde a borde mientras el contenido se queda en la grilla de la página. Pasa `contained={false}` para armar el contenido a tu manera, o un tamaño de container como `"md"` para angostarlo. Las partes del encabezado le dan a cada sección de una landing la misma jerarquía.
+
+## Composición
+
+```tree
+Section
+├── Section.Header
+│   ├── Section.Eyebrow
+│   ├── Section.Title
+│   ├── Section.Description
+│   └── Section.Actions
+└── tu contenido
+```
+
+## Ejemplos
+
+### Predeterminado (Default)
+
+Una sección de features con el encabezado alineado a la izquierda.
+
+<ComponentPreview component="section" demo="default" />
+
+### Fondos
+
+Cada tono define fondo y primer plano, así que el texto y los botones de adentro siguen legibles.
+
+<ComponentPreview component="section" demo="backgrounds" />
+
+### Centrado
+
+`Header` con `align="center"` y `bordered` en la sección.
+
+<ComponentPreview component="section" demo="centered" />
+
+## Referencia de API
+
+### Section
+
+| Prop         | Tipo                                                        | Por defecto | Descripción                                                 |
+| ------------ | ----------------------------------------------------------- | ----------- | ----------------------------------------------------------- |
+| `size`       | `'sm' \| 'md' \| 'lg' \| 'xl'`                              | `'md'`      | Padding vertical                                            |
+| `background` | `'default' \| 'muted' \| 'card' \| 'primary' \| 'inverted'` | `'default'` | Fondo y primer plano a juego                                |
+| `bordered`   | `boolean`                                                   | `false`     | Borde superior e inferior                                   |
+| `contained`  | `boolean \| ContainerSize`                                  | `true`      | Envuelve a los hijos en un `Container`, con tamaño opcional |
+| `as`         | `React.ElementType`                                         | `'section'` | Elemento a renderizar                                       |
+| `className`  | `string`                                                    | -           | Clases CSS adicionales                                      |
+
+### Section.Header
+
+| Prop      | Tipo                   | Por defecto | Descripción                             |
+| --------- | ---------------------- | ----------- | --------------------------------------- |
+| `align`   | `'start' \| 'center'`  | `'start'`   | Alineación de las partes del encabezado |
+| `spacing` | `'sm' \| 'md' \| 'lg'` | `'md'`      | Espacio debajo del encabezado           |
+
+### Section.Title
+
+| Prop | Tipo                           | Por defecto | Descripción       |
+| ---- | ------------------------------ | ----------- | ----------------- |
+| `as` | `'h1' \| 'h2' \| 'h3' \| 'h4'` | `'h2'`      | Nivel del heading |
+
+### Section.Eyebrow, Section.Description, Section.Actions
+
+Partes de presentación. Cada una acepta `className` y los atributos del elemento que renderiza.

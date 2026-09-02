@@ -1,0 +1,56 @@
+---
+title: Center
+description: Centra hijos en uno o ambos ejes sin volver a escribir las clases de flex.
+published: true
+date: 2026-09-01
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="center" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="center" />
+
+## Anatomía
+
+```tsx
+import { Center } from '@/components/ui/center';
+```
+
+```tsx
+<Center className="h-64">
+  <p>Todavía no hay nada</p>
+</Center>
+```
+
+`Center` es un contenedor flex con `items-center` y `justify-center`. Dale una altura, o deja que llene un padre que la tenga, y lo que esté adentro queda en el medio. Agrega `flex-col` y `gap-*` con `className` cuando haya varios hijos.
+
+## Ejemplos
+
+### Predeterminado (Default)
+
+Un estado vacío centrado en una tarjeta. `text` también centra el texto.
+
+<ComponentPreview component="center" demo="default" />
+
+### Eje
+
+`axis` limita el centrado a una dirección.
+
+<ComponentPreview component="center" demo="axis" />
+
+## Referencia de API
+
+### Center
+
+| Prop        | Tipo                                   | Por defecto | Descripción                          |
+| ----------- | -------------------------------------- | ----------- | ------------------------------------ |
+| `axis`      | `'both' \| 'horizontal' \| 'vertical'` | `'both'`    | En qué ejes centrar                  |
+| `inline`    | `boolean`                              | `false`     | Usa `inline-flex` en lugar de `flex` |
+| `text`      | `boolean`                              | `false`     | Aplica también `text-center`         |
+| `as`        | `React.ElementType`                    | `'div'`     | Elemento a renderizar                |
+| `className` | `string`                               | -           | Clases CSS adicionales               |

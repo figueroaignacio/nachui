@@ -347,6 +347,36 @@
           "title": "Container",
           "href": "/docs/elements/layout/container",
           "description": "Restringe y centra el contenido."
+        },
+        {
+          "title": "Aspect Ratio",
+          "href": "/docs/elements/layout/aspect-ratio",
+          "description": "Mantén una caja en una proporción fija para imágenes, video y embeds.",
+          "badge": "new"
+        },
+        {
+          "title": "Center",
+          "href": "/docs/elements/layout/center",
+          "description": "Centra hijos en uno o ambos ejes.",
+          "badge": "new"
+        },
+        {
+          "title": "Spacer",
+          "href": "/docs/elements/layout/spacer",
+          "description": "Espacio flexible o fijo entre hermanos.",
+          "badge": "new"
+        },
+        {
+          "title": "Split",
+          "href": "/docs/elements/layout/split",
+          "description": "Dos columnas con proporción fija que se apilan debajo de un breakpoint.",
+          "badge": "new"
+        },
+        {
+          "title": "Section",
+          "href": "/docs/elements/layout/section",
+          "description": "Secciones de página con ritmo consistente, tonos de fondo y un encabezado.",
+          "badge": "new"
         }
       ]
     },
