@@ -1,0 +1,130 @@
+---
+title: Attachment
+description: Show files as rows, cards or chips with a preview, size, actions and upload progress.
+published: true
+date: 2026-09-01
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="attachment" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="attachment" />
+
+## Anatomy
+
+```tsx
+import { Attachment } from '@/components/ui/attachment';
+```
+
+```tsx
+<Attachment>
+  <Attachment.Preview type="application/pdf" name="deck.pdf" />
+  <Attachment.Content>
+    <Attachment.Name>deck.pdf</Attachment.Name>
+    <Attachment.Meta>
+      <Attachment.Size bytes={4820000} />
+    </Attachment.Meta>
+  </Attachment.Content>
+  <Attachment.Actions>
+    <Attachment.Download href="/files/deck.pdf" />
+    <Attachment.Remove onClick={remove} />
+  </Attachment.Actions>
+</Attachment>
+```
+
+`Attachment` is display only. It does not know how the file got there, so it fits an upload queue, a message composer, a comment thread or a list of files already on the server. Pair it with [File Upload](/docs/elements/ui/file-upload) when you need the picker and the validation.
+
+## Composition
+
+```tree
+Attachment.List
+└── Attachment.Item
+    └── Attachment
+        ├── Attachment.Preview
+        ├── Attachment.Content
+        │   ├── Attachment.Name
+        │   └── Attachment.Meta
+        │       └── Attachment.Size
+        ├── Attachment.Actions
+        │   ├── Attachment.Download
+        │   └── Attachment.Remove
+        └── Attachment.Progress
+```
+
+## Variants
+
+### Rows
+
+The default `row` variant, a stacked list with a type icon, name, size and actions.
+
+<ComponentPreview component="attachment" demo="default" />
+
+### Cards
+
+`variant="card"` for images. The preview fills the top, and the actions appear on hover or focus.
+
+<ComponentPreview component="attachment" demo="cards" />
+
+### Chips
+
+`variant="chip"` is a compact pill for composers and comment boxes.
+
+<ComponentPreview component="attachment" demo="chips" />
+
+### Uploading
+
+`status` drives the look: `uploading` dims the row, `error` outlines it. `Progress` draws a bar along the bottom edge.
+
+<ComponentPreview component="attachment" demo="uploading" />
+
+## Helpers
+
+`formatFileSize(bytes, decimals?)` turns a byte count into `1.5 MB`. `Attachment.Size` calls it for you.
+
+## API Reference
+
+### Attachment
+
+| Prop        | Type                                               | Default  | Description                         |
+| ----------- | -------------------------------------------------- | -------- | ----------------------------------- |
+| `variant`   | `"row"` \| `"card"` \| `"chip"`                    | `"row"`  | Layout of the parts                 |
+| `status`    | `"idle"` \| `"uploading"` \| `"done"` \| `"error"` | `"idle"` | Exposed as `data-status`, styles it |
+| `className` | `string`                                           | -        | Additional CSS classes              |
+
+### Attachment.Preview
+
+| Prop       | Type        | Default | Description                                   |
+| ---------- | ----------- | ------- | --------------------------------------------- |
+| `src`      | `string`    | -       | Image URL. Renders a thumbnail when present   |
+| `type`     | `string`    | -       | MIME type, picks the icon                     |
+| `name`     | `string`    | -       | File name, used for the icon and the alt text |
+| `alt`      | `string`    | -       | Alt text for the thumbnail                    |
+| `children` | `ReactNode` | -       | Replace the thumbnail or icon entirely        |
+
+### Attachment.Size
+
+| Prop       | Type     | Default | Description      |
+| ---------- | -------- | ------- | ---------------- |
+| `bytes`    | `number` | -       | Size to format   |
+| `decimals` | `number` | `1`     | Decimals to keep |
+
+### Attachment.Progress
+
+| Prop    | Type     | Default | Description                |
+| ------- | -------- | ------- | -------------------------- |
+| `value` | `number` | -       | Percent complete, 0 to 100 |
+
+### Attachment.List
+
+| Prop     | Type                                | Default   | Description        |
+| -------- | ----------------------------------- | --------- | ------------------ |
+| `layout` | `"stack"` \| `"grid"` \| `"inline"` | `"stack"` | How the items flow |
+
+### Attachment.Item, Attachment.Content, Attachment.Name, Attachment.Meta, Attachment.Actions, Attachment.Remove, Attachment.Download
+
+Presentational parts. Each accepts `className` and the attributes of the element it renders. `Remove` is a button and `Download` an anchor with the `download` attribute. Both ship with an English `aria-label` you can override.

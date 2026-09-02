@@ -1,0 +1,130 @@
+---
+title: Attachment
+description: Muestra archivos como filas, tarjetas o chips con preview, tamaño, acciones y progreso de subida.
+published: true
+date: 2026-09-01
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="attachment" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="attachment" />
+
+## Anatomía
+
+```tsx
+import { Attachment } from '@/components/ui/attachment';
+```
+
+```tsx
+<Attachment>
+  <Attachment.Preview type="application/pdf" name="deck.pdf" />
+  <Attachment.Content>
+    <Attachment.Name>deck.pdf</Attachment.Name>
+    <Attachment.Meta>
+      <Attachment.Size bytes={4820000} />
+    </Attachment.Meta>
+  </Attachment.Content>
+  <Attachment.Actions>
+    <Attachment.Download href="/files/deck.pdf" />
+    <Attachment.Remove onClick={remove} />
+  </Attachment.Actions>
+</Attachment>
+```
+
+`Attachment` solo muestra. No sabe cómo llegó el archivo, así que sirve para una cola de subida, un compositor de mensajes, un hilo de comentarios o una lista de archivos que ya están en el servidor. Combínalo con [File Upload](/docs/elements/ui/file-upload) cuando necesites el selector y la validación.
+
+## Composición
+
+```tree
+Attachment.List
+└── Attachment.Item
+    └── Attachment
+        ├── Attachment.Preview
+        ├── Attachment.Content
+        │   ├── Attachment.Name
+        │   └── Attachment.Meta
+        │       └── Attachment.Size
+        ├── Attachment.Actions
+        │   ├── Attachment.Download
+        │   └── Attachment.Remove
+        └── Attachment.Progress
+```
+
+## Variantes
+
+### Filas
+
+La variante `row` por defecto, una lista apilada con ícono por tipo, nombre, tamaño y acciones.
+
+<ComponentPreview component="attachment" demo="default" />
+
+### Tarjetas
+
+`variant="card"` para imágenes. El preview ocupa la parte superior y las acciones aparecen al pasar el cursor o al enfocar.
+
+<ComponentPreview component="attachment" demo="cards" />
+
+### Chips
+
+`variant="chip"` es una píldora compacta para compositores y cajas de comentarios.
+
+<ComponentPreview component="attachment" demo="chips" />
+
+### Subiendo
+
+`status` define el aspecto: `uploading` atenúa la fila, `error` la delinea. `Progress` dibuja una barra en el borde inferior.
+
+<ComponentPreview component="attachment" demo="uploading" />
+
+## Helpers
+
+`formatFileSize(bytes, decimals?)` convierte una cantidad de bytes en `1.5 MB`. `Attachment.Size` lo llama por ti.
+
+## Referencia de API
+
+### Attachment
+
+| Prop        | Tipo                                               | Por defecto | Descripción                              |
+| ----------- | -------------------------------------------------- | ----------- | ---------------------------------------- |
+| `variant`   | `"row"` \| `"card"` \| `"chip"`                    | `"row"`     | Layout de las partes                     |
+| `status`    | `"idle"` \| `"uploading"` \| `"done"` \| `"error"` | `"idle"`    | Se expone como `data-status` y da estilo |
+| `className` | `string`                                           | -           | Clases CSS adicionales                   |
+
+### Attachment.Preview
+
+| Prop       | Tipo        | Por defecto | Descripción                                      |
+| ---------- | ----------- | ----------- | ------------------------------------------------ |
+| `src`      | `string`    | -           | URL de imagen. Renderiza una miniatura si está   |
+| `type`     | `string`    | -           | Tipo MIME, elige el ícono                        |
+| `name`     | `string`    | -           | Nombre del archivo, usado para el ícono y el alt |
+| `alt`      | `string`    | -           | Texto alternativo de la miniatura                |
+| `children` | `ReactNode` | -           | Reemplaza la miniatura o el ícono por completo   |
+
+### Attachment.Size
+
+| Prop       | Tipo     | Por defecto | Descripción           |
+| ---------- | -------- | ----------- | --------------------- |
+| `bytes`    | `number` | -           | Tamaño a formatear    |
+| `decimals` | `number` | `1`         | Decimales a conservar |
+
+### Attachment.Progress
+
+| Prop    | Tipo     | Por defecto | Descripción                    |
+| ------- | -------- | ----------- | ------------------------------ |
+| `value` | `number` | -           | Porcentaje completado, 0 a 100 |
+
+### Attachment.List
+
+| Prop     | Tipo                                | Por defecto | Descripción               |
+| -------- | ----------------------------------- | ----------- | ------------------------- |
+| `layout` | `"stack"` \| `"grid"` \| `"inline"` | `"stack"`   | Cómo fluyen los elementos |
+
+### Attachment.Item, Attachment.Content, Attachment.Name, Attachment.Meta, Attachment.Actions, Attachment.Remove, Attachment.Download
+
+Partes de presentación. Cada una acepta `className` y los atributos del elemento que renderiza. `Remove` es un botón y `Download` un ancla con el atributo `download`. Ambos traen un `aria-label` en inglés que puedes sobrescribir.

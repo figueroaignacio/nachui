@@ -65,6 +65,12 @@
           "description": "Muestra y oculta contenido expandible."
         },
         {
+          "title": "Attachment",
+          "href": "/docs/elements/ui/attachment",
+          "description": "Muestra archivos como filas, tarjetas o chips con preview, tamaño, acciones y progreso de subida.",
+          "badge": "new"
+        },
+        {
           "title": "Avatar",
           "href": "/docs/elements/ui/avatar",
           "description": "Un elemento de imagen con respaldo (fallback) para representar a un usuario."
@@ -111,14 +117,14 @@
           "description": "Un control que permite al usuario alternar entre marcado y no marcado."
         },
         {
-          "title": "Command",
-          "href": "/docs/elements/ui/command",
-          "description": "Un componente para mostrar y copiar comandos de la línea de comandos."
-        },
-        {
           "title": "Collapsible",
           "href": "/docs/elements/ui/collapsible",
           "description": "Secciones plegables con animaciones suaves."
+        },
+        {
+          "title": "Command",
+          "href": "/docs/elements/ui/command",
+          "description": "Un componente para mostrar y copiar comandos de la línea de comandos."
         },
         {
           "title": "Context Menu",
@@ -148,6 +154,12 @@
           "badge": "new"
         },
         {
+          "title": "Field",
+          "href": "/docs/elements/ui/field",
+          "description": "Label, control, texto de ayuda y errores compuestos en un campo de formulario accesible.",
+          "badge": "new"
+        },
+        {
           "title": "File Upload",
           "href": "/docs/elements/ui/file-upload",
           "description": "Arrastra y suelta o busca archivos, con validación, previews y un hook para interfaces propias.",
@@ -157,6 +169,12 @@
           "title": "Frame",
           "href": "/docs/elements/ui/frame",
           "description": "Un contenedor estructurado que anida paneles, como una card dentro de una card.",
+          "badge": "new"
+        },
+        {
+          "title": "Hover Card",
+          "href": "/docs/elements/ui/hover-card",
+          "description": "Vista previa enriquecida que se abre al pasar el cursor o enfocar un enlace o disparador.",
           "badge": "new"
         },
         {
@@ -214,6 +232,24 @@
           "description": "Un control que permite al usuario seleccionar una opción de un conjunto de opciones mutuamente excluyentes."
         },
         {
+          "title": "Rating",
+          "href": "/docs/elements/ui/rating",
+          "description": "Calificaciones con estrellas para clickear, previsualizar y manejar con teclado. Medios pasos y solo lectura.",
+          "badge": "new"
+        },
+        {
+          "title": "Resizable",
+          "href": "/docs/elements/ui/resizable",
+          "description": "Grupos de paneles con manijas arrastrables y accesibles por teclado.",
+          "badge": "new"
+        },
+        {
+          "title": "Scroll Area",
+          "href": "/docs/elements/ui/scroll-area",
+          "description": "Una región con scroll y una barra propia acorde al tema.",
+          "badge": "new"
+        },
+        {
           "title": "Select",
           "href": "/docs/elements/ui/select",
           "description": "Muestra una lista de opciones para que el usuario elija."
@@ -253,6 +289,12 @@
           "title": "Tabs",
           "href": "/docs/elements/ui/tabs",
           "description": "Organiza contenido en pestañas intercambiables."
+        },
+        {
+          "title": "Textarea",
+          "href": "/docs/elements/ui/textarea",
+          "description": "Entrada de texto multilínea con label, validación, auto-resize y contador de caracteres.",
+          "badge": "new"
         },
         {
           "title": "Timeline",

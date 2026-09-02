@@ -65,6 +65,12 @@
           "description": "Expandable and collapsible content panels."
         },
         {
+          "title": "Attachment",
+          "href": "/docs/elements/ui/attachment",
+          "description": "Show files as rows, cards or chips with a preview, size, actions and upload progress.",
+          "badge": "new"
+        },
+        {
           "title": "Avatar",
           "href": "/docs/elements/ui/avatar",
           "description": "An image element with a fallback for representing the user."
@@ -111,14 +117,14 @@
           "description": "A control that allows the user to toggle between checked and not checked."
         },
         {
-          "title": "Command",
-          "href": "/docs/elements/ui/command",
-          "description": "A component for displaying and copying CLI commands."
-        },
-        {
           "title": "Collapsible",
           "href": "/docs/elements/ui/collapsible",
           "description": "Hide or show sections of content dynamically."
+        },
+        {
+          "title": "Command",
+          "href": "/docs/elements/ui/command",
+          "description": "A component for displaying and copying CLI commands."
         },
         {
           "title": "Context Menu",
@@ -148,6 +154,12 @@
           "badge": "new"
         },
         {
+          "title": "Field",
+          "href": "/docs/elements/ui/field",
+          "description": "Label, control, helper text and errors composed into one accessible form field.",
+          "badge": "new"
+        },
+        {
           "title": "File Upload",
           "href": "/docs/elements/ui/file-upload",
           "description": "Drag and drop or browse for files, with validation, previews and a hook for custom UIs.",
@@ -157,6 +169,12 @@
           "title": "Frame",
           "href": "/docs/elements/ui/frame",
           "description": "A structured container that nests panels, like a card inside a card.",
+          "badge": "new"
+        },
+        {
+          "title": "Hover Card",
+          "href": "/docs/elements/ui/hover-card",
+          "description": "Rich preview that opens when a link or trigger is hovered or focused.",
           "badge": "new"
         },
         {
@@ -214,6 +232,24 @@
           "description": "A control that allows the user to select one option from a set of mutually exclusive options."
         },
         {
+          "title": "Rating",
+          "href": "/docs/elements/ui/rating",
+          "description": "Star ratings you can click, hover and drive with the keyboard. Half steps and read-only display.",
+          "badge": "new"
+        },
+        {
+          "title": "Resizable",
+          "href": "/docs/elements/ui/resizable",
+          "description": "Panel groups with draggable, keyboard accessible handles.",
+          "badge": "new"
+        },
+        {
+          "title": "Scroll Area",
+          "href": "/docs/elements/ui/scroll-area",
+          "description": "A scrollable region with a custom, theme-aware scrollbar.",
+          "badge": "new"
+        },
+        {
           "title": "Select",
           "href": "/docs/elements/ui/select",
           "description": "Displays a list of options for the user to pick from."
@@ -253,6 +289,12 @@
           "title": "Tabs",
           "href": "/docs/elements/ui/tabs",
           "description": "Switch between different content panels easily."
+        },
+        {
+          "title": "Textarea",
+          "href": "/docs/elements/ui/textarea",
+          "description": "Multi-line text input with label, validation, auto-resize and a character count.",
+          "badge": "new"
         },
         {
           "title": "Timeline",

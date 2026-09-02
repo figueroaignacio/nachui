@@ -1,0 +1,79 @@
+---
+title: Rating
+description: Star ratings you can click, hover and drive with the keyboard. Half steps, read-only display and custom icons.
+published: true
+date: 2026-09-01
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="rating" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="rating" />
+
+## Anatomy
+
+```tsx
+import { Rating } from '@/components/ui/rating';
+```
+
+```tsx
+<Rating defaultValue={3} onValueChange={setScore} aria-label="Rate this release" />
+```
+
+The interactive rating is a `radiogroup` with one `radio` per step, so assistive tech reads it as a choice between values. Focus lands on the current value, the arrow keys move by one step, `Home` and `End` jump to the ends, and `Backspace` clears. Hovering previews a value without committing it.
+
+## Variants
+
+### Default
+
+Controlled with `value` and `onValueChange`, or uncontrolled with `defaultValue`.
+
+<ComponentPreview component="rating" demo="default" />
+
+### Half steps
+
+`precision={0.5}` splits each star. The half is picked from where the pointer is. `allowClear` resets to zero when the current value is clicked again.
+
+<ComponentPreview component="rating" demo="half" />
+
+### Read only
+
+`readOnly` renders an `img` with a label such as `4.6 of 5` and no buttons. Children render after the stars, for counts and averages.
+
+<ComponentPreview component="rating" demo="read-only" />
+
+### Sizes
+
+<ComponentPreview component="rating" demo="sizes" />
+
+### Custom icon
+
+`icon` and `filledIcon` swap the shape. Recolor the fill through the `rating-fill` slot.
+
+<ComponentPreview component="rating" demo="custom-icon" />
+
+## API Reference
+
+### Rating
+
+| Prop            | Type                                     | Default      | Description                                      |
+| --------------- | ---------------------------------------- | ------------ | ------------------------------------------------ |
+| `value`         | `number`                                 | -            | Controlled value                                 |
+| `defaultValue`  | `number`                                 | `0`          | Initial value when uncontrolled                  |
+| `onValueChange` | `(value: number) => void`                | -            | Called with the new value                        |
+| `max`           | `number`                                 | `5`          | Number of steps                                  |
+| `precision`     | `1` \| `0.5`                             | `1`          | Whole or half steps                              |
+| `size`          | `"sm"` \| `"default"` \| `"lg"`          | `"default"`  | Icon size                                        |
+| `readOnly`      | `boolean`                                | `false`      | Display only                                     |
+| `disabled`      | `boolean`                                | `false`      | Dims and blocks interaction                      |
+| `allowClear`    | `boolean`                                | `false`      | Picking the current value clears it              |
+| `name`          | `string`                                 | -            | Renders a hidden input for form submissions      |
+| `icon`          | `ReactNode`                              | star outline | Outline icon                                     |
+| `filledIcon`    | `ReactNode`                              | filled star  | Icon drawn over the outline, clipped to the fill |
+| `getLabel`      | `(value: number, max: number) => string` | `"3 of 5"`   | Accessible label for each step and the group     |
+| `className`     | `string`                                 | -            | Additional CSS classes                           |

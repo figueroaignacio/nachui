@@ -1,0 +1,82 @@
+---
+title: Hover Card
+description: Vista previa enriquecida que se abre al pasar el cursor o enfocar un enlace o disparador. Retrasos, lados y alineación.
+published: true
+date: 2026-09-01
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="hover-card" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="hover-card" />
+
+## Anatomía
+
+```tsx
+import { HoverCard } from '@/components/ui/hover-card';
+```
+
+```tsx
+<HoverCard>
+  <HoverCard.Trigger asChild>
+    <a href="/u/nacho">@nacho</a>
+  </HoverCard.Trigger>
+  <HoverCard.Content>Vista previa del perfil</HoverCard.Content>
+</HoverCard>
+```
+
+La tarjeta se abre después de `openDelay` cuando el puntero entra al disparador y se cierra después de `closeDelay` cuando sale, salvo que se haya movido sobre la tarjeta. El foco de teclado la abre de inmediato y el blur la cierra. `Escape` también la cierra. Los punteros táctiles nunca la abren, así que en teléfonos el disparador conserva su comportamiento.
+
+## Composición
+
+```tree
+HoverCard
+├── HoverCard.Trigger
+└── HoverCard.Content
+```
+
+## Variantes
+
+### Predeterminado (Default)
+
+Una tarjeta de perfil sobre una mención.
+
+<ComponentPreview component="hover-card" demo="default" />
+
+### Vista previa de enlace
+
+En línea dentro de un párrafo, abriéndose arriba y alineada al inicio del enlace.
+
+<ComponentPreview component="hover-card" demo="link-preview" />
+
+## Referencia de API
+
+### HoverCard
+
+| Prop           | Tipo                      | Por defecto | Descripción                                   |
+| -------------- | ------------------------- | ----------- | --------------------------------------------- |
+| `open`         | `boolean`                 | -           | Estado abierto controlado                     |
+| `defaultOpen`  | `boolean`                 | `false`     | Estado inicial cuando no es controlado        |
+| `onOpenChange` | `(open: boolean) => void` | -           | Se llama cuando cambia el estado              |
+| `openDelay`    | `number`                  | `500`       | Milisegundos de hover antes de abrir          |
+| `closeDelay`   | `number`                  | `200`       | Milisegundos después de salir antes de cerrar |
+
+### HoverCard.Trigger
+
+| Prop      | Tipo      | Por defecto | Descripción                                        |
+| --------- | --------- | ----------- | -------------------------------------------------- |
+| `asChild` | `boolean` | `false`     | Adjunta los handlers al hijo en lugar de un `span` |
+
+### HoverCard.Content
+
+| Prop         | Tipo                                           | Por defecto | Descripción                          |
+| ------------ | ---------------------------------------------- | ----------- | ------------------------------------ |
+| `side`       | `"top"` \| `"bottom"` \| `"left"` \| `"right"` | `"bottom"`  | Posición relativa al disparador      |
+| `align`      | `"start"` \| `"center"` \| `"end"`             | `"center"`  | Alineación a lo largo de ese lado    |
+| `sideOffset` | `number`                                       | `4`         | Separación del disparador en píxeles |
+| `className`  | `string`                                       | -           | Clases CSS adicionales               |

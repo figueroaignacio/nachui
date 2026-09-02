@@ -1,0 +1,93 @@
+---
+title: Resizable
+description: Grupos de paneles con manijas arrastrables y accesibles por teclado. Layouts horizontales, verticales y anidados.
+published: true
+date: 2026-09-01
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="resizable" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="resizable" />
+
+## Anatomía
+
+```tsx
+import { Resizable } from '@/components/ui/resizable';
+```
+
+```tsx
+<Resizable direction="horizontal">
+  <Resizable.Panel defaultSize={30} minSize={20}>
+    Sidebar
+  </Resizable.Panel>
+  <Resizable.Handle withHandle />
+  <Resizable.Panel>Contenido</Resizable.Panel>
+</Resizable>
+```
+
+Los tamaños son porcentajes del grupo. Los paneles sin `defaultSize` se reparten lo que queda. Arrastrar una manija mueve el límite entre los dos paneles vecinos y nunca deja que alguno pase su `minSize` o `maxSize`. La manija es un `separator` con `aria-valuenow`, recibe foco y se mueve con las flechas, `Home` y `End`. Con `Shift` los pasos son más grandes.
+
+## Composición
+
+```tree
+Resizable
+├── Resizable.Panel
+├── Resizable.Handle
+└── Resizable.Panel
+```
+
+Paneles y manijas deben ser hijos directos del grupo para que pueda numerarlos. Anida otro `Resizable` dentro de un panel para armar grillas.
+
+## Variantes
+
+### Predeterminado (Default)
+
+Dos paneles lado a lado con un agarre visible en la manija.
+
+<ComponentPreview component="resizable" demo="default" />
+
+### Vertical
+
+`direction="vertical"` apila los paneles y la manija pasa a ser una barra horizontal.
+
+<ComponentPreview component="resizable" demo="vertical" />
+
+### Anidado
+
+Un grupo vertical dentro de un panel de un grupo horizontal.
+
+<ComponentPreview component="resizable" demo="nested" />
+
+## Referencia de API
+
+### Resizable
+
+| Prop        | Tipo                           | Por defecto    | Descripción                                           |
+| ----------- | ------------------------------ | -------------- | ----------------------------------------------------- |
+| `direction` | `"horizontal"` \| `"vertical"` | `"horizontal"` | Eje del layout                                        |
+| `onLayout`  | `(sizes: number[]) => void`    | -              | Se llama con todos los tamaños después de cada cambio |
+| `className` | `string`                       | -              | Clases para el grupo. Dale una altura si es vertical  |
+
+### Resizable.Panel
+
+| Prop          | Tipo     | Por defecto | Descripción                                     |
+| ------------- | -------- | ----------- | ----------------------------------------------- |
+| `defaultSize` | `number` | -           | Tamaño inicial en porcentaje                    |
+| `minSize`     | `number` | `10`        | Tamaño mínimo en porcentaje                     |
+| `maxSize`     | `number` | `100`       | Tamaño máximo en porcentaje                     |
+| `className`   | `string` | -           | Clases CSS adicionales. El contenido se recorta |
+
+### Resizable.Handle
+
+| Prop         | Tipo      | Por defecto | Descripción                                   |
+| ------------ | --------- | ----------- | --------------------------------------------- |
+| `withHandle` | `boolean` | `false`     | Renderiza un pequeño agarre en el medio       |
+| `disabled`   | `boolean` | `false`     | Ignora puntero y teclado                      |
+| `step`       | `number`  | `2`         | Porcentaje que mueve cada pulsación de flecha |
+| `className`  | `string`  | -           | Clases CSS adicionales                        |

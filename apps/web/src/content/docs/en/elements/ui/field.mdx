@@ -1,0 +1,136 @@
+---
+title: Field
+description: Label, control, helper text and errors composed into one accessible form field. Vertical, horizontal or responsive.
+published: true
+date: 2026-09-01
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="field" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="field" />
+
+## Anatomy
+
+```tsx
+import { Field } from '@/components/ui/field';
+```
+
+```tsx
+<Field invalid={hasError}>
+  <Field.Label>Email</Field.Label>
+  <Field.Control>
+    <Input type="email" />
+  </Field.Control>
+  <Field.Description>We only use it for receipts.</Field.Description>
+  <Field.Error errors={errors} />
+</Field>
+```
+
+`Field` generates an id and shares it with its parts. `Label` points at it, `Description` and `Error` register their ids, and `Control` clones the element inside it with `id`, `aria-describedby`, `aria-invalid` and `disabled`. Anything that renders a native control works: `Input`, `Textarea`, `Select`, `Switch`, `Checkbox`, `Radio` or a plain element. For a component that cannot take a child, call `useField()` and spread the result.
+
+## Composition
+
+```tree
+Field.Set
+├── Field.Legend
+├── Field.Description
+└── Field.Group
+    ├── Field
+    │   ├── Field.Label
+    │   ├── Field.Control
+    │   ├── Field.Description
+    │   └── Field.Error
+    ├── Field.Separator
+    └── Field
+        ├── Field.Content
+        │   ├── Field.Label
+        │   └── Field.Description
+        └── Field.Control
+```
+
+`Group` spaces fields in a form. `Set` and `Legend` wrap related controls in a real `fieldset`. `Content` keeps a label and its description together when the control sits next to them.
+
+## Variants
+
+### Default
+
+A vertical form: label, control, description.
+
+<ComponentPreview component="field" demo="default" />
+
+### Horizontal
+
+`orientation="horizontal"` lines the parts up on one row. Put the label and description in `Content` so they stack and the control stays at the end.
+
+<ComponentPreview component="field" demo="horizontal" />
+
+### Fieldset
+
+Radio or checkbox options grouped under a legend. Each option is its own `Field` so the label clicks the control.
+
+<ComponentPreview component="field" demo="fieldset" />
+
+### With error
+
+Pass `invalid` to the root and the errors to `Error`. Strings, objects with a `message` and empty values are all accepted, so a form library's error array works as is. One message renders as text, several as a list.
+
+<ComponentPreview component="field" demo="with-error" />
+
+### Responsive
+
+`orientation="responsive"` is vertical by default and becomes horizontal when the enclosing `Field.Group` is at least `28rem` wide. It uses a container query, so it follows the form, not the viewport.
+
+## Hook
+
+```tsx
+import { useField } from '@/components/ui/field';
+
+function ColorPicker() {
+  const field = useField();
+  return <input type="color" {...field} />;
+}
+```
+
+`useField` returns `id`, `aria-describedby`, `aria-invalid` and `disabled` for the nearest `Field`.
+
+## API Reference
+
+### Field
+
+| Prop          | Type                                             | Default      | Description                                   |
+| ------------- | ------------------------------------------------ | ------------ | --------------------------------------------- |
+| `orientation` | `"vertical"` \| `"horizontal"` \| `"responsive"` | `"vertical"` | Layout of the parts                           |
+| `invalid`     | `boolean`                                        | `false`      | Marks the field and its control invalid       |
+| `disabled`    | `boolean`                                        | `false`      | Dims the field and disables the control       |
+| `id`          | `string`                                         | generated    | Id given to the control                       |
+| `name`        | `string`                                         | -            | Stored as `data-name` for styling and testing |
+| `className`   | `string`                                         | -            | Additional CSS classes                        |
+
+### Field.Control
+
+| Prop       | Type           | Default | Description                                |
+| ---------- | -------------- | ------- | ------------------------------------------ |
+| `children` | `ReactElement` | -       | The single element that receives the props |
+
+### Field.Error
+
+| Prop       | Type                                            | Default | Description                              |
+| ---------- | ----------------------------------------------- | ------- | ---------------------------------------- |
+| `errors`   | `Array<string \| { message?: string } \| null>` | -       | Messages to show. Duplicates are dropped |
+| `children` | `ReactNode`                                     | -       | Custom content instead of `errors`       |
+
+### Field.Legend
+
+| Prop      | Type                    | Default    | Description                   |
+| --------- | ----------------------- | ---------- | ----------------------------- |
+| `variant` | `"legend"` \| `"label"` | `"legend"` | Larger heading or label sized |
+
+### Field.Label, Field.Description, Field.Content, Field.Title, Field.Set, Field.Group, Field.Separator
+
+Presentational parts. Each accepts `className` and the attributes of the element it renders. `Separator` takes optional children rendered in the middle of the line.

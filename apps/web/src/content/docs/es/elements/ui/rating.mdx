@@ -1,0 +1,79 @@
+---
+title: Rating
+description: Calificaciones con estrellas que se pueden clickear, previsualizar al pasar el cursor y manejar con teclado. Medios pasos, solo lectura e íconos propios.
+published: true
+date: 2026-09-01
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="rating" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="rating" />
+
+## Anatomía
+
+```tsx
+import { Rating } from '@/components/ui/rating';
+```
+
+```tsx
+<Rating defaultValue={3} onValueChange={setScore} aria-label="Califica esta versión" />
+```
+
+La calificación interactiva es un `radiogroup` con un `radio` por paso, así que la tecnología asistiva lo lee como una elección entre valores. El foco cae en el valor actual, las flechas mueven un paso, `Home` y `End` saltan a los extremos y `Backspace` limpia. Pasar el cursor previsualiza un valor sin confirmarlo.
+
+## Variantes
+
+### Predeterminado (Default)
+
+Controlado con `value` y `onValueChange`, o no controlado con `defaultValue`.
+
+<ComponentPreview component="rating" demo="default" />
+
+### Medios pasos
+
+`precision={0.5}` divide cada estrella. La mitad se elige según dónde está el puntero. `allowClear` vuelve a cero cuando se clickea el valor actual otra vez.
+
+<ComponentPreview component="rating" demo="half" />
+
+### Solo lectura
+
+`readOnly` renderiza un `img` con una etiqueta como `4.6 of 5` y sin botones. Los hijos se muestran después de las estrellas, para conteos y promedios.
+
+<ComponentPreview component="rating" demo="read-only" />
+
+### Tamaños
+
+<ComponentPreview component="rating" demo="sizes" />
+
+### Ícono propio
+
+`icon` y `filledIcon` cambian la forma. Recolorea el relleno a través del slot `rating-fill`.
+
+<ComponentPreview component="rating" demo="custom-icon" />
+
+## Referencia de API
+
+### Rating
+
+| Prop            | Tipo                                     | Por defecto       | Descripción                                            |
+| --------------- | ---------------------------------------- | ----------------- | ------------------------------------------------------ |
+| `value`         | `number`                                 | -                 | Valor controlado                                       |
+| `defaultValue`  | `number`                                 | `0`               | Valor inicial cuando no es controlado                  |
+| `onValueChange` | `(value: number) => void`                | -                 | Se llama con el nuevo valor                            |
+| `max`           | `number`                                 | `5`               | Cantidad de pasos                                      |
+| `precision`     | `1` \| `0.5`                             | `1`               | Pasos enteros o medios                                 |
+| `size`          | `"sm"` \| `"default"` \| `"lg"`          | `"default"`       | Tamaño del ícono                                       |
+| `readOnly`      | `boolean`                                | `false`           | Solo muestra                                           |
+| `disabled`      | `boolean`                                | `false`           | Atenúa y bloquea la interacción                        |
+| `allowClear`    | `boolean`                                | `false`           | Elegir el valor actual lo limpia                       |
+| `name`          | `string`                                 | -                 | Renderiza un input oculto para enviar formularios      |
+| `icon`          | `ReactNode`                              | estrella en línea | Ícono de contorno                                      |
+| `filledIcon`    | `ReactNode`                              | estrella rellena  | Ícono dibujado sobre el contorno, recortado al relleno |
+| `getLabel`      | `(value: number, max: number) => string` | `"3 of 5"`        | Etiqueta accesible de cada paso y del grupo            |
+| `className`     | `string`                                 | -                 | Clases CSS adicionales                                 |

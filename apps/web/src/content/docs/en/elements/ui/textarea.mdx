@@ -1,0 +1,94 @@
+---
+title: Textarea
+description: Multi-line text input with label, helper text, validation, auto-resize and a character count.
+published: true
+date: 2026-09-01
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="textarea" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="textarea" />
+
+## Anatomy
+
+```tsx
+import { Textarea } from '@/components/ui/textarea';
+```
+
+```tsx
+<Textarea label="Notes" description="Visible to the whole team." placeholder="Write something" />
+```
+
+The label, description, error and count are wired to the textarea through `aria-describedby`, so a screen reader announces them together. The id is generated when you do not pass one.
+
+## Variants
+
+### Default
+
+<ComponentPreview component="textarea" demo="default" />
+
+### With label
+
+`label` and `description` render above the field.
+
+<ComponentPreview component="textarea" demo="with-label" />
+
+### With error
+
+`error` marks the field invalid and shows the message below it.
+
+<ComponentPreview component="textarea" demo="with-error" />
+
+### Auto resize
+
+`autoResize` grows the textarea with its content. `maxRows` caps the height and the field scrolls past it.
+
+<ComponentPreview component="textarea" demo="auto-resize" />
+
+### With count
+
+`showCount` renders the current length. With `maxLength` it renders `12 / 160`.
+
+<ComponentPreview component="textarea" demo="with-count" />
+
+## Compound Components
+
+The parts are exposed for custom layouts:
+
+```tsx
+<Textarea.Wrapper>
+  <Textarea.Label htmlFor="custom">Custom layout</Textarea.Label>
+  <Textarea.Description>Helper text goes here.</Textarea.Description>
+  <textarea id="custom" />
+  <Textarea.Error>Something went wrong.</Textarea.Error>
+</Textarea.Wrapper>
+```
+
+## API Reference
+
+### Textarea
+
+| Prop          | Type                                 | Default      | Description                                     |
+| ------------- | ------------------------------------ | ------------ | ----------------------------------------------- |
+| `label`       | `string`                             | -            | Label rendered above the textarea               |
+| `description` | `string`                             | -            | Helper text between the label and the field     |
+| `error`       | `string`                             | -            | Error message, also sets `aria-invalid`         |
+| `size`        | `"sm"` \| `"default"` \| `"lg"`      | `"default"`  | Padding and font size                           |
+| `resize`      | `"none"` \| `"vertical"` \| `"both"` | `"vertical"` | Which directions the user can drag              |
+| `autoResize`  | `boolean`                            | `false`      | Grow with the content and disable manual resize |
+| `maxRows`     | `number`                             | -            | Maximum rows when `autoResize` is on            |
+| `showCount`   | `boolean`                            | `false`      | Show the character count                        |
+| `maxLength`   | `number`                             | -            | Native limit, shown next to the count           |
+| `className`   | `string`                             | -            | Additional CSS classes                          |
+
+Every other attribute of a native `textarea` is passed through.
+
+### Textarea.Wrapper, Textarea.Label, Textarea.Description, Textarea.Error, Textarea.Count
+
+Presentational parts. Each accepts `className` and the attributes of the element it renders.

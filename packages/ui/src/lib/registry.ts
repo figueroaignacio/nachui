@@ -10,6 +10,7 @@ export const FAMILIES = [
 
 export const COMPONENT_REGISTRY = {
   accordion: 'packages/ui/src/components/accordion.tsx',
+  attachment: 'packages/ui/src/components/attachment.tsx',
   avatar: 'packages/ui/src/components/avatar.tsx',
   badge: 'packages/ui/src/components/badge.tsx',
   banner: 'packages/ui/src/components/banner.tsx',
@@ -27,10 +28,12 @@ export const COMPONENT_REGISTRY = {
   drawer: 'packages/ui/src/components/drawer.tsx',
   'dropdown-menu': 'packages/ui/src/components/dropdown-menu.tsx',
   empty: 'packages/ui/src/components/empty.tsx',
+  field: 'packages/ui/src/components/field.tsx',
   'file-upload': 'packages/ui/src/components/file-upload.tsx',
   flex: 'packages/ui/src/layout/flex.tsx',
   frame: 'packages/ui/src/components/frame.tsx',
   grid: 'packages/ui/src/layout/grid.tsx',
+  'hover-card': 'packages/ui/src/components/hover-card.tsx',
   'icon-tile': 'packages/ui/src/components/icon-tile.tsx',
   input: 'packages/ui/src/components/input.tsx',
   kbd: 'packages/ui/src/components/kbd.tsx',
@@ -41,6 +44,9 @@ export const COMPONENT_REGISTRY = {
   popover: 'packages/ui/src/components/popover.tsx',
   progress: 'packages/ui/src/components/progress.tsx',
   radio: 'packages/ui/src/components/radio.tsx',
+  rating: 'packages/ui/src/components/rating.tsx',
+  resizable: 'packages/ui/src/components/resizable.tsx',
+  'scroll-area': 'packages/ui/src/components/scroll-area.tsx',
   select: 'packages/ui/src/components/select.tsx',
   separator: 'packages/ui/src/components/separator.tsx',
   skeleton: 'packages/ui/src/components/skeleton.tsx',
@@ -52,6 +58,7 @@ export const COMPONENT_REGISTRY = {
   switch: 'packages/ui/src/components/switch.tsx',
   table: 'packages/ui/src/components/table.tsx',
   tabs: 'packages/ui/src/components/tabs.tsx',
+  textarea: 'packages/ui/src/components/textarea.tsx',
   timeline: 'packages/ui/src/components/timeline.tsx',
   toast: 'packages/ui/src/components/toast.tsx',
   tooltip: 'packages/ui/src/components/tooltip.tsx',
@@ -62,6 +69,7 @@ export const COMPONENT_REGISTRY = {
 /** Which family each component belongs to. */
 export const COMPONENT_FAMILY = {
   accordion: 'ui',
+  attachment: 'ui',
   avatar: 'ui',
   badge: 'ui',
   banner: 'ui',
@@ -79,10 +87,12 @@ export const COMPONENT_FAMILY = {
   drawer: 'ui',
   'dropdown-menu': 'ui',
   empty: 'ui',
+  field: 'ui',
   'file-upload': 'ui',
   flex: 'layout',
   frame: 'ui',
   grid: 'layout',
+  'hover-card': 'ui',
   'icon-tile': 'ui',
   input: 'ui',
   kbd: 'ui',
@@ -93,6 +103,9 @@ export const COMPONENT_FAMILY = {
   popover: 'ui',
   progress: 'ui',
   radio: 'ui',
+  rating: 'ui',
+  resizable: 'ui',
+  'scroll-area': 'ui',
   select: 'ui',
   separator: 'ui',
   skeleton: 'ui',
@@ -104,6 +117,7 @@ export const COMPONENT_FAMILY = {
   switch: 'ui',
   table: 'ui',
   tabs: 'ui',
+  textarea: 'ui',
   timeline: 'ui',
   toast: 'ui',
   tooltip: 'ui',
@@ -116,6 +130,12 @@ export const DEMO_REGISTRY = {
     collapsed: 'packages/ui/src/demos/accordion/collapsed.tsx',
     default: 'packages/ui/src/demos/accordion/default.tsx',
     multiple: 'packages/ui/src/demos/accordion/multiple.tsx',
+  },
+  attachment: {
+    cards: 'packages/ui/src/demos/attachment/cards.tsx',
+    chips: 'packages/ui/src/demos/attachment/chips.tsx',
+    default: 'packages/ui/src/demos/attachment/default.tsx',
+    uploading: 'packages/ui/src/demos/attachment/uploading.tsx',
   },
   avatar: {
     'avatar-group': 'packages/ui/src/demos/avatar/avatar-group.tsx',
@@ -209,6 +229,12 @@ export const DEMO_REGISTRY = {
     default: 'packages/ui/src/demos/empty/default.tsx',
     outline: 'packages/ui/src/demos/empty/outline.tsx',
   },
+  field: {
+    default: 'packages/ui/src/demos/field/default.tsx',
+    fieldset: 'packages/ui/src/demos/field/fieldset.tsx',
+    horizontal: 'packages/ui/src/demos/field/horizontal.tsx',
+    'with-error': 'packages/ui/src/demos/field/with-error.tsx',
+  },
   'file-upload': {
     avatar: 'packages/ui/src/demos/file-upload/avatar.tsx',
     compact: 'packages/ui/src/demos/file-upload/compact.tsx',
@@ -226,6 +252,10 @@ export const DEMO_REGISTRY = {
   },
   grid: {
     default: 'packages/ui/src/demos/grid/default.tsx',
+  },
+  'hover-card': {
+    default: 'packages/ui/src/demos/hover-card/default.tsx',
+    'link-preview': 'packages/ui/src/demos/hover-card/link-preview.tsx',
   },
   'icon-tile': {
     default: 'packages/ui/src/demos/icon-tile/default.tsx',
@@ -278,6 +308,23 @@ export const DEMO_REGISTRY = {
     disabled: 'packages/ui/src/demos/radio/disabled.tsx',
     'with-label': 'packages/ui/src/demos/radio/with-label.tsx',
   },
+  rating: {
+    'custom-icon': 'packages/ui/src/demos/rating/custom-icon.tsx',
+    default: 'packages/ui/src/demos/rating/default.tsx',
+    half: 'packages/ui/src/demos/rating/half.tsx',
+    'read-only': 'packages/ui/src/demos/rating/read-only.tsx',
+    sizes: 'packages/ui/src/demos/rating/sizes.tsx',
+  },
+  resizable: {
+    default: 'packages/ui/src/demos/resizable/default.tsx',
+    nested: 'packages/ui/src/demos/resizable/nested.tsx',
+    vertical: 'packages/ui/src/demos/resizable/vertical.tsx',
+  },
+  'scroll-area': {
+    both: 'packages/ui/src/demos/scroll-area/both.tsx',
+    default: 'packages/ui/src/demos/scroll-area/default.tsx',
+    horizontal: 'packages/ui/src/demos/scroll-area/horizontal.tsx',
+  },
   select: {
     default: 'packages/ui/src/demos/select/default.tsx',
     'grouped-items': 'packages/ui/src/demos/select/grouped-items.tsx',
@@ -318,6 +365,13 @@ export const DEMO_REGISTRY = {
   tabs: {
     default: 'packages/ui/src/demos/tabs/default.tsx',
     vertical: 'packages/ui/src/demos/tabs/vertical.tsx',
+  },
+  textarea: {
+    'auto-resize': 'packages/ui/src/demos/textarea/auto-resize.tsx',
+    default: 'packages/ui/src/demos/textarea/default.tsx',
+    'with-count': 'packages/ui/src/demos/textarea/with-count.tsx',
+    'with-error': 'packages/ui/src/demos/textarea/with-error.tsx',
+    'with-label': 'packages/ui/src/demos/textarea/with-label.tsx',
   },
   timeline: {
     alternate: 'packages/ui/src/demos/timeline/alternate.tsx',

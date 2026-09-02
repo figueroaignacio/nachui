@@ -1,0 +1,80 @@
+---
+title: Scroll Area
+description: Una región con scroll y una barra propia, acorde al tema, que aparece al pasar el cursor o al desplazarse.
+published: true
+date: 2026-09-01
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="scroll-area" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="scroll-area" />
+
+## Anatomía
+
+```tsx
+import { ScrollArea } from '@/components/ui/scroll-area';
+```
+
+```tsx
+<ScrollArea className="h-72 w-56 rounded-md border">
+  <div className="p-4">Contenido largo</div>
+</ScrollArea>
+```
+
+La raíz envuelve tu contenido en un viewport que hace scroll nativo con la barra del navegador oculta, y dibuja su propio pulgar encima. Rueda, touch, teclado y arrastre siguen funcionando porque el viewport es un elemento normal con overflow. El pulgar se arrastra con el puntero y la pista salta al hacer click.
+
+## Composición
+
+```tree
+ScrollArea
+└── ScrollArea.Bar
+```
+
+La raíz renderiza una `Bar` por cada dirección de `orientation`. Agrega una `Bar` propia con `forceMount` cuando necesites una que nunca se oculte.
+
+## Variantes
+
+### Predeterminado (Default)
+
+Scroll vertical. Con `type="hover"` (el valor por defecto) la barra aparece mientras el puntero está sobre el área o el contenido se desplaza.
+
+<ComponentPreview component="scroll-area" demo="default" />
+
+### Horizontal
+
+`orientation="horizontal"` oculta el overflow vertical y dibuja la barra en el borde inferior.
+
+<ComponentPreview component="scroll-area" demo="horizontal" />
+
+### Ambas direcciones
+
+`orientation="both"` para tablas anchas. `type="always"` mantiene las barras visibles siempre que el contenido desborde.
+
+<ComponentPreview component="scroll-area" demo="both" />
+
+## Referencia de API
+
+### ScrollArea
+
+| Prop                | Tipo                                              | Por defecto  | Descripción                                                  |
+| ------------------- | ------------------------------------------------- | ------------ | ------------------------------------------------------------ |
+| `orientation`       | `"vertical"` \| `"horizontal"` \| `"both"`        | `"vertical"` | Qué direcciones hacen scroll                                 |
+| `type`              | `"auto"` \| `"always"` \| `"hover"` \| `"scroll"` | `"hover"`    | Cuándo se ve la barra. Todas requieren overflow              |
+| `scrollHideDelay`   | `number`                                          | `600`        | Milisegundos antes de ocultar la barra tras el scroll        |
+| `viewportRef`       | `React.Ref<HTMLDivElement>`                       | -            | Ref al elemento que hace scroll, para `scrollTo` y similares |
+| `viewportClassName` | `string`                                          | -            | Clases para el viewport                                      |
+| `className`         | `string`                                          | -            | Clases para la raíz. Dale una altura o un ancho              |
+
+### ScrollArea.Bar
+
+| Prop          | Tipo                           | Por defecto  | Descripción                            |
+| ------------- | ------------------------------ | ------------ | -------------------------------------- |
+| `orientation` | `"vertical"` \| `"horizontal"` | `"vertical"` | Qué eje controla la barra              |
+| `forceMount`  | `boolean`                      | `false`      | Mantenerla visible sin importar `type` |
+| `className`   | `string`                       | -            | Clases CSS adicionales                 |

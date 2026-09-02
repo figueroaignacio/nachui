@@ -1,0 +1,82 @@
+---
+title: Hover Card
+description: Rich preview that opens when a link or trigger is hovered or focused. Delays, sides and alignment.
+published: true
+date: 2026-09-01
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="hover-card" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="hover-card" />
+
+## Anatomy
+
+```tsx
+import { HoverCard } from '@/components/ui/hover-card';
+```
+
+```tsx
+<HoverCard>
+  <HoverCard.Trigger asChild>
+    <a href="/u/nacho">@nacho</a>
+  </HoverCard.Trigger>
+  <HoverCard.Content>Profile preview</HoverCard.Content>
+</HoverCard>
+```
+
+The card opens after `openDelay` when the pointer enters the trigger and closes after `closeDelay` when it leaves, unless it moved onto the card. Keyboard focus opens it at once and blur closes it. `Escape` closes it too. Touch pointers never open it, so on phones the trigger keeps its own behaviour.
+
+## Composition
+
+```tree
+HoverCard
+├── HoverCard.Trigger
+└── HoverCard.Content
+```
+
+## Variants
+
+### Default
+
+A profile card on a mention.
+
+<ComponentPreview component="hover-card" demo="default" />
+
+### Link preview
+
+Inline in a paragraph, opening above and aligned to the start of the link.
+
+<ComponentPreview component="hover-card" demo="link-preview" />
+
+## API Reference
+
+### HoverCard
+
+| Prop           | Type                      | Default | Description                               |
+| -------------- | ------------------------- | ------- | ----------------------------------------- |
+| `open`         | `boolean`                 | -       | Controlled open state                     |
+| `defaultOpen`  | `boolean`                 | `false` | Initial state when uncontrolled           |
+| `onOpenChange` | `(open: boolean) => void` | -       | Called when the state changes             |
+| `openDelay`    | `number`                  | `500`   | Milliseconds of hover before opening      |
+| `closeDelay`   | `number`                  | `200`   | Milliseconds after leaving before closing |
+
+### HoverCard.Trigger
+
+| Prop      | Type      | Default | Description                                          |
+| --------- | --------- | ------- | ---------------------------------------------------- |
+| `asChild` | `boolean` | `false` | Attach the handlers to the child instead of a `span` |
+
+### HoverCard.Content
+
+| Prop         | Type                                           | Default    | Description                       |
+| ------------ | ---------------------------------------------- | ---------- | --------------------------------- |
+| `side`       | `"top"` \| `"bottom"` \| `"left"` \| `"right"` | `"bottom"` | Placement relative to the trigger |
+| `align`      | `"start"` \| `"center"` \| `"end"`             | `"center"` | Alignment along that side         |
+| `sideOffset` | `number`                                       | `4`        | Gap from the trigger in pixels    |
+| `className`  | `string`                                       | -          | Additional CSS classes            |

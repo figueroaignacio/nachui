@@ -1,0 +1,93 @@
+---
+title: Resizable
+description: Panel groups with draggable, keyboard accessible handles. Horizontal, vertical and nested layouts.
+published: true
+date: 2026-09-01
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="resizable" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="resizable" />
+
+## Anatomy
+
+```tsx
+import { Resizable } from '@/components/ui/resizable';
+```
+
+```tsx
+<Resizable direction="horizontal">
+  <Resizable.Panel defaultSize={30} minSize={20}>
+    Sidebar
+  </Resizable.Panel>
+  <Resizable.Handle withHandle />
+  <Resizable.Panel>Content</Resizable.Panel>
+</Resizable>
+```
+
+Sizes are percentages of the group. Panels without `defaultSize` share whatever is left. Dragging a handle moves the boundary between the two panels next to it and never lets either one go past its `minSize` or `maxSize`. The handle is a `separator` with `aria-valuenow`, focusable, and moves with the arrow keys, `Home` and `End`. Hold `Shift` for bigger steps.
+
+## Composition
+
+```tree
+Resizable
+├── Resizable.Panel
+├── Resizable.Handle
+└── Resizable.Panel
+```
+
+Panels and handles must be direct children of the group so it can number them. Nest another `Resizable` inside a panel for grids.
+
+## Variants
+
+### Default
+
+Two panels side by side with a visible grip on the handle.
+
+<ComponentPreview component="resizable" demo="default" />
+
+### Vertical
+
+`direction="vertical"` stacks the panels and the handle becomes a horizontal bar.
+
+<ComponentPreview component="resizable" demo="vertical" />
+
+### Nested
+
+A vertical group inside a panel of a horizontal group.
+
+<ComponentPreview component="resizable" demo="nested" />
+
+## API Reference
+
+### Resizable
+
+| Prop        | Type                           | Default        | Description                                           |
+| ----------- | ------------------------------ | -------------- | ----------------------------------------------------- |
+| `direction` | `"horizontal"` \| `"vertical"` | `"horizontal"` | Axis of the layout                                    |
+| `onLayout`  | `(sizes: number[]) => void`    | -              | Called with every panel size after a resize           |
+| `className` | `string`                       | -              | Classes for the group. Give it a height when vertical |
+
+### Resizable.Panel
+
+| Prop          | Type     | Default | Description                                |
+| ------------- | -------- | ------- | ------------------------------------------ |
+| `defaultSize` | `number` | -       | Initial size in percent                    |
+| `minSize`     | `number` | `10`    | Smallest size in percent                   |
+| `maxSize`     | `number` | `100`   | Largest size in percent                    |
+| `className`   | `string` | -       | Additional CSS classes. Content is clipped |
+
+### Resizable.Handle
+
+| Prop         | Type      | Default | Description                       |
+| ------------ | --------- | ------- | --------------------------------- |
+| `withHandle` | `boolean` | `false` | Render a small grip in the middle |
+| `disabled`   | `boolean` | `false` | Ignore pointer and keyboard       |
+| `step`       | `number`  | `2`     | Percent moved per arrow key press |
+| `className`  | `string`  | -       | Additional CSS classes            |
