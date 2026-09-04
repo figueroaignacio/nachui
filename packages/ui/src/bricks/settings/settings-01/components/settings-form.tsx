@@ -89,10 +89,13 @@ export function Settings01() {
               <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
                 <div className="space-y-2">
                   <Label htmlFor="settings-01-plan">Plan</Label>
-                  <Select id="settings-01-plan" defaultValue="pro">
-                    <option value="starter">Starter</option>
-                    <option value="pro">Pro</option>
-                    <option value="enterprise">Enterprise</option>
+                  <Select defaultValue="pro">
+                    <Select.Trigger id="settings-01-plan" />
+                    <Select.Content>
+                      <Select.Item value="starter">Starter</Select.Item>
+                      <Select.Item value="pro">Pro</Select.Item>
+                      <Select.Item value="enterprise">Enterprise</Select.Item>
+                    </Select.Content>
                   </Select>
                 </div>
                 <div className="flex items-start gap-2">

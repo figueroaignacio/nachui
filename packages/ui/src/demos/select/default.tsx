@@ -1,3 +1,5 @@
+'use client';
+
 import { Label } from '../../components/label';
 import { Select } from '../../components/select';
 
@@ -15,12 +17,15 @@ export function Default() {
       <Label htmlFor="deploy-region" description="Your database is created in the same region.">
         Deployment region
       </Label>
-      <Select id="deploy-region" defaultValue="eu-central-1">
-        {regions.map((region) => (
-          <option key={region.value} value={region.value}>
-            {region.label}
-          </option>
-        ))}
+      <Select defaultValue="eu-central-1">
+        <Select.Trigger id="deploy-region" placeholder="Pick a region" />
+        <Select.Content>
+          {regions.map((region) => (
+            <Select.Item key={region.value} value={region.value}>
+              {region.label}
+            </Select.Item>
+          ))}
+        </Select.Content>
       </Select>
     </div>
   );

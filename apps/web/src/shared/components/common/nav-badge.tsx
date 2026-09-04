@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 
 const variantByBadge = {
   new: 'success',
-  updated: 'info',
+  updated: 'warning',
 } as const;
 
 /**

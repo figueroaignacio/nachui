@@ -31,10 +31,13 @@ export function Settings02() {
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="settings-02-digest">Digest frequency</Label>
-                    <Select id="settings-02-digest" defaultValue="weekly">
-                      <option value="daily">Daily</option>
-                      <option value="weekly">Weekly</option>
-                      <option value="monthly">Monthly</option>
+                    <Select defaultValue="weekly">
+                      <Select.Trigger id="settings-02-digest" />
+                      <Select.Content>
+                        <Select.Item value="daily">Daily</Select.Item>
+                        <Select.Item value="weekly">Weekly</Select.Item>
+                        <Select.Item value="monthly">Monthly</Select.Item>
+                      </Select.Content>
                     </Select>
                   </div>
 

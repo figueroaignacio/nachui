@@ -22,10 +22,30 @@ import { Select } from '@/components/ui/select';
 ```
 
 ```tsx
-<Select>
-  <option value="1">Option 1</option>
+<Select defaultValue="one">
+  <Select.Trigger placeholder="Elegí una opción" />
+  <Select.Content>
+    <Select.Item value="one">Opción 1</Select.Item>
+    <Select.Item value="two">Opción 2</Select.Item>
+  </Select.Content>
 </Select>
 ```
+
+## Composición
+
+Utiliza la siguiente composición para construir un `Select`:
+
+```tree
+Select
+├── Select.Trigger
+└── Select.Content
+    ├── Select.Group
+    │   ├── Select.Label
+    │   └── Select.Item
+    └── Select.Separator
+```
+
+El trigger muestra solo la etiqueta del elemento seleccionado. Pasale children únicamente cuando quieras renderizar otra cosa en su lugar.
 
 ## Variantes
 
@@ -35,16 +55,67 @@ import { Select } from '@/components/ui/select';
 
 ### Opciones Agrupadas (Grouped Items)
 
-Utiliza la etiqueta `optgroup` para agrupar opciones relacionadas lógicamente.
+Envolvé los elementos relacionados en `Select.Group` y dale a cada grupo un `Select.Label`.
 
 <ComponentPreview component="select" demo="grouped-items" />
+
+## Teclado
+
+| Tecla                         | Acción                                                      |
+| ----------------------------- | ----------------------------------------------------------- |
+| `Enter`, `Espacio`, `Flechas` | Abre la lista y enfoca el elemento seleccionado             |
+| `ArrowUp`, `ArrowDown`        | Se mueve entre elementos                                    |
+| `Home`, `End`                 | Salta al primer o último elemento                           |
+| Una letra                     | Enfoca el siguiente elemento cuya etiqueta empieza con ella |
+| `Enter`, `Espacio`            | Selecciona el elemento enfocado                             |
+| `Escape`                      | Cierra la lista y devuelve el foco al trigger               |
 
 ## Referencia de API
 
 ### Select
 
-| Prop               | Tipo      | Por defecto | Descripción                                      |
-| ------------------ | --------- | ----------- | ------------------------------------------------ |
-| `wrapperClassName` | `string`  | -           | Clases CSS adicionales para el contenedor `div`  |
-| `className`        | `string`  | -           | Clases CSS adicionales para el elemento `select` |
-| `disabled`         | `boolean` | -           | Deshabilita el menú desplegable                  |
+| Prop            | Tipo                      | Por defecto | Descripción                                                          |
+| --------------- | ------------------------- | ----------- | -------------------------------------------------------------------- |
+| `value`         | `string`                  | -           | Valor controlado                                                     |
+| `defaultValue`  | `string`                  | `''`        | Valor inicial cuando no es controlado                                |
+| `onValueChange` | `(value: string) => void` | -           | Se llama cuando cambia el valor seleccionado                         |
+| `open`          | `boolean`                 | -           | Estado de apertura controlado                                        |
+| `defaultOpen`   | `boolean`                 | `false`     | Estado de apertura inicial cuando no es controlado                   |
+| `onOpenChange`  | `(open: boolean) => void` | -           | Se llama cuando cambia el estado de apertura                         |
+| `disabled`      | `boolean`                 | `false`     | Deshabilita el trigger                                               |
+| `name`          | `string`                  | -           | Renderiza un input oculto para que el valor se envíe con formularios |
+| `required`      | `boolean`                 | -           | Marca el input oculto como requerido                                 |
+| `className`     | `string`                  | -           | Clases CSS adicionales para el contenedor                            |
+
+### Select.Trigger
+
+Acepta todos los atributos de `button`, así que `id` y `aria-label` funcionan como siempre.
+
+| Prop          | Tipo                        | Por defecto | Descripción                                                |
+| ------------- | --------------------------- | ----------- | ---------------------------------------------------------- |
+| `placeholder` | `string`                    | -           | Texto que se muestra cuando no hay ningún elemento elegido |
+| `size`        | `'sm' \| 'default' \| 'lg'` | `'default'` | Alto y padding del trigger                                 |
+| `children`    | `ReactNode`                 | -           | Reemplaza la etiqueta seleccionada con contenido propio    |
+| `className`   | `string`                    | -           | Clases CSS adicionales                                     |
+
+### Select.Content
+
+| Prop         | Tipo     | Por defecto | Descripción                            |
+| ------------ | -------- | ----------- | -------------------------------------- |
+| `sideOffset` | `number` | `4`         | Separación entre el trigger y la lista |
+| `className`  | `string` | -           | Clases CSS adicionales                 |
+
+### Select.Item
+
+| Prop        | Tipo      | Por defecto | Descripción                                                     |
+| ----------- | --------- | ----------- | --------------------------------------------------------------- |
+| `value`     | `string`  | -           | Valor que se informa cuando se selecciona el elemento           |
+| `textValue` | `string`  | -           | Etiqueta para el trigger cuando los children no son texto plano |
+| `disabled`  | `boolean` | `false`     | Lo salta en la navegación por teclado y bloquea la selección    |
+| `className` | `string`  | -           | Clases CSS adicionales                                          |
+
+### Select.Group, Select.Label, Select.Separator
+
+| Prop        | Tipo     | Por defecto | Descripción            |
+| ----------- | -------- | ----------- | ---------------------- |
+| `className` | `string` | -           | Clases CSS adicionales |

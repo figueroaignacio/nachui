@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@repo/ui/components/button';
 import { Card } from '@repo/ui/components/card';
 import { Label } from '@repo/ui/components/label';
@@ -16,10 +18,13 @@ export function PreviewPayoutThreshold() {
       <Card.Content compact className="mt-4 space-y-5">
         <div className="space-y-1.5">
           <Label className="text-xs">Preferred Currency</Label>
-          <Select defaultValue="usd" aria-label="Preferred currency">
-            <option value="usd">USD — United States Dollar</option>
-            <option value="eur">EUR — Euro</option>
-            <option value="gbp">GBP — British Pound</option>
+          <Select defaultValue="usd">
+            <Select.Trigger aria-label="Preferred currency" />
+            <Select.Content>
+              <Select.Item value="usd">USD, United States Dollar</Select.Item>
+              <Select.Item value="eur">EUR, Euro</Select.Item>
+              <Select.Item value="gbp">GBP, British Pound</Select.Item>
+            </Select.Content>
           </Select>
         </div>
         <div className="space-y-2">

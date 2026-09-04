@@ -29,18 +29,24 @@ export function Form() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="grid gap-1.5">
               <Label htmlFor="key-scope">Scope</Label>
-              <Select id="key-scope" defaultValue="deploy">
-                <option value="read">Read only</option>
-                <option value="deploy">Deploy and read logs</option>
-                <option value="admin">Full workspace access</option>
+              <Select defaultValue="deploy">
+                <Select.Trigger id="key-scope" />
+                <Select.Content>
+                  <Select.Item value="read">Read only</Select.Item>
+                  <Select.Item value="deploy">Deploy and read logs</Select.Item>
+                  <Select.Item value="admin">Full workspace access</Select.Item>
+                </Select.Content>
               </Select>
             </div>
             <div className="grid gap-1.5">
               <Label htmlFor="key-expiry">Expires</Label>
-              <Select id="key-expiry" defaultValue="90">
-                <option value="30">In 30 days</option>
-                <option value="90">In 90 days</option>
-                <option value="never">Never</option>
+              <Select defaultValue="90">
+                <Select.Trigger id="key-expiry" />
+                <Select.Content>
+                  <Select.Item value="30">In 30 days</Select.Item>
+                  <Select.Item value="90">In 90 days</Select.Item>
+                  <Select.Item value="never">Never</Select.Item>
+                </Select.Content>
               </Select>
             </div>
           </div>

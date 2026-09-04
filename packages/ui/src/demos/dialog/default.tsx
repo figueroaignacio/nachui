@@ -30,10 +30,13 @@ export function Default() {
           />
           <div className="grid gap-1.5">
             <Label htmlFor="invite-role">Role</Label>
-            <Select id="invite-role" defaultValue="developer">
-              <option value="admin">Admin, full access including billing</option>
-              <option value="developer">Developer, can deploy and read logs</option>
-              <option value="viewer">Viewer, read only</option>
+            <Select defaultValue="developer">
+              <Select.Trigger id="invite-role" />
+              <Select.Content>
+                <Select.Item value="admin">Admin, full access including billing</Select.Item>
+                <Select.Item value="developer">Developer, can deploy and read logs</Select.Item>
+                <Select.Item value="viewer">Viewer, read only</Select.Item>
+              </Select.Content>
             </Select>
           </div>
         </div>

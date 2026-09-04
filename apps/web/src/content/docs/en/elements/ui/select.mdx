@@ -22,10 +22,30 @@ import { Select } from '@/components/ui/select';
 ```
 
 ```tsx
-<Select>
-  <option value="1">Option 1</option>
+<Select defaultValue="one">
+  <Select.Trigger placeholder="Pick an option" />
+  <Select.Content>
+    <Select.Item value="one">Option 1</Select.Item>
+    <Select.Item value="two">Option 2</Select.Item>
+  </Select.Content>
 </Select>
 ```
+
+## Composition
+
+Use the following composition to build a `Select`:
+
+```tree
+Select
+├── Select.Trigger
+└── Select.Content
+    ├── Select.Group
+    │   ├── Select.Label
+    │   └── Select.Item
+    └── Select.Separator
+```
+
+The trigger shows the label of the selected item on its own. Pass children to the trigger only when you want to render something else in its place.
 
 ## Variants
 
@@ -35,16 +55,67 @@ import { Select } from '@/components/ui/select';
 
 ### Grouped Items
 
-Use `optgroup` to group related options together.
+Wrap related items in `Select.Group` and give each group a `Select.Label`.
 
 <ComponentPreview component="select" demo="grouped-items" />
+
+## Keyboard
+
+| Key                        | Action                                         |
+| -------------------------- | ---------------------------------------------- |
+| `Enter`, `Space`, `Arrows` | Open the list and focus the selected item      |
+| `ArrowUp`, `ArrowDown`     | Move between items                             |
+| `Home`, `End`              | Jump to the first or last item                 |
+| A letter                   | Focus the next item whose label starts with it |
+| `Enter`, `Space`           | Select the focused item                        |
+| `Escape`                   | Close the list and return focus to the trigger |
 
 ## API Reference
 
 ### Select
 
-| Prop               | Type      | Default | Description                                     |
-| ------------------ | --------- | ------- | ----------------------------------------------- |
-| `wrapperClassName` | `string`  | -       | Additional CSS classes for the container `div`  |
-| `className`        | `string`  | -       | Additional CSS classes for the `select` element |
-| `disabled`         | `boolean` | -       | Disables the select menu                        |
+| Prop            | Type                      | Default | Description                                            |
+| --------------- | ------------------------- | ------- | ------------------------------------------------------ |
+| `value`         | `string`                  | -       | Controlled value                                       |
+| `defaultValue`  | `string`                  | `''`    | Initial value when uncontrolled                        |
+| `onValueChange` | `(value: string) => void` | -       | Called when the selected value changes                 |
+| `open`          | `boolean`                 | -       | Controlled open state                                  |
+| `defaultOpen`   | `boolean`                 | `false` | Initial open state when uncontrolled                   |
+| `onOpenChange`  | `(open: boolean) => void` | -       | Called when the open state changes                     |
+| `disabled`      | `boolean`                 | `false` | Disables the trigger                                   |
+| `name`          | `string`                  | -       | Renders a hidden input so the value submits with forms |
+| `required`      | `boolean`                 | -       | Marks the hidden input as required                     |
+| `className`     | `string`                  | -       | Additional CSS classes for the wrapper                 |
+
+### Select.Trigger
+
+Accepts every `button` attribute, so `id` and `aria-label` work as usual.
+
+| Prop          | Type                        | Default     | Description                                     |
+| ------------- | --------------------------- | ----------- | ----------------------------------------------- |
+| `placeholder` | `string`                    | -           | Text shown when no item is selected             |
+| `size`        | `'sm' \| 'default' \| 'lg'` | `'default'` | Height and padding of the trigger               |
+| `children`    | `ReactNode`                 | -           | Replaces the selected label with custom content |
+| `className`   | `string`                    | -           | Additional CSS classes                          |
+
+### Select.Content
+
+| Prop         | Type     | Default | Description                          |
+| ------------ | -------- | ------- | ------------------------------------ |
+| `sideOffset` | `number` | `4`     | Gap between the trigger and the list |
+| `className`  | `string` | -       | Additional CSS classes               |
+
+### Select.Item
+
+| Prop        | Type      | Default | Description                                                 |
+| ----------- | --------- | ------- | ----------------------------------------------------------- |
+| `value`     | `string`  | -       | Value reported when the item is selected                    |
+| `textValue` | `string`  | -       | Label shown in the trigger when children are not plain text |
+| `disabled`  | `boolean` | `false` | Skips the item in keyboard navigation and blocks selection  |
+| `className` | `string`  | -       | Additional CSS classes                                      |
+
+### Select.Group, Select.Label, Select.Separator
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |

@@ -1,3 +1,5 @@
+'use client';
+
 import { Label } from '../../components/label';
 import { Select } from '../../components/select';
 
@@ -30,19 +32,20 @@ export function GroupedItems() {
   return (
     <div className="flex w-full max-w-sm flex-col gap-1.5">
       <Label htmlFor="assignee">Assign ticket to</Label>
-      <Select id="assignee" defaultValue="">
-        <option value="" disabled>
-          Unassigned
-        </option>
-        {teams.map((team) => (
-          <optgroup key={team.label} label={team.label}>
-            {team.members.map((member) => (
-              <option key={member.value} value={member.value}>
-                {member.label}
-              </option>
-            ))}
-          </optgroup>
-        ))}
+      <Select>
+        <Select.Trigger id="assignee" placeholder="Unassigned" />
+        <Select.Content>
+          {teams.map((team) => (
+            <Select.Group key={team.label}>
+              <Select.Label>{team.label}</Select.Label>
+              {team.members.map((member) => (
+                <Select.Item key={member.value} value={member.value}>
+                  {member.label}
+                </Select.Item>
+              ))}
+            </Select.Group>
+          ))}
+        </Select.Content>
       </Select>
     </div>
   );
