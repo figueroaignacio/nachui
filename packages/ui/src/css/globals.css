@@ -153,6 +153,15 @@
   --code-tag: oklch(79.4% 0.075 18.9);
 }
 
+@utility bg-hatch {
+  background-color: var(--surface-muted);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    color-mix(in oklab, var(--border) 70%, transparent) 0 1px,
+    transparent 1px 8px
+  );
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

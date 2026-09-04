@@ -13,7 +13,7 @@ import { ContextMenu } from '../../components/context-menu';
 export function Default() {
   return (
     <ContextMenu className="w-full max-w-md">
-      <ContextMenu.Trigger className="border-border text-muted-foreground flex h-48 w-full items-center justify-center rounded-xl border border-dashed text-sm">
+      <ContextMenu.Trigger className="border-border bg-hatch text-muted-foreground flex h-48 w-full items-center justify-center rounded-xl border text-sm">
         Right click here
       </ContextMenu.Trigger>
       <ContextMenu.Content>

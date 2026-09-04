@@ -4,7 +4,7 @@ import { Container } from '../../layout/container';
 
 export function Default() {
   return (
-    <div className="border-border w-full rounded-xl border border-dashed py-8">
+    <div className="border-border bg-hatch w-full rounded-xl border py-8">
       <Container size="sm" align="center">
         <article className="border-border bg-card rounded-xl border p-6">
           <p className="text-primary text-xs font-medium tracking-wide uppercase">Article</p>

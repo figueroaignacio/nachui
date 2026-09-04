@@ -1,7 +1,7 @@
 import { Center } from '../../layout/center';
 
 const chip = 'bg-primary text-primary-foreground rounded-md px-3 py-1.5 text-xs font-medium';
-const frame = 'border-border bg-card h-24 w-full rounded-lg border border-dashed';
+const frame = 'border-border bg-hatch h-24 w-full rounded-lg border';
 
 export function Axis() {
   return (
