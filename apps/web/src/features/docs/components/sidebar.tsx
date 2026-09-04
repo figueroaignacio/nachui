@@ -12,7 +12,7 @@ export function Sidebar() {
   const docsNavigation = t.raw('navigation') as DocSection[];
 
   return (
-    <aside className="lg:border-r lg:pr-8">
+    <aside className="lg:pr-8">
       <nav className="hide-scrollbar sticky top-24 hidden h-[calc(100vh-5rem)] shrink-0 overflow-y-scroll mask-[linear-gradient(180deg,black_90%,transparent)] pb-20 lg:block">
         {docsNavigation.map((section: DocSection) => (
           <div key={section.title} className="mb-6 last:mb-0">

@@ -52,7 +52,7 @@ function ComingSoonRow({
 }) {
   return (
     <div className="flex cursor-default items-start gap-3 rounded-md px-2.5 py-2.5 opacity-60">
-      <IconTile tone="muted" className="size-9 border-dashed">
+      <IconTile tone="muted" className="ring-border/60 size-9 border-transparent ring-1 ring-inset">
         <HugeiconsIcon icon={icon} size={16} strokeWidth={1.6} aria-hidden="true" />
       </IconTile>
       <span className="min-w-0">
@@ -86,9 +86,7 @@ export function Navbar() {
     <div>
       <div className="relative z-50 hidden w-full lg:flex">
         <div className="flex h-14 w-full items-stretch">
-          {/* Brand + search segment: mirrors the docs sidebar column (260px) so
-              its right rule joins the sidebar's border on docs pages. */}
-          <div className="flex w-65 shrink-0 items-center justify-between border-r pr-3">
+          <div className="flex w-65 shrink-0 items-center pr-3">
             <Link
               href="/"
               className="group/brand focus-visible:ring-ring rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -100,7 +98,6 @@ export function Navbar() {
                 imageClassName="transition-transform duration-300 ease-out group-hover/brand:scale-110 group-hover/brand:-rotate-12 group-hover/brand:shadow-md motion-reduce:transform-none"
               />
             </Link>
-            <Searcher variant="icon" />
           </div>
           <NavigationMenu className="pl-8" aria-label="Main navigation">
             <NavigationMenu.Item className="flex items-center self-stretch">
@@ -172,11 +169,14 @@ export function Navbar() {
               );
             })}
           </NavigationMenu>
-          <div className="ml-auto flex items-center gap-3">
+          <div className="ml-auto flex items-center gap-2">
+            <Searcher variant="icon" />
             <AskAiButton />
-            <Separator orientation="vertical" className="h-4" />
+            <Separator orientation="vertical" className="mx-1 h-4" />
             <GitHubLink />
+            <Separator orientation="vertical" className="mx-1 h-4" />
             <LocaleSwitcher />
+            <Separator orientation="vertical" className="mx-1 h-4" />
             <ThemeToggle />
           </div>
         </div>
