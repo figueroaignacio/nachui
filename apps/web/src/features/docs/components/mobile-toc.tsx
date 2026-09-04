@@ -29,13 +29,7 @@ export function MobileToc({ toc }: TocProps) {
     return () => window.removeEventListener('scroll', close);
   }, [open]);
 
-  const handleSelect = (url: string) => {
-    setOpen(false);
-    const id = decodeURIComponent(url.split('#')[1] ?? '');
-    const target = id ? document.getElementById(id) : null;
-    if (!target) return;
-    requestAnimationFrame(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }));
-  };
+  const handleSelect = () => setOpen(false);
 
   if (!toc || toc.length === 0) return null;
 
@@ -68,11 +62,11 @@ export function MobileToc({ toc }: TocProps) {
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="bg-background/95 border-rule absolute inset-x-0 top-full overflow-hidden border-b shadow-lg backdrop-blur-md"
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
+            className="bg-background/95 border-rule absolute inset-x-0 top-full border-b shadow-lg backdrop-blur-md"
           >
             <div className="max-h-[60vh] overflow-y-auto px-3 py-3">
               <Tree tree={toc} activeItem={activeHeading} onItemClick={handleSelect} />
