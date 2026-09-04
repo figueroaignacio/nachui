@@ -34,7 +34,7 @@ export function ComponentPreviewClient({
       <Frame className="mt-5">
         <Frame.Panel
           className={cn(
-            'bg-code flex min-h-72 items-center p-6 *:min-w-0 sm:p-8',
+            'bg-code flex min-h-72 items-center overflow-visible p-6 *:min-w-0 sm:p-8',
             alignmentClasses[align],
           )}
         >
