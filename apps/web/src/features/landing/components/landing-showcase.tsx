@@ -9,9 +9,8 @@ export function LandingShowcase() {
   const featuredMeta: string[] = t.raw('featured.meta');
 
   return (
-    <section className="w-full pb-6" aria-labelledby="showcase-title">
-      <div className="rule-bleed" />
-      <div className="scroll-reveal flex flex-col gap-3 pt-4 pb-6 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
+    <section className="w-full" aria-labelledby="showcase-title">
+      <div className="scroll-reveal flex flex-col gap-3 pb-6 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
         <div className="max-w-xl">
           <p className="section-label">{t('label')}</p>
           <h2
@@ -30,7 +29,7 @@ export function LandingShowcase() {
         </Link>
       </div>
 
-      <div className="scroll-reveal border-rule bg-surface-muted/50 flex flex-col gap-6 rounded-lg border p-4 sm:p-6 lg:flex-row lg:items-center lg:gap-10">
+      <div className="scroll-reveal bg-surface-muted flex flex-col gap-6 rounded-xl p-4 sm:p-6 lg:flex-row lg:items-center lg:gap-10">
         <div className="flex flex-col lg:w-[42%] lg:shrink-0">
           <p className="section-label">{t('featured.badge')}</p>
           <h3 className="font-heading text-foreground mt-3 text-xl font-semibold tracking-tight">

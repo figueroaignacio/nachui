@@ -35,14 +35,14 @@ export function PreviewContributionHistory() {
           ))}
         </div>
         <div className="grid grid-cols-2 gap-2">
-          <div className="border-border rounded-md border p-3">
+          <div className="bg-surface-muted rounded-md p-3">
             <span className="text-muted-foreground text-[9px] font-semibold tracking-wider uppercase">
               Upcoming
             </span>
             <div className="text-foreground mt-1 text-sm font-bold">May 2024</div>
             <div className="text-muted-foreground text-xs">Scheduled</div>
           </div>
-          <div className="border-border rounded-md border p-3">
+          <div className="bg-surface-muted rounded-md p-3">
             <span className="text-muted-foreground text-[9px] font-semibold tracking-wider uppercase">
               Savings Plan
             </span>

@@ -36,11 +36,7 @@ export function LandingAssistant() {
 
   return (
     <section className="w-full" aria-labelledby="assistant-title">
-      {/* The rule bleeds past the rails, so it has to sit outside the clipped
-          frame below — otherwise the overflow that makes it bleed is cut. */}
-      <div className="rule-bleed rule-draw" />
-
-      <div className="assistant-frame relative overflow-hidden pt-8 pb-10">
+      <div className="assistant-frame relative overflow-hidden pb-10">
         <div className="scroll-reveal max-w-2xl">
           <p className="section-label">{t('label')}</p>
           <h2

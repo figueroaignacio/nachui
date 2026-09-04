@@ -40,7 +40,7 @@ export function PreviewPaymentsNav() {
         {actions.map((action) => (
           <div
             key={action.title}
-            className="border-border flex items-center justify-between gap-2 rounded-md border p-3"
+            className="bg-surface-muted flex items-center justify-between gap-2 rounded-md p-3"
           >
             <div>
               <div className="text-foreground text-xs font-semibold">{action.title}</div>

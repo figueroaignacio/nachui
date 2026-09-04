@@ -52,8 +52,7 @@ export function LandingHero() {
         </Link>
       </div>
 
-      <div className="rule-bleed mt-10 md:mt-14" />
-      <div className="mt-10">
+      <div className="mt-14 md:mt-20">
         <PreviewMasonry />
       </div>
     </section>

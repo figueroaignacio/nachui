@@ -6,7 +6,7 @@ import { LandingShowcase } from '@/features/landing/components/landing-showcase'
 
 export function HomeView() {
   return (
-    <div className="relative flex flex-col">
+    <div className="relative flex flex-col gap-20 pb-10 md:gap-28">
       <LandingHero />
       <LandingShowcase />
       <LandingCatalog />

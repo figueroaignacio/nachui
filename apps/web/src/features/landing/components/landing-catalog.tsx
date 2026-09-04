@@ -21,9 +21,8 @@ export function LandingCatalog() {
   if (components.length === 0) return null;
 
   return (
-    <section className="w-full pt-6 pb-2" aria-labelledby="catalog-title">
-      <div className="rule-bleed rule-draw" />
-      <div className="scroll-reveal flex flex-col gap-3 pt-4 pb-6 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
+    <section className="w-full" aria-labelledby="catalog-title">
+      <div className="scroll-reveal flex flex-col gap-3 pb-6 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
         <div className="max-w-xl">
           <p className="section-label">{t('label')}</p>
           <h2

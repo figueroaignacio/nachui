@@ -1,7 +1,6 @@
 'use client';
 
 import { CopyButton } from '@/components/mdx/copy-button';
-import { AiWalker } from '@/features/chat/ui/ai-walker';
 import { Link } from '@/i18n/navigation';
 import { ArrowRight02Icon, ArrowUpRight01Icon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
@@ -51,9 +50,8 @@ export function LandingInstall() {
   const tools: Tool[] = t.raw('tools');
 
   return (
-    <section className="w-full py-10 sm:py-14">
-      <div className="rule-bleed rule-draw" />
-      <div className="scroll-reveal mt-8 flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-12">
+    <section className="w-full">
+      <div className="scroll-reveal flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-12">
         <div className="flex flex-col lg:w-[40%] lg:shrink-0">
           <p className="section-label">{t('label')}</p>
           <h2 className="font-heading text-foreground mt-3 text-lg leading-tight font-semibold tracking-tight md:text-xl">
@@ -121,13 +119,7 @@ export function LandingInstall() {
           </p>
         </div>
       </div>
-      <div className="relative mt-16">
-        <div className="rule-bleed" />
-        <div className="ai-walk-track" aria-hidden="true">
-          <AiWalker />
-        </div>
-      </div>
-      <p className="text-muted-foreground mt-4 font-mono text-xs">{t('license')}</p>
+      <p className="text-muted-foreground mt-16 font-mono text-xs">{t('license')}</p>
     </section>
   );
 }

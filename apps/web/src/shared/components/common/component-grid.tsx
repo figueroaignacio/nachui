@@ -23,9 +23,8 @@ interface ComponentGridProps {
 const cascadeIndex = (index: number) => ({ '--cascade-i': index }) as React.CSSProperties;
 
 /**
- * Dense, hairline-ruled catalog of components: one icon + name per cell.
- * Cells carry their own right/bottom rule and pull it back by 1px so the
- * trailing column and row collapse into the container's border.
+ * Dense catalog of components: one icon + name per tile on a muted surface,
+ * separated by gaps instead of rules.
  */
 export function ComponentGrid({ items, className }: ComponentGridProps) {
   const t = useTranslations('ui');
@@ -54,7 +53,7 @@ export function ComponentGrid({ items, className }: ComponentGridProps) {
     <div
       ref={containerRef}
       className={cn(
-        'grid-cascade border-rule grid grid-cols-2 overflow-hidden rounded-lg border sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5',
+        'grid-cascade grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5',
         inView && 'grid-cascade-in',
         className,
       )}
@@ -66,15 +65,15 @@ export function ComponentGrid({ items, className }: ComponentGridProps) {
           title={item.description || undefined}
           style={cascadeIndex(index)}
           className={cn(
-            'group/cell border-rule relative -mr-px -mb-px flex items-center overflow-hidden border-r border-b px-3 py-2.5 sm:px-4',
-            'hover:bg-surface-muted focus-visible:ring-ring transition-colors duration-200 focus-visible:z-10 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
+            'group/cell bg-surface-muted relative flex items-center overflow-hidden rounded-lg px-3 py-2.5 sm:px-4',
+            'hover:bg-muted focus-visible:ring-ring transition-colors duration-200 focus-visible:z-10 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
           )}
         >
           <span className="flex min-w-0 origin-left items-center gap-2.5 transition-transform duration-200 ease-out group-hover/cell:scale-[1.03] motion-reduce:transform-none">
             <IconTile
               size="sm"
               tone="muted"
-              className="group-hover/cell:border-rule group-hover/cell:bg-background border-transparent bg-transparent transition-all duration-200 ease-out group-hover/cell:scale-110 group-hover/cell:-rotate-6 group-hover/cell:shadow-sm motion-reduce:transform-none"
+              className="group-hover/cell:bg-background border-transparent bg-transparent transition-all duration-200 ease-out group-hover/cell:scale-110 group-hover/cell:-rotate-6 group-hover/cell:shadow-sm motion-reduce:transform-none"
             >
               <HugeiconsIcon
                 icon={getComponentIcon(item.href)}
@@ -92,9 +91,13 @@ export function ComponentGrid({ items, className }: ComponentGridProps) {
       <div
         aria-hidden="true"
         style={cascadeIndex(items.length)}
-        className="border-rule [grid-column-end:-1] -mr-px -mb-px flex items-center gap-2.5 border-r border-b px-3 py-2.5 sm:px-4"
+        className="bg-surface-muted [grid-column-end:-1] flex items-center gap-2.5 rounded-lg px-3 py-2.5 sm:px-4"
       >
-        <IconTile size="sm" tone="muted" className="border-rule border-dashed bg-transparent">
+        <IconTile
+          size="sm"
+          tone="muted"
+          className="ring-border/60 border-transparent bg-transparent ring-1 ring-inset"
+        >
           <HugeiconsIcon icon={PlusSignIcon} size={16} strokeWidth={1.6} />
         </IconTile>
         <span className="text-muted-foreground truncate font-mono text-xs italic">

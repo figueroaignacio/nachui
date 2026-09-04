@@ -19,7 +19,7 @@ export function PreviewDividendIncome() {
         {holdings.map((holding) => (
           <div
             key={holding.name}
-            className="border-border flex items-center justify-between rounded-md border p-3"
+            className="bg-surface-muted flex items-center justify-between rounded-md p-3"
           >
             <div>
               <div className="text-foreground text-xs font-semibold">{holding.name}</div>

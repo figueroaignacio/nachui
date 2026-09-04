@@ -20,7 +20,7 @@ export function PreviewClaimableBalance() {
         </div>
       </Card.Header>
       <Card.Content compact className="mt-4 space-y-4">
-        <div className="border-border space-y-2.5 rounded-md border p-3.5 text-xs">
+        <div className="bg-surface-muted space-y-2.5 rounded-md p-3.5 text-xs">
           {rows.map((row) => (
             <div key={row.label} className="flex justify-between">
               <span className="text-muted-foreground">{row.label}</span>

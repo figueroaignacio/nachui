@@ -18,7 +18,7 @@ export function PreviewSavingsTargets() {
       </Card.Header>
       <Card.Content compact className="mt-4 space-y-3">
         {targets.map((target) => (
-          <div key={target.name} className="border-border space-y-2 rounded-md border p-3.5">
+          <div key={target.name} className="bg-surface-muted space-y-2 rounded-md p-3.5">
             <span className="text-muted-foreground text-[9px] font-semibold tracking-wider uppercase">
               {target.name}
             </span>
