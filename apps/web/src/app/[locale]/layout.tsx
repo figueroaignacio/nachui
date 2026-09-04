@@ -14,7 +14,6 @@ import type { Metadata } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { ViewTransition } from 'react';
 
 interface LocaleLayoutProps {
   children: React.ReactNode;
@@ -80,9 +79,7 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
           <Providers>
             <Header />
             <PageFrame>
-              <ViewTransition>
-                <main id="main-content">{children}</main>
-              </ViewTransition>
+              <main id="main-content">{children}</main>
             </PageFrame>
             <Footer />
             {/* Mounted app-wide: the landing section and the docs pages share

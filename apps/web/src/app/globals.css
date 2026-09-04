@@ -83,54 +83,14 @@ body {
     display: none;
   }
 }
-
-/* --- View transitions --------------------------------------------------- */
-/* Let clicks through while a transition runs, so navigation never swallows a
-   tap mid-animation. */
-::view-transition {
-  pointer-events: none;
-}
-
-/* The header is a fixed spatial anchor: it must not crossfade with the body. */
-::view-transition-group(site-header) {
-  animation: none;
-  z-index: 100;
-}
-
-::view-transition-old(site-header) {
-  display: none;
-}
-
-::view-transition-new(site-header) {
-  animation: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(*),
-  ::view-transition-new(*),
-  ::view-transition-group(*) {
-    animation-duration: 0s !important;
-    animation-delay: 0s !important;
-  }
-}
-
-/* --- Scroll-driven enhancements ---------------------------------------- */
-/* Progressive enhancement: browsers without scroll timelines (or users with
-   reduced motion) simply get the static page. The global reduced-motion
-   override kills durations but scroll timelines ignore duration, hence the
-   explicit media query. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    /* Fade + rise + unblur as the element enters the viewport. */
     .scroll-reveal {
       animation: scroll-reveal linear both;
       animation-timeline: view();
       animation-range: entry 0% entry 60%;
     }
 
-    /* Editorial hairlines draw themselves from the left. Cover-based range:
-       a 1px-tall rule has a near-zero entry range, so the draw is paced by
-       its travel across the lower third of the viewport instead. */
     .rule-draw {
       transform-origin: left;
       animation: rule-draw linear both;
@@ -138,9 +98,6 @@ body {
       animation-range: cover 0% cover 35%;
     }
 
-    /* The assistant leans out of the bottom-right corner along the diagonal.
-       The timeline is named on the section: a bare view() would track the
-       avatar's own 48px box, which barely moves through the viewport. */
     .assistant-frame {
       view-timeline-name: --assistant-section;
     }
@@ -151,7 +108,6 @@ body {
       animation-range: entry 25% entry 90%;
     }
 
-    /* Lags slightly behind the scroll for a one-layer parallax. */
     .scroll-parallax {
       animation: scroll-parallax linear both;
       animation-timeline: view();
@@ -160,9 +116,6 @@ body {
   }
 }
 
-/* Grid cascade: cells hide until the grid scrolls into view, then animate in
-   one by one via a per-cell --cascade-i delay. Gated on scripting so the grid
-   never stays hidden without JS, and on reduced motion. */
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
   .grid-cascade > * {
     opacity: 0;
@@ -214,9 +167,6 @@ body {
   }
 }
 
-/* Resting state, and the fallback when scroll timelines don't run: already
-   leaning out of the corner. Only the wrapper translates — the tilt lives on
-   the avatar itself, so the tooltip never inherits the rotation. */
 .assistant-peek {
   transform: translate(40%, 30%);
 }
