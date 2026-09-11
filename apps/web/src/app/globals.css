@@ -931,6 +931,12 @@ body {
   mask-image: linear-gradient(180deg, black 55%, transparent 100%);
 }
 
+.header-silk {
+  inset: -220% -10%;
+  filter: blur(36px);
+  opacity: 0.9;
+}
+
 .chat-silk {
   inset: -25%;
   mask-image: linear-gradient(180deg, black 35%, transparent 100%);
