@@ -1,7 +1,7 @@
 'use client';
 
-import { GitHubStarTocCta } from '@/components/common/github-star-cta';
 import { useMounted } from '@/hooks/use-mounted';
+import { Separator } from '@repo/ui/components/separator';
 import { Typography } from '@repo/ui/components/typography';
 import { Skeleton } from '@repo/ui/components/skeleton';
 import { motion } from 'motion/react';
@@ -48,7 +48,12 @@ function TocSkeleton() {
   );
 }
 
-export function Toc({ toc }: TocProps) {
+type TocPanelProps = TocProps & {
+  /** Rendered under the tree, inside the sticky rail. */
+  footer?: React.ReactNode;
+};
+
+export function Toc({ toc, footer }: TocPanelProps) {
   const itemIds = useMemo(() => {
     if (!toc) return [];
     const ids: string[] = [];
@@ -69,7 +74,7 @@ export function Toc({ toc }: TocProps) {
   const t = useTranslations('components.toc');
 
   if (!toc || toc.length === 0) {
-    return null;
+    return footer ? <div className="sticky top-24 space-y-4">{footer}</div> : null;
   }
 
   if (!mounted) {
@@ -89,7 +94,12 @@ export function Toc({ toc }: TocProps) {
 
       <Tree tree={toc} activeItem={activeHeading} />
 
-      <GitHubStarTocCta />
+      {footer && (
+        <div className="mt-6">
+          <Separator className="bg-border/40 mb-5" />
+          {footer}
+        </div>
+      )}
     </motion.div>
   );
 }

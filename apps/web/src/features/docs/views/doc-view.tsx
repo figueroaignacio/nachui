@@ -65,15 +65,19 @@ export function DocView({ doc }: DocViewProps) {
                 </p>
               )}
               <Flex wrap="wrap" align="center" justify="between" gap="3" className="mt-4">
-                <DocActions
-                  page={doc.title}
-                  url={docUrl}
-                  filePath={doc.sourceFilePath}
-                  rawContent={doc.raw}
-                  rawPath={`/${doc.locale || 'en'}${currentPath}.md`}
-                  sourceUrl={sourceUrl}
-                />
-                <DocsNavigationButtons currentPath={currentPath} />
+                <div className="xl:hidden">
+                  <DocActions
+                    page={doc.title}
+                    url={docUrl}
+                    filePath={doc.sourceFilePath}
+                    rawContent={doc.raw}
+                    rawPath={`/${doc.locale || 'en'}${currentPath}.md`}
+                    sourceUrl={sourceUrl}
+                  />
+                </div>
+                <div className="ml-auto">
+                  <DocsNavigationButtons currentPath={currentPath} />
+                </div>
               </Flex>
             </div>
           </div>
@@ -91,7 +95,20 @@ export function DocView({ doc }: DocViewProps) {
         </Stack>
       </Container>
       <div data-doc-toc className="hidden xl:block">
-        <Toc toc={tocContent} />
+        <Toc
+          toc={tocContent}
+          footer={
+            <DocActions
+              layout="rail"
+              page={doc.title}
+              url={docUrl}
+              filePath={doc.sourceFilePath}
+              rawContent={doc.raw}
+              rawPath={`/${doc.locale || 'en'}${currentPath}.md`}
+              sourceUrl={sourceUrl}
+            />
+          }
+        />
       </div>
     </>
   );

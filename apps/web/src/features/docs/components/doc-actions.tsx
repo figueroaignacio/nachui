@@ -6,8 +6,10 @@ import { useChatStore } from '@/features/chat/store/chat-store';
 import { useCopyToClipboard } from '@/features/docs/hooks/use-copy-to-clipboard';
 import { getDocEditUrl } from '@/lib/domains';
 import {
+  AiChat01Icon,
   ArrowDown01Icon,
   Copy01Icon,
+  PencilEdit02Icon,
   SourceCodeIcon,
   Tick02Icon,
 } from '@hugeicons/core-free-icons';
@@ -26,6 +28,8 @@ type DocActionsProps = {
   rawPath: string;
   /** GitHub URL of the component's source file, on element pages. */
   sourceUrl?: string;
+  /** `rail` stacks the buttons to fit the docs sidebar. */
+  layout?: 'inline' | 'rail';
 };
 
 export function DocActions({
@@ -35,6 +39,7 @@ export function DocActions({
   rawContent,
   rawPath,
   sourceUrl,
+  layout = 'inline',
 }: DocActionsProps) {
   const t = useTranslations('components');
   const { triggerExplanation } = useChatStore();
@@ -68,6 +73,38 @@ export function DocActions({
   }, [t, page, url]);
 
   const githubEditUrl = getDocEditUrl(filePath);
+
+  if (layout === 'rail') {
+    return (
+      <div className="flex flex-col items-start gap-0.5">
+        <RailAction icon={<HugeiconsIcon icon={AiChat01Icon} size={14} />} onClick={handleExplain}>
+          {t('explainButton.label')}
+        </RailAction>
+        <RailAction
+          icon={<HugeiconsIcon icon={isCopied ? Tick02Icon : Copy01Icon} size={14} />}
+          onClick={() => copyToClipboard(rawContent)}
+        >
+          {isCopied ? t('copyMarkdown.copied') : t('copyMarkdown.label')}
+        </RailAction>
+        <RailAction icon={<MarkdownIcon />} href={rawPath}>
+          {t('viewRawMarkdown.label')}
+        </RailAction>
+        {sourceUrl && (
+          <RailAction icon={<HugeiconsIcon icon={SourceCodeIcon} size={14} />} href={sourceUrl}>
+            {t('viewSource.label')}
+          </RailAction>
+        )}
+        <RailAction icon={<HugeiconsIcon icon={PencilEdit02Icon} size={14} />} href={githubEditUrl}>
+          {t('editOnGithub.label')}
+        </RailAction>
+        {openInLinks.map((link) => (
+          <RailAction key={link.name} icon={<link.icon />} href={link.href}>
+            {t('openIn.label')} {link.name}
+          </RailAction>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <Button.Group attached>
@@ -149,6 +186,37 @@ export function DocActions({
         </DropdownMenu.Content>
       </DropdownMenu>
     </Button.Group>
+  );
+}
+
+const RAIL_ACTION_CLASS =
+  'text-muted-foreground hover:text-foreground flex items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-xs leading-snug no-underline transition-colors duration-200 outline-none focus-visible:ring-1 [&_svg]:size-3.5 [&_svg]:shrink-0';
+
+function RailAction({
+  href,
+  onClick,
+  icon,
+  children,
+}: {
+  href?: string;
+  onClick?: () => void;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  if (href) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={RAIL_ACTION_CLASS}>
+        {icon}
+        <span>{children}</span>
+      </a>
+    );
+  }
+
+  return (
+    <button type="button" onClick={onClick} className={RAIL_ACTION_CLASS}>
+      {icon}
+      <span>{children}</span>
+    </button>
   );
 }
 
