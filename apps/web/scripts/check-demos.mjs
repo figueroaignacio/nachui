@@ -21,6 +21,7 @@ import { fileURLToPath } from 'node:url';
 const APP_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const UI_SRC = resolve(APP_ROOT, '../../packages/ui/src');
 const DEMOS_ROOT = join(UI_SRC, 'demos');
+const EXAMPLES_ROOT = join(UI_SRC, 'examples');
 
 // Must stay in sync with rewriteDemoImports. A new family directory in
 // packages/ui has to be added in both places, and this check is what says so.
@@ -76,7 +77,7 @@ function walk(dir) {
 }
 
 function main() {
-  const files = walk(DEMOS_ROOT);
+  const files = [...walk(DEMOS_ROOT), ...(existsSync(EXAMPLES_ROOT) ? walk(EXAMPLES_ROOT) : [])];
   const problems = [];
 
   if (files.length === 0) {
@@ -85,7 +86,7 @@ function main() {
   }
 
   for (const file of files) {
-    const rel = file.slice(DEMOS_ROOT.length + 1);
+    const rel = file.slice(UI_SRC.length + 1);
     const source = readFileSync(file, 'utf8');
 
     // A default export cannot be imported by the `{ Name as Alias }` form the
@@ -123,7 +124,7 @@ function main() {
   }
 
   if (problems.length === 0) {
-    console.log(`check-demos: ${files.length} demos ok`);
+    console.log(`check-demos: ${files.length} demos and examples ok`);
     return;
   }
 

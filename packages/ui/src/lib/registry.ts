@@ -436,6 +436,64 @@ export const DEMO_REGISTRY = {
   },
 } as const;
 
+/** Gallery examples: real compositions built with a component, never shown in docs. */
+export const EXAMPLE_REGISTRY = {
+  accordion: {
+    icons: 'packages/ui/src/examples/accordion/icons.tsx',
+  },
+  avatar: {
+    team: 'packages/ui/src/examples/avatar/team.tsx',
+  },
+  badge: {
+    statuses: 'packages/ui/src/examples/badge/statuses.tsx',
+  },
+  bubble: {
+    attachments: 'packages/ui/src/examples/bubble/attachments.tsx',
+  },
+  button: {
+    toolbar: 'packages/ui/src/examples/button/toolbar.tsx',
+  },
+  card: {
+    stats: 'packages/ui/src/examples/card/stats.tsx',
+  },
+  'context-menu': {
+    'track-list': 'packages/ui/src/examples/context-menu/track-list.tsx',
+  },
+  dialog: {
+    confirm: 'packages/ui/src/examples/dialog/confirm.tsx',
+  },
+  empty: {
+    inbox: 'packages/ui/src/examples/empty/inbox.tsx',
+  },
+  'file-upload': {
+    documents: 'packages/ui/src/examples/file-upload/documents.tsx',
+  },
+  frame: {
+    nested: 'packages/ui/src/examples/frame/nested.tsx',
+  },
+  'icon-tile': {
+    'feature-list': 'packages/ui/src/examples/icon-tile/feature-list.tsx',
+  },
+  input: {
+    'sign-in': 'packages/ui/src/examples/input/sign-in.tsx',
+  },
+  message: {
+    assistant: 'packages/ui/src/examples/message/assistant.tsx',
+  },
+  pagination: {
+    table: 'packages/ui/src/examples/pagination/table.tsx',
+  },
+  switch: {
+    preferences: 'packages/ui/src/examples/switch/preferences.tsx',
+  },
+  tabs: {
+    settings: 'packages/ui/src/examples/tabs/settings.tsx',
+  },
+  timeline: {
+    deployments: 'packages/ui/src/examples/timeline/deployments.tsx',
+  },
+} as const;
+
 export const BRICK_REGISTRY = {
   dashboard: {
     'dashboard-01': 'packages/ui/src/bricks/dashboard/dashboard-01',
@@ -463,5 +521,6 @@ export const BRICK_REGISTRY = {
 export type Family = (typeof FAMILIES)[number]['id'];
 export type ComponentName = keyof typeof COMPONENT_REGISTRY;
 export type DemoName<T extends keyof typeof DEMO_REGISTRY> = keyof (typeof DEMO_REGISTRY)[T];
+export type ExampleName<T extends keyof typeof EXAMPLE_REGISTRY> = keyof (typeof EXAMPLE_REGISTRY)[T];
 export type BrickCategory = keyof typeof BRICK_REGISTRY;
 export type BrickName<T extends BrickCategory> = keyof (typeof BRICK_REGISTRY)[T];

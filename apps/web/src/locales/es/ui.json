@@ -22,6 +22,11 @@
         "href": "/docs/elements/layout"
       },
       {
+        "title": "Componentes",
+        "description": "Una galería de ejemplos vivos hechos con la librería.",
+        "href": "/components"
+      },
+      {
         "title": "Bloques",
         "description": "Secciones de página completas listas para copiar en tu app.",
         "href": "/bricks/login"

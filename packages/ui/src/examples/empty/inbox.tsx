@@ -1,0 +1,29 @@
+import { InboxIcon } from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Button } from '../../components/button';
+import { Empty } from '../../components/empty';
+import { Kbd } from '../../components/kbd';
+
+export function Inbox() {
+  return (
+    <Empty variant="card" className="max-w-md">
+      <Empty.Header>
+        <Empty.Media variant="icon">
+          <HugeiconsIcon icon={InboxIcon} size={24} />
+        </Empty.Media>
+        <Empty.Title>Inbox zero</Empty.Title>
+        <Empty.Description>
+          Every notification is handled. New mentions, reviews and deploy alerts will land here.
+        </Empty.Description>
+      </Empty.Header>
+      <Empty.Content>
+        <Button size="sm" variant="outline">
+          Notification settings
+        </Button>
+        <span className="text-muted-foreground flex items-center gap-1.5 text-xs">
+          or press <Kbd>R</Kbd> to refresh
+        </span>
+      </Empty.Content>
+    </Empty>
+  );
+}

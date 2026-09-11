@@ -1,0 +1,52 @@
+import { GalleryView } from '@/features/gallery/views/gallery-view';
+import { buildAlternates, getAbsoluteUrl, getAssetUrl } from '@/lib/domains';
+import type { Metadata } from 'next';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+
+type PageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function ComponentsPage({ params }: PageProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  return <GalleryView />;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'sections.gallery' });
+  const canonicalUrl = getAbsoluteUrl(locale, '/components');
+
+  return {
+    title: 'Components',
+    description: t('metaDescription'),
+    openGraph: {
+      title: 'Components · NachUI',
+      description: t('metaDescription'),
+      type: 'website',
+      locale,
+      url: canonicalUrl,
+      siteName: 'NachUI',
+      images: [
+        {
+          url: getAssetUrl('/images/og/og-home.png'),
+          width: 1200,
+          height: 630,
+          alt: 'Components · NachUI',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Components · NachUI',
+      description: t('metaDescription'),
+      images: [getAssetUrl('/images/og/og-home.png')],
+    },
+    alternates: {
+      canonical: canonicalUrl,
+      languages: buildAlternates('/components'),
+    },
+  };
+}

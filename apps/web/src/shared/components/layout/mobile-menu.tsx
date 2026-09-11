@@ -1,8 +1,6 @@
 'use client';
 
 import { NavBadge } from '@/components/common/nav-badge';
-import { Badge } from '@repo/ui/components/badge';
-import { Button } from '@repo/ui/components/button';
 import { Searcher } from '@/features/docs/components/searcher';
 import { useDialogBehavior } from '@/hooks/use-dialog-behavior';
 import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll';
@@ -10,6 +8,8 @@ import { Link, usePathname } from '@/i18n/navigation';
 import type { DocSection, Navigation } from '@/lib/definitions';
 import { Cancel01Icon, PanelLeftIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
+import { Badge } from '@repo/ui/components/badge';
+import { Button } from '@repo/ui/components/button';
 import { Separator } from '@repo/ui/components/separator';
 import { Typography } from '@repo/ui/components/typography';
 import { cn } from '@repo/ui/lib/cn';
@@ -43,8 +43,6 @@ export function MobileMenu() {
   useLockBodyScroll(isMenuOpen);
   useDialogBehavior({ open: isMenuOpen, onClose: closeMenu, ref: menuRef });
 
-  // The 56px row matches the desktop navbar, so the header is one known height
-  // at every breakpoint and the sticky offsets below it line up.
   return (
     <div className="relative flex h-14 w-full items-center justify-between lg:hidden">
       <Flex gap="3" align="center">

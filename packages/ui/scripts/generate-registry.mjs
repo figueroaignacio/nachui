@@ -30,6 +30,7 @@ const FAMILIES = [
 ];
 
 const DEMOS_DIR = 'src/demos';
+const EXAMPLES_DIR = 'src/examples';
 const BRICKS_DIR = 'src/bricks';
 
 const GENERATED_HEADER = [
@@ -41,6 +42,7 @@ const GENERATED_HEADER = [
 
 const REGISTRY_TARGET = 'packages/ui/src/lib/registry.ts';
 const DEMO_COMPONENTS_TARGET = 'apps/web/src/shared/components/mdx/demo-registry.tsx';
+const EXAMPLE_COMPONENTS_TARGET = 'apps/web/src/features/gallery/lib/example-registry.tsx';
 
 function listDir(relPath) {
   try {
@@ -69,13 +71,13 @@ function scanComponents() {
   return components.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-function scanDemos() {
+function scanVariants(rootDir) {
   const demos = [];
 
-  for (const dir of listDir(DEMOS_DIR)) {
+  for (const dir of listDir(rootDir)) {
     if (!dir.isDirectory()) continue;
 
-    const variants = listDir(`${DEMOS_DIR}/${dir.name}`)
+    const variants = listDir(`${rootDir}/${dir.name}`)
       .filter((f) => f.isFile() && f.name.endsWith('.tsx') && !f.name.endsWith('.test.tsx'))
       .map((f) => f.name.replace(/\.tsx$/, ''))
       .sort((a, b) => a.localeCompare(b));
@@ -120,7 +122,7 @@ function demoAlias(component, variant) {
     : `${pascal(component)}${pascal(variant)}`;
 }
 
-function emitRegistry(components, demos, bricks) {
+function emitRegistry(components, demos, examples, bricks) {
   const lines = [GENERATED_HEADER];
 
   lines.push('/** Families of components, and where each one lives. */');
@@ -157,6 +159,21 @@ function emitRegistry(components, demos, bricks) {
   }
   lines.push('} as const;', '');
 
+  lines.push(
+    '/** Gallery examples: real compositions built with a component, never shown in docs. */',
+  );
+  lines.push('export const EXAMPLE_REGISTRY = {');
+  for (const example of examples) {
+    lines.push(`  ${key(example.component)}: {`);
+    for (const variant of example.variants) {
+      lines.push(
+        `    ${key(variant)}: 'packages/ui/${EXAMPLES_DIR}/${example.component}/${variant}.tsx',`,
+      );
+    }
+    lines.push('  },');
+  }
+  lines.push('} as const;', '');
+
   lines.push('export const BRICK_REGISTRY = {');
   for (const brick of bricks) {
     lines.push(`  ${key(brick.category)}: {`);
@@ -172,19 +189,22 @@ function emitRegistry(components, demos, bricks) {
   lines.push(
     'export type DemoName<T extends keyof typeof DEMO_REGISTRY> = keyof (typeof DEMO_REGISTRY)[T];',
   );
+  lines.push(
+    'export type ExampleName<T extends keyof typeof EXAMPLE_REGISTRY> = keyof (typeof EXAMPLE_REGISTRY)[T];',
+  );
   lines.push('export type BrickCategory = keyof typeof BRICK_REGISTRY;');
   lines.push('export type BrickName<T extends BrickCategory> = keyof (typeof BRICK_REGISTRY)[T];');
 
   return `${lines.join('\n')}\n`;
 }
 
-function emitDemoComponents(demos) {
+function emitVariantComponents(demos, { dir, exportName, aliasSuffix }) {
   const imports = [];
   const aliases = new Map();
 
   for (const demo of demos) {
     for (const variant of demo.variants) {
-      const alias = demoAlias(demo.component, variant);
+      const alias = `${demoAlias(demo.component, variant)}${aliasSuffix}`;
       const previous = aliases.get(alias);
       if (previous) {
         throw new Error(
@@ -196,7 +216,7 @@ function emitDemoComponents(demos) {
 
       imports.push({
         alias,
-        statement: `import { ${pascal(variant)} as ${alias} } from '@repo/ui/${DEMOS_DIR}/${demo.component}/${variant}';`,
+        statement: `import { ${pascal(variant)} as ${alias} } from '@repo/ui/${dir}/${demo.component}/${variant}';`,
       });
     }
   }
@@ -206,13 +226,11 @@ function emitDemoComponents(demos) {
   const lines = [GENERATED_HEADER];
   for (const entry of imports) lines.push(entry.statement);
   lines.push('');
-  lines.push(
-    'export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>> = {',
-  );
+  lines.push(`export const ${exportName}: Record<string, Record<string, React.ComponentType>> = {`);
   for (const demo of demos) {
     lines.push(`  ${key(demo.component)}: {`);
     for (const variant of demo.variants) {
-      lines.push(`    ${key(variant)}: ${demoAlias(demo.component, variant)},`);
+      lines.push(`    ${key(variant)}: ${demoAlias(demo.component, variant)}${aliasSuffix},`);
     }
     lines.push('  },');
   }
@@ -227,7 +245,8 @@ function main() {
   const check = process.argv.includes('--check');
 
   const components = scanComponents();
-  const demos = scanDemos();
+  const demos = scanVariants(DEMOS_DIR);
+  const examples = scanVariants(EXAMPLES_DIR);
   const bricks = scanBricks();
 
   if (components.length === 0 || demos.length === 0) {
@@ -236,8 +255,23 @@ function main() {
   }
 
   const outputs = [
-    { target: REGISTRY_TARGET, content: emitRegistry(components, demos, bricks) },
-    { target: DEMO_COMPONENTS_TARGET, content: emitDemoComponents(demos) },
+    { target: REGISTRY_TARGET, content: emitRegistry(components, demos, examples, bricks) },
+    {
+      target: DEMO_COMPONENTS_TARGET,
+      content: emitVariantComponents(demos, {
+        dir: DEMOS_DIR,
+        exportName: 'DEMO_COMPONENTS',
+        aliasSuffix: '',
+      }),
+    },
+    {
+      target: EXAMPLE_COMPONENTS_TARGET,
+      content: emitVariantComponents(examples, {
+        dir: EXAMPLES_DIR,
+        exportName: 'EXAMPLE_COMPONENTS',
+        aliasSuffix: 'Example',
+      }),
+    },
   ];
 
   const stale = [];
@@ -261,6 +295,7 @@ function main() {
   const summary =
     `${components.length} components, ` +
     `${demos.reduce((total, d) => total + d.variants.length, 0)} demos, ` +
+    `${examples.reduce((total, e) => total + e.variants.length, 0)} examples, ` +
     `${bricks.reduce((total, b) => total + b.items.length, 0)} bricks`;
 
   if (!check) {

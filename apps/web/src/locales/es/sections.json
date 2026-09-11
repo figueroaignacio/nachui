@@ -280,5 +280,17 @@
       }
     },
     "codeTitle": "Usalo"
+  },
+  "gallery": {
+    "eyebrow": "Componentes",
+    "title": "Hecho con NachUI",
+    "description": "Piezas reales de interfaz hechas con la librería: {count} composiciones corriendo en vivo en esta página, cada una a un clic de su documentación.",
+    "metaDescription": "Una galería de interfaces reales hechas con NachUI. Cada tarjeta es una composición funcionando en el navegador, a un clic de su documentación.",
+    "examples": "{count, plural, one {# ejemplo} other {# ejemplos}}",
+    "viewDocs": "Leer documentación",
+    "back": "Todos los componentes",
+    "filter": "Filtrar componentes...",
+    "search": "Buscar ejemplos...",
+    "noResults": "Nada coincide con esa búsqueda."
   }
 }

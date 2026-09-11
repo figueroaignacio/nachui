@@ -279,5 +279,17 @@
       }
     },
     "codeTitle": "Use it"
+  },
+  "gallery": {
+    "eyebrow": "Components",
+    "title": "Built with NachUI",
+    "description": "Real pieces of product UI built with the library: {count} compositions running live on this page, each one a click away from its docs.",
+    "metaDescription": "A gallery of real UI built with NachUI. Every tile is a working composition running in the browser, one click away from its documentation.",
+    "examples": "{count, plural, one {# example} other {# examples}}",
+    "viewDocs": "Read the docs",
+    "back": "All components",
+    "filter": "Filter components...",
+    "search": "Search examples...",
+    "noResults": "Nothing matches that search."
   }
 }

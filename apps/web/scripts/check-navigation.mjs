@@ -183,6 +183,15 @@ function main() {
         continue;
       }
 
+      // Static app routes (/components, /about, ...) pass when their
+      // page.tsx exists; localised content lives in the messages, not files.
+      const appPage = join(APP_ROOT, 'src/app/[locale]', href.slice(1), 'page.tsx');
+      try {
+        if (statSync(appPage).isFile()) continue;
+      } catch {
+        // fall through to unchecked
+      }
+
       unchecked.push(`[${locale}] ${href}  (${source})`);
     }
   }
