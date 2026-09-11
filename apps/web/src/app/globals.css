@@ -868,3 +868,149 @@ body {
     opacity: 0;
   }
 }
+
+/* --- Site surface: darker dark palette, film grain, silk hero ------------ */
+:root {
+  --brand: oklch(62% 0.13 70);
+  --brand-foreground: oklch(98.5% 0.002 85);
+
+  --wave-base: oklch(97% 0.004 85);
+  --wave-fold: oklch(88% 0.01 85);
+  --wave-deep: oklch(78% 0.016 80);
+  --wave-glow: oklch(78% 0.11 75 / 0.5);
+  --wave-scrim: oklch(99.1% 0.003 85 / 0.55);
+}
+
+.dark {
+  --background: oklch(10% 0 0);
+  --card: oklch(15.5% 0 0);
+  --popover: oklch(17.5% 0 0);
+  --surface-muted: oklch(13% 0 0);
+  --secondary: oklch(21% 0 0);
+  --accent: oklch(21% 0 0);
+  --muted: oklch(21% 0 0);
+  --border: oklch(22% 0 0);
+  --input: oklch(29% 0 0);
+  --rule: oklch(22% 0 0);
+  --code: oklch(13% 0 0);
+  --info-surface: oklch(15.5% 0 0);
+
+  --brand: oklch(78% 0.12 75);
+  --brand-foreground: oklch(14.5% 0 0);
+
+  --wave-base: oklch(12% 0 0);
+  --wave-fold: oklch(23% 0 0);
+  --wave-deep: oklch(34% 0.006 80);
+  --wave-glow: oklch(70% 0.12 75 / 0.35);
+  --wave-scrim: oklch(10% 0 0 / 0.45);
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.45;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+}
+
+.dark .grain {
+  mix-blend-mode: screen;
+  opacity: 0.35;
+}
+
+.landing-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  inline-size: 100%;
+  padding: 3.5rem 1.5rem 3.75rem;
+  border-radius: var(--radius-2xl, 1.25rem);
+  background: var(--wave-base);
+}
+
+@media (min-width: 48rem) {
+  .landing-hero {
+    padding: 5rem 3rem 5.5rem;
+  }
+}
+
+.hero-waves {
+  position: absolute;
+  inset: -35%;
+  z-index: -1;
+  filter: blur(48px);
+  pointer-events: none;
+}
+
+.hero-waves::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 20%, var(--wave-scrim) 55%, transparent 90%);
+}
+
+.hero-waves span {
+  position: absolute;
+  inset: 0;
+  border-radius: 45%;
+  animation: wave-drift 22s ease-in-out infinite alternate;
+}
+
+.hero-waves span:nth-child(1) {
+  background: conic-gradient(
+    from 210deg at 30% 40%,
+    var(--wave-base),
+    var(--wave-fold) 25%,
+    var(--wave-base) 45%,
+    var(--wave-deep) 70%,
+    var(--wave-base)
+  );
+}
+
+.hero-waves span:nth-child(2) {
+  background: radial-gradient(
+    60% 45% at 70% 60%,
+    var(--wave-deep),
+    var(--wave-fold) 45%,
+    transparent 75%
+  );
+  animation-duration: 30s;
+  animation-delay: -12s;
+  animation-direction: alternate-reverse;
+}
+
+.hero-waves span:nth-child(3) {
+  background: radial-gradient(35% 30% at 65% 30%, var(--wave-glow), transparent 70%);
+  animation-duration: 17s;
+  animation-delay: -5s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-waves span {
+    animation: none;
+  }
+}
+
+@keyframes wave-drift {
+  0% {
+    translate: -14% -10%;
+    rotate: -18deg;
+    scale: 1;
+  }
+  50% {
+    translate: 10% 14%;
+    rotate: 10deg;
+    scale: 1.18;
+  }
+  100% {
+    translate: 16% -12%;
+    rotate: 28deg;
+    scale: 1.04;
+  }
+}

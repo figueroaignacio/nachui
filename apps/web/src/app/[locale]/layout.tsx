@@ -4,6 +4,7 @@ import { ThemeInitScript } from '@/components/common/theme-init-script';
 import { AiChat } from '@/features/chat/containers/ai-chat';
 import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
+import { Grain } from '@/components/layout/grain';
 import { PageFrame } from '@/components/layout/page-frame';
 import { Providers } from '@/components/providers';
 import { routing } from '@/i18n/routing';
@@ -75,6 +76,7 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
         className={`relative ${fontSans.variable} ${fontHeading.variable} ${fontSerif.variable} ${fontCode.variable}`}
       >
         <SkipLink />
+        <Grain />
         <NextIntlClientProvider>
           <Providers>
             <Header />
