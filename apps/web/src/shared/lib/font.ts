@@ -1,31 +1,30 @@
-import { Bricolage_Grotesque, JetBrains_Mono, Source_Serif_4 } from 'next/font/google';
+import { Geist, Geist_Mono } from 'next/font/google';
 
-export const fontHeading = Bricolage_Grotesque({
-  subsets: ['latin'],
-  variable: '--font-heading',
-  display: 'swap',
-  preload: true,
-});
-
-export const fontSans = Bricolage_Grotesque({
+export const fontSans = Geist({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
   preload: true,
 });
 
-export const fontCode = JetBrains_Mono({
+export const fontHeading = Geist({
+  subsets: ['latin'],
+  variable: '--font-heading',
+  display: 'swap',
+  preload: true,
+});
+
+export const fontSerif = Geist({
+  subsets: ['latin'],
+  variable: '--font-serif',
+  display: 'swap',
+  preload: false,
+});
+
+export const fontCode = Geist_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
   display: 'swap',
   weight: ['400', '500', '700'],
   preload: false,
-});
-
-export const fontSerif = Source_Serif_4({
-  subsets: ['latin'],
-  variable: '--font-serif',
-  display: 'swap',
-  style: ['normal', 'italic'],
-  preload: true,
 });

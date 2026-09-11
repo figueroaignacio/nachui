@@ -6,6 +6,7 @@ import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
 import { Grain } from '@/components/layout/grain';
 import { PageFrame } from '@/components/layout/page-frame';
+import { SilkWaves } from '@/components/layout/silk-waves';
 import { Providers } from '@/components/providers';
 import { routing } from '@/i18n/routing';
 import { SPRITE_CSS } from '@repo/ui/components/sprite';
@@ -76,6 +77,9 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
         className={`relative ${fontSans.variable} ${fontHeading.variable} ${fontSerif.variable} ${fontCode.variable}`}
       >
         <SkipLink />
+        <div className="silk-backdrop" aria-hidden="true">
+          <SilkWaves />
+        </div>
         <Grain />
         <NextIntlClientProvider>
           <Providers>

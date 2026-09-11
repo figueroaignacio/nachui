@@ -3,7 +3,7 @@ import { Navbar } from './navbar';
 
 export function Header() {
   return (
-    <header className="bg-background/95 sticky top-0 z-50 w-full border-b backdrop-blur-sm">
+    <header className="bg-background/35 border-border/40 sticky top-0 z-50 w-full border-b backdrop-blur-md">
       {/* Same frame as the main content, so the nav aligns to the same gutter as
           everything below it. */}
       <div className="page-frame-outer">
