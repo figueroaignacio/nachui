@@ -1,6 +1,6 @@
 import { useDialogBehavior } from '@/hooks/use-dialog-behavior';
 import type { Message } from '@/lib/definitions';
-import { SilkWaves } from '@/components/layout/silk-waves';
+import { Silk } from '@/components/layout/silk';
 import { Container } from '@repo/ui/layout/container';
 import { AnimatePresence, motion, useReducedMotion, type Transition } from 'motion/react';
 import { useTranslations } from 'next-intl';
@@ -89,7 +89,7 @@ export function ChatWindow(props: ChatWindowProps) {
 
   const body = (
     <div className="bg-background relative isolate z-10 flex h-full flex-col overflow-hidden">
-      <SilkWaves className="chat-silk" />
+      <Silk className="chat-silk" />
       <ChatHeader
         onClose={onClose}
         onReset={onReset}
