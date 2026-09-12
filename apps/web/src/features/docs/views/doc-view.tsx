@@ -1,13 +1,11 @@
 import { MDXContent } from '@/components/mdx/mdx-content';
 import { DocActions } from '@/features/docs/components/doc-actions';
-import { DocsNavigationButtons } from '@/features/docs/components/docs-navigation-button';
 import { DocsPagination } from '@/features/docs/components/docs-pagination';
 import { IssueCta } from '@/features/docs/components/issue-cta';
 import { MobileToc } from '@/features/docs/components/mobile-toc';
 import { Toc } from '@/features/docs/components/toc';
 import { GITHUB_REPO_URL, getAbsoluteUrl } from '@/lib/domains';
 import { Callout } from '@repo/ui/components/callout';
-import { Flex } from '@repo/ui/layout/flex';
 import { Stack } from '@repo/ui/layout/stack';
 import { COMPONENT_REGISTRY } from '@repo/ui/registry';
 import { Container } from '@repo/ui/src/layout/container';
@@ -64,21 +62,16 @@ export function DocView({ doc }: DocViewProps) {
                   {doc.description}
                 </p>
               )}
-              <Flex wrap="wrap" align="center" justify="between" gap="3" className="mt-4">
-                <div className="xl:hidden">
-                  <DocActions
-                    page={doc.title}
-                    url={docUrl}
-                    filePath={doc.sourceFilePath}
-                    rawContent={doc.raw}
-                    rawPath={`/${doc.locale || 'en'}${currentPath}.md`}
-                    sourceUrl={sourceUrl}
-                  />
-                </div>
-                <div className="ml-auto">
-                  <DocsNavigationButtons currentPath={currentPath} />
-                </div>
-              </Flex>
+              <div className="mt-4 xl:hidden">
+                <DocActions
+                  page={doc.title}
+                  url={docUrl}
+                  filePath={doc.sourceFilePath}
+                  rawContent={doc.raw}
+                  rawPath={`/${doc.locale || 'en'}${currentPath}.md`}
+                  sourceUrl={sourceUrl}
+                />
+              </div>
             </div>
           </div>
           <div data-doc-prose className="min-w-0 flex-1">
