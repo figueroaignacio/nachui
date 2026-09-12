@@ -48,11 +48,8 @@ export function ChatHeader({ onClose, onReset, isExpanded, onToggleExpand }: Cha
 
   if (!onClose) return null;
 
-  // Mirrors the site header exactly: a 56px row *inside* the bordered box, so
-  // both border-bottoms land on the same pixel (with border-box, putting the
-  // height on the bordered element itself would sit this one 1px higher).
   return (
-    <header className="bg-background/40 border-rule border-b backdrop-blur-md">
+    <header className="backdrop-blur-md">
       <div className="flex h-14 items-center justify-between px-4">
         <AiAvatar size="sm" />
         <div className="flex items-center gap-1">

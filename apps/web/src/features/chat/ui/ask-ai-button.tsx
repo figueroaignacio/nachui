@@ -9,7 +9,7 @@ export function AskAiButton() {
   const openChat = useChatStore((state) => state.openChat);
 
   return (
-    <Button variant="outline" size="sm" onClick={openChat}>
+    <Button variant="default" size="sm" onClick={openChat}>
       {t('ask')}
     </Button>
   );
