@@ -2,11 +2,10 @@ import '@/app/globals.css';
 import { SkipLink } from '@/components/common/skip-link';
 import { ThemeInitScript } from '@/components/common/theme-init-script';
 import { AiChat } from '@/features/chat/containers/ai-chat';
+import { Backdrop } from '@/components/layout/backdrop';
 import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
-import { Grain } from '@/components/layout/grain';
 import { PageFrame } from '@/components/layout/page-frame';
-import { Silk } from '@/components/layout/silk';
 import { Providers } from '@/components/providers';
 import { routing } from '@/i18n/routing';
 import { SPRITE_CSS } from '@repo/ui/components/sprite';
@@ -77,10 +76,7 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
         className={`relative ${fontSans.variable} ${fontHeading.variable} ${fontSerif.variable} ${fontCode.variable}`}
       >
         <SkipLink />
-        <div className="silk-backdrop" aria-hidden="true">
-          <Silk />
-        </div>
-        <Grain />
+        <Backdrop />
         <NextIntlClientProvider>
           <Providers>
             <Header />

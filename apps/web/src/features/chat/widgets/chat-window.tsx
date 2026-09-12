@@ -1,6 +1,5 @@
 import { useDialogBehavior } from '@/hooks/use-dialog-behavior';
 import type { Message } from '@/lib/definitions';
-import { Silk } from '@/components/layout/silk';
 import { Container } from '@repo/ui/layout/container';
 import { AnimatePresence, motion, useReducedMotion, type Transition } from 'motion/react';
 import { useTranslations } from 'next-intl';
@@ -88,8 +87,7 @@ export function ChatWindow(props: ChatWindowProps) {
   useDialogBehavior({ open: isOpen, onClose, ref: panelRef, trap: isModal });
 
   const body = (
-    <div className="bg-background relative isolate z-10 flex h-full flex-col overflow-hidden">
-      <Silk className="chat-silk" />
+    <div className="bg-background relative z-10 flex h-full flex-col">
       <ChatHeader
         onClose={onClose}
         onReset={onReset}

@@ -896,38 +896,34 @@ body {
   --silk-deep: oklch(22% 0 0);
 }
 
-.grain {
-  position: fixed;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  opacity: 0.45;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 240px 240px;
+/* Opaque, but tinted with the same fold colour the dome puts behind it, so the
+   row reads as part of the backdrop without letting the page show through. */
+.site-header {
+  background-color: var(--background);
 }
 
-.dark .grain {
-  mix-blend-mode: screen;
-  opacity: 0.35;
+.dark .site-header {
+  background-color: color-mix(in oklab, var(--background) 78%, var(--silk-fold));
 }
 
-.silk-backdrop {
-  position: fixed;
+.page-backdrop {
+  display: none;
+}
+
+.dark .page-backdrop {
+  display: block;
+  position: absolute;
   inset: 0 0 auto;
   z-index: -1;
-  block-size: 100vh;
+  block-size: min(72vh, 42rem);
   overflow: hidden;
   pointer-events: none;
-  mask-image: linear-gradient(180deg, black 55%, transparent 100%);
+  mask-image: radial-gradient(120% 100% at 50% 0%, black 45%, transparent 78%);
 }
 
-.silk-sheet {
-  display: none;
+.page-backdrop-silk {
   position: absolute;
   inset: 0;
-  z-index: -1;
-  pointer-events: none;
   background: linear-gradient(
     100deg,
     var(--silk-base) 0%,
@@ -939,15 +935,78 @@ body {
   );
 }
 
-.dark .silk-sheet {
-  display: block;
+/* Slow folds running across the sheet. Wide and low contrast on purpose: they
+   should read as the fabric catching light, not as stripes. Two layers drifting
+   against each other is what makes the light move instead of just sliding. */
+.page-backdrop-waves {
+  position: absolute;
+  inset: -25% -35%;
+  opacity: 0.6;
+  background-image:
+    radial-gradient(
+      130% 26% at 18% 18%,
+      color-mix(in oklab, var(--silk-fold) 85%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      150% 24% at 42% 62%,
+      color-mix(in oklab, var(--silk-fold) 60%, transparent) 0%,
+      transparent 75%
+    );
 }
 
-.header-silk {
-  inset: 0 0 auto;
-  block-size: 100vh;
+.page-backdrop-waves::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(
+      115% 22% at 82% 34%,
+      color-mix(in oklab, var(--silk-deep) 85%, transparent) 0%,
+      transparent 72%
+    ),
+    radial-gradient(
+      125% 20% at 60% 80%,
+      color-mix(in oklab, var(--silk-deep) 60%, transparent) 0%,
+      transparent 74%
+    );
 }
 
-.chat-silk {
-  mask-image: linear-gradient(180deg, black 35%, transparent 100%);
+@media (prefers-reduced-motion: no-preference) {
+  .page-backdrop-waves {
+    animation: silk-drift 18s ease-in-out infinite alternate;
+  }
+
+  .page-backdrop-waves::after {
+    animation: silk-drift-back 23s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes silk-drift {
+  from {
+    transform: translate3d(-9%, -3%, 0) scale(1);
+  }
+
+  to {
+    transform: translate3d(9%, 3%, 0) scale(1.12);
+  }
+}
+
+@keyframes silk-drift-back {
+  from {
+    transform: translate3d(8%, 2%, 0) scale(1.08);
+  }
+
+  to {
+    transform: translate3d(-8%, -2%, 0) scale(1);
+  }
+}
+
+.page-backdrop-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
 }
