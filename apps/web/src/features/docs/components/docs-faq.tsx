@@ -27,7 +27,7 @@ export function DocsFaq() {
   };
 
   return (
-    <section className="bg-background relative z-10 w-full pt-7">
+    <section className="relative z-10 w-full pt-7">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
