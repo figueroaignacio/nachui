@@ -291,5 +291,26 @@
     "filter": "Filter components...",
     "search": "Search examples...",
     "noResults": "Nothing matches that search."
+  },
+  "icons": {
+    "eyebrow": "NachUI · Icons",
+    "title": "Icons drawn for the system",
+    "subtitle": "A set drawn on the same grid as the components: 24 by 24, a 1.5 stroke, round caps and joins, and currentColor everywhere. Optional, since every component takes any icon through props.",
+    "explainer": "{count} icons so far. Click one for the SVG, the React component and the CLI command. Each icon is a single file with no dependencies, the same as any NachUI component.",
+    "search": "Search icons by name or tag",
+    "filter": "Category",
+    "all": "All",
+    "categories": {
+      "arrows": "Arrows",
+      "actions": "Actions",
+      "interface": "Interface",
+      "feedback": "Feedback",
+      "objects": "Objects",
+      "layout": "Layout",
+      "development": "Development"
+    },
+    "size": "Size",
+    "stroke": "Stroke",
+    "empty": "No icon matches that search."
   }
 }

@@ -29,6 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry(locale, '/docs/elements/ui', { changeFrequency: 'weekly', priority: 0.9 }),
     entry(locale, '/about', { changeFrequency: 'monthly', priority: 0.7 }),
     entry(locale, '/bricks', { changeFrequency: 'daily', priority: 0.9 }),
+    entry(locale, '/icons', { changeFrequency: 'weekly', priority: 0.8 }),
   ]);
 
   const docPages: MetadataRoute.Sitemap = docs

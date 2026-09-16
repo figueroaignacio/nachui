@@ -1,3 +1,4 @@
+import { ICON_CATALOG } from '@/features/icons/lib/icons';
 import { ContentRepository } from '@/lib/content-repository';
 import { baseUrl } from '@/lib/domains';
 
@@ -23,12 +24,23 @@ export async function GET() {
     return `## ${title}\n\n${lines.join('\n')}`;
   };
 
+  const iconsSection = () => {
+    const names = ICON_CATALOG.map((icon) => icon.name).join(', ');
+    return (
+      `## Icons\n\n` +
+      `An optional icon set drawn on a 24x24 grid with a 1.5 stroke. Each icon is one self-contained React component; ` +
+      `install with \`npx nachui add icons/<name>\` or copy it from ${baseUrl}/en/icons.\n\n` +
+      `Available: ${names}.`
+    );
+  };
+
   const blocks = [
     '# NachUI\n\n> Editorial, zero-dependency React components you copy straight into your repository. No npm wrapper and no black boxes, so you own the source, the design tokens and the patterns. Written to be read by the developer and by whatever agent is helping them.\n\nEach link below serves the raw markdown of that page. Append `.md` to any docs URL to get its source.',
     section('Getting started', ''),
     section('Concepts', 'concepts/'),
     section('UI elements', 'elements/ui'),
     section('Layout elements', 'elements/layout'),
+    iconsSection(),
     `## Optional\n\n- [Sitemap](${baseUrl}/sitemap.xml)\n- [Docs index (JSON)](${baseUrl}/api/docs)`,
   ];
 

@@ -292,5 +292,26 @@
     "filter": "Filtrar componentes...",
     "search": "Buscar ejemplos...",
     "noResults": "Nada coincide con esa búsqueda."
+  },
+  "icons": {
+    "eyebrow": "NachUI · Iconos",
+    "title": "Iconos dibujados para el sistema",
+    "subtitle": "Un set dibujado sobre la misma grilla que los componentes: 24 por 24, trazo de 1.5, terminaciones redondas y currentColor en todo. Es opcional, porque cada componente recibe cualquier icono por props.",
+    "explainer": "{count} iconos por ahora. Hacé click en uno para copiar el SVG, el componente React o el comando del CLI. Cada icono es un solo archivo sin dependencias, igual que cualquier componente de NachUI.",
+    "search": "Buscar iconos por nombre o etiqueta",
+    "filter": "Categoría",
+    "all": "Todos",
+    "categories": {
+      "arrows": "Flechas",
+      "actions": "Acciones",
+      "interface": "Interfaz",
+      "feedback": "Feedback",
+      "objects": "Objetos",
+      "layout": "Layout",
+      "development": "Desarrollo"
+    },
+    "size": "Tamaño",
+    "stroke": "Trazo",
+    "empty": "Ningún icono coincide con esa búsqueda."
   }
 }
