@@ -130,7 +130,29 @@ All text uses `antialiased` rendering for crisp edges on high-DPI displays.
 - Dark mode shadows provide depth without harsh black overlays
 - Theme overrides allow component-level color customization while maintaining dark mode structure
 
-## 6. Technical Notes
+## 6. Icons
+
+NachUI ships its own icon set in `packages/ui/src/icons`, one self-contained React component per file. It is optional: every component takes icons through props, so any library works. The set exists so the catalog, the docs and the demos read as one hand.
+
+### Grid and stroke
+
+- **Canvas**: 24 by 24 with a 2px safe area. Nothing draws outside 2..22.
+- **Stroke**: 1.5, `stroke-linecap="round"`, `stroke-linejoin="round"`, `fill="none"`.
+- **Corners**: radius 2 on rectangles, 45 or 90 degree angles, perfect circles. No freehand curves.
+- **Color**: always `stroke="currentColor"`. No fills, no gradients, no ids, no `<defs>`, no transforms.
+- **Primitives**: only `path`, `circle`, `rect`, `line`, `polyline`. Compound shapes stay separate elements so they can be animated later.
+- **Optical alignment**: arrows, play and similar asymmetric shapes are centered by visual weight, not by bounding box.
+
+### Component contract
+
+- Exported as `<Name>Icon` from `packages/ui/src/icons/<name>.tsx`, kebab-case file, no shared base component and no imports besides React.
+- Props: `size` (default 24, sets width and height), `strokeWidth` (default 1.5), plus every `SVGProps`. `aria-hidden` is on by default; pass `aria-label` and `aria-hidden={false}` when the icon carries meaning alone.
+- No comments in the file: the source is shown verbatim on the catalog page and installed by the CLI as `icons/<name>`.
+- Variants come as sibling files (`search-filled.tsx`), never as a `variant` prop, so each file stays a single drawing.
+
+The test in `packages/ui/src/icons/icons.test.tsx` enforces the contract, and `apps/web/src/features/icons/lib/icons.ts` holds the category and tags of every icon for the `/icons` catalog.
+
+## 7. Technical Notes
 
 - **Color Space**: OKLCH for perceptually uniform, gamut-safe color definitions
 - **CSS Variables**: All tokens exposed as `--color-*` for runtime theming

@@ -88,7 +88,7 @@ pnpm --filter @repo/ui vitest run src/components/button.test.tsx -t "renders loa
 ## Import Ordering
 
 1. Core platform modules (`react`, `next/navigation`).
-2. Third-party packages (motion, zod, date-fns, lucide-react, etc.).
+2. Third-party packages (motion, zod, etc.).
 3. Workspace aliases (@repo/ui, @repo/ai, @/lib, @/features).
 4. Relative paths (`./component`, `../lib/cn`).
 

@@ -1,6 +1,6 @@
 // GENERATED FILE, DO NOT EDIT.
 // Run `pnpm --filter @repo/ui generate:registry` after adding a component,
-// a demo or a brick. The build fails if this file is out of date.
+// a demo, a brick or an icon. The build fails if this file is out of date.
 
 import { Assistant as MessageAssistantExample } from '@repo/ui/src/examples/message/assistant';
 import { Attachments as BubbleAttachmentsExample } from '@repo/ui/src/examples/bubble/attachments';

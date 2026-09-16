@@ -46,10 +46,12 @@ Lint is enforced at `--max-warnings 0` (also via husky + lint-staged on commit).
 
 The component catalog is described by generated files, and the web build fails if they are stale:
 
-1. `packages/ui/scripts/generate-registry.mjs` scans `packages/ui/src/{components,layout,demos,bricks}` and writes two GENERATED files: `packages/ui/src/lib/registry.ts` (paths) and `apps/web/src/shared/components/mdx/demo-registry.tsx` (React imports for live MDX demos). Never edit these by hand.
-2. After adding or renaming a component, demo, or brick, run `pnpm --filter @repo/ui generate:registry`.
+1. `packages/ui/scripts/generate-registry.mjs` scans `packages/ui/src/{components,layout,demos,examples,bricks,icons}` and writes GENERATED files: `packages/ui/src/lib/registry.ts` (paths), `apps/web/src/shared/components/mdx/demo-registry.tsx` (React imports for live MDX demos), `apps/web/src/features/gallery/lib/example-registry.tsx` and `apps/web/src/features/icons/lib/icon-registry.tsx`. Never edit these by hand.
+2. After adding or renaming a component, demo, brick, or icon, run `pnpm --filter @repo/ui generate:registry`.
 3. `web`'s build runs `checks` first: registry freshness (`--check`), `scripts/check-navigation.mjs` (every nav href must resolve to a published doc or brick), and `scripts/check-demos.mjs`. A new docs page must have `published` frontmatter or the nav check fails.
 4. `pnpm registry:sync` (root) pushes component source + inferred npm dependencies into Postgres via `@repo/db`, which the API `registry` module and CLI serve. Requires `packages/db/.env`.
+
+Icons are their own family: one self-contained file per icon in `packages/ui/src/icons/` (rules in `DESIGN.md`, section 6), metadata in `apps/web/src/features/icons/lib/icons.ts` (the `/icons` page fails the build if the two drift), served by the CLI as `icons/<name>`. The web catalog is `/icons`, not a docs page.
 
 So a new component typically touches: the component in `packages/ui/src/components/` (or `layout/`), a demo in `packages/ui/src/demos/`, regenerated registry files, and MDX docs in `apps/web/src/content/docs/{en,es}/`. Both locales exist for every page.
 
@@ -63,7 +65,7 @@ DB workflow lives in `packages/db`: `db:generate`, `db:migrate`, `db:push`, `db:
 
 ## Conventions that matter here
 
-- Components in `packages/ui` must stay copy-paste ready and self-contained: runtime deps are limited to `clsx`, `tailwind-merge`, `motion`, `zod`, and icons. Never import docs/app data into a primitive; pass text and icons via props.
+- Components in `packages/ui` must stay copy-paste ready and self-contained: runtime deps are limited to `clsx`, `tailwind-merge`, `motion` and `zod`. Icons are never a dependency: a primitive inlines the SVGs it needs as local components, and demos import from `packages/ui/src/icons/`. Never import docs/app data into a primitive; pass text and icons via props.
 - Derive class strings with `cn(...)` (`packages/ui/src/lib`), never manual Tailwind string concatenation. Tailwind v4 has no config file; design tokens are CSS variables in `packages/ui/src/css/globals.css` (visual rules in `DESIGN.md`).
 - `'use client'` only when hooks or DOM APIs require it. MDX-rendered components must be deterministic (no random IDs, no `Date.now()` defaults).
 - Files: kebab-case components (`mobile-menu.tsx`), hooks in `packages/ui/src/hooks` prefixed `use`, tests colocated with `.test.ts(x)` suffix.

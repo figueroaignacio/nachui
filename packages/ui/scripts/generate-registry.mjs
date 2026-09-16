@@ -3,6 +3,7 @@
  *
  *   packages/ui/src/lib/registry.ts                        paths
  *   apps/web/src/shared/components/mdx/demo-registry.tsx   React imports
+ *   apps/web/src/features/icons/lib/icon-registry.tsx      React imports
  *
  * They used to be maintained by hand, with the same keys in the same nested
  * shape, so adding one demo meant three edits and forgetting one failed at
@@ -32,17 +33,19 @@ const FAMILIES = [
 const DEMOS_DIR = 'src/demos';
 const EXAMPLES_DIR = 'src/examples';
 const BRICKS_DIR = 'src/bricks';
+const ICONS_DIR = 'src/icons';
 
 const GENERATED_HEADER = [
   '// GENERATED FILE, DO NOT EDIT.',
   '// Run `pnpm --filter @repo/ui generate:registry` after adding a component,',
-  '// a demo or a brick. The build fails if this file is out of date.',
+  '// a demo, a brick or an icon. The build fails if this file is out of date.',
   '',
 ].join('\n');
 
 const REGISTRY_TARGET = 'packages/ui/src/lib/registry.ts';
 const DEMO_COMPONENTS_TARGET = 'apps/web/src/shared/components/mdx/demo-registry.tsx';
 const EXAMPLE_COMPONENTS_TARGET = 'apps/web/src/features/gallery/lib/example-registry.tsx';
+const ICON_COMPONENTS_TARGET = 'apps/web/src/features/icons/lib/icon-registry.tsx';
 
 function listDir(relPath) {
   try {
@@ -105,6 +108,13 @@ function scanBricks() {
   return bricks.sort((a, b) => a.category.localeCompare(b.category));
 }
 
+function scanIcons() {
+  return listDir(ICONS_DIR)
+    .filter((f) => f.isFile() && f.name.endsWith('.tsx') && !f.name.endsWith('.test.tsx'))
+    .map((f) => f.name.replace(/\.tsx$/, ''))
+    .sort((a, b) => a.localeCompare(b));
+}
+
 function key(name) {
   return /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(name) ? name : `'${name}'`;
 }
@@ -122,7 +132,7 @@ function demoAlias(component, variant) {
     : `${pascal(component)}${pascal(variant)}`;
 }
 
-function emitRegistry(components, demos, examples, bricks) {
+function emitRegistry(components, demos, examples, bricks, icons) {
   const lines = [GENERATED_HEADER];
 
   lines.push('/** Families of components, and where each one lives. */');
@@ -184,6 +194,16 @@ function emitRegistry(components, demos, examples, bricks) {
   }
   lines.push('} as const;', '');
 
+  lines.push(
+    '/** The icon set: one self-contained file per icon, served as the `icons` family. */',
+  );
+  lines.push("export const ICONS_DIR = 'src/icons';");
+  lines.push('export const ICON_REGISTRY = {');
+  for (const icon of icons) {
+    lines.push(`  ${key(icon)}: 'packages/ui/${ICONS_DIR}/${icon}.tsx',`);
+  }
+  lines.push('} as const;', '');
+
   lines.push("export type Family = (typeof FAMILIES)[number]['id'];");
   lines.push('export type ComponentName = keyof typeof COMPONENT_REGISTRY;');
   lines.push(
@@ -194,6 +214,7 @@ function emitRegistry(components, demos, examples, bricks) {
   );
   lines.push('export type BrickCategory = keyof typeof BRICK_REGISTRY;');
   lines.push('export type BrickName<T extends BrickCategory> = keyof (typeof BRICK_REGISTRY)[T];');
+  lines.push('export type IconName = keyof typeof ICON_REGISTRY;');
 
   return `${lines.join('\n')}\n`;
 }
@@ -239,6 +260,27 @@ function emitVariantComponents(demos, { dir, exportName, aliasSuffix }) {
   return `${lines.join('\n')}\n`;
 }
 
+function emitIconComponents(icons) {
+  const lines = [GENERATED_HEADER];
+  for (const icon of icons) {
+    lines.push(`import { ${pascal(icon)}Icon } from '@repo/ui/icons/${icon}';`);
+  }
+  lines.push('');
+  lines.push(
+    'export const ICON_COMPONENTS: Record<string, React.ComponentType<IconComponentProps>> = {',
+  );
+  for (const icon of icons) {
+    lines.push(`  ${key(icon)}: ${pascal(icon)}Icon,`);
+  }
+  lines.push('};');
+  lines.push('');
+  lines.push('export type IconComponentProps = React.SVGProps<SVGSVGElement> & {');
+  lines.push('  size?: number | string;');
+  lines.push('};');
+
+  return `${lines.join('\n')}\n`;
+}
+
 // ---------------------------------------------------------------- driver
 
 function main() {
@@ -248,6 +290,7 @@ function main() {
   const demos = scanVariants(DEMOS_DIR);
   const examples = scanVariants(EXAMPLES_DIR);
   const bricks = scanBricks();
+  const icons = scanIcons();
 
   if (components.length === 0 || demos.length === 0) {
     console.error('generate-registry: scanned nothing. The family paths are wrong.');
@@ -255,7 +298,7 @@ function main() {
   }
 
   const outputs = [
-    { target: REGISTRY_TARGET, content: emitRegistry(components, demos, examples, bricks) },
+    { target: REGISTRY_TARGET, content: emitRegistry(components, demos, examples, bricks, icons) },
     {
       target: DEMO_COMPONENTS_TARGET,
       content: emitVariantComponents(demos, {
@@ -272,6 +315,7 @@ function main() {
         aliasSuffix: 'Example',
       }),
     },
+    { target: ICON_COMPONENTS_TARGET, content: emitIconComponents(icons) },
   ];
 
   const stale = [];
@@ -296,7 +340,8 @@ function main() {
     `${components.length} components, ` +
     `${demos.reduce((total, d) => total + d.variants.length, 0)} demos, ` +
     `${examples.reduce((total, e) => total + e.variants.length, 0)} examples, ` +
-    `${bricks.reduce((total, b) => total + b.items.length, 0)} bricks`;
+    `${bricks.reduce((total, b) => total + b.items.length, 0)} bricks, ` +
+    `${icons.length} icons`;
 
   if (!check) {
     console.log(`generate-registry: wrote ${outputs.length} files (${summary})`);

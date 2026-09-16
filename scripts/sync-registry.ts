@@ -1,7 +1,7 @@
 import { components, db, type ComponentFamily } from '@repo/db';
 import fs from 'node:fs';
 import path from 'node:path';
-import { FAMILIES } from '../packages/ui/src/lib/registry';
+import { FAMILIES, ICONS_DIR } from '../packages/ui/src/lib/registry';
 
 const UI_PACKAGE_ROOT = path.resolve(process.cwd(), 'packages/ui');
 
@@ -112,8 +112,11 @@ async function syncRegistry() {
     total += await processFamily(family.id, family.codeDir);
   }
 
+  console.log(`\n── icons (${ICONS_DIR})`);
+  total += await processFamily('icons', ICONS_DIR);
+
   console.log(
-    `\n✨ Syncing finished successfully. ${total} components across ${FAMILIES.length} families.`,
+    `\n✨ Syncing finished successfully. ${total} components across ${FAMILIES.length + 1} families.`,
   );
   console.log('   Rows whose slug is not yet qualified are left untouched.');
   console.log('   Run `pnpm registry:migrate-slugs` once to convert them.');

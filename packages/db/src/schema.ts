@@ -1,6 +1,6 @@
 import { index, integer, jsonb, pgTable, text, timestamp, uuid, vector } from 'drizzle-orm/pg-core';
 
-export type ComponentFamily = 'ui' | 'layout' | 'ai';
+export type ComponentFamily = 'ui' | 'layout' | 'ai' | 'icons';
 
 export const components = pgTable('components', {
   id: uuid('id').defaultRandom().primaryKey(),

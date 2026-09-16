@@ -1,6 +1,6 @@
 // GENERATED FILE, DO NOT EDIT.
 // Run `pnpm --filter @repo/ui generate:registry` after adding a component,
-// a demo or a brick. The build fails if this file is out of date.
+// a demo, a brick or an icon. The build fails if this file is out of date.
 
 import { Alert as DialogAlert } from '@repo/ui/src/demos/dialog/alert';
 import { Alternate as TimelineAlternate } from '@repo/ui/src/demos/timeline/alternate';
@@ -47,6 +47,7 @@ import { Default as CommandDefault } from '@repo/ui/src/demos/command/default';
 import { Default as ContainerDefault } from '@repo/ui/src/demos/container/default';
 import { Default as ContextMenuDefault } from '@repo/ui/src/demos/context-menu/default';
 import { Default as DialogDefault } from '@repo/ui/src/demos/dialog/default';
+import { Default as DockDefault } from '@repo/ui/src/demos/dock/default';
 import { Default as DrawerDefault } from '@repo/ui/src/demos/drawer/default';
 import { Default as DropdownMenuDefault } from '@repo/ui/src/demos/dropdown-menu/default';
 import { Default as EmptyDefault } from '@repo/ui/src/demos/empty/default';
@@ -117,6 +118,7 @@ import { LeftDates as TimelineLeftDates } from '@repo/ui/src/demos/timeline/left
 import { Lines as TreeLines } from '@repo/ui/src/demos/tree/lines';
 import { Link as ButtonLink } from '@repo/ui/src/demos/button/link';
 import { LinkPreview as HoverCardLinkPreview } from '@repo/ui/src/demos/hover-card/link-preview';
+import { Links as DockLinks } from '@repo/ui/src/demos/dock/links';
 import { Multiple as AccordionMultiple } from '@repo/ui/src/demos/accordion/multiple';
 import { Multiple as FileUploadMultiple } from '@repo/ui/src/demos/file-upload/multiple';
 import { Nested as ResizableNested } from '@repo/ui/src/demos/resizable/nested';
@@ -282,6 +284,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
   dialog: {
     alert: DialogAlert,
     default: DialogDefault,
+  },
+  dock: {
+    default: DockDefault,
+    links: DockLinks,
   },
   drawer: {
     default: DrawerDefault,
