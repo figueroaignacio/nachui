@@ -1,27 +1,29 @@
 'use client';
 
 import { NavBadge } from '@/components/common/nav-badge';
-import { Searcher } from '@/features/docs/components/searcher';
 import { useDialogBehavior } from '@/hooks/use-dialog-behavior';
 import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { DocSection, Navigation } from '@/lib/definitions';
-import { Cancel01Icon, PanelLeftIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { isHiddenProductLink } from '@/lib/hidden-product-links';
 import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
-import { Separator } from '@repo/ui/components/separator';
+import { PanelLeftIcon } from '@repo/ui/icons/panel-left';
 import { Typography } from '@repo/ui/components/typography';
+import { XIcon } from '@repo/ui/icons/x';
 import { cn } from '@repo/ui/lib/cn';
-import { Flex } from '@repo/ui/src/layout/flex';
 import { useTranslations } from 'next-intl';
 import { useCallback, useRef, useState } from 'react';
 import { LocaleSwitcher } from '../common/locale-switcher';
 import { Logo } from '../common/logo';
 import { ThemeToggle } from '../common/theme-toggle';
 
-export function MobileMenu() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+type MobileMenuPanelProps = {
+  open: boolean;
+  onClose: () => void;
+};
+
+export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelProps) {
   const t = useTranslations();
   const pathname = usePathname();
 
@@ -33,40 +35,18 @@ export function MobileMenu() {
     badge: string;
     items: { title: string; description: string }[];
   };
-  const menuLinks = [...elementsMenu.items, ...navigation];
+  const menuLinks = [...elementsMenu.items, ...navigation].filter(
+    (item) => !isHiddenProductLink(item.href),
+  );
 
   const menuRef = useRef<HTMLElement>(null);
-
-  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
-  const closeMenu = useCallback(() => setIsMenuOpen(false), []);
+  const toggleMenu = onClose;
 
   useLockBodyScroll(isMenuOpen);
-  useDialogBehavior({ open: isMenuOpen, onClose: closeMenu, ref: menuRef });
+  useDialogBehavior({ open: isMenuOpen, onClose, ref: menuRef });
 
   return (
-    <div className="relative flex h-14 w-full items-center justify-between lg:hidden">
-      <Flex gap="3" align="center">
-        <Link href="/" aria-label="NachUI home">
-          <Logo />
-        </Link>
-        <Separator orientation="vertical" className="h-4" />
-        <Button
-          variant="ghost"
-          size="icon"
-          className="size-8"
-          onClick={toggleMenu}
-          title={isMenuOpen ? 'Close menu' : 'Open menu'}
-          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={isMenuOpen}
-          aria-controls="mobile-menu"
-        >
-          <HugeiconsIcon icon={PanelLeftIcon} aria-hidden="true" />
-        </Button>
-      </Flex>
-      <div className="flex items-center gap-x-5">
-        <Searcher />
-        <LocaleSwitcher />
-      </div>
+    <div className="lg:hidden">
       <nav
         ref={menuRef}
         id="mobile-menu"
@@ -88,6 +68,7 @@ export function MobileMenu() {
             </Link>
           </div>
           <div className="flex items-center gap-x-3">
+            <LocaleSwitcher />
             <ThemeToggle />
             <Button
               variant="ghost"
@@ -98,7 +79,7 @@ export function MobileMenu() {
               aria-label="Close menu"
               aria-expanded={isMenuOpen}
             >
-              <HugeiconsIcon icon={Cancel01Icon} size={20} aria-hidden="true" />
+              <XIcon size={20} aria-hidden="true" />
             </Button>
           </div>
         </div>
@@ -183,6 +164,29 @@ export function MobileMenu() {
           ))}
         </div>
       </nav>
+    </div>
+  );
+}
+
+export function MobileMenu() {
+  const [open, setOpen] = useState(false);
+  const close = useCallback(() => setOpen(false), []);
+
+  return (
+    <div className="lg:hidden">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="size-9"
+        onClick={() => setOpen((previous) => !previous)}
+        title={open ? 'Close menu' : 'Open menu'}
+        aria-label={open ? 'Close menu' : 'Open menu'}
+        aria-expanded={open}
+        aria-controls="mobile-menu"
+      >
+        <PanelLeftIcon size={18} aria-hidden="true" />
+      </Button>
+      <MobileMenuPanel open={open} onClose={close} />
     </div>
   );
 }

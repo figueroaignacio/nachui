@@ -4,22 +4,20 @@ import { useSearch } from '@/features/docs/hooks/use-search';
 import { useDialogFocus } from '@/hooks/use-dialog-focus';
 import { useKbdShortcut } from '@/hooks/use-kbd-shortcut';
 import { useRouter } from '@/i18n/navigation';
-import {
-  ArrowDown01Icon,
-  ArrowMoveDownLeftIcon,
-  ArrowUp01Icon,
-  Search02Icon,
-} from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '@repo/ui/components/button';
+import { Dock } from '@repo/ui/components/dock';
 import { Dialog } from '@repo/ui/components/dialog';
 import { Kbd } from '@repo/ui/components/kbd';
+import { ChevronDownIcon } from '@repo/ui/icons/chevron-down';
+import { ChevronUpIcon } from '@repo/ui/icons/chevron-up';
+import { CornerDownLeftIcon } from '@repo/ui/icons/corner-down-left';
+import { SearchIcon } from '@repo/ui/icons/search';
 import { useTranslations } from 'next-intl';
 import { useCallback, useId, useState } from 'react';
 import { SearchInput } from './search-input';
 import { SearchResults } from './search-results';
 
-export function Searcher({ variant = 'default' }: { variant?: 'default' | 'icon' }) {
+export function Searcher({ variant = 'default' }: { variant?: 'default' | 'icon' | 'dock' }) {
   const t = useTranslations('components.searcher');
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -72,7 +70,11 @@ export function Searcher({ variant = 'default' }: { variant?: 'default' | 'icon'
       }}
     >
       <Dialog.Trigger asChild>
-        {variant === 'icon' ? (
+        {variant === 'dock' ? (
+          <Dock.Item label={t('label')}>
+            <SearchIcon aria-hidden="true" />
+          </Dock.Item>
+        ) : variant === 'icon' ? (
           <Button
             variant="ghost"
             size="icon"
@@ -80,7 +82,7 @@ export function Searcher({ variant = 'default' }: { variant?: 'default' | 'icon'
             title={t('label')}
             aria-label={t('label')}
           >
-            <HugeiconsIcon icon={Search02Icon} size={15} aria-hidden="true" />
+            <SearchIcon size={15} aria-hidden="true" />
           </Button>
         ) : (
           <button
@@ -88,8 +90,7 @@ export function Searcher({ variant = 'default' }: { variant?: 'default' | 'icon'
             title={t('label')}
             aria-label={t('label')}
           >
-            <HugeiconsIcon
-              icon={Search02Icon}
+            <SearchIcon
               size={13}
               className="shrink-0 opacity-60 transition-opacity group-hover:opacity-80"
               aria-hidden="true"
@@ -129,16 +130,16 @@ export function Searcher({ variant = 'default' }: { variant?: 'default' | 'icon'
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
               <Kbd size="sm" variant="outline">
-                <HugeiconsIcon icon={ArrowDown01Icon} size={9} aria-hidden="true" />
+                <ChevronDownIcon size={9} aria-hidden="true" />
               </Kbd>
               <Kbd size="sm" variant="outline">
-                <HugeiconsIcon icon={ArrowUp01Icon} size={9} aria-hidden="true" />
+                <ChevronUpIcon size={9} aria-hidden="true" />
               </Kbd>
               <span className="text-muted-foreground/50 text-[10px]">navigate</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Kbd size="sm" variant="outline">
-                <HugeiconsIcon icon={ArrowMoveDownLeftIcon} size={9} aria-hidden="true" />
+                <CornerDownLeftIcon size={9} aria-hidden="true" />
               </Kbd>
               <span className="text-muted-foreground/50 text-[10px]">{t('select')}</span>
             </div>

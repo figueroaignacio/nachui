@@ -1,7 +1,7 @@
 'use client';
 
-import { ArrowDown01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { ChevronDownIcon } from '@repo/ui/icons/chevron-down';
+import { usePastSilk } from '@/shared/hooks/use-past-silk';
 import { cn } from '@repo/ui/lib/cn';
 import { AnimatePresence, motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
@@ -15,9 +15,12 @@ function flatten(toc: TocEntry[]): { id: string; title: string }[] {
   });
 }
 
+const TOC_HEIGHT = 44;
+
 export function MobileToc({ toc }: TocProps) {
   const t = useTranslations('components.mobileToc');
   const [open, setOpen] = useState(false);
+  const pastSilk = usePastSilk(TOC_HEIGHT);
 
   const entries = useMemo(() => (toc ? flatten(toc) : []), [toc]);
   const activeHeading = useActiveItem(entries.map((entry) => entry.id));
@@ -39,7 +42,12 @@ export function MobileToc({ toc }: TocProps) {
     : 0;
 
   return (
-    <div className="bg-background/90 border-rule sticky top-14 z-40 -mx-4 mb-8 border-b backdrop-blur-md xl:hidden">
+    <div
+      className={cn(
+        'bg-background/90 border-rule sticky top-0 z-40 -mx-4 mb-8 border-b backdrop-blur-md transition-colors duration-250 ease-out motion-reduce:transition-none xl:hidden',
+        !pastSilk && !open && 'dark:border-transparent dark:bg-transparent dark:backdrop-blur-none',
+      )}
+    >
       <button
         type="button"
         onClick={() => setOpen((previous) => !previous)}
@@ -48,8 +56,7 @@ export function MobileToc({ toc }: TocProps) {
       >
         <ProgressRing progress={progress} />
         <span className="text-foreground/90 min-w-0 flex-1 truncate text-xs">{activeTitle}</span>
-        <HugeiconsIcon
-          icon={ArrowDown01Icon}
+        <ChevronDownIcon
           size={14}
           aria-hidden="true"
           className={cn(

@@ -13,7 +13,7 @@ export function Sidebar() {
 
   return (
     <aside className="hidden lg:block lg:pr-8">
-      <nav className="hide-scrollbar sticky top-24 hidden h-[calc(100vh-5rem)] shrink-0 overflow-y-scroll mask-[linear-gradient(180deg,black_90%,transparent)] pb-20 lg:block">
+      <nav className="hide-scrollbar sticky top-10 hidden h-[calc(100vh-9rem)] shrink-0 overflow-y-scroll mask-[linear-gradient(180deg,black_90%,transparent)] pb-20 lg:block">
         {docsNavigation.map((section: DocSection) => (
           <div key={section.title} className="mb-6 last:mb-0">
             <p className="text-muted-foreground px-2.5 text-xs">{section.title}</p>

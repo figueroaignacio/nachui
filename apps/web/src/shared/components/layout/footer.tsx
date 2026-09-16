@@ -12,7 +12,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer data-site-footer className="border-rule border-t">
+    <footer data-site-footer className="border-rule border-t pb-24">
       <div className="page-frame-outer">
         <div className="page-frame">
           <div className="flex w-full flex-col gap-6 pt-10 pb-8 md:flex-row md:items-start md:justify-between md:pt-14">

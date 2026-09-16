@@ -4,7 +4,8 @@ import { ThemeInitScript } from '@/components/common/theme-init-script';
 import { AiChat } from '@/features/chat/containers/ai-chat';
 import { Backdrop } from '@/components/layout/backdrop';
 import { Footer } from '@/components/layout/footer';
-import { Header } from '@/components/layout/header';
+import { SiteBrand } from '@/components/layout/site-brand';
+import { SiteDock } from '@/components/layout/site-dock';
 import { PageFrame } from '@/components/layout/page-frame';
 import { Providers } from '@/components/providers';
 import { routing } from '@/i18n/routing';
@@ -79,7 +80,7 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
         <Backdrop />
         <NextIntlClientProvider>
           <Providers>
-            <Header />
+            <SiteBrand />
             <PageFrame>
               <main id="main-content">{children}</main>
             </PageFrame>
@@ -87,6 +88,7 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
             {/* Mounted app-wide: the landing section and the docs pages share
                 the same assistant. */}
             <AiChat />
+            <SiteDock />
           </Providers>
         </NextIntlClientProvider>
       </body>

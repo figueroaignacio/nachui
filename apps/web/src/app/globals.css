@@ -552,14 +552,66 @@ body {
   --silk-deep: oklch(22% 0 0);
 }
 
-/* Opaque, but tinted with the same fold colour the dome puts behind it, so the
-   row reads as part of the backdrop without letting the page show through. */
-.site-header {
-  background-color: var(--background);
+/* The dock wears the same silk as the dome: a folded gradient with two slow
+   waves drifting over it. Dark only, the light theme keeps the plain glass. */
+.site-dock-silk {
+  display: none;
 }
 
-.dark .site-header {
-  background-color: color-mix(in oklab, var(--background) 78%, var(--silk-fold));
+.dark .site-dock {
+  background-color: transparent;
+  border-color: color-mix(in oklab, var(--silk-deep) 80%, transparent);
+}
+
+.dark .site-dock-silk {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.dark .site-dock-silk::before,
+.dark .site-dock-silk::after {
+  content: '';
+  position: absolute;
+}
+
+.dark .site-dock-silk::before {
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    color-mix(in oklab, var(--silk-base) 88%, transparent) 0%,
+    color-mix(in oklab, var(--silk-fold) 88%, transparent) 20%,
+    color-mix(in oklab, var(--silk-base) 88%, transparent) 36%,
+    color-mix(in oklab, var(--silk-deep) 88%, transparent) 58%,
+    color-mix(in oklab, var(--silk-fold) 88%, transparent) 76%,
+    color-mix(in oklab, var(--silk-base) 88%, transparent) 100%
+  );
+}
+
+.dark .site-dock-silk::after {
+  inset: -60% -35%;
+  opacity: 0.7;
+  background-image:
+    radial-gradient(
+      60% 40% at 18% 30%,
+      color-mix(in oklab, var(--silk-fold) 90%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      70% 45% at 62% 70%,
+      color-mix(in oklab, var(--silk-deep) 90%, transparent) 0%,
+      transparent 72%
+    );
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dark .site-dock-silk::after {
+    animation: silk-drift 14s ease-in-out infinite alternate;
+  }
 }
 
 .page-backdrop {
@@ -568,7 +620,7 @@ body {
 
 .dark .page-backdrop {
   display: block;
-  position: absolute;
+  position: fixed;
   inset: 0 0 auto;
   z-index: -1;
   block-size: min(72vh, 42rem);

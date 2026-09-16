@@ -30,6 +30,11 @@
         "title": "Bricks",
         "description": "Full page sections ready to copy into your app.",
         "href": "/bricks/login"
+      },
+      {
+        "title": "Icons",
+        "description": "An icon set drawn on the same grid as the components.",
+        "href": "/icons"
       }
     ],
     "comingSoon": {
@@ -55,5 +60,15 @@
         "description": "Skills that teach agents how to build with NachUI."
       }
     ]
+  },
+  "dock": {
+    "label": "Site navigation",
+    "home": "Home",
+    "docs": "Docs",
+    "search": "Search",
+    "ask": "Ask AI",
+    "github": "GitHub",
+    "theme": "Toggle theme",
+    "language": "Switch language"
   }
 }

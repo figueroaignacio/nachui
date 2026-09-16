@@ -5,11 +5,9 @@ import { useKbdShortcut } from '@/hooks/use-kbd-shortcut';
 import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { AnimatePresence } from 'motion/react';
-import { useCallback, useRef, type RefObject } from 'react';
-import { useFooterInView } from '../hooks/use-footer-in-view';
+import { useCallback, type RefObject } from 'react';
 import { useTextSelection } from '../hooks/use-text-selection';
 import { useChatStore } from '../store/chat-store';
-import { ChatLauncher } from '../ui/chat-launcher';
 import { SelectionPrompt } from '../ui/selection-prompt';
 import { ChatWindow } from '../widgets/chat-window';
 
@@ -33,12 +31,6 @@ export function AiChat() {
     setAttachment,
     attachSelection,
   } = useChatStore();
-
-  const launcherRef = useRef<HTMLTextAreaElement>(null);
-
-  const isFooterInView = useFooterInView();
-
-  const hasConversation = messages.length > 0;
 
   const { selection, clear: clearSelection } = useTextSelection('[data-doc-prose]');
 
@@ -69,13 +61,8 @@ export function AiChat() {
   useKbdShortcut(
     ['ctrl', 'i'],
     useCallback(() => {
-      if (isOpen) return;
-      if (hasConversation || isFooterInView) {
-        setIsOpen(true);
-        return;
-      }
-      launcherRef.current?.focus();
-    }, [isOpen, hasConversation, isFooterInView, setIsOpen]),
+      if (!isOpen) setIsOpen(true);
+    }, [isOpen, setIsOpen]),
   );
 
   useKbdShortcut(
@@ -96,21 +83,6 @@ export function AiChat() {
 
   return (
     <div data-chat-open={isOpen ? 'true' : 'false'}>
-      <div className="fixed bottom-6 left-1/2 z-500 -translate-x-1/2">
-        <AnimatePresence>
-          {!isOpen && !isExpanded && !isFooterInView && (
-            <ChatLauncher
-              message={message}
-              inputRef={launcherRef}
-              hasConversation={hasConversation}
-              onMessageChange={setMessage}
-              onSubmit={handleSubmit}
-              onKeyDown={handleKeyPress}
-              onOpen={() => setIsOpen(true)}
-            />
-          )}
-        </AnimatePresence>
-      </div>
       <AnimatePresence>
         {selection && <SelectionPrompt selection={selection} onAdd={handleAddSelection} />}
       </AnimatePresence>

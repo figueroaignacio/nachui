@@ -2,9 +2,8 @@
 
 import { NavBadge } from '@/components/common/nav-badge';
 import { Link, usePathname } from '@/i18n/navigation';
-import { Search01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Input } from '@repo/ui/components/input';
+import { SearchIcon } from '@repo/ui/icons/search';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -43,7 +42,7 @@ export function GallerySidebar() {
     <aside className="lg:border-r lg:pr-8">
       <nav
         aria-label={t('eyebrow')}
-        className="hide-scrollbar sticky top-24 hidden h-[calc(100vh-5rem)] shrink-0 overflow-y-scroll mask-[linear-gradient(180deg,black_90%,transparent)] pt-6 pb-20 lg:block"
+        className="hide-scrollbar sticky top-10 hidden h-[calc(100vh-9rem)] shrink-0 overflow-y-scroll mask-[linear-gradient(180deg,black_90%,transparent)] pt-6 pb-20 lg:block"
       >
         <Input
           size="sm"
@@ -51,7 +50,7 @@ export function GallerySidebar() {
           onChange={(event) => setFilter(event.target.value)}
           placeholder={t('filter')}
           aria-label={t('filter')}
-          leftIcon={<HugeiconsIcon icon={Search01Icon} size={14} />}
+          leftIcon={<SearchIcon size={14} />}
           className="mb-3"
         />
         <ul>
