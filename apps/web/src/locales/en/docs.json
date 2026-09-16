@@ -138,6 +138,12 @@
           "description": "Modal windows for user notifications and interactions."
         },
         {
+          "title": "Dock",
+          "href": "/docs/elements/ui/dock",
+          "description": "A floating bar of icon actions with tooltips, magnification and auto hide.",
+          "badge": "new"
+        },
+        {
           "title": "Drawer",
           "href": "/docs/elements/ui/drawer",
           "description": "A panel that slides in from the edge of the screen to display supplementary content."

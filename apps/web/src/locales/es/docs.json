@@ -138,6 +138,12 @@
           "description": "Ventanas modales para interacción con el usuario."
         },
         {
+          "title": "Dock",
+          "href": "/docs/elements/ui/dock",
+          "description": "Una barra flotante de acciones con iconos, tooltips, magnificación y ocultado automático.",
+          "badge": "new"
+        },
+        {
           "title": "Drawer",
           "href": "/docs/elements/ui/drawer",
           "description": "Un panel que se desliza desde el borde de la pantalla para mostrar contenido complementario."

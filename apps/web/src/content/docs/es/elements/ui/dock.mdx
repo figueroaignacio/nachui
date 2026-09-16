@@ -1,0 +1,105 @@
+---
+title: Dock
+description: Una barra flotante de acciones con iconos, tooltips, magnificación y ocultado automático.
+published: true
+date: 2026-09-15
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="dock" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="dock" />
+
+## Anatomía
+
+```tsx
+import { Dock, useDockAutoHide } from '@/components/ui/dock';
+```
+
+```tsx
+<Dock label="Navegación del sitio">
+  <Dock.Item label="Inicio" active>
+    <HomeIcon />
+  </Dock.Item>
+  <Dock.Separator />
+  <Dock.Item label="Buscar">
+    <SearchIcon />
+  </Dock.Item>
+</Dock>
+```
+
+Cada ítem recibe un `label`. Es el nombre accesible del control y el tooltip que aparece al pasar el mouse o al enfocar, así el icono nunca tiene que explicarse solo.
+
+## Links
+
+Pasá `asChild` para que el ítem sea lo que renderices adentro, por ejemplo un link del router. Conserva el tamaño, el tooltip y el estado activo.
+
+<ComponentPreview component="dock" demo="links" />
+
+## Magnificación
+
+Los ítems crecen cuando el puntero se acerca, como en un dock de escritorio. Ajustalo con `itemSize`, `magnifiedSize` y `range`, o apagalo con `magnify={false}`. Se desactiva solo cuando el visitante prefiere menos movimiento, y nunca corre en pantallas táctiles.
+
+```tsx
+<Dock itemSize={44} magnifiedSize={68} range={140}>
+  ...
+</Dock>
+```
+
+## Ocultado automático
+
+`useDockAutoHide` devuelve `true` mientras la página scrollea hacia abajo y `false` cuando sube, llega al final, o el puntero se acerca al borde inferior. Pasáselo a `hidden` y la barra se corre del camino.
+
+```tsx
+function SiteDock() {
+  const hidden = useDockAutoHide();
+
+  return (
+    <Dock hidden={hidden} label="Navegación del sitio">
+      ...
+    </Dock>
+  );
+}
+```
+
+Por defecto la barra queda fija abajo y al centro del viewport. Usá `floating={false}` para renderizarla en su lugar, por ejemplo dentro de una toolbar o de una demo.
+
+## Referencia de API
+
+### Dock
+
+| Prop            | Type      | Default  | Descripción                                                   |
+| --------------- | --------- | -------- | ------------------------------------------------------------- |
+| `label`         | `string`  | `'Dock'` | Nombre accesible del landmark de navegación.                  |
+| `hidden`        | `boolean` | `false`  | Desliza la barra fuera de la vista y desactiva el puntero.    |
+| `floating`      | `boolean` | `true`   | Fija la barra abajo y al centro del viewport.                 |
+| `magnify`       | `boolean` | `true`   | Agranda los ítems cerca del puntero.                          |
+| `itemSize`      | `number`  | `40`     | Tamaño en reposo de cada ítem, en píxeles.                    |
+| `magnifiedSize` | `number`  | `60`     | Tamaño del ítem justo debajo del puntero.                     |
+| `range`         | `number`  | `120`    | Distancia en píxeles en la que la magnificación se desvanece. |
+
+### Dock.Item
+
+| Prop                 | Type      | Default | Descripción                                                       |
+| -------------------- | --------- | ------- | ----------------------------------------------------------------- |
+| `label`              | `string`  |         | Nombre accesible y texto del tooltip. Obligatorio.                |
+| `active`             | `boolean` | `false` | Marca el ítem actual con un punto y `aria-current`.               |
+| `asChild`            | `boolean` | `false` | Renderiza el hijo en lugar de un botón.                           |
+| `containerClassName` | `string`  |         | Clases para la caja exterior, útil para ocultar ítems por tamaño. |
+
+### Dock.Separator
+
+Una línea vertical entre grupos de ítems. Acepta `className`.
+
+### useDockAutoHide
+
+| Opción       | Type     | Default | Descripción                                                   |
+| ------------ | -------- | ------- | ------------------------------------------------------------- |
+| `threshold`  | `number` | `12`    | Desplazamiento mínimo antes de cambiar el estado.             |
+| `revealZone` | `number` | `96`    | Distancia del puntero al borde inferior que vuelve a mostrar. |
+| `minScroll`  | `number` | `80`    | Posición de scroll por debajo de la cual nunca se oculta.     |

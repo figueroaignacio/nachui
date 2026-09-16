@@ -1,0 +1,105 @@
+---
+title: Dock
+description: A floating bar of icon actions with tooltips, magnification and auto hide.
+published: true
+date: 2026-09-15
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="dock" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="dock" />
+
+## Anatomy
+
+```tsx
+import { Dock, useDockAutoHide } from '@/components/ui/dock';
+```
+
+```tsx
+<Dock label="Site navigation">
+  <Dock.Item label="Home" active>
+    <HomeIcon />
+  </Dock.Item>
+  <Dock.Separator />
+  <Dock.Item label="Search">
+    <SearchIcon />
+  </Dock.Item>
+</Dock>
+```
+
+Every item takes a `label`. It is the accessible name of the control and the tooltip that appears on hover or focus, so the icon alone never has to explain itself.
+
+## Links
+
+Pass `asChild` to turn the item into whatever you render inside it, like a router link. The item keeps its size, tooltip and active state.
+
+<ComponentPreview component="dock" demo="links" />
+
+## Magnification
+
+Items grow as the pointer gets close, the way a desktop dock does. Tune it with `itemSize`, `magnifiedSize` and `range`, or turn it off with `magnify={false}`. It is off automatically when the visitor prefers reduced motion, and it never runs on touch.
+
+```tsx
+<Dock itemSize={44} magnifiedSize={68} range={140}>
+  ...
+</Dock>
+```
+
+## Auto hide
+
+`useDockAutoHide` returns `true` while the page scrolls down and `false` when it scrolls up, reaches the bottom, or the pointer comes near the bottom edge. Feed it to `hidden` and the bar slides out of the way.
+
+```tsx
+function SiteDock() {
+  const hidden = useDockAutoHide();
+
+  return (
+    <Dock hidden={hidden} label="Site navigation">
+      ...
+    </Dock>
+  );
+}
+```
+
+By default the bar is fixed to the bottom center of the viewport. Use `floating={false}` to render it in place, for example inside a toolbar or a demo.
+
+## API Reference
+
+### Dock
+
+| Prop            | Type      | Default  | Description                                                |
+| --------------- | --------- | -------- | ---------------------------------------------------------- |
+| `label`         | `string`  | `'Dock'` | Accessible name of the navigation landmark.                |
+| `hidden`        | `boolean` | `false`  | Slides the bar out and disables pointer events.            |
+| `floating`      | `boolean` | `true`   | Fixes the bar to the bottom center of the viewport.        |
+| `magnify`       | `boolean` | `true`   | Grow items near the pointer.                               |
+| `itemSize`      | `number`  | `40`     | Resting size of each item in pixels.                       |
+| `magnifiedSize` | `number`  | `60`     | Size of the item right under the pointer.                  |
+| `range`         | `number`  | `120`    | Distance in pixels over which the magnification fades out. |
+
+### Dock.Item
+
+| Prop                 | Type      | Default | Description                                                     |
+| -------------------- | --------- | ------- | --------------------------------------------------------------- |
+| `label`              | `string`  |         | Accessible name and tooltip text. Required.                     |
+| `active`             | `boolean` | `false` | Marks the current item with a dot and `aria-current`.           |
+| `asChild`            | `boolean` | `false` | Render the child element instead of a button.                   |
+| `containerClassName` | `string`  |         | Classes for the outer box, useful to hide items per breakpoint. |
+
+### Dock.Separator
+
+A vertical rule between groups of items. Accepts the usual `className`.
+
+### useDockAutoHide
+
+| Option       | Type     | Default | Description                                         |
+| ------------ | -------- | ------- | --------------------------------------------------- |
+| `threshold`  | `number` | `12`    | Minimum scroll delta before the state changes.      |
+| `revealZone` | `number` | `96`    | Pointer distance from the bottom edge that reveals. |
+| `minScroll`  | `number` | `80`    | Scroll position under which the bar never hides.    |
