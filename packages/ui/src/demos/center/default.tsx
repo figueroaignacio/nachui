@@ -1,6 +1,5 @@
-import { InboxIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '../../components/button';
+import { InboxIcon } from '../../icons/inbox';
 import { Center } from '../../layout/center';
 
 export function Default() {
@@ -10,7 +9,7 @@ export function Default() {
       className="border-border bg-card h-56 w-full max-w-md flex-col gap-3 rounded-xl border"
     >
       <span className="bg-muted text-muted-foreground flex size-10 items-center justify-center rounded-full">
-        <HugeiconsIcon icon={InboxIcon} size={20} />
+        <InboxIcon size={20} />
       </span>
       <div>
         <p className="text-sm font-medium">No deploys yet</p>

@@ -1,10 +1,9 @@
 'use client';
 
-import { CloudUploadIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { useEffect, useRef, useState } from 'react';
 import { FileUpload, type FileWithPreview } from '../../components/file-upload';
 import { Progress } from '../../components/progress';
+import { CloudUploadIcon } from '../../icons/cloud-upload';
 
 function UploadRow({ file }: { file: FileWithPreview }) {
   const [value, setValue] = useState(0);
@@ -43,7 +42,7 @@ export function UploadProgress() {
   return (
     <FileUpload className="max-w-md" multiple maxFiles={4}>
       <FileUpload.Dropzone>
-        <HugeiconsIcon icon={CloudUploadIcon} strokeWidth={1.5} />
+        <CloudUploadIcon strokeWidth={1.5} />
         <p className="text-foreground font-medium">Drop files to start uploading</p>
         <p className="text-xs">Progress is simulated in this demo</p>
       </FileUpload.Dropzone>

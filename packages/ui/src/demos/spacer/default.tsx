@@ -1,9 +1,9 @@
 'use client';
 
-import { Notification03Icon, Search01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Avatar } from '../../components/avatar';
 import { Button } from '../../components/button';
+import { BellIcon } from '../../icons/bell';
+import { SearchIcon } from '../../icons/search';
 import { Flex } from '../../layout/flex';
 import { Spacer } from '../../layout/spacer';
 
@@ -17,10 +17,10 @@ export function Default() {
       <span className="px-2 text-sm font-semibold">Northwind</span>
       <Spacer />
       <Button variant="ghost" size="icon" aria-label="Search">
-        <HugeiconsIcon icon={Search01Icon} size={16} />
+        <SearchIcon size={16} />
       </Button>
       <Button variant="ghost" size="icon" aria-label="Notifications">
-        <HugeiconsIcon icon={Notification03Icon} size={16} />
+        <BellIcon size={16} />
       </Button>
       <Avatar size="sm">
         <Avatar.Fallback>IF</Avatar.Fallback>

@@ -1,9 +1,51 @@
 'use client';
 
-import { MinusSignIcon, Tick01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+
+type IconProps = React.SVGProps<SVGSVGElement> & {
+  size?: number | string;
+};
+
+function CheckIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="m4 12.5 5 5L20 6.5" />
+    </svg>
+  );
+}
+
+function MinusIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M5 12h14" />
+    </svg>
+  );
+}
 
 export interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onCheckedChange?: (checked: boolean) => void;
@@ -48,15 +90,13 @@ function Checkbox({
         {...props}
       />
       {indeterminate ? (
-        <HugeiconsIcon
-          icon={MinusSignIcon}
+        <MinusIcon
           aria-hidden="true"
           className="text-primary-foreground pointer-events-none absolute size-3"
           size={12}
         />
       ) : (
-        <HugeiconsIcon
-          icon={Tick01Icon}
+        <CheckIcon
           aria-hidden="true"
           className="text-primary-foreground pointer-events-none absolute size-3 opacity-0 transition-opacity peer-checked:opacity-100"
           size={12}

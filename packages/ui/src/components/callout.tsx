@@ -1,13 +1,97 @@
-import {
-  Alert02Icon,
-  AlertCircleIcon,
-  CheckmarkCircle01Icon,
-  InformationCircleIcon,
-} from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import React from 'react';
 import { cn } from '../lib/cn';
+
+type IconProps = React.SVGProps<SVGSVGElement> & {
+  size?: number | string;
+};
+
+function AlertCircleIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="9.5" />
+      <path d="M12 7.5V13" />
+      <path d="M12 16.5h.01" />
+    </svg>
+  );
+}
+
+function AlertTriangleIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M10.3 4.2 2.9 17a2 2 0 0 0 1.7 3h14.8a2 2 0 0 0 1.7-3L13.7 4.2a2 2 0 0 0-3.4 0Z" />
+      <path d="M12 9v4.5" />
+      <path d="M12 16.5h.01" />
+    </svg>
+  );
+}
+
+function CheckCircleIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="9.5" />
+      <path d="m8 12 2.7 2.7L16 9.3" />
+    </svg>
+  );
+}
+
+function InfoIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="9.5" />
+      <path d="M12 11v5.5" />
+      <path d="M12 7.5h.01" />
+    </svg>
+  );
+}
 
 const calloutVariants = cva('flex w-full items-start gap-3 rounded-md border p-3.5 text-sm', {
   variants: {
@@ -35,13 +119,13 @@ type CalloutVariant = NonNullable<CalloutProps['variant']>;
 const getDefaultIcon = (variant: CalloutVariant) => {
   switch (variant) {
     case 'info':
-      return <HugeiconsIcon icon={InformationCircleIcon} size={18} />;
+      return <InfoIcon size={18} />;
     case 'warning':
-      return <HugeiconsIcon icon={Alert02Icon} size={18} />;
+      return <AlertTriangleIcon size={18} />;
     case 'danger':
-      return <HugeiconsIcon icon={AlertCircleIcon} size={18} />;
+      return <AlertCircleIcon size={18} />;
     case 'success':
-      return <HugeiconsIcon icon={CheckmarkCircle01Icon} size={18} />;
+      return <CheckCircleIcon size={18} />;
     default:
       return null;
   }

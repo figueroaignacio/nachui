@@ -1,11 +1,11 @@
 'use client';
 
-import { Attachment01Icon, SentIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import * as React from 'react';
 import { Attachment } from '../../components/attachment';
 import { Button } from '../../components/button';
 import { Textarea } from '../../components/textarea';
+import { PaperclipIcon } from '../../icons/paperclip';
+import { SendIcon } from '../../icons/send';
 
 const initial = [
   { id: 'spec', name: 'checkout-spec.md', type: 'text/markdown', size: 18_400 },
@@ -45,12 +45,12 @@ export function Chips() {
       )}
       <div className="flex items-center justify-between">
         <Button type="button" variant="ghost" size="sm">
-          <HugeiconsIcon icon={Attachment01Icon} size={16} />
+          <PaperclipIcon size={16} />
           Attach
         </Button>
         <Button type="button" size="sm">
           Send
-          <HugeiconsIcon icon={SentIcon} size={16} />
+          <SendIcon size={16} />
         </Button>
       </div>
     </div>

@@ -1,6 +1,6 @@
-import { ArrowUp01Icon, StopIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '@repo/ui/components/button';
+import { ChevronUpIcon } from '@repo/ui/icons/chevron-up';
+import { SquareIcon } from '@repo/ui/icons/square';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -65,11 +65,7 @@ export function ChatInput(props: ChatInputProps) {
             aria-label={t('launcher.send')}
             className="text-muted-foreground hover:text-foreground size-5 rounded-sm hover:bg-transparent"
           >
-            <HugeiconsIcon
-              icon={isLoading ? StopIcon : ArrowUp01Icon}
-              size={16}
-              aria-hidden="true"
-            />
+            {isLoading ? <SquareIcon size={16} /> : <ChevronUpIcon size={16} />}
           </Button>
         </div>
       </div>

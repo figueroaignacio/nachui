@@ -1,15 +1,14 @@
-import { InboxIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '../../components/button';
 import { Empty } from '../../components/empty';
 import { Kbd } from '../../components/kbd';
+import { InboxIcon } from '../../icons/inbox';
 
 export function Inbox() {
   return (
     <Empty variant="card" className="max-w-md">
       <Empty.Header>
         <Empty.Media variant="icon">
-          <HugeiconsIcon icon={InboxIcon} size={24} />
+          <InboxIcon size={24} />
         </Empty.Media>
         <Empty.Title>Inbox zero</Empty.Title>
         <Empty.Description>

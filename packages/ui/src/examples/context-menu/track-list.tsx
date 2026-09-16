@@ -1,8 +1,10 @@
 'use client';
 
-import { Delete02Icon, Download01Icon, Link01Icon, PlusSignIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { ContextMenu } from '../../components/context-menu';
+import { DownloadIcon } from '../../icons/download';
+import { LinkIcon } from '../../icons/link';
+import { PlusIcon } from '../../icons/plus';
+import { TrashIcon } from '../../icons/trash';
 
 const tracks = [
   { title: 'Design tokens walkthrough', duration: '12:40' },
@@ -28,20 +30,20 @@ export function TrackList() {
           </ContextMenu.Trigger>
           <ContextMenu.Content>
             <ContextMenu.Item>
-              <HugeiconsIcon icon={PlusSignIcon} size={16} />
+              <PlusIcon size={16} />
               Add to queue
             </ContextMenu.Item>
             <ContextMenu.Item>
-              <HugeiconsIcon icon={Link01Icon} size={16} />
+              <LinkIcon size={16} />
               Copy link
             </ContextMenu.Item>
             <ContextMenu.Item>
-              <HugeiconsIcon icon={Download01Icon} size={16} />
+              <DownloadIcon size={16} />
               Download
             </ContextMenu.Item>
             <ContextMenu.Separator />
             <ContextMenu.Item variant="destructive">
-              <HugeiconsIcon icon={Delete02Icon} size={16} />
+              <TrashIcon size={16} />
               Remove
             </ContextMenu.Item>
           </ContextMenu.Content>

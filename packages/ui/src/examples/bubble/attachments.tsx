@@ -1,6 +1,5 @@
-import { File01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Bubble } from '../../components/bubble';
+import { FileIcon } from '../../icons/file';
 
 export function Attachments() {
   return (
@@ -12,7 +11,7 @@ export function Attachments() {
         <Bubble variant="outline">
           <Bubble.Content className="flex items-center gap-3">
             <span className="bg-muted text-muted-foreground flex size-9 shrink-0 items-center justify-center rounded-md">
-              <HugeiconsIcon icon={File01Icon} size={18} />
+              <FileIcon size={18} />
             </span>
             <span className="flex min-w-0 flex-col">
               <span className="truncate text-sm font-medium">q3-review.pdf</span>

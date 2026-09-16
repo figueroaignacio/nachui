@@ -1,9 +1,9 @@
 'use client';
 
 import { Link } from '@/i18n/navigation';
-import { ArrowLeft01Icon, ArrowUpRight01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Frame } from '@repo/ui/components/frame';
+import { ArrowUpRightIcon } from '@repo/ui/icons/arrow-up-right';
+import { ChevronLeftIcon } from '@repo/ui/icons/chevron-left';
 import { Grid } from '@repo/ui/layout/grid';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
@@ -27,7 +27,7 @@ export function GalleryComponentView({ slug }: { slug: string }) {
           href="/components"
           className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex items-center gap-1 rounded-sm font-mono text-[13px] transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
-          <HugeiconsIcon icon={ArrowLeft01Icon} size={14} />
+          <ChevronLeftIcon size={14} />
           {t('back')}
         </Link>
         <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
@@ -44,7 +44,7 @@ export function GalleryComponentView({ slug }: { slug: string }) {
             className="border-border text-foreground hover:bg-muted focus-visible:ring-ring inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[13px] font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             {t('viewDocs')}
-            <HugeiconsIcon icon={ArrowUpRight01Icon} size={14} />
+            <ArrowUpRightIcon size={14} />
           </Link>
         </div>
       </section>

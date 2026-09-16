@@ -1,5 +1,5 @@
-import { Cancel01Icon, Search02Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { SearchIcon } from '@repo/ui/icons/search';
+import { XIcon } from '@repo/ui/icons/x';
 
 interface SearchInputProps {
   value: string;
@@ -30,11 +30,7 @@ export function SearchInput({
 }: SearchInputProps) {
   return (
     <div className="border-border/40 flex items-center gap-3 border-b px-4 py-3">
-      <HugeiconsIcon
-        icon={Search02Icon}
-        className="text-muted-foreground/60 h-4 w-4 shrink-0"
-        aria-hidden="true"
-      />
+      <SearchIcon className="text-muted-foreground/60 h-4 w-4 shrink-0" aria-hidden="true" />
       <input
         ref={inputRef}
         type="text"
@@ -56,7 +52,7 @@ export function SearchInput({
           className="text-muted-foreground/50 hover:text-foreground flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded transition-colors"
           aria-label={clearLabel}
         >
-          <HugeiconsIcon icon={Cancel01Icon} className="h-3.5 w-3.5" aria-hidden="true" />
+          <XIcon className="h-3.5 w-3.5" aria-hidden="true" />
         </button>
       )}
     </div>

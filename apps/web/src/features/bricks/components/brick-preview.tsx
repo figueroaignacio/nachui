@@ -2,10 +2,11 @@
 
 import type { BrickSourceFile } from '@/features/bricks/lib/get-brick-source';
 import { useCopyToClipboard } from '@/features/docs/hooks/use-copy-to-clipboard';
-import { LaptopIcon, Tick02Icon, Copy01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Callout } from '@repo/ui/components/callout';
 import { Tabs } from '@repo/ui/components/tabs';
+import { CheckIcon } from '@repo/ui/icons/check';
+import { CopyIcon } from '@repo/ui/icons/copy';
+import { LaptopIcon } from '@repo/ui/icons/laptop';
 import { cn } from '@repo/ui/lib/cn';
 import { useState } from 'react';
 import { BrickCodeViewer } from './brick-code-viewer';
@@ -79,7 +80,7 @@ export function BrickPreview({
                 aria-label="Desktop viewport"
                 aria-pressed={viewport === 'desktop'}
               >
-                <HugeiconsIcon icon={LaptopIcon} size={14} aria-hidden="true" />
+                <LaptopIcon size={14} aria-hidden="true" />
               </button>
               <button
                 type="button"
@@ -124,11 +125,7 @@ export function BrickPreview({
                 )}
                 title={isCopied ? 'Copied!' : `Copy: ${installCommand}`}
               >
-                <HugeiconsIcon
-                  icon={isCopied ? Tick02Icon : Copy01Icon}
-                  size={12}
-                  aria-hidden="true"
-                />
+                {isCopied ? <CheckIcon size={12} /> : <CopyIcon size={12} />}
                 <span className="hidden sm:inline">{installCommand}</span>
               </button>
             )}

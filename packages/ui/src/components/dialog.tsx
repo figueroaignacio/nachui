@@ -1,12 +1,35 @@
 'use client';
 
-import { Cancel01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { AnimatePresence, HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cloneElement } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
+
+type IconProps = React.SVGProps<SVGSVGElement> & {
+  size?: number | string;
+};
+
+function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  );
+}
 
 const FOCUSABLE_SELECTOR = [
   'a[href]',
@@ -373,7 +396,7 @@ const DialogContent = ({
           >
             {children}
             <DialogClose className="ring-offset-background focus-visible:ring-ring absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none">
-              <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" size={16} />
+              <XIcon className="h-4 w-4" size={16} />
               <span className="sr-only">Close</span>
             </DialogClose>
           </motion.div>

@@ -1,7 +1,6 @@
 'use client';
 
-import { SparklesIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { SparklesIcon } from '@repo/ui/icons/sparkles';
 import { cn } from '@repo/ui/lib/cn';
 import { motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
@@ -44,7 +43,7 @@ export function SelectionPrompt({ selection, onAdd }: SelectionPromptProps) {
           onClick={onAdd}
           className="bg-background/95 border-rule text-foreground hover:border-foreground/25 flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium whitespace-nowrap shadow-sm backdrop-blur-md transition-colors"
         >
-          <HugeiconsIcon icon={SparklesIcon} size={13} aria-hidden="true" />
+          <SparklesIcon size={13} aria-hidden="true" />
           {t('add')}
         </button>
       </motion.div>

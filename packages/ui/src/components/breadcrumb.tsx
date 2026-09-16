@@ -1,7 +1,51 @@
-import { ArrowRight01Icon, MoreHorizontalIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+
+type IconProps = React.SVGProps<SVGSVGElement> & {
+  size?: number | string;
+};
+
+function ChevronRightIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="m9 6 6 6-6 6" />
+    </svg>
+  );
+}
+
+function MoreHorizontalIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <circle cx="5" cy="12" r="1" />
+      <circle cx="12" cy="12" r="1" />
+      <circle cx="19" cy="12" r="1" />
+    </svg>
+  );
+}
 
 const BreadcrumbRoot = ({ className, ...props }: React.ComponentProps<'nav'>) => {
   return <nav aria-label="breadcrumb" className={className} {...props} />;
@@ -57,7 +101,7 @@ const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentP
       className={cn('[&>svg]:size-3.5', className)}
       {...props}
     >
-      {children ?? <HugeiconsIcon icon={ArrowRight01Icon} size={14} className="size-3.5" />}
+      {children ?? <ChevronRightIcon size={14} className="size-3.5" />}
     </li>
   );
 };
@@ -70,7 +114,7 @@ const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<'span'
       className={cn('flex size-9 items-center justify-center', className)}
       {...props}
     >
-      <HugeiconsIcon icon={MoreHorizontalIcon} className="size-4" size={16} />
+      <MoreHorizontalIcon className="size-4" size={16} />
     </span>
   );
 };

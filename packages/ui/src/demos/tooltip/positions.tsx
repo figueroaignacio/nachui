@@ -1,13 +1,15 @@
 'use client';
 
-import { Comment01Icon, Delete02Icon, HistoryIcon, Share01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Tooltip } from '../../components/tooltip';
+import { HistoryIcon } from '../../icons/history';
+import { MessageCircleIcon } from '../../icons/message-circle';
+import { ShareIcon } from '../../icons/share';
+import { TrashIcon } from '../../icons/trash';
 
 const actions = [
   {
     side: 'top',
-    icon: Comment01Icon,
+    icon: MessageCircleIcon,
     label: 'Comment on selection',
     hint: 'Comment on selection (⇧⌘M)',
   },
@@ -19,13 +21,13 @@ const actions = [
   },
   {
     side: 'left',
-    icon: Share01Icon,
+    icon: ShareIcon,
     label: 'Share document',
     hint: 'Shared with 3 people in Northwind',
   },
   {
     side: 'right',
-    icon: Delete02Icon,
+    icon: TrashIcon,
     label: 'Move to trash',
     hint: 'Move to trash, recoverable for 30 days',
   },
@@ -42,7 +44,7 @@ export function Positions() {
               aria-label={action.label}
               className="text-muted-foreground hover:bg-muted hover:text-foreground flex size-9 items-center justify-center rounded-md transition-colors"
             >
-              <HugeiconsIcon icon={action.icon} size={18} strokeWidth={1.6} />
+              <action.icon size={18} strokeWidth={1.6} />
             </button>
           </Tooltip.Trigger>
           <Tooltip.Content side={action.side}>{action.hint}</Tooltip.Content>

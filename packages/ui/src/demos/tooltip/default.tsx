@@ -1,8 +1,7 @@
 'use client';
 
-import { InformationCircleIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Tooltip } from '../../components/tooltip';
+import { InfoIcon } from '../../icons/info';
 
 export function Default() {
   return (
@@ -16,7 +15,7 @@ export function Default() {
               aria-label="How net MRR is calculated"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              <HugeiconsIcon icon={InformationCircleIcon} size={14} />
+              <InfoIcon size={14} />
             </button>
           </Tooltip.Trigger>
           <Tooltip.Content className="w-56 whitespace-normal">

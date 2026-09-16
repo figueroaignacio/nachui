@@ -1,7 +1,71 @@
-import { ArrowLeft01Icon, ArrowRight01Icon, MoreHorizontalIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+
+type IconProps = React.SVGProps<SVGSVGElement> & {
+  size?: number | string;
+};
+
+function ChevronLeftIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="m15 6-6 6 6 6" />
+    </svg>
+  );
+}
+
+function ChevronRightIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="m9 6 6 6-6 6" />
+    </svg>
+  );
+}
+
+function MoreHorizontalIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <circle cx="5" cy="12" r="1" />
+      <circle cx="12" cy="12" r="1" />
+      <circle cx="19" cy="12" r="1" />
+    </svg>
+  );
+}
 
 interface PaginationProps extends React.ComponentProps<'nav'> {
   label?: string;
@@ -130,7 +194,7 @@ const PaginationPrevious = ({
       className={cn('pl-2.5', iconOnly && 'pl-0', className)}
       {...props}
     >
-      <HugeiconsIcon icon={ArrowLeft01Icon} size={16} aria-hidden="true" />
+      <ChevronLeftIcon size={16} aria-hidden="true" />
       {iconOnly ? <span className="sr-only">{children}</span> : <span>{children}</span>}
     </PaginationLink>
   );
@@ -151,7 +215,7 @@ const PaginationNext = ({
       {...props}
     >
       {iconOnly ? <span className="sr-only">{children}</span> : <span>{children}</span>}
-      <HugeiconsIcon icon={ArrowRight01Icon} size={16} aria-hidden="true" />
+      <ChevronRightIcon size={16} aria-hidden="true" />
     </PaginationLink>
   );
 };
@@ -171,7 +235,7 @@ const PaginationEllipsis = ({
       className={cn('flex size-9 items-center justify-center', className)}
       {...props}
     >
-      <HugeiconsIcon icon={MoreHorizontalIcon} size={16} />
+      <MoreHorizontalIcon size={16} />
       <span className="sr-only">{label}</span>
     </span>
   );

@@ -1,7 +1,5 @@
 'use client';
 
-import { Cancel01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import {
   AnimatePresence,
@@ -14,6 +12,31 @@ import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
 import { Button, type ButtonProps } from './button';
+
+type IconProps = React.SVGProps<SVGSVGElement> & {
+  size?: number | string;
+};
+
+function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  );
+}
 
 // --- Animation constants (module level) ---
 
@@ -391,7 +414,7 @@ const DrawerContent = ({
                   className="hover:bg-muted rounded-full p-2 transition-colors"
                   aria-label="Close"
                 >
-                  <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" size={16} />
+                  <XIcon className="h-4 w-4" size={16} />
                 </motion.button>
               </div>
 

@@ -1,13 +1,12 @@
 'use client';
 
 import { Link } from '@/i18n/navigation';
-import { PlusSignIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { IconTile } from '@repo/ui/components/icon-tile';
+import { PlusIcon } from '@repo/ui/icons/plus';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
-import { getComponentIcon } from './component-icons';
+import { ComponentIcon } from './component-icons';
 
 export interface ComponentGridItem {
   href: string;
@@ -75,8 +74,8 @@ export function ComponentGrid({ items, className }: ComponentGridProps) {
               tone="muted"
               className="group-hover/cell:bg-background border-transparent bg-transparent transition-all duration-200 ease-out group-hover/cell:scale-110 group-hover/cell:-rotate-6 group-hover/cell:shadow-sm motion-reduce:transform-none"
             >
-              <HugeiconsIcon
-                icon={getComponentIcon(item.href)}
+              <ComponentIcon
+                href={item.href}
                 size={16}
                 strokeWidth={1.6}
                 className="text-muted-foreground group-hover/cell:text-foreground transition-colors duration-200"
@@ -98,7 +97,7 @@ export function ComponentGrid({ items, className }: ComponentGridProps) {
           tone="muted"
           className="ring-border/60 border-transparent bg-transparent ring-1 ring-inset"
         >
-          <HugeiconsIcon icon={PlusSignIcon} size={16} strokeWidth={1.6} />
+          <PlusIcon size={16} strokeWidth={1.6} />
         </IconTile>
         <span className="text-muted-foreground truncate font-mono text-xs italic">
           {t('componentGrid.wip')}

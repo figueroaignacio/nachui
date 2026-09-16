@@ -1,10 +1,9 @@
 'use client';
 
-import { Calendar03Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Avatar } from '../../components/avatar';
 import { Button } from '../../components/button';
 import { HoverCard } from '../../components/hover-card';
+import { CalendarIcon } from '../../icons/calendar';
 
 export function Default() {
   return (
@@ -24,7 +23,7 @@ export function Default() {
               Building NachUI, a copy-paste component library with zero dependencies.
             </p>
             <p className="text-muted-foreground flex items-center gap-1.5 pt-1 text-xs">
-              <HugeiconsIcon icon={Calendar03Icon} size={14} />
+              <CalendarIcon size={14} />
               Joined March 2024
             </p>
           </div>

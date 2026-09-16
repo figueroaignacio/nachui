@@ -1,6 +1,6 @@
-import { Add01Icon, Search01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '../../components/button';
+import { PlusIcon } from '../../icons/plus';
+import { SearchIcon } from '../../icons/search';
 import { Flex } from '../../layout/flex';
 import { Stack } from '../../layout/stack';
 
@@ -47,8 +47,7 @@ export function Sizes() {
           <Button
             size={row.size}
             leftIcon={
-              <HugeiconsIcon
-                icon={Add01Icon}
+              <PlusIcon
                 className={row.size === 'lg' ? 'size-5' : 'size-4'}
                 size={row.size === 'lg' ? 20 : 16}
               />
@@ -72,7 +71,7 @@ export function Sizes() {
           </p>
         </div>
         <Button size="icon" aria-label="Search this project">
-          <HugeiconsIcon icon={Search01Icon} className="size-4" size={16} />
+          <SearchIcon className="size-4" size={16} />
         </Button>
       </Flex>
     </Stack>

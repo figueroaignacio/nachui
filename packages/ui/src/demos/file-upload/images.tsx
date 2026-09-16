@@ -1,14 +1,13 @@
 'use client';
 
-import { ImageAdd01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { FileUpload } from '../../components/file-upload';
+import { ImagePlusIcon } from '../../icons/image-plus';
 
 export function Images() {
   return (
     <FileUpload className="max-w-md" multiple accept="image/*" maxFiles={6}>
       <FileUpload.Dropzone className="min-h-32">
-        <HugeiconsIcon icon={ImageAdd01Icon} strokeWidth={1.5} />
+        <ImagePlusIcon strokeWidth={1.5} />
         <p className="text-foreground font-medium">Drop images here</p>
         <p className="text-xs">Up to 6 images</p>
       </FileUpload.Dropzone>

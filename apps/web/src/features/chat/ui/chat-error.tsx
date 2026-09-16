@@ -1,7 +1,6 @@
-import { RefreshIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '@repo/ui/components/button';
 import { Callout } from '@repo/ui/components/callout';
+import { RefreshIcon } from '@repo/ui/icons/refresh';
 import { useTranslations } from 'next-intl';
 import type { ChatErrorCode } from '../lib/chat-error';
 import { AiPerch } from './ai-perch';
@@ -32,7 +31,7 @@ export function ChatError({ code, onRetry }: ChatErrorProps) {
               variant="link"
               size="sm"
               onClick={onRetry}
-              leftIcon={<HugeiconsIcon icon={RefreshIcon} size={13} aria-hidden="true" />}
+              leftIcon={<RefreshIcon size={13} aria-hidden="true" />}
               className="text-foreground/80 hover:text-foreground mt-3 underline"
             >
               {t('retry')}

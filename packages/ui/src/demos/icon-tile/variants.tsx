@@ -1,6 +1,5 @@
-import { SparklesIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { IconTile } from '../../components/icon-tile';
+import { SparklesIcon } from '../../icons/sparkles';
 
 const VARIANTS = ['outline', 'elevated', 'soft', 'solid', 'frame'] as const;
 
@@ -10,7 +9,7 @@ export function Variants() {
       {VARIANTS.map((variant) => (
         <div key={variant} className="flex flex-col items-center gap-2">
           <IconTile variant={variant} tone="primary">
-            <HugeiconsIcon icon={SparklesIcon} />
+            <SparklesIcon />
           </IconTile>
           <span className="text-muted-foreground font-mono text-xs">{variant}</span>
         </div>

@@ -1,8 +1,8 @@
 'use client';
 
-import { Moon02Icon, SunIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '@repo/ui/components/button';
+import { MoonIcon } from '@repo/ui/icons/moon';
+import { SunIcon } from '@repo/ui/icons/sun';
 import { useTheme } from 'nach-themes';
 
 export function ThemeToggle() {
@@ -18,10 +18,10 @@ export function ThemeToggle() {
     >
       {/* Both icons render; the active theme decides which one shows, so server and client markup match. */}
       <span className="dark:hidden">
-        <HugeiconsIcon icon={SunIcon} size={16} aria-hidden="true" />
+        <SunIcon size={16} aria-hidden="true" />
       </span>
       <span className="hidden dark:block">
-        <HugeiconsIcon icon={Moon02Icon} size={16} aria-hidden="true" />
+        <MoonIcon size={16} aria-hidden="true" />
       </span>
     </Button>
   );

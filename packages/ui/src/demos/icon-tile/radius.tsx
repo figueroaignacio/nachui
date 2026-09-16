@@ -1,18 +1,19 @@
-import { Camera01Icon, Globe02Icon, Mail01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { IconTile } from '../../components/icon-tile';
+import { CameraIcon } from '../../icons/camera';
+import { GlobeIcon } from '../../icons/globe';
+import { MailIcon } from '../../icons/mail';
 
 export function Radius() {
   return (
     <div className="flex items-center gap-3">
       <IconTile radius="full">
-        <HugeiconsIcon icon={Camera01Icon} />
+        <CameraIcon />
       </IconTile>
       <IconTile radius="full" variant="soft" tone="info">
-        <HugeiconsIcon icon={Globe02Icon} />
+        <GlobeIcon />
       </IconTile>
       <IconTile radius="full" variant="solid" tone="success">
-        <HugeiconsIcon icon={Mail01Icon} />
+        <MailIcon />
       </IconTile>
     </div>
   );

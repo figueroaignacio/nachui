@@ -1,10 +1,9 @@
 'use client';
 
-import { Tick02Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import * as React from 'react';
 import { Button } from '../../components/button';
 import { DropdownMenu } from '../../components/dropdown-menu';
+import { CheckIcon } from '../../icons/check';
 
 const COLUMNS = [
   { id: 'customer', label: 'Customer' },
@@ -41,7 +40,7 @@ export function Checkboxes() {
         {COLUMNS.map(({ id, label }) => (
           <DropdownMenu.Item key={id} onClick={() => toggle(id)}>
             <span className="flex w-6 items-center justify-center">
-              {visible[id] && <HugeiconsIcon icon={Tick02Icon} size={16} />}
+              {visible[id] && <CheckIcon size={16} />}
             </span>
             {label}
           </DropdownMenu.Item>

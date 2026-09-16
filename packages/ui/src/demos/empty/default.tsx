@@ -1,14 +1,13 @@
-import { Folder01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '../../components/button';
 import { Empty } from '../../components/empty';
+import { FolderIcon } from '../../icons/folder';
 
 export function Default() {
   return (
     <Empty className="max-w-md">
       <Empty.Header>
         <Empty.Media variant="icon">
-          <HugeiconsIcon icon={Folder01Icon} size={24} />
+          <FolderIcon size={24} />
         </Empty.Media>
         <Empty.Title>No projects yet</Empty.Title>
         <Empty.Description>

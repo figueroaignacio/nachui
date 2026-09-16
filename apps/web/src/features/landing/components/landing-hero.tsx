@@ -1,12 +1,11 @@
 'use client';
 
 import { Link } from '@/i18n/navigation';
-import { ArrowRight02Icon, ArrowUpRight01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { buttonVariants } from '@repo/ui/components/button';
+import { ArrowRightIcon } from '@repo/ui/icons/arrow-right';
+import { ArrowUpRightIcon } from '@repo/ui/icons/arrow-up-right';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
-
 import { PreviewMasonry } from './preview-masonry';
 
 interface HomePageActions {
@@ -38,7 +37,7 @@ export function LandingHero() {
           )}
         >
           {actions[0]?.label ?? 'Get started'}
-          <HugeiconsIcon icon={ArrowRight02Icon} size={14} aria-hidden="true" />
+          <ArrowRightIcon size={14} aria-hidden="true" />
         </Link>
         <Link
           href={actions[1]?.href ?? '/docs/elements/ui'}
@@ -48,7 +47,7 @@ export function LandingHero() {
           )}
         >
           {actions[1]?.label ?? 'View UI elements'}
-          <HugeiconsIcon icon={ArrowUpRight01Icon} size={14} aria-hidden="true" />
+          <ArrowUpRightIcon size={14} aria-hidden="true" />
         </Link>
       </div>
 

@@ -125,14 +125,14 @@ import { Typography } from '@repo/ui/components/typography';
 
 ## Icons
 
-NachUI uses `@hugeicons/core-free-icons` and `@hugeicons/react`. Never use lucide-react or heroicons.
+NachUI ships its own icon set: one self-contained React component per icon, installed with `npx nachui add icons/<name>` and imported from `@/components/ui/<name>` as `<Name>Icon`. Browse it at `/icons`. Components accept any icon through props, so another library is fine when a project already uses one, but do not add an icon dependency on your own.
 
 ```tsx
-import { ArrowRight02Icon, Copy01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { ArrowRightIcon } from '@/components/ui/arrow-right';
+import { CopyIcon } from '@/components/ui/copy';
 
-<HugeiconsIcon icon={ArrowRight02Icon} size={16} />
-<HugeiconsIcon icon={Copy01Icon} className="h-4 w-4" />
+<ArrowRightIcon size={16} />
+<CopyIcon className="h-4 w-4" strokeWidth={2} />
 ```
 
 ## Client vs Server Components

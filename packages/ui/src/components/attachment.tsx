@@ -1,18 +1,185 @@
 'use client';
 
-import {
-  Cancel01Icon,
-  Download01Icon,
-  File01Icon,
-  FileZipIcon,
-  Image01Icon,
-  MusicNote01Icon,
-  Pdf01Icon,
-  Video01Icon,
-} from '@hugeicons/core-free-icons';
-import { HugeiconsIcon, type IconSvgElement } from '@hugeicons/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+
+type IconProps = React.SVGProps<SVGSVGElement> & {
+  size?: number | string;
+};
+
+function ArchiveIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <rect x="2.5" y="3.5" width="19" height="5.5" rx="2" />
+      <path d="M4 9v8.5a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V9" />
+      <path d="M10 13.5h4" />
+    </svg>
+  );
+}
+
+function DownloadIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M12 3v11" />
+      <path d="m8 10.5 4 4 4-4" />
+      <path d="M3.5 15v1.5A3.5 3.5 0 0 0 7 20h10a3.5 3.5 0 0 0 3.5-3.5V15" />
+    </svg>
+  );
+}
+
+function FileIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M13.5 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8.5L13.5 3Z" />
+      <path d="M13.5 3v3.5a2 2 0 0 0 2 2H19" />
+    </svg>
+  );
+}
+
+function FileTextIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M13.5 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8.5L13.5 3Z" />
+      <path d="M13.5 3v3.5a2 2 0 0 0 2 2H19" />
+      <path d="M8.5 13h7" />
+      <path d="M8.5 17h4" />
+    </svg>
+  );
+}
+
+function ImageIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <rect x="2.5" y="3.5" width="19" height="17" rx="3.5" />
+      <circle cx="8.5" cy="9" r="2" />
+      <path d="m21.5 14.5-3.4-3.4a2 2 0 0 0-2.8 0L7 19.4" />
+    </svg>
+  );
+}
+
+function MusicIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <circle cx="6.5" cy="17.5" r="3" />
+      <circle cx="17.5" cy="15.5" r="3" />
+      <path d="M9.5 17.5V7.2a2 2 0 0 1 1.5-1.9l8-2a2 2 0 0 1 1.5 1.9v10.3" />
+    </svg>
+  );
+}
+
+function VideoIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <rect x="2.5" y="5.5" width="13" height="13" rx="3" />
+      <path d="m15.5 10 4.4-2.6a1 1 0 0 1 1.6.9v7.4a1 1 0 0 1-1.6.9L15.5 14" />
+    </svg>
+  );
+}
+
+function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  );
+}
 
 type AttachmentVariant = 'row' | 'card' | 'chip';
 type AttachmentStatus = 'idle' | 'uploading' | 'done' | 'error';
@@ -40,22 +207,30 @@ function formatFileSize(bytes: number, decimals = 1): string {
   return `${rounded} ${SIZE_UNITS[exponent]}`;
 }
 
-function iconForType(type: string | undefined, name: string | undefined): IconSvgElement {
+function iconForType(
+  type: string | undefined,
+  name: string | undefined,
+): React.ComponentType<IconProps> {
   const mime = (type ?? '').toLowerCase();
   const extension = (name ?? '').toLowerCase().split('.').pop() ?? '';
 
-  if (mime.startsWith('image/')) return Image01Icon;
-  if (mime.startsWith('video/')) return Video01Icon;
-  if (mime.startsWith('audio/')) return MusicNote01Icon;
-  if (mime === 'application/pdf' || extension === 'pdf') return Pdf01Icon;
+  if (mime.startsWith('image/')) return ImageIcon;
+  if (mime.startsWith('video/')) return VideoIcon;
+  if (mime.startsWith('audio/')) return MusicIcon;
+  if (mime === 'application/pdf' || extension === 'pdf') return FileTextIcon;
   if (
     mime.includes('zip') ||
     mime.includes('compressed') ||
     ['zip', 'rar', '7z', 'gz', 'tar'].includes(extension)
   ) {
-    return FileZipIcon;
+    return ArchiveIcon;
   }
-  return File01Icon;
+  return FileIcon;
+}
+
+function AttachmentTypeIcon({ type, name }: { type?: string; name?: string }) {
+  const Icon = iconForType(type, name);
+  return <Icon aria-hidden="true" />;
 }
 
 interface AttachmentProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -133,7 +308,7 @@ const AttachmentPreview = ({
         (isImage ? (
           <img src={src} alt={alt ?? name ?? ''} className="size-full object-cover" />
         ) : (
-          <HugeiconsIcon icon={iconForType(type, name)} aria-hidden="true" />
+          <AttachmentTypeIcon type={type} name={name} />
         ))}
     </div>
   );
@@ -267,7 +442,7 @@ const AttachmentRemove = ({
       )}
       {...props}
     >
-      {children ?? <HugeiconsIcon icon={Cancel01Icon} aria-hidden="true" />}
+      {children ?? <XIcon aria-hidden="true" />}
     </button>
   );
 };
@@ -295,7 +470,7 @@ const AttachmentDownload = ({
       )}
       {...props}
     >
-      {children ?? <HugeiconsIcon icon={Download01Icon} aria-hidden="true" />}
+      {children ?? <DownloadIcon aria-hidden="true" />}
     </a>
   );
 };

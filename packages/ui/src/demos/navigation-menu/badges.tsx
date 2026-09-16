@@ -1,9 +1,10 @@
 'use client';
 
-import { Book02Icon, PuzzleIcon, ServerStack01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Badge } from '../../components/badge';
 import { NavigationMenu } from '../../components/navigation-menu';
+import { BookIcon } from '../../icons/book';
+import { PuzzleIcon } from '../../icons/puzzle';
+import { ServerIcon } from '../../icons/server';
 
 const resources = [
   {
@@ -13,13 +14,13 @@ const resources = [
     badge: { variant: 'success', label: 'Open source' },
   },
   {
-    icon: Book02Icon,
+    icon: BookIcon,
     title: 'Changelog',
     description: '12 components shipped since v2.13.',
     badge: { variant: 'info', label: 'New' },
   },
   {
-    icon: ServerStack01Icon,
+    icon: ServerIcon,
     title: 'MCP server',
     description: 'Pull component source into your editor.',
     badge: { variant: 'warning', label: 'Beta' },
@@ -39,7 +40,7 @@ export function Badges() {
               title={resource.title}
               description={resource.description}
               badge={<Badge variant={resource.badge.variant}>{resource.badge.label}</Badge>}
-              icon={<HugeiconsIcon icon={resource.icon} size={16} strokeWidth={1.6} />}
+              icon={<resource.icon size={16} strokeWidth={1.6} />}
             />
           ))}
         </NavigationMenu.Content>

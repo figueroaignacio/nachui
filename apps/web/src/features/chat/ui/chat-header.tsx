@@ -1,10 +1,12 @@
 'use client';
 
-import { Cancel01Icon, ChatAdd01Icon, ExpandIcon, Tick02Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '@repo/ui/components/button';
 import { Tooltip } from '@repo/ui/components/tooltip';
 import { Typography } from '@repo/ui/components/typography';
+import { CheckIcon } from '@repo/ui/icons/check';
+import { MaximizeIcon } from '@repo/ui/icons/maximize';
+import { MessagePlusIcon } from '@repo/ui/icons/message-plus';
+import { XIcon } from '@repo/ui/icons/x';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -63,8 +65,7 @@ export function ChatHeader({ onClose, onReset, isExpanded, onToggleExpand }: Cha
                   className="hidden size-8 rounded-md transition-all lg:flex"
                   aria-label={isExpanded ? 'Collapse chat' : 'Expand chat'}
                 >
-                  <HugeiconsIcon
-                    icon={ExpandIcon}
+                  <MaximizeIcon
                     size={15}
                     className={cn(
                       'transition-transform duration-300 ease-out',
@@ -93,11 +94,11 @@ export function ChatHeader({ onClose, onReset, isExpanded, onToggleExpand }: Cha
                   )}
                   aria-label={confirming ? 'Confirm reset' : 'Reset chat'}
                 >
-                  <HugeiconsIcon
-                    icon={confirming ? Tick02Icon : ChatAdd01Icon}
-                    size={15}
-                    className={cn('transition-transform duration-200', confirming && 'scale-110')}
-                  />
+                  {confirming ? (
+                    <CheckIcon size={15} className="scale-110 transition-transform duration-200" />
+                  ) : (
+                    <MessagePlusIcon size={15} className="transition-transform duration-200" />
+                  )}
                 </Button>
               </Tooltip.Trigger>
               <Tooltip.Content side="bottom">
@@ -116,7 +117,7 @@ export function ChatHeader({ onClose, onReset, isExpanded, onToggleExpand }: Cha
                 className="size-8 rounded-md transition-all"
                 aria-label="Close chat"
               >
-                <HugeiconsIcon icon={Cancel01Icon} size={15} />
+                <XIcon size={15} />
               </Button>
             </Tooltip.Trigger>
             <Tooltip.Content side="bottom">

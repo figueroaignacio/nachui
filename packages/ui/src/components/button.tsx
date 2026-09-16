@@ -1,11 +1,33 @@
 'use client';
 
-import { Loading02Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { AnimatePresence, HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import React from 'react';
 import { cn } from '../lib/cn';
+
+type IconProps = React.SVGProps<SVGSVGElement> & {
+  size?: number | string;
+};
+
+function LoaderIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M21.5 12A9.5 9.5 0 1 1 12 2.5" />
+    </svg>
+  );
+}
 
 // --- CVA ---
 
@@ -110,9 +132,7 @@ const ButtonRoot = ({
             className="absolute flex items-center justify-center"
             aria-hidden="true"
           >
-            {loader ?? (
-              <HugeiconsIcon icon={Loading02Icon} className="size-4 animate-spin" size={16} />
-            )}
+            {loader ?? <LoaderIcon className="size-4 animate-spin" size={16} />}
           </motion.span>
         ) : (
           <motion.div

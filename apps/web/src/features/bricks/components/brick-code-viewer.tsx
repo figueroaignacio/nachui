@@ -2,10 +2,11 @@
 
 import { CodeBlock } from '@/components/mdx/codeblock';
 import type { BrickSourceFile } from '@/features/bricks/lib/get-brick-source';
-import { File01Icon, Folder01Icon, Folder02Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Tree } from '@repo/ui/components/tree';
 import { Typography } from '@repo/ui/components/typography';
+import { FileIcon } from '@repo/ui/icons/file';
+import { FolderIcon } from '@repo/ui/icons/folder';
+import { FolderOpenIcon } from '@repo/ui/icons/folder-open';
 import type * as React from 'react';
 import { useMemo, useState } from 'react';
 
@@ -94,9 +95,9 @@ function buildTree(files: BrickSourceFile[]): TreeNode[] {
   return root;
 }
 
-const folderClosed = <HugeiconsIcon icon={Folder01Icon} size={16} />;
-const folderOpen = <HugeiconsIcon icon={Folder02Icon} size={16} />;
-const fileIcon = <HugeiconsIcon icon={File01Icon} size={16} />;
+const folderClosed = <FolderIcon size={16} />;
+const folderOpen = <FolderOpenIcon size={16} />;
+const fileIcon = <FileIcon size={16} />;
 
 function collectFolderPaths(nodes: TreeNode[]): string[] {
   return nodes.flatMap((node) =>

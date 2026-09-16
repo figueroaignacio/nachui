@@ -1,8 +1,7 @@
 'use client';
 
-import { Camera01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { FileUpload, useFileUploadContext } from '../../components/file-upload';
+import { CameraIcon } from '../../icons/camera';
 
 function AvatarDropzone() {
   const { files } = useFileUploadContext();
@@ -16,7 +15,7 @@ function AvatarDropzone() {
       {preview ? (
         <img src={preview} alt="" className="size-full object-cover" />
       ) : (
-        <HugeiconsIcon icon={Camera01Icon} strokeWidth={1.5} />
+        <CameraIcon strokeWidth={1.5} />
       )}
     </FileUpload.Dropzone>
   );

@@ -1,12 +1,12 @@
 'use client';
 
 import { usePathname, useRouter } from '@/i18n/navigation';
-import { ArrowLeft01Icon, Home01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
 import { Empty } from '@repo/ui/components/empty';
 import { Frame } from '@repo/ui/components/frame';
+import { ChevronLeftIcon } from '@repo/ui/icons/chevron-left';
+import { HomeIcon } from '@repo/ui/icons/home';
 import { Flex } from '@repo/ui/layout/flex';
 import { useTranslations } from 'next-intl';
 
@@ -38,14 +38,14 @@ export default function NotFound() {
               <Button
                 variant="outline"
                 size="sm"
-                leftIcon={<HugeiconsIcon icon={ArrowLeft01Icon} className="size-4" />}
+                leftIcon={<ChevronLeftIcon className="size-4" />}
                 onClick={() => router.back()}
               >
                 {t('actionBack')}
               </Button>
               <Button
                 size="sm"
-                leftIcon={<HugeiconsIcon icon={Home01Icon} className="size-4" />}
+                leftIcon={<HomeIcon className="size-4" />}
                 onClick={() => router.push('/')}
               >
                 {t('actionHome')}

@@ -1,6 +1,5 @@
-import { MoreHorizontalIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '../../components/button';
+import { MoreHorizontalIcon } from '../../icons/more-horizontal';
 import { Flex } from '../../layout/flex';
 
 export function Ghost() {
@@ -23,7 +22,7 @@ export function Ghost() {
           Duplicate
         </Button>
         <Button variant="ghost" size="icon" aria-label="More actions">
-          <HugeiconsIcon icon={MoreHorizontalIcon} className="size-4" size={16} />
+          <MoreHorizontalIcon className="size-4" size={16} />
         </Button>
       </Flex>
     </Flex>

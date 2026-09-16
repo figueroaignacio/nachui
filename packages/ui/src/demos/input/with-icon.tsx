@@ -1,6 +1,6 @@
-import { Search01Icon, ViewIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Input } from '../../components/input';
+import { EyeIcon } from '../../icons/eye';
+import { SearchIcon } from '../../icons/search';
 
 export function WithIcon() {
   return (
@@ -8,13 +8,13 @@ export function WithIcon() {
       <Input
         aria-label="Search customers"
         placeholder="Search customers and invoices"
-        leftIcon={<HugeiconsIcon icon={Search01Icon} size={16} />}
+        leftIcon={<SearchIcon size={16} />}
       />
       <Input
         label="Password"
         type="password"
         placeholder="At least 12 characters"
-        rightIcon={<HugeiconsIcon icon={ViewIcon} size={16} />}
+        rightIcon={<EyeIcon size={16} />}
       />
     </div>
   );

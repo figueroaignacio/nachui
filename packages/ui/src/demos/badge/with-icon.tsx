@@ -1,13 +1,14 @@
-import { Alert02Icon, Loading02Icon, Tick02Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Badge } from '../../components/badge';
+import { AlertTriangleIcon } from '../../icons/alert-triangle';
+import { CheckIcon } from '../../icons/check';
+import { LoaderIcon } from '../../icons/loader';
 import { Flex } from '../../layout/flex';
 import { Stack } from '../../layout/stack';
 
 const checks = [
-  { name: 'Unit tests', detail: '412 passed in 38s', label: 'Passed', icon: Tick02Icon },
-  { name: 'Type check', detail: 'Running on node 22', label: 'Running', icon: Loading02Icon },
-  { name: 'Bundle size', detail: '+12kb over budget', label: 'Warning', icon: Alert02Icon },
+  { name: 'Unit tests', detail: '412 passed in 38s', label: 'Passed', icon: CheckIcon },
+  { name: 'Type check', detail: 'Running on node 22', label: 'Running', icon: LoaderIcon },
+  { name: 'Bundle size', detail: '+12kb over budget', label: 'Warning', icon: AlertTriangleIcon },
 ] as const;
 
 const variants = {
@@ -26,7 +27,7 @@ export function WithIcon() {
             <p className="text-muted-foreground truncate text-xs">{check.detail}</p>
           </div>
           <Badge variant={variants[check.label]}>
-            <HugeiconsIcon icon={check.icon} className="size-3" size={12} />
+            <check.icon className="size-3" size={12} />
             {check.label}
           </Badge>
         </Flex>

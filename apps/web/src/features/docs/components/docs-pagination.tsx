@@ -1,7 +1,7 @@
 import { useDocsNavigation } from '@/features/docs/hooks/use-docs-navigation';
 import { Link } from '@/i18n/navigation';
-import { ArrowLeft01Icon, ArrowRight01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { ChevronLeftIcon } from '@repo/ui/icons/chevron-left';
+import { ChevronRightIcon } from '@repo/ui/icons/chevron-right';
 import { Flex } from '@repo/ui/layout/flex';
 import { Stack } from '@repo/ui/layout/stack';
 import { useTranslations } from 'next-intl';
@@ -24,7 +24,7 @@ function PaginationLink({
   direction: 'prev' | 'next';
   label: string;
 }) {
-  const icon = direction === 'prev' ? ArrowLeft01Icon : ArrowRight01Icon;
+  const Icon = direction === 'prev' ? ChevronLeftIcon : ChevronRightIcon;
   const isNext = direction === 'next';
 
   if (!item) {
@@ -40,9 +40,9 @@ function PaginationLink({
         <span
           className={`text-muted-foreground flex items-center gap-2 text-sm ${isNext ? 'justify-end' : ''}`}
         >
-          {!isNext && <HugeiconsIcon icon={icon} className="h-4 w-4" />}
+          {!isNext && <Icon className="h-4 w-4" />}
           {label}
-          {isNext && <HugeiconsIcon icon={icon} className="h-4 w-4" />}
+          {isNext && <Icon className="h-4 w-4" />}
         </span>
         <span className="font-medium group-hover:underline">{item.title}</span>
       </Stack>

@@ -1,12 +1,13 @@
 'use client';
 
-import { File01Icon, Folder01Icon, Folder02Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Tree } from '../../components/tree';
+import { FileIcon } from '../../icons/file';
+import { FolderIcon } from '../../icons/folder';
+import { FolderOpenIcon } from '../../icons/folder-open';
 
-const folderClosed = <HugeiconsIcon icon={Folder01Icon} size={16} />;
-const folderOpen = <HugeiconsIcon icon={Folder02Icon} size={16} />;
-const file = <HugeiconsIcon icon={File01Icon} size={16} />;
+const folderClosed = <FolderIcon size={16} />;
+const folderOpen = <FolderOpenIcon size={16} />;
+const file = <FileIcon size={16} />;
 
 export function Icons() {
   return (

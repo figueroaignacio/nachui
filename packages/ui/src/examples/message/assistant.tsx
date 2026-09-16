@@ -1,10 +1,11 @@
 'use client';
 
-import { CopyIcon, RepeatIcon, SparklesIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Avatar } from '../../components/avatar';
 import { Bubble } from '../../components/bubble';
 import { Message } from '../../components/message';
+import { CopyIcon } from '../../icons/copy';
+import { RepeatIcon } from '../../icons/repeat';
+import { SparklesIcon } from '../../icons/sparkles';
 
 export function Assistant() {
   return (
@@ -20,7 +21,7 @@ export function Assistant() {
         <Message.Avatar>
           <Avatar size="sm">
             <Avatar.Fallback className="bg-primary/10 text-primary">
-              <HugeiconsIcon icon={SparklesIcon} size={14} />
+              <SparklesIcon size={14} />
             </Avatar.Fallback>
           </Avatar>
         </Message.Avatar>
@@ -41,14 +42,14 @@ export function Assistant() {
               aria-label="Copy answer"
               className="hover:text-foreground transition-colors"
             >
-              <HugeiconsIcon icon={CopyIcon} size={13} />
+              <CopyIcon size={13} />
             </button>
             <button
               type="button"
               aria-label="Regenerate answer"
               className="hover:text-foreground transition-colors"
             >
-              <HugeiconsIcon icon={RepeatIcon} size={13} />
+              <RepeatIcon size={13} />
             </button>
           </Message.Footer>
         </Message.Content>

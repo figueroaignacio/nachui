@@ -1,7 +1,6 @@
 'use client';
 
-import { Tick02Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { CheckIcon } from '@repo/ui/icons/check';
 import { motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
@@ -55,8 +54,7 @@ export function ChatReasoning({ activeTool }: ChatReasoningProps) {
                     className="bg-muted-foreground size-1.5 shrink-0 animate-pulse rounded-full"
                   />
                 ) : (
-                  <HugeiconsIcon
-                    icon={Tick02Icon}
+                  <CheckIcon
                     size={12}
                     className="text-muted-foreground/60 shrink-0"
                     aria-hidden="true"

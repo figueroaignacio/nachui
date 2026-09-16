@@ -1,6 +1,5 @@
-import { Download01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '../../components/button';
+import { DownloadIcon } from '../../icons/download';
 import { Flex } from '../../layout/flex';
 
 export function Outline() {
@@ -15,10 +14,7 @@ export function Outline() {
         <p className="text-sm font-medium">Invoices</p>
         <p className="text-muted-foreground text-xs">142 records, Jan 1 to Mar 31</p>
       </div>
-      <Button
-        variant="outline"
-        leftIcon={<HugeiconsIcon icon={Download01Icon} className="size-4" size={16} />}
-      >
+      <Button variant="outline" leftIcon={<DownloadIcon className="size-4" size={16} />}>
         Export CSV
       </Button>
     </Flex>

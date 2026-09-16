@@ -1,21 +1,18 @@
 'use client';
 
 import { GitHubIcon } from '@/components/common/github-icon';
-import { AiAvatar } from '@/features/chat/ui/ai-avatar';
 import { useChatStore } from '@/features/chat/store/chat-store';
+import { AiAvatar } from '@/features/chat/ui/ai-avatar';
 import { useCopyToClipboard } from '@/features/docs/hooks/use-copy-to-clipboard';
 import { getDocEditUrl } from '@/lib/domains';
-import {
-  AiChat01Icon,
-  ArrowDown01Icon,
-  Copy01Icon,
-  PencilEdit02Icon,
-  SourceCodeIcon,
-  Tick02Icon,
-} from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '@repo/ui/components/button';
 import { DropdownMenu } from '@repo/ui/components/dropdown-menu';
+import { CheckIcon } from '@repo/ui/icons/check';
+import { ChevronDownIcon } from '@repo/ui/icons/chevron-down';
+import { CodeIcon } from '@repo/ui/icons/code';
+import { CopyIcon } from '@repo/ui/icons/copy';
+import { PencilIcon } from '@repo/ui/icons/pencil';
+import { SparklesIcon } from '@repo/ui/icons/sparkles';
 import { useTranslations } from 'next-intl';
 import { useCallback, useMemo } from 'react';
 
@@ -77,11 +74,11 @@ export function DocActions({
   if (layout === 'rail') {
     return (
       <div className="flex flex-col items-start gap-0.5">
-        <RailAction icon={<HugeiconsIcon icon={AiChat01Icon} size={14} />} onClick={handleExplain}>
+        <RailAction icon={<SparklesIcon size={14} />} onClick={handleExplain}>
           {t('explainButton.label')}
         </RailAction>
         <RailAction
-          icon={<HugeiconsIcon icon={isCopied ? Tick02Icon : Copy01Icon} size={14} />}
+          icon={isCopied ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
           onClick={() => copyToClipboard(rawContent)}
         >
           {isCopied ? t('copyMarkdown.copied') : t('copyMarkdown.label')}
@@ -90,11 +87,11 @@ export function DocActions({
           {t('viewRawMarkdown.label')}
         </RailAction>
         {sourceUrl && (
-          <RailAction icon={<HugeiconsIcon icon={SourceCodeIcon} size={14} />} href={sourceUrl}>
+          <RailAction icon={<CodeIcon size={14} />} href={sourceUrl}>
             {t('viewSource.label')}
           </RailAction>
         )}
-        <RailAction icon={<HugeiconsIcon icon={PencilEdit02Icon} size={14} />} href={githubEditUrl}>
+        <RailAction icon={<PencilIcon size={14} />} href={githubEditUrl}>
           {t('editOnGithub.label')}
         </RailAction>
         {openInLinks.map((link) => (
@@ -122,14 +119,14 @@ export function DocActions({
         size="sm"
         className="h-8 gap-2 border-r-0 px-4"
         onClick={() => copyToClipboard(rawContent)}
-        leftIcon={<HugeiconsIcon icon={isCopied ? Tick02Icon : Copy01Icon} size={16} />}
+        leftIcon={isCopied ? <CheckIcon size={16} /> : <CopyIcon size={16} />}
       >
         <span>{isCopied ? t('copyMarkdown.copied') : t('copyMarkdown.label')}</span>
       </Button>
       <DropdownMenu>
         <DropdownMenu.Trigger asChild>
           <Button variant="outline" size="sm" className="h-8 w-8 rounded-r-full p-0">
-            <HugeiconsIcon icon={ArrowDown01Icon} size={16} />
+            <ChevronDownIcon size={16} />
           </Button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content align="end" className="w-56">
@@ -167,7 +164,7 @@ export function DocActions({
                 rel="noopener noreferrer"
                 className="flex w-full items-center gap-2"
               >
-                <HugeiconsIcon icon={SourceCodeIcon} size={16} />
+                <CodeIcon size={16} />
                 <span>{t('viewSource.label')}</span>
               </a>
             </DropdownMenu.Item>

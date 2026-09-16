@@ -1,8 +1,8 @@
 'use client';
 
 import { useCopyToClipboard } from '@/features/docs/hooks/use-copy-to-clipboard';
-import { Copy01Icon, Tick02Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
+import { CheckIcon } from '@repo/ui/icons/check';
+import { CopyIcon } from '@repo/ui/icons/copy';
 import { cn } from '@repo/ui/lib/cn';
 
 interface CopyButtonProps {
@@ -25,9 +25,9 @@ export function CopyButton({ value, className }: CopyButtonProps) {
       )}
     >
       {isCopied ? (
-        <HugeiconsIcon icon={Tick02Icon} className="h-4 w-4" aria-hidden="true" />
+        <CheckIcon className="h-4 w-4" aria-hidden="true" />
       ) : (
-        <HugeiconsIcon icon={Copy01Icon} className="h-4 w-4" aria-hidden="true" />
+        <CopyIcon className="h-4 w-4" aria-hidden="true" />
       )}
     </button>
   );

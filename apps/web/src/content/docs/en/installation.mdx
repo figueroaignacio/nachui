@@ -33,7 +33,7 @@ If you don't have Tailwind CSS installed yet, follow the official guide:
 
 NachUI requires the following libraries to work properly:
 
-<PackageManagerTabs command="install motion clsx tailwind-merge class-variance-authority lucide-react" />
+<PackageManagerTabs command="install motion clsx tailwind-merge class-variance-authority" />
 
 These libraries are used for:
 
@@ -41,7 +41,8 @@ These libraries are used for:
 - **clsx**: Conditional CSS class construction
 - **tailwind-merge**: Smart merging of Tailwind classes
 - **class-variance-authority**: Component variant management
-- **lucide-react**: Icons used in components
+
+Icons need no extra package. The components carry their own SVGs, and the optional [NachUI icon set](/icons) installs one file at a time with `npx nachui add icons/<name>`. Any other icon library works too, since every component takes icons through props.
 
 #### Configure the `cn` function
 

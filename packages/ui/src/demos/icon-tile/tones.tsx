@@ -1,39 +1,36 @@
-import {
-  Alert02Icon,
-  CheckmarkCircle02Icon,
-  Delete02Icon,
-  InformationCircleIcon,
-  PaintBoardIcon,
-  UserIcon,
-  ZapIcon,
-} from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { IconTile } from '../../components/icon-tile';
+import { AlertTriangleIcon } from '../../icons/alert-triangle';
+import { CheckCircleIcon } from '../../icons/check-circle';
+import { InfoIcon } from '../../icons/info';
+import { PaletteIcon } from '../../icons/palette';
+import { TrashIcon } from '../../icons/trash';
+import { UserIcon } from '../../icons/user';
+import { ZapIcon } from '../../icons/zap';
 
 const TONES = [
-  { tone: 'default', icon: PaintBoardIcon },
+  { tone: 'default', icon: PaletteIcon },
   { tone: 'muted', icon: UserIcon },
   { tone: 'primary', icon: ZapIcon },
-  { tone: 'success', icon: CheckmarkCircle02Icon },
-  { tone: 'warning', icon: Alert02Icon },
-  { tone: 'info', icon: InformationCircleIcon },
-  { tone: 'destructive', icon: Delete02Icon },
+  { tone: 'success', icon: CheckCircleIcon },
+  { tone: 'warning', icon: AlertTriangleIcon },
+  { tone: 'info', icon: InfoIcon },
+  { tone: 'destructive', icon: TrashIcon },
 ] as const;
 
 export function Tones() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-3">
-        {TONES.map(({ tone, icon }) => (
+        {TONES.map(({ tone, icon: Icon }) => (
           <IconTile key={tone} tone={tone} variant="soft">
-            <HugeiconsIcon icon={icon} />
+            <Icon />
           </IconTile>
         ))}
       </div>
       <div className="flex flex-wrap items-center gap-3">
-        {TONES.map(({ tone, icon }) => (
+        {TONES.map(({ tone, icon: Icon }) => (
           <IconTile key={tone} tone={tone} variant="solid">
-            <HugeiconsIcon icon={icon} />
+            <Icon />
           </IconTile>
         ))}
       </div>

@@ -1,10 +1,9 @@
 import { BricksHero } from '@/features/bricks/components/bricks-hero';
 import { BRICK_CATEGORIES } from '@/features/bricks/lib/bricks-registry';
 import { Link } from '@/i18n/navigation';
-import { ArrowRight02Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { IconTile } from '@repo/ui/components/icon-tile';
 import { Typography } from '@repo/ui/components/typography';
+import { ArrowRightIcon } from '@repo/ui/icons/arrow-right';
 import { Flex } from '@repo/ui/layout/flex';
 import { Grid } from '@repo/ui/layout/grid';
 import { Stack } from '@repo/ui/layout/stack';
@@ -48,7 +47,7 @@ export function BricksView() {
                   {category.bricks.length} component{category.bricks.length !== 1 ? 's' : ''}
                 </span>
                 <span className="text-foreground ml-auto -translate-x-2 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100">
-                  <HugeiconsIcon icon={ArrowRight02Icon} size={16} />
+                  <ArrowRightIcon size={16} />
                 </span>
               </Flex>
             </Stack>

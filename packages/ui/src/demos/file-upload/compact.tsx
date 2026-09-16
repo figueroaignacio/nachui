@@ -1,15 +1,14 @@
 'use client';
 
-import { Attachment01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { FileUpload } from '../../components/file-upload';
+import { PaperclipIcon } from '../../icons/paperclip';
 
 export function Compact() {
   return (
     <FileUpload className="max-w-md" multiple accept="image/*,.pdf">
       <div className="flex items-center gap-3">
         <FileUpload.Trigger>
-          <HugeiconsIcon icon={Attachment01Icon} />
+          <PaperclipIcon />
           Attach files
         </FileUpload.Trigger>
         <span className="text-muted-foreground text-xs">Images or PDF</span>

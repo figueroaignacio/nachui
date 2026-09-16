@@ -1,8 +1,10 @@
 'use client';
 
-import { GitCommitIcon, GitMergeIcon, Rocket01Icon, Tick02Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Timeline } from '../../components/timeline';
+import { CheckIcon } from '../../icons/check';
+import { GitCommitIcon } from '../../icons/git-commit';
+import { GitMergeIcon } from '../../icons/git-merge';
+import { RocketIcon } from '../../icons/rocket';
 
 const STEPS = [
   {
@@ -13,7 +15,7 @@ const STEPS = [
   },
   {
     step: 2,
-    icon: Tick02Icon,
+    icon: CheckIcon,
     title: 'Checks passed',
     body: 'Lint, type-check and 312 tests in 48s.',
   },
@@ -25,7 +27,7 @@ const STEPS = [
   },
   {
     step: 4,
-    icon: Rocket01Icon,
+    icon: RocketIcon,
     title: 'Deployed',
     body: 'Waiting for the production rollout window.',
   },
@@ -40,7 +42,7 @@ export function Icons() {
             <Timeline.Title>{item.title}</Timeline.Title>
           </Timeline.Header>
           <Timeline.Indicator className="bg-muted text-muted-foreground size-7 border-0 [&_svg]:size-4">
-            <HugeiconsIcon icon={item.icon} />
+            <item.icon />
           </Timeline.Indicator>
           <Timeline.Separator />
           <Timeline.Content>{item.body}</Timeline.Content>

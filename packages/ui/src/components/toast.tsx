@@ -1,18 +1,122 @@
 'use client';
 
-import {
-  Alert02Icon,
-  AlertCircleIcon,
-  Cancel01Icon,
-  CheckmarkCircle01Icon,
-  InformationCircleIcon,
-} from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
+
+type IconProps = React.SVGProps<SVGSVGElement> & {
+  size?: number | string;
+};
+
+function AlertCircleIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="9.5" />
+      <path d="M12 7.5V13" />
+      <path d="M12 16.5h.01" />
+    </svg>
+  );
+}
+
+function AlertTriangleIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M10.3 4.2 2.9 17a2 2 0 0 0 1.7 3h14.8a2 2 0 0 0 1.7-3L13.7 4.2a2 2 0 0 0-3.4 0Z" />
+      <path d="M12 9v4.5" />
+      <path d="M12 16.5h.01" />
+    </svg>
+  );
+}
+
+function CheckCircleIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="9.5" />
+      <path d="m8 12 2.7 2.7L16 9.3" />
+    </svg>
+  );
+}
+
+function InfoIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="9.5" />
+      <path d="M12 11v5.5" />
+      <path d="M12 7.5h.01" />
+    </svg>
+  );
+}
+
+function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  );
+}
 
 // --- Position ---
 
@@ -78,12 +182,12 @@ type ToastVariant = VariantProps<typeof toastVariants>['variant'];
 
 // --- Variant icons ---
 
-const VARIANT_ICONS: Record<string, typeof CheckmarkCircle01Icon | undefined> = {
+const VARIANT_ICONS: Record<string, React.ComponentType<IconProps> | undefined> = {
   default: undefined,
-  success: CheckmarkCircle01Icon,
+  success: CheckCircleIcon,
   error: AlertCircleIcon,
-  info: InformationCircleIcon,
-  warning: Alert02Icon,
+  info: InfoIcon,
+  warning: AlertTriangleIcon,
 };
 
 // --- Types ---
@@ -143,7 +247,7 @@ function ToastItem({ toast: t, onDismiss, position }: ToastItemProps) {
     return () => clearTimeout(timer);
   }, [t.id, t.duration, onDismiss, paused]);
 
-  const variantIcon = VARIANT_ICONS[t.variant ?? 'default'];
+  const VariantIcon = VARIANT_ICONS[t.variant ?? 'default'];
 
   return (
     <motion.div
@@ -165,7 +269,7 @@ function ToastItem({ toast: t, onDismiss, position }: ToastItemProps) {
       className={cn(toastVariants({ variant: t.variant }), 'flex-col')}
     >
       <div className="flex w-full items-center gap-2">
-        {variantIcon && <HugeiconsIcon icon={variantIcon} className="shrink-0" size={18} />}
+        {VariantIcon && <VariantIcon className="shrink-0" size={18} />}
         <p className="flex-1 text-sm font-semibold">{t.title}</p>
         <button
           type="button"
@@ -173,7 +277,7 @@ function ToastItem({ toast: t, onDismiss, position }: ToastItemProps) {
           onClick={() => onDismiss(t.id)}
           className="focus-visible:ring-ring shrink-0 rounded-sm opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none"
         >
-          <HugeiconsIcon icon={Cancel01Icon} size={14} aria-hidden="true" />
+          <XIcon size={14} aria-hidden="true" />
         </button>
       </div>
       {(t.description || t.action) && (

@@ -1,6 +1,5 @@
-import { Delete02Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '../../components/button';
+import { TrashIcon } from '../../icons/trash';
 import { Stack } from '../../layout/stack';
 
 export function Destructive() {
@@ -19,7 +18,7 @@ export function Destructive() {
         variant="destructive"
         size="sm"
         className="self-start"
-        leftIcon={<HugeiconsIcon icon={Delete02Icon} className="size-4" size={16} />}
+        leftIcon={<TrashIcon className="size-4" size={16} />}
       >
         Delete account
       </Button>

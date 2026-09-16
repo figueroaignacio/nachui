@@ -2,11 +2,11 @@
 
 import { CopyButton } from '@/components/mdx/copy-button';
 import { Link } from '@/i18n/navigation';
-import { ArrowRight02Icon, ArrowUpRight01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { buttonVariants } from '@repo/ui/components/button';
-import { cn } from '@repo/ui/lib/cn';
 import { Frame } from '@repo/ui/components/frame';
+import { ArrowRightIcon } from '@repo/ui/icons/arrow-right';
+import { ArrowUpRightIcon } from '@repo/ui/icons/arrow-up-right';
+import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 
 type Tool = { name: string; description: string };
@@ -65,7 +65,7 @@ export function LandingInstall() {
               className={cn(buttonVariants({ variant: 'default', size: 'sm' }), 'font-mono')}
             >
               {t('primaryAction')}
-              <HugeiconsIcon icon={ArrowRight02Icon} size={14} aria-hidden="true" />
+              <ArrowRightIcon size={14} aria-hidden="true" />
             </Link>
             <Link
               href="/docs/elements/ui"
@@ -75,7 +75,7 @@ export function LandingInstall() {
               )}
             >
               {t('secondaryAction')}
-              <HugeiconsIcon icon={ArrowUpRight01Icon} size={14} aria-hidden="true" />
+              <ArrowUpRightIcon size={14} aria-hidden="true" />
             </Link>
           </div>
         </div>

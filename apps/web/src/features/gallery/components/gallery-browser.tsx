@@ -1,11 +1,11 @@
 'use client';
 
 import { Link } from '@/i18n/navigation';
-import { ArrowUpRight01Icon, Search01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Badge } from '@repo/ui/components/badge';
 import { Frame } from '@repo/ui/components/frame';
 import { Input } from '@repo/ui/components/input';
+import { ArrowUpRightIcon } from '@repo/ui/icons/arrow-up-right';
+import { SearchIcon } from '@repo/ui/icons/search';
 import { Grid } from '@repo/ui/layout/grid';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
@@ -54,7 +54,7 @@ export function GalleryBrowser() {
           onChange={(event) => setQuery(event.target.value)}
           placeholder={t('search')}
           aria-label={t('search')}
-          leftIcon={<HugeiconsIcon icon={Search01Icon} size={14} />}
+          leftIcon={<SearchIcon size={14} />}
           className="mt-4 max-w-xs"
         />
       </section>
@@ -79,7 +79,7 @@ export function GalleryBrowser() {
               >
                 <span className="truncate">{doc?.title ?? humanize(slug)}</span>
                 <span className="text-muted-foreground group-hover/link:text-foreground -translate-x-0.5 transition-all group-hover/link:translate-x-0">
-                  <HugeiconsIcon icon={ArrowUpRight01Icon} size={12} />
+                  <ArrowUpRightIcon size={12} />
                 </span>
               </Link>
               <span className="text-muted-foreground shrink-0 font-mono text-[11px] whitespace-nowrap">

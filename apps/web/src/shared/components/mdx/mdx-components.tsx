@@ -1,8 +1,7 @@
 import { DocsFaq } from '@/features/docs/components/docs-faq';
-import { Alert02Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Callout } from '@repo/ui/components/callout';
 import { Steps } from '@repo/ui/components/steps';
+import { AlertTriangleIcon } from '@repo/ui/icons/alert-triangle';
 import { cn } from '@repo/ui/lib/cn';
 import { Command } from '@repo/ui/src/components/command';
 import { isValidElement } from 'react';
@@ -187,7 +186,7 @@ function Blockquote({ className, children, ...props }: React.HTMLAttributes<HTML
       {...props}
     >
       <div className="bg-background mt-0.5 shrink-0 rounded-md p-1.5">
-        <HugeiconsIcon icon={Alert02Icon} className="stroke-primary size-4" />
+        <AlertTriangleIcon className="stroke-primary size-4" />
       </div>
       <div className="text-[15px] leading-[1.7] [&>div]:mt-0 [&>p]:mt-0">{children}</div>
     </blockquote>

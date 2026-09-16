@@ -1,8 +1,9 @@
 'use client';
 
-import { CodeIcon, PaintBoardIcon, PuzzleIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { NavigationMenu } from '../../components/navigation-menu';
+import { CodeIcon } from '../../icons/code';
+import { PaletteIcon } from '../../icons/palette';
+import { PuzzleIcon } from '../../icons/puzzle';
 
 const products = [
   {
@@ -12,7 +13,7 @@ const products = [
     href: '#',
   },
   {
-    icon: PaintBoardIcon,
+    icon: PaletteIcon,
     title: 'Themes',
     description: 'Design tokens for light and dark out of the box.',
     href: '#',
@@ -37,7 +38,7 @@ export function Default() {
               href={product.href}
               title={product.title}
               description={product.description}
-              icon={<HugeiconsIcon icon={product.icon} size={16} strokeWidth={1.6} />}
+              icon={<product.icon size={16} strokeWidth={1.6} />}
             />
           ))}
         </NavigationMenu.Content>

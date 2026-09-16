@@ -33,7 +33,7 @@ Si aún no tienes Tailwind CSS instalado, sigue la guía oficial:
 
 NachUI requiere las siguientes librerías para funcionar correctamente:
 
-<PackageManagerTabs command="install motion clsx tailwind-merge class-variance-authority lucide-react" />
+<PackageManagerTabs command="install motion clsx tailwind-merge class-variance-authority" />
 
 Estas librerías son utilizadas para:
 
@@ -41,7 +41,8 @@ Estas librerías son utilizadas para:
 - **clsx**: Construcción condicional de clases CSS
 - **tailwind-merge**: Fusión inteligente de clases de Tailwind
 - **class-variance-authority**: Gestión de variantes de componentes
-- **lucide-react**: Iconos utilizados en los componentes
+
+Los iconos no necesitan ningún paquete extra. Los componentes traen sus propios SVG, y el [set de iconos de NachUI](/icons), que es opcional, se instala de a un archivo con `npx nachui add icons/<nombre>`. También sirve cualquier otra librería de iconos, porque todos los componentes los reciben por props.
 
 #### Configura la función `cn`
 

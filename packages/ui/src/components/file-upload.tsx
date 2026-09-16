@@ -1,9 +1,53 @@
 'use client';
 
-import { Cancel01Icon, File01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+
+type IconProps = React.SVGProps<SVGSVGElement> & {
+  size?: number | string;
+};
+
+function FileIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M13.5 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8.5L13.5 3Z" />
+      <path d="M13.5 3v3.5a2 2 0 0 0 2 2H19" />
+    </svg>
+  );
+}
+
+function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  );
+}
 
 interface FileMetadata {
   id: string;
@@ -555,7 +599,7 @@ const FileUploadItemPreview = ({
       {preview ? (
         <img src={preview} alt="" className="size-full object-cover" />
       ) : (
-        (children ?? <HugeiconsIcon icon={File01Icon} strokeWidth={1.5} />)
+        (children ?? <FileIcon strokeWidth={1.5} />)
       )}
     </div>
   );
@@ -618,7 +662,7 @@ const FileUploadItemRemove = ({
       }}
       {...props}
     >
-      {children ?? <HugeiconsIcon icon={Cancel01Icon} strokeWidth={2} />}
+      {children ?? <XIcon strokeWidth={2} />}
     </button>
   );
 };

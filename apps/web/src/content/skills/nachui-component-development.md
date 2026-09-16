@@ -97,7 +97,7 @@ export const useAlertContext = () => {
 Organize imports cleanly with groups separated by a single empty line:
 
 1. Core platform modules (`react`, `next/navigation`).
-2. Third-party dependencies (`framer-motion`, `lucide-react`, etc.).
+2. Third-party dependencies (`motion`, `zod`, etc.).
 3. Workspace aliases (`@repo/ui`, `@/lib`, `@/components`).
 4. Relative imports (`./button-utils`, `../types`).
 5. Type imports should use `import type { ... }` explicitly.

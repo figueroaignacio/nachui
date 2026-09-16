@@ -1,26 +1,23 @@
-import {
-  CreditCardIcon,
-  Folder01Icon,
-  Notification01Icon,
-  Shield01Icon,
-} from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { IconTile } from '../../components/icon-tile';
+import { BellIcon } from '../../icons/bell';
+import { CreditCardIcon } from '../../icons/credit-card';
+import { FolderIcon } from '../../icons/folder';
+import { ShieldIcon } from '../../icons/shield';
 
 export function Default() {
   return (
     <div className="flex items-center gap-3">
       <IconTile>
-        <HugeiconsIcon icon={Folder01Icon} />
+        <FolderIcon />
       </IconTile>
       <IconTile variant="elevated">
-        <HugeiconsIcon icon={Notification01Icon} />
+        <BellIcon />
       </IconTile>
       <IconTile variant="frame">
-        <HugeiconsIcon icon={CreditCardIcon} />
+        <CreditCardIcon />
       </IconTile>
       <IconTile variant="solid" tone="primary">
-        <HugeiconsIcon icon={Shield01Icon} />
+        <ShieldIcon />
       </IconTile>
     </div>
   );

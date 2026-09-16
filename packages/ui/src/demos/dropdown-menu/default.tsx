@@ -1,34 +1,31 @@
 'use client';
 
-import {
-  CreditCardIcon,
-  Key01Icon,
-  Logout02Icon,
-  Notification03Icon,
-  Settings01Icon,
-  UserGroupIcon,
-  UserIcon,
-} from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Avatar } from '../../components/avatar';
 import { Button } from '../../components/button';
 import { DropdownMenu } from '../../components/dropdown-menu';
+import { BellIcon } from '../../icons/bell';
+import { CreditCardIcon } from '../../icons/credit-card';
+import { KeyIcon } from '../../icons/key';
+import { LogOutIcon } from '../../icons/log-out';
+import { SettingsIcon } from '../../icons/settings';
+import { UserIcon } from '../../icons/user';
+import { UsersIcon } from '../../icons/users';
 
 const menuGroups = [
   {
     label: 'Account',
     items: [
       { icon: UserIcon, label: 'Profile', shortcut: '⇧⌘P' },
-      { icon: Notification03Icon, label: 'Notifications', shortcut: null },
-      { icon: Settings01Icon, label: 'Settings', shortcut: '⌘,' },
+      { icon: BellIcon, label: 'Notifications', shortcut: null },
+      { icon: SettingsIcon, label: 'Settings', shortcut: '⌘,' },
     ],
   },
   {
     label: 'Northwind',
     items: [
-      { icon: UserGroupIcon, label: 'Team members', shortcut: null },
+      { icon: UsersIcon, label: 'Team members', shortcut: null },
       { icon: CreditCardIcon, label: 'Usage and billing', shortcut: null },
-      { icon: Key01Icon, label: 'API keys', shortcut: null },
+      { icon: KeyIcon, label: 'API keys', shortcut: null },
     ],
   },
 ];
@@ -56,7 +53,7 @@ export function Default() {
             {group.items.map((item) => (
               <DropdownMenu.Item key={item.label} className="justify-between">
                 <span className="flex items-center">
-                  <HugeiconsIcon icon={item.icon} className="mr-2 size-4" />
+                  <item.icon className="mr-2 size-4" />
                   {item.label}
                 </span>
                 {item.shortcut && (
@@ -68,7 +65,7 @@ export function Default() {
         ))}
         <DropdownMenu.Separator />
         <DropdownMenu.Item variant="destructive">
-          <HugeiconsIcon icon={Logout02Icon} className="mr-2 size-4" />
+          <LogOutIcon className="mr-2 size-4" />
           Sign out
         </DropdownMenu.Item>
       </DropdownMenu.Content>

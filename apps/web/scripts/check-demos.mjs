@@ -25,7 +25,7 @@ const EXAMPLES_ROOT = join(UI_SRC, 'examples');
 
 // Must stay in sync with rewriteDemoImports. A new family directory in
 // packages/ui has to be added in both places, and this check is what says so.
-const REWRITTEN_FAMILIES = ['components', 'layout', 'lib'];
+const REWRITTEN_FAMILIES = ['components', 'layout', 'icons', 'lib'];
 
 const hasClientDirective = (source) => /^\s*(['"])use client\1/.test(source);
 

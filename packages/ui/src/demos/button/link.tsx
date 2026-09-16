@@ -1,6 +1,5 @@
-import { ArrowUpRight01Icon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '../../components/button';
+import { ArrowUpRightIcon } from '../../icons/arrow-up-right';
 import { Stack } from '../../layout/stack';
 
 export function Link() {
@@ -13,7 +12,7 @@ export function Link() {
       <Button
         variant="link"
         className="self-start text-sm"
-        rightIcon={<HugeiconsIcon icon={ArrowUpRight01Icon} className="size-3.5" size={14} />}
+        rightIcon={<ArrowUpRightIcon className="size-3.5" size={14} />}
       >
         Read the rate limit docs
       </Button>

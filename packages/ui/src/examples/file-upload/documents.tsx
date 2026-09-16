@@ -1,9 +1,8 @@
 'use client';
 
-import { FileUploadIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/react';
 import { Button } from '../../components/button';
 import { FileUpload } from '../../components/file-upload';
+import { FileUpIcon } from '../../icons/file-up';
 
 export function Documents() {
   return (
@@ -21,7 +20,7 @@ export function Documents() {
         </p>
       </div>
       <FileUpload.Dropzone className="min-h-28">
-        <HugeiconsIcon icon={FileUploadIcon} strokeWidth={1.5} />
+        <FileUpIcon strokeWidth={1.5} />
         <p className="text-foreground text-sm font-medium">Drop your documents</p>
         <p className="text-xs">PDF, PNG or JPG, up to 10 MB each</p>
       </FileUpload.Dropzone>
