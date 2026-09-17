@@ -22,6 +22,11 @@
         "href": "/docs/elements/layout"
       },
       {
+        "title": "Elementos AI",
+        "description": "Chat, prompts y primitivos de streaming para apps con IA.",
+        "href": "/docs/elements/ai"
+      },
+      {
         "title": "Componentes",
         "description": "Una galería de ejemplos vivos hechos con la librería.",
         "href": "/components"
@@ -36,12 +41,7 @@
         "description": "Un set de iconos dibujado sobre la misma grilla que los componentes.",
         "href": "/icons"
       }
-    ],
-    "comingSoon": {
-      "title": "Elementos AI",
-      "description": "Chat, prompts y primitivos de streaming para apps con IA.",
-      "badge": "Próximamente"
-    }
+    ]
   },
   "resourcesMenu": {
     "label": "Recursos",

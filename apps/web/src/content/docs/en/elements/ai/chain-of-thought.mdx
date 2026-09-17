@@ -1,0 +1,103 @@
+---
+title: Chain of Thought
+description: The steps an agent walked through, with search results and images attached to each one.
+published: true
+date: 2026-09-16
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="chain-of-thought" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="chain-of-thought" />
+
+## Anatomy
+
+```tsx
+import { ChainOfThought } from '@/components/ui/chain-of-thought';
+```
+
+```tsx
+<ChainOfThought defaultOpen>
+  <ChainOfThought.Header />
+  <ChainOfThought.Content>
+    <ChainOfThought.Step label="Searching the documentation" status="complete">
+      <ChainOfThought.SearchResults>
+        <ChainOfThought.SearchResult>docs/concepts/theming</ChainOfThought.SearchResult>
+      </ChainOfThought.SearchResults>
+    </ChainOfThought.Step>
+    <ChainOfThought.Step label="Writing the answer" status="active" />
+  </ChainOfThought.Content>
+</ChainOfThought>
+```
+
+Where [Reasoning](/docs/elements/ai/reasoning) shows one block of thinking, Chain of Thought shows a sequence: steps on a rail, each with its own status and its own evidence.
+
+## Composition
+
+Use the following composition to build a `ChainOfThought`:
+
+```tree
+ChainOfThought
+├── ChainOfThought.Header
+└── ChainOfThought.Content
+    └── ChainOfThought.Step
+        ├── ChainOfThought.SearchResults
+        │   └── ChainOfThought.SearchResult
+        └── ChainOfThought.Image
+```
+
+## Steps
+
+A step takes a `label`, an optional `description` and a `status` of `complete`, `active` or `pending`. The active one pulses, the rail connects them, and the last step drops the connector so the list ends cleanly.
+
+`icon` swaps the dot for any icon component, which is how you mark a search step differently from a write step.
+
+## Evidence
+
+`SearchResults` holds the sources a step consulted as small chips, and `Image` frames a screenshot or a chart with an optional caption under it. Both live inside the step they belong to, so the evidence stays attached to the reason for it.
+
+## API Reference
+
+### ChainOfThought
+
+| Prop           | Type                      | Default | Description                        |
+| -------------- | ------------------------- | ------- | ---------------------------------- |
+| `defaultOpen`  | `boolean`                 | `false` | Open state when uncontrolled       |
+| `open`         | `boolean`                 | -       | Controlled open state              |
+| `onOpenChange` | `(open: boolean) => void` | -       | Called when the open state changes |
+| `className`    | `string`                  | -       | Additional CSS classes             |
+
+### ChainOfThought.Header
+
+| Prop        | Type        | Default              | Description            |
+| ----------- | ----------- | -------------------- | ---------------------- |
+| `children`  | `ReactNode` | `'Chain of Thought'` | Label of the trigger   |
+| `className` | `string`    | -                    | Additional CSS classes |
+
+### ChainOfThought.Step
+
+| Prop          | Type                                  | Default      | Description                      |
+| ------------- | ------------------------------------- | ------------ | -------------------------------- |
+| `label`       | `ReactNode`                           | -            | Title of the step                |
+| `description` | `ReactNode`                           | -            | Supporting line under the title  |
+| `status`      | `'complete' \| 'active' \| 'pending'` | `'complete'` | Drives the tone and the pulse    |
+| `icon`        | `ComponentType`                       | dot          | Icon shown in the rail indicator |
+| `className`   | `string`                              | -            | Additional CSS classes           |
+
+### ChainOfThought.Image
+
+| Prop        | Type        | Default | Description             |
+| ----------- | ----------- | ------- | ----------------------- |
+| `caption`   | `ReactNode` | -       | Caption under the frame |
+| `className` | `string`    | -       | Additional CSS classes  |
+
+### ChainOfThought.SearchResults / ChainOfThought.SearchResult
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |

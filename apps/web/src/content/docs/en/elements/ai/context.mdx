@@ -1,0 +1,93 @@
+---
+title: Context
+description: How much of the context window is spent, as a meter with the breakdown on hover.
+published: true
+date: 2026-09-16
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="context" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="context" />
+
+## Anatomy
+
+```tsx
+import { Context } from '@/components/ui/context';
+```
+
+```tsx
+<Context maxTokens={200000} usedTokens={84320}>
+  <Context.Trigger />
+  <Context.Content>
+    <Context.Header />
+    <Context.Body>
+      <Context.Usage label="Input" tokens={61200} />
+      <Context.Usage label="Output" tokens={14100} tone="info" />
+    </Context.Body>
+    <Context.Footer>Estimated from your model pricing.</Context.Footer>
+  </Context.Content>
+</Context>
+```
+
+The trigger is a ring that fills as the window does, with the percentage beside it. The panel opens on hover and on focus, and clicking pins it open for keyboard and touch.
+
+## Composition
+
+Use the following composition to build a `Context`:
+
+```tree
+Context
+├── Context.Trigger
+└── Context.Content
+    ├── Context.Header
+    ├── Context.Body
+    │   └── Context.Usage
+    └── Context.Footer
+```
+
+## Usage rows
+
+`Context.Usage` is deliberately generic. It takes a `label`, an optional `tokens` count and a `tone` for the dot, so you name the buckets your provider reports rather than inheriting somebody else's. Input, output, reasoning and cached is a good default set.
+
+Both `Header` and `Usage` render sensible content when you give them no children, and any children you do pass replace it completely.
+
+## API Reference
+
+### Context
+
+| Prop           | Type                      | Default | Description                        |
+| -------------- | ------------------------- | ------- | ---------------------------------- |
+| `maxTokens`    | `number`                  | -       | Size of the context window         |
+| `usedTokens`   | `number`                  | -       | Tokens spent so far                |
+| `open`         | `boolean`                 | -       | Controlled open state              |
+| `onOpenChange` | `(open: boolean) => void` | -       | Called when the open state changes |
+| `className`    | `string`                  | -       | Additional CSS classes             |
+
+### Context.Content
+
+| Prop        | Type                           | Default    | Description               |
+| ----------- | ------------------------------ | ---------- | ------------------------- |
+| `side`      | `'top' \| 'bottom'`            | `'bottom'` | Edge the panel opens from |
+| `align`     | `'start' \| 'center' \| 'end'` | `'start'`  | Horizontal anchor         |
+| `className` | `string`                       | -          | Additional CSS classes    |
+
+### Context.Usage
+
+| Prop        | Type                                                       | Default     | Description              |
+| ----------- | ---------------------------------------------------------- | ----------- | ------------------------ |
+| `label`     | `ReactNode`                                                | -           | Name of the bucket       |
+| `tokens`    | `number`                                                   | -           | Count shown on the right |
+| `tone`      | `'default' \| 'muted' \| 'success' \| 'info' \| 'warning'` | `'default'` | Colour of the dot        |
+| `className` | `string`                                                   | -           | Additional CSS classes   |
+
+### Context.Trigger / Context.Header / Context.Body / Context.Footer
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |

@@ -22,6 +22,11 @@
         "href": "/docs/elements/layout"
       },
       {
+        "title": "AI Elements",
+        "description": "Chat, prompts and streaming primitives for AI apps.",
+        "href": "/docs/elements/ai"
+      },
+      {
         "title": "Components",
         "description": "A gallery of live examples built with the library.",
         "href": "/components"
@@ -36,12 +41,7 @@
         "description": "An icon set drawn on the same grid as the components.",
         "href": "/icons"
       }
-    ],
-    "comingSoon": {
-      "title": "AI Elements",
-      "description": "Chat, prompts and streaming primitives for AI apps.",
-      "badge": "Soon"
-    }
+    ]
   },
   "resourcesMenu": {
     "label": "Resources",

@@ -1,0 +1,92 @@
+---
+title: Task
+description: A collapsible step with a status, for showing what an agent did and which files it touched.
+published: true
+date: 2026-09-16
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="task" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="task" />
+
+## Anatomy
+
+```tsx
+import { Task } from '@/components/ui/task';
+```
+
+```tsx
+<Task defaultOpen>
+  <Task.Trigger title="Scanned the component registry" status="complete" />
+  <Task.Content>
+    <Task.Item>Read 58 components across two families</Task.Item>
+    <Task.Item>
+      Matched the request to <Task.File>button.tsx</Task.File>
+    </Task.Item>
+  </Task.Content>
+</Task>
+```
+
+A task opens by default, because the interesting part of an agent run is usually the step it is on. Set `defaultOpen={false}` on the ones that already finished.
+
+## Composition
+
+Use the following composition to build a `Task`:
+
+```tree
+Task
+├── Task.Trigger
+└── Task.Content
+    └── Task.Item
+        └── Task.File
+```
+
+## Statuses
+
+`status` drives the icon and its colour: `pending` waits, `active` spins, `complete` checks off and `error` flags. Stack several tasks to make a run readable at a glance.
+
+<ComponentPreview component="task" demo="statuses" />
+
+## API Reference
+
+### Task
+
+| Prop           | Type                      | Default | Description                       |
+| -------------- | ------------------------- | ------- | --------------------------------- |
+| `defaultOpen`  | `boolean`                 | `true`  | Open state when uncontrolled      |
+| `open`         | `boolean`                 | -       | Controlled open state             |
+| `onOpenChange` | `(open: boolean) => void` | -       | Called when the open state change |
+| `className`    | `string`                  | -       | Additional CSS classes            |
+
+### Task.Trigger
+
+| Prop        | Type                                             | Default      | Description                      |
+| ----------- | ------------------------------------------------ | ------------ | -------------------------------- |
+| `title`     | `string`                                         | -            | Label of the step                |
+| `status`    | `'pending' \| 'active' \| 'complete' \| 'error'` | `'complete'` | Icon and colour of the indicator |
+| `children`  | `ReactNode`                                      | -            | Replaces the title when given    |
+| `className` | `string`                                         | -            | Additional CSS classes           |
+
+### Task.Content
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### Task.Item
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### Task.File
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |

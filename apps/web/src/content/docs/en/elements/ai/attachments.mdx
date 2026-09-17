@@ -1,0 +1,117 @@
+---
+title: Attachments
+description: Files hanging off a message or a composer, as a grid, a row of chips or a list.
+published: true
+date: 2026-09-16
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="attachments" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="attachments" />
+
+## Anatomy
+
+```tsx
+import { Attachments } from '@/components/ui/attachments';
+```
+
+```tsx
+<Attachments variant="grid">
+  {files.map((file) => (
+    <Attachments.Item key={file.id} data={file} onRemove={() => remove(file.id)}>
+      <Attachments.Preview />
+      <Attachments.Info />
+      <Attachments.Remove />
+    </Attachments.Item>
+  ))}
+</Attachments>
+```
+
+`Item` puts the file in context, so `Preview`, `Info` and `Remove` read it themselves instead of taking the same object three times. An image with a `url` previews inline; anything else falls back to an icon you can swap.
+
+This is the read side of the story. For the picker and the drop zone see [Prompt Input](/docs/elements/ai/prompt-input), and for a single file row with upload progress see [Attachment](/docs/elements/ui/attachment).
+
+## Composition
+
+Use the following composition to build an `Attachments`:
+
+```tree
+Attachments
+├── Attachments.Item
+│   ├── Attachments.Preview
+│   ├── Attachments.Info
+│   └── Attachments.Remove
+└── Attachments.Empty
+```
+
+## Variants
+
+`grid` wraps cards and hides the remove button until hover, `inline` is a row of pills that fits above a composer, and `list` is one full width row per file where the remove button sits at the end.
+
+<ComponentPreview component="attachments" demo="variants" />
+
+## Data
+
+`data` is a plain object, not an SDK type:
+
+```ts
+interface AttachmentData {
+  id: string;
+  filename?: string;
+  mediaType?: string;
+  url?: string;
+  size?: number;
+}
+```
+
+`formatSize` and `attachmentLabel` are exported next to the component, so the same wording shows up wherever you list files.
+
+## API Reference
+
+### Attachments
+
+| Prop        | Type                           | Default  | Description            |
+| ----------- | ------------------------------ | -------- | ---------------------- |
+| `variant`   | `'grid' \| 'inline' \| 'list'` | `'grid'` | Layout of the items    |
+| `className` | `string`                       | -        | Additional CSS classes |
+
+### Attachments.Item
+
+| Prop        | Type             | Default | Description                    |
+| ----------- | ---------------- | ------- | ------------------------------ |
+| `data`      | `AttachmentData` | -       | The file this item describes   |
+| `onRemove`  | `() => void`     | -       | Called by `Attachments.Remove` |
+| `className` | `string`         | -       | Additional CSS classes         |
+
+### Attachments.Preview
+
+| Prop           | Type        | Default   | Description                          |
+| -------------- | ----------- | --------- | ------------------------------------ |
+| `fallbackIcon` | `ReactNode` | file icon | Shown when there is no image preview |
+| `className`    | `string`    | -         | Additional CSS classes               |
+
+### Attachments.Info
+
+| Prop            | Type      | Default | Description                          |
+| --------------- | --------- | ------- | ------------------------------------ |
+| `showMediaType` | `boolean` | `false` | Adds the media type to the meta line |
+| `className`     | `string`  | -       | Additional CSS classes               |
+
+### Attachments.Remove
+
+| Prop        | Type     | Default    | Description                   |
+| ----------- | -------- | ---------- | ----------------------------- |
+| `label`     | `string` | `'Remove'` | Prefix of the accessible name |
+| `className` | `string` | -          | Additional CSS classes        |
+
+### Attachments.Empty
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |

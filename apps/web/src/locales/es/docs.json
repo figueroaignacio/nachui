@@ -20,6 +20,10 @@
         {
           "title": "Elementos de layout",
           "href": "/docs/elements/layout"
+        },
+        {
+          "title": "Elementos AI",
+          "href": "/docs/elements/ai"
         }
       ]
     },
@@ -383,6 +387,59 @@
           "title": "Section",
           "href": "/docs/elements/layout/section",
           "description": "Secciones de página con ritmo consistente, tonos de fondo y un encabezado.",
+          "badge": "new"
+        }
+      ]
+    },
+    {
+      "title": "Elementos AI",
+      "items": [
+        {
+          "title": "Attachments",
+          "href": "/docs/elements/ai/attachments",
+          "description": "Archivos colgando de un mensaje o de un composer, como grilla, fila de chips o lista.",
+          "badge": "new"
+        },
+        {
+          "title": "Chain of Thought",
+          "href": "/docs/elements/ai/chain-of-thought",
+          "description": "Los pasos que recorrió un agente, con resultados de búsqueda e imágenes en cada uno.",
+          "badge": "new"
+        },
+        {
+          "title": "Context",
+          "href": "/docs/elements/ai/context",
+          "description": "Cuánto de la ventana de contexto se gastó, como un medidor con el desglose al pasar el mouse.",
+          "badge": "new"
+        },
+        {
+          "title": "Prompt Input",
+          "href": "/docs/elements/ai/prompt-input",
+          "description": "El composer, con textarea que crece, adjuntos, barra de herramientas y un botón que conoce el stream.",
+          "badge": "new"
+        },
+        {
+          "title": "Reasoning",
+          "href": "/docs/elements/ai/reasoning",
+          "description": "El razonamiento del modelo, abierto mientras llega y plegado cuando empieza la respuesta.",
+          "badge": "new"
+        },
+        {
+          "title": "Shimmer",
+          "href": "/docs/elements/ai/shimmer",
+          "description": "Texto con una luz que lo recorre, para el momento previo a la respuesta del modelo.",
+          "badge": "new"
+        },
+        {
+          "title": "Suggestion",
+          "href": "/docs/elements/ai/suggestion",
+          "description": "Prompts de arranque en una fila que scrollea, a un clic de ser enviados.",
+          "badge": "new"
+        },
+        {
+          "title": "Task",
+          "href": "/docs/elements/ai/task",
+          "description": "Un paso plegable con estado, para mostrar qué hizo un agente y qué archivos tocó.",
           "badge": "new"
         }
       ]

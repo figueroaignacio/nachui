@@ -1,0 +1,65 @@
+---
+title: Suggestion
+description: Prompt starters in a row that scrolls, one click away from being sent.
+published: true
+date: 2026-09-16
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="suggestion" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="suggestion" />
+
+## Anatomy
+
+```tsx
+import { Suggestion } from '@/components/ui/suggestion';
+```
+
+```tsx
+<Suggestion.Group>
+  <Suggestion suggestion="How do I install NachUI?" onClick={send} />
+  <Suggestion suggestion="Show me the prompt input" onClick={send} />
+</Suggestion.Group>
+```
+
+`onClick` receives the suggestion text, not the event, so the handler that sends a message can be passed straight in without a wrapper closure per item.
+
+## Composition
+
+Use the following composition to build a `Suggestion`:
+
+```tree
+Suggestion.Group
+└── Suggestion
+```
+
+## Variants
+
+Three visual weights and three sizes. `outline` is the default and reads as a control; `secondary` sits on a filled surface; `ghost` disappears until hovered, which suits a dense list under a composer.
+
+<ComponentPreview component="suggestion" demo="variants" />
+
+## API Reference
+
+### Suggestion
+
+| Prop         | Type                                  | Default     | Description                           |
+| ------------ | ------------------------------------- | ----------- | ------------------------------------- |
+| `suggestion` | `string`                              | -           | Text shown and passed to `onClick`    |
+| `onClick`    | `(suggestion: string) => void`        | -           | Called with the suggestion text       |
+| `variant`    | `'outline' \| 'secondary' \| 'ghost'` | `'outline'` | Visual treatment                      |
+| `size`       | `'sm' \| 'md' \| 'lg'`                | `'md'`      | Control height                        |
+| `children`   | `ReactNode`                           | -           | Replaces the label, keeps the payload |
+| `className`  | `string`                              | -           | Additional CSS classes                |
+
+### Suggestion.Group
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |

@@ -1,0 +1,82 @@
+---
+title: Reasoning
+description: The model's thinking, open while it streams and folded away once the answer starts.
+published: true
+date: 2026-09-16
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="reasoning" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="reasoning" />
+
+## Anatomy
+
+```tsx
+import { Reasoning } from '@/components/ui/reasoning';
+```
+
+```tsx
+<Reasoning isStreaming={isReasoning}>
+  <Reasoning.Trigger />
+  <Reasoning.Content>{reasoningText}</Reasoning.Content>
+</Reasoning>
+```
+
+The trigger writes its own label. While `isStreaming` is true it pulses "Thinking", and once the stream ends it settles into "Thought for 4 seconds" using either the `duration` you pass or the time it measured itself.
+
+## Composition
+
+Use the following composition to build a `Reasoning`:
+
+```tree
+Reasoning
+├── Reasoning.Trigger
+└── Reasoning.Content
+```
+
+## Streaming
+
+Flipping `isStreaming` on opens the panel, and flipping it off closes it and records the duration. That is the behaviour people expect from a thinking model: you see the reasoning arrive, then it gets out of the way, and it is one click back.
+
+<ComponentPreview component="reasoning" demo="streaming" />
+
+## useReasoning
+
+`useReasoning()` reads the state from inside the panel, which is how you build a custom trigger or a footer that reacts to the stream.
+
+```tsx
+const { isStreaming, isOpen, setIsOpen, duration } = useReasoning();
+```
+
+## API Reference
+
+### Reasoning
+
+| Prop           | Type                      | Default | Description                                      |
+| -------------- | ------------------------- | ------- | ------------------------------------------------ |
+| `isStreaming`  | `boolean`                 | `false` | Opens the panel, pulses the label, times the run |
+| `defaultOpen`  | `boolean`                 | `true`  | Open state when uncontrolled                     |
+| `open`         | `boolean`                 | -       | Controlled open state                            |
+| `onOpenChange` | `(open: boolean) => void` | -       | Called when the open state changes               |
+| `duration`     | `number`                  | -       | Seconds to display instead of the measured time  |
+| `className`    | `string`                  | -       | Additional CSS classes                           |
+
+### Reasoning.Trigger
+
+| Prop        | Type                                                     | Default | Description                        |
+| ----------- | -------------------------------------------------------- | ------- | ---------------------------------- |
+| `getLabel`  | `(isStreaming: boolean, duration?: number) => ReactNode` | -       | Replaces the built-in wording      |
+| `children`  | `ReactNode`                                              | -       | Static label, wins over `getLabel` |
+| `className` | `string`                                                 | -       | Additional CSS classes             |
+
+### Reasoning.Content
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |

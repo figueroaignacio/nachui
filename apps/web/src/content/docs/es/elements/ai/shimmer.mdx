@@ -1,0 +1,51 @@
+---
+title: Shimmer
+description: Texto con una luz que lo recorre, para el momento previo a la respuesta del modelo.
+published: true
+date: 2026-09-16
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="shimmer" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="shimmer" />
+
+## Anatomía
+
+```tsx
+import { Shimmer } from '@/components/ui/shimmer';
+```
+
+```tsx
+<Shimmer>Leyendo el registro…</Shimmer>
+```
+
+Shimmer es un solo elemento. Pinta un degradado detrás del texto, lo recorta contra las letras y lo desliza, así la etiqueta se lee como ocupada sin necesidad de un spinner al lado.
+
+## Polimórfico
+
+`as` elige la etiqueta. Por defecto es un párrafo, pero un encabezado o un span en línea funcionan igual.
+
+<ComponentPreview component="shimmer" demo="sizes" />
+
+## Movimiento
+
+El barrido respeta `prefers-reduced-motion`. Cuando el movimiento está reducido el componente renderiza texto apagado y quieto, así nada se mueve y la etiqueta se sigue leyendo como secundaria.
+
+`duration` define cuánto tarda una pasada y `spread` ensancha la banda de luz, multiplicado por el largo del texto para que etiquetas cortas y largas barran con un ritmo parecido.
+
+## Referencia de API
+
+### Shimmer
+
+| Prop        | Type          | Default | Description                         |
+| ----------- | ------------- | ------- | ----------------------------------- |
+| `as`        | `ElementType` | `'p'`   | Etiqueta o componente a renderizar  |
+| `duration`  | `number`      | `2`     | Segundos de una pasada completa     |
+| `spread`    | `number`      | `2`     | Multiplicador del ancho de la banda |
+| `className` | `string`      | -       | Clases CSS adicionales              |

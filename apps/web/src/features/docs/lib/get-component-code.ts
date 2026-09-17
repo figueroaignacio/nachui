@@ -13,9 +13,10 @@ type ComponentCodeResult = {
  *
  * Demos import their siblings by relative path inside packages/ui, from more
  * than one family directory: `../../components/` for UI primitives,
- * `../../layout/` for Flex, Stack, Grid and Container, and `../../icons/` for
- * the icon set. The CLI writes every component to `aliases.components`
- * regardless of family, so all of them collapse to the same target here.
+ * `../../layout/` for Flex, Stack, Grid and Container, `../../ai/` for the AI
+ * elements, and `../../icons/` for the icon set. The CLI writes every component
+ * to `aliases.components` regardless of family, so all of them collapse to the
+ * same target here.
  *
  * `../../lib/` is the exception, because it is not a component. It holds the
  * `cn` helper that the installation guide has the reader create at `lib/cn.ts`,
@@ -26,7 +27,7 @@ type ComponentCodeResult = {
  */
 export function rewriteDemoImports(code: string): string {
   return code
-    .replaceAll(/from ['"]\.\.\/\.\.\/(components|layout|icons)\//g, "from '@/components/ui/")
+    .replaceAll(/from ['"]\.\.\/\.\.\/(components|layout|ai|icons)\//g, "from '@/components/ui/")
     .replaceAll(/from ['"]\.\.\/\.\.\/lib\//g, "from '@/lib/");
 }
 

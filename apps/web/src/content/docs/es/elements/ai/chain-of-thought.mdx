@@ -1,0 +1,103 @@
+---
+title: Chain of Thought
+description: Los pasos que recorrió un agente, con resultados de búsqueda e imágenes colgando de cada uno.
+published: true
+date: 2026-09-16
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="chain-of-thought" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="chain-of-thought" />
+
+## Anatomía
+
+```tsx
+import { ChainOfThought } from '@/components/ui/chain-of-thought';
+```
+
+```tsx
+<ChainOfThought defaultOpen>
+  <ChainOfThought.Header />
+  <ChainOfThought.Content>
+    <ChainOfThought.Step label="Buscando en la documentación" status="complete">
+      <ChainOfThought.SearchResults>
+        <ChainOfThought.SearchResult>docs/concepts/theming</ChainOfThought.SearchResult>
+      </ChainOfThought.SearchResults>
+    </ChainOfThought.Step>
+    <ChainOfThought.Step label="Escribiendo la respuesta" status="active" />
+  </ChainOfThought.Content>
+</ChainOfThought>
+```
+
+Donde [Reasoning](/docs/elements/ai/reasoning) muestra un bloque de pensamiento, Chain of Thought muestra una secuencia: pasos sobre un riel, cada uno con su estado y su evidencia.
+
+## Composición
+
+Usa la siguiente composición para construir un `ChainOfThought`:
+
+```tree
+ChainOfThought
+├── ChainOfThought.Header
+└── ChainOfThought.Content
+    └── ChainOfThought.Step
+        ├── ChainOfThought.SearchResults
+        │   └── ChainOfThought.SearchResult
+        └── ChainOfThought.Image
+```
+
+## Pasos
+
+Un paso toma un `label`, una `description` opcional y un `status` de `complete`, `active` o `pending`. El activo late, el riel los conecta, y el último paso corta el conector para que la lista termine limpia.
+
+`icon` cambia el punto por cualquier componente de icono, y así un paso de búsqueda se distingue de uno de escritura.
+
+## Evidencia
+
+`SearchResults` guarda las fuentes que consultó un paso como chips chicos, e `Image` enmarca una captura o un gráfico con un pie opcional. Los dos viven dentro del paso al que pertenecen, así la evidencia queda pegada a su motivo.
+
+## Referencia de API
+
+### ChainOfThought
+
+| Prop           | Type                      | Default | Description                          |
+| -------------- | ------------------------- | ------- | ------------------------------------ |
+| `defaultOpen`  | `boolean`                 | `false` | Estado abierto cuando no se controla |
+| `open`         | `boolean`                 | -       | Estado abierto controlado            |
+| `onOpenChange` | `(open: boolean) => void` | -       | Se llama al cambiar el estado        |
+| `className`    | `string`                  | -       | Clases CSS adicionales               |
+
+### ChainOfThought.Header
+
+| Prop        | Type        | Default              | Description            |
+| ----------- | ----------- | -------------------- | ---------------------- |
+| `children`  | `ReactNode` | `'Chain of Thought'` | Etiqueta del trigger   |
+| `className` | `string`    | -                    | Clases CSS adicionales |
+
+### ChainOfThought.Step
+
+| Prop          | Type                                  | Default      | Description                    |
+| ------------- | ------------------------------------- | ------------ | ------------------------------ |
+| `label`       | `ReactNode`                           | -            | Título del paso                |
+| `description` | `ReactNode`                           | -            | Línea de apoyo bajo el título  |
+| `status`      | `'complete' \| 'active' \| 'pending'` | `'complete'` | Define el tono y el latido     |
+| `icon`        | `ComponentType`                       | punto        | Icono del indicador en el riel |
+| `className`   | `string`                              | -            | Clases CSS adicionales         |
+
+### ChainOfThought.Image
+
+| Prop        | Type        | Default | Description            |
+| ----------- | ----------- | ------- | ---------------------- |
+| `caption`   | `ReactNode` | -       | Pie debajo del marco   |
+| `className` | `string`    | -       | Clases CSS adicionales |
+
+### ChainOfThought.SearchResults / ChainOfThought.SearchResult
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |

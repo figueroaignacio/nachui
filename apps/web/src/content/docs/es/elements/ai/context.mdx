@@ -1,0 +1,93 @@
+---
+title: Context
+description: Cuánto de la ventana de contexto se gastó, como un medidor con el desglose al pasar el mouse.
+published: true
+date: 2026-09-16
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="context" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="context" />
+
+## Anatomía
+
+```tsx
+import { Context } from '@/components/ui/context';
+```
+
+```tsx
+<Context maxTokens={200000} usedTokens={84320}>
+  <Context.Trigger />
+  <Context.Content>
+    <Context.Header />
+    <Context.Body>
+      <Context.Usage label="Input" tokens={61200} />
+      <Context.Usage label="Output" tokens={14100} tone="info" />
+    </Context.Body>
+    <Context.Footer>Estimado según el precio de tu modelo.</Context.Footer>
+  </Context.Content>
+</Context>
+```
+
+El trigger es un anillo que se llena junto con la ventana, con el porcentaje al lado. El panel se abre al pasar el mouse y al recibir foco, y el clic lo fija abierto para teclado y touch.
+
+## Composición
+
+Usa la siguiente composición para construir un `Context`:
+
+```tree
+Context
+├── Context.Trigger
+└── Context.Content
+    ├── Context.Header
+    ├── Context.Body
+    │   └── Context.Usage
+    └── Context.Footer
+```
+
+## Filas de uso
+
+`Context.Usage` es genérico a propósito. Toma un `label`, un `tokens` opcional y un `tone` para el punto, así nombrás los grupos que reporta tu proveedor en vez de heredar los de otro. Input, output, reasoning y cached es un buen set por defecto.
+
+Tanto `Header` como `Usage` renderizan contenido razonable si no les pasás hijos, y los hijos que sí pases lo reemplazan por completo.
+
+## Referencia de API
+
+### Context
+
+| Prop           | Type                      | Default | Description                      |
+| -------------- | ------------------------- | ------- | -------------------------------- |
+| `maxTokens`    | `number`                  | -       | Tamaño de la ventana de contexto |
+| `usedTokens`   | `number`                  | -       | Tokens gastados hasta ahora      |
+| `open`         | `boolean`                 | -       | Estado abierto controlado        |
+| `onOpenChange` | `(open: boolean) => void` | -       | Se llama al cambiar el estado    |
+| `className`    | `string`                  | -       | Clases CSS adicionales           |
+
+### Context.Content
+
+| Prop        | Type                           | Default    | Description             |
+| ----------- | ------------------------------ | ---------- | ----------------------- |
+| `side`      | `'top' \| 'bottom'`            | `'bottom'` | Borde desde el que abre |
+| `align`     | `'start' \| 'center' \| 'end'` | `'start'`  | Anclaje horizontal      |
+| `className` | `string`                       | -          | Clases CSS adicionales  |
+
+### Context.Usage
+
+| Prop        | Type                                                       | Default     | Description                    |
+| ----------- | ---------------------------------------------------------- | ----------- | ------------------------------ |
+| `label`     | `ReactNode`                                                | -           | Nombre del grupo               |
+| `tokens`    | `number`                                                   | -           | Cantidad mostrada a la derecha |
+| `tone`      | `'default' \| 'muted' \| 'success' \| 'info' \| 'warning'` | `'default'` | Color del punto                |
+| `className` | `string`                                                   | -           | Clases CSS adicionales         |
+
+### Context.Trigger / Context.Header / Context.Body / Context.Footer
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |

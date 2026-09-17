@@ -1,0 +1,51 @@
+---
+title: Shimmer
+description: Text with a light sweeping across it, for the moment before the model answers.
+published: true
+date: 2026-09-16
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="shimmer" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="shimmer" />
+
+## Anatomy
+
+```tsx
+import { Shimmer } from '@/components/ui/shimmer';
+```
+
+```tsx
+<Shimmer>Reading the registry…</Shimmer>
+```
+
+Shimmer is a single element. It paints a gradient behind the text, clips it to the glyphs and slides it, so the label reads as busy without a spinner next to it.
+
+## Polymorphic
+
+`as` picks the tag. The default is a paragraph, but a heading or an inline span works the same.
+
+<ComponentPreview component="shimmer" demo="sizes" />
+
+## Motion
+
+The sweep respects `prefers-reduced-motion`. When motion is reduced the component renders plain muted text instead, so nothing moves and the label still reads as secondary.
+
+`duration` sets how long one pass takes and `spread` widens the bright band, multiplied by the length of the text so short and long labels sweep at a similar rhythm.
+
+## API Reference
+
+### Shimmer
+
+| Prop        | Type          | Default | Description                          |
+| ----------- | ------------- | ------- | ------------------------------------ |
+| `as`        | `ElementType` | `'p'`   | Tag or component to render           |
+| `duration`  | `number`      | `2`     | Seconds for one full sweep           |
+| `spread`    | `number`      | `2`     | Width multiplier for the bright band |
+| `className` | `string`      | -       | Additional CSS classes               |

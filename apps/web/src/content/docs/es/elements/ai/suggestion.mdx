@@ -1,0 +1,65 @@
+---
+title: Suggestion
+description: Prompts de arranque en una fila que scrollea, a un clic de ser enviados.
+published: true
+date: 2026-09-16
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="suggestion" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="suggestion" />
+
+## Anatomía
+
+```tsx
+import { Suggestion } from '@/components/ui/suggestion';
+```
+
+```tsx
+<Suggestion.Group>
+  <Suggestion suggestion="¿Cómo instalo NachUI?" onClick={enviar} />
+  <Suggestion suggestion="Mostrame el prompt input" onClick={enviar} />
+</Suggestion.Group>
+```
+
+`onClick` recibe el texto de la sugerencia, no el evento, así el handler que manda el mensaje se pasa directo sin escribir un closure por cada ítem.
+
+## Composición
+
+Usa la siguiente composición para construir un `Suggestion`:
+
+```tree
+Suggestion.Group
+└── Suggestion
+```
+
+## Variantes
+
+Tres pesos visuales y tres tamaños. `outline` es el valor por defecto y se lee como un control; `secondary` se apoya en una superficie rellena; `ghost` desaparece hasta el hover, algo que funciona bien en una lista densa debajo del composer.
+
+<ComponentPreview component="suggestion" demo="variants" />
+
+## Referencia de API
+
+### Suggestion
+
+| Prop         | Type                                  | Default     | Description                              |
+| ------------ | ------------------------------------- | ----------- | ---------------------------------------- |
+| `suggestion` | `string`                              | -           | Texto mostrado y pasado a `onClick`      |
+| `onClick`    | `(suggestion: string) => void`        | -           | Se llama con el texto de la sugerencia   |
+| `variant`    | `'outline' \| 'secondary' \| 'ghost'` | `'outline'` | Tratamiento visual                       |
+| `size`       | `'sm' \| 'md' \| 'lg'`                | `'md'`      | Alto del control                         |
+| `children`   | `ReactNode`                           | -           | Reemplaza la etiqueta, conserva el valor |
+| `className`  | `string`                              | -           | Clases CSS adicionales                   |
+
+### Suggestion.Group
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |

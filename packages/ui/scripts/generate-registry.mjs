@@ -28,6 +28,7 @@ const REPO_ROOT = resolve(UI_ROOT, '../..');
 const FAMILIES = [
   { id: 'ui', codeDir: 'src/components', docsSegment: 'elements/ui' },
   { id: 'layout', codeDir: 'src/layout', docsSegment: 'elements/layout' },
+  { id: 'ai', codeDir: 'src/ai', docsSegment: 'elements/ai' },
 ];
 
 const DEMOS_DIR = 'src/demos';

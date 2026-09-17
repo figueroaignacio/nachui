@@ -1,0 +1,142 @@
+---
+title: Prompt Input
+description: The composer. A growing textarea, file attachments, a toolbar and a submit button that knows the stream's state.
+published: true
+date: 2026-09-16
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="prompt-input" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="prompt-input" />
+
+## Anatomy
+
+```tsx
+import { PromptInput } from '@/components/ui/prompt-input';
+```
+
+```tsx
+<PromptInput onSubmit={(message) => sendMessage(message.text, message.files)}>
+  <PromptInput.Header>
+    <PromptInput.Attachments />
+  </PromptInput.Header>
+  <PromptInput.Body>
+    <PromptInput.Textarea placeholder="Ask anything…" />
+  </PromptInput.Body>
+  <PromptInput.Footer>
+    <PromptInput.Tools>
+      <PromptInput.AddAttachments />
+    </PromptInput.Tools>
+    <PromptInput.Submit status={status} />
+  </PromptInput.Footer>
+</PromptInput>
+```
+
+The root is a real `form`. Submitting calls `onSubmit` with `{ text, files }` and then clears itself, which you can turn off with `clearOnSubmit={false}` if your app owns the reset.
+
+## Composition
+
+Use the following composition to build a `PromptInput`:
+
+```tree
+PromptInput
+├── PromptInput.Header
+│   └── PromptInput.Attachments
+├── PromptInput.Body
+│   └── PromptInput.Textarea
+└── PromptInput.Footer
+    ├── PromptInput.Tools
+    │   ├── PromptInput.AddAttachments
+    │   └── PromptInput.Button
+    └── PromptInput.Submit
+```
+
+## Keyboard
+
+Enter sends, Shift and Enter make a newline, and composition input from an IME is left alone so an unconfirmed candidate never gets submitted by accident. The textarea grows with the text up to `maxRows` and then scrolls.
+
+## Files
+
+Files arrive three ways: the clip button, a drop anywhere on the composer, and a drop anywhere on the page when `globalDrop` is set. `accept`, `maxFiles` and `maxFileSize` are checked before a file is kept, and anything rejected goes to `onError` with a code you can show.
+
+<ComponentPreview component="prompt-input" demo="attachments" />
+
+Each accepted file becomes a `PromptInputFile` with an object URL ready to preview and the original `File` for upload:
+
+```ts
+interface PromptInputFile {
+  id: string;
+  filename: string;
+  mediaType: string;
+  size: number;
+  url: string;
+  file: File;
+}
+```
+
+`usePromptInputAttachments()` exposes `files`, `add`, `remove`, `clear` and `openFileDialog`, which is how you build your own strip with [Attachments](/docs/elements/ai/attachments) instead of the built-in chips.
+
+## Status
+
+`status` on the submit button covers the full round trip: `ready` sends, `submitted` spins, `streaming` turns into a stop square and `error` goes destructive.
+
+<ComponentPreview component="prompt-input" demo="statuses" />
+
+## API Reference
+
+### PromptInput
+
+| Prop            | Type                                                      | Default | Description                               |
+| --------------- | --------------------------------------------------------- | ------- | ----------------------------------------- |
+| `onSubmit`      | `(message: PromptInputMessage, event: FormEvent) => void` | -       | Called with the text and the files        |
+| `accept`        | `string`                                                  | -       | File types to accept                      |
+| `multiple`      | `boolean`                                                 | `false` | Allow more than one file                  |
+| `maxFiles`      | `number`                                                  | -       | Cap on attached files                     |
+| `maxFileSize`   | `number`                                                  | -       | Cap in bytes per file                     |
+| `globalDrop`    | `boolean`                                                 | `false` | Accept a drop anywhere on the page        |
+| `clearOnSubmit` | `boolean`                                                 | `true`  | Reset the text and the files after submit |
+| `onError`       | `(error: { code, message }) => void`                      | -       | Called when a file is rejected            |
+| `className`     | `string`                                                  | -       | Additional CSS classes                    |
+
+### PromptInput.Textarea
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `minRows`   | `number` | `1`     | Rows before it grows   |
+| `maxRows`   | `number` | `8`     | Rows before it scrolls |
+| `className` | `string` | -       | Additional CSS classes |
+
+### PromptInput.Submit
+
+| Prop        | Type                                               | Default          | Description                |
+| ----------- | -------------------------------------------------- | ---------------- | -------------------------- |
+| `status`    | `'ready' \| 'submitted' \| 'streaming' \| 'error'` | `'ready'`        | Icon, colour and disabling |
+| `label`     | `string`                                           | `'Send message'` | Accessible name            |
+| `className` | `string`                                           | -                | Additional CSS classes     |
+
+### PromptInput.Button
+
+| Prop        | Type                   | Default   | Description               |
+| ----------- | ---------------------- | --------- | ------------------------- |
+| `label`     | `string`               | -         | Accessible name and title |
+| `variant`   | `'ghost' \| 'outline'` | `'ghost'` | Visual treatment          |
+| `className` | `string`               | -         | Additional CSS classes    |
+
+### PromptInput.AddAttachments
+
+| Prop        | Type     | Default       | Description            |
+| ----------- | -------- | ------------- | ---------------------- |
+| `label`     | `string` | `'Add files'` | Accessible name        |
+| `className` | `string` | -             | Additional CSS classes |
+
+### PromptInput.Header / .Body / .Footer / .Tools / .Attachments
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |

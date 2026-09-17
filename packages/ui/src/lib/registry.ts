@@ -6,12 +6,14 @@
 export const FAMILIES = [
   { id: 'ui', codeDir: 'src/components', docsSegment: 'elements/ui' },
   { id: 'layout', codeDir: 'src/layout', docsSegment: 'elements/layout' },
+  { id: 'ai', codeDir: 'src/ai', docsSegment: 'elements/ai' },
 ] as const;
 
 export const COMPONENT_REGISTRY = {
   accordion: 'packages/ui/src/components/accordion.tsx',
   'aspect-ratio': 'packages/ui/src/layout/aspect-ratio.tsx',
   attachment: 'packages/ui/src/components/attachment.tsx',
+  attachments: 'packages/ui/src/ai/attachments.tsx',
   avatar: 'packages/ui/src/components/avatar.tsx',
   badge: 'packages/ui/src/components/badge.tsx',
   banner: 'packages/ui/src/components/banner.tsx',
@@ -21,10 +23,12 @@ export const COMPONENT_REGISTRY = {
   callout: 'packages/ui/src/components/callout.tsx',
   card: 'packages/ui/src/components/card.tsx',
   center: 'packages/ui/src/layout/center.tsx',
+  'chain-of-thought': 'packages/ui/src/ai/chain-of-thought.tsx',
   checkbox: 'packages/ui/src/components/checkbox.tsx',
   collapsible: 'packages/ui/src/components/collapsible.tsx',
   command: 'packages/ui/src/components/command.tsx',
   container: 'packages/ui/src/layout/container.tsx',
+  context: 'packages/ui/src/ai/context.tsx',
   'context-menu': 'packages/ui/src/components/context-menu.tsx',
   dialog: 'packages/ui/src/components/dialog.tsx',
   dock: 'packages/ui/src/components/dock.tsx',
@@ -46,13 +50,16 @@ export const COMPONENT_REGISTRY = {
   pagination: 'packages/ui/src/components/pagination.tsx',
   popover: 'packages/ui/src/components/popover.tsx',
   progress: 'packages/ui/src/components/progress.tsx',
+  'prompt-input': 'packages/ui/src/ai/prompt-input.tsx',
   radio: 'packages/ui/src/components/radio.tsx',
   rating: 'packages/ui/src/components/rating.tsx',
+  reasoning: 'packages/ui/src/ai/reasoning.tsx',
   resizable: 'packages/ui/src/components/resizable.tsx',
   'scroll-area': 'packages/ui/src/components/scroll-area.tsx',
   section: 'packages/ui/src/layout/section.tsx',
   select: 'packages/ui/src/components/select.tsx',
   separator: 'packages/ui/src/components/separator.tsx',
+  shimmer: 'packages/ui/src/ai/shimmer.tsx',
   skeleton: 'packages/ui/src/components/skeleton.tsx',
   snippet: 'packages/ui/src/components/snippet.tsx',
   spacer: 'packages/ui/src/layout/spacer.tsx',
@@ -61,9 +68,11 @@ export const COMPONENT_REGISTRY = {
   sprite: 'packages/ui/src/components/sprite.tsx',
   stack: 'packages/ui/src/layout/stack.tsx',
   steps: 'packages/ui/src/components/steps.tsx',
+  suggestion: 'packages/ui/src/ai/suggestion.tsx',
   switch: 'packages/ui/src/components/switch.tsx',
   table: 'packages/ui/src/components/table.tsx',
   tabs: 'packages/ui/src/components/tabs.tsx',
+  task: 'packages/ui/src/ai/task.tsx',
   textarea: 'packages/ui/src/components/textarea.tsx',
   timeline: 'packages/ui/src/components/timeline.tsx',
   toast: 'packages/ui/src/components/toast.tsx',
@@ -77,6 +86,7 @@ export const COMPONENT_FAMILY = {
   accordion: 'ui',
   'aspect-ratio': 'layout',
   attachment: 'ui',
+  attachments: 'ai',
   avatar: 'ui',
   badge: 'ui',
   banner: 'ui',
@@ -86,10 +96,12 @@ export const COMPONENT_FAMILY = {
   callout: 'ui',
   card: 'ui',
   center: 'layout',
+  'chain-of-thought': 'ai',
   checkbox: 'ui',
   collapsible: 'ui',
   command: 'ui',
   container: 'layout',
+  context: 'ai',
   'context-menu': 'ui',
   dialog: 'ui',
   dock: 'ui',
@@ -111,13 +123,16 @@ export const COMPONENT_FAMILY = {
   pagination: 'ui',
   popover: 'ui',
   progress: 'ui',
+  'prompt-input': 'ai',
   radio: 'ui',
   rating: 'ui',
+  reasoning: 'ai',
   resizable: 'ui',
   'scroll-area': 'ui',
   section: 'layout',
   select: 'ui',
   separator: 'ui',
+  shimmer: 'ai',
   skeleton: 'ui',
   snippet: 'ui',
   spacer: 'layout',
@@ -126,9 +141,11 @@ export const COMPONENT_FAMILY = {
   sprite: 'ui',
   stack: 'layout',
   steps: 'ui',
+  suggestion: 'ai',
   switch: 'ui',
   table: 'ui',
   tabs: 'ui',
+  task: 'ai',
   textarea: 'ui',
   timeline: 'ui',
   toast: 'ui',
@@ -152,6 +169,10 @@ export const DEMO_REGISTRY = {
     chips: 'packages/ui/src/demos/attachment/chips.tsx',
     default: 'packages/ui/src/demos/attachment/default.tsx',
     uploading: 'packages/ui/src/demos/attachment/uploading.tsx',
+  },
+  attachments: {
+    default: 'packages/ui/src/demos/attachments/default.tsx',
+    variants: 'packages/ui/src/demos/attachments/variants.tsx',
   },
   avatar: {
     'avatar-group': 'packages/ui/src/demos/avatar/avatar-group.tsx',
@@ -212,6 +233,9 @@ export const DEMO_REGISTRY = {
     axis: 'packages/ui/src/demos/center/axis.tsx',
     default: 'packages/ui/src/demos/center/default.tsx',
   },
+  'chain-of-thought': {
+    default: 'packages/ui/src/demos/chain-of-thought/default.tsx',
+  },
   checkbox: {
     default: 'packages/ui/src/demos/checkbox/default.tsx',
     disabled: 'packages/ui/src/demos/checkbox/disabled.tsx',
@@ -227,6 +251,9 @@ export const DEMO_REGISTRY = {
   },
   container: {
     default: 'packages/ui/src/demos/container/default.tsx',
+  },
+  context: {
+    default: 'packages/ui/src/demos/context/default.tsx',
   },
   'context-menu': {
     default: 'packages/ui/src/demos/context-menu/default.tsx',
@@ -327,6 +354,11 @@ export const DEMO_REGISTRY = {
     indeterminate: 'packages/ui/src/demos/progress/indeterminate.tsx',
     'with-value': 'packages/ui/src/demos/progress/with-value.tsx',
   },
+  'prompt-input': {
+    attachments: 'packages/ui/src/demos/prompt-input/attachments.tsx',
+    default: 'packages/ui/src/demos/prompt-input/default.tsx',
+    statuses: 'packages/ui/src/demos/prompt-input/statuses.tsx',
+  },
   radio: {
     default: 'packages/ui/src/demos/radio/default.tsx',
     disabled: 'packages/ui/src/demos/radio/disabled.tsx',
@@ -338,6 +370,10 @@ export const DEMO_REGISTRY = {
     half: 'packages/ui/src/demos/rating/half.tsx',
     'read-only': 'packages/ui/src/demos/rating/read-only.tsx',
     sizes: 'packages/ui/src/demos/rating/sizes.tsx',
+  },
+  reasoning: {
+    default: 'packages/ui/src/demos/reasoning/default.tsx',
+    streaming: 'packages/ui/src/demos/reasoning/streaming.tsx',
   },
   resizable: {
     default: 'packages/ui/src/demos/resizable/default.tsx',
@@ -361,6 +397,10 @@ export const DEMO_REGISTRY = {
   separator: {
     default: 'packages/ui/src/demos/separator/default.tsx',
     'with-label': 'packages/ui/src/demos/separator/with-label.tsx',
+  },
+  shimmer: {
+    default: 'packages/ui/src/demos/shimmer/default.tsx',
+    sizes: 'packages/ui/src/demos/shimmer/sizes.tsx',
   },
   skeleton: {
     card: 'packages/ui/src/demos/skeleton/card.tsx',
@@ -389,6 +429,10 @@ export const DEMO_REGISTRY = {
   stack: {
     default: 'packages/ui/src/demos/stack/default.tsx',
   },
+  suggestion: {
+    default: 'packages/ui/src/demos/suggestion/default.tsx',
+    variants: 'packages/ui/src/demos/suggestion/variants.tsx',
+  },
   switch: {
     default: 'packages/ui/src/demos/switch/default.tsx',
     disabled: 'packages/ui/src/demos/switch/disabled.tsx',
@@ -403,6 +447,10 @@ export const DEMO_REGISTRY = {
   tabs: {
     default: 'packages/ui/src/demos/tabs/default.tsx',
     vertical: 'packages/ui/src/demos/tabs/vertical.tsx',
+  },
+  task: {
+    default: 'packages/ui/src/demos/task/default.tsx',
+    statuses: 'packages/ui/src/demos/task/statuses.tsx',
   },
   textarea: {
     'auto-resize': 'packages/ui/src/demos/textarea/auto-resize.tsx',

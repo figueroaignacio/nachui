@@ -40,6 +40,7 @@ export async function GET() {
     section('Concepts', 'concepts/'),
     section('UI elements', 'elements/ui'),
     section('Layout elements', 'elements/layout'),
+    section('AI elements', 'elements/ai'),
     iconsSection(),
     `## Optional\n\n- [Sitemap](${baseUrl}/sitemap.xml)\n- [Docs index (JSON)](${baseUrl}/api/docs)`,
   ];

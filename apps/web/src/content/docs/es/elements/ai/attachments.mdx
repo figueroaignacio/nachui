@@ -1,0 +1,117 @@
+---
+title: Attachments
+description: Archivos colgando de un mensaje o de un composer, como grilla, fila de chips o lista.
+published: true
+date: 2026-09-16
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="attachments" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="attachments" />
+
+## Anatomía
+
+```tsx
+import { Attachments } from '@/components/ui/attachments';
+```
+
+```tsx
+<Attachments variant="grid">
+  {archivos.map((archivo) => (
+    <Attachments.Item key={archivo.id} data={archivo} onRemove={() => quitar(archivo.id)}>
+      <Attachments.Preview />
+      <Attachments.Info />
+      <Attachments.Remove />
+    </Attachments.Item>
+  ))}
+</Attachments>
+```
+
+`Item` pone el archivo en contexto, así `Preview`, `Info` y `Remove` lo leen solos en vez de recibir el mismo objeto tres veces. Una imagen con `url` se previsualiza en línea; cualquier otra cosa cae en un icono que podés cambiar.
+
+Este es el lado de lectura. Para el selector y la zona de drop mirá [Prompt Input](/docs/elements/ai/prompt-input), y para una fila de un solo archivo con progreso de subida mirá [Attachment](/docs/elements/ui/attachment).
+
+## Composición
+
+Usa la siguiente composición para construir un `Attachments`:
+
+```tree
+Attachments
+├── Attachments.Item
+│   ├── Attachments.Preview
+│   ├── Attachments.Info
+│   └── Attachments.Remove
+└── Attachments.Empty
+```
+
+## Variantes
+
+`grid` acomoda tarjetas y esconde el botón de quitar hasta el hover, `inline` es una fila de píldoras que entra arriba del composer, y `list` es una fila de ancho completo por archivo con el botón de quitar al final.
+
+<ComponentPreview component="attachments" demo="variants" />
+
+## Datos
+
+`data` es un objeto plano, no un tipo de un SDK:
+
+```ts
+interface AttachmentData {
+  id: string;
+  filename?: string;
+  mediaType?: string;
+  url?: string;
+  size?: number;
+}
+```
+
+`formatSize` y `attachmentLabel` se exportan junto al componente, así el mismo texto aparece en cualquier lugar donde listes archivos.
+
+## Referencia de API
+
+### Attachments
+
+| Prop        | Type                           | Default  | Description              |
+| ----------- | ------------------------------ | -------- | ------------------------ |
+| `variant`   | `'grid' \| 'inline' \| 'list'` | `'grid'` | Disposición de los ítems |
+| `className` | `string`                       | -        | Clases CSS adicionales   |
+
+### Attachments.Item
+
+| Prop        | Type             | Default | Description                       |
+| ----------- | ---------------- | ------- | --------------------------------- |
+| `data`      | `AttachmentData` | -       | El archivo que describe este ítem |
+| `onRemove`  | `() => void`     | -       | Lo llama `Attachments.Remove`     |
+| `className` | `string`         | -       | Clases CSS adicionales            |
+
+### Attachments.Preview
+
+| Prop           | Type        | Default          | Description                               |
+| -------------- | ----------- | ---------------- | ----------------------------------------- |
+| `fallbackIcon` | `ReactNode` | icono de archivo | Se muestra cuando no hay previsualización |
+| `className`    | `string`    | -                | Clases CSS adicionales                    |
+
+### Attachments.Info
+
+| Prop            | Type      | Default | Description                          |
+| --------------- | --------- | ------- | ------------------------------------ |
+| `showMediaType` | `boolean` | `false` | Agrega el tipo a la línea de detalle |
+| `className`     | `string`  | -       | Clases CSS adicionales               |
+
+### Attachments.Remove
+
+| Prop        | Type     | Default    | Description                  |
+| ----------- | -------- | ---------- | ---------------------------- |
+| `label`     | `string` | `'Remove'` | Prefijo del nombre accesible |
+| `className` | `string` | -          | Clases CSS adicionales       |
+
+### Attachments.Empty
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |

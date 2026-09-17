@@ -1,0 +1,92 @@
+---
+title: Task
+description: Un paso plegable con estado, para mostrar qué hizo un agente y qué archivos tocó.
+published: true
+date: 2026-09-16
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="task" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="task" />
+
+## Anatomía
+
+```tsx
+import { Task } from '@/components/ui/task';
+```
+
+```tsx
+<Task defaultOpen>
+  <Task.Trigger title="Recorrí el registro de componentes" status="complete" />
+  <Task.Content>
+    <Task.Item>Leí 58 componentes en dos familias</Task.Item>
+    <Task.Item>
+      Relacioné el pedido con <Task.File>button.tsx</Task.File>
+    </Task.Item>
+  </Task.Content>
+</Task>
+```
+
+Una tarea arranca abierta, porque lo interesante de la corrida de un agente suele ser el paso en el que está. Pon `defaultOpen={false}` en las que ya terminaron.
+
+## Composición
+
+Usa la siguiente composición para construir un `Task`:
+
+```tree
+Task
+├── Task.Trigger
+└── Task.Content
+    └── Task.Item
+        └── Task.File
+```
+
+## Estados
+
+`status` define el icono y su color: `pending` espera, `active` gira, `complete` tilda y `error` marca el problema. Apilá varias tareas y la corrida entera se lee de un vistazo.
+
+<ComponentPreview component="task" demo="statuses" />
+
+## Referencia de API
+
+### Task
+
+| Prop           | Type                      | Default | Description                          |
+| -------------- | ------------------------- | ------- | ------------------------------------ |
+| `defaultOpen`  | `boolean`                 | `true`  | Estado abierto cuando no se controla |
+| `open`         | `boolean`                 | -       | Estado abierto controlado            |
+| `onOpenChange` | `(open: boolean) => void` | -       | Se llama al cambiar el estado        |
+| `className`    | `string`                  | -       | Clases CSS adicionales               |
+
+### Task.Trigger
+
+| Prop        | Type                                             | Default      | Description                    |
+| ----------- | ------------------------------------------------ | ------------ | ------------------------------ |
+| `title`     | `string`                                         | -            | Etiqueta del paso              |
+| `status`    | `'pending' \| 'active' \| 'complete' \| 'error'` | `'complete'` | Icono y color del indicador    |
+| `children`  | `ReactNode`                                      | -            | Reemplaza el título si se pasa |
+| `className` | `string`                                         | -            | Clases CSS adicionales         |
+
+### Task.Content
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |
+
+### Task.Item
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |
+
+### Task.File
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |

@@ -22,6 +22,7 @@ import { PuzzleIcon } from '@repo/ui/icons/puzzle';
 import { SparklesIcon } from '@repo/ui/icons/sparkles';
 import { StarIcon } from '@repo/ui/icons/star';
 import { SunIcon } from '@repo/ui/icons/sun';
+import { WandIcon } from '@repo/ui/icons/wand';
 import { cn } from '@repo/ui/lib/cn';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useTheme } from 'nach-themes';
@@ -38,6 +39,7 @@ type ElementsMenu = {
 const PRODUCT_ICONS: Record<string, React.ComponentType<{ size?: number }>> = {
   '/docs/elements/ui': LayoutGridIcon,
   '/docs/elements/layout': LayoutIcon,
+  '/docs/elements/ai': WandIcon,
   '/components': PuzzleIcon,
   '/bricks/login': PackageIcon,
   '/icons': StarIcon,

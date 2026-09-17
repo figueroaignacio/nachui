@@ -42,6 +42,7 @@ export function Footer() {
                       ['/docs', t('footer.product.docs')],
                       ['/docs/elements/ui', t('footer.product.components')],
                       ['/docs/elements/layout', t('footer.product.layout')],
+                      ['/docs/elements/ai', t('footer.product.ai')],
                       ['/docs/installation', t('footer.product.installation')],
                       ['/about', t('footer.product.about')],
                     ] as [string, string][]

@@ -9,6 +9,7 @@
     "./lib/*": "./src/lib/*.ts",
     "./components/*": "./src/components/*.tsx",
     "./layout/*": "./src/layout/*.tsx",
+    "./ai/*": "./src/ai/*.tsx",
     "./icons/*": "./src/icons/*.tsx",
     "./hooks/*": "./src/hooks/*.ts",
     "./registry": "./src/lib/registry.ts",
