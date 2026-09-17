@@ -19,12 +19,10 @@ interface ChatWindowProps {
   activeTool: ToolName | null;
   errorCode: ChatErrorCode | null;
   messagesEndRef: React.RefObject<HTMLDivElement>;
-  message: string;
   attachment: string | null;
   onRemoveAttachment: () => void;
-  onMessageChange: (value: string) => void;
-  onSubmit: (e?: React.FormEvent) => void;
-  onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  onSubmit: (text: string) => void;
+  onStop: () => void;
   onClose: () => void;
   onReset: () => void;
   onSuggestionClick: (text: string) => void;
@@ -66,12 +64,10 @@ export function ChatWindow(props: ChatWindowProps) {
     activeTool,
     errorCode,
     messagesEndRef,
-    message,
     attachment,
     onRemoveAttachment,
-    onMessageChange,
     onSubmit,
-    onKeyDown,
+    onStop,
     onClose,
     onReset,
     onSuggestionClick,
@@ -107,13 +103,12 @@ export function ChatWindow(props: ChatWindowProps) {
         />
       </div>
       <ChatInput
-        message={message}
-        isLoading={isLoading || isStreaming}
+        isLoading={isLoading}
+        isStreaming={isStreaming}
         attachment={attachment}
         onRemoveAttachment={onRemoveAttachment}
-        onMessageChange={onMessageChange}
         onSubmit={onSubmit}
-        onKeyDown={onKeyDown}
+        onStop={onStop}
       />
     </div>
   );

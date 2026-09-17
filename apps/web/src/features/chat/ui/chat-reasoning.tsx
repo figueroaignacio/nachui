@@ -1,7 +1,8 @@
 'use client';
 
+import { ChainOfThought } from '@repo/ui/ai/chain-of-thought';
+import { Shimmer } from '@repo/ui/ai/shimmer';
 import { CheckIcon } from '@repo/ui/icons/check';
-import { motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import type { ToolName } from '../hooks/use-chat';
@@ -14,7 +15,7 @@ interface ChatReasoningProps {
 
 /**
  * The turn's thought process: every step the agent has taken so far, the
- * current one still pulsing. Tool execution (embeddings + DB lookups) is the
+ * current one still shimmering. Tool execution (embeddings + DB lookups) is the
  * long silence in a turn — showing the trail reads as progress, not a hang.
  */
 export function ChatReasoning({ activeTool }: ChatReasoningProps) {
@@ -31,44 +32,32 @@ export function ChatReasoning({ activeTool }: ChatReasoningProps) {
 
   return (
     <div className="w-full min-w-0">
-      <div>
-        <AiWorking width={60} />
-        <p className="text-muted-foreground/70 mt-3 font-mono text-[10px] tracking-[0.15em] uppercase">
+      <AiWorking width={60} />
+      <ChainOfThought defaultOpen className="mt-3">
+        <ChainOfThought.Header className="text-muted-foreground/70 font-mono text-[10px] tracking-[0.15em] uppercase">
           {t('reasoning')}
-        </p>
-        <ol className="mt-2 space-y-2">
+        </ChainOfThought.Header>
+        <ChainOfThought.Content>
           {steps.map((step, index) => {
             const isCurrent = index === steps.length - 1;
 
             return (
-              <motion.li
+              <ChainOfThought.Step
                 key={`${step}-${index}`}
-                initial={{ opacity: 0, y: -2 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2 }}
-                className="flex items-center gap-2 text-xs"
-              >
-                {isCurrent ? (
-                  <span
-                    aria-hidden="true"
-                    className="bg-muted-foreground size-1.5 shrink-0 animate-pulse rounded-full"
-                  />
-                ) : (
-                  <CheckIcon
-                    size={12}
-                    className="text-muted-foreground/60 shrink-0"
-                    aria-hidden="true"
-                  />
-                )}
-                <span className={isCurrent ? 'text-foreground/80' : 'text-muted-foreground/60'}>
-                  {step}
-                  {isCurrent && '…'}
-                </span>
-              </motion.li>
+                status={isCurrent ? 'active' : 'complete'}
+                icon={isCurrent ? undefined : CheckIcon}
+                label={
+                  isCurrent ? (
+                    <Shimmer as="span" className="text-xs font-normal">{`${step}…`}</Shimmer>
+                  ) : (
+                    <span className="text-muted-foreground/60 text-xs font-normal">{step}</span>
+                  )
+                }
+              />
             );
           })}
-        </ol>
-      </div>
+        </ChainOfThought.Content>
+      </ChainOfThought>
     </div>
   );
 }

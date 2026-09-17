@@ -41,7 +41,8 @@
       "placeholder": "Haz una pregunta...",
       "resume": "Volver al chat",
       "shortcut": "Ctrl+I",
-      "send": "Enviar mensaje"
+      "send": "Enviar mensaje",
+      "stop": "Detener la respuesta"
     },
     "selection": {
       "add": "Agregar al asistente",

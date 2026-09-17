@@ -1,74 +1,61 @@
-import { Button } from '@repo/ui/components/button';
-import { ChevronUpIcon } from '@repo/ui/icons/chevron-up';
-import { SquareIcon } from '@repo/ui/icons/square';
-import { cn } from '@repo/ui/lib/cn';
+'use client';
+
+import { PromptInput } from '@repo/ui/ai/prompt-input';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
 import { ChatAttachment } from './chat-attachment';
 
 interface ChatInputProps {
-  message: string;
   isLoading: boolean;
+  isStreaming: boolean;
   attachment: string | null;
   onRemoveAttachment: () => void;
-  onMessageChange: (value: string) => void;
-  onSubmit: (e?: React.FormEvent) => void;
-  onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  onSubmit: (text: string) => void;
+  onStop: () => void;
 }
 
 export function ChatInput(props: ChatInputProps) {
-  const {
-    message,
-    isLoading,
-    attachment,
-    onRemoveAttachment,
-    onMessageChange,
-    onSubmit,
-    onKeyDown,
-  } = props;
+  const { isLoading, isStreaming, attachment, onRemoveAttachment, onSubmit, onStop } = props;
   const t = useTranslations('components.chat');
-  const [isFocused, setIsFocused] = useState(false);
 
-  const canSend = !isLoading && message.trim().length > 0;
+  const status = isStreaming ? 'streaming' : isLoading ? 'submitted' : 'ready';
 
   return (
-    <form onSubmit={onSubmit} className="relative z-10 w-full px-4 pb-4">
-      <div
-        className={cn(
-          'bg-background border-rule rounded-2xl border px-4 py-3 transition-colors duration-200',
-          isFocused && 'border-foreground/25',
-        )}
+    <div className="relative z-10 w-full px-4 pb-4">
+      <PromptInput
+        clearOnSubmit={!isLoading}
+        onSubmit={(message) => {
+          if (isLoading) return;
+          onSubmit(message.text);
+        }}
+        className="border-rule focus-within:border-foreground/25 rounded-2xl"
       >
         {attachment && (
-          <div className="mb-2">
+          <PromptInput.Header>
             <ChatAttachment text={attachment} onRemove={onRemoveAttachment} />
-          </div>
+          </PromptInput.Header>
         )}
-        <textarea
-          data-autofocus
-          rows={1}
-          value={message}
-          onChange={(e) => onMessageChange(e.target.value)}
-          onKeyDown={onKeyDown}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          placeholder={t('input.placeholder')}
-          aria-label={t('input.placeholder')}
-          className="placeholder:text-muted-foreground/80 max-h-32 w-full resize-none bg-transparent text-sm leading-relaxed outline-none"
-        />
-        <div className="mt-1 flex items-center justify-end">
-          <Button
-            type="submit"
-            variant="ghost"
-            size="icon"
-            disabled={!canSend}
-            aria-label={t('launcher.send')}
-            className="text-muted-foreground hover:text-foreground size-5 rounded-sm hover:bg-transparent"
-          >
-            {isLoading ? <SquareIcon size={16} /> : <ChevronUpIcon size={16} />}
-          </Button>
-        </div>
-      </div>
-    </form>
+        <PromptInput.Body>
+          <PromptInput.Textarea
+            data-autofocus
+            maxRows={5}
+            placeholder={t('input.placeholder')}
+            aria-label={t('input.placeholder')}
+          />
+        </PromptInput.Body>
+        <PromptInput.Footer className="justify-end">
+          <PromptInput.Submit
+            status={status}
+            label={status === 'streaming' ? t('launcher.stop') : t('launcher.send')}
+            disabled={status === 'submitted'}
+            className="size-7"
+            onClick={(event) => {
+              if (status !== 'streaming') return;
+              event.preventDefault();
+              onStop();
+            }}
+          />
+        </PromptInput.Footer>
+      </PromptInput>
+    </div>
   );
 }

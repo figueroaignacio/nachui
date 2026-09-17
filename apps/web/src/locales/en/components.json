@@ -41,7 +41,8 @@
       "placeholder": "Ask a question...",
       "resume": "Back to the chat",
       "shortcut": "Ctrl+I",
-      "send": "Send message"
+      "send": "Send message",
+      "stop": "Stop generating"
     },
     "selection": {
       "add": "Add to assistant",

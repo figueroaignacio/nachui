@@ -1,6 +1,5 @@
 'use client';
 
-import { useChatInput } from '@/features/chat/hooks/use-chat-input';
 import { useKbdShortcut } from '@/hooks/use-kbd-shortcut';
 import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll';
 import { useMediaQuery } from '@/hooks/use-media-query';
@@ -27,6 +26,7 @@ export function AiChat() {
     handleSuggestionClick,
     retry,
     resetChat,
+    stop,
     attachment,
     setAttachment,
     attachSelection,
@@ -43,8 +43,6 @@ export function AiChat() {
     },
     [attachment, setAttachment, isOpen, setIsOpen, sendMessage],
   );
-
-  const { message, setMessage, handleSubmit, handleKeyPress } = useChatInput(submit);
 
   const handleAddSelection = useCallback(() => {
     if (!selection) return;
@@ -73,14 +71,6 @@ export function AiChat() {
   const isMobile = useMediaQuery('(max-width: 47.99rem)');
   useLockBodyScroll(isOpen && isMobile);
 
-  const handleSuggestionClickWrapper = useCallback(
-    (text: string) => {
-      handleSuggestionClick(text);
-      setMessage('');
-    },
-    [handleSuggestionClick, setMessage],
-  );
-
   return (
     <div data-chat-open={isOpen ? 'true' : 'false'}>
       <AnimatePresence>
@@ -95,15 +85,13 @@ export function AiChat() {
         activeTool={activeTool}
         errorCode={errorCode}
         messagesEndRef={messagesEndRef as RefObject<HTMLDivElement>}
-        message={message}
-        onMessageChange={setMessage}
-        onSubmit={handleSubmit}
-        onKeyDown={handleKeyPress}
+        onSubmit={submit}
+        onStop={stop}
         onClose={handleClose}
         onReset={resetChat}
         attachment={attachment}
         onRemoveAttachment={() => setAttachment(null)}
-        onSuggestionClick={handleSuggestionClickWrapper}
+        onSuggestionClick={handleSuggestionClick}
         onRetry={retry}
         onToggleExpand={toggleExpanded}
         isModal={isMobile || isExpanded}

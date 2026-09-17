@@ -1,6 +1,7 @@
-import { Badge } from '@repo/ui/components/badge';
+'use client';
+
+import { Attachments } from '@repo/ui/ai/attachments';
 import { FileIcon } from '@repo/ui/icons/file';
-import { XIcon } from '@repo/ui/icons/x';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 
@@ -20,26 +21,20 @@ export function ChatAttachment({ text, onRemove, className }: ChatAttachmentProp
     collapsed.length > MAX_CHARS ? `${collapsed.slice(0, MAX_CHARS).trimEnd()}...` : collapsed;
 
   return (
-    <Badge
-      variant="outline"
-      title={collapsed}
-      className={cn(
-        'border-rule text-muted-foreground max-w-full gap-1.5 rounded-md px-2 py-1 font-normal tracking-normal',
-        className,
-      )}
-    >
-      <FileIcon size={12} className="shrink-0" aria-hidden="true" />
-      <span className="truncate">{preview}</span>
-      {onRemove && (
-        <button
-          type="button"
-          onClick={onRemove}
-          aria-label={t('remove')}
-          className="hover:text-foreground -mr-0.5 shrink-0 transition-colors"
-        >
-          <XIcon size={11} aria-hidden="true" />
-        </button>
-      )}
-    </Badge>
+    <Attachments variant="inline" className={cn('w-auto', className)}>
+      <Attachments.Item
+        data={{ id: 'selection', filename: preview }}
+        onRemove={onRemove}
+        title={collapsed}
+        className="border-rule text-muted-foreground max-w-full"
+      >
+        <Attachments.Preview
+          className="size-5 bg-transparent"
+          fallbackIcon={<FileIcon size={12} aria-hidden="true" />}
+        />
+        <Attachments.Info className="min-w-0" />
+        {onRemove && <Attachments.Remove label={t('remove')} className="border-none" />}
+      </Attachments.Item>
+    </Attachments>
   );
 }
