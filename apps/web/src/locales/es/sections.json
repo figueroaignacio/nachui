@@ -83,49 +83,6 @@
           "description": "Cumplimiento completo de las normas WCAG 2.2 y accesibilidad por teclado nativa."
         }
       ]
-    },
-    "showcase": {
-      "label": "Ejemplos en vivo",
-      "title": "No hay una librería abajo",
-      "description": "La mayoría de los catálogos son una capa de estilos sobre un kit headless que también tenés que instalar. Estos están escritos desde cero, y cada panel de abajo es el componente real corriendo en esta página.",
-      "cta": "Ver todos los elementos UI",
-      "featured": {
-        "badge": "Destacado",
-        "title": "Un panel de dashboard con cuatro slots y sin librería de gráficos",
-        "description": "Contribution History es una sola Card compuesta por los slots de header, content y footer. Las barras son divs con alturas basadas en tokens: leelo de arriba a abajo y cambiá la línea que quieras.",
-        "meta": ["Card.Header", "Card.Content", "Card.Footer", "Button"]
-      }
-    },
-    "assistant": {
-      "label": "Asistente integrado",
-      "title": "Conocé al asistente de IA de NachUI",
-      "description": "Cada página de la documentación viene con un asistente que leyó todo el código. Preguntale qué hace un componente, cómo componerlo o por qué existe un token. Responde desde el código real, no adivinando.",
-      "tooltip": "Sé todo sobre esto",
-      "cta": "Preguntale algo",
-      "roles": [
-        {
-          "title": "Lee el código",
-          "description": "Cada respuesta sale de los componentes, tokens y docs de este repo."
-        },
-        {
-          "title": "Explica en contexto",
-          "description": "Tocá “Explain this” en cualquier página y sigue justo donde estás leyendo."
-        },
-        {
-          "title": "Compone por vos",
-          "description": "Pedile un layout y te devuelve código que usa tus propios primitivos."
-        },
-        {
-          "title": "O traé tu propio agente",
-          "description": "La misma documentación se sirve como llms.txt y markdown crudo, así Claude, Cursor o Windsurf pueden leerla directo desde la fuente."
-        }
-      ]
-    },
-    "catalog": {
-      "label": "Registro de elementos UI",
-      "title": "{count} elementos UI, listos para copiar",
-      "description": "Todos los primitivos de NachUI. Accesibles, personalizables, tuyos desde el momento en que los pegás y legibles para cualquier agente que trabaje en tu código.",
-      "cta": "Ver la documentación"
     }
   },
   "bricks": {
@@ -146,6 +103,7 @@
       "docs": "Documentación",
       "components": "Elementos UI",
       "layout": "Elementos de layout",
+      "ai": "Elementos AI",
       "installation": "Instalación",
       "about": "Acerca de"
     },

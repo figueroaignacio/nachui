@@ -167,6 +167,93 @@ body {
   }
 }
 
+/*
+ * The hero wall: a masonry of real component previews drifting up a plane
+ * tilted away from the reader. Columns keep their natural card heights, which
+ * is what makes it read as a wall of components and not a row of tiles.
+ *
+ * The tilt is what keeps it reading as a backdrop instead of a carousel you
+ * are meant to operate, so the whole thing is inert.
+ */
+.preview-stage {
+  --preview-fade-y: 12%;
+  --preview-fade-x: 7%;
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent,
+      black var(--preview-fade-y),
+      black calc(100% - var(--preview-fade-y)),
+      transparent
+    ),
+    linear-gradient(
+      to right,
+      transparent,
+      black var(--preview-fade-x),
+      black calc(100% - var(--preview-fade-x)),
+      transparent
+    );
+  mask-composite: intersect;
+}
+
+.preview-plane {
+  --preview-tilt: 12deg;
+  --preview-yaw: -5deg;
+  --preview-roll: -4deg;
+  --preview-scale: 0.5;
+
+  transform: perspective(1600px) rotateX(var(--preview-tilt)) rotateY(var(--preview-yaw))
+    rotateZ(var(--preview-roll)) scale(var(--preview-scale));
+  transform-origin: 50% 0;
+}
+
+/*
+ * On a phone the wall is scaled down instead of reflowed, so more columns fit
+ * across and it still reads as a wall of components. The columns keep their
+ * layout size, so the copy-taller-than-stage rule from WallColumn still holds:
+ * at 0.5 the stage sees twice its height in plane space, which is why the
+ * stage is shorter on a phone than the shortest column would otherwise allow.
+ */
+@media (min-width: 40rem) {
+  .preview-plane {
+    --preview-scale: 0.7;
+  }
+}
+
+@media (min-width: 64rem) {
+  .preview-plane {
+    --preview-scale: 1;
+  }
+}
+
+.preview-column {
+  display: flex;
+  flex-direction: column;
+  height: max-content;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .preview-column {
+    animation: preview-drift var(--preview-duration, 90s) linear infinite;
+  }
+
+  .preview-column[data-direction='reverse'] {
+    animation-direction: reverse;
+  }
+}
+
+@keyframes preview-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
 .assistant-peek {
   transform: translate(40%, 30%);
 }

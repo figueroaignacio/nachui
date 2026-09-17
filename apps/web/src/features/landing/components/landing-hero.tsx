@@ -6,7 +6,7 @@ import { ArrowRightIcon } from '@repo/ui/icons/arrow-right';
 import { ArrowUpRightIcon } from '@repo/ui/icons/arrow-up-right';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
-import { PreviewMasonry } from './preview-masonry';
+import { PreviewWall } from './preview-wall';
 
 interface HomePageActions {
   href: string;
@@ -51,8 +51,8 @@ export function LandingHero() {
         </Link>
       </div>
 
-      <div className="mt-14 md:mt-20">
-        <PreviewMasonry />
+      <div className="mt-14 w-full md:mt-20">
+        <PreviewWall />
       </div>
     </section>
   );
