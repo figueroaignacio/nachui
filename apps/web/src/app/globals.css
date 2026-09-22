@@ -231,10 +231,15 @@ body {
   display: flex;
   flex-direction: column;
   height: max-content;
-  will-change: transform;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media (min-width: 40rem) {
+  .preview-column {
+    will-change: transform;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (min-width: 40rem) {
   .preview-column {
     animation: preview-drift var(--preview-duration, 90s) linear infinite;
   }
