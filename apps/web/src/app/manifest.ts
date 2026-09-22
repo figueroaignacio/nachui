@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'NachUI',
     short_name: 'NachUI',
     description:
-      'Editorial, zero-dependency React components copy-pasted directly into your repository.',
+      'AI elements for React, copy-pasted into your repository with no SDK and no provider lock-in.',
     start_url: '/',
     display: 'standalone',
     background_color: '#0b0c0f',

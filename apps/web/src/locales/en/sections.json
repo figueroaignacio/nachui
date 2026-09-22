@@ -1,20 +1,20 @@
 {
   "home": {
-    "badge": "Minimalism in code & design",
-    "subheading1": "Designed minimal for modern developers and their AI agents",
+    "badge": "AI elements for React",
+    "subheading1": "The chat and agent surfaces your product needs, as source you own",
     "subheading2": "",
-    "description": "React components to build your own design system in a simple way. The source lives in your repo, so your AI reads it like any other file.",
+    "description": "Prompt composers, reasoning panels, tool calls, task lists, token budgets. Copy-paste React components with no SDK and no provider lock-in, built on a minimal UI kit that lives in your repo so your AI reads it like any other file.",
     "actions": [
       {
-        "label": "Get started",
-        "href": "/docs",
-        "description": "A complete guide to integrate the minimalist design system into your codebase.",
+        "label": "Explore AI elements",
+        "href": "/docs/elements/ai",
+        "description": "Every surface an AI product needs, wired to whatever runs your model.",
         "variant": "default"
       },
       {
-        "label": "View UI elements",
-        "href": "/docs/elements/ui",
-        "description": "Explore all copy-paste ready minimalist React components.",
+        "label": "Get started",
+        "href": "/docs",
+        "description": "Install the CLI, pull the primitives, ship.",
         "variant": "secondary"
       }
     ],
@@ -50,36 +50,36 @@
       "description": "A design system built to get out of your way. Fast page speeds, clean type hierarchies, and total codebase control.",
       "items": [
         {
-          "title": "Editorial AI Docs",
-          "description": "An integrated assistant that knows the codebase inside out to answer your questions instantly."
+          "title": "AI elements first",
+          "description": "Composer, reasoning, chain of thought, tasks, context window, attachments and suggestions. The parts of a chat that generic kits leave to you."
         },
         {
-          "title": "Pragmatic CLI",
-          "description": "Inject components, variables, and layouts into your workspace with a single clean command."
+          "title": "SDK agnostic",
+          "description": "Props in, events out. Wire them to the Vercel AI SDK, your own fetch or a websocket. No provider knows they exist."
         },
         {
-          "title": "Document-Style Reference",
-          "description": "Copy-paste ready components. No npm dependency bloat. Clear visual separation."
+          "title": "UI primitives underneath",
+          "description": "Buttons, inputs, dialogs, frames and menus in the same voice. The AI elements are built on them, and so can your product."
         },
         {
-          "title": "Pristine Ownership",
+          "title": "Pristine ownership",
           "description": "No hidden runtime scripts or upstream updates. Inspect and modify every single line."
         },
         {
-          "title": "Absolute Efficiency",
-          "description": "Maximum loading performance. Only compile the exact lines of code your project requires."
+          "title": "Pragmatic CLI",
+          "description": "Inject components, variables and layouts into your workspace with a single command."
         },
         {
-          "title": "Quiet Transitions",
-          "description": "Subtle, non-distracting motion scales and scroll entry animations for premium feedback."
+          "title": "Editorial AI docs",
+          "description": "An integrated assistant that reads the real source to answer your questions, plus llms.txt and raw markdown for yours."
         },
         {
-          "title": "Refined Minimalism",
-          "description": "Harmonious warm bone tones, thin structural border rules, and crisp type hierarchies."
+          "title": "Refined minimalism",
+          "description": "Warm bone tones, thin structural rules and crisp type hierarchies."
         },
         {
-          "title": "Inclusive Design",
-          "description": "Full WCAG 2.2 standards and keyboard accessibility baked into every layout primitive."
+          "title": "Inclusive design",
+          "description": "WCAG 2.2 and keyboard accessibility baked into every primitive."
         }
       ]
     }

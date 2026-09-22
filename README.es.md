@@ -2,9 +2,9 @@
 
 [English](./README.md) | [Español]
 
-### Componentes de sistema de diseño que realmente te pertenecen, y que tu IA puede leer.
+### AI elements para React que realmente te pertenecen, y que tu IA puede leer.
 
-**NachUI** es un conjunto de componentes de UI **copy-paste y sin dependencias**, construido con **React**, **Next.js**, **Tailwind** y **Motion**. Ofrece una base de código de alta propiedad y fácil mantenimiento, en lugar de librerías externas infladas.
+**NachUI** es un conjunto de componentes de React **copy-paste y sin dependencias** para interfaces de chat y agentes: composers de prompt, paneles de razonamiento, tool calls, listas de tareas, presupuesto de tokens. Reciben los datos por props y se conectan a lo que sea que corra tu modelo, sin SDK ni atadura a un proveedor. Debajo hay un kit de UI minimalista (botones, inputs, diálogos, frames) construido con **React**, **Next.js**, **Tailwind** y **Motion**, para que todo el producto hable con la misma voz.
 
 También está escrito para el agente que tengas abierto al lado. Nada queda compilado, así que un asistente de código trabaja sobre el mismo código plano que vos, y la documentación se publica en un formato que puede leer de verdad.
 

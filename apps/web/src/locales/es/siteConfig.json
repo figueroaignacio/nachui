@@ -1,6 +1,6 @@
 {
-  "title": "Sistema de diseño React minimalista que te pertenece y que tu IA puede leer.",
-  "description": "Componentes de React editoriales y sin dependencias, copiados directamente a tu repositorio. Hecho para que vos y tu asistente de IA lean lo mismo: código plano, un índice llms.txt, documentación en markdown y skills instalables.",
+  "title": "AI elements para React que te pertenecen y que tu IA puede leer.",
+  "description": "Componentes de React copy-paste para interfaces de chat y agentes, sin SDK ni atadura a un proveedor, construidos sobre un kit de UI minimalista y sin dependencias. Código plano en tu repo, un índice llms.txt, documentación en markdown y skills instalables.",
   "openGraph": {
     "type": "website",
     "siteName": "NachUI",
@@ -9,7 +9,7 @@
         "url": "/opengraph-image",
         "width": 1200,
         "height": 630,
-        "alt": "Componentes de React editoriales y sin dependencias, copiados directamente a tu repositorio. Hecho para que vos y tu asistente de IA lean lo mismo: código plano, un índice llms.txt, documentación en markdown y skills instalables."
+        "alt": "Componentes de React copy-paste para interfaces de chat y agentes, sin SDK ni atadura a un proveedor, construidos sobre un kit de UI minimalista y sin dependencias. Código plano en tu repo, un índice llms.txt, documentación en markdown y skills instalables."
       }
     ]
   },

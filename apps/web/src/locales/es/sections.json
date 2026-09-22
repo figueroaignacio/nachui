@@ -1,21 +1,21 @@
 {
   "home": {
-    "badge": "Minimalismo en código y diseño",
-    "subheading1": "Diseñado de manera minimalista para desarrolladores modernos y sus agentes de IA",
+    "badge": "AI elements para React",
+    "subheading1": "Las superficies de chat y agentes que tu producto necesita, como código tuyo",
     "subheading2": "",
-    "description": "Componentes de React para crear tu propio sistema de diseño de manera sencilla. El código vive en tu repo, así que tu IA lo lee como cualquier otro archivo.",
+    "description": "Composers de prompt, paneles de razonamiento, tool calls, listas de tareas, presupuesto de tokens. Componentes de React copy-paste sin SDK ni atadura a un proveedor, construidos sobre un kit de UI minimalista que vive en tu repo para que tu IA lo lea como cualquier otro archivo.",
     "github": "Código abierto, el código es tuyo",
     "actions": [
       {
-        "label": "Comenzar",
-        "href": "/docs",
-        "description": "Una guía completa para integrar el sistema de diseño minimalista en tu código.",
+        "label": "Explorar AI elements",
+        "href": "/docs/elements/ai",
+        "description": "Cada superficie que necesita un producto con IA, conectada a lo que sea que corra tu modelo.",
         "variant": "default"
       },
       {
-        "label": "Ver elementos UI",
-        "href": "/docs/elements/ui",
-        "description": "Explora todos los componentes minimalistas de React listos para copiar y pegar.",
+        "label": "Comenzar",
+        "href": "/docs",
+        "description": "Instalá la CLI, traé las primitivas, publicá.",
         "variant": "secondary"
       }
     ],
@@ -51,36 +51,36 @@
       "description": "Un sistema de diseño creado para no interponerse en tu camino. Velocidad de carga instantánea, jerarquías tipográficas limpias y control absoluto del código.",
       "items": [
         {
-          "title": "Docs con IA Editorial",
-          "description": "Un asistente inteligente integrado que conoce el código al detalle para responder tus dudas al instante."
+          "title": "AI elements primero",
+          "description": "Composer, razonamiento, chain of thought, tareas, ventana de contexto, adjuntos y sugerencias. Las partes de un chat que los kits genéricos te dejan a vos."
         },
         {
-          "title": "CLI Pragmática",
-          "description": "Inyecta componentes, variables y layouts en tu espacio de trabajo con un solo comando limpio."
+          "title": "Agnóstico del SDK",
+          "description": "Props que entran, eventos que salen. Conectalos al Vercel AI SDK, a tu propio fetch o a un websocket. Ningún proveedor sabe que existen."
         },
         {
-          "title": "Referencia Estilo Documento",
-          "description": "Componentes listos para copiar y pegar. Sin sobrecarga de dependencias npm. Claridad visual."
+          "title": "Primitivas de UI debajo",
+          "description": "Botones, inputs, diálogos, frames y menús con la misma voz. Los AI elements se construyen sobre ellas, y tu producto también puede."
         },
         {
-          "title": "Propiedad Absoluta",
-          "description": "Sin scripts ocultos en runtime ni actualizaciones de terceros. Inspecciona y modifica cada línea."
+          "title": "Propiedad absoluta",
+          "description": "Sin scripts ocultos en runtime ni actualizaciones de terceros. Inspeccioná y modificá cada línea."
         },
         {
-          "title": "Eficiencia Total",
-          "description": "Rendimiento óptimo. Compila exclusivamente las líneas exactas de código que requiere tu proyecto."
+          "title": "CLI pragmática",
+          "description": "Inyectá componentes, variables y layouts en tu espacio de trabajo con un solo comando."
         },
         {
-          "title": "Transiciones Silenciosas",
-          "description": "Animaciones de entrada y hover sumamente sutiles y no intrusivas para una experiencia premium."
+          "title": "Docs con IA editorial",
+          "description": "Un asistente integrado que lee el código real para responder tus dudas, más llms.txt y markdown plano para la tuya."
         },
         {
-          "title": "Minimalismo Refinado",
-          "description": "Tonos cálidos warm bone, líneas divisorias delgadas y jerarquías tipográficas perfectamente legibles."
+          "title": "Minimalismo refinado",
+          "description": "Tonos cálidos warm bone, líneas divisorias delgadas y jerarquías tipográficas legibles."
         },
         {
-          "title": "Diseño Inclusivo",
-          "description": "Cumplimiento completo de las normas WCAG 2.2 y accesibilidad por teclado nativa."
+          "title": "Diseño inclusivo",
+          "description": "WCAG 2.2 y accesibilidad por teclado en cada primitiva."
         }
       ]
     }
