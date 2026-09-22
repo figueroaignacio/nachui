@@ -97,39 +97,8 @@
     ]
   },
   "footer": {
-    "product": {
-      "title": "Product",
-      "docs": "Documentation",
-      "components": "UI Elements",
-      "layout": "Layout Elements",
-      "ai": "AI Elements",
-      "installation": "Installation",
-      "about": "About"
-    },
-    "resources": {
-      "title": "Resources",
-      "theming": "Theming",
-      "darkMode": "Dark Mode",
-      "cli": "CLI",
-      "llmsTxt": "llms.txt",
-      "examples": "Examples"
-    },
-    "community": {
-      "title": "Community",
-      "github": "GitHub",
-      "discord": "Discord",
-      "twitter": "Twitter",
-      "contributing": "Contributing"
-    },
-    "legal": {
-      "title": "Legal",
-      "privacy": "Privacy Policy",
-      "terms": "Terms of Service",
-      "license": "License"
-    },
-    "copyright": "All rights reserved.",
-    "developedBy": "Developed by ",
-    "sitemap": "Sitemap"
+    "builtBy": "Built by",
+    "source": "The source code is available on"
   },
   "faq": {
     "title": "Ownership, Control, and Transparent Code",

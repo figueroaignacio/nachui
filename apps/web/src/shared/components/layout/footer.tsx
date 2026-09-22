@@ -1,153 +1,43 @@
-import { AiPerch } from '@/features/chat/ui/ai-perch';
-import { Link } from '@/i18n/navigation';
 import { GITHUB_REPO_URL } from '@/lib/domains';
-import { Separator } from '@repo/ui/components/separator';
 import { useTranslations } from 'next-intl';
 import { LocaleSwitcher } from '../common/locale-switcher';
-import { RegistrationMark } from '../common/registration-mark';
 import { ThemeToggle } from '../common/theme-toggle';
 
+const linkClassName =
+  'text-foreground font-medium underline underline-offset-4 decoration-border hover:decoration-foreground transition-colors';
+
 export function Footer() {
-  const t = useTranslations('sections');
-  const currentYear = new Date().getFullYear();
+  const t = useTranslations('sections.footer');
 
   return (
     <footer data-site-footer className="border-rule border-t pb-24">
       <div className="page-frame-outer">
         <div className="page-frame">
-          <div className="flex w-full flex-col gap-6 pt-10 pb-8 md:flex-row md:items-start md:justify-between md:pt-14">
-            <div className="max-w-xs space-y-3">
-              <span className="text-foreground font-mono text-sm font-medium">nachui</span>
-              <p className="text-muted-foreground text-[13px] leading-relaxed">
-                {t('home.description')}
-              </p>
+          <div className="flex w-full flex-col gap-4 py-6 md:flex-row md:items-center md:justify-between">
+            <p className="text-muted-foreground text-[13px] leading-relaxed text-balance">
+              {t('builtBy')}{' '}
+              <a
+                href="https://ignaciofigueroa.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={linkClassName}
+              >
+                ignaciofigueroa
+              </a>
+              . {t('source')}{' '}
               <a
                 href={GITHUB_REPO_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground inline-block font-mono text-xs transition-colors"
-                aria-label="GitHub repository"
+                className={linkClassName}
               >
-                github
+                GitHub
               </a>
-            </div>
-            <div className="grid grid-cols-2 gap-x-12 gap-y-6 sm:grid-cols-3">
-              <div className="space-y-3">
-                <p className="text-muted-foreground font-mono text-[11px] tracking-[0.2em] uppercase">
-                  {t('footer.product.title')}
-                </p>
-                <ul className="space-y-2">
-                  {(
-                    [
-                      ['/docs', t('footer.product.docs')],
-                      ['/docs/elements/ui', t('footer.product.components')],
-                      ['/docs/elements/layout', t('footer.product.layout')],
-                      ['/docs/elements/ai', t('footer.product.ai')],
-                      ['/docs/installation', t('footer.product.installation')],
-                      ['/about', t('footer.product.about')],
-                    ] as [string, string][]
-                  ).map(([href, label]) => (
-                    <li key={href}>
-                      <Link
-                        href={href}
-                        className="text-muted-foreground hover:text-foreground text-[13px] transition-colors"
-                      >
-                        {label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="space-y-3">
-                <p className="text-muted-foreground font-mono text-[11px] tracking-[0.2em] uppercase">
-                  {t('footer.resources.title')}
-                </p>
-                <ul className="space-y-2">
-                  {(
-                    [
-                      ['/docs/concepts/theming', t('footer.resources.theming')],
-                      ['/docs/concepts/dark-mode', t('footer.resources.darkMode')],
-                      ['/docs/concepts/cli', t('footer.resources.cli')],
-                      ['/docs/concepts/llms-txt', t('footer.resources.llmsTxt')],
-                    ] as [string, string][]
-                  ).map(([href, label]) => (
-                    <li key={href}>
-                      <Link
-                        href={href}
-                        className="text-muted-foreground hover:text-foreground text-[13px] transition-colors"
-                      >
-                        {label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="space-y-3">
-                <p className="text-muted-foreground font-mono text-[11px] tracking-[0.2em] uppercase">
-                  {t('footer.community.title')}
-                </p>
-                <ul className="space-y-2">
-                  <li>
-                    <a
-                      href={GITHUB_REPO_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-foreground text-[13px] transition-colors"
-                    >
-                      {t('footer.community.github')}
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="rule-bleed" />
-            <AiPerch className="ai-edge-perch" expression="asleep" />
-          </div>
-
-          <RegistrationMark />
-
-          <div className="flex w-full flex-col gap-6 py-6 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
-            <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-6">
-              <p className="text-muted-foreground font-mono text-xs">
-                © {currentYear} NachUI. {t('footer.copyright')}
-              </p>
-              <p className="text-muted-foreground font-mono text-xs">
-                {t('footer.developedBy')}{' '}
-                <a
-                  href="https://ignaciofigueroa.dev"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-foreground transition-colors"
-                >
-                  ignaciofigueroa.dev
-                </a>
-              </p>
-            </div>
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-8">
-              <div className="flex items-center gap-6">
-                <Link
-                  href="/sitemap.xml"
-                  className="text-muted-foreground hover:text-foreground font-mono text-xs transition-colors"
-                >
-                  {t('footer.sitemap')}
-                </Link>
-                <Link
-                  href="/rss.xml"
-                  className="text-muted-foreground hover:text-foreground font-mono text-xs transition-colors"
-                >
-                  rss
-                </Link>
-              </div>
-              <Separator orientation="vertical" className="hidden h-4 sm:block" />
-              <div className="flex items-center gap-3">
-                <LocaleSwitcher />
-                <ThemeToggle />
-              </div>
+              .
+            </p>
+            <div className="flex items-center gap-3">
+              <LocaleSwitcher />
+              <ThemeToggle />
             </div>
           </div>
         </div>

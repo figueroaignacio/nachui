@@ -98,39 +98,8 @@
     ]
   },
   "footer": {
-    "product": {
-      "title": "Producto",
-      "docs": "Documentación",
-      "components": "Elementos UI",
-      "layout": "Elementos de layout",
-      "ai": "Elementos AI",
-      "installation": "Instalación",
-      "about": "Acerca de"
-    },
-    "resources": {
-      "title": "Recursos",
-      "theming": "Tematización",
-      "darkMode": "Modo Oscuro",
-      "cli": "CLI",
-      "llmsTxt": "llms.txt",
-      "examples": "Ejemplos"
-    },
-    "community": {
-      "title": "Comunidad",
-      "github": "GitHub",
-      "discord": "Discord",
-      "twitter": "Twitter",
-      "contributing": "Contribuir"
-    },
-    "legal": {
-      "title": "Legal",
-      "privacy": "Política de Privacidad",
-      "terms": "Términos de Servicio",
-      "license": "Licencia"
-    },
-    "copyright": "Todos los derechos reservados.",
-    "developedBy": "Desarrollado por ",
-    "sitemap": "Mapa del sitio"
+    "builtBy": "Hecho por",
+    "source": "El código fuente está disponible en"
   },
   "faq": {
     "title": "Propiedad, Control y Código Transparente",
