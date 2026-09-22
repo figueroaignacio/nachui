@@ -1,0 +1,95 @@
+---
+title: Sources
+description: A collapsed list of the citations behind an answer, each with a favicon, a title and its host.
+published: true
+date: 2026-09-22
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="sources" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="sources" />
+
+## Anatomy
+
+```tsx
+import { Sources } from '@/components/ui/sources';
+```
+
+```tsx
+<Sources>
+  <Sources.Trigger />
+  <Sources.Content>
+    <Sources.Item href="https://react.dev/reference/react/use" title="use – React" />
+    <Sources.Item href="https://www.w3.org/WAI/ARIA/apg/" title="ARIA Authoring Practices" />
+  </Sources.Content>
+</Sources>
+```
+
+Sources start closed. The trigger counts the items on its own and reads "Used 2 sources", so the answer keeps its shape and the citations sit one click away.
+
+## Composition
+
+Use the following composition to build `Sources`:
+
+```tree
+Sources
+├── Sources.Trigger
+└── Sources.Content
+    └── Sources.Item
+```
+
+## Open by default
+
+Pass `defaultOpen` when the citations are the point, for example in a research view. Each item derives its host from the `href` and pulls a favicon for it, and `favicon` overrides that image or removes it with `null`.
+
+<ComponentPreview component="sources" demo="open" />
+
+## Labels
+
+`label` on the trigger receives the count and returns the text, which is where translations go. Give the trigger children instead to replace the label entirely. When the number of items is not the number of citations, say because the list is paginated, set `count` on the root.
+
+## API Reference
+
+### Sources
+
+| Prop           | Type                      | Default | Description                                    |
+| -------------- | ------------------------- | ------- | ---------------------------------------------- |
+| `defaultOpen`  | `boolean`                 | `false` | Open state when uncontrolled                   |
+| `open`         | `boolean`                 | -       | Controlled open state                          |
+| `onOpenChange` | `(open: boolean) => void` | -       | Called when the open state changes             |
+| `count`        | `number`                  | -       | Number shown in the trigger, defaults to items |
+| `className`    | `string`                  | -       | Additional CSS classes                         |
+
+### Sources.Trigger
+
+| Prop        | Type                        | Default          | Description                     |
+| ----------- | --------------------------- | ---------------- | ------------------------------- |
+| `label`     | `(count: number) => string` | `Used N sources` | Builds the label from the count |
+| `children`  | `ReactNode`                 | -                | Replaces the label when given   |
+| `className` | `string`                    | -                | Additional CSS classes          |
+
+### Sources.Content
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### Sources.Item
+
+| Prop        | Type             | Default        | Description                              |
+| ----------- | ---------------- | -------------- | ---------------------------------------- |
+| `href`      | `string`         | -              | Link to the source, opens in a new tab   |
+| `title`     | `string`         | -              | Text of the citation                     |
+| `favicon`   | `string \| null` | Google favicon | Image next to the title, `null` hides it |
+| `children`  | `ReactNode`      | -              | Replaces the title when given            |
+| `className` | `string`         | -              | Additional CSS classes                   |
+
+### sourceHost
+
+`sourceHost(href)` returns the hostname of a URL without its `www.` prefix, and the input unchanged when it is not a URL.

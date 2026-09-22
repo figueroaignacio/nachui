@@ -395,6 +395,12 @@
       "title": "Elementos AI",
       "items": [
         {
+          "title": "Actions",
+          "href": "/docs/elements/ai/actions",
+          "description": "La fila de botones de copiar, reintentar y feedback debajo de una respuesta.",
+          "badge": "new"
+        },
+        {
           "title": "Attachments",
           "href": "/docs/elements/ai/attachments",
           "description": "Archivos colgando de un mensaje o de un composer, como grilla, fila de chips o lista.",
@@ -407,9 +413,21 @@
           "badge": "new"
         },
         {
+          "title": "Code Block",
+          "href": "/docs/elements/ai/code-block",
+          "description": "Código dentro de una respuesta, con botón de copiar, números de línea y plegado para snippets largos.",
+          "badge": "new"
+        },
+        {
           "title": "Context",
           "href": "/docs/elements/ai/context",
           "description": "Cuánto de la ventana de contexto se gastó, como un medidor con el desglose al pasar el mouse.",
+          "badge": "new"
+        },
+        {
+          "title": "Conversation",
+          "href": "/docs/elements/ai/conversation",
+          "description": "El hilo con scroll que mantiene a la vista el mensaje más nuevo mientras llega.",
           "badge": "new"
         },
         {
@@ -425,9 +443,21 @@
           "badge": "new"
         },
         {
+          "title": "Response",
+          "href": "/docs/elements/ai/response",
+          "description": "La respuesta del asistente, con un cursor mientras llega y un skeleton antes del primer token.",
+          "badge": "new"
+        },
+        {
           "title": "Shimmer",
           "href": "/docs/elements/ai/shimmer",
           "description": "Texto con una luz que lo recorre, para el momento previo a la respuesta del modelo.",
+          "badge": "new"
+        },
+        {
+          "title": "Sources",
+          "href": "/docs/elements/ai/sources",
+          "description": "Las fuentes detrás de una respuesta, plegadas bajo un contador hasta que el lector las quiera.",
           "badge": "new"
         },
         {
@@ -440,6 +470,12 @@
           "title": "Task",
           "href": "/docs/elements/ai/task",
           "description": "Un paso plegable con estado, para mostrar qué hizo un agente y qué archivos tocó.",
+          "badge": "new"
+        },
+        {
+          "title": "Tool",
+          "href": "/docs/elements/ai/tool",
+          "description": "Una llamada a herramienta con su estado, entrada y salida, plegada en una tarjeta.",
           "badge": "new"
         }
       ]

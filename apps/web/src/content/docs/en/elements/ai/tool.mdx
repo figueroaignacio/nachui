@@ -1,0 +1,100 @@
+---
+title: Tool
+description: A collapsible card for a tool call, with the call's status, its input and what came back.
+published: true
+date: 2026-09-22
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="tool" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="tool" />
+
+## Anatomy
+
+```tsx
+import { Tool } from '@/components/ui/tool';
+```
+
+```tsx
+<Tool status="complete">
+  <Tool.Header name="get_projects" description="Lists the public projects" />
+  <Tool.Content>
+    <Tool.Input value={{ locale: 'en', limit: 3 }} />
+    <Tool.Output value={projects} />
+  </Tool.Content>
+</Tool>
+```
+
+A tool call starts closed. The name and the status are what the reader needs at a glance; the payloads are there for whoever wants to check them. Pass `defaultOpen` to the calls worth showing, like a failed one.
+
+`Tool.Input` and `Tool.Output` take any `value`: a string is printed as is, anything else is pretty-printed as JSON. Give `Tool.Output` children instead when the result deserves real markup.
+
+## Composition
+
+Use the following composition to build a `Tool`:
+
+```tree
+Tool
+├── Tool.Header
+└── Tool.Content
+    ├── Tool.Input
+    └── Tool.Output
+```
+
+## Statuses
+
+`status` lives on the root and drives the indicator in the header: `pending` waits with a dot, `running` spins, `complete` checks off and `error` flags. Pair `error` with `<Tool.Output error />` so the payload reads as the failure it is.
+
+<ComponentPreview component="tool" demo="statuses" />
+
+## API Reference
+
+### Tool
+
+| Prop           | Type                                              | Default      | Description                        |
+| -------------- | ------------------------------------------------- | ------------ | ---------------------------------- |
+| `status`       | `'pending' \| 'running' \| 'complete' \| 'error'` | `'complete'` | State of the call                  |
+| `defaultOpen`  | `boolean`                                         | `false`      | Open state when uncontrolled       |
+| `open`         | `boolean`                                         | -            | Controlled open state              |
+| `onOpenChange` | `(open: boolean) => void`                         | -            | Called when the open state changes |
+| `className`    | `string`                                          | -            | Additional CSS classes             |
+
+### Tool.Header
+
+| Prop           | Type                              | Default | Description                          |
+| -------------- | --------------------------------- | ------- | ------------------------------------ |
+| `name`         | `string`                          | -       | Name of the tool                     |
+| `description`  | `string`                          | -       | One line under the name              |
+| `statusLabels` | `Partial<Record<Status, string>>` | -       | Screen reader labels for each status |
+| `className`    | `string`                          | -       | Additional CSS classes               |
+
+### Tool.Content
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### Tool.Input
+
+| Prop        | Type        | Default   | Description                                    |
+| ----------- | ----------- | --------- | ---------------------------------------------- |
+| `label`     | `string`    | `'Input'` | Label above the block                          |
+| `value`     | `unknown`   | -         | Printed as is when a string, as JSON otherwise |
+| `children`  | `ReactNode` | -         | Replaces `value` when given                    |
+| `className` | `string`    | -         | Additional CSS classes                         |
+
+### Tool.Output
+
+| Prop        | Type        | Default    | Description                                    |
+| ----------- | ----------- | ---------- | ---------------------------------------------- |
+| `label`     | `string`    | `'Output'` | Label above the block                          |
+| `value`     | `unknown`   | -          | Printed as is when a string, as JSON otherwise |
+| `error`     | `boolean`   | `false`    | Destructive tones for a failed call            |
+| `children`  | `ReactNode` | -          | Replaces `value` when given                    |
+| `className` | `string`    | -          | Additional CSS classes                         |

@@ -1,0 +1,96 @@
+---
+title: Conversation
+description: El hilo con scroll de un chat, pegado al último mensaje mientras llega el stream y fácil de retomar cuando te alejás.
+published: true
+date: 2026-09-22
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="conversation" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="conversation" />
+
+## Anatomía
+
+```tsx
+import { Conversation } from '@/components/ui/conversation';
+```
+
+```tsx
+<Conversation className="h-96">
+  <Conversation.Content>
+    {messages.map((message) => (
+      <Message key={message.id}>...</Message>
+    ))}
+  </Conversation.Content>
+  <Conversation.ScrollButton />
+</Conversation>
+```
+
+La raíz es el contenedor con scroll, así que dale una altura. Se renderiza como una región en vivo de tipo polite, que es como un lector de pantalla se entera de los mensajes nuevos sin que lo interrumpan a mitad de una frase.
+
+## Composición
+
+Usa la siguiente composición para construir un `Conversation`:
+
+```tree
+Conversation
+├── Conversation.Content
+├── Conversation.ScrollButton
+└── Conversation.Empty
+```
+
+## Pegado al fondo
+
+Mientras el usuario está abajo, el contenido nuevo mantiene el hilo pegado ahí, que es lo que querés durante un stream. Apenas scrollea hacia arriba el hilo lo suelta, y aparece el botón para volver al último mensaje con un click. Si baja a mano, se vuelve a pegar solo.
+
+<ComponentPreview component="conversation" demo="streaming" />
+
+Poné `stickToBottom={false}` para apagar el anclaje y quedarte solo con el contenedor y el botón.
+
+## Estado vacío
+
+`Conversation.Empty` llena el hilo antes del primer mensaje. Metele la intro o un par de sugerencias, y cambialo por `Conversation.Content` cuando haya algo que mostrar.
+
+## useConversation
+
+`useConversation()` lee si el hilo está pegado y expone `scrollToBottom`, así un composer puede bajar el hilo después de enviar.
+
+```tsx
+const { stuck, scrollToBottom } = useConversation();
+```
+
+## Referencia de API
+
+### Conversation
+
+| Prop            | Type                       | Default | Description                                         |
+| --------------- | -------------------------- | ------- | --------------------------------------------------- |
+| `stickToBottom` | `boolean`                  | `true`  | Mantiene el hilo pegado mientras crece el contenido |
+| `onStickChange` | `(stuck: boolean) => void` | -       | Se llama cuando el hilo se pega o se suelta         |
+| `className`     | `string`                   | -       | Clases CSS adicionales, dale una altura             |
+
+### Conversation.Content
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |
+
+### Conversation.ScrollButton
+
+| Prop        | Type        | Default              | Description                    |
+| ----------- | ----------- | -------------------- | ------------------------------ |
+| `label`     | `string`    | `'Scroll to bottom'` | Nombre accesible del botón     |
+| `children`  | `ReactNode` | -                    | Reemplaza el icono del chevron |
+| `className` | `string`    | -                    | Clases CSS adicionales         |
+
+### Conversation.Empty
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |

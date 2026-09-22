@@ -1,0 +1,75 @@
+---
+title: Response
+description: La respuesta del asistente como una columna de prosa, con un cursor mientras llegan los tokens y un esqueleto antes del primero.
+published: true
+date: 2026-09-22
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="response" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="response" />
+
+## Anatomía
+
+```tsx
+import { Response } from '@/components/ui/response';
+```
+
+```tsx
+<Response isStreaming={status === 'streaming'}>
+  <ReactMarkdown>{message.content}</ReactMarkdown>
+</Response>
+```
+
+`Response` no parsea markdown. Le da estilo a lo que renderices adentro: párrafos, títulos, listas, código inline y citas reciben el espaciado y la tipografía de una respuesta, y un `CodeBlock` entra tal cual. Renderizá el markdown con react-markdown o con tu propio pipeline y pasá el resultado como children, así el componente sigue sin dependencias y el renderer lo controlás vos.
+
+## Composición
+
+Usá la siguiente composición para construir un `Response`:
+
+```tree
+Response
+├── Response.Content
+└── Response.Caret
+Response.Skeleton
+```
+
+## Streaming
+
+Mientras `isStreaming` es true, un cursor parpadea después del último nodo y la raíz lleva `aria-busy`. Antes del primer token no hay nada que mostrar, así que renderizá `Response.Skeleton` en su lugar: tres líneas con brillo que se leen como una respuesta escribiéndose.
+
+<ComponentPreview component="response" demo="streaming" />
+
+## Referencia de API
+
+### Response
+
+| Prop          | Type      | Default | Description                           |
+| ------------- | --------- | ------- | ------------------------------------- |
+| `isStreaming` | `boolean` | `false` | Muestra el cursor y setea `aria-busy` |
+| `className`   | `string`  | -       | Clases CSS adicionales                |
+
+### Response.Content
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |
+
+### Response.Caret
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |
+
+### Response.Skeleton
+
+| Prop        | Type       | Default                | Description                    |
+| ----------- | ---------- | ---------------------- | ------------------------------ |
+| `lines`     | `string[]` | tres líneas de relleno | Texto de cada línea con brillo |
+| `className` | `string`   | -                      | Clases CSS adicionales         |

@@ -11,6 +11,7 @@ export const FAMILIES = [
 
 export const COMPONENT_REGISTRY = {
   accordion: 'packages/ui/src/components/accordion.tsx',
+  actions: 'packages/ui/src/ai/actions.tsx',
   'aspect-ratio': 'packages/ui/src/layout/aspect-ratio.tsx',
   attachment: 'packages/ui/src/components/attachment.tsx',
   attachments: 'packages/ui/src/ai/attachments.tsx',
@@ -25,11 +26,13 @@ export const COMPONENT_REGISTRY = {
   center: 'packages/ui/src/layout/center.tsx',
   'chain-of-thought': 'packages/ui/src/ai/chain-of-thought.tsx',
   checkbox: 'packages/ui/src/components/checkbox.tsx',
+  'code-block': 'packages/ui/src/ai/code-block.tsx',
   collapsible: 'packages/ui/src/components/collapsible.tsx',
   command: 'packages/ui/src/components/command.tsx',
   container: 'packages/ui/src/layout/container.tsx',
   context: 'packages/ui/src/ai/context.tsx',
   'context-menu': 'packages/ui/src/components/context-menu.tsx',
+  conversation: 'packages/ui/src/ai/conversation.tsx',
   dialog: 'packages/ui/src/components/dialog.tsx',
   dock: 'packages/ui/src/components/dock.tsx',
   drawer: 'packages/ui/src/components/drawer.tsx',
@@ -55,6 +58,7 @@ export const COMPONENT_REGISTRY = {
   rating: 'packages/ui/src/components/rating.tsx',
   reasoning: 'packages/ui/src/ai/reasoning.tsx',
   resizable: 'packages/ui/src/components/resizable.tsx',
+  response: 'packages/ui/src/ai/response.tsx',
   'scroll-area': 'packages/ui/src/components/scroll-area.tsx',
   section: 'packages/ui/src/layout/section.tsx',
   select: 'packages/ui/src/components/select.tsx',
@@ -62,6 +66,7 @@ export const COMPONENT_REGISTRY = {
   shimmer: 'packages/ui/src/ai/shimmer.tsx',
   skeleton: 'packages/ui/src/components/skeleton.tsx',
   snippet: 'packages/ui/src/components/snippet.tsx',
+  sources: 'packages/ui/src/ai/sources.tsx',
   spacer: 'packages/ui/src/layout/spacer.tsx',
   spinner: 'packages/ui/src/components/spinner.tsx',
   split: 'packages/ui/src/layout/split.tsx',
@@ -76,6 +81,7 @@ export const COMPONENT_REGISTRY = {
   textarea: 'packages/ui/src/components/textarea.tsx',
   timeline: 'packages/ui/src/components/timeline.tsx',
   toast: 'packages/ui/src/components/toast.tsx',
+  tool: 'packages/ui/src/ai/tool.tsx',
   tooltip: 'packages/ui/src/components/tooltip.tsx',
   tree: 'packages/ui/src/components/tree.tsx',
   typography: 'packages/ui/src/components/typography.tsx',
@@ -84,6 +90,7 @@ export const COMPONENT_REGISTRY = {
 /** Which family each component belongs to. */
 export const COMPONENT_FAMILY = {
   accordion: 'ui',
+  actions: 'ai',
   'aspect-ratio': 'layout',
   attachment: 'ui',
   attachments: 'ai',
@@ -98,11 +105,13 @@ export const COMPONENT_FAMILY = {
   center: 'layout',
   'chain-of-thought': 'ai',
   checkbox: 'ui',
+  'code-block': 'ai',
   collapsible: 'ui',
   command: 'ui',
   container: 'layout',
   context: 'ai',
   'context-menu': 'ui',
+  conversation: 'ai',
   dialog: 'ui',
   dock: 'ui',
   drawer: 'ui',
@@ -128,6 +137,7 @@ export const COMPONENT_FAMILY = {
   rating: 'ui',
   reasoning: 'ai',
   resizable: 'ui',
+  response: 'ai',
   'scroll-area': 'ui',
   section: 'layout',
   select: 'ui',
@@ -135,6 +145,7 @@ export const COMPONENT_FAMILY = {
   shimmer: 'ai',
   skeleton: 'ui',
   snippet: 'ui',
+  sources: 'ai',
   spacer: 'layout',
   spinner: 'ui',
   split: 'layout',
@@ -149,6 +160,7 @@ export const COMPONENT_FAMILY = {
   textarea: 'ui',
   timeline: 'ui',
   toast: 'ui',
+  tool: 'ai',
   tooltip: 'ui',
   tree: 'ui',
   typography: 'ui',
@@ -159,6 +171,10 @@ export const DEMO_REGISTRY = {
     collapsed: 'packages/ui/src/demos/accordion/collapsed.tsx',
     default: 'packages/ui/src/demos/accordion/default.tsx',
     multiple: 'packages/ui/src/demos/accordion/multiple.tsx',
+  },
+  actions: {
+    default: 'packages/ui/src/demos/actions/default.tsx',
+    'with-message': 'packages/ui/src/demos/actions/with-message.tsx',
   },
   'aspect-ratio': {
     default: 'packages/ui/src/demos/aspect-ratio/default.tsx',
@@ -241,6 +257,10 @@ export const DEMO_REGISTRY = {
     disabled: 'packages/ui/src/demos/checkbox/disabled.tsx',
     'with-label': 'packages/ui/src/demos/checkbox/with-label.tsx',
   },
+  'code-block': {
+    collapsible: 'packages/ui/src/demos/code-block/collapsible.tsx',
+    default: 'packages/ui/src/demos/code-block/default.tsx',
+  },
   collapsible: {
     bordered: 'packages/ui/src/demos/collapsible/bordered.tsx',
     card: 'packages/ui/src/demos/collapsible/card.tsx',
@@ -257,6 +277,10 @@ export const DEMO_REGISTRY = {
   },
   'context-menu': {
     default: 'packages/ui/src/demos/context-menu/default.tsx',
+  },
+  conversation: {
+    default: 'packages/ui/src/demos/conversation/default.tsx',
+    streaming: 'packages/ui/src/demos/conversation/streaming.tsx',
   },
   dialog: {
     alert: 'packages/ui/src/demos/dialog/alert.tsx',
@@ -380,6 +404,10 @@ export const DEMO_REGISTRY = {
     nested: 'packages/ui/src/demos/resizable/nested.tsx',
     vertical: 'packages/ui/src/demos/resizable/vertical.tsx',
   },
+  response: {
+    default: 'packages/ui/src/demos/response/default.tsx',
+    streaming: 'packages/ui/src/demos/response/streaming.tsx',
+  },
   'scroll-area': {
     both: 'packages/ui/src/demos/scroll-area/both.tsx',
     default: 'packages/ui/src/demos/scroll-area/default.tsx',
@@ -405,6 +433,10 @@ export const DEMO_REGISTRY = {
   skeleton: {
     card: 'packages/ui/src/demos/skeleton/card.tsx',
     default: 'packages/ui/src/demos/skeleton/default.tsx',
+  },
+  sources: {
+    default: 'packages/ui/src/demos/sources/default.tsx',
+    open: 'packages/ui/src/demos/sources/open.tsx',
   },
   spacer: {
     default: 'packages/ui/src/demos/spacer/default.tsx',
@@ -471,6 +503,10 @@ export const DEMO_REGISTRY = {
     positions: 'packages/ui/src/demos/toast/positions.tsx',
     variants: 'packages/ui/src/demos/toast/variants.tsx',
     'with-action': 'packages/ui/src/demos/toast/with-action.tsx',
+  },
+  tool: {
+    default: 'packages/ui/src/demos/tool/default.tsx',
+    statuses: 'packages/ui/src/demos/tool/statuses.tsx',
   },
   tooltip: {
     default: 'packages/ui/src/demos/tooltip/default.tsx',

@@ -1,0 +1,106 @@
+---
+title: Code Block
+description: A block of code with a header, a copy button, optional line numbers and a fold for long snippets. No highlighter attached.
+published: true
+date: 2026-09-22
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="code-block" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="code-block" />
+
+## Anatomy
+
+```tsx
+import { CodeBlock } from '@/components/ui/code-block';
+```
+
+```tsx
+<CodeBlock code={source} language="tsx" filename="snippet.tsx" showLineNumbers>
+  <CodeBlock.Header>
+    <CodeBlock.CopyButton />
+  </CodeBlock.Header>
+  <CodeBlock.Content />
+</CodeBlock>
+```
+
+The code goes in as a string on the root, and every part reads it from there. The header prints the filename and the language on its own; whatever you put inside it lands on the right as actions.
+
+## Composition
+
+Use the following composition to build a `CodeBlock`:
+
+```tree
+CodeBlock
+├── CodeBlock.Header
+│   └── CodeBlock.CopyButton
+├── CodeBlock.Content
+└── CodeBlock.Expand
+```
+
+## Folding long code
+
+Set `collapsible` and the content stops at `maxLines`. `CodeBlock.Expand` renders the toggle, and only when there is something to reveal.
+
+<ComponentPreview component="code-block" demo="collapsible" />
+
+## Syntax highlighting
+
+There is none built in, on purpose: a highlighter is the one dependency that would double the size of this file. Pass `renderLine` and return whatever your highlighter gives you for each line, Shiki tokens included.
+
+```tsx
+<CodeBlock code={source} renderLine={(line, index) => highlight(line, index)}>
+  <CodeBlock.Content />
+</CodeBlock>
+```
+
+## API Reference
+
+### CodeBlock
+
+| Prop              | Type                                         | Default | Description                                      |
+| ----------------- | -------------------------------------------- | ------- | ------------------------------------------------ |
+| `code`            | `string`                                     | -       | The source to display and copy                   |
+| `language`        | `string`                                     | -       | Printed in the header, set on `data-language`    |
+| `filename`        | `string`                                     | -       | Printed in the header                            |
+| `showLineNumbers` | `boolean`                                    | `false` | Adds a gutter with line numbers                  |
+| `collapsible`     | `boolean`                                    | `false` | Stops the content at `maxLines` until expanded   |
+| `maxLines`        | `number`                                     | `20`    | Lines shown while collapsed                      |
+| `renderLine`      | `(line: string, index: number) => ReactNode` | -       | Renders each line, for plugging in a highlighter |
+| `className`       | `string`                                     | -       | Additional CSS classes                           |
+
+### CodeBlock.Header
+
+| Prop        | Type        | Default | Description                    |
+| ----------- | ----------- | ------- | ------------------------------ |
+| `children`  | `ReactNode` | -       | Actions, rendered on the right |
+| `className` | `string`    | -       | Additional CSS classes         |
+
+### CodeBlock.CopyButton
+
+| Prop          | Type                     | Default       | Description                            |
+| ------------- | ------------------------ | ------------- | -------------------------------------- |
+| `copyLabel`   | `string`                 | `'Copy code'` | Accessible name at rest                |
+| `copiedLabel` | `string`                 | `'Copied'`    | Accessible name for 1.5s after copying |
+| `onCopied`    | `(code: string) => void` | -             | Called after the clipboard write       |
+| `className`   | `string`                 | -             | Additional CSS classes                 |
+
+### CodeBlock.Content
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### CodeBlock.Expand
+
+| Prop            | Type                         | Default               | Description            |
+| --------------- | ---------------------------- | --------------------- | ---------------------- |
+| `expandLabel`   | `(hidden: number) => string` | `Show {n} more lines` | Label while collapsed  |
+| `collapseLabel` | `string`                     | `'Show less'`         | Label while expanded   |
+| `className`     | `string`                     | -                     | Additional CSS classes |

@@ -1,0 +1,96 @@
+---
+title: Conversation
+description: The scrolling thread of a chat, pinned to the latest message while it streams and easy to get back to once you scroll away.
+published: true
+date: 2026-09-22
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="conversation" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="conversation" />
+
+## Anatomy
+
+```tsx
+import { Conversation } from '@/components/ui/conversation';
+```
+
+```tsx
+<Conversation className="h-96">
+  <Conversation.Content>
+    {messages.map((message) => (
+      <Message key={message.id}>...</Message>
+    ))}
+  </Conversation.Content>
+  <Conversation.ScrollButton />
+</Conversation>
+```
+
+The root is the scroll container, so give it a height. It renders as a polite live region, which is how a screen reader hears new messages arrive without being interrupted mid sentence.
+
+## Composition
+
+Use the following composition to build a `Conversation`:
+
+```tree
+Conversation
+├── Conversation.Content
+├── Conversation.ScrollButton
+└── Conversation.Empty
+```
+
+## Sticking to the bottom
+
+While the user is at the bottom, new content keeps the thread pinned there, which is what you want during a stream. The moment they scroll up the thread lets go, and the scroll button shows up so the latest message is one click away. Scrolling back down by hand sticks it again.
+
+<ComponentPreview component="conversation" demo="streaming" />
+
+Set `stickToBottom={false}` to turn the pinning off and keep only the scroll container and the button.
+
+## Empty state
+
+`Conversation.Empty` fills the thread before the first message. Put the intro or a few suggestions in there, and swap it for `Conversation.Content` once there is something to show.
+
+## useConversation
+
+`useConversation()` reads the stuck state and exposes `scrollToBottom`, so a composer can jump the thread down after sending.
+
+```tsx
+const { stuck, scrollToBottom } = useConversation();
+```
+
+## API Reference
+
+### Conversation
+
+| Prop            | Type                       | Default | Description                                |
+| --------------- | -------------------------- | ------- | ------------------------------------------ |
+| `stickToBottom` | `boolean`                  | `true`  | Keep the thread pinned while content grows |
+| `onStickChange` | `(stuck: boolean) => void` | -       | Called when the thread sticks or lets go   |
+| `className`     | `string`                   | -       | Additional CSS classes, give it a height   |
+
+### Conversation.Content
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### Conversation.ScrollButton
+
+| Prop        | Type        | Default              | Description                   |
+| ----------- | ----------- | -------------------- | ----------------------------- |
+| `label`     | `string`    | `'Scroll to bottom'` | Accessible name of the button |
+| `children`  | `ReactNode` | -                    | Replaces the chevron icon     |
+| `className` | `string`    | -                    | Additional CSS classes        |
+
+### Conversation.Empty
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |

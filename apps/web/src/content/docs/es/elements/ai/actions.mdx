@@ -1,0 +1,89 @@
+---
+title: Actions
+description: La fila de botones chicos con ícono debajo de un mensaje del asistente, con un botón de copiar que se confirma solo.
+published: true
+date: 2026-09-22
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="actions" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="actions" />
+
+## Anatomía
+
+```tsx
+import { Actions } from '@/components/ui/actions';
+```
+
+```tsx
+<Actions>
+  <Actions.Copy text={answer} />
+  <Actions.Button label="Reintentar" onClick={regenerate}>
+    <Actions.Icons.retry />
+  </Actions.Button>
+  <Actions.Button label="Buena respuesta" active={vote === 'up'} onClick={voteUp}>
+    <Actions.Icons.thumbsUp />
+  </Actions.Button>
+</Actions>
+```
+
+Cada botón lleva un `label`. Es el nombre accesible y el tooltip nativo, así el ícono nunca queda como única descripción. `active` marca un estado presionado, por ejemplo el voto que el lector ya dio.
+
+## Composición
+
+Usá la siguiente composición para construir `Actions`:
+
+```tree
+Actions
+├── Actions.Copy
+└── Actions.Button
+    └── Actions.Icons.*
+```
+
+## Con un mensaje
+
+Las acciones van naturales en un `Message.Footer`. Dejalas al principio de la fila en los mensajes del asistente y al final en los del lector.
+
+<ComponentPreview component="actions" demo="with-message" />
+
+## Copiar
+
+`Actions.Copy` escribe `text` en el portapapeles y cambia a un tilde por un momento, con la etiqueta pasando a "Copied" para que los lectores de pantalla también reciban la confirmación. `label`, `copiedLabel` y `timeout` lo ajustan.
+
+## Íconos
+
+`Actions.Icons` trae `copy`, `check`, `retry`, `thumbsUp`, `thumbsDown` y `share` como componentes SVG planos, así la fila típica no necesita ningún paquete de íconos. Cualquier SVG sirve como hijo.
+
+## Referencia de API
+
+### Actions
+
+| Prop        | Type               | Default   | Description                           |
+| ----------- | ------------------ | --------- | ------------------------------------- |
+| `align`     | `'start' \| 'end'` | `'start'` | Lado de la fila donde van los botones |
+| `className` | `string`           | -         | Clases CSS adicionales                |
+
+### Actions.Button
+
+| Prop        | Type        | Default | Description                             |
+| ----------- | ----------- | ------- | --------------------------------------- |
+| `label`     | `string`    | -       | Nombre accesible y tooltip, obligatorio |
+| `active`    | `boolean`   | `false` | Estado presionado, setea `data-active`  |
+| `children`  | `ReactNode` | -       | El ícono                                |
+| `className` | `string`    | -       | Clases CSS adicionales                  |
+
+### Actions.Copy
+
+| Prop          | Type     | Default    | Description                               |
+| ------------- | -------- | ---------- | ----------------------------------------- |
+| `text`        | `string` | -          | Lo que se copia                           |
+| `label`       | `string` | `'Copy'`   | Etiqueta en reposo                        |
+| `copiedLabel` | `string` | `'Copied'` | Etiqueta después de copiar                |
+| `timeout`     | `number` | `1500`     | Milisegundos hasta que vuelve la etiqueta |
+| `className`   | `string` | -          | Clases CSS adicionales                    |

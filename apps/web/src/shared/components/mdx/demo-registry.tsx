@@ -21,6 +21,7 @@ import { Checkboxes as DropdownMenuCheckboxes } from '@repo/ui/src/demos/dropdow
 import { Chips as AttachmentChips } from '@repo/ui/src/demos/attachment/chips';
 import { Collapsed as AccordionCollapsed } from '@repo/ui/src/demos/accordion/collapsed';
 import { Collapsed as BreadcrumbCollapsed } from '@repo/ui/src/demos/breadcrumb/collapsed';
+import { Collapsible as CodeBlockCollapsible } from '@repo/ui/src/demos/code-block/collapsible';
 import { Compact as CardCompact } from '@repo/ui/src/demos/card/compact';
 import { Compact as FileUploadCompact } from '@repo/ui/src/demos/file-upload/compact';
 import { Compact as PaginationCompact } from '@repo/ui/src/demos/pagination/compact';
@@ -31,6 +32,7 @@ import { CustomTag as TypographyCustomTag } from '@repo/ui/src/demos/typography/
 import { Danger as BannerDanger } from '@repo/ui/src/demos/banner/danger';
 import { Danger as CalloutDanger } from '@repo/ui/src/demos/callout/danger';
 import { Default as AccordionDefault } from '@repo/ui/src/demos/accordion/default';
+import { Default as ActionsDefault } from '@repo/ui/src/demos/actions/default';
 import { Default as AspectRatioDefault } from '@repo/ui/src/demos/aspect-ratio/default';
 import { Default as AttachmentDefault } from '@repo/ui/src/demos/attachment/default';
 import { Default as AttachmentsDefault } from '@repo/ui/src/demos/attachments/default';
@@ -45,11 +47,13 @@ import { Default as CardDefault } from '@repo/ui/src/demos/card/default';
 import { Default as CenterDefault } from '@repo/ui/src/demos/center/default';
 import { Default as ChainOfThoughtDefault } from '@repo/ui/src/demos/chain-of-thought/default';
 import { Default as CheckboxDefault } from '@repo/ui/src/demos/checkbox/default';
+import { Default as CodeBlockDefault } from '@repo/ui/src/demos/code-block/default';
 import { Default as CollapsibleDefault } from '@repo/ui/src/demos/collapsible/default';
 import { Default as CommandDefault } from '@repo/ui/src/demos/command/default';
 import { Default as ContainerDefault } from '@repo/ui/src/demos/container/default';
 import { Default as ContextDefault } from '@repo/ui/src/demos/context/default';
 import { Default as ContextMenuDefault } from '@repo/ui/src/demos/context-menu/default';
+import { Default as ConversationDefault } from '@repo/ui/src/demos/conversation/default';
 import { Default as DialogDefault } from '@repo/ui/src/demos/dialog/default';
 import { Default as DockDefault } from '@repo/ui/src/demos/dock/default';
 import { Default as DrawerDefault } from '@repo/ui/src/demos/drawer/default';
@@ -75,12 +79,14 @@ import { Default as RadioDefault } from '@repo/ui/src/demos/radio/default';
 import { Default as RatingDefault } from '@repo/ui/src/demos/rating/default';
 import { Default as ReasoningDefault } from '@repo/ui/src/demos/reasoning/default';
 import { Default as ResizableDefault } from '@repo/ui/src/demos/resizable/default';
+import { Default as ResponseDefault } from '@repo/ui/src/demos/response/default';
 import { Default as ScrollAreaDefault } from '@repo/ui/src/demos/scroll-area/default';
 import { Default as SectionDefault } from '@repo/ui/src/demos/section/default';
 import { Default as SelectDefault } from '@repo/ui/src/demos/select/default';
 import { Default as SeparatorDefault } from '@repo/ui/src/demos/separator/default';
 import { Default as ShimmerDefault } from '@repo/ui/src/demos/shimmer/default';
 import { Default as SkeletonDefault } from '@repo/ui/src/demos/skeleton/default';
+import { Default as SourcesDefault } from '@repo/ui/src/demos/sources/default';
 import { Default as SpacerDefault } from '@repo/ui/src/demos/spacer/default';
 import { Default as SpinnerDefault } from '@repo/ui/src/demos/spinner/default';
 import { Default as SplitDefault } from '@repo/ui/src/demos/split/default';
@@ -94,6 +100,7 @@ import { Default as TaskDefault } from '@repo/ui/src/demos/task/default';
 import { Default as TextareaDefault } from '@repo/ui/src/demos/textarea/default';
 import { Default as TimelineDefault } from '@repo/ui/src/demos/timeline/default';
 import { Default as ToastDefault } from '@repo/ui/src/demos/toast/default';
+import { Default as ToolDefault } from '@repo/ui/src/demos/tool/default';
 import { Default as TooltipDefault } from '@repo/ui/src/demos/tooltip/default';
 import { Default as TreeDefault } from '@repo/ui/src/demos/tree/default';
 import { Default as TypographyDefault } from '@repo/ui/src/demos/typography/default';
@@ -131,6 +138,7 @@ import { Links as DockLinks } from '@repo/ui/src/demos/dock/links';
 import { Multiple as AccordionMultiple } from '@repo/ui/src/demos/accordion/multiple';
 import { Multiple as FileUploadMultiple } from '@repo/ui/src/demos/file-upload/multiple';
 import { Nested as ResizableNested } from '@repo/ui/src/demos/resizable/nested';
+import { Open as SourcesOpen } from '@repo/ui/src/demos/sources/open';
 import { Outline as BadgeOutline } from '@repo/ui/src/demos/badge/outline';
 import { Outline as ButtonOutline } from '@repo/ui/src/demos/button/outline';
 import { Outline as CardOutline } from '@repo/ui/src/demos/card/outline';
@@ -162,7 +170,10 @@ import { Stacked as FrameStacked } from '@repo/ui/src/demos/frame/stacked';
 import { States as SpriteStates } from '@repo/ui/src/demos/sprite/states';
 import { Statuses as PromptInputStatuses } from '@repo/ui/src/demos/prompt-input/statuses';
 import { Statuses as TaskStatuses } from '@repo/ui/src/demos/task/statuses';
+import { Statuses as ToolStatuses } from '@repo/ui/src/demos/tool/statuses';
+import { Streaming as ConversationStreaming } from '@repo/ui/src/demos/conversation/streaming';
 import { Streaming as ReasoningStreaming } from '@repo/ui/src/demos/reasoning/streaming';
+import { Streaming as ResponseStreaming } from '@repo/ui/src/demos/response/streaming';
 import { Striped as TableStriped } from '@repo/ui/src/demos/table/striped';
 import { Success as BannerSuccess } from '@repo/ui/src/demos/banner/success';
 import { Success as CalloutSuccess } from '@repo/ui/src/demos/callout/success';
@@ -200,6 +211,7 @@ import { WithLabel as RadioWithLabel } from '@repo/ui/src/demos/radio/with-label
 import { WithLabel as SeparatorWithLabel } from '@repo/ui/src/demos/separator/with-label';
 import { WithLabel as SwitchWithLabel } from '@repo/ui/src/demos/switch/with-label';
 import { WithLabel as TextareaWithLabel } from '@repo/ui/src/demos/textarea/with-label';
+import { WithMessage as ActionsWithMessage } from '@repo/ui/src/demos/actions/with-message';
 import { WithValue as ProgressWithValue } from '@repo/ui/src/demos/progress/with-value';
 
 export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>> = {
@@ -207,6 +219,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
     collapsed: AccordionCollapsed,
     default: AccordionDefault,
     multiple: AccordionMultiple,
+  },
+  actions: {
+    default: ActionsDefault,
+    'with-message': ActionsWithMessage,
   },
   'aspect-ratio': {
     default: AspectRatioDefault,
@@ -289,6 +305,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
     disabled: CheckboxDisabled,
     'with-label': CheckboxWithLabel,
   },
+  'code-block': {
+    collapsible: CodeBlockCollapsible,
+    default: CodeBlockDefault,
+  },
   collapsible: {
     bordered: CollapsibleBordered,
     card: CollapsibleCard,
@@ -305,6 +325,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
   },
   'context-menu': {
     default: ContextMenuDefault,
+  },
+  conversation: {
+    default: ConversationDefault,
+    streaming: ConversationStreaming,
   },
   dialog: {
     alert: DialogAlert,
@@ -428,6 +452,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
     nested: ResizableNested,
     vertical: ResizableVertical,
   },
+  response: {
+    default: ResponseDefault,
+    streaming: ResponseStreaming,
+  },
   'scroll-area': {
     both: ScrollAreaBoth,
     default: ScrollAreaDefault,
@@ -453,6 +481,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
   skeleton: {
     card: SkeletonCard,
     default: SkeletonDefault,
+  },
+  sources: {
+    default: SourcesDefault,
+    open: SourcesOpen,
   },
   spacer: {
     default: SpacerDefault,
@@ -519,6 +551,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
     positions: ToastPositions,
     variants: ToastVariants,
     'with-action': ToastWithAction,
+  },
+  tool: {
+    default: ToolDefault,
+    statuses: ToolStatuses,
   },
   tooltip: {
     default: TooltipDefault,

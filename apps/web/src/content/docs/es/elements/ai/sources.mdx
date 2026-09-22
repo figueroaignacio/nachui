@@ -1,0 +1,95 @@
+---
+title: Sources
+description: Una lista plegada con las citas detrás de una respuesta, cada una con favicon, título y su dominio.
+published: true
+date: 2026-09-22
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="sources" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="sources" />
+
+## Anatomía
+
+```tsx
+import { Sources } from '@/components/ui/sources';
+```
+
+```tsx
+<Sources>
+  <Sources.Trigger />
+  <Sources.Content>
+    <Sources.Item href="https://react.dev/reference/react/use" title="use – React" />
+    <Sources.Item href="https://www.w3.org/WAI/ARIA/apg/" title="ARIA Authoring Practices" />
+  </Sources.Content>
+</Sources>
+```
+
+Las fuentes arrancan cerradas. El trigger cuenta los ítems solo y dice "Used 2 sources", así la respuesta mantiene su forma y las citas quedan a un click.
+
+## Composición
+
+Usá la siguiente composición para construir `Sources`:
+
+```tree
+Sources
+├── Sources.Trigger
+└── Sources.Content
+    └── Sources.Item
+```
+
+## Abierto por defecto
+
+Pasá `defaultOpen` cuando las citas son lo importante, por ejemplo en una vista de investigación. Cada ítem saca el dominio del `href` y busca un favicon para ese dominio; `favicon` reemplaza esa imagen o la saca con `null`.
+
+<ComponentPreview component="sources" demo="open" />
+
+## Etiquetas
+
+`label` en el trigger recibe la cantidad y devuelve el texto, y ahí van las traducciones. Pasale children al trigger para reemplazar la etiqueta entera. Cuando la cantidad de ítems no es la cantidad de citas, por ejemplo porque la lista está paginada, poné `count` en la raíz.
+
+## Referencia de API
+
+### Sources
+
+| Prop           | Type                      | Default | Description                                          |
+| -------------- | ------------------------- | ------- | ---------------------------------------------------- |
+| `defaultOpen`  | `boolean`                 | `false` | Estado abierto cuando no está controlado             |
+| `open`         | `boolean`                 | -       | Estado abierto controlado                            |
+| `onOpenChange` | `(open: boolean) => void` | -       | Se llama cuando cambia el estado                     |
+| `count`        | `number`                  | -       | Número que muestra el trigger, por defecto los ítems |
+| `className`    | `string`                  | -       | Clases CSS adicionales                               |
+
+### Sources.Trigger
+
+| Prop        | Type                        | Default          | Description                              |
+| ----------- | --------------------------- | ---------------- | ---------------------------------------- |
+| `label`     | `(count: number) => string` | `Used N sources` | Arma la etiqueta a partir de la cantidad |
+| `children`  | `ReactNode`                 | -                | Reemplaza la etiqueta cuando se pasa     |
+| `className` | `string`                    | -                | Clases CSS adicionales                   |
+
+### Sources.Content
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |
+
+### Sources.Item
+
+| Prop        | Type             | Default           | Description                                 |
+| ----------- | ---------------- | ----------------- | ------------------------------------------- |
+| `href`      | `string`         | -                 | Link a la fuente, abre en una pestaña nueva |
+| `title`     | `string`         | -                 | Texto de la cita                            |
+| `favicon`   | `string \| null` | Favicon de Google | Imagen junto al título, `null` la oculta    |
+| `children`  | `ReactNode`      | -                 | Reemplaza el título cuando se pasa          |
+| `className` | `string`         | -                 | Clases CSS adicionales                      |
+
+### sourceHost
+
+`sourceHost(href)` devuelve el dominio de una URL sin el prefijo `www.`, y el texto sin cambios cuando no es una URL.

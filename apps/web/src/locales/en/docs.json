@@ -395,6 +395,12 @@
       "title": "AI Elements",
       "items": [
         {
+          "title": "Actions",
+          "href": "/docs/elements/ai/actions",
+          "description": "The row of copy, retry and feedback buttons under an answer.",
+          "badge": "new"
+        },
+        {
           "title": "Attachments",
           "href": "/docs/elements/ai/attachments",
           "description": "Files hanging off a message or a composer, as a grid, a row of chips or a list.",
@@ -407,9 +413,21 @@
           "badge": "new"
         },
         {
+          "title": "Code Block",
+          "href": "/docs/elements/ai/code-block",
+          "description": "Code in an answer, with a copy button, line numbers and a collapse for long snippets.",
+          "badge": "new"
+        },
+        {
           "title": "Context",
           "href": "/docs/elements/ai/context",
           "description": "How much of the context window is spent, as a meter with the breakdown on hover.",
+          "badge": "new"
+        },
+        {
+          "title": "Conversation",
+          "href": "/docs/elements/ai/conversation",
+          "description": "The scrolling thread that keeps the newest message in view while it streams.",
           "badge": "new"
         },
         {
@@ -425,9 +443,21 @@
           "badge": "new"
         },
         {
+          "title": "Response",
+          "href": "/docs/elements/ai/response",
+          "description": "The assistant's answer, with a caret while it streams and a skeleton before the first token.",
+          "badge": "new"
+        },
+        {
           "title": "Shimmer",
           "href": "/docs/elements/ai/shimmer",
           "description": "Text with a light sweeping across it, for the moment before the model answers.",
+          "badge": "new"
+        },
+        {
+          "title": "Sources",
+          "href": "/docs/elements/ai/sources",
+          "description": "The citations behind an answer, folded under a count until the reader wants them.",
           "badge": "new"
         },
         {
@@ -440,6 +470,12 @@
           "title": "Task",
           "href": "/docs/elements/ai/task",
           "description": "A collapsible step with a status, for showing what an agent did and which files it touched.",
+          "badge": "new"
+        },
+        {
+          "title": "Tool",
+          "href": "/docs/elements/ai/tool",
+          "description": "A tool call with its status, input and output, folded into a card.",
           "badge": "new"
         }
       ]

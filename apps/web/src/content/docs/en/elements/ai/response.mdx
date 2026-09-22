@@ -1,0 +1,75 @@
+---
+title: Response
+description: The assistant's answer as a prose column, with a caret while tokens arrive and a skeleton before the first one.
+published: true
+date: 2026-09-22
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="response" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="response" />
+
+## Anatomy
+
+```tsx
+import { Response } from '@/components/ui/response';
+```
+
+```tsx
+<Response isStreaming={status === 'streaming'}>
+  <ReactMarkdown>{message.content}</ReactMarkdown>
+</Response>
+```
+
+`Response` does not parse markdown. It styles whatever you render inside it: paragraphs, headings, lists, inline code and blockquotes get the spacing and type of an answer, and a `CodeBlock` drops in as is. Render the markdown with react-markdown or your own pipeline and pass the result as children, so the component stays dependency free and you keep control of the renderer.
+
+## Composition
+
+Use the following composition to build a `Response`:
+
+```tree
+Response
+├── Response.Content
+└── Response.Caret
+Response.Skeleton
+```
+
+## Streaming
+
+While `isStreaming` is true, a caret blinks after the last node and the root carries `aria-busy`. Before the first token there is nothing to show, so render `Response.Skeleton` instead: three shimmering lines that read as an answer being written.
+
+<ComponentPreview component="response" demo="streaming" />
+
+## API Reference
+
+### Response
+
+| Prop          | Type      | Default | Description                          |
+| ------------- | --------- | ------- | ------------------------------------ |
+| `isStreaming` | `boolean` | `false` | Shows the caret and sets `aria-busy` |
+| `className`   | `string`  | -       | Additional CSS classes               |
+
+### Response.Content
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### Response.Caret
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### Response.Skeleton
+
+| Prop        | Type       | Default                 | Description                  |
+| ----------- | ---------- | ----------------------- | ---------------------------- |
+| `lines`     | `string[]` | three placeholder lines | Text of each shimmering line |
+| `className` | `string`   | -                       | Additional CSS classes       |

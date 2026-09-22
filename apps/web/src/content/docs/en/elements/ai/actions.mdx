@@ -1,0 +1,89 @@
+---
+title: Actions
+description: The row of small icon buttons under an assistant message, with a copy button that confirms itself.
+published: true
+date: 2026-09-22
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="actions" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="actions" />
+
+## Anatomy
+
+```tsx
+import { Actions } from '@/components/ui/actions';
+```
+
+```tsx
+<Actions>
+  <Actions.Copy text={answer} />
+  <Actions.Button label="Retry" onClick={regenerate}>
+    <Actions.Icons.retry />
+  </Actions.Button>
+  <Actions.Button label="Good response" active={vote === 'up'} onClick={voteUp}>
+    <Actions.Icons.thumbsUp />
+  </Actions.Button>
+</Actions>
+```
+
+Every button takes a `label`. It becomes the accessible name and the native tooltip, so the icon alone is never the only description. `active` marks a pressed state, for example the vote the reader already gave.
+
+## Composition
+
+Use the following composition to build `Actions`:
+
+```tree
+Actions
+├── Actions.Copy
+└── Actions.Button
+    └── Actions.Icons.*
+```
+
+## With a message
+
+Actions sit naturally in a `Message.Footer`. Keep them at the start of the row for assistant messages and at the end for the reader's own.
+
+<ComponentPreview component="actions" demo="with-message" />
+
+## Copy
+
+`Actions.Copy` writes `text` to the clipboard and swaps to a check for a moment, with the label changing to "Copied" so screen readers get the confirmation too. `label`, `copiedLabel` and `timeout` tune it.
+
+## Icons
+
+`Actions.Icons` ships `copy`, `check`, `retry`, `thumbsUp`, `thumbsDown` and `share` as plain SVG components, so the common row needs no icon package. Any SVG works as a child.
+
+## API Reference
+
+### Actions
+
+| Prop        | Type               | Default   | Description                        |
+| ----------- | ------------------ | --------- | ---------------------------------- |
+| `align`     | `'start' \| 'end'` | `'start'` | Side of the row the buttons sit on |
+| `className` | `string`           | -         | Additional CSS classes             |
+
+### Actions.Button
+
+| Prop        | Type        | Default | Description                           |
+| ----------- | ----------- | ------- | ------------------------------------- |
+| `label`     | `string`    | -       | Accessible name and tooltip, required |
+| `active`    | `boolean`   | `false` | Pressed state, sets `data-active`     |
+| `children`  | `ReactNode` | -       | The icon                              |
+| `className` | `string`    | -       | Additional CSS classes                |
+
+### Actions.Copy
+
+| Prop          | Type     | Default    | Description                           |
+| ------------- | -------- | ---------- | ------------------------------------- |
+| `text`        | `string` | -          | What gets copied                      |
+| `label`       | `string` | `'Copy'`   | Label at rest                         |
+| `copiedLabel` | `string` | `'Copied'` | Label after copying                   |
+| `timeout`     | `number` | `1500`     | Milliseconds before the label returns |
+| `className`   | `string` | -          | Additional CSS classes                |
