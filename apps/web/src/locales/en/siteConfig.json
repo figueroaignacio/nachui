@@ -1,6 +1,6 @@
 {
-  "title": "AI elements for React that you own and your AI can read.",
-  "description": "Copy-paste React components for chat and agent interfaces, with no SDK and no provider lock-in, built on a minimal dependency-free UI kit. Plain source in your repo, an llms.txt index, raw markdown docs and installable skills.",
+  "title": "A design system you own: UI, AI and layout elements for React.",
+  "description": "React components copied into your repo as plain source. UI elements, AI elements for chat and agents, and layout primitives, with no wrappers and no SDK. An llms.txt index, raw markdown docs and installable skills so your AI reads the same thing you do.",
   "openGraph": {
     "type": "website",
     "siteName": "NachUI",
@@ -9,7 +9,7 @@
         "url": "/opengraph-image",
         "width": 1200,
         "height": 630,
-        "alt": "Copy-paste React components for chat and agent interfaces, with no SDK and no provider lock-in, built on a minimal dependency-free UI kit. Plain source in your repo, an llms.txt index, raw markdown docs and installable skills."
+        "alt": "React components copied into your repo as plain source. UI elements, AI elements for chat and agents, and layout primitives, with no wrappers and no SDK. An llms.txt index, raw markdown docs and installable skills so your AI reads the same thing you do."
       }
     ]
   },

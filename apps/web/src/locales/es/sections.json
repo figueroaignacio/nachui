@@ -1,21 +1,21 @@
 {
   "home": {
-    "badge": "AI elements para React",
-    "subheading1": "Las superficies de chat y agentes que tu producto necesita, como código tuyo",
+    "badge": "UI · AI · Layout",
+    "subheading1": "Un sistema de diseño tuyo, con elementos de UI, AI y layout",
     "subheading2": "",
-    "description": "Composers de prompt, paneles de razonamiento, tool calls, listas de tareas, presupuesto de tokens. Componentes de React copy-paste sin SDK ni atadura a un proveedor, construidos sobre un kit de UI minimalista que vive en tu repo para que tu IA lo lea como cualquier otro archivo.",
+    "description": "Componentes de React copiados a tu repo como código plano. Botones, diálogos y menús. Composers de prompt, paneles de razonamiento y listas de tareas. Stacks, grillas y secciones. Sin wrappers, sin SDK, y tu IA lo lee como cualquier otro archivo.",
     "github": "Código abierto, el código es tuyo",
     "actions": [
       {
-        "label": "Explorar AI elements",
-        "href": "/docs/elements/ai",
-        "description": "Cada superficie que necesita un producto con IA, conectada a lo que sea que corra tu modelo.",
+        "label": "Comenzar",
+        "href": "/docs",
+        "description": "Instalá la CLI y traé lo que necesites.",
         "variant": "default"
       },
       {
-        "label": "Comenzar",
-        "href": "/docs",
-        "description": "Instalá la CLI, traé las primitivas, publicá.",
+        "label": "Ver elementos",
+        "href": "/docs/elements/ui",
+        "description": "Elementos de UI, AI y layout, cada uno en su página.",
         "variant": "secondary"
       }
     ],
@@ -51,36 +51,36 @@
       "description": "Un sistema de diseño creado para no interponerse en tu camino. Velocidad de carga instantánea, jerarquías tipográficas limpias y control absoluto del código.",
       "items": [
         {
-          "title": "AI elements primero",
-          "description": "Composer, razonamiento, chain of thought, tareas, ventana de contexto, adjuntos y sugerencias. Las partes de un chat que los kits genéricos te dejan a vos."
+          "title": "Elementos UI",
+          "description": "Botones, inputs, diálogos, menús, frames, tablas. Las piezas de todos los días, con una sola voz."
         },
         {
-          "title": "Agnóstico del SDK",
-          "description": "Props que entran, eventos que salen. Conectalos al Vercel AI SDK, a tu propio fetch o a un websocket. Ningún proveedor sabe que existen."
+          "title": "Elementos AI",
+          "description": "Composer de prompt, razonamiento, chain of thought, tareas, ventana de contexto, adjuntos, sugerencias. Props que entran, sin SDK atado."
         },
         {
-          "title": "Primitivas de UI debajo",
-          "description": "Botones, inputs, diálogos, frames y menús con la misma voz. Los AI elements se construyen sobre ellas, y tu producto también puede."
+          "title": "Elementos de layout",
+          "description": "Stack, grid, split, section, container, spacer. Estructura sin escribir un CSS propio."
         },
         {
-          "title": "Propiedad absoluta",
-          "description": "Sin scripts ocultos en runtime ni actualizaciones de terceros. Inspeccioná y modificá cada línea."
+          "title": "Código tuyo",
+          "description": "Sin paquete en runtime ni actualizaciones de terceros. Cada línea está en tu repo para leer y cambiar."
         },
         {
-          "title": "CLI pragmática",
-          "description": "Inyectá componentes, variables y layouts en tu espacio de trabajo con un solo comando."
+          "title": "Una CLI",
+          "description": "Agrega componentes, tokens y layouts a tu proyecto con un comando."
         },
         {
-          "title": "Docs con IA editorial",
-          "description": "Un asistente integrado que lee el código real para responder tus dudas, más llms.txt y markdown plano para la tuya."
+          "title": "Legible para tu IA",
+          "description": "Código plano, un índice llms.txt, docs en markdown y skills instalables. El asistente de las docs lee los mismos archivos."
         },
         {
-          "title": "Minimalismo refinado",
-          "description": "Tonos cálidos warm bone, líneas divisorias delgadas y jerarquías tipográficas legibles."
+          "title": "Minimalista por defecto",
+          "description": "Tonos cálidos warm bone, líneas finas, jerarquía tipográfica clara. Fácil de reestilizar porque hay poco que deshacer."
         },
         {
-          "title": "Diseño inclusivo",
-          "description": "WCAG 2.2 y accesibilidad por teclado en cada primitiva."
+          "title": "Accesible",
+          "description": "WCAG 2.2 y soporte de teclado en cada primitiva."
         }
       ]
     }

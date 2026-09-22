@@ -1,6 +1,6 @@
 {
-  "title": "AI elements para React que te pertenecen y que tu IA puede leer.",
-  "description": "Componentes de React copy-paste para interfaces de chat y agentes, sin SDK ni atadura a un proveedor, construidos sobre un kit de UI minimalista y sin dependencias. Código plano en tu repo, un índice llms.txt, documentación en markdown y skills instalables.",
+  "title": "Un sistema de diseño tuyo: elementos de UI, AI y layout para React.",
+  "description": "Componentes de React copiados a tu repo como código plano. Elementos de UI, elementos AI para chat y agentes, y primitivas de layout, sin wrappers ni SDK. Un índice llms.txt, docs en markdown y skills instalables para que tu IA lea lo mismo que vos.",
   "openGraph": {
     "type": "website",
     "siteName": "NachUI",
@@ -9,7 +9,7 @@
         "url": "/opengraph-image",
         "width": 1200,
         "height": 630,
-        "alt": "Componentes de React copy-paste para interfaces de chat y agentes, sin SDK ni atadura a un proveedor, construidos sobre un kit de UI minimalista y sin dependencias. Código plano en tu repo, un índice llms.txt, documentación en markdown y skills instalables."
+        "alt": "Componentes de React copiados a tu repo como código plano. Elementos de UI, elementos AI para chat y agentes, y primitivas de layout, sin wrappers ni SDK. Un índice llms.txt, docs en markdown y skills instalables para que tu IA lea lo mismo que vos."
       }
     ]
   },
