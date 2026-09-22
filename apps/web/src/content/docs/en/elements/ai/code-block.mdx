@@ -1,6 +1,6 @@
 ---
 title: Code Block
-description: A block of code with a header, a copy button, optional line numbers and a fold for long snippets. No highlighter attached.
+description: A code block with a copy button, optional line numbers and a fold for long snippets. No highlighter attached.
 published: true
 date: 2026-09-22
 label: New
@@ -22,15 +22,13 @@ import { CodeBlock } from '@/components/ui/code-block';
 ```
 
 ```tsx
-<CodeBlock code={source} language="tsx" filename="snippet.tsx" showLineNumbers>
-  <CodeBlock.Header>
-    <CodeBlock.CopyButton />
-  </CodeBlock.Header>
+<CodeBlock code={source} language="tsx" showLineNumbers>
+  <CodeBlock.CopyButton />
   <CodeBlock.Content />
 </CodeBlock>
 ```
 
-The code goes in as a string on the root, and every part reads it from there. The header prints the filename and the language on its own; whatever you put inside it lands on the right as actions.
+The code goes in as a string on the root, and every part reads it from there. There is no header: the copy button floats in the top right corner and shows on hover, so the block is just the code.
 
 ## Composition
 
@@ -38,8 +36,7 @@ Use the following composition to build a `CodeBlock`:
 
 ```tree
 CodeBlock
-├── CodeBlock.Header
-│   └── CodeBlock.CopyButton
+├── CodeBlock.CopyButton
 ├── CodeBlock.Content
 └── CodeBlock.Expand
 ```
@@ -64,23 +61,15 @@ There is none built in, on purpose: a highlighter is the one dependency that wou
 
 ### CodeBlock
 
-| Prop              | Type                                         | Default | Description                                      |
-| ----------------- | -------------------------------------------- | ------- | ------------------------------------------------ |
-| `code`            | `string`                                     | -       | The source to display and copy                   |
-| `language`        | `string`                                     | -       | Printed in the header, set on `data-language`    |
-| `filename`        | `string`                                     | -       | Printed in the header                            |
-| `showLineNumbers` | `boolean`                                    | `false` | Adds a gutter with line numbers                  |
-| `collapsible`     | `boolean`                                    | `false` | Stops the content at `maxLines` until expanded   |
-| `maxLines`        | `number`                                     | `20`    | Lines shown while collapsed                      |
-| `renderLine`      | `(line: string, index: number) => ReactNode` | -       | Renders each line, for plugging in a highlighter |
-| `className`       | `string`                                     | -       | Additional CSS classes                           |
-
-### CodeBlock.Header
-
-| Prop        | Type        | Default | Description                    |
-| ----------- | ----------- | ------- | ------------------------------ |
-| `children`  | `ReactNode` | -       | Actions, rendered on the right |
-| `className` | `string`    | -       | Additional CSS classes         |
+| Prop              | Type                                         | Default | Description                                            |
+| ----------------- | -------------------------------------------- | ------- | ------------------------------------------------------ |
+| `code`            | `string`                                     | -       | The source to display and copy                         |
+| `language`        | `string`                                     | -       | Set on `data-language` and as `language-*` on the code |
+| `showLineNumbers` | `boolean`                                    | `false` | Adds a gutter with line numbers                        |
+| `collapsible`     | `boolean`                                    | `false` | Stops the content at `maxLines` until expanded         |
+| `maxLines`        | `number`                                     | `20`    | Lines shown while collapsed                            |
+| `renderLine`      | `(line: string, index: number) => ReactNode` | -       | Renders each line, for plugging in a highlighter       |
+| `className`       | `string`                                     | -       | Additional CSS classes                                 |
 
 ### CodeBlock.CopyButton
 

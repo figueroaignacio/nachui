@@ -7,10 +7,8 @@ const SAMPLE = ['const a = 1;', 'const b = 2;', 'const c = a + b;'].join('\n');
 
 function Block(props: Partial<React.ComponentProps<typeof CodeBlock>>) {
   return (
-    <CodeBlock code={SAMPLE} language="ts" filename="sum.ts" {...props}>
-      <CodeBlock.Header>
-        <CodeBlock.CopyButton />
-      </CodeBlock.Header>
+    <CodeBlock code={SAMPLE} language="ts" {...props}>
+      <CodeBlock.CopyButton />
       <CodeBlock.Content />
       <CodeBlock.Expand />
     </CodeBlock>
@@ -29,10 +27,9 @@ describe('CodeBlock', () => {
     vi.useRealTimers();
   });
 
-  it('renders the filename, language and every line', () => {
-    render(<Block />);
-    expect(screen.getByText('sum.ts')).toBeInTheDocument();
-    expect(screen.getByText('ts')).toBeInTheDocument();
+  it('renders every line and exposes the language', () => {
+    const { container } = render(<Block />);
+    expect(container.firstElementChild).toHaveAttribute('data-language', 'ts');
     expect(screen.getByText('const c = a + b;')).toBeInTheDocument();
   });
 

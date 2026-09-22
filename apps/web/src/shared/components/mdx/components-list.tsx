@@ -14,9 +14,7 @@ export function ComponentsList({ section }: { section?: string }) {
   const docsNavigation = t.raw('navigation') as DocsNavigationSection[];
 
   const componentsSection = docsNavigation.find((s) =>
-    section
-      ? s.title.toLowerCase() === section.toLowerCase()
-      : s.title === 'Elementos UI' || s.title === 'UI Elements',
+    section ? s.title.toLowerCase() === section.toLowerCase() : s.title === 'UI',
   );
 
   if (!componentsSection) {

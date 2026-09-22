@@ -13,10 +13,8 @@ const CODE = Array.from({ length: 24 }, (_, index) =>
 export function Collapsible() {
   return (
     <div className="w-full max-w-lg">
-      <CodeBlock code={CODE} language="ts" filename="steps.ts" collapsible maxLines={8}>
-        <CodeBlock.Header>
-          <CodeBlock.CopyButton />
-        </CodeBlock.Header>
+      <CodeBlock code={CODE} language="ts" collapsible maxLines={8}>
+        <CodeBlock.CopyButton />
         <CodeBlock.Content />
         <CodeBlock.Expand />
       </CodeBlock>

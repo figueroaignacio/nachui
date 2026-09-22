@@ -6,10 +6,8 @@ const CODE = `import { CodeBlock } from '@/components/ui/code-block';
 
 export function Snippet() {
   return (
-    <CodeBlock code={source} language="tsx" filename="snippet.tsx">
-      <CodeBlock.Header>
-        <CodeBlock.CopyButton />
-      </CodeBlock.Header>
+    <CodeBlock code={source} language="tsx">
+      <CodeBlock.CopyButton />
       <CodeBlock.Content />
     </CodeBlock>
   );
@@ -18,10 +16,8 @@ export function Snippet() {
 export function Default() {
   return (
     <div className="w-full max-w-lg">
-      <CodeBlock code={CODE} language="tsx" filename="snippet.tsx" showLineNumbers>
-        <CodeBlock.Header>
-          <CodeBlock.CopyButton />
-        </CodeBlock.Header>
+      <CodeBlock code={CODE} language="tsx" showLineNumbers>
+        <CodeBlock.CopyButton />
         <CodeBlock.Content />
       </CodeBlock>
     </div>

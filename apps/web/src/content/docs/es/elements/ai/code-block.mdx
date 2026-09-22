@@ -1,6 +1,6 @@
 ---
 title: Code Block
-description: Un bloque de código con encabezado, botón de copiar, números de línea opcionales y un pliegue para snippets largos. Sin highlighter atado.
+description: Un bloque de código con botón de copiar, números de línea opcionales y un pliegue para snippets largos. Sin highlighter atado.
 published: true
 date: 2026-09-22
 label: New
@@ -22,15 +22,13 @@ import { CodeBlock } from '@/components/ui/code-block';
 ```
 
 ```tsx
-<CodeBlock code={source} language="tsx" filename="snippet.tsx" showLineNumbers>
-  <CodeBlock.Header>
-    <CodeBlock.CopyButton />
-  </CodeBlock.Header>
+<CodeBlock code={source} language="tsx" showLineNumbers>
+  <CodeBlock.CopyButton />
   <CodeBlock.Content />
 </CodeBlock>
 ```
 
-El código entra como string en la raíz y todas las partes lo leen de ahí. El encabezado imprime solo el nombre del archivo y el lenguaje; lo que pongas adentro queda a la derecha como acciones.
+El código entra como string en la raíz y todas las partes lo leen de ahí. No hay encabezado: el botón de copiar flota arriba a la derecha y aparece al pasar el mouse, así que el bloque es solo el código.
 
 ## Composición
 
@@ -38,8 +36,7 @@ Usá la siguiente composición para construir un `CodeBlock`:
 
 ```tree
 CodeBlock
-├── CodeBlock.Header
-│   └── CodeBlock.CopyButton
+├── CodeBlock.CopyButton
 ├── CodeBlock.Content
 └── CodeBlock.Expand
 ```
@@ -64,23 +61,15 @@ No trae ninguno, a propósito: un highlighter es la única dependencia que dupli
 
 ### CodeBlock
 
-| Prop              | Type                                         | Default | Description                                        |
-| ----------------- | -------------------------------------------- | ------- | -------------------------------------------------- |
-| `code`            | `string`                                     | -       | El código a mostrar y copiar                       |
-| `language`        | `string`                                     | -       | Se imprime en el encabezado y en `data-language`   |
-| `filename`        | `string`                                     | -       | Se imprime en el encabezado                        |
-| `showLineNumbers` | `boolean`                                    | `false` | Agrega un margen con números de línea              |
-| `collapsible`     | `boolean`                                    | `false` | Corta el contenido en `maxLines` hasta expandir    |
-| `maxLines`        | `number`                                     | `20`    | Líneas visibles mientras está plegado              |
-| `renderLine`      | `(line: string, index: number) => ReactNode` | -       | Renderiza cada línea, para enchufar un highlighter |
-| `className`       | `string`                                     | -       | Clases CSS adicionales                             |
-
-### CodeBlock.Header
-
-| Prop        | Type        | Default | Description                         |
-| ----------- | ----------- | ------- | ----------------------------------- |
-| `children`  | `ReactNode` | -       | Acciones, renderizadas a la derecha |
-| `className` | `string`    | -       | Clases CSS adicionales              |
+| Prop              | Type                                         | Default | Description                                          |
+| ----------------- | -------------------------------------------- | ------- | ---------------------------------------------------- |
+| `code`            | `string`                                     | -       | El código a mostrar y copiar                         |
+| `language`        | `string`                                     | -       | Va en `data-language` y como `language-*` en el code |
+| `showLineNumbers` | `boolean`                                    | `false` | Agrega un margen con números de línea                |
+| `collapsible`     | `boolean`                                    | `false` | Corta el contenido en `maxLines` hasta expandir      |
+| `maxLines`        | `number`                                     | `20`    | Líneas visibles mientras está plegado                |
+| `renderLine`      | `(line: string, index: number) => ReactNode` | -       | Renderiza cada línea, para enchufar un highlighter   |
+| `className`       | `string`                                     | -       | Clases CSS adicionales                               |
 
 ### CodeBlock.CopyButton
 

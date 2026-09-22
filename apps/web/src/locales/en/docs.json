@@ -14,15 +14,15 @@
           "href": "/docs"
         },
         {
-          "title": "UI Elements",
+          "title": "UI",
           "href": "/docs/elements/ui"
         },
         {
-          "title": "Layout Elements",
+          "title": "Layout",
           "href": "/docs/elements/layout"
         },
         {
-          "title": "AI Elements",
+          "title": "AI",
           "href": "/docs/elements/ai"
         }
       ]
@@ -61,7 +61,7 @@
       ]
     },
     {
-      "title": "UI Elements",
+      "title": "UI",
       "items": [
         {
           "title": "Accordion",
@@ -337,7 +337,7 @@
       ]
     },
     {
-      "title": "Layout Elements",
+      "title": "Layout",
       "items": [
         {
           "title": "Flex",
@@ -392,7 +392,7 @@
       ]
     },
     {
-      "title": "AI Elements",
+      "title": "AI",
       "items": [
         {
           "title": "Actions",

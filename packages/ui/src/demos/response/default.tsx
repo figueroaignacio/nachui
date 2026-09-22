@@ -24,9 +24,7 @@ export function Default() {
           <li>Show the caret only while tokens are still arriving.</li>
         </ul>
         <CodeBlock code={CODE} language="ts">
-          <CodeBlock.Header>
-            <CodeBlock.CopyButton />
-          </CodeBlock.Header>
+          <CodeBlock.CopyButton />
           <CodeBlock.Content />
         </CodeBlock>
       </Response>

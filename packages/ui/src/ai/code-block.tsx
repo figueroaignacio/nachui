@@ -74,7 +74,6 @@ interface CodeBlockContextValue {
   code: string;
   lines: string[];
   language?: string;
-  filename?: string;
   showLineNumbers: boolean;
   collapsible: boolean;
   maxLines: number;
@@ -96,14 +95,11 @@ const useCodeBlockContext = (): CodeBlockContextValue => {
 interface CodeBlockProps extends React.HTMLAttributes<HTMLDivElement> {
   code: string;
   language?: string;
-  filename?: string;
   showLineNumbers?: boolean;
   collapsible?: boolean;
   maxLines?: number;
   renderLine?: (line: string, index: number) => React.ReactNode;
 }
-
-type CodeBlockHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
 interface CodeBlockCopyButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   copyLabel?: string;
@@ -128,7 +124,6 @@ const CodeBlockRoot = ({
   className,
   code,
   language,
-  filename,
   showLineNumbers = false,
   collapsible = false,
   maxLines = 20,
@@ -145,7 +140,6 @@ const CodeBlockRoot = ({
       code,
       lines,
       language,
-      filename,
       showLineNumbers,
       collapsible,
       maxLines,
@@ -153,7 +147,7 @@ const CodeBlockRoot = ({
       setExpanded,
       renderLine,
     }),
-    [code, lines, language, filename, showLineNumbers, collapsible, maxLines, expanded, renderLine],
+    [code, lines, language, showLineNumbers, collapsible, maxLines, expanded, renderLine],
   );
 
   return (
@@ -163,7 +157,7 @@ const CodeBlockRoot = ({
         data-language={language}
         data-state={collapsible ? (expanded ? 'expanded' : 'collapsed') : undefined}
         className={cn(
-          'border-border bg-code text-foreground w-full min-w-0 overflow-hidden rounded-lg border',
+          'group/code border-border bg-code text-foreground relative w-full min-w-0 overflow-hidden rounded-lg border',
           className,
         )}
         {...props}
@@ -175,34 +169,6 @@ const CodeBlockRoot = ({
 };
 
 CodeBlockRoot.displayName = 'CodeBlock';
-
-const CodeBlockHeader = ({
-  className,
-  children,
-  ref,
-  ...props
-}: CodeBlockHeaderProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { filename, language } = useCodeBlockContext();
-
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        'border-border text-muted-foreground flex min-h-9 items-center justify-between gap-3 border-b px-3 py-1.5 font-mono text-xs',
-        className,
-      )}
-      {...props}
-    >
-      <div className="flex min-w-0 items-center gap-2">
-        {filename ? <span className="text-foreground truncate">{filename}</span> : null}
-        {language ? <span className="shrink-0 uppercase">{language}</span> : null}
-      </div>
-      {children ? <div className="flex shrink-0 items-center gap-1">{children}</div> : null}
-    </div>
-  );
-};
-
-CodeBlockHeader.displayName = 'CodeBlockHeader';
 
 const CodeBlockCopyButton = ({
   className,
@@ -244,7 +210,7 @@ const CodeBlockCopyButton = ({
         });
       }}
       className={cn(
-        'text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:ring-ring data-[copied]:text-success-text inline-flex size-7 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:outline-none',
+        'bg-code/80 text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:ring-ring data-[copied]:text-success-text absolute top-2 right-2 inline-flex size-7 items-center justify-center rounded-md opacity-0 backdrop-blur-sm transition-opacity group-hover/code:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none data-[copied]:opacity-100',
         className,
       )}
       {...props}
@@ -341,7 +307,6 @@ const CodeBlockExpand = ({
 CodeBlockExpand.displayName = 'CodeBlockExpand';
 
 const CodeBlock = Object.assign(CodeBlockRoot, {
-  Header: CodeBlockHeader,
   CopyButton: CodeBlockCopyButton,
   Content: CodeBlockContent,
   Expand: CodeBlockExpand,
@@ -352,6 +317,5 @@ export type {
   CodeBlockContentProps,
   CodeBlockCopyButtonProps,
   CodeBlockExpandProps,
-  CodeBlockHeaderProps,
   CodeBlockProps,
 };
