@@ -636,7 +636,8 @@ body {
 
   --silk-base: oklch(8% 0 0);
   --silk-fold: oklch(15% 0 0);
-  --silk-deep: oklch(22% 0 0);
+  --silk-deep: oklch(24% 0.006 80);
+  --silk-glow: oklch(70% 0.12 75 / 0.35);
 }
 
 /* The dock wears the same silk as the dome: a folded gradient with two slow
@@ -695,10 +696,19 @@ body {
     );
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .dark .site-dock-silk::after {
-    animation: silk-drift 14s ease-in-out infinite alternate;
-  }
+.dark .site-dock-silk::after {
+  background-image:
+    radial-gradient(
+      60% 40% at 18% 30%,
+      color-mix(in oklab, var(--silk-fold) 90%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      70% 45% at 62% 70%,
+      color-mix(in oklab, var(--silk-deep) 90%, transparent) 0%,
+      transparent 72%
+    ),
+    radial-gradient(35% 30% at 65% 30%, var(--silk-glow), transparent 70%);
 }
 
 .page-backdrop {
@@ -767,34 +777,13 @@ body {
     );
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .page-backdrop-waves {
-    animation: silk-drift 18s ease-in-out infinite alternate;
-  }
-
-  .page-backdrop-waves::after {
-    animation: silk-drift-back 23s ease-in-out infinite alternate;
-  }
-}
-
-@keyframes silk-drift {
-  from {
-    transform: translate3d(-9%, -3%, 0) scale(1);
-  }
-
-  to {
-    transform: translate3d(9%, 3%, 0) scale(1.12);
-  }
-}
-
-@keyframes silk-drift-back {
-  from {
-    transform: translate3d(8%, 2%, 0) scale(1.08);
-  }
-
-  to {
-    transform: translate3d(-8%, -2%, 0) scale(1);
-  }
+/* The warm glow the portfolio's silk carries, parked where the light would
+   catch the fold. Static: the sheet reads as lit, not as moving. */
+.page-backdrop-glow {
+  position: absolute;
+  inset: -20%;
+  filter: blur(48px);
+  background: radial-gradient(35% 30% at 65% 30%, var(--silk-glow), transparent 70%);
 }
 
 .page-backdrop-grain {
