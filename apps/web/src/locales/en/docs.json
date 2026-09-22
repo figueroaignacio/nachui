@@ -271,6 +271,12 @@
           "description": "A visual divider for separating content with optional label."
         },
         {
+          "title": "Sheet",
+          "href": "/docs/elements/ui/sheet",
+          "description": "A panel pinned to one edge of the screen, for filters, details and forms.",
+          "badge": "new"
+        },
+        {
           "title": "Skeleton",
           "href": "/docs/elements/ui/skeleton",
           "description": "A placeholder loading component with pulse animation."

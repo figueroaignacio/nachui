@@ -3,6 +3,7 @@
 import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { floatingOrigin, floatingVariants, reveal } from '../lib/motion';
 
 const HOVER_CARD_POSITION_CLASSES = {
   top: {
@@ -27,33 +28,7 @@ const HOVER_CARD_POSITION_CLASSES = {
   },
 } as const;
 
-const HOVER_CARD_ANIMATION_VARIANTS = {
-  top: {
-    initial: { opacity: 0, y: 5, scale: 0.96, filter: 'blur(4px)' },
-    animate: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
-  },
-  bottom: {
-    initial: { opacity: 0, y: -5, scale: 0.96, filter: 'blur(4px)' },
-    animate: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
-  },
-  left: {
-    initial: { opacity: 0, x: 5, scale: 0.96, filter: 'blur(4px)' },
-    animate: { opacity: 1, x: 0, scale: 1, filter: 'blur(0px)' },
-  },
-  right: {
-    initial: { opacity: 0, x: -5, scale: 0.96, filter: 'blur(4px)' },
-    animate: { opacity: 1, x: 0, scale: 1, filter: 'blur(0px)' },
-  },
-} as const;
-
-const HOVER_CARD_TRANSITION = { duration: 0.2, ease: 'easeOut' } as const;
 const HOVER_CARD_STYLE = { willChange: 'opacity, transform, filter' } as const;
-const REDUCED_MOTION_PROPS = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.12 },
-} as const;
 
 type HoverCardSide = 'top' | 'bottom' | 'left' | 'right';
 type HoverCardAlign = 'start' | 'center' | 'end';
@@ -285,22 +260,10 @@ const HoverCardContent = ({
           data-slot="hover-card-content"
           data-side={side}
           data-align={align}
-          initial={
-            shouldReduceMotion
-              ? REDUCED_MOTION_PROPS.initial
-              : HOVER_CARD_ANIMATION_VARIANTS[side].initial
-          }
-          animate={
-            shouldReduceMotion
-              ? REDUCED_MOTION_PROPS.animate
-              : HOVER_CARD_ANIMATION_VARIANTS[side].animate
-          }
-          exit={
-            shouldReduceMotion
-              ? REDUCED_MOTION_PROPS.exit
-              : HOVER_CARD_ANIMATION_VARIANTS[side].initial
-          }
-          transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : HOVER_CARD_TRANSITION}
+          variants={shouldReduceMotion ? reveal : floatingVariants[side]}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
           style={offsetStyle}
           onPointerEnter={(event) => {
             onPointerEnter?.(event);
@@ -313,6 +276,7 @@ const HoverCardContent = ({
           className={cn(
             'bg-popover text-popover-foreground absolute z-50 w-64 rounded-md border p-4 shadow-md outline-none',
             HOVER_CARD_POSITION_CLASSES[side][align],
+            floatingOrigin[side],
             className,
           )}
           {...props}

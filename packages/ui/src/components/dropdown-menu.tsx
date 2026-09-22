@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { floatingVariants, reveal, springs, tap } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -79,7 +80,6 @@ const DROPDOWN_ICON_VARIANTS = {
   closed: { rotate: 0 },
 } as const;
 
-const DROPDOWN_ICON_TRANSITION = { type: 'spring', stiffness: 300, damping: 20 } as const;
 const DROPDOWN_ICON_STYLE = { willChange: 'transform' } as const;
 const DROPDOWN_CONTENT_STYLE = { willChange: 'opacity, transform, filter' } as const;
 
@@ -87,41 +87,6 @@ const ALIGN_CLASSES = {
   start: 'left-0',
   center: 'left-1/2 -translate-x-1/2',
   end: 'right-0',
-} as const;
-
-const DROPDOWN_INITIAL = {
-  bottom: { opacity: 0, scale: 0.95, y: -8, filter: 'blur(4px)' },
-  top: { opacity: 0, scale: 0.95, y: 8, filter: 'blur(4px)' },
-} as const;
-
-const DROPDOWN_ANIMATE = {
-  opacity: 1,
-  scale: 1,
-  y: 0,
-  filter: 'blur(0px)',
-  transition: {
-    type: 'spring',
-    duration: 0.3,
-    bounce: 0,
-    opacity: { duration: 0.2 },
-  },
-} as const;
-
-const DROPDOWN_EXIT = {
-  bottom: {
-    opacity: 0,
-    scale: 0.98,
-    y: -4,
-    filter: 'blur(2px)',
-    transition: { duration: 0.15 },
-  },
-  top: {
-    opacity: 0,
-    scale: 0.98,
-    y: 4,
-    filter: 'blur(2px)',
-    transition: { duration: 0.15 },
-  },
 } as const;
 
 // --- Context ---
@@ -290,7 +255,8 @@ const DropdownMenuTrigger = ({
       type="button"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      whileTap={!shouldReduceMotion ? { scale: 0.98 } : undefined}
+      whileTap={!shouldReduceMotion ? tap : undefined}
+      transition={springs.snappy}
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium',
         'text-foreground border-border border',
@@ -305,7 +271,7 @@ const DropdownMenuTrigger = ({
         aria-hidden="true"
         variants={DROPDOWN_ICON_VARIANTS}
         animate={isOpen ? 'open' : 'closed'}
-        transition={DROPDOWN_ICON_TRANSITION}
+        transition={springs.snappy}
         style={DROPDOWN_ICON_STYLE}
       >
         <ChevronDownIcon className="h-4 w-4 opacity-50" size={16} />
@@ -408,6 +374,8 @@ const DropdownMenuContent = ({
     [closeMenu],
   );
 
+  const shouldReduceMotion = useReducedMotion();
+
   const transformOriginClass =
     position === 'bottom'
       ? align === 'start'
@@ -435,9 +403,10 @@ const DropdownMenuContent = ({
           role="menu"
           aria-labelledby={triggerId}
           onKeyDown={handleKeyDown}
-          initial={DROPDOWN_INITIAL[position]}
-          animate={DROPDOWN_ANIMATE}
-          exit={DROPDOWN_EXIT[position]}
+          variants={shouldReduceMotion ? reveal : floatingVariants[position]}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
           style={{ ...verticalStyle, ...DROPDOWN_CONTENT_STYLE }}
           className={cn(
             'border-border absolute z-50 min-w-48 overflow-hidden rounded-md border',

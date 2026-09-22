@@ -4,6 +4,7 @@ import { cva } from 'class-variance-authority';
 import { AnimatePresence, HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { collapse, collapseInner, springs, tap } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -29,42 +30,7 @@ function ChevronDownIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) 
   );
 }
 
-// --- Animation constants (module level) ---
-
-const COLLAPSIBLE_ICON_TRANSITION = { type: 'spring', stiffness: 300, damping: 20 } as const;
-
-const COLLAPSIBLE_HEIGHT_VARIANTS = {
-  open: {
-    height: 'auto',
-    opacity: 1,
-    filter: 'blur(0px)',
-    transition: {
-      height: { duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] as [number, number, number, number] },
-      opacity: { duration: 0.25, delay: 0.05 },
-      filter: { duration: 0.3 },
-    },
-  },
-  closed: {
-    height: 0,
-    opacity: 0,
-    filter: 'blur(10px)',
-    transition: {
-      height: {
-        duration: 0.25,
-        ease: [0.04, 0.62, 0.23, 0.98] as [number, number, number, number],
-      },
-      opacity: { duration: 0.15 },
-      filter: { duration: 0.2 },
-    },
-  },
-} as const;
-
-const COLLAPSIBLE_INNER_VARIANTS = {
-  open: { y: 0, scale: 1, transition: { duration: 0.3, ease: 'easeOut' } },
-  closed: { y: -8, scale: 0.98, transition: { duration: 0.2 } },
-} as const;
-
-const COLLAPSIBLE_CONTENT_STYLE = { willChange: 'height, opacity, filter' } as const;
+const COLLAPSIBLE_CONTENT_STYLE = { willChange: 'height, opacity' } as const;
 
 // --- CVA ---
 
@@ -254,8 +220,8 @@ const CollapsibleTrigger = ({
       data-state={isOpen ? 'open' : 'closed'}
       aria-expanded={isOpen}
       aria-controls={`${id}-content`}
-      whileHover={!disabled && !shouldReduceMotion ? { scale: 1.005 } : undefined}
-      whileTap={!disabled && !shouldReduceMotion ? { scale: 0.99 } : undefined}
+      whileTap={!disabled && !shouldReduceMotion ? tap : undefined}
+      transition={springs.snappy}
       className={cn(collapsibleTriggerVariants({ variant }), className)}
       {...props}
     >
@@ -263,7 +229,7 @@ const CollapsibleTrigger = ({
         <motion.span
           aria-hidden="true"
           animate={shouldReduceMotion ? undefined : { rotate: isOpen ? 90 : 0 }}
-          transition={COLLAPSIBLE_ICON_TRANSITION}
+          transition={springs.snappy}
           className="mr-2"
         >
           {chevron}
@@ -274,7 +240,7 @@ const CollapsibleTrigger = ({
         <motion.span
           aria-hidden="true"
           animate={shouldReduceMotion ? undefined : { rotate: isOpen ? 180 : 0 }}
-          transition={COLLAPSIBLE_ICON_TRANSITION}
+          transition={springs.snappy}
           className="ml-2"
         >
           {chevron}
@@ -303,7 +269,7 @@ const CollapsibleContent = ({
           id={`${id}-content`}
           role="region"
           aria-labelledby={`${id}-trigger`}
-          variants={COLLAPSIBLE_HEIGHT_VARIANTS}
+          variants={collapse}
           initial="closed"
           animate="open"
           exit="closed"
@@ -311,12 +277,7 @@ const CollapsibleContent = ({
           className={cn(collapsibleContentVariants({ variant }), className)}
           {...props}
         >
-          <motion.div
-            variants={COLLAPSIBLE_INNER_VARIANTS}
-            initial="closed"
-            animate="open"
-            exit="closed"
-          >
+          <motion.div variants={collapseInner} initial="closed" animate="open" exit="closed">
             {children}
           </motion.div>
         </motion.div>

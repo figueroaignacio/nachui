@@ -3,41 +3,14 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
-
-// --- Animation variants (hoisted at module level to avoid recreation per render) ---
+import { collapse, collapseInner, springs, tap } from '../lib/motion';
 
 const CHEVRON_VARIANTS = {
   open: { rotate: 180 },
   closed: { rotate: 0 },
 } as const;
 
-const CHEVRON_TRANSITION = {
-  type: 'spring',
-  stiffness: 200,
-  damping: 15,
-} as const;
-
 const CHEVRON_STYLE = { willChange: 'transform' } as const;
-
-const CONTENT_HEIGHT_VARIANTS = {
-  open: { height: 'auto' },
-  closed: { height: 0 },
-} as const;
-
-const CONTENT_HEIGHT_TRANSITION = {
-  duration: 0.3,
-  ease: [0.04, 0.62, 0.23, 0.98] as [number, number, number, number],
-} as const;
-
-const CONTENT_FADE_VARIANTS = {
-  open: { y: 0, opacity: 1, filter: 'blur(0px)' },
-  closed: { y: -15, opacity: 0, filter: 'blur(6px)' },
-} as const;
-
-const CONTENT_FADE_TRANSITIONS = {
-  enter: { duration: 0.35, ease: 'easeOut' },
-  exit: { duration: 0.2, ease: 'easeIn' },
-} as const;
 
 const CONTENT_STYLE = { willChange: 'opacity, transform, filter' } as const;
 
@@ -202,7 +175,8 @@ const AccordionTrigger = ({
       aria-expanded={isOpen}
       onClick={() => toggleItem(value)}
       onKeyDown={handleKeyDown}
-      whileTap={shouldReduceMotion ? undefined : { scale: 0.99 }}
+      whileTap={shouldReduceMotion ? undefined : tap}
+      transition={springs.snappy}
       className={cn(
         'group hover:text-muted-foreground flex w-full items-center justify-between py-3.5 text-left text-sm font-medium transition-colors',
         className,
@@ -223,7 +197,7 @@ const AccordionTrigger = ({
         className="text-muted-foreground group-hover:text-primary h-4 w-4 shrink-0 transition-colors"
         variants={CHEVRON_VARIANTS}
         animate={shouldReduceMotion ? undefined : isOpen ? 'open' : 'closed'}
-        transition={CHEVRON_TRANSITION}
+        transition={springs.snappy}
         style={CHEVRON_STYLE}
       >
         <path d="m6 9 6 6 6-6" />
@@ -260,19 +234,17 @@ const AccordionContent = ({
           role="region"
           aria-labelledby={triggerId}
           key="content"
-          variants={CONTENT_HEIGHT_VARIANTS}
+          variants={collapse}
           initial="closed"
           animate="open"
           exit="closed"
-          transition={CONTENT_HEIGHT_TRANSITION}
           className={cn('overflow-hidden text-sm', className)}
         >
           <motion.div
-            variants={CONTENT_FADE_VARIANTS}
+            variants={collapseInner}
             initial="closed"
             animate="open"
-            exit={{ ...CONTENT_FADE_VARIANTS.closed, transition: CONTENT_FADE_TRANSITIONS.exit }}
-            transition={CONTENT_FADE_TRANSITIONS.enter}
+            exit="closed"
             style={CONTENT_STYLE}
             className="text-muted-foreground pt-0 pb-4"
           >

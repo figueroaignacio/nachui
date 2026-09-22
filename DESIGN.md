@@ -152,7 +152,43 @@ NachUI ships its own icon set in `packages/ui/src/icons`, one self-contained Rea
 
 The test in `packages/ui/src/icons/icons.test.tsx` enforces the contract, and `apps/web/src/features/icons/lib/icons.ts` holds the category and tags of every icon for the `/icons` catalog.
 
-## 7. Technical Notes
+## 7. Motion
+
+Every animation in NachUI is made of the same material: springy, a little playful, never sloppy. The vocabulary lives in `packages/ui/src/lib/motion.ts` and the installation guide has the reader create it next to `cn.ts`; components import it as `../lib/motion` and never define their own springs.
+
+### One physics
+
+- **Three springs, no more**: `snappy` (550 / 22 / 0.6) for hover, press and toggles; `smooth` (380 / 24 / 0.8) for panels, menus and collapsibles; `gentle` (200 / 20 / 1) for large surfaces like dialogs and drawers. All three are underdamped on purpose: things overshoot their target a touch and settle back, which is what reads as friendly. The overshoot is small and quick, one visible bounce and done.
+- **State changes use springs, never durations.** Springs are interruptible: opening and closing mid flight continues from the current position with its velocity. Fixed durations are reserved for opacity and for loops.
+- **Nothing longer than 0.3s** on anything the user is waiting for.
+
+### Depth of field
+
+Things arrive by popping into focus and leave by shrinking out of it: `blur(6px)` and `scale(0.85)` on entry, springing past full size and settling; `scale(0.92)` with a lighter `blur(4px)` on exit. Blur only ever appears during a transition, never at rest, and never on text that is being read. This is the library's signature and it is applied everywhere something appears or disappears.
+
+### Asymmetry
+
+Exits are faster than entries, roughly 60% of the time. What arrives deserves attention; what leaves should not get in the way. `floatingVariants` and `collapse` encode this: spring in, short tween out.
+
+### Origin
+
+Anything that opens from a trigger opens from the trigger: `floatingOrigin[side]` sets `transform-origin` toward it, and `floatingVariants[side]` starts the element a few pixels closer to it. Tooltip, popover, hover card, dropdown and context menu share exactly this behaviour.
+
+### Press
+
+`whileTap={tap}` with `springs.snappy`: `scale(0.94)`, a real squish, and a spring back that overshoots. This is where the library feels most like a toy, and that is the point: a control should feel good to press.
+
+### Reduced motion
+
+Every animated component checks `useReducedMotion()` and swaps to `reveal` (a short opacity fade) or `still`. Motion is never removed entirely, so state changes stay legible.
+
+### Not allowed
+
+- Bounce that keeps going. One overshoot is character; two is a wobble. If a spring visibly oscillates more than once, raise its damping.
+- Animating `width`, `top` or `left`. Only `transform`, `opacity` and `filter`; `height` on collapsibles is the one justified exception.
+- Stagger without a cap. `cascade` is for lists of up to ten items at 35ms apart.
+
+## 8. Technical Notes
 
 - **Color Space**: OKLCH for perceptually uniform, gamut-safe color definitions
 - **CSS Variables**: All tokens exposed as `--color-*` for runtime theming

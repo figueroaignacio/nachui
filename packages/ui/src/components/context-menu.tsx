@@ -1,8 +1,9 @@
 'use client';
 
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { floatingVariants, reveal } from '../lib/motion';
 
 interface ContextMenuContextValue {
   isOpen: boolean;
@@ -39,27 +40,6 @@ interface ContextMenuItemProps {
   onSelect?: () => void;
   variant?: 'default' | 'destructive';
 }
-
-const CONTEXT_MENU_INITIAL = { opacity: 0, scale: 0.95, filter: 'blur(4px)' } as const;
-
-const CONTEXT_MENU_ANIMATE = {
-  opacity: 1,
-  scale: 1,
-  filter: 'blur(0px)',
-  transition: {
-    type: 'spring',
-    duration: 0.25,
-    bounce: 0,
-    opacity: { duration: 0.15 },
-  },
-} as const;
-
-const CONTEXT_MENU_EXIT = {
-  opacity: 0,
-  scale: 0.98,
-  filter: 'blur(2px)',
-  transition: { duration: 0.12 },
-} as const;
 
 const CONTEXT_MENU_STYLE = { willChange: 'opacity, transform, filter' } as const;
 
@@ -296,6 +276,8 @@ const ContextMenuContent = ({
     [closeMenu],
   );
 
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -305,9 +287,10 @@ const ContextMenuContent = ({
           role="menu"
           aria-labelledby={triggerId}
           onKeyDown={handleKeyDown}
-          initial={CONTEXT_MENU_INITIAL}
-          animate={CONTEXT_MENU_ANIMATE}
-          exit={CONTEXT_MENU_EXIT}
+          variants={shouldReduceMotion ? reveal : floatingVariants.bottom}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
           style={{
             left: coords?.left ?? 0,
             top: coords?.top ?? 0,

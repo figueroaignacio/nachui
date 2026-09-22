@@ -4,11 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
-
-// --- Animation constants (module level) ---
-
-const TABS_INDICATOR_TRANSITION = { type: 'spring', bounce: 0.2, duration: 0.6 } as const;
-const STILL_TRANSITION = { duration: 0 } as const;
+import { springs, still } from '../lib/motion';
 
 // --- CVA ---
 
@@ -271,7 +267,7 @@ const TabsTrigger = ({
               ? 'bg-foreground top-auto bottom-0 h-[1.5px]'
               : 'bg-background border-border/30 rounded-sm border',
           )}
-          transition={shouldReduceMotion ? STILL_TRANSITION : TABS_INDICATOR_TRANSITION}
+          transition={shouldReduceMotion ? still : springs.smooth}
         />
       )}
     </button>

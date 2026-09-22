@@ -271,6 +271,12 @@
           "description": "Un divisor visual para separar secciones de contenido con label opcional."
         },
         {
+          "title": "Sheet",
+          "href": "/docs/elements/ui/sheet",
+          "description": "Un panel fijado a un borde de la pantalla, para filtros, detalles y formularios.",
+          "badge": "new"
+        },
+        {
           "title": "Skeleton",
           "href": "/docs/elements/ui/skeleton",
           "description": "Un componente de carga de marcador de posición con animación de pulso."

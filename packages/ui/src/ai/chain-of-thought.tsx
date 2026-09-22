@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { collapse, springs } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -70,31 +71,8 @@ function DotIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
   );
 }
 
-const CHAIN_CONTENT_VARIANTS = {
-  open: {
-    height: 'auto',
-    opacity: 1,
-    transition: {
-      height: {
-        duration: 0.25,
-        ease: [0.04, 0.62, 0.23, 0.98] as [number, number, number, number],
-      },
-      opacity: { duration: 0.2, delay: 0.04 },
-    },
-  },
-  closed: {
-    height: 0,
-    opacity: 0,
-    transition: {
-      height: { duration: 0.2, ease: [0.04, 0.62, 0.23, 0.98] as [number, number, number, number] },
-      opacity: { duration: 0.12 },
-    },
-  },
-} as const;
-
 const PULSE_ANIMATE = { opacity: [0.45, 1, 0.45] };
 const PULSE_TRANSITION = { repeat: Infinity, duration: 1.6, ease: 'easeInOut' } as const;
-const CHEVRON_TRANSITION = { type: 'spring', stiffness: 300, damping: 20 } as const;
 
 type ChainOfThoughtStatus = 'complete' | 'active' | 'pending';
 
@@ -219,7 +197,7 @@ const ChainOfThoughtHeader = ({
         aria-hidden="true"
         className="flex shrink-0"
         animate={shouldReduceMotion ? undefined : { rotate: open ? 180 : 0 }}
-        transition={CHEVRON_TRANSITION}
+        transition={springs.snappy}
       >
         <ChevronDownIcon size={14} />
       </motion.span>
@@ -245,7 +223,7 @@ const ChainOfThoughtContent = ({
           id={`${id}-content`}
           role="region"
           aria-labelledby={`${id}-trigger`}
-          variants={CHAIN_CONTENT_VARIANTS}
+          variants={collapse}
           initial="closed"
           animate="open"
           exit="closed"

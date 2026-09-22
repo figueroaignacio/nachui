@@ -3,6 +3,7 @@
 import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { floatingOrigin, floatingVariants, reveal } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -38,33 +39,7 @@ const POPOVER_POSITION_CLASSES = {
   right: 'left-full top-1/2 -translate-y-1/2 ml-2',
 } as const;
 
-const POPOVER_ANIMATION_VARIANTS = {
-  top: {
-    initial: { opacity: 0, y: 5, scale: 0.96, filter: 'blur(4px)' },
-    animate: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
-  },
-  bottom: {
-    initial: { opacity: 0, y: -5, scale: 0.96, filter: 'blur(4px)' },
-    animate: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
-  },
-  left: {
-    initial: { opacity: 0, x: 5, scale: 0.96, filter: 'blur(4px)' },
-    animate: { opacity: 1, x: 0, scale: 1, filter: 'blur(0px)' },
-  },
-  right: {
-    initial: { opacity: 0, x: -5, scale: 0.96, filter: 'blur(4px)' },
-    animate: { opacity: 1, x: 0, scale: 1, filter: 'blur(0px)' },
-  },
-} as const;
-
-const POPOVER_TRANSITION = { duration: 0.2, ease: 'easeOut' } as const;
 const POPOVER_STYLE = { willChange: 'opacity, transform, filter' } as const;
-const REDUCED_MOTION_PROPS = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.12 },
-} as const;
 
 // --- Context ---
 
@@ -290,26 +265,15 @@ const PopoverContent = ({
           id={id}
           role="dialog"
           tabIndex={-1}
-          initial={
-            shouldReduceMotion
-              ? REDUCED_MOTION_PROPS.initial
-              : POPOVER_ANIMATION_VARIANTS[side].initial
-          }
-          animate={
-            shouldReduceMotion
-              ? REDUCED_MOTION_PROPS.animate
-              : POPOVER_ANIMATION_VARIANTS[side].animate
-          }
-          exit={
-            shouldReduceMotion
-              ? REDUCED_MOTION_PROPS.exit
-              : POPOVER_ANIMATION_VARIANTS[side].initial
-          }
-          transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : POPOVER_TRANSITION}
+          variants={shouldReduceMotion ? reveal : floatingVariants[side]}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
           style={sideOffsetStyle}
           className={cn(
             'bg-popover text-popover-foreground absolute z-50 w-72 rounded-md border p-4 shadow-sm outline-none',
             POPOVER_POSITION_CLASSES[side],
+            floatingOrigin[side],
             className,
           )}
           {...props}

@@ -63,6 +63,7 @@ export const COMPONENT_REGISTRY = {
   section: 'packages/ui/src/layout/section.tsx',
   select: 'packages/ui/src/components/select.tsx',
   separator: 'packages/ui/src/components/separator.tsx',
+  sheet: 'packages/ui/src/components/sheet.tsx',
   shimmer: 'packages/ui/src/ai/shimmer.tsx',
   skeleton: 'packages/ui/src/components/skeleton.tsx',
   snippet: 'packages/ui/src/components/snippet.tsx',
@@ -142,6 +143,7 @@ export const COMPONENT_FAMILY = {
   section: 'layout',
   select: 'ui',
   separator: 'ui',
+  sheet: 'ui',
   shimmer: 'ai',
   skeleton: 'ui',
   snippet: 'ui',
@@ -425,6 +427,11 @@ export const DEMO_REGISTRY = {
   separator: {
     default: 'packages/ui/src/demos/separator/default.tsx',
     'with-label': 'packages/ui/src/demos/separator/with-label.tsx',
+  },
+  sheet: {
+    default: 'packages/ui/src/demos/sheet/default.tsx',
+    sides: 'packages/ui/src/demos/sheet/sides.tsx',
+    sizes: 'packages/ui/src/demos/sheet/sizes.tsx',
   },
   shimmer: {
     default: 'packages/ui/src/demos/shimmer/default.tsx',

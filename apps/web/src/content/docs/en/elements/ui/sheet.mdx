@@ -1,0 +1,116 @@
+---
+title: Sheet
+description: A panel pinned to one edge of the screen, for filters, details and forms that should not take you off the page.
+published: true
+date: 2026-09-16
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="sheet" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="sheet" />
+
+## Anatomy
+
+```tsx
+import { Sheet } from '@/components/ui/sheet';
+```
+
+```tsx
+<Sheet>
+  <Sheet.Trigger asChild>
+    <Button variant="outline">Filters</Button>
+  </Sheet.Trigger>
+  <Sheet.Content side="right" size="md">
+    <Sheet.Header>
+      <Sheet.Title>Filters</Sheet.Title>
+      <Sheet.Description>Narrow the list without leaving the page.</Sheet.Description>
+    </Sheet.Header>
+    <Sheet.Body>...</Sheet.Body>
+    <Sheet.Footer>
+      <Sheet.Close asChild>
+        <Button>Apply</Button>
+      </Sheet.Close>
+    </Sheet.Footer>
+  </Sheet.Content>
+</Sheet>
+```
+
+A sheet is flush with the edge it opens from and fills that edge end to end. It traps focus, closes on Escape and on the backdrop, locks page scroll and returns focus to the trigger when it goes.
+
+## Sheet or Drawer
+
+They look related and they are, but they answer different questions. [Drawer](/docs/elements/ui/drawer) is the touch one: a floating island with a handle you drag to dismiss, at home on a phone. Sheet is the desktop one: a fixed side panel with no drag, sized in steps, meant for a filter rail, an edit form or a details view. If the content is something you fill in, reach for Sheet. If it is something you flick away, reach for Drawer.
+
+## Composition
+
+Use the following composition to build a `Sheet`:
+
+```tree
+Sheet
+├── Sheet.Trigger
+└── Sheet.Content
+    ├── Sheet.Header
+    │   ├── Sheet.Title
+    │   └── Sheet.Description
+    ├── Sheet.Body
+    └── Sheet.Footer
+        └── Sheet.Close
+```
+
+`Header`, `Body` and `Footer` are layout: the body scrolls on its own and the footer sticks to the bottom, so long forms keep their actions in reach.
+
+## Sides
+
+<ComponentPreview component="sheet" demo="sides" />
+
+## Sizes
+
+`size` is a width on the left and right, and a maximum height on the top and bottom. `full` covers the screen.
+
+<ComponentPreview component="sheet" demo="sizes" />
+
+## API Reference
+
+### Sheet
+
+| Prop           | Type                      | Default | Description                        |
+| -------------- | ------------------------- | ------- | ---------------------------------- |
+| `defaultOpen`  | `boolean`                 | `false` | Open state when uncontrolled       |
+| `open`         | `boolean`                 | -       | Controlled open state              |
+| `onOpenChange` | `(open: boolean) => void` | -       | Called when the open state changes |
+
+### Sheet.Trigger
+
+| Prop        | Type      | Default | Description                                         |
+| ----------- | --------- | ------- | --------------------------------------------------- |
+| `asChild`   | `boolean` | `false` | Render the child as the trigger instead of a button |
+| `className` | `string`  | -       | Additional CSS classes                              |
+
+### Sheet.Content
+
+| Prop         | Type                                     | Default   | Description                               |
+| ------------ | ---------------------------------------- | --------- | ----------------------------------------- |
+| `side`       | `'top' \| 'bottom' \| 'left' \| 'right'` | `'right'` | Edge the sheet is pinned to               |
+| `size`       | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'`    | Width on the sides, height top and bottom |
+| `showClose`  | `boolean`                                | `true`    | Show the corner close button              |
+| `closeLabel` | `string`                                 | `'Close'` | Accessible name of that button            |
+| `className`  | `string`                                 | -         | Additional CSS classes                    |
+
+### Sheet.Close
+
+| Prop        | Type      | Default | Description                                        |
+| ----------- | --------- | ------- | -------------------------------------------------- |
+| `asChild`   | `boolean` | `false` | Render the child as the closer instead of a button |
+| `className` | `string`  | -       | Additional CSS classes                             |
+
+### Sheet.Header / Sheet.Body / Sheet.Footer / Sheet.Title / Sheet.Description
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |

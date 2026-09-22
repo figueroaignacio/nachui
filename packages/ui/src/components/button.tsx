@@ -4,6 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { AnimatePresence, HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import React from 'react';
 import { cn } from '../lib/cn';
+import { springs, tap } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -76,7 +77,6 @@ const CONTENT_VARIANTS = {
 } as const;
 
 const SWAP_TRANSITION = { duration: 0.2 } as const;
-const BUTTON_SPRING = { type: 'spring', stiffness: 400, damping: 17 } as const;
 const BUTTON_STYLE = { willChange: 'transform' } as const;
 
 // --- Component ---
@@ -115,8 +115,8 @@ const ButtonRoot = ({
       disabled={isDisabled}
       aria-busy={loading}
       className={cn(buttonVariants({ variant, size }), fullWidth && 'w-full', className)}
-      whileTap={!isDisabled && !shouldReduceMotion ? { scale: 0.96 } : undefined}
-      transition={BUTTON_SPRING}
+      whileTap={!isDisabled && !shouldReduceMotion ? tap : undefined}
+      transition={springs.snappy}
       style={BUTTON_STYLE}
       {...props}
     >

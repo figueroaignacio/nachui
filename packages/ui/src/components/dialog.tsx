@@ -5,6 +5,7 @@ import * as React from 'react';
 import { cloneElement } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
+import { backdrop, reveal, surface } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -65,38 +66,8 @@ function lockPageScroll() {
   };
 }
 
-// --- Animation constants (module level) ---
-
-const OVERLAY_VARIANTS = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-} as const;
-
-const OVERLAY_TRANSITION = { duration: 0.3 } as const;
 const OVERLAY_STYLE = { willChange: 'opacity' } as const;
-
-const DIALOG_VARIANTS = {
-  initial: { opacity: 0, scale: 0.9, filter: 'blur(10px)', y: 10 },
-  animate: { opacity: 1, scale: 1, filter: 'blur(0px)', y: 0 },
-  exit: { opacity: 0, scale: 0.9, filter: 'blur(10px)', y: 10 },
-} as const;
-
-const DIALOG_TRANSITION = {
-  type: 'spring',
-  damping: 25,
-  stiffness: 350,
-  mass: 0.5,
-} as const;
-
-const DIALOG_EXIT_TRANSITION = { duration: 0.2, ease: 'easeIn' } as const;
 const DIALOG_STYLE = { willChange: 'opacity, transform, filter' } as const;
-const REDUCED_MOTION_PROPS = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.12 },
-} as const;
 
 // --- Context ---
 
@@ -279,10 +250,10 @@ const DialogOverlay = ({
   return (
     <motion.div
       ref={ref}
-      initial={shouldReduceMotion ? REDUCED_MOTION_PROPS.initial : OVERLAY_VARIANTS.initial}
-      animate={shouldReduceMotion ? REDUCED_MOTION_PROPS.animate : OVERLAY_VARIANTS.animate}
-      exit={shouldReduceMotion ? REDUCED_MOTION_PROPS.exit : OVERLAY_VARIANTS.exit}
-      transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : OVERLAY_TRANSITION}
+      variants={shouldReduceMotion ? reveal : backdrop}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
       style={OVERLAY_STYLE}
       className={cn('bg-overlay fixed inset-0 z-200', className)}
       onClick={() => setOpen(false)}
@@ -379,14 +350,10 @@ const DialogContent = ({
             aria-describedby={hasDescription ? `${id}-description` : undefined}
             tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
-            initial={shouldReduceMotion ? REDUCED_MOTION_PROPS.initial : DIALOG_VARIANTS.initial}
-            animate={shouldReduceMotion ? REDUCED_MOTION_PROPS.animate : DIALOG_VARIANTS.animate}
-            exit={
-              shouldReduceMotion
-                ? REDUCED_MOTION_PROPS.exit
-                : { ...DIALOG_VARIANTS.exit, transition: DIALOG_EXIT_TRANSITION }
-            }
-            transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : DIALOG_TRANSITION}
+            variants={shouldReduceMotion ? reveal : surface}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
             style={DIALOG_STYLE}
             className={cn(
               'bg-background fixed top-[50%] left-[50%] z-500 grid w-full max-w-xl translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 outline-none',

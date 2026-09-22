@@ -3,6 +3,7 @@
 import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { floatingOrigin, floatingVariants, reveal } from '../lib/motion';
 
 // --- Animation constants (module level) ---
 
@@ -18,33 +19,6 @@ const TOOLTIP_ARROW_CLASSES = {
   bottom: '-top-1 left-1/2 -translate-x-1/2',
   left: '-right-1 top-1/2 -translate-y-1/2',
   right: '-left-1 top-1/2 -translate-y-1/2',
-} as const;
-
-const TOOLTIP_ANIMATION_VARIANTS = {
-  top: {
-    initial: { opacity: 0, y: 5, filter: 'blur(4px)' },
-    animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
-  },
-  bottom: {
-    initial: { opacity: 0, y: -5, filter: 'blur(4px)' },
-    animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
-  },
-  left: {
-    initial: { opacity: 0, x: 5, filter: 'blur(4px)' },
-    animate: { opacity: 1, x: 0, filter: 'blur(0px)' },
-  },
-  right: {
-    initial: { opacity: 0, x: -5, filter: 'blur(4px)' },
-    animate: { opacity: 1, x: 0, filter: 'blur(0px)' },
-  },
-} as const;
-
-const TOOLTIP_TRANSITION = { duration: 0.2, ease: 'easeOut' } as const;
-const REDUCED_MOTION_PROPS = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.12 },
 } as const;
 
 const TOOLTIP_STYLE = { willChange: 'opacity, transform, filter' } as const;
@@ -234,26 +208,15 @@ const TooltipContent = ({
         <motion.div
           id={id}
           role="tooltip"
-          initial={
-            shouldReduceMotion
-              ? REDUCED_MOTION_PROPS.initial
-              : TOOLTIP_ANIMATION_VARIANTS[side].initial
-          }
-          animate={
-            shouldReduceMotion
-              ? REDUCED_MOTION_PROPS.animate
-              : TOOLTIP_ANIMATION_VARIANTS[side].animate
-          }
-          exit={
-            shouldReduceMotion
-              ? REDUCED_MOTION_PROPS.exit
-              : TOOLTIP_ANIMATION_VARIANTS[side].initial
-          }
-          transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : TOOLTIP_TRANSITION}
+          variants={shouldReduceMotion ? reveal : floatingVariants[side]}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
           style={sideOffsetStyle}
           className={cn(
             'bg-foreground text-background absolute z-50 rounded-sm px-2.5 py-1 text-xs whitespace-nowrap',
             TOOLTIP_POSITION_CLASSES[side],
+            floatingOrigin[side],
             className,
           )}
           {...props}

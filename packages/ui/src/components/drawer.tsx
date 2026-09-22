@@ -11,6 +11,7 @@ import {
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
+import { backdrop, reveal, slideVariants } from '../lib/motion';
 import { Button, type ButtonProps } from './button';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
@@ -38,46 +39,6 @@ function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
   );
 }
 
-// --- Animation constants (module level) ---
-
-const slideVariants = {
-  bottom: {
-    initial: { y: '100%' },
-    animate: { y: 0 },
-    exit: { y: '110%' },
-  },
-  top: {
-    initial: { y: '-100%' },
-    animate: { y: 0 },
-    exit: { y: '-110%' },
-  },
-  left: {
-    initial: { x: '-100%' },
-    animate: { x: 0 },
-    exit: { x: '-110%' },
-  },
-  right: {
-    initial: { x: '100%' },
-    animate: { x: 0 },
-    exit: { x: '110%' },
-  },
-} as const;
-
-const DRAWER_SPRING = { type: 'spring', damping: 32, stiffness: 320 } as const;
-
-const DRAWER_OVERLAY_VARIANTS = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-} as const;
-
-const DRAWER_OVERLAY_TRANSITION = { duration: 0.2 } as const;
-const REDUCED_MOTION_PROPS = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.12 },
-} as const;
 const DRAWER_OVERLAY_STYLE = { willChange: 'opacity' } as const;
 const DRAWER_CONTENT_STYLE = { willChange: 'transform' } as const;
 const CLOSE_BUTTON_TAP = { scale: 0.9 } as const;
@@ -215,10 +176,10 @@ const DrawerOverlay = ({ className }: { className?: string }) => {
 
   return (
     <motion.div
-      initial={shouldReduceMotion ? REDUCED_MOTION_PROPS.initial : DRAWER_OVERLAY_VARIANTS.initial}
-      animate={shouldReduceMotion ? REDUCED_MOTION_PROPS.animate : DRAWER_OVERLAY_VARIANTS.animate}
-      exit={shouldReduceMotion ? REDUCED_MOTION_PROPS.exit : DRAWER_OVERLAY_VARIANTS.exit}
-      transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : DRAWER_OVERLAY_TRANSITION}
+      variants={shouldReduceMotion ? reveal : backdrop}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
       style={DRAWER_OVERLAY_STYLE}
       className={cn('bg-overlay fixed inset-0 z-300 backdrop-blur-xs', className)}
       onClick={() => setOpen(false)}
@@ -380,22 +341,12 @@ const DrawerContent = ({
               ...(isVertical ? { y: dragY } : { x: dragX }),
               ...DRAWER_CONTENT_STYLE,
             }}
-            initial={
-              shouldReduceMotion
-                ? REDUCED_MOTION_PROPS.initial
-                : slideVariants[side as keyof typeof slideVariants].initial
+            variants={
+              shouldReduceMotion ? reveal : slideVariants[side as keyof typeof slideVariants]
             }
-            animate={
-              shouldReduceMotion
-                ? REDUCED_MOTION_PROPS.animate
-                : slideVariants[side as keyof typeof slideVariants].animate
-            }
-            exit={
-              shouldReduceMotion
-                ? REDUCED_MOTION_PROPS.exit
-                : slideVariants[side as keyof typeof slideVariants].exit
-            }
-            transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : DRAWER_SPRING}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
             className={cn(drawerVariants({ side }), className)}
             {...props}
           >

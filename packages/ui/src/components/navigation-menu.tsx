@@ -3,6 +3,7 @@
 import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { floatingOrigin, floatingVariants, reveal } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -28,22 +29,7 @@ function ChevronDownIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) 
   );
 }
 
-// --- Animation constants ---
-
-const MENU_ANIMATION = {
-  initial: { opacity: 0, y: -5, scale: 0.98, filter: 'blur(4px)' },
-  animate: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
-  exit: { opacity: 0, y: -5, scale: 0.98, filter: 'blur(4px)' },
-} as const;
-
-const MENU_TRANSITION = { duration: 0.18, ease: 'easeOut' } as const;
 const MENU_STYLE = { willChange: 'opacity, transform, filter' } as const;
-const REDUCED_MOTION_PROPS = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.12 },
-} as const;
 
 const CLOSE_DELAY_MS = 150;
 
@@ -207,13 +193,14 @@ const NavigationMenuContent = ({ className, children, ...props }: HTMLMotionProp
       {open && (
         <motion.div
           id={id}
-          initial={shouldReduceMotion ? REDUCED_MOTION_PROPS.initial : MENU_ANIMATION.initial}
-          animate={shouldReduceMotion ? REDUCED_MOTION_PROPS.animate : MENU_ANIMATION.animate}
-          exit={shouldReduceMotion ? REDUCED_MOTION_PROPS.exit : MENU_ANIMATION.exit}
-          transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : MENU_TRANSITION}
+          variants={shouldReduceMotion ? reveal : floatingVariants.bottom}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
           style={MENU_STYLE}
           className={cn(
             'border-border bg-popover absolute top-full left-0 z-50 mt-2 w-72 rounded-lg border p-1.5 shadow-lg',
+            floatingOrigin.bottom,
             className,
           )}
           {...props}

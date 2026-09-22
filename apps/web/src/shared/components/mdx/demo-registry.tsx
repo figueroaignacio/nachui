@@ -84,6 +84,7 @@ import { Default as ScrollAreaDefault } from '@repo/ui/src/demos/scroll-area/def
 import { Default as SectionDefault } from '@repo/ui/src/demos/section/default';
 import { Default as SelectDefault } from '@repo/ui/src/demos/select/default';
 import { Default as SeparatorDefault } from '@repo/ui/src/demos/separator/default';
+import { Default as SheetDefault } from '@repo/ui/src/demos/sheet/default';
 import { Default as ShimmerDefault } from '@repo/ui/src/demos/shimmer/default';
 import { Default as SkeletonDefault } from '@repo/ui/src/demos/skeleton/default';
 import { Default as SourcesDefault } from '@repo/ui/src/demos/sources/default';
@@ -158,12 +159,14 @@ import { Reverse as SplitReverse } from '@repo/ui/src/demos/split/reverse';
 import { Secondary as BadgeSecondary } from '@repo/ui/src/demos/badge/secondary';
 import { Secondary as ButtonSecondary } from '@repo/ui/src/demos/button/secondary';
 import { Seeds as SpriteSeeds } from '@repo/ui/src/demos/sprite/seeds';
+import { Sides as SheetSides } from '@repo/ui/src/demos/sheet/sides';
 import { Sizes as AvatarSizes } from '@repo/ui/src/demos/avatar/sizes';
 import { Sizes as ButtonSizes } from '@repo/ui/src/demos/button/sizes';
 import { Sizes as IconTileSizes } from '@repo/ui/src/demos/icon-tile/sizes';
 import { Sizes as InputSizes } from '@repo/ui/src/demos/input/sizes';
 import { Sizes as KbdSizes } from '@repo/ui/src/demos/kbd/sizes';
 import { Sizes as RatingSizes } from '@repo/ui/src/demos/rating/sizes';
+import { Sizes as SheetSizes } from '@repo/ui/src/demos/sheet/sizes';
 import { Sizes as ShimmerSizes } from '@repo/ui/src/demos/shimmer/sizes';
 import { Sizes as SpinnerSizes } from '@repo/ui/src/demos/spinner/sizes';
 import { Stacked as FrameStacked } from '@repo/ui/src/demos/frame/stacked';
@@ -473,6 +476,11 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
   separator: {
     default: SeparatorDefault,
     'with-label': SeparatorWithLabel,
+  },
+  sheet: {
+    default: SheetDefault,
+    sides: SheetSides,
+    sizes: SheetSizes,
   },
   shimmer: {
     default: ShimmerDefault,
