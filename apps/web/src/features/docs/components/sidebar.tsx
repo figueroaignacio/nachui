@@ -9,7 +9,7 @@ import { springs, still } from '@repo/ui/lib/motion';
 import { motion, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import * as React from 'react';
-import { buildSectionFilters, sectionOf, visibleSections } from '../lib/section-filters';
+import { buildSectionFilters, sectionOf } from '../lib/section-filters';
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -21,15 +21,37 @@ export function Sidebar() {
     () => sectionOf(docsNavigation, pathname),
     [docsNavigation, pathname],
   );
-  const [filter, setFilter] = React.useState(current);
+  const [anchor, setAnchor] = React.useState(current);
+  const navRef = React.useRef<HTMLElement>(null);
+  const anchors = buildSectionFilters(docsNavigation, t('sidebar.all')).slice(1);
+
+  const jumpTo = React.useCallback((id: string, behavior: ScrollBehavior) => {
+    setAnchor(id);
+    const nav = navRef.current;
+    const target = nav?.querySelector<HTMLElement>(`[data-section="${CSS.escape(id)}"]`);
+    if (!nav || !target) return;
+    nav.scrollTo({ top: target.offsetTop, behavior });
+  }, []);
 
   React.useEffect(() => {
-    setFilter(current);
-  }, [current]);
+    jumpTo(current, 'instant');
+  }, [current, jumpTo]);
 
-  const chips = buildSectionFilters(docsNavigation, t('sidebar.all'));
-
-  const visible = visibleSections(docsNavigation, filter);
+  React.useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    const onScroll = () => {
+      const sections = Array.from(nav.querySelectorAll<HTMLElement>('[data-section]'));
+      const nearest = sections.reduce<HTMLElement | undefined>((best, section) => {
+        if (!best) return section;
+        const distance = Math.abs(section.offsetTop - nav.scrollTop);
+        return distance < Math.abs(best.offsetTop - nav.scrollTop) ? section : best;
+      }, undefined);
+      if (nearest?.dataset.section) setAnchor(nearest.dataset.section);
+    };
+    nav.addEventListener('scroll', onScroll, { passive: true });
+    return () => nav.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <aside className="hidden lg:block lg:pr-6">
@@ -40,8 +62,8 @@ export function Sidebar() {
           aria-orientation="vertical"
           aria-label={t('sidebar.filterLabel')}
         >
-          {chips.map(({ id, label, Icon }) => {
-            const isActive = id === filter;
+          {anchors.map(({ id, label, Icon }) => {
+            const isActive = id === anchor;
             return (
               <Tooltip key={id} delayDuration={200}>
                 <Tooltip.Trigger asChild>
@@ -50,7 +72,7 @@ export function Sidebar() {
                     role="tab"
                     aria-selected={isActive}
                     aria-label={label}
-                    onClick={() => setFilter(id)}
+                    onClick={() => jumpTo(id, shouldReduceMotion ? 'instant' : 'smooth')}
                     className={cn(
                       'relative flex size-9 items-center justify-center rounded-md transition-colors',
                       isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
@@ -58,7 +80,7 @@ export function Sidebar() {
                   >
                     {isActive && (
                       <motion.span
-                        layoutId="docs-sidebar-filter"
+                        layoutId="docs-sidebar-anchor"
                         transition={shouldReduceMotion ? still : springs.smooth}
                         className="bg-card absolute inset-0 rounded-md"
                       />
@@ -74,10 +96,19 @@ export function Sidebar() {
           })}
         </div>
 
-        <nav className="hide-scrollbar min-h-0 overflow-y-scroll mask-[linear-gradient(180deg,black_90%,transparent)] pb-20">
-          {visible.map((section: DocSection) => (
-            <div key={section.title} className="mb-6 last:mb-0">
-              <p className="text-muted-foreground px-2.5 text-xs">{section.title}</p>
+        <nav
+          ref={navRef}
+          className="hide-scrollbar relative min-h-0 overflow-y-scroll mask-[linear-gradient(180deg,black_90%,transparent)] pb-20"
+        >
+          {docsNavigation.map((section: DocSection) => (
+            <div key={section.title} data-section={section.title} className="mb-6 last:mb-0">
+              <p className="text-muted-foreground flex items-center gap-1.5 px-2.5 text-xs">
+                {(() => {
+                  const Icon = anchors.find((entry) => entry.id === section.title)?.Icon;
+                  return Icon ? <Icon size={12} /> : null;
+                })()}
+                {section.title}
+              </p>
               <ul className="mt-2">
                 {section.items.map((item: DocItem) => {
                   const isActive = pathname === item.href;

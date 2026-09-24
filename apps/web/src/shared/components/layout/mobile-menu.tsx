@@ -200,7 +200,11 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
               data-section={section.title}
               className="mb-8 scroll-mt-14 last:mb-0"
             >
-              <Typography className="text-muted-foreground mb-2 px-2.5 text-xs">
+              <Typography className="text-muted-foreground mb-2 flex items-center gap-1.5 px-2.5 text-xs">
+                {(() => {
+                  const Icon = anchors.find((entry) => entry.id === section.title)?.Icon;
+                  return Icon ? <Icon size={12} /> : null;
+                })()}
                 {section.title}
               </Typography>
               <ul>
