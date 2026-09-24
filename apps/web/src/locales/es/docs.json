@@ -541,5 +541,9 @@
   "badges": {
     "new": "Nuevo",
     "updated": "Actualizado"
+  },
+  "sidebar": {
+    "all": "Todo",
+    "filterLabel": "Filtrar el sidebar por sección"
   }
 }
