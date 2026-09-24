@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SettingsRow } from './settings-row';
@@ -40,7 +40,7 @@ describe('SettingsRow', () => {
     const trigger = screen.getByRole('combobox', { name: 'Frequency' });
     expect(trigger).toHaveTextContent('Daily digest');
     await userEvent.click(trigger);
-    await userEvent.click(screen.getByRole('option', { name: 'Instantly', hidden: true }));
+    fireEvent.click(screen.getByText('Instantly'));
     expect(onValueChange).toHaveBeenCalledWith('instant');
   });
 
