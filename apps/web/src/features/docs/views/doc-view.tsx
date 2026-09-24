@@ -2,7 +2,6 @@ import { MDXContent } from '@/components/mdx/mdx-content';
 import { DocActions } from '@/features/docs/components/doc-actions';
 import { DocsPagination } from '@/features/docs/components/docs-pagination';
 import { IssueCta } from '@/features/docs/components/issue-cta';
-import { MobileToc } from '@/features/docs/components/mobile-toc';
 import { Toc } from '@/features/docs/components/toc';
 import { GITHUB_REPO_URL, getAbsoluteUrl } from '@/lib/domains';
 import { Callout } from '@repo/ui/components/callout';
@@ -51,7 +50,6 @@ export function DocView({ doc }: DocViewProps) {
       />
       <Container size="md" className="px-0">
         <Stack as="article" className="w-full min-w-0">
-          <MobileToc toc={tocContent} />
           <div className="mt-4 mb-6">
             <div>
               <h1 className="font-heading text-foreground text-[1.75rem] leading-tight font-semibold tracking-tight">

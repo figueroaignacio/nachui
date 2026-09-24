@@ -4,7 +4,7 @@ import { MobileMenu } from './mobile-menu';
 
 export function SiteBrand() {
   return (
-    <div className="page-frame-outer lg:hidden">
+    <div className="page-frame-outer bg-background/85 sticky top-0 z-40 backdrop-blur-md lg:hidden">
       <div className="page-frame flex h-14 items-center justify-between">
         <MobileMenu />
         <Link

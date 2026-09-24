@@ -12,8 +12,11 @@ import { PanelLeftIcon } from '@repo/ui/icons/panel-left';
 import { Typography } from '@repo/ui/components/typography';
 import { XIcon } from '@repo/ui/icons/x';
 import { cn } from '@repo/ui/lib/cn';
+import { springs, still } from '@repo/ui/lib/motion';
+import { motion, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { buildSectionFilters, sectionOf } from '@/features/docs/lib/section-filters';
 import { LocaleSwitcher } from '../common/locale-switcher';
 import { Logo } from '../common/logo';
 import { ThemeToggle } from '../common/theme-toggle';
@@ -40,7 +43,30 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
   );
 
   const menuRef = useRef<HTMLElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const toggleMenu = onClose;
+  const shouldReduceMotion = useReducedMotion();
+
+  const currentSection = useMemo(
+    () => sectionOf(docsNavigation, pathname),
+    [docsNavigation, pathname],
+  );
+  const [anchor, setAnchor] = useState(currentSection);
+  const anchors = buildSectionFilters(docsNavigation, t('docs.sidebar.all')).slice(1);
+  const activeAnchor = anchors.find((entry) => entry.id === anchor);
+
+  const jumpTo = useCallback((id: string, behavior: ScrollBehavior) => {
+    setAnchor(id);
+    const target = scrollRef.current?.querySelector<HTMLElement>(
+      `[data-section="${CSS.escape(id)}"]`,
+    );
+    target?.scrollIntoView({ behavior, block: 'start' });
+  }, []);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    jumpTo(currentSection, 'instant');
+  }, [isMenuOpen, currentSection, jumpTo]);
 
   useLockBodyScroll(isMenuOpen);
   useDialogBehavior({ open: isMenuOpen, onClose, ref: menuRef });
@@ -83,7 +109,7 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
             </Button>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto px-6 py-6">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-6">
           {menuLinks.length > 0 && (
             <div className="mb-8">
               <Typography className="text-muted-foreground mb-2 px-2.5 text-xs">Menu</Typography>
@@ -131,8 +157,49 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
               ))}
             </ul>
           </div>
+          <div
+            className="bg-background/90 sticky -top-6 z-10 -mx-6 mb-4 flex items-center gap-1 px-6 py-2 backdrop-blur-md"
+            role="tablist"
+            aria-label={t('docs.sidebar.filterLabel')}
+          >
+            {anchors.map(({ id, label, Icon }) => {
+              const isActive = id === anchor;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-label={label}
+                  onClick={() => jumpTo(id, shouldReduceMotion ? 'instant' : 'smooth')}
+                  className={cn(
+                    'relative flex size-9 items-center justify-center rounded-md transition-colors',
+                    isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
+                  )}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="mobile-menu-anchor"
+                      transition={shouldReduceMotion ? still : springs.smooth}
+                      className="bg-card absolute inset-0 rounded-md"
+                    />
+                  )}
+                  <span className="relative">
+                    <Icon size={16} />
+                  </span>
+                </button>
+              );
+            })}
+            <span className="text-muted-foreground ml-1 truncate text-xs" aria-live="polite">
+              {activeAnchor?.label}
+            </span>
+          </div>
           {docsNavigation.map((section, sectionIndex) => (
-            <div key={sectionIndex} className="mb-8 last:mb-0">
+            <div
+              key={sectionIndex}
+              data-section={section.title}
+              className="mb-8 scroll-mt-14 last:mb-0"
+            >
               <Typography className="text-muted-foreground mb-2 px-2.5 text-xs">
                 {section.title}
               </Typography>

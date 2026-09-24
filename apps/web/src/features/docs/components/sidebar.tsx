@@ -4,52 +4,12 @@ import { NavBadge } from '@/components/common/nav-badge';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { DocItem, DocSection } from '@/lib/definitions';
 import { Tooltip } from '@repo/ui/components/tooltip';
-import { BookIcon } from '@repo/ui/icons/book';
-import { GridIcon } from '@repo/ui/icons/grid';
-import { LayersIcon } from '@repo/ui/icons/layers';
-import { LayoutIcon } from '@repo/ui/icons/layout';
-import { LayoutGridIcon } from '@repo/ui/icons/layout-grid';
-import { RocketIcon } from '@repo/ui/icons/rocket';
-import { WandIcon } from '@repo/ui/icons/wand';
 import { cn } from '@repo/ui/lib/cn';
 import { springs, still } from '@repo/ui/lib/motion';
 import { motion, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import * as React from 'react';
-
-const ALL = 'all';
-
-type Icon = React.ComponentType<{ size?: number }>;
-
-const ICON_BY_HREF: Record<string, Icon> = {
-  '/docs': RocketIcon,
-  '/docs/installation': BookIcon,
-  '/docs/elements/ui/': LayoutGridIcon,
-  '/docs/elements/layout/': LayoutIcon,
-  '/docs/elements/ai/': WandIcon,
-  '/docs/elements/hybrids/': LayersIcon,
-};
-
-function iconOf(section: DocSection): Icon {
-  const first = section.items[0]?.href ?? '';
-  const match = Object.keys(ICON_BY_HREF).find((prefix) =>
-    prefix.endsWith('/') ? first.startsWith(prefix) : first === prefix,
-  );
-  return (match && ICON_BY_HREF[match]) || BookIcon;
-}
-
-function sectionOf(sections: DocSection[], pathname: string): string {
-  const exact = sections.find((section) => section.items.some((item) => item.href === pathname));
-  if (exact) return exact.title;
-  const byPrefix = sections.find((section) =>
-    section.items.some((item) => item.href !== '/docs' && pathname.startsWith(`${item.href}/`)),
-  );
-  return byPrefix?.title ?? ALL;
-}
-
-function chipLabel(section: DocSection, index: number): string {
-  return index === 0 ? (section.items[0]?.title ?? section.title) : section.title;
-}
+import { buildSectionFilters, sectionOf, visibleSections } from '../lib/section-filters';
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -67,17 +27,9 @@ export function Sidebar() {
     setFilter(current);
   }, [current]);
 
-  const chips = [
-    { id: ALL, label: t('sidebar.all'), Icon: GridIcon },
-    ...docsNavigation.map((section, index) => ({
-      id: section.title,
-      label: chipLabel(section, index),
-      Icon: iconOf(section),
-    })),
-  ];
+  const chips = buildSectionFilters(docsNavigation, t('sidebar.all'));
 
-  const visible =
-    filter === ALL ? docsNavigation : docsNavigation.filter((section) => section.title === filter);
+  const visible = visibleSections(docsNavigation, filter);
 
   return (
     <aside className="hidden lg:block lg:pr-6">
