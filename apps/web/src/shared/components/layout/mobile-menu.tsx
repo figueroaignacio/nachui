@@ -7,18 +7,22 @@ import { Link, usePathname } from '@/i18n/navigation';
 import type { DocSection, Navigation } from '@/lib/definitions';
 import { isHiddenProductLink } from '@/lib/hidden-product-links';
 import { Button } from '@repo/ui/components/button';
-import { PanelLeftIcon } from '@repo/ui/icons/panel-left';
 import { Typography } from '@repo/ui/components/typography';
 import { XIcon } from '@repo/ui/icons/x';
 import { cn } from '@repo/ui/lib/cn';
 import { springs, still } from '@repo/ui/lib/motion';
-import { motion, useReducedMotion } from 'motion/react';
+import { motion, useDragControls, useReducedMotion, type PanInfo } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { buildSectionFilters, sectionOf } from '@/features/docs/lib/section-filters';
 import { LocaleSwitcher } from '../common/locale-switcher';
 import { Logo } from '../common/logo';
 import { ThemeToggle } from '../common/theme-toggle';
+
+const SWIPE_CLOSE_THRESHOLD = 80;
+const SWIPE_CLOSE_VELOCITY = 600;
+const DRAG_CONSTRAINTS = { top: 0, bottom: 0 };
+const DRAG_ELASTIC = { top: 0, bottom: 0.9 };
 
 type MobileMenuPanelProps = {
   open: boolean;
@@ -41,6 +45,11 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
   const scrollRef = useRef<HTMLDivElement>(null);
   const toggleMenu = onClose;
   const shouldReduceMotion = useReducedMotion();
+  const dragControls = useDragControls();
+
+  const onDragEnd = (_: unknown, info: PanInfo) => {
+    if (info.offset.y > SWIPE_CLOSE_THRESHOLD || info.velocity.y > SWIPE_CLOSE_VELOCITY) onClose();
+  };
 
   const currentSection = useMemo(
     () => sectionOf(docsNavigation, pathname),
@@ -68,21 +77,47 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
 
   return (
     <div className="lg:hidden">
-      <nav
+      <div
+        aria-hidden="true"
+        onClick={onClose}
+        className={cn(
+          'bg-overlay fixed inset-0 z-50 backdrop-blur-xs transition-opacity duration-300',
+          isMenuOpen ? 'opacity-100' : 'pointer-events-none opacity-0',
+        )}
+      />
+      <motion.nav
         ref={menuRef}
         id="mobile-menu"
         aria-label="Site"
         tabIndex={-1}
         inert={!isMenuOpen}
+        initial={false}
+        animate={isMenuOpen ? { y: 0 } : { y: '110%' }}
+        transition={shouldReduceMotion ? still : springs.smooth}
+        drag="y"
+        dragListener={false}
+        dragControls={dragControls}
+        dragConstraints={DRAG_CONSTRAINTS}
+        dragElastic={DRAG_ELASTIC}
+        dragMomentum={false}
+        onDragEnd={onDragEnd}
         className={cn(
-          'bg-background fixed z-50 flex flex-col overflow-hidden shadow-2xl transition-all duration-300',
-          'border-rule inset-0 h-lvh w-full sm:inset-2 sm:h-[calc(100svh-1rem)] sm:w-95 sm:rounded-lg sm:border',
-          isMenuOpen
-            ? 'translate-x-0'
-            : '-translate-x-full opacity-0 sm:translate-x-[calc(-90%-2rem)]',
+          'bg-background border-rule fixed inset-x-0 bottom-0 z-50 flex h-[85svh] flex-col overflow-hidden rounded-t-2xl border border-b-0 shadow-2xl',
+          'sm:mx-auto sm:max-w-md',
+          !isMenuOpen && 'pointer-events-none',
         )}
       >
-        <div className="border-rule flex items-center justify-between border-b px-6 py-4">
+        <div
+          onPointerDown={(event) => dragControls.start(event)}
+          className="flex shrink-0 cursor-grab touch-none items-center justify-center pt-2.5 pb-1 active:cursor-grabbing"
+          aria-hidden="true"
+        >
+          <span className="bg-muted-foreground/30 h-1 w-10 rounded-full" />
+        </div>
+        <div
+          onPointerDown={(event) => dragControls.start(event)}
+          className="border-rule flex touch-none items-center justify-between border-b px-6 pt-2 pb-4"
+        >
           <div className="flex items-center gap-x-3">
             <Link href="/" onClick={toggleMenu} aria-label="NachUI home">
               <Logo withText />
@@ -239,30 +274,7 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
             </div>
           ))}
         </div>
-      </nav>
-    </div>
-  );
-}
-
-export function MobileMenu() {
-  const [open, setOpen] = useState(false);
-  const close = useCallback(() => setOpen(false), []);
-
-  return (
-    <div className="lg:hidden">
-      <Button
-        variant="ghost"
-        size="icon"
-        className="size-9"
-        onClick={() => setOpen((previous) => !previous)}
-        title={open ? 'Close menu' : 'Open menu'}
-        aria-label={open ? 'Close menu' : 'Open menu'}
-        aria-expanded={open}
-        aria-controls="mobile-menu"
-      >
-        <PanelLeftIcon size={18} aria-hidden="true" />
-      </Button>
-      <MobileMenuPanel open={open} onClose={close} />
+      </motion.nav>
     </div>
   );
 }

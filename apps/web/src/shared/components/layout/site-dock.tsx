@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import { GitHubIcon } from '@/components/common/github-icon';
 import { useChatStore } from '@/features/chat/store/chat-store';
 import { Searcher } from '@/features/docs/components/searcher';
@@ -12,7 +12,6 @@ import { Badge } from '@repo/ui/components/badge';
 import { Dock, useDockAutoHide } from '@repo/ui/components/dock';
 import { BookIcon } from '@repo/ui/icons/book';
 import { FileTextIcon } from '@repo/ui/icons/file-text';
-import { HomeIcon } from '@repo/ui/icons/home';
 import { LanguagesIcon } from '@repo/ui/icons/languages';
 import { LayersIcon } from '@repo/ui/icons/layers';
 import { LinkIcon } from '@repo/ui/icons/link';
@@ -20,7 +19,9 @@ import { LayoutIcon } from '@repo/ui/icons/layout';
 import { LayoutGridIcon } from '@repo/ui/icons/layout-grid';
 import { MoonIcon } from '@repo/ui/icons/moon';
 import { Logo } from '../common/logo';
+import { MobileMenuPanel } from './mobile-menu';
 import { PackageIcon } from '@repo/ui/icons/package';
+import { PanelLeftIcon } from '@repo/ui/icons/panel-left';
 import { PuzzleIcon } from '@repo/ui/icons/puzzle';
 import { ServerIcon } from '@repo/ui/icons/server';
 import { SparklesIcon } from '@repo/ui/icons/sparkles';
@@ -185,6 +186,9 @@ export function SiteDock() {
   const togglePanel = (panel: 'product' | 'resources') =>
     setOpenPanel((previous) => (previous === panel ? null : panel));
   const closePanels = () => setOpenPanel(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+  const hidden = autoHidden || chatOpen;
 
   const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
   const menuActive = (menu: ElementsMenu) =>
@@ -199,12 +203,21 @@ export function SiteDock() {
 
   return (
     <>
-      <Dock
-        hidden={autoHidden || chatOpen}
-        label={t('label')}
-        className="site-dock relative isolate"
-      >
+      <Dock hidden={hidden} label={t('label')} className="site-dock relative isolate">
         <span className="site-dock-silk" aria-hidden="true" />
+        <Dock.Item
+          label={t('menu')}
+          containerClassName="lg:hidden"
+          aria-haspopup="dialog"
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
+          onClick={() => {
+            closePanels();
+            setMenuOpen((previous) => !previous);
+          }}
+        >
+          <PanelLeftIcon />
+        </Dock.Item>
         <Dock.Item
           asChild
           label={t('home')}
@@ -217,11 +230,6 @@ export function SiteDock() {
           </Link>
         </Dock.Item>
         <Dock.Separator className="hidden lg:block" />
-        <Dock.Item asChild label={t('home')} active={isActive('/')} containerClassName="lg:hidden">
-          <Link href="/">
-            <HomeIcon />
-          </Link>
-        </Dock.Item>
         <Dock.Item
           label={elementsMenu.label}
           active={menuActive(elementsMenu)}
@@ -259,6 +267,7 @@ export function SiteDock() {
         </Dock.Item>
         <Dock.Item
           label={t('theme')}
+          containerClassName="hidden sm:flex"
           onClick={(event) => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark', event)}
         >
           <span className="contents dark:hidden">
@@ -276,6 +285,7 @@ export function SiteDock() {
           <LanguagesIcon />
         </Dock.Item>
       </Dock>
+      <MobileMenuPanel open={menuOpen} onClose={closeMenu} />
       <ProductPanel
         id="product"
         open={openPanel === 'product'}

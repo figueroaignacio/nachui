@@ -69,6 +69,7 @@
     ]
   },
   "dock": {
+    "menu": "Menú",
     "label": "Navegación del sitio",
     "home": "Inicio",
     "docs": "Documentación",
