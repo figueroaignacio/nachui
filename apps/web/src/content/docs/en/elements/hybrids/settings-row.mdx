@@ -1,0 +1,167 @@
+---
+title: Settings Row
+description: The row every settings page repeats, in one piece. Label and description on the left, the control on the right, with a section that stacks them and draws the rules.
+published: true
+date: 2026-09-22
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="settings-row" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="settings-row" />
+
+## Anatomy
+
+```tsx
+import { SettingsRow } from '@/components/ui/settings-row';
+```
+
+```tsx
+<SettingsRow.Section
+  title="Notifications"
+  description="How we reach you."
+  footer={<Button size="sm">Save</Button>}
+>
+  <SettingsRow label="Email alerts" description="One email per event.">
+    <SettingsRow.Switch checked={email} onCheckedChange={setEmail} />
+  </SettingsRow>
+  <SettingsRow label="Frequency" badge={<Badge variant="secondary">Beta</Badge>}>
+    <SettingsRow.Select options={frequencies} value={frequency} onValueChange={setFrequency} />
+  </SettingsRow>
+  <SettingsRow label="Reply-to address">
+    <SettingsRow.Input type="email" value={replyTo} onChange={onReplyTo} />
+  </SettingsRow>
+</SettingsRow.Section>
+```
+
+A row takes a label, an optional description and one control as its child. It generates the id, points the `Label` at it and hands the description to the control as `aria-describedby`, so a screen reader hears the same thing a sighted reader sees. The row stacks on a phone and goes side by side from `sm` up.
+
+Any element works as the child. The built-in parts are the same elements, already sized for the row and already wired to its label.
+
+## Composition
+
+A hybrid is visible composition. Open `settings-row.tsx` and these are the elements it is made of, in this order:
+
+```tree
+SettingsRow
+├── Label                      (+ Badge when given)
+├── description                (plain text, aria-describedby)
+└── control
+    ├── SettingsRow.Switch     →  Switch
+    ├── SettingsRow.Select     →  Select.Trigger + Select.Content + Select.Item
+    ├── SettingsRow.Input      →  Input
+    ├── SettingsRow.Action     →  Button
+    └── SettingsRow.Value      →  <code> + copy button
+
+SettingsRow.Section
+├── header                     (title, description)
+├── rows separated by Separator
+└── footer                     (slot)
+```
+
+## Switch
+
+`SettingsRow.Switch` is the `Switch` element with the row's id on its input. Clicking the label toggles it. `checked` and `onCheckedChange` work as on the element, and `disabled` on the row disables it.
+
+## Select
+
+`SettingsRow.Select` takes `options` as `{ value, label }` and renders a small `Select` on the right. Its trigger is labelled by the row, so the combobox reads with the row's name. It never stores the value: pass `value` and `onValueChange`, or `defaultValue` to leave it uncontrolled.
+
+## Input
+
+`SettingsRow.Input` is the `Input` element at the small size, capped at a sensible width so a long row does not stretch it. Every input prop passes through except `id`, `label` and `description`, which the row owns.
+
+## Action
+
+`SettingsRow.Action` is a `Button`, outline and small by default. Use it for "Manage", "Rotate" or, with `variant="destructive"`, for the one thing on the page that cannot be undone.
+
+## Value
+
+`SettingsRow.Value` shows a read-only value in mono, an API key prefix or an account id. Set `copy` to add a copy button that writes the value to the clipboard and swaps to a check for a moment.
+
+<ComponentPreview component="settings-row" demo="danger" />
+
+## Section
+
+`SettingsRow.Section` groups rows under a title in a bordered card. It puts a `Separator` between every pair of rows and takes a `footer` slot for a save button or a note. Disabling a row dims it; disabling the whole section is a matter of passing `disabled` to each row you want off.
+
+## API Reference
+
+### SettingsRow
+
+| Prop          | Type        | Default | Description                                             |
+| ------------- | ----------- | ------- | ------------------------------------------------------- |
+| `label`       | `ReactNode` | -       | The row's label, rendered with `Label`                  |
+| `description` | `ReactNode` | -       | Helper text under the label, linked to the control      |
+| `htmlFor`     | `string`    | -       | Id for the control; generated when left out             |
+| `badge`       | `ReactNode` | -       | Rendered next to the label, usually a `Badge`           |
+| `disabled`    | `boolean`   | `false` | Dims the row and disables the built-in control          |
+| `children`    | `ReactNode` | -       | The control, a built-in part or any element of your own |
+| `className`   | `string`    | -       | Additional CSS classes                                  |
+
+### SettingsRow.Switch
+
+| Prop              | Type                         | Default | Description               |
+| ----------------- | ---------------------------- | ------- | ------------------------- |
+| `checked`         | `boolean`                    | -       | Controlled state          |
+| `defaultChecked`  | `boolean`                    | -       | Initial state             |
+| `onCheckedChange` | `(checked: boolean) => void` | -       | Called on every toggle    |
+| `disabled`        | `boolean`                    | row's   | Overrides the row's value |
+| `className`       | `string`                     | -       | Additional CSS classes    |
+
+### SettingsRow.Select
+
+| Prop            | Type                                                     | Default | Description                     |
+| --------------- | -------------------------------------------------------- | ------- | ------------------------------- |
+| `options`       | `{ value: string; label: string; disabled?: boolean }[]` | -       | The entries of the list         |
+| `value`         | `string`                                                 | -       | Controlled value                |
+| `defaultValue`  | `string`                                                 | -       | Initial value when uncontrolled |
+| `onValueChange` | `(value: string) => void`                                | -       | Called with the picked value    |
+| `placeholder`   | `string`                                                 | -       | Shown while nothing is selected |
+| `name`          | `string`                                                 | -       | Form field name                 |
+| `disabled`      | `boolean`                                                | row's   | Overrides the row's value       |
+| `className`     | `string`                                                 | -       | Additional CSS classes          |
+
+### SettingsRow.Input
+
+| Prop        | Type                        | Default | Description                                        |
+| ----------- | --------------------------- | ------- | -------------------------------------------------- |
+| `size`      | `'sm' \| 'default' \| 'lg'` | `'sm'`  | Input size                                         |
+| `disabled`  | `boolean`                   | row's   | Overrides the row's value                          |
+| `className` | `string`                    | -       | Additional CSS classes                             |
+| `...`       | -                           | -       | Any input prop except `id`, `label`, `description` |
+
+### SettingsRow.Action
+
+| Prop       | Type                                                                          | Default     | Description               |
+| ---------- | ----------------------------------------------------------------------------- | ----------- | ------------------------- |
+| `variant`  | `'default' \| 'destructive' \| 'outline' \| 'secondary' \| 'ghost' \| 'link'` | `'outline'` | Button variant            |
+| `size`     | `'default' \| 'sm' \| 'lg' \| 'icon'`                                         | `'sm'`      | Button size               |
+| `disabled` | `boolean`                                                                     | row's       | Overrides the row's value |
+| `...`      | -                                                                             | -           | Any `Button` prop         |
+
+### SettingsRow.Value
+
+| Prop          | Type                      | Default    | Description                            |
+| ------------- | ------------------------- | ---------- | -------------------------------------- |
+| `value`       | `string`                  | -          | The text shown in mono                 |
+| `copy`        | `boolean`                 | `false`    | Adds the copy button                   |
+| `copyLabel`   | `string`                  | `'Copy'`   | Accessible name at rest                |
+| `copiedLabel` | `string`                  | `'Copied'` | Accessible name for 1.5s after copying |
+| `onCopied`    | `(value: string) => void` | -          | Called after the clipboard write       |
+| `className`   | `string`                  | -          | Additional CSS classes                 |
+
+### SettingsRow.Section
+
+| Prop          | Type        | Default | Description                           |
+| ------------- | ----------- | ------- | ------------------------------------- |
+| `title`       | `ReactNode` | -       | Heading of the card                   |
+| `description` | `ReactNode` | -       | Text under the heading                |
+| `footer`      | `ReactNode` | -       | Slot at the bottom, right aligned     |
+| `children`    | `ReactNode` | -       | Rows, separated by a `Separator` each |
+| `className`   | `string`    | -       | Additional CSS classes                |

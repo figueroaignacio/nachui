@@ -29,6 +29,7 @@ const FAMILIES = [
   { id: 'ui', codeDir: 'src/components', docsSegment: 'elements/ui' },
   { id: 'layout', codeDir: 'src/layout', docsSegment: 'elements/layout' },
   { id: 'ai', codeDir: 'src/ai', docsSegment: 'elements/ai' },
+  { id: 'hybrids', codeDir: 'src/hybrids', docsSegment: 'elements/hybrids' },
 ];
 
 const DEMOS_DIR = 'src/demos';

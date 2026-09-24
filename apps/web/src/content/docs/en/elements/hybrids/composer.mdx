@@ -1,0 +1,145 @@
+---
+title: Composer
+description: The box under a chat, in one piece. Prompt input, attachments, suggestions, a model picker and the context meter, wired to a single onSend.
+published: true
+date: 2026-09-22
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="composer" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="composer" />
+
+## Anatomy
+
+```tsx
+import { Composer } from '@/components/ui/composer';
+```
+
+```tsx
+<Composer
+  onSend={({ text, files }) => send(text, files)}
+  onStop={stop}
+  status={status}
+  suggestions={['What is NachUI?', 'Install the CLI']}
+  models={models}
+  model={model}
+  onModelChange={setModel}
+  context={{ used: 12400, max: 128000 }}
+/>
+```
+
+With no children the composer lays itself out: suggestions and attachment chips above, the textarea in the middle, attach and model on the left of the footer, the context meter and the send button on the right. Enter sends, Shift+Enter breaks the line, Escape clears.
+
+Pass children to rearrange the parts, drop one or put something of yours between them. Every part reads from the same context, so the order is yours and the wiring stays.
+
+```tsx
+<Composer onSend={handleSend}>
+  <Composer.Attachments />
+  <Composer.Input />
+  <Composer.Footer>
+    <Composer.Send />
+  </Composer.Footer>
+</Composer>
+```
+
+## Composition
+
+A hybrid is visible composition. Open `composer.tsx` and these are the elements it is made of, in this order:
+
+```tree
+Composer
+├── PromptInput
+│   ├── Composer.Suggestions  →  Suggestion.Group + Suggestion
+│   ├── Composer.Attachments  →  Attachments (inline)
+│   ├── Composer.Input        →  PromptInput.Textarea
+│   └── Composer.Footer
+│       ├── PromptInput.AddAttachments
+│       ├── DropdownMenu       (model picker)
+│       ├── Context            (token meter)
+│       └── Composer.Send     →  PromptInput.Submit or a stop button
+```
+
+## Suggestions
+
+`suggestions` renders a row of chips above the input while it is empty. A click sends the suggestion as a message. Set `sendOnSuggestion={false}` to fill the input instead and let the reader edit before sending.
+
+## Models
+
+`models` adds a picker to the footer. It is a plain `DropdownMenu` showing the current label; picking another entry calls `onModelChange` with its id. The composer never stores the model, you do.
+
+## Context
+
+`context` renders the `Context` meter next to the send button, with `used` and `max` tokens. Hover or focus it for the breakdown header.
+
+## Streaming
+
+`status` follows the `PromptInput` statuses. While it is `streaming` the send button becomes a stop button that calls `onStop`, and `onSend` is ignored until the answer ends. `submitted` shows the spinner and blocks sending too.
+
+<ComponentPreview component="composer" demo="streaming" />
+
+## Files
+
+The attach button opens the file dialog and dropping files on the composer works too. Files show as inline chips with a remove button, and `onSend` receives them as a plain `File[]`. Limit them with `maxFiles` and `accept`.
+
+## API Reference
+
+### Composer
+
+| Prop               | Type                                                    | Default           | Description                                      |
+| ------------------ | ------------------------------------------------------- | ----------------- | ------------------------------------------------ |
+| `onSend`           | `(message: { text: string; files: File[] }) => void`    | -                 | Called on Enter, the send button or a suggestion |
+| `onStop`           | `() => void`                                            | -                 | Called by the stop button while streaming        |
+| `status`           | `'ready' \| 'submitted' \| 'streaming' \| 'error'`      | `'ready'`         | Drives the send button and blocks sending        |
+| `placeholder`      | `string`                                                | `'Ask anything…'` | Textarea placeholder                             |
+| `disabled`         | `boolean`                                               | `false`           | Disables every control                           |
+| `maxFiles`         | `number`                                                | -                 | Cap on attached files                            |
+| `accept`           | `string`                                                | -                 | Accepted file types, as on an input              |
+| `suggestions`      | `string[]`                                              | `[]`              | Chips shown while the input is empty             |
+| `sendOnSuggestion` | `boolean`                                               | `true`            | Send on click, or fill the input                 |
+| `models`           | `{ id: string; label: string; description?: string }[]` | `[]`              | Entries of the model picker                      |
+| `model`            | `string`                                                | -                 | Id of the current model                          |
+| `onModelChange`    | `(model: string) => void`                               | -                 | Called with the picked id                        |
+| `context`          | `{ used: number; max: number }`                         | -                 | Renders the token meter                          |
+| `labels`           | `Partial<{ send; stop; attach; model }>`                | English           | Accessible names of the buttons                  |
+| `value`            | `string`                                                | -                 | Controlled text                                  |
+| `defaultValue`     | `string`                                                | -                 | Initial text when uncontrolled                   |
+| `onValueChange`    | `(value: string) => void`                               | -                 | Called as the text changes                       |
+| `className`        | `string`                                                | -                 | Additional CSS classes                           |
+
+### Composer.Suggestions
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### Composer.Attachments
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### Composer.Input
+
+| Prop        | Type     | Default | Description                                     |
+| ----------- | -------- | ------- | ----------------------------------------------- |
+| `className` | `string` | -       | Additional CSS classes                          |
+| `...`       | -        | -       | Any textarea prop except `value` and `onChange` |
+
+### Composer.Footer
+
+| Prop        | Type        | Default             | Description                |
+| ----------- | ----------- | ------------------- | -------------------------- |
+| `children`  | `ReactNode` | `<Composer.Send />` | What sits at the far right |
+| `className` | `string`    | -                   | Additional CSS classes     |
+
+### Composer.Send
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |

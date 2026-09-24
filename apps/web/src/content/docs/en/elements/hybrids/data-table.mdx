@@ -1,0 +1,173 @@
+---
+title: Data Table
+description: Table, filter, column picker, pagination and row selection in one piece. Sorting, filtering and paging run in plain React over the rows you pass in.
+published: true
+date: 2026-09-22
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="data-table" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="data-table" />
+
+## Anatomy
+
+```tsx
+import { DataTable, type DataTableColumn } from '@/components/ui/data-table';
+```
+
+```tsx
+const columns: DataTableColumn<Invoice>[] = [
+  {
+    id: 'id',
+    header: 'Invoice',
+    cell: (row) => row.id,
+    sortable: true,
+    sortValue: (row) => row.id,
+  },
+  {
+    id: 'customer',
+    header: 'Customer',
+    cell: (row) => row.customer,
+    sortable: true,
+    sortValue: (row) => row.customer,
+  },
+  {
+    id: 'amount',
+    header: 'Amount',
+    cell: (row) => money(row.amount),
+    sortable: true,
+    sortValue: (row) => row.amount,
+    align: 'end',
+  },
+];
+
+<DataTable data={invoices} columns={columns} getRowId={(row) => row.id} pageSize={10} selectable />;
+```
+
+With no children the table lays itself out: the filter and the column picker on top, the table in the middle, the selection count and the pager at the bottom. Everything runs on the array you pass in, so there is no fetching, no adapter and no library underneath.
+
+Pass children to keep only the parts you want. Every part reads the same context, so a table alone still filters, sorts and pages through whatever you wire to `useDataTable`.
+
+```tsx
+<DataTable data={rows} columns={columns} getRowId={(row) => row.id}>
+  <DataTable.Content />
+</DataTable>
+```
+
+## Composition
+
+A hybrid is visible composition. Open `data-table.tsx` and these are the elements it is made of, in this order:
+
+```tree
+DataTable
+├── DataTable.Toolbar
+│   ├── Input                →  the filter
+│   └── DropdownMenu         →  column visibility
+├── DataTable.Content
+│   └── Table
+│       ├── Checkbox         →  select all, select row
+│       └── Empty            →  no rows
+└── DataTable.Footer
+    └── Pagination
+```
+
+## Column shape
+
+A column says how to read the row and how to show it. `cell` renders, `sortValue` and `filterValue` are what sorting and filtering compare. When a column has no `filterValue` the table falls back to `sortValue`, then to the cell if it is plain text.
+
+| Field         | Type                                   | Description                                       |
+| ------------- | -------------------------------------- | ------------------------------------------------- |
+| `id`          | `string`                               | Stable key, also the name in `sort`               |
+| `header`      | `ReactNode`                            | Header cell, used as the label in the column menu |
+| `cell`        | `(row: T) => ReactNode`                | Body cell                                         |
+| `sortable`    | `boolean`                              | Turns the header into a sort button               |
+| `sortValue`   | `(row: T) => string \| number \| Date` | Value compared when sorting                       |
+| `filterValue` | `(row: T) => string`                   | Text searched by the filter                       |
+| `align`       | `'start' \| 'end'`                     | `end` right-aligns and sets tabular numerals      |
+| `hidden`      | `boolean`                              | Hidden at first, still available in the menu      |
+| `width`       | `string`                               | Any CSS width for the header cell                 |
+
+## Sorting
+
+Click a sortable header to sort ascending, again for descending, a third time to clear. The sort is stable, so rows that tie keep the order they came in. The header carries `aria-sort` for assistive tech.
+
+## Selection
+
+Set `selectable` for a checkbox column. The header box selects the current page, and turns indeterminate when only some of it is selected. Selection is a set of row ids from `getRowId`, so it survives sorting, filtering and paging. Read it from `onSelectedChange` or control it with `selected`.
+
+## Controlled state
+
+Filter, sort and selection are uncontrolled by default. Pass `filter`, `sort` or `selected` with their change handlers to own them, for a URL, a store or a server query. The pure `applyDataTable` helper is what the component runs, so you can run the same logic elsewhere.
+
+```tsx
+const { rows, total, pageCount } = applyDataTable(data, {
+  columns,
+  filter: 'acme',
+  sort: { id: 'amount', direction: 'desc' },
+  page: 2,
+  pageSize: 10,
+});
+```
+
+## Compact
+
+Keep only the table when the toolbar and footer would be noise.
+
+<ComponentPreview component="data-table" demo="compact" />
+
+## API Reference
+
+### DataTable
+
+| Prop                | Type                           | Default        | Description                                    |
+| ------------------- | ------------------------------ | -------------- | ---------------------------------------------- |
+| `data`              | `T[]`                          | -              | Every row, before filtering and paging         |
+| `columns`           | `DataTableColumn<T>[]`         | -              | Column definitions                             |
+| `getRowId`          | `(row: T) => string`           | -              | Stable id per row, used for keys and selection |
+| `pageSize`          | `number`                       | `10`           | Rows per page                                  |
+| `selectable`        | `boolean`                      | `false`        | Adds the checkbox column                       |
+| `selected`          | `Set<string> \| string[]`      | -              | Controlled selection                           |
+| `onSelectedChange`  | `(selected: string[]) => void` | -              | Called when selection changes                  |
+| `sort`              | `{ id, direction } \| null`    | -              | Controlled sort                                |
+| `onSortChange`      | `(sort) => void`               | -              | Called when sort changes                       |
+| `filter`            | `string`                       | -              | Controlled filter text                         |
+| `onFilterChange`    | `(filter: string) => void`     | -              | Called when the filter changes                 |
+| `filterPlaceholder` | `string`                       | `'Filter…'`    | Placeholder of the filter input                |
+| `emptyTitle`        | `string`                       | `'No results'` | Title of the empty state                       |
+| `emptyDescription`  | `string`                       | -              | Description of the empty state                 |
+| `labels`            | `Partial<DataTableLabels>`     | -              | Every visible string, with English defaults    |
+| `children`          | `ReactNode`                    | -              | Custom layout, replaces the default parts      |
+| `className`         | `string`                       | -              | Additional CSS classes                         |
+
+### DataTable.Toolbar
+
+| Prop        | Type        | Default | Description                      |
+| ----------- | ----------- | ------- | -------------------------------- |
+| `children`  | `ReactNode` | -       | Extra actions next to the filter |
+| `className` | `string`    | -       | Additional CSS classes           |
+
+### DataTable.Content
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### DataTable.Footer
+
+| Prop        | Type        | Default | Description                               |
+| ----------- | ----------- | ------- | ----------------------------------------- |
+| `children`  | `ReactNode` | -       | Extra content next to the selection count |
+| `className` | `string`    | -       | Additional CSS classes                    |
+
+### Helpers
+
+| Signature                                                         | Description                                                         |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `applyDataTable(data, { columns, filter, sort, page, pageSize })` | Returns `{ rows, total, pageCount }`, the same logic the table runs |
+| `useDataTable()`                                                  | The table context, for custom parts inside `DataTable`              |

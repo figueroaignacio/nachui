@@ -13,6 +13,7 @@ import { Dock, useDockAutoHide } from '@repo/ui/components/dock';
 import { BookIcon } from '@repo/ui/icons/book';
 import { HomeIcon } from '@repo/ui/icons/home';
 import { LanguagesIcon } from '@repo/ui/icons/languages';
+import { LayersIcon } from '@repo/ui/icons/layers';
 import { LayoutIcon } from '@repo/ui/icons/layout';
 import { LayoutGridIcon } from '@repo/ui/icons/layout-grid';
 import { MoonIcon } from '@repo/ui/icons/moon';
@@ -40,6 +41,7 @@ const PRODUCT_ICONS: Record<string, React.ComponentType<{ size?: number }>> = {
   '/docs/elements/ui': LayoutGridIcon,
   '/docs/elements/layout': LayoutIcon,
   '/docs/elements/ai': WandIcon,
+  '/docs/elements/hybrids': LayersIcon,
   '/components': PuzzleIcon,
   '/bricks/login': PackageIcon,
   '/icons': StarIcon,

@@ -1,0 +1,193 @@
+---
+title: Chat
+description: Un chat entero en un componente. El hilo, cada respuesta con su código, sus tool calls y sus fuentes, la fila de acciones debajo y el composer al pie, todo cableado.
+published: true
+date: 2026-09-22
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="chat" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="chat" />
+
+## Anatomía
+
+```tsx
+import { Chat } from '@/components/ui/chat';
+```
+
+```tsx
+<Chat
+  messages={messages}
+  status={status}
+  onSend={({ text, files }) => send(text, files)}
+  onStop={stop}
+  onRetry={(id) => regenerate(id)}
+  onFeedback={(id, vote) => rate(id, vote)}
+  suggestions={['¿Qué es NachUI?', 'Mostrame el composer']}
+/>
+```
+
+Le das los mensajes y un estado, y dibuja el resto: el hilo pegado al mensaje más nuevo, un skeleton mientras la respuesta viene en camino, un cursor mientras llega, y el composer que envía. Ponelo dentro de cualquier contenedor con alto fijo y lo llena.
+
+## Composición
+
+Abrís `chat.tsx` y encontrás los elements en el orden en que aparecen en pantalla. El chat no agrega lógica propia más allá de entregarle cada parte de un mensaje al element que sabe dibujarla.
+
+```tree
+Chat
+├── Chat.Thread                      Conversation
+│   ├── Conversation.Empty             + Chat.Suggestions   Suggestion
+│   ├── Chat.Message                   Message
+│   │   ├── user                         Bubble, Attachments
+│   │   └── assistant                    Response
+│   │       ├── reasoning                  Reasoning
+│   │       ├── text                       renderMarkdown
+│   │       ├── code                       CodeBlock
+│   │       ├── tool                       Tool
+│   │       └── sources                    Sources
+│   │       └── footer                     Actions
+│   ├── Chat.Pending                   Response.Skeleton
+│   └── Conversation.ScrollButton
+└── Chat.Composer                    PromptInput
+```
+
+Pasale children a `Chat` para armar el layout vos; cada parte lee los mensajes y los handlers del contexto.
+
+```tsx
+<Chat messages={messages} onSend={send}>
+  <header className="border-b p-3">Soporte</header>
+  <Chat.Thread />
+  <Chat.Composer accept="image/*" />
+</Chat>
+```
+
+## Forma del mensaje
+
+Un mensaje es un rol y una lista de partes. Las partes se renderizan en orden, así que una respuesta puede pensar, contestar, mostrar código, llamar una herramienta y citar sus fuentes, en esa secuencia.
+
+```ts
+type ChatMessage = {
+  id: string;
+  role: 'user' | 'assistant';
+  parts: ChatPart[];
+};
+
+type ChatPart =
+  | { type: 'text'; text: string }
+  | { type: 'reasoning'; text: string }
+  | { type: 'code'; code: string; language?: string }
+  | { type: 'tool'; name: string; status: ToolStatus; input?: unknown; output?: unknown }
+  | { type: 'sources'; items: { href: string; title: string }[] }
+  | { type: 'file'; name: string; size?: number; url?: string; mediaType?: string };
+```
+
+Las partes de texto pasan por `renderMarkdown`. El default parte párrafos en las líneas en blanco; pasale `react-markdown` o tu propio renderer para tener el resto.
+
+```tsx
+<Chat renderMarkdown={(text) => <Markdown>{text}</Markdown>} … />
+```
+
+## Adaptador
+
+El chat no sabe qué SDK corre tu modelo. `toChatMessages` mapea el array de `UIMessage` que mantiene el Vercel AI SDK a la forma de arriba, sin importar el SDK: las partes de texto, razonamiento y archivo pasan directo, las partes `tool-*` se vuelven partes tool con su state plegado en un status, y las partes `source-url` se juntan en una sola parte sources.
+
+```tsx
+'use client';
+
+import { useChat } from '@ai-sdk/react';
+import { Chat, toChatMessages } from '@/components/ui/chat';
+
+export function Soporte() {
+  const { messages, sendMessage, status, stop, regenerate } = useChat();
+
+  return (
+    <Chat
+      messages={toChatMessages(messages)}
+      status={status}
+      onSend={({ text, files }) => sendMessage({ text, files })}
+      onStop={stop}
+      onRetry={() => regenerate()}
+    />
+  );
+}
+```
+
+Cualquier otra cosa que produzca mensajes funciona igual: armás el array y lo pasás.
+
+## Streaming
+
+`status` maneja los dos estados de espera. `submitted` muestra un skeleton debajo del último mensaje del usuario hasta que cae el primer token; `streaming` pone un cursor después de la última respuesta y convierte el botón de enviar en uno de parar.
+
+<ComponentPreview component="chat" demo="streaming" />
+
+## Referencia de API
+
+### Chat
+
+| Prop               | Tipo                                                  | Default   | Descripción                                                     |
+| ------------------ | ----------------------------------------------------- | --------- | --------------------------------------------------------------- |
+| `messages`         | `ChatMessage[]`                                       | -         | El hilo, del más viejo al más nuevo                             |
+| `status`           | `'ready' \| 'submitted' \| 'streaming' \| 'error'`    | `'ready'` | Maneja el skeleton, el cursor y el botón de parar               |
+| `onSend`           | `(message: { text: string; files?: File[] }) => void` | -         | Se llama cuando el composer envía                               |
+| `onStop`           | `() => void`                                          | -         | Lo llama el botón de parar mientras una respuesta está en vuelo |
+| `onRetry`          | `(messageId: string) => void`                         | -         | Agrega una acción de reintentar debajo de cada respuesta        |
+| `onFeedback`       | `(messageId: string, vote: 'up' \| 'down') => void`   | -         | Agrega pulgar arriba y abajo debajo de cada respuesta           |
+| `suggestions`      | `string[]`                                            | `[]`      | Chips que se muestran en el estado vacío                        |
+| `onSuggestion`     | `(text: string) => void`                              | -         | Se llama al elegir un chip; si falta, usa `onSend`              |
+| `placeholder`      | `string`                                              | -         | Placeholder del composer, atajo de `labels.placeholder`         |
+| `emptyTitle`       | `string`                                              | -         | Título del estado vacío, atajo de `labels.emptyTitle`           |
+| `emptyDescription` | `string`                                              | -         | Texto del estado vacío, atajo de `labels.emptyDescription`      |
+| `labels`           | `Partial<ChatLabels>`                                 | -         | Cada texto visible, con defaults en inglés                      |
+| `renderMarkdown`   | `(text: string) => ReactNode`                         | -         | Renderiza las partes de texto; el default parte párrafos        |
+| `children`         | `ReactNode`                                           | -         | Reemplaza el layout default de hilo y composer                  |
+| `className`        | `string`                                              | -         | Clases CSS adicionales                                          |
+
+### Chat.Thread
+
+| Prop        | Tipo        | Default | Descripción                                         |
+| ----------- | ----------- | ------- | --------------------------------------------------- |
+| `children`  | `ReactNode` | -       | Reemplaza los mensajes renderizados dentro del hilo |
+| `className` | `string`    | -       | Clases CSS adicionales                              |
+
+### Chat.Message
+
+| Prop        | Tipo          | Default | Descripción                                                  |
+| ----------- | ------------- | ------- | ------------------------------------------------------------ |
+| `message`   | `ChatMessage` | -       | El mensaje a dibujar                                         |
+| `isLast`    | `boolean`     | `false` | Marca la respuesta que hace streaming y abre su razonamiento |
+| `className` | `string`      | -       | Clases CSS adicionales                                       |
+
+### Chat.Pending
+
+Renderiza `Response.Skeleton` mientras `status` es `submitted` y el último mensaje es del usuario; nada en otro caso.
+
+| Prop        | Tipo     | Default | Descripción            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |
+
+### Chat.Suggestions
+
+| Prop        | Tipo     | Default | Descripción            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |
+
+### Chat.Composer
+
+Acepta todas las props de `PromptInput` menos `onSubmit`, así que `accept`, `maxFiles` y `maxFileSize` pasan directo.
+
+| Prop        | Tipo        | Default | Descripción                                         |
+| ----------- | ----------- | ------- | --------------------------------------------------- |
+| `children`  | `ReactNode` | -       | Reemplaza el textarea, las herramientas y el enviar |
+| `className` | `string`    | -       | Clases CSS adicionales                              |
+
+### toChatMessages
+
+| Firma                                                      | Descripción                                                               |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `toChatMessages(messages: UIMessageLike[]): ChatMessage[]` | Mapea mensajes del Vercel AI SDK a la forma del chat, sin importar el SDK |

@@ -1,0 +1,168 @@
+---
+title: Search Command
+description: La paleta ⌘K en una sola pieza. Un disparador que parece un input, un diálogo con búsqueda, resultados agrupados, navegación por teclado y una fila de ayudas, cableados a un solo onSelect.
+published: true
+date: 2026-09-22
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="search-command" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="search-command" />
+
+## Anatomía
+
+```tsx
+import { SearchCommand } from '@/components/ui/search-command';
+```
+
+```tsx
+<SearchCommand
+  items={[
+    { id: 'docs', label: 'Documentación', group: 'Páginas', href: '/docs' },
+    { id: 'theme', label: 'Cambiar tema', group: 'Acciones', shortcut: ['T'], onSelect: toggle },
+  ]}
+  placeholder="Buscar…"
+  onSelect={(item) => track(item.id)}
+/>
+```
+
+Sin children renderiza el disparador y el diálogo. El disparador parece un campo de búsqueda y muestra el atajo; el diálogo tiene el input, la lista agrupada y la fila de ayudas. Escribir filtra, las flechas mueven el resaltado, Enter selecciona, Escape cierra.
+
+Pasá children para quedarte solo con lo que necesitás. La demo controlada de abajo saca el disparador y abre la paleta desde un botón propio.
+
+```tsx
+<SearchCommand items={items} open={open} onOpenChange={setOpen} hotkey={null}>
+  <SearchCommand.Dialog />
+</SearchCommand>
+```
+
+## Composición
+
+Un hybrid es composición visible. Abrí `search-command.tsx` y estos son los elements que lo forman, en este orden:
+
+```tree
+SearchCommand
+├── Dialog
+│   ├── SearchCommand.Trigger  →  Dialog.Trigger + Kbd
+│   └── SearchCommand.Dialog   →  Dialog.Content
+│       ├── SearchCommand.Input
+│       ├── SearchCommand.List
+│       │   ├── SearchCommand.Item  →  Kbd (atajo)
+│       │   └── SearchCommand.Empty
+│       └── SearchCommand.Footer  →  Kbd
+```
+
+El diálogo, su overlay, la trampa de foco y Escape vienen de `Dialog`. Las teclas dibujadas vienen de `Kbd`. El filtrado y la lista con flechas son del hybrid, chicos como para leerlos de una sentada.
+
+## Atajo
+
+`hotkey` es `k` por defecto, así que ⌘K en Mac y Ctrl+K en el resto abre y cierra la paleta. El disparador muestra el modificador correcto para la plataforma. Pasá `hotkey={null}` para no registrar nada y abrirla vos con `open`.
+
+## Items y grupos
+
+Cada item tiene un `id` y un `label`. Agregá `group` y la lista se parte bajo un encabezado chico por grupo, en el orden en que aparece cada uno por primera vez. `description` va debajo del label, `icon` a la izquierda, `shortcut` como teclas a la derecha, y `keywords` se suman al label y la descripción en la búsqueda. Un item con `href` y sin `onSelect` se renderiza como link. `disabled` lo deja visible pero no se puede elegir.
+
+## Filtrado
+
+El filtro por defecto es una coincidencia sin distinguir mayúsculas sobre label, descripción y keywords. Pasá `filter` para reemplazarlo por el tuyo, difuso o remoto, mientras responda de forma sincrónica sobre los items que ya tenés.
+
+## Controlado
+
+`open` y `onOpenChange` ponen la paleta bajo tu control, que es lo que querés cuando la abre otra cosa, un dock o un menú.
+
+<ComponentPreview component="search-command" demo="controlled" />
+
+## Referencia de API
+
+### SearchCommand
+
+| Prop            | Tipo                                           | Default   | Descripción                                         |
+| --------------- | ---------------------------------------------- | --------- | --------------------------------------------------- |
+| `items`         | `SearchItem[]`                                 | -         | Lo que busca la paleta                              |
+| `open`          | `boolean`                                      | -         | Estado abierto controlado                           |
+| `defaultOpen`   | `boolean`                                      | `false`   | Estado inicial cuando no es controlado              |
+| `onOpenChange`  | `(open: boolean) => void`                      | -         | Se llama cuando cambia el estado                    |
+| `hotkey`        | `string \| null`                               | `'k'`     | Tecla que la abre con ⌘ o Ctrl; `null` la desactiva |
+| `placeholder`   | `string`                                       | `Search…` | Texto del disparador y del input                    |
+| `emptyText`     | `string`                                       | -         | Se muestra cuando nada coincide                     |
+| `filter`        | `(item: SearchItem, query: string) => boolean` | -         | Reemplaza la coincidencia por defecto               |
+| `onSelect`      | `(item: SearchItem) => void`                   | -         | Se llama después del `onSelect` propio del item     |
+| `closeOnSelect` | `boolean`                                      | `true`    | Cierra el diálogo después de elegir                 |
+| `labels`        | `Partial<SearchCommandLabels>`                 | Inglés    | Placeholder, vacío, ayudas y nombre del disparador  |
+| `className`     | `string`                                       | -         | Clases CSS adicionales                              |
+| `children`      | `ReactNode`                                    | -         | Reemplaza el disparador y el diálogo por defecto    |
+
+### SearchItem
+
+| Campo         | Tipo         | Descripción                                           |
+| ------------- | ------------ | ----------------------------------------------------- |
+| `id`          | `string`     | Clave única, también usada en `aria-activedescendant` |
+| `label`       | `string`     | El nombre visible                                     |
+| `group`       | `string`     | Encabezado bajo el que se lista                       |
+| `description` | `string`     | Segunda línea bajo el label                           |
+| `icon`        | `ReactNode`  | Se renderiza a la izquierda                           |
+| `shortcut`    | `string[]`   | Teclas a la derecha                                   |
+| `keywords`    | `string[]`   | Palabras extra sobre las que busca                    |
+| `href`        | `string`     | Renderiza el item como link cuando está               |
+| `onSelect`    | `() => void` | Corre antes del `onSelect` de la raíz                 |
+| `disabled`    | `boolean`    | Visible pero no elegible                              |
+
+### SearchCommand.Trigger
+
+| Prop        | Tipo        | Default       | Descripción            |
+| ----------- | ----------- | ------------- | ---------------------- |
+| `children`  | `ReactNode` | `placeholder` | Texto del campo        |
+| `className` | `string`    | -             | Clases CSS adicionales |
+
+### SearchCommand.Dialog
+
+| Prop        | Tipo        | Default              | Descripción            |
+| ----------- | ----------- | -------------------- | ---------------------- |
+| `children`  | `ReactNode` | Input, List y Footer | Reemplaza el default   |
+| `className` | `string`    | -                    | Clases CSS adicionales |
+
+### SearchCommand.Input
+
+| Prop        | Tipo     | Default | Descripción                                        |
+| ----------- | -------- | ------- | -------------------------------------------------- |
+| `className` | `string` | -       | Clases CSS adicionales                             |
+| `...`       | -        | -       | Cualquier prop de input salvo `value` y `onChange` |
+
+### SearchCommand.List
+
+| Prop        | Tipo     | Default | Descripción            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |
+
+### SearchCommand.Item
+
+| Prop        | Tipo         | Default | Descripción             |
+| ----------- | ------------ | ------- | ----------------------- |
+| `item`      | `SearchItem` | -       | La entrada a renderizar |
+| `className` | `string`     | -       | Clases CSS adicionales  |
+
+### SearchCommand.Empty
+
+| Prop        | Tipo        | Default     | Descripción            |
+| ----------- | ----------- | ----------- | ---------------------- |
+| `children`  | `ReactNode` | `emptyText` | Qué decir              |
+| `className` | `string`    | -           | Clases CSS adicionales |
+
+### SearchCommand.Footer
+
+| Prop        | Tipo        | Default         | Descripción            |
+| ----------- | ----------- | --------------- | ---------------------- |
+| `children`  | `ReactNode` | Las tres ayudas | Reemplaza la fila      |
+| `className` | `string`    | -               | Clases CSS adicionales |
+
+### useSearchCommand
+
+| Devuelve                                           | Descripción                               |
+| -------------------------------------------------- | ----------------------------------------- |
+| `{ open, setOpen, query, setQuery, results, ... }` | El estado de la paleta, para partes tuyas |

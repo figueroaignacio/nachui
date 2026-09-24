@@ -1,0 +1,137 @@
+---
+title: Agent Run
+description: Un agente corriendo en una sola tarjeta. Sus pasos, las herramientas que llama cada uno, el razonamiento detrás y la respuesta a la que llega.
+published: true
+date: 2026-09-22
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="agent-run" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="agent-run" />
+
+## Anatomía
+
+```tsx
+import { AgentRun, type AgentStep } from '@/components/ui/agent-run';
+```
+
+```tsx
+<AgentRun
+  title="Refactorizando el módulo de auth"
+  status="running"
+  steps={steps}
+  startedAt={startedAt}
+  usage={{ used: 38400, max: 200000 }}
+  answer={<p>Los stores de sesión y de token ahora comparten una interfaz.</p>}
+/>
+```
+
+Le pasás la corrida como datos y arma todo: un encabezado con el estado y el tiempo transcurrido, una barra de progreso, un `Task` por paso, la respuesta como `Response` y el uso de tokens como un medidor `Context` en el pie. Si le pasás children, elegís y ordenás las partes vos.
+
+## Composición
+
+`AgentRun` es un hybrid: está hecho de elements que ya tenés, cableados en orden. Abrís el archivo y los encontrás con esta forma:
+
+```tree
+AgentRun
+├── AgentRun.Header
+├── AgentRun.Progress
+├── AgentRun.Steps
+│   └── Task (uno por paso)
+│       ├── Task.Trigger
+│       └── Task.Content
+│           ├── Task.Item
+│           ├── Task.File
+│           ├── Reasoning
+│           └── Tool
+│               ├── Tool.Header
+│               ├── Tool.Input
+│               └── Tool.Output
+├── AgentRun.Answer
+│   └── Response
+└── AgentRun.Footer
+    └── Context
+```
+
+## Forma de un paso
+
+Cada entrada de `steps` es un `AgentStep`. Solo `id`, `title` y `status` son obligatorios; el resto aparece cuando está.
+
+| Campo       | Tipo                                             | Descripción                                           |
+| ----------- | ------------------------------------------------ | ----------------------------------------------------- |
+| `id`        | `string`                                         | Key estable                                           |
+| `title`     | `string`                                         | Etiqueta del paso                                     |
+| `status`    | `'pending' \| 'active' \| 'complete' \| 'error'` | Define el ícono del Task y qué paso se abre           |
+| `detail`    | `string`                                         | Una línea debajo del título                           |
+| `files`     | `string[]`                                       | Se muestran como chips `Task.File`                    |
+| `reasoning` | `string`                                         | Va en un panel `Reasoning`, cerrado                   |
+| `tools`     | `AgentTool[]`                                    | Se muestran como tarjetas `Tool` con entrada y salida |
+
+Un `AgentTool` es `{ id, name, status, description?, input?, output?, error? }`, donde `status` es el `ToolStatus` del element Tool. Una herramienta que falló arranca abierta, así el error no queda escondido detrás de un click.
+
+## En vivo
+
+El paso activo se abre solo y los terminados se pliegan, la barra avanza con cada paso completado, la respuesta llega con un cursor cuando empieza, y el tiempo se detiene cuando termina la corrida.
+
+<ComponentPreview component="agent-run" demo="live" />
+
+## Referencia de API
+
+### AgentRun
+
+| Prop          | Tipo                                           | Default  | Descripción                                                |
+| ------------- | ---------------------------------------------- | -------- | ---------------------------------------------------------- |
+| `steps`       | `AgentStep[]`                                  | -        | La corrida, una entrada por paso                           |
+| `status`      | `'idle' \| 'running' \| 'complete' \| 'error'` | `'idle'` | Estado de toda la corrida                                  |
+| `title`       | `string`                                       | -        | Se imprime en el encabezado                                |
+| `answer`      | `ReactNode`                                    | -        | La respuesta final, dentro de `Response`                   |
+| `usage`       | `{ used: number; max: number }`                | -        | Uso de tokens para el medidor del pie                      |
+| `startedAt`   | `Date \| number`                               | -        | Inicio del reloj                                           |
+| `finishedAt`  | `Date \| number`                               | -        | Detiene el reloj                                           |
+| `labels`      | `Partial<AgentRunLabels>`                      | Inglés   | Nombres de estado, etiquetas de entrada y salida, progreso |
+| `defaultOpen` | `boolean`                                      | -        | Fuerza todos los pasos abiertos o cerrados                 |
+| `children`    | `ReactNode`                                    | -        | Reemplaza el layout por defecto con tus propias partes     |
+| `className`   | `string`                                       | -        | Clases CSS adicionales                                     |
+
+### AgentRun.Header
+
+| Prop        | Tipo        | Default | Descripción            |
+| ----------- | ----------- | ------- | ---------------------- |
+| `children`  | `ReactNode` | -       | Reemplaza el título    |
+| `className` | `string`    | -       | Clases CSS adicionales |
+
+### AgentRun.Progress
+
+| Prop        | Tipo     | Default | Descripción            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |
+
+### AgentRun.Steps
+
+| Prop        | Tipo     | Default | Descripción            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |
+
+### AgentRun.Answer
+
+| Prop        | Tipo        | Default | Descripción                |
+| ----------- | ----------- | ------- | -------------------------- |
+| `children`  | `ReactNode` | -       | Reemplaza la prop `answer` |
+| `className` | `string`    | -       | Clases CSS adicionales     |
+
+### AgentRun.Footer
+
+| Prop        | Tipo        | Default | Descripción                               |
+| ----------- | ----------- | ------- | ----------------------------------------- |
+| `children`  | `ReactNode` | -       | Reemplaza el medidor de uso de la derecha |
+| `className` | `string`    | -       | Clases CSS adicionales                    |
+
+### Helpers
+
+`agentRunProgress(steps)` devuelve `{ done, total, ratio }`, los mismos números que imprimen la barra y el pie. `useAgentRun()` lee la corrida desde el contexto dentro de partes propias.

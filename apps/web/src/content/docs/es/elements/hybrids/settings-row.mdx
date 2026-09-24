@@ -1,0 +1,167 @@
+---
+title: Settings Row
+description: La fila que toda página de configuración repite, en una sola pieza. Label y descripción a la izquierda, el control a la derecha, y una sección que las apila y dibuja las líneas.
+published: true
+date: 2026-09-22
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="settings-row" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="settings-row" />
+
+## Anatomía
+
+```tsx
+import { SettingsRow } from '@/components/ui/settings-row';
+```
+
+```tsx
+<SettingsRow.Section
+  title="Notificaciones"
+  description="Cómo te avisamos."
+  footer={<Button size="sm">Guardar</Button>}
+>
+  <SettingsRow label="Alertas por email" description="Un email por cada evento.">
+    <SettingsRow.Switch checked={email} onCheckedChange={setEmail} />
+  </SettingsRow>
+  <SettingsRow label="Frecuencia" badge={<Badge variant="secondary">Beta</Badge>}>
+    <SettingsRow.Select options={frecuencias} value={frecuencia} onValueChange={setFrecuencia} />
+  </SettingsRow>
+  <SettingsRow label="Dirección de respuesta">
+    <SettingsRow.Input type="email" value={replyTo} onChange={onReplyTo} />
+  </SettingsRow>
+</SettingsRow.Section>
+```
+
+Una fila recibe un label, una descripción opcional y un control como hijo. Genera el id, apunta el `Label` ahí y le pasa la descripción al control como `aria-describedby`, así un lector de pantalla escucha lo mismo que ve alguien mirando. La fila se apila en el celular y va lado a lado desde `sm` para arriba.
+
+Cualquier element sirve como hijo. Las partes incluidas son los mismos elements, ya con el tamaño de la fila y ya cableados a su label.
+
+## Composición
+
+Un hybrid es composición visible. Abrí `settings-row.tsx` y estos son los elements que lo forman, en este orden:
+
+```tree
+SettingsRow
+├── Label                      (+ Badge si lo pasás)
+├── descripción                (texto plano, aria-describedby)
+└── control
+    ├── SettingsRow.Switch     →  Switch
+    ├── SettingsRow.Select     →  Select.Trigger + Select.Content + Select.Item
+    ├── SettingsRow.Input      →  Input
+    ├── SettingsRow.Action     →  Button
+    └── SettingsRow.Value      →  <code> + botón de copiar
+
+SettingsRow.Section
+├── header                     (título, descripción)
+├── filas separadas por Separator
+└── footer                     (slot)
+```
+
+## Switch
+
+`SettingsRow.Switch` es el element `Switch` con el id de la fila en su input. Hacer clic en el label lo alterna. `checked` y `onCheckedChange` funcionan como en el element, y `disabled` en la fila lo deshabilita.
+
+## Select
+
+`SettingsRow.Select` recibe `options` como `{ value, label }` y renderiza un `Select` chico a la derecha. Su trigger está etiquetado por la fila, así que el combobox se lee con el nombre de la fila. Nunca guarda el valor: pasale `value` y `onValueChange`, o `defaultValue` para dejarlo sin controlar.
+
+## Input
+
+`SettingsRow.Input` es el element `Input` en tamaño chico, con un ancho tope para que una fila larga no lo estire. Todas las props del input pasan, salvo `id`, `label` y `description`, que son de la fila.
+
+## Action
+
+`SettingsRow.Action` es un `Button`, outline y chico por defecto. Usalo para "Administrar", "Rotar" o, con `variant="destructive"`, para la única cosa de la página que no se puede deshacer.
+
+## Value
+
+`SettingsRow.Value` muestra un valor de solo lectura en mono, el prefijo de una API key o el id de una cuenta. Pasale `copy` para sumar un botón que escribe el valor al portapapeles y muestra un check por un momento.
+
+<ComponentPreview component="settings-row" demo="danger" />
+
+## Section
+
+`SettingsRow.Section` agrupa filas bajo un título en una tarjeta con borde. Pone un `Separator` entre cada par de filas y recibe un slot `footer` para un botón de guardar o una nota. Deshabilitar una fila la atenúa; deshabilitar toda la sección es pasarle `disabled` a cada fila que quieras apagar.
+
+## Referencia de API
+
+### SettingsRow
+
+| Prop          | Tipo        | Default | Descripción                                             |
+| ------------- | ----------- | ------- | ------------------------------------------------------- |
+| `label`       | `ReactNode` | -       | El label de la fila, renderizado con `Label`            |
+| `description` | `ReactNode` | -       | Texto de ayuda bajo el label, enlazado al control       |
+| `htmlFor`     | `string`    | -       | Id del control; se genera si no lo pasás                |
+| `badge`       | `ReactNode` | -       | Se renderiza junto al label, normalmente un `Badge`     |
+| `disabled`    | `boolean`   | `false` | Atenúa la fila y deshabilita el control incluido        |
+| `children`    | `ReactNode` | -       | El control, una parte incluida o cualquier element tuyo |
+| `className`   | `string`    | -       | Clases CSS adicionales                                  |
+
+### SettingsRow.Switch
+
+| Prop              | Tipo                         | Default       | Descripción              |
+| ----------------- | ---------------------------- | ------------- | ------------------------ |
+| `checked`         | `boolean`                    | -             | Estado controlado        |
+| `defaultChecked`  | `boolean`                    | -             | Estado inicial           |
+| `onCheckedChange` | `(checked: boolean) => void` | -             | Se llama en cada cambio  |
+| `disabled`        | `boolean`                    | el de la fila | Pisa el valor de la fila |
+| `className`       | `string`                     | -             | Clases CSS adicionales   |
+
+### SettingsRow.Select
+
+| Prop            | Tipo                                                     | Default       | Descripción                         |
+| --------------- | -------------------------------------------------------- | ------------- | ----------------------------------- |
+| `options`       | `{ value: string; label: string; disabled?: boolean }[]` | -             | Las entradas de la lista            |
+| `value`         | `string`                                                 | -             | Valor controlado                    |
+| `defaultValue`  | `string`                                                 | -             | Valor inicial sin controlar         |
+| `onValueChange` | `(value: string) => void`                                | -             | Se llama con el valor elegido       |
+| `placeholder`   | `string`                                                 | -             | Se muestra mientras no hay elección |
+| `name`          | `string`                                                 | -             | Nombre del campo en el formulario   |
+| `disabled`      | `boolean`                                                | el de la fila | Pisa el valor de la fila            |
+| `className`     | `string`                                                 | -             | Clases CSS adicionales              |
+
+### SettingsRow.Input
+
+| Prop        | Tipo                        | Default       | Descripción                                                 |
+| ----------- | --------------------------- | ------------- | ----------------------------------------------------------- |
+| `size`      | `'sm' \| 'default' \| 'lg'` | `'sm'`        | Tamaño del input                                            |
+| `disabled`  | `boolean`                   | el de la fila | Pisa el valor de la fila                                    |
+| `className` | `string`                    | -             | Clases CSS adicionales                                      |
+| `...`       | -                           | -             | Cualquier prop del input salvo `id`, `label`, `description` |
+
+### SettingsRow.Action
+
+| Prop       | Tipo                                                                          | Default       | Descripción                |
+| ---------- | ----------------------------------------------------------------------------- | ------------- | -------------------------- |
+| `variant`  | `'default' \| 'destructive' \| 'outline' \| 'secondary' \| 'ghost' \| 'link'` | `'outline'`   | Variante del botón         |
+| `size`     | `'default' \| 'sm' \| 'lg' \| 'icon'`                                         | `'sm'`        | Tamaño del botón           |
+| `disabled` | `boolean`                                                                     | el de la fila | Pisa el valor de la fila   |
+| `...`      | -                                                                             | -             | Cualquier prop de `Button` |
+
+### SettingsRow.Value
+
+| Prop          | Tipo                      | Default    | Descripción                                     |
+| ------------- | ------------------------- | ---------- | ----------------------------------------------- |
+| `value`       | `string`                  | -          | El texto que se muestra en mono                 |
+| `copy`        | `boolean`                 | `false`    | Suma el botón de copiar                         |
+| `copyLabel`   | `string`                  | `'Copy'`   | Nombre accesible en reposo                      |
+| `copiedLabel` | `string`                  | `'Copied'` | Nombre accesible durante 1.5s después de copiar |
+| `onCopied`    | `(value: string) => void` | -          | Se llama después de escribir al portapapeles    |
+| `className`   | `string`                  | -          | Clases CSS adicionales                          |
+
+### SettingsRow.Section
+
+| Prop          | Tipo        | Default | Descripción                              |
+| ------------- | ----------- | ------- | ---------------------------------------- |
+| `title`       | `ReactNode` | -       | Encabezado de la tarjeta                 |
+| `description` | `ReactNode` | -       | Texto bajo el encabezado                 |
+| `footer`      | `ReactNode` | -       | Slot al pie, alineado a la derecha       |
+| `children`    | `ReactNode` | -       | Filas, con un `Separator` entre cada par |
+| `className`   | `string`    | -       | Clases CSS adicionales                   |

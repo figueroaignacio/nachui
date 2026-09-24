@@ -1,0 +1,168 @@
+---
+title: Search Command
+description: The ⌘K palette in one piece. A trigger that looks like an input, a dialog with search, grouped results, keyboard navigation and a hint row, wired to a single onSelect.
+published: true
+date: 2026-09-22
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="search-command" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="search-command" />
+
+## Anatomy
+
+```tsx
+import { SearchCommand } from '@/components/ui/search-command';
+```
+
+```tsx
+<SearchCommand
+  items={[
+    { id: 'docs', label: 'Documentation', group: 'Pages', href: '/docs' },
+    { id: 'theme', label: 'Toggle theme', group: 'Actions', shortcut: ['T'], onSelect: toggle },
+  ]}
+  placeholder="Search…"
+  onSelect={(item) => track(item.id)}
+/>
+```
+
+With no children it renders the trigger and the dialog. The trigger looks like a search field and shows the hotkey; the dialog holds the input, the grouped list and the hint row. Typing filters, arrows move the highlight, Enter selects, Escape closes.
+
+Pass children to keep only what you need. The controlled demo below drops the trigger and opens the palette from a button of its own.
+
+```tsx
+<SearchCommand items={items} open={open} onOpenChange={setOpen} hotkey={null}>
+  <SearchCommand.Dialog />
+</SearchCommand>
+```
+
+## Composition
+
+A hybrid is visible composition. Open `search-command.tsx` and these are the elements it is made of, in this order:
+
+```tree
+SearchCommand
+├── Dialog
+│   ├── SearchCommand.Trigger  →  Dialog.Trigger + Kbd
+│   └── SearchCommand.Dialog   →  Dialog.Content
+│       ├── SearchCommand.Input
+│       ├── SearchCommand.List
+│       │   ├── SearchCommand.Item  →  Kbd (shortcut)
+│       │   └── SearchCommand.Empty
+│       └── SearchCommand.Footer  →  Kbd
+```
+
+The dialog, its overlay, the focus trap and Escape come from `Dialog`. The key caps come from `Kbd`. The filtering and the arrow-key list are the hybrid's own, small enough to read in one sitting.
+
+## Hotkey
+
+`hotkey` defaults to `k`, so ⌘K on a Mac and Ctrl+K elsewhere toggles the palette. The trigger prints the right modifier for the platform. Pass `hotkey={null}` to register nothing and open it yourself through `open`.
+
+## Items and groups
+
+Every item has an `id` and a `label`. Add `group` and the list is split under a small heading per group, in the order the groups first appear. `description` prints under the label, `icon` on the left, `shortcut` as key caps on the right, and `keywords` join the label and description in the search. An item with `href` and no `onSelect` renders as a link. `disabled` keeps it visible but unselectable.
+
+## Filtering
+
+The default filter is a case-insensitive match on label, description and keywords. Pass `filter` to replace it with your own, fuzzy or remote, as long as it answers synchronously for the items you already have.
+
+## Controlled
+
+`open` and `onOpenChange` put the palette under your control, which is what you want when something else, a dock or a menu, opens it.
+
+<ComponentPreview component="search-command" demo="controlled" />
+
+## API Reference
+
+### SearchCommand
+
+| Prop            | Type                                           | Default   | Description                                         |
+| --------------- | ---------------------------------------------- | --------- | --------------------------------------------------- |
+| `items`         | `SearchItem[]`                                 | -         | What the palette searches                           |
+| `open`          | `boolean`                                      | -         | Controlled open state                               |
+| `defaultOpen`   | `boolean`                                      | `false`   | Open state when uncontrolled                        |
+| `onOpenChange`  | `(open: boolean) => void`                      | -         | Called when the open state changes                  |
+| `hotkey`        | `string \| null`                               | `'k'`     | Key that toggles it with ⌘ or Ctrl; `null` disables |
+| `placeholder`   | `string`                                       | `Search…` | Text of the trigger and the input                   |
+| `emptyText`     | `string`                                       | -         | Shown when nothing matches                          |
+| `filter`        | `(item: SearchItem, query: string) => boolean` | -         | Replaces the default match                          |
+| `onSelect`      | `(item: SearchItem) => void`                   | -         | Called after the item's own `onSelect`              |
+| `closeOnSelect` | `boolean`                                      | `true`    | Close the dialog after a selection                  |
+| `labels`        | `Partial<SearchCommandLabels>`                 | English   | Placeholder, empty, hints and trigger name          |
+| `className`     | `string`                                       | -         | Additional CSS classes                              |
+| `children`      | `ReactNode`                                    | -         | Replaces the default trigger and dialog             |
+
+### SearchItem
+
+| Field         | Type         | Description                                       |
+| ------------- | ------------ | ------------------------------------------------- |
+| `id`          | `string`     | Unique key, also used for `aria-activedescendant` |
+| `label`       | `string`     | The visible name                                  |
+| `group`       | `string`     | Heading the item is listed under                  |
+| `description` | `string`     | Second line under the label                       |
+| `icon`        | `ReactNode`  | Rendered on the left                              |
+| `shortcut`    | `string[]`   | Key caps on the right                             |
+| `keywords`    | `string[]`   | Extra words the search matches on                 |
+| `href`        | `string`     | Renders the item as a link when set               |
+| `onSelect`    | `() => void` | Runs before the root `onSelect`                   |
+| `disabled`    | `boolean`    | Visible but not selectable                        |
+
+### SearchCommand.Trigger
+
+| Prop        | Type        | Default       | Description            |
+| ----------- | ----------- | ------------- | ---------------------- |
+| `children`  | `ReactNode` | `placeholder` | Text of the field      |
+| `className` | `string`    | -             | Additional CSS classes |
+
+### SearchCommand.Dialog
+
+| Prop        | Type        | Default                | Description            |
+| ----------- | ----------- | ---------------------- | ---------------------- |
+| `children`  | `ReactNode` | Input, List and Footer | Replaces the default   |
+| `className` | `string`    | -                      | Additional CSS classes |
+
+### SearchCommand.Input
+
+| Prop        | Type     | Default | Description                                  |
+| ----------- | -------- | ------- | -------------------------------------------- |
+| `className` | `string` | -       | Additional CSS classes                       |
+| `...`       | -        | -       | Any input prop except `value` and `onChange` |
+
+### SearchCommand.List
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### SearchCommand.Item
+
+| Prop        | Type         | Default | Description            |
+| ----------- | ------------ | ------- | ---------------------- |
+| `item`      | `SearchItem` | -       | The entry to render    |
+| `className` | `string`     | -       | Additional CSS classes |
+
+### SearchCommand.Empty
+
+| Prop        | Type        | Default     | Description            |
+| ----------- | ----------- | ----------- | ---------------------- |
+| `children`  | `ReactNode` | `emptyText` | What to say            |
+| `className` | `string`    | -           | Additional CSS classes |
+
+### SearchCommand.Footer
+
+| Prop        | Type        | Default         | Description            |
+| ----------- | ----------- | --------------- | ---------------------- |
+| `children`  | `ReactNode` | The three hints | Replaces the hint row  |
+| `className` | `string`    | -               | Additional CSS classes |
+
+### useSearchCommand
+
+| Returns                                            | Description                              |
+| -------------------------------------------------- | ---------------------------------------- |
+| `{ open, setOpen, query, setQuery, results, ... }` | The palette state, for parts of your own |

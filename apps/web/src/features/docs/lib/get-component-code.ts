@@ -27,7 +27,10 @@ type ComponentCodeResult = {
  */
 export function rewriteDemoImports(code: string): string {
   return code
-    .replaceAll(/from ['"]\.\.\/\.\.\/(components|layout|ai|icons)\//g, "from '@/components/ui/")
+    .replaceAll(
+      /from ['"]\.\.\/\.\.\/(components|layout|ai|hybrids|icons)\//g,
+      "from '@/components/ui/",
+    )
     .replaceAll(/from ['"]\.\.\/\.\.\/lib\//g, "from '@/lib/");
 }
 

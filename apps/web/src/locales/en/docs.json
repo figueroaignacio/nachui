@@ -24,6 +24,10 @@
         {
           "title": "AI",
           "href": "/docs/elements/ai"
+        },
+        {
+          "title": "Hybrids",
+          "href": "/docs/elements/hybrids"
         }
       ]
     },
@@ -482,6 +486,53 @@
           "title": "Tool",
           "href": "/docs/elements/ai/tool",
           "description": "A tool call with its status, input and output, folded into a card.",
+          "badge": "new"
+        }
+      ]
+    },
+    {
+      "title": "Hybrids",
+      "items": [
+        {
+          "title": "Agent Run",
+          "href": "/docs/elements/hybrids/agent-run",
+          "description": "A running agent: its plan, the tools it calls and the answer it lands on.",
+          "badge": "new"
+        },
+        {
+          "title": "Chat",
+          "href": "/docs/elements/hybrids/chat",
+          "description": "A whole chat in one component: thread, answers, sources, actions and composer.",
+          "badge": "new"
+        },
+        {
+          "title": "Composer",
+          "href": "/docs/elements/hybrids/composer",
+          "description": "The box under a chat: prompt, attachments, suggestions and context in one piece.",
+          "badge": "new"
+        },
+        {
+          "title": "Confirm",
+          "href": "/docs/elements/hybrids/confirm",
+          "description": "A confirmation dialog with an async action, an optional typed guard and a promise hook.",
+          "badge": "new"
+        },
+        {
+          "title": "Data Table",
+          "href": "/docs/elements/hybrids/data-table",
+          "description": "A table with filter, sorting, column visibility, selection and pagination, no library.",
+          "badge": "new"
+        },
+        {
+          "title": "Search Command",
+          "href": "/docs/elements/hybrids/search-command",
+          "description": "The ⌘K palette: a trigger, a dialog and a command list with groups and shortcuts.",
+          "badge": "new"
+        },
+        {
+          "title": "Settings Row",
+          "href": "/docs/elements/hybrids/settings-row",
+          "description": "Label and description on the left, a switch, select, input or action on the right.",
           "badge": "new"
         }
       ]

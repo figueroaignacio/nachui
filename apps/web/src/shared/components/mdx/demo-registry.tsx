@@ -23,16 +23,20 @@ import { Collapsed as AccordionCollapsed } from '@repo/ui/src/demos/accordion/co
 import { Collapsed as BreadcrumbCollapsed } from '@repo/ui/src/demos/breadcrumb/collapsed';
 import { Collapsible as CodeBlockCollapsible } from '@repo/ui/src/demos/code-block/collapsible';
 import { Compact as CardCompact } from '@repo/ui/src/demos/card/compact';
+import { Compact as DataTableCompact } from '@repo/ui/src/demos/data-table/compact';
 import { Compact as FileUploadCompact } from '@repo/ui/src/demos/file-upload/compact';
 import { Compact as PaginationCompact } from '@repo/ui/src/demos/pagination/compact';
 import { Compact as TableCompact } from '@repo/ui/src/demos/table/compact';
+import { Controlled as SearchCommandControlled } from '@repo/ui/src/demos/search-command/controlled';
 import { CustomIcon as RatingCustomIcon } from '@repo/ui/src/demos/rating/custom-icon';
 import { CustomSeparator as BreadcrumbCustomSeparator } from '@repo/ui/src/demos/breadcrumb/custom-separator';
 import { CustomTag as TypographyCustomTag } from '@repo/ui/src/demos/typography/custom-tag';
 import { Danger as BannerDanger } from '@repo/ui/src/demos/banner/danger';
 import { Danger as CalloutDanger } from '@repo/ui/src/demos/callout/danger';
+import { Danger as SettingsRowDanger } from '@repo/ui/src/demos/settings-row/danger';
 import { Default as AccordionDefault } from '@repo/ui/src/demos/accordion/default';
 import { Default as ActionsDefault } from '@repo/ui/src/demos/actions/default';
+import { Default as AgentRunDefault } from '@repo/ui/src/demos/agent-run/default';
 import { Default as AspectRatioDefault } from '@repo/ui/src/demos/aspect-ratio/default';
 import { Default as AttachmentDefault } from '@repo/ui/src/demos/attachment/default';
 import { Default as AttachmentsDefault } from '@repo/ui/src/demos/attachments/default';
@@ -46,14 +50,18 @@ import { Default as CalloutDefault } from '@repo/ui/src/demos/callout/default';
 import { Default as CardDefault } from '@repo/ui/src/demos/card/default';
 import { Default as CenterDefault } from '@repo/ui/src/demos/center/default';
 import { Default as ChainOfThoughtDefault } from '@repo/ui/src/demos/chain-of-thought/default';
+import { Default as ChatDefault } from '@repo/ui/src/demos/chat/default';
 import { Default as CheckboxDefault } from '@repo/ui/src/demos/checkbox/default';
 import { Default as CodeBlockDefault } from '@repo/ui/src/demos/code-block/default';
 import { Default as CollapsibleDefault } from '@repo/ui/src/demos/collapsible/default';
 import { Default as CommandDefault } from '@repo/ui/src/demos/command/default';
+import { Default as ComposerDefault } from '@repo/ui/src/demos/composer/default';
+import { Default as ConfirmDefault } from '@repo/ui/src/demos/confirm/default';
 import { Default as ContainerDefault } from '@repo/ui/src/demos/container/default';
 import { Default as ContextDefault } from '@repo/ui/src/demos/context/default';
 import { Default as ContextMenuDefault } from '@repo/ui/src/demos/context-menu/default';
 import { Default as ConversationDefault } from '@repo/ui/src/demos/conversation/default';
+import { Default as DataTableDefault } from '@repo/ui/src/demos/data-table/default';
 import { Default as DialogDefault } from '@repo/ui/src/demos/dialog/default';
 import { Default as DockDefault } from '@repo/ui/src/demos/dock/default';
 import { Default as DrawerDefault } from '@repo/ui/src/demos/drawer/default';
@@ -81,9 +89,11 @@ import { Default as ReasoningDefault } from '@repo/ui/src/demos/reasoning/defaul
 import { Default as ResizableDefault } from '@repo/ui/src/demos/resizable/default';
 import { Default as ResponseDefault } from '@repo/ui/src/demos/response/default';
 import { Default as ScrollAreaDefault } from '@repo/ui/src/demos/scroll-area/default';
+import { Default as SearchCommandDefault } from '@repo/ui/src/demos/search-command/default';
 import { Default as SectionDefault } from '@repo/ui/src/demos/section/default';
 import { Default as SelectDefault } from '@repo/ui/src/demos/select/default';
 import { Default as SeparatorDefault } from '@repo/ui/src/demos/separator/default';
+import { Default as SettingsRowDefault } from '@repo/ui/src/demos/settings-row/default';
 import { Default as SheetDefault } from '@repo/ui/src/demos/sheet/default';
 import { Default as ShimmerDefault } from '@repo/ui/src/demos/shimmer/default';
 import { Default as SkeletonDefault } from '@repo/ui/src/demos/skeleton/default';
@@ -121,6 +131,7 @@ import { Grouped as MessageGrouped } from '@repo/ui/src/demos/message/grouped';
 import { GroupedItems as SelectGroupedItems } from '@repo/ui/src/demos/select/grouped-items';
 import { Half as RatingHalf } from '@repo/ui/src/demos/rating/half';
 import { Headings as TypographyHeadings } from '@repo/ui/src/demos/typography/headings';
+import { Hook as ConfirmHook } from '@repo/ui/src/demos/confirm/hook';
 import { Horizontal as FieldHorizontal } from '@repo/ui/src/demos/field/horizontal';
 import { Horizontal as ScrollAreaHorizontal } from '@repo/ui/src/demos/scroll-area/horizontal';
 import { Horizontal as TimelineHorizontal } from '@repo/ui/src/demos/timeline/horizontal';
@@ -136,6 +147,7 @@ import { Lines as TreeLines } from '@repo/ui/src/demos/tree/lines';
 import { Link as ButtonLink } from '@repo/ui/src/demos/button/link';
 import { LinkPreview as HoverCardLinkPreview } from '@repo/ui/src/demos/hover-card/link-preview';
 import { Links as DockLinks } from '@repo/ui/src/demos/dock/links';
+import { Live as AgentRunLive } from '@repo/ui/src/demos/agent-run/live';
 import { Multiple as AccordionMultiple } from '@repo/ui/src/demos/accordion/multiple';
 import { Multiple as FileUploadMultiple } from '@repo/ui/src/demos/file-upload/multiple';
 import { Nested as ResizableNested } from '@repo/ui/src/demos/resizable/nested';
@@ -174,6 +186,8 @@ import { States as SpriteStates } from '@repo/ui/src/demos/sprite/states';
 import { Statuses as PromptInputStatuses } from '@repo/ui/src/demos/prompt-input/statuses';
 import { Statuses as TaskStatuses } from '@repo/ui/src/demos/task/statuses';
 import { Statuses as ToolStatuses } from '@repo/ui/src/demos/tool/statuses';
+import { Streaming as ChatStreaming } from '@repo/ui/src/demos/chat/streaming';
+import { Streaming as ComposerStreaming } from '@repo/ui/src/demos/composer/streaming';
 import { Streaming as ConversationStreaming } from '@repo/ui/src/demos/conversation/streaming';
 import { Streaming as ReasoningStreaming } from '@repo/ui/src/demos/reasoning/streaming';
 import { Streaming as ResponseStreaming } from '@repo/ui/src/demos/response/streaming';
@@ -215,6 +229,7 @@ import { WithLabel as SeparatorWithLabel } from '@repo/ui/src/demos/separator/wi
 import { WithLabel as SwitchWithLabel } from '@repo/ui/src/demos/switch/with-label';
 import { WithLabel as TextareaWithLabel } from '@repo/ui/src/demos/textarea/with-label';
 import { WithMessage as ActionsWithMessage } from '@repo/ui/src/demos/actions/with-message';
+import { WithText as ConfirmWithText } from '@repo/ui/src/demos/confirm/with-text';
 import { WithValue as ProgressWithValue } from '@repo/ui/src/demos/progress/with-value';
 
 export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>> = {
@@ -226,6 +241,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
   actions: {
     default: ActionsDefault,
     'with-message': ActionsWithMessage,
+  },
+  'agent-run': {
+    default: AgentRunDefault,
+    live: AgentRunLive,
   },
   'aspect-ratio': {
     default: AspectRatioDefault,
@@ -303,6 +322,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
   'chain-of-thought': {
     default: ChainOfThoughtDefault,
   },
+  chat: {
+    default: ChatDefault,
+    streaming: ChatStreaming,
+  },
   checkbox: {
     default: CheckboxDefault,
     disabled: CheckboxDisabled,
@@ -320,6 +343,15 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
   command: {
     default: CommandDefault,
   },
+  composer: {
+    default: ComposerDefault,
+    streaming: ComposerStreaming,
+  },
+  confirm: {
+    default: ConfirmDefault,
+    hook: ConfirmHook,
+    'with-text': ConfirmWithText,
+  },
   container: {
     default: ContainerDefault,
   },
@@ -332,6 +364,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
   conversation: {
     default: ConversationDefault,
     streaming: ConversationStreaming,
+  },
+  'data-table': {
+    compact: DataTableCompact,
+    default: DataTableDefault,
   },
   dialog: {
     alert: DialogAlert,
@@ -464,6 +500,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
     default: ScrollAreaDefault,
     horizontal: ScrollAreaHorizontal,
   },
+  'search-command': {
+    controlled: SearchCommandControlled,
+    default: SearchCommandDefault,
+  },
   section: {
     backgrounds: SectionBackgrounds,
     centered: SectionCentered,
@@ -476,6 +516,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>
   separator: {
     default: SeparatorDefault,
     'with-label': SeparatorWithLabel,
+  },
+  'settings-row': {
+    danger: SettingsRowDanger,
+    default: SettingsRowDefault,
   },
   sheet: {
     default: SheetDefault,

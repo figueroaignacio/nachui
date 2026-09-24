@@ -1,0 +1,173 @@
+---
+title: Confirm
+description: El momento "¿estás seguro?", en una sola pieza. Un Dialog que se comporta como alerta, un botón de cancelar y uno de acción, un guardia opcional de escribir para confirmar, y un hook que lo convierte en una promesa.
+published: true
+date: 2026-09-22
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="confirm" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="confirm" />
+
+## Anatomía
+
+```tsx
+import { Confirm } from '@/components/ui/confirm';
+```
+
+```tsx
+<Confirm
+  title="Eliminar proyecto"
+  description="Esto no se puede deshacer."
+  variant="destructive"
+  confirmText="Eliminar"
+  onConfirm={deleteProject}
+>
+  <Confirm.Trigger>Eliminar</Confirm.Trigger>
+</Confirm>
+```
+
+Con solo un trigger como hijo, el panel se arma solo: ícono si le pasaste uno, título, descripción, el guardia de texto cuando hay `requireText`, y abajo Cancelar y la acción. El panel tiene `role="alertdialog"`, así que los lectores de pantalla lo anuncian como algo que espera una respuesta, y Escape y el overlay cuentan como cancelar.
+
+Pasale un `Confirm.Content` para reordenar el footer o meter algo tuyo entre la descripción y los botones.
+
+```tsx
+<Confirm title="¿Cerrar sesión en todos lados?" onConfirm={signOutAll}>
+  <Confirm.Trigger>Cerrar sesión</Confirm.Trigger>
+  <Confirm.Content>
+    <p className="text-muted-foreground text-sm">Tus otras 3 sesiones terminan ahora.</p>
+    <Dialog.Footer>
+      <Confirm.Cancel>Dejarlas</Confirm.Cancel>
+      <Confirm.Action>Cerrar sesión</Confirm.Action>
+    </Dialog.Footer>
+  </Confirm.Content>
+</Confirm>
+```
+
+## Composición
+
+Un hybrid es composición visible. Abrí `confirm.tsx` y estos son los elements que lo forman, en este orden:
+
+```tree
+Confirm
+├── Dialog
+│   ├── Confirm.Trigger   →  Dialog.Trigger
+│   └── Confirm.Content   →  Dialog.Content (role="alertdialog")
+│       ├── Dialog.Header
+│       │   ├── Dialog.Title
+│       │   └── Dialog.Description
+│       ├── Input            (solo con requireText)
+│       └── Dialog.Footer
+│           ├── Confirm.Cancel  →  Button (outline)
+│           └── Confirm.Action  →  Button (default o destructive)
+└── ConfirmProvider + useConfirm()
+```
+
+## Variantes
+
+`variant="destructive"` pinta el botón de acción con los tokens destructivos y manda el foco inicial a Cancelar, así un Enter de más no borra nada. La variante por defecto enfoca la acción, porque ahí el camino rápido es el correcto.
+
+## Confirmación asíncrona
+
+Devolvé una promesa desde `onConfirm` y el panel la espera. La acción muestra el spinner, los dos botones se deshabilitan, y Escape y el overlay dejan de cerrarlo. Se cierra cuando la promesa resuelve, y si rechaza se queda abierto con los botones de vuelta, para reintentar o salir.
+
+```tsx
+<Confirm
+  title="Eliminar proyecto"
+  variant="destructive"
+  onConfirm={async () => {
+    await api.projects.delete(id);
+  }}
+/>
+```
+
+## Escribir para confirmar
+
+`requireText` agrega un input debajo de la descripción y mantiene la acción deshabilitada hasta que lo tipeado coincide exacto. Enter dentro del input confirma una vez que coincide.
+
+<ComponentPreview component="confirm" demo="with-text" />
+
+## El hook
+
+Envolvé la app, o la parte que hace preguntas, en `ConfirmProvider`. Después `useConfirm()` te da una función que abre el panel y resuelve `true` al confirmar y `false` al cancelar, con Escape o con el overlay. Las llamadas se encolan, un panel a la vez.
+
+```tsx
+const confirm = useConfirm();
+
+async function remove(id: string) {
+  const ok = await confirm({
+    title: '¿Eliminar este comentario?',
+    variant: 'destructive',
+    confirmText: 'Eliminar',
+  });
+  if (ok) await api.comments.delete(id);
+}
+```
+
+<ComponentPreview component="confirm" demo="hook" />
+
+## Referencia de API
+
+### Confirm
+
+| Prop           | Type                                          | Default     | Description                                                 |
+| -------------- | --------------------------------------------- | ----------- | ----------------------------------------------------------- |
+| `title`        | `ReactNode`                                   | -           | La pregunta, también el nombre accesible                    |
+| `description`  | `ReactNode`                                   | -           | Qué pasa si dicen que sí                                    |
+| `icon`         | `ReactNode`                                   | -           | Se muestra en un círculo arriba del título                  |
+| `variant`      | `'default' \| 'destructive'`                  | `'default'` | Tono de la acción y dónde cae el foco                       |
+| `confirmText`  | `string`                                      | `'Confirm'` | Etiqueta del botón de acción                                |
+| `cancelText`   | `string`                                      | `'Cancel'`  | Etiqueta del botón de cancelar                              |
+| `requireText`  | `string`                                      | -           | Texto que hay que escribir antes de confirmar               |
+| `labels`       | `Partial<{ confirm; cancel; typeToConfirm }>` | Inglés      | Todos los textos visibles, `typeToConfirm` es una función   |
+| `open`         | `boolean`                                     | -           | Estado abierto controlado                                   |
+| `defaultOpen`  | `boolean`                                     | `false`     | Estado abierto cuando no es controlado                      |
+| `onOpenChange` | `(open: boolean) => void`                     | -           | Se llama cuando cambia el estado abierto                    |
+| `onConfirm`    | `() => void \| Promise<void>`                 | -           | Lo llama la acción; una promesa lo deja pendiente           |
+| `onCancel`     | `() => void`                                  | -           | Lo llaman cancelar, Escape y el overlay                     |
+| `className`    | `string`                                      | -           | Clases para el panel por defecto                            |
+| `children`     | `ReactNode`                                   | -           | Un `Confirm.Trigger` y, opcionalmente, un `Confirm.Content` |
+
+### Confirm.Trigger
+
+| Prop        | Type      | Default | Description                       |
+| ----------- | --------- | ------- | --------------------------------- |
+| `asChild`   | `boolean` | `false` | Usa el elemento hijo como trigger |
+| `className` | `string`  | -       | Clases CSS adicionales            |
+
+### Confirm.Content
+
+| Prop        | Type        | Default           | Description                                            |
+| ----------- | ----------- | ----------------- | ------------------------------------------------------ |
+| `children`  | `ReactNode` | Cancelar y Acción | Reemplaza el footer; el encabezado y el guardia quedan |
+| `className` | `string`    | -                 | Clases CSS adicionales                                 |
+
+### Confirm.Cancel
+
+| Prop        | Type        | Default      | Description                                |
+| ----------- | ----------- | ------------ | ------------------------------------------ |
+| `children`  | `ReactNode` | `cancelText` | Etiqueta                                   |
+| `className` | `string`    | -            | Clases CSS adicionales                     |
+| `...`       | -           | -            | Cualquier prop de `Button` salvo `variant` |
+
+### Confirm.Action
+
+| Prop        | Type        | Default       | Description                                |
+| ----------- | ----------- | ------------- | ------------------------------------------ |
+| `children`  | `ReactNode` | `confirmText` | Etiqueta                                   |
+| `className` | `string`    | -             | Clases CSS adicionales                     |
+| `...`       | -           | -             | Cualquier prop de `Button` salvo `variant` |
+
+### useConfirm
+
+| Firma                                                         | Descripción                                                                  |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `useConfirm(): (options: ConfirmOptions) => Promise<boolean>` | Abre un panel, resuelve `true` al confirmar y `false` en cualquier otro caso |
+
+`ConfirmOptions` acepta `title`, `description`, `icon`, `variant`, `confirmText`, `cancelText`, `requireText` y `labels`, con el mismo significado que las props de arriba. Necesita un `ConfirmProvider` por encima.

@@ -1,0 +1,137 @@
+---
+title: Agent Run
+description: A running agent in one card. Its steps, the tools each one calls, the reasoning behind them, and the answer it lands on.
+published: true
+date: 2026-09-22
+label: New
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="agent-run" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="agent-run" />
+
+## Anatomy
+
+```tsx
+import { AgentRun, type AgentStep } from '@/components/ui/agent-run';
+```
+
+```tsx
+<AgentRun
+  title="Refactoring the auth module"
+  status="running"
+  steps={steps}
+  startedAt={startedAt}
+  usage={{ used: 38400, max: 200000 }}
+  answer={<p>The session and token stores now share one interface.</p>}
+/>
+```
+
+Hand it the run as data and it lays the whole thing out: a header with the status and the elapsed time, a progress bar, one `Task` per step, the answer as a `Response`, and the token usage as a `Context` meter in the footer. Pass children instead to pick and order the parts yourself.
+
+## Composition
+
+`AgentRun` is a hybrid: it is made of elements you already have, wired in order. Open the file and you will find them in this shape:
+
+```tree
+AgentRun
+├── AgentRun.Header
+├── AgentRun.Progress
+├── AgentRun.Steps
+│   └── Task (one per step)
+│       ├── Task.Trigger
+│       └── Task.Content
+│           ├── Task.Item
+│           ├── Task.File
+│           ├── Reasoning
+│           └── Tool
+│               ├── Tool.Header
+│               ├── Tool.Input
+│               └── Tool.Output
+├── AgentRun.Answer
+│   └── Response
+└── AgentRun.Footer
+    └── Context
+```
+
+## Step shape
+
+Each entry in `steps` is an `AgentStep`. Only `id`, `title` and `status` are required; the rest shows up when present.
+
+| Field       | Type                                             | Description                                    |
+| ----------- | ------------------------------------------------ | ---------------------------------------------- |
+| `id`        | `string`                                         | Stable key                                     |
+| `title`     | `string`                                         | Label of the step                              |
+| `status`    | `'pending' \| 'active' \| 'complete' \| 'error'` | Drives the Task icon and which step opens      |
+| `detail`    | `string`                                         | One line under the title                       |
+| `files`     | `string[]`                                       | Rendered as `Task.File` chips                  |
+| `reasoning` | `string`                                         | Rendered in a `Reasoning` panel, closed        |
+| `tools`     | `AgentTool[]`                                    | Rendered as `Tool` cards with input and output |
+
+An `AgentTool` is `{ id, name, status, description?, input?, output?, error? }`, with `status` being the Tool element's own `ToolStatus`. A tool that failed opens by default so the error is not hidden behind a click.
+
+## Live
+
+The active step opens on its own and finished ones fold, the bar advances with every completed step, the answer streams with a caret once it starts, and the elapsed time stops when the run does.
+
+<ComponentPreview component="agent-run" demo="live" />
+
+## API Reference
+
+### AgentRun
+
+| Prop          | Type                                           | Default  | Description                                          |
+| ------------- | ---------------------------------------------- | -------- | ---------------------------------------------------- |
+| `steps`       | `AgentStep[]`                                  | -        | The run, one entry per step                          |
+| `status`      | `'idle' \| 'running' \| 'complete' \| 'error'` | `'idle'` | State of the whole run                               |
+| `title`       | `string`                                       | -        | Printed in the header                                |
+| `answer`      | `ReactNode`                                    | -        | The final response, rendered inside `Response`       |
+| `usage`       | `{ used: number; max: number }`                | -        | Token usage for the footer meter                     |
+| `startedAt`   | `Date \| number`                               | -        | Start of the elapsed clock                           |
+| `finishedAt`  | `Date \| number`                               | -        | Stops the clock                                      |
+| `labels`      | `Partial<AgentRunLabels>`                      | English  | Status names, input and output labels, progress text |
+| `defaultOpen` | `boolean`                                      | -        | Forces every step open or closed                     |
+| `children`    | `ReactNode`                                    | -        | Replaces the default layout with your own parts      |
+| `className`   | `string`                                       | -        | Additional CSS classes                               |
+
+### AgentRun.Header
+
+| Prop        | Type        | Default | Description            |
+| ----------- | ----------- | ------- | ---------------------- |
+| `children`  | `ReactNode` | -       | Replaces the title     |
+| `className` | `string`    | -       | Additional CSS classes |
+
+### AgentRun.Progress
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### AgentRun.Steps
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### AgentRun.Answer
+
+| Prop        | Type        | Default | Description                |
+| ----------- | ----------- | ------- | -------------------------- |
+| `children`  | `ReactNode` | -       | Replaces the `answer` prop |
+| `className` | `string`    | -       | Additional CSS classes     |
+
+### AgentRun.Footer
+
+| Prop        | Type        | Default | Description                           |
+| ----------- | ----------- | ------- | ------------------------------------- |
+| `children`  | `ReactNode` | -       | Replaces the usage meter on the right |
+| `className` | `string`    | -       | Additional CSS classes                |
+
+### Helpers
+
+`agentRunProgress(steps)` returns `{ done, total, ratio }`, the same numbers the bar and the footer print. `useAgentRun()` reads the run from context inside custom parts.

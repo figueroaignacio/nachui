@@ -1,0 +1,173 @@
+---
+title: Data Table
+description: Tabla, filtro, selector de columnas, paginación y selección de filas en una sola pieza. Ordenar, filtrar y paginar corren en React plano sobre las filas que le pasás.
+published: true
+date: 2026-09-22
+label: New
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="data-table" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="data-table" />
+
+## Anatomía
+
+```tsx
+import { DataTable, type DataTableColumn } from '@/components/ui/data-table';
+```
+
+```tsx
+const columns: DataTableColumn<Invoice>[] = [
+  {
+    id: 'id',
+    header: 'Factura',
+    cell: (row) => row.id,
+    sortable: true,
+    sortValue: (row) => row.id,
+  },
+  {
+    id: 'customer',
+    header: 'Cliente',
+    cell: (row) => row.customer,
+    sortable: true,
+    sortValue: (row) => row.customer,
+  },
+  {
+    id: 'amount',
+    header: 'Monto',
+    cell: (row) => money(row.amount),
+    sortable: true,
+    sortValue: (row) => row.amount,
+    align: 'end',
+  },
+];
+
+<DataTable data={invoices} columns={columns} getRowId={(row) => row.id} pageSize={10} selectable />;
+```
+
+Sin children la tabla se arma sola: el filtro y el selector de columnas arriba, la tabla en el medio, el conteo de seleccionadas y el paginador abajo. Todo corre sobre el array que le pasás, así que no hay fetch, ni adaptador, ni librería debajo.
+
+Pasale children para quedarte solo con las partes que querés. Todas leen el mismo contexto, así que una tabla sola sigue filtrando, ordenando y paginando con lo que conectes a `useDataTable`.
+
+```tsx
+<DataTable data={rows} columns={columns} getRowId={(row) => row.id}>
+  <DataTable.Content />
+</DataTable>
+```
+
+## Composición
+
+Un hybrid es composición visible. Abrí `data-table.tsx` y estos son los elements que lo forman, en este orden:
+
+```tree
+DataTable
+├── DataTable.Toolbar
+│   ├── Input                →  el filtro
+│   └── DropdownMenu         →  visibilidad de columnas
+├── DataTable.Content
+│   └── Table
+│       ├── Checkbox         →  seleccionar todo, seleccionar fila
+│       └── Empty            →  sin filas
+└── DataTable.Footer
+    └── Pagination
+```
+
+## Forma de una columna
+
+Una columna dice cómo leer la fila y cómo mostrarla. `cell` renderiza, `sortValue` y `filterValue` son lo que comparan el orden y el filtro. Si una columna no tiene `filterValue`, la tabla usa `sortValue`, y si tampoco, la celda cuando es texto plano.
+
+| Campo         | Tipo                                   | Descripción                                          |
+| ------------- | -------------------------------------- | ---------------------------------------------------- |
+| `id`          | `string`                               | Clave estable, también el nombre en `sort`           |
+| `header`      | `ReactNode`                            | Celda de cabecera, y etiqueta en el menú de columnas |
+| `cell`        | `(row: T) => ReactNode`                | Celda del cuerpo                                     |
+| `sortable`    | `boolean`                              | Convierte la cabecera en un botón de orden           |
+| `sortValue`   | `(row: T) => string \| number \| Date` | Valor que se compara al ordenar                      |
+| `filterValue` | `(row: T) => string`                   | Texto que busca el filtro                            |
+| `align`       | `'start' \| 'end'`                     | `end` alinea a la derecha y usa números tabulares    |
+| `hidden`      | `boolean`                              | Oculta al inicio, sigue disponible en el menú        |
+| `width`       | `string`                               | Cualquier ancho CSS para la cabecera                 |
+
+## Orden
+
+Hacé clic en una cabecera ordenable para ordenar ascendente, otra vez para descendente, y una tercera para limpiar. El orden es estable, así que las filas empatadas mantienen el orden en que llegaron. La cabecera lleva `aria-sort` para tecnología asistiva.
+
+## Selección
+
+Con `selectable` aparece la columna de checkboxes. El de la cabecera selecciona la página actual, y queda indeterminado cuando solo hay parte seleccionada. La selección es un set de ids de `getRowId`, así que sobrevive al orden, al filtro y al paginado. Leela con `onSelectedChange` o controlala con `selected`.
+
+## Estado controlado
+
+Filtro, orden y selección son no controlados por defecto. Pasá `filter`, `sort` o `selected` con sus handlers para manejarlos vos, para una URL, un store o una query al servidor. El helper puro `applyDataTable` es lo que corre el componente, así que podés correr la misma lógica en otro lado.
+
+```tsx
+const { rows, total, pageCount } = applyDataTable(data, {
+  columns,
+  filter: 'acme',
+  sort: { id: 'amount', direction: 'desc' },
+  page: 2,
+  pageSize: 10,
+});
+```
+
+## Compacta
+
+Quedate solo con la tabla cuando la barra y el pie serían ruido.
+
+<ComponentPreview component="data-table" demo="compact" />
+
+## Referencia de API
+
+### DataTable
+
+| Prop                | Tipo                           | Por defecto    | Descripción                                       |
+| ------------------- | ------------------------------ | -------------- | ------------------------------------------------- |
+| `data`              | `T[]`                          | -              | Todas las filas, antes de filtrar y paginar       |
+| `columns`           | `DataTableColumn<T>[]`         | -              | Definición de columnas                            |
+| `getRowId`          | `(row: T) => string`           | -              | Id estable por fila, para keys y selección        |
+| `pageSize`          | `number`                       | `10`           | Filas por página                                  |
+| `selectable`        | `boolean`                      | `false`        | Agrega la columna de checkboxes                   |
+| `selected`          | `Set<string> \| string[]`      | -              | Selección controlada                              |
+| `onSelectedChange`  | `(selected: string[]) => void` | -              | Se llama cuando cambia la selección               |
+| `sort`              | `{ id, direction } \| null`    | -              | Orden controlado                                  |
+| `onSortChange`      | `(sort) => void`               | -              | Se llama cuando cambia el orden                   |
+| `filter`            | `string`                       | -              | Texto del filtro controlado                       |
+| `onFilterChange`    | `(filter: string) => void`     | -              | Se llama cuando cambia el filtro                  |
+| `filterPlaceholder` | `string`                       | `'Filter…'`    | Placeholder del input de filtro                   |
+| `emptyTitle`        | `string`                       | `'No results'` | Título del estado vacío                           |
+| `emptyDescription`  | `string`                       | -              | Descripción del estado vacío                      |
+| `labels`            | `Partial<DataTableLabels>`     | -              | Todos los textos visibles, con defaults en inglés |
+| `children`          | `ReactNode`                    | -              | Layout propio, reemplaza las partes por defecto   |
+| `className`         | `string`                       | -              | Clases CSS adicionales                            |
+
+### DataTable.Toolbar
+
+| Prop        | Tipo        | Por defecto | Descripción                       |
+| ----------- | ----------- | ----------- | --------------------------------- |
+| `children`  | `ReactNode` | -           | Acciones extra al lado del filtro |
+| `className` | `string`    | -           | Clases CSS adicionales            |
+
+### DataTable.Content
+
+| Prop        | Tipo     | Por defecto | Descripción            |
+| ----------- | -------- | ----------- | ---------------------- |
+| `className` | `string` | -           | Clases CSS adicionales |
+
+### DataTable.Footer
+
+| Prop        | Tipo        | Por defecto | Descripción                        |
+| ----------- | ----------- | ----------- | ---------------------------------- |
+| `children`  | `ReactNode` | -           | Contenido extra al lado del conteo |
+| `className` | `string`    | -           | Clases CSS adicionales             |
+
+### Helpers
+
+| Firma                                                             | Descripción                                                               |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `applyDataTable(data, { columns, filter, sort, page, pageSize })` | Devuelve `{ rows, total, pageCount }`, la misma lógica que corre la tabla |
+| `useDataTable()`                                                  | El contexto de la tabla, para partes propias dentro de `DataTable`        |

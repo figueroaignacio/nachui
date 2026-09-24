@@ -25,7 +25,7 @@ const EXAMPLES_ROOT = join(UI_SRC, 'examples');
 
 // Must stay in sync with rewriteDemoImports. A new family directory in
 // packages/ui has to be added in both places, and this check is what says so.
-const REWRITTEN_FAMILIES = ['components', 'layout', 'ai', 'icons', 'lib'];
+const REWRITTEN_FAMILIES = ['components', 'layout', 'ai', 'hybrids', 'icons', 'lib'];
 
 const hasClientDirective = (source) => /^\s*(['"])use client\1/.test(source);
 
@@ -44,7 +44,7 @@ function findServerBoundaryReads(source) {
 
   const importedFrom = new Map();
   for (const [, names, dir, file] of source.matchAll(
-    /import\s+\{([^}]+)\}\s+from\s+['"]\.\.\/\.\.\/(components|layout|ai)\/([^'"]+)['"]/g,
+    /import\s+\{([^}]+)\}\s+from\s+['"]\.\.\/\.\.\/(components|layout|ai|hybrids)\/([^'"]+)['"]/g,
   )) {
     for (const name of names.split(',')) {
       const local = name

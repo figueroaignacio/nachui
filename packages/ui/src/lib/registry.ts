@@ -7,11 +7,13 @@ export const FAMILIES = [
   { id: 'ui', codeDir: 'src/components', docsSegment: 'elements/ui' },
   { id: 'layout', codeDir: 'src/layout', docsSegment: 'elements/layout' },
   { id: 'ai', codeDir: 'src/ai', docsSegment: 'elements/ai' },
+  { id: 'hybrids', codeDir: 'src/hybrids', docsSegment: 'elements/hybrids' },
 ] as const;
 
 export const COMPONENT_REGISTRY = {
   accordion: 'packages/ui/src/components/accordion.tsx',
   actions: 'packages/ui/src/ai/actions.tsx',
+  'agent-run': 'packages/ui/src/hybrids/agent-run.tsx',
   'aspect-ratio': 'packages/ui/src/layout/aspect-ratio.tsx',
   attachment: 'packages/ui/src/components/attachment.tsx',
   attachments: 'packages/ui/src/ai/attachments.tsx',
@@ -25,14 +27,18 @@ export const COMPONENT_REGISTRY = {
   card: 'packages/ui/src/components/card.tsx',
   center: 'packages/ui/src/layout/center.tsx',
   'chain-of-thought': 'packages/ui/src/ai/chain-of-thought.tsx',
+  chat: 'packages/ui/src/hybrids/chat.tsx',
   checkbox: 'packages/ui/src/components/checkbox.tsx',
   'code-block': 'packages/ui/src/ai/code-block.tsx',
   collapsible: 'packages/ui/src/components/collapsible.tsx',
   command: 'packages/ui/src/components/command.tsx',
+  composer: 'packages/ui/src/hybrids/composer.tsx',
+  confirm: 'packages/ui/src/hybrids/confirm.tsx',
   container: 'packages/ui/src/layout/container.tsx',
   context: 'packages/ui/src/ai/context.tsx',
   'context-menu': 'packages/ui/src/components/context-menu.tsx',
   conversation: 'packages/ui/src/ai/conversation.tsx',
+  'data-table': 'packages/ui/src/hybrids/data-table.tsx',
   dialog: 'packages/ui/src/components/dialog.tsx',
   dock: 'packages/ui/src/components/dock.tsx',
   drawer: 'packages/ui/src/components/drawer.tsx',
@@ -60,9 +66,11 @@ export const COMPONENT_REGISTRY = {
   resizable: 'packages/ui/src/components/resizable.tsx',
   response: 'packages/ui/src/ai/response.tsx',
   'scroll-area': 'packages/ui/src/components/scroll-area.tsx',
+  'search-command': 'packages/ui/src/hybrids/search-command.tsx',
   section: 'packages/ui/src/layout/section.tsx',
   select: 'packages/ui/src/components/select.tsx',
   separator: 'packages/ui/src/components/separator.tsx',
+  'settings-row': 'packages/ui/src/hybrids/settings-row.tsx',
   sheet: 'packages/ui/src/components/sheet.tsx',
   shimmer: 'packages/ui/src/ai/shimmer.tsx',
   skeleton: 'packages/ui/src/components/skeleton.tsx',
@@ -92,6 +100,7 @@ export const COMPONENT_REGISTRY = {
 export const COMPONENT_FAMILY = {
   accordion: 'ui',
   actions: 'ai',
+  'agent-run': 'hybrids',
   'aspect-ratio': 'layout',
   attachment: 'ui',
   attachments: 'ai',
@@ -105,14 +114,18 @@ export const COMPONENT_FAMILY = {
   card: 'ui',
   center: 'layout',
   'chain-of-thought': 'ai',
+  chat: 'hybrids',
   checkbox: 'ui',
   'code-block': 'ai',
   collapsible: 'ui',
   command: 'ui',
+  composer: 'hybrids',
+  confirm: 'hybrids',
   container: 'layout',
   context: 'ai',
   'context-menu': 'ui',
   conversation: 'ai',
+  'data-table': 'hybrids',
   dialog: 'ui',
   dock: 'ui',
   drawer: 'ui',
@@ -140,9 +153,11 @@ export const COMPONENT_FAMILY = {
   resizable: 'ui',
   response: 'ai',
   'scroll-area': 'ui',
+  'search-command': 'hybrids',
   section: 'layout',
   select: 'ui',
   separator: 'ui',
+  'settings-row': 'hybrids',
   sheet: 'ui',
   shimmer: 'ai',
   skeleton: 'ui',
@@ -177,6 +192,10 @@ export const DEMO_REGISTRY = {
   actions: {
     default: 'packages/ui/src/demos/actions/default.tsx',
     'with-message': 'packages/ui/src/demos/actions/with-message.tsx',
+  },
+  'agent-run': {
+    default: 'packages/ui/src/demos/agent-run/default.tsx',
+    live: 'packages/ui/src/demos/agent-run/live.tsx',
   },
   'aspect-ratio': {
     default: 'packages/ui/src/demos/aspect-ratio/default.tsx',
@@ -254,6 +273,10 @@ export const DEMO_REGISTRY = {
   'chain-of-thought': {
     default: 'packages/ui/src/demos/chain-of-thought/default.tsx',
   },
+  chat: {
+    default: 'packages/ui/src/demos/chat/default.tsx',
+    streaming: 'packages/ui/src/demos/chat/streaming.tsx',
+  },
   checkbox: {
     default: 'packages/ui/src/demos/checkbox/default.tsx',
     disabled: 'packages/ui/src/demos/checkbox/disabled.tsx',
@@ -271,6 +294,15 @@ export const DEMO_REGISTRY = {
   command: {
     default: 'packages/ui/src/demos/command/default.tsx',
   },
+  composer: {
+    default: 'packages/ui/src/demos/composer/default.tsx',
+    streaming: 'packages/ui/src/demos/composer/streaming.tsx',
+  },
+  confirm: {
+    default: 'packages/ui/src/demos/confirm/default.tsx',
+    hook: 'packages/ui/src/demos/confirm/hook.tsx',
+    'with-text': 'packages/ui/src/demos/confirm/with-text.tsx',
+  },
   container: {
     default: 'packages/ui/src/demos/container/default.tsx',
   },
@@ -283,6 +315,10 @@ export const DEMO_REGISTRY = {
   conversation: {
     default: 'packages/ui/src/demos/conversation/default.tsx',
     streaming: 'packages/ui/src/demos/conversation/streaming.tsx',
+  },
+  'data-table': {
+    compact: 'packages/ui/src/demos/data-table/compact.tsx',
+    default: 'packages/ui/src/demos/data-table/default.tsx',
   },
   dialog: {
     alert: 'packages/ui/src/demos/dialog/alert.tsx',
@@ -415,6 +451,10 @@ export const DEMO_REGISTRY = {
     default: 'packages/ui/src/demos/scroll-area/default.tsx',
     horizontal: 'packages/ui/src/demos/scroll-area/horizontal.tsx',
   },
+  'search-command': {
+    controlled: 'packages/ui/src/demos/search-command/controlled.tsx',
+    default: 'packages/ui/src/demos/search-command/default.tsx',
+  },
   section: {
     backgrounds: 'packages/ui/src/demos/section/backgrounds.tsx',
     centered: 'packages/ui/src/demos/section/centered.tsx',
@@ -427,6 +467,10 @@ export const DEMO_REGISTRY = {
   separator: {
     default: 'packages/ui/src/demos/separator/default.tsx',
     'with-label': 'packages/ui/src/demos/separator/with-label.tsx',
+  },
+  'settings-row': {
+    danger: 'packages/ui/src/demos/settings-row/danger.tsx',
+    default: 'packages/ui/src/demos/settings-row/default.tsx',
   },
   sheet: {
     default: 'packages/ui/src/demos/sheet/default.tsx',

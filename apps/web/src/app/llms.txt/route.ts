@@ -41,6 +41,7 @@ export async function GET() {
     section('UI elements', 'elements/ui'),
     section('Layout elements', 'elements/layout'),
     section('AI elements', 'elements/ai'),
+    section('Hybrid elements', 'elements/hybrids'),
     iconsSection(),
     `## Optional\n\n- [Sitemap](${baseUrl}/sitemap.xml)\n- [Docs index (JSON)](${baseUrl}/api/docs)`,
   ];

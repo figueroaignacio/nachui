@@ -27,6 +27,11 @@
         "href": "/docs/elements/ai"
       },
       {
+        "title": "Hybrids",
+        "description": "Chat, composer y agent run, armados con los elements.",
+        "href": "/docs/elements/hybrids"
+      },
+      {
         "title": "Componentes",
         "description": "Una galería de ejemplos vivos hechos con la librería.",
         "href": "/components"
