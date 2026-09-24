@@ -1,0 +1,61 @@
+---
+title: MCP Server
+description: Apuntá cualquier cliente MCP al servidor de NachUI y tu agente puede listar el catálogo, leer el código real de un componente y buscar en la documentación antes de escribir una línea.
+published: true
+toc:
+  visible: true
+date: 2026-09-24
+locale: es
+---
+
+Un asistente que adivina cómo es un componente inventa uno que no existe. El servidor MCP cierra esa brecha: expone el mismo registro que usan la documentación y el CLI, así el agente lee el archivo de verdad antes de escribir nada.
+
+No instala nada ni deja nada corriendo. Son cuatro herramientas de solo lectura sobre el registro.
+
+## Configuración
+
+Agregá el servidor a tu cliente MCP. Para Claude Code, Cursor y la mayoría, es una entrada en el `mcp.json` del cliente:
+
+```json title="mcp.json"
+{
+  "mcpServers": {
+    "nachui": {
+      "command": "npx",
+      "args": ["-y", "nachui-mcp"]
+    }
+  }
+}
+```
+
+El paquete se descarga en el primer uso y `npx` lo cachea. Reiniciás el cliente y aparecen las herramientas.
+
+## Herramientas
+
+| Herramienta       | Qué devuelve                                                                       |
+| ----------------- | ---------------------------------------------------------------------------------- |
+| `list_components` | Todos los componentes del registro, con los paquetes npm que necesitan.            |
+| `get_component`   | El código de un componente, el mismo archivo que copiarías a mano.                 |
+| `search_docs`     | Búsqueda semántica sobre la documentación, en inglés o español.                    |
+| `get_doc`         | Una página entera de la documentación en markdown, cuando un fragmento no alcanza. |
+
+Un turno típico: el agente llama a `list_components` para ver qué existe, a `search_docs` para encontrar cómo se usa un patrón, y a `get_component` para traer el archivo que va a adaptar. El mismo copiar y pegar de siempre, hecho por el agente, desde el código real.
+
+## Slugs
+
+Los componentes se piden por familia y nombre, los mismos slugs que toma el CLI: `ui/button`, `layout/stack`, `ai/prompt-input`, `hybrids/chat`, `icons/search`. Un nombre pelado como `button` funciona cuando es único entre familias.
+
+<Callout variant="info" className="mt-4">
+  <Callout.Title>Tres formas de darle la librería a un agente</Callout.Title>
+  <Callout.Content>
+    [llms.txt](/docs/concepts/llms-txt) es la documentación en texto plano, para cualquier modelo
+    que pueda leer una URL. [Skills](/docs/concepts/skills) son las convenciones, instaladas en tu
+    repo. El servidor MCP es el registro en vivo, para agentes que pueden llamar herramientas. Se
+    suman.
+  </Callout.Content>
+</Callout>
+
+## Relacionado
+
+- [CLI](/docs/concepts/cli) para los comandos que estas herramientas reflejan.
+- [llms.txt](/docs/concepts/llms-txt) para la documentación como texto.
+- [Skills](/docs/concepts/skills) para las convenciones que un asistente debería seguir.

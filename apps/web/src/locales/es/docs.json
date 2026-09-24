@@ -55,6 +55,11 @@
           "href": "/docs/concepts/cli"
         },
         {
+          "title": "MCP Server",
+          "href": "/docs/concepts/mcp",
+          "badge": "new"
+        },
+        {
           "title": "llms.txt",
           "href": "/docs/concepts/llms-txt"
         },

@@ -61,7 +61,7 @@ export function LandingInstall() {
           <p className="text-muted-strong mt-3 text-sm leading-relaxed">{t('description')}</p>
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
             <Link
-              href="/docs/installation"
+              href="/docs/concepts/mcp"
               className={cn(buttonVariants({ variant: 'default', size: 'sm' }), 'font-mono')}
             >
               {t('primaryAction')}

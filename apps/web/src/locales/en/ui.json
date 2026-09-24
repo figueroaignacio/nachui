@@ -50,19 +50,21 @@
   },
   "resourcesMenu": {
     "label": "Resources",
-    "badge": "Soon",
     "items": [
       {
         "title": "llms.txt",
-        "description": "The whole catalog as plain text for any model."
+        "description": "The whole catalog as plain text for any model.",
+        "href": "/docs/concepts/llms-txt"
+      },
+      {
+        "title": "Skills",
+        "description": "Conventions an assistant installs into your repo.",
+        "href": "/docs/concepts/skills"
       },
       {
         "title": "MCP Server",
-        "description": "Browse and install components from your agent."
-      },
-      {
-        "title": "Agent Skills",
-        "description": "Skills that teach agents how to build with NachUI."
+        "description": "Browse and install components from your agent.",
+        "href": "/docs/concepts/mcp"
       }
     ]
   },

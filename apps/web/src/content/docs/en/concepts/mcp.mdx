@@ -1,0 +1,60 @@
+---
+title: MCP Server
+description: Point any MCP client at the NachUI server and your agent can list the catalog, read the real source of a component and search the docs before it writes a line.
+published: true
+toc:
+  visible: true
+date: 2026-09-24
+locale: en
+---
+
+An assistant that guesses what a component looks like will invent one that does not exist. The MCP server closes that gap: it exposes the same registry the docs and the CLI use, so the agent reads the actual file before it writes anything.
+
+Nothing is installed and nothing runs in the background. It is four read-only tools over the registry.
+
+## Setup
+
+Add the server to your MCP client. For Claude Code, Cursor and most others, that is an entry in the client's `mcp.json`:
+
+```json title="mcp.json"
+{
+  "mcpServers": {
+    "nachui": {
+      "command": "npx",
+      "args": ["-y", "nachui-mcp"]
+    }
+  }
+}
+```
+
+The package is fetched on first use and cached by `npx`. Restart the client and the tools show up.
+
+## Tools
+
+| Tool              | What it returns                                                    |
+| ----------------- | ------------------------------------------------------------------ |
+| `list_components` | Every component in the registry, with the npm packages it needs.   |
+| `get_component`   | The source of one component, the same file you would copy by hand. |
+| `search_docs`     | Semantic search across the documentation, in English or Spanish.   |
+| `get_doc`         | A full docs page as markdown, for when a snippet is not enough.    |
+
+A typical turn: the agent calls `list_components` to see what exists, `search_docs` to find how a pattern is meant to be used, and `get_component` to pull the file it is about to adapt. You get the same copy and paste as always, done by the agent, from the real source.
+
+## Slugs
+
+Components are addressed by family and name, the same slugs the CLI takes: `ui/button`, `layout/stack`, `ai/prompt-input`, `hybrids/chat`, `icons/search`. A bare name like `button` works when it is unique across families.
+
+<Callout variant="info" className="mt-4">
+  <Callout.Title>Three ways to hand an agent the library</Callout.Title>
+  <Callout.Content>
+    [llms.txt](/docs/concepts/llms-txt) is the documentation as plain text, for any model that can
+    fetch a URL. [Skills](/docs/concepts/skills) are the conventions, installed into your repo. The
+    MCP server is the live registry, for agents that can call tools. They stack.
+  </Callout.Content>
+</Callout>
+
+## Related
+
+- [CLI](/docs/concepts/cli) for the commands the tools mirror.
+- [llms.txt](/docs/concepts/llms-txt) for the documentation feed.
+- [Skills](/docs/concepts/skills) for the conventions an assistant should follow.

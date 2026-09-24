@@ -11,18 +11,22 @@ import { isHiddenProductLink } from '@/lib/hidden-product-links';
 import { Badge } from '@repo/ui/components/badge';
 import { Dock, useDockAutoHide } from '@repo/ui/components/dock';
 import { BookIcon } from '@repo/ui/icons/book';
+import { FileTextIcon } from '@repo/ui/icons/file-text';
 import { HomeIcon } from '@repo/ui/icons/home';
 import { LanguagesIcon } from '@repo/ui/icons/languages';
 import { LayersIcon } from '@repo/ui/icons/layers';
+import { LinkIcon } from '@repo/ui/icons/link';
 import { LayoutIcon } from '@repo/ui/icons/layout';
 import { LayoutGridIcon } from '@repo/ui/icons/layout-grid';
 import { MoonIcon } from '@repo/ui/icons/moon';
 import { Logo } from '../common/logo';
 import { PackageIcon } from '@repo/ui/icons/package';
 import { PuzzleIcon } from '@repo/ui/icons/puzzle';
+import { ServerIcon } from '@repo/ui/icons/server';
 import { SparklesIcon } from '@repo/ui/icons/sparkles';
 import { StarIcon } from '@repo/ui/icons/star';
 import { SunIcon } from '@repo/ui/icons/sun';
+import { ZapIcon } from '@repo/ui/icons/zap';
 import { WandIcon } from '@repo/ui/icons/wand';
 import { cn } from '@repo/ui/lib/cn';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
@@ -45,16 +49,21 @@ const PRODUCT_ICONS: Record<string, React.ComponentType<{ size?: number }>> = {
   '/components': PuzzleIcon,
   '/bricks/login': PackageIcon,
   '/icons': StarIcon,
+  '/docs/concepts/llms-txt': FileTextIcon,
+  '/docs/concepts/skills': ZapIcon,
+  '/docs/concepts/mcp': ServerIcon,
 };
 
 const PANEL_TRANSITION = { type: 'spring' as const, stiffness: 420, damping: 32, mass: 0.7 };
 
 function ProductPanel({
+  id,
   open,
   onClose,
   menu,
   pathname,
 }: {
+  id: string;
   open: boolean;
   onClose: () => void;
   menu: ElementsMenu;
@@ -71,7 +80,7 @@ function ProductPanel({
     const onPointer = (event: PointerEvent) => {
       const target = event.target as Node;
       if (ref.current?.contains(target)) return;
-      if ((target as Element).closest?.('[data-dock-product]')) return;
+      if ((target as Element).closest?.(`[data-dock-panel="${id}"]`)) return;
       onClose();
     };
     window.addEventListener('keydown', onKey);
@@ -82,7 +91,7 @@ function ProductPanel({
       window.removeEventListener('pointerdown', onPointer);
       window.removeEventListener('scroll', onClose);
     };
-  }, [open, onClose]);
+  }, [open, onClose, id]);
 
   return (
     <AnimatePresence>
@@ -171,12 +180,15 @@ export function SiteDock() {
   const autoHidden = useDockAutoHide();
   const chatOpen = useChatStore((state) => state.isOpen);
   const openChat = useChatStore((state) => state.openChat);
-  const [productOpen, setProductOpen] = useState(false);
+  const resourcesMenu = tUi.raw('resourcesMenu') as ElementsMenu;
+  const [openPanel, setOpenPanel] = useState<'product' | 'resources' | null>(null);
+  const togglePanel = (panel: 'product' | 'resources') =>
+    setOpenPanel((previous) => (previous === panel ? null : panel));
+  const closePanels = () => setOpenPanel(null);
 
   const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
-  const productActive = elementsMenu.items.some(
-    (item) => pathname === item.href || pathname.startsWith(`${item.href}/`),
-  );
+  const menuActive = (menu: ElementsMenu) =>
+    menu.items.some((item) => pathname === item.href || pathname.startsWith(`${item.href}/`));
 
   const nextLocale = locales.find((code) => code !== locale) ?? locale;
   const switchLocale = () => {
@@ -212,11 +224,11 @@ export function SiteDock() {
         </Dock.Item>
         <Dock.Item
           label={elementsMenu.label}
-          active={productActive}
-          data-dock-product
+          active={menuActive(elementsMenu)}
+          data-dock-panel="product"
           aria-haspopup="menu"
-          aria-expanded={productOpen}
-          onClick={() => setProductOpen((previous) => !previous)}
+          aria-expanded={openPanel === 'product'}
+          onClick={() => togglePanel('product')}
         >
           <LayoutGridIcon />
         </Dock.Item>
@@ -224,6 +236,16 @@ export function SiteDock() {
           <Link href="/docs">
             <BookIcon />
           </Link>
+        </Dock.Item>
+        <Dock.Item
+          label={resourcesMenu.label}
+          active={menuActive(resourcesMenu)}
+          data-dock-panel="resources"
+          aria-haspopup="menu"
+          aria-expanded={openPanel === 'resources'}
+          onClick={() => togglePanel('resources')}
+        >
+          <LinkIcon />
         </Dock.Item>
         <Dock.Separator />
         <Searcher variant="dock" />
@@ -255,9 +277,17 @@ export function SiteDock() {
         </Dock.Item>
       </Dock>
       <ProductPanel
-        open={productOpen}
-        onClose={() => setProductOpen(false)}
+        id="product"
+        open={openPanel === 'product'}
+        onClose={closePanels}
         menu={elementsMenu}
+        pathname={pathname}
+      />
+      <ProductPanel
+        id="resources"
+        open={openPanel === 'resources'}
+        onClose={closePanels}
+        menu={resourcesMenu}
         pathname={pathname}
       />
     </>

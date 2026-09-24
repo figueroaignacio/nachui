@@ -6,7 +6,6 @@ import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { DocSection, Navigation } from '@/lib/definitions';
 import { isHiddenProductLink } from '@/lib/hidden-product-links';
-import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
 import { PanelLeftIcon } from '@repo/ui/icons/panel-left';
 import { Typography } from '@repo/ui/components/typography';
@@ -33,11 +32,7 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
   const docsNavigation = t.raw('docs.navigation') as DocSection[];
   const navigation = t.raw('ui.navigation') as Navigation[];
   const elementsMenu = t.raw('ui.elementsMenu') as { items: Navigation[] };
-  const resourcesMenu = t.raw('ui.resourcesMenu') as {
-    label: string;
-    badge: string;
-    items: { title: string; description: string }[];
-  };
+  const resourcesMenu = t.raw('ui.resourcesMenu') as { label: string; items: Navigation[] };
   const menuLinks = [...elementsMenu.items, ...navigation].filter(
     (item) => !isHiddenProductLink(item.href),
   );
@@ -144,17 +139,27 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
               {resourcesMenu.label}
             </Typography>
             <ul>
-              {resourcesMenu.items.map((item) => (
-                <li
-                  key={item.title}
-                  className="text-muted-foreground flex items-center gap-2 px-2.5 py-1.5 text-sm opacity-60"
-                >
-                  {item.title}
-                  <Badge variant="outline" className="text-[10px]">
-                    {resourcesMenu.badge}
-                  </Badge>
-                </li>
-              ))}
+              {resourcesMenu.items.map((item) => {
+                const isActive = pathname === item.href;
+
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      onClick={toggleMenu}
+                      aria-current={isActive ? 'page' : undefined}
+                      className={cn(
+                        'flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors',
+                        isActive
+                          ? 'bg-card text-foreground font-medium'
+                          : 'text-muted-foreground hover:text-foreground',
+                      )}
+                    >
+                      {item.title}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
           <div

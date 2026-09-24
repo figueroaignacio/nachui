@@ -30,14 +30,13 @@ They are synced from [github.com/figueroaignacio/ui-skills](https://github.com/f
 
 ## Which one you want
 
-Most of the time you only need the first one.
+Three skills, one job each. Most projects want the first, and the other two once the assistant starts touching the visual side.
 
-- **nachui-usage** is for consuming NachUI in an app. Import paths, which primitive to reach for, how to compose them. This is the one to install if you are building with the components rather than on them.
-- **nachui-component-development** is for writing or refactoring primitives themselves: file layout, CVA configs, forwarded refs, display names.
-- **nachui-compound-components** covers the dot notation pattern, the shared context, and how to add a sub-component without breaking the typing.
-- **nachui-design** covers tokens, spacing, typography and the visual rules, so an assistant stops inventing hex values.
-- **nachui-cli-development** is for working inside `packages/cli`, on commands, prompts and registry calls.
-- **nachui-docs-management** is for the docs app: MDX schemas, routing, translations.
+- **nachui-usage** is the one to install if you build with NachUI. Import paths, which primitive to reach for, how the pieces compose, what the CLI puts where.
+- **nachui-compound-components** teaches the dot notation pattern: `Dialog.Trigger`, `Card.Header`, the shared context behind them, and how to extend a component with a new part without breaking its types.
+- **nachui-design** carries the tokens, the spacing and typography rules and the dark mode contract, so an assistant stops inventing hex values and arbitrary sizes.
+
+They are written for people consuming the library. The skills we use to develop NachUI itself live in the same repository but are not listed here, because they assume the monorepo and would only get in the way of your project.
 
 ## How they work
 
