@@ -37,7 +37,7 @@ import { SkillsList } from './skills-list';
 // rather than size jumps or rules, so a page reads as one column of text.
 const headingStyles = {
   h1: 'font-heading mt-2 scroll-m-20 text-[1.75rem] font-semibold leading-tight tracking-tight text-foreground',
-  h2: 'doc-section-heading font-heading mt-16 mb-6 scroll-m-20 border-t-2 border-foreground pt-5 text-2xl leading-[0.95] font-black tracking-[-0.05em] uppercase first:mt-0 text-foreground md:text-[1.75rem]',
+  h2: 'doc-section-heading font-heading mt-16 mb-6 scroll-m-20 text-2xl leading-[0.95] font-black tracking-[-0.05em] uppercase first:mt-0 text-foreground md:text-[1.75rem]',
   h3: 'font-heading mt-8 mb-3 scroll-m-20 text-base font-bold tracking-[-0.02em] text-foreground',
   h4: 'font-heading mt-5 mb-1.5 scroll-m-20 text-[15px] font-semibold tracking-tight text-foreground/90',
   h5: 'font-heading mt-6 scroll-m-20 text-[15px] font-semibold text-foreground/90',
@@ -51,7 +51,13 @@ function createHeading(Tag: keyof typeof headingStyles) {
 }
 
 const H1 = createHeading('h1');
-const H2 = createHeading('h2');
+function H2({ className, children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
+  return (
+    <h2 className={cn(headingStyles.h2, className)} {...props}>
+      <span className="doc-section-mark">{children}</span>
+    </h2>
+  );
+}
 const H3 = createHeading('h3');
 const H4 = createHeading('h4');
 const H5 = createHeading('h5');

@@ -167,14 +167,6 @@ body {
   }
 }
 
-/*
- * The hero wall: a masonry of real component previews drifting up a plane
- * tilted away from the reader. Columns keep their natural card heights, which
- * is what makes it read as a wall of components and not a row of tiles.
- *
- * The tilt is what keeps it reading as a backdrop instead of a carousel you
- * are meant to operate, so the whole thing is inert.
- */
 [data-doc-prose] {
   counter-reset: doc-section;
 }
@@ -195,6 +187,25 @@ body {
   color: var(--muted-foreground);
 }
 
+.doc-section-mark {
+  padding-inline: 0.06em;
+  background-image: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--brand) 30%, transparent) 0.34em,
+    transparent 0.34em
+  );
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/*
+ * The hero wall: a masonry of real component previews drifting up a plane
+ * tilted away from the reader. Columns keep their natural card heights, which
+ * is what makes it read as a wall of components and not a row of tiles.
+ *
+ * The tilt is what keeps it reading as a backdrop instead of a carousel you
+ * are meant to operate, so the whole thing is inert.
+ */
 .preview-stage {
   --preview-fade-y: 12%;
   --preview-fade-x: 7%;
@@ -747,7 +758,7 @@ body {
 
 .dark .page-backdrop {
   display: block;
-  position: fixed;
+  position: absolute;
   inset: 0 0 auto;
   z-index: -1;
   block-size: min(72vh, 42rem);
