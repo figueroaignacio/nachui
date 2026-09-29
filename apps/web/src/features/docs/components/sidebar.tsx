@@ -102,11 +102,8 @@ export function Sidebar() {
         >
           {docsNavigation.map((section: DocSection) => (
             <div key={section.title} data-section={section.title} className="mb-6 last:mb-0">
-              <p className="text-muted-foreground flex items-center gap-1.5 px-2.5 text-xs">
-                {(() => {
-                  const Icon = anchors.find((entry) => entry.id === section.title)?.Icon;
-                  return Icon ? <Icon size={12} /> : null;
-                })()}
+              <p className="text-muted-foreground px-2.5 font-mono text-[11px] lowercase">
+                <span className="text-muted-foreground/50">./</span>
                 {section.title}
               </p>
               <ul className="mt-2">
@@ -120,12 +117,19 @@ export function Sidebar() {
                         rel={item.target ? 'noopener noreferrer' : undefined}
                         aria-current={isActive ? 'page' : undefined}
                         className={cn(
-                          'flex items-center gap-2 rounded-md px-2.5 py-1 text-[13px] transition-colors',
+                          'flex items-center gap-2.5 px-2.5 py-1 text-[13px] transition-colors',
                           isActive
-                            ? 'bg-card text-foreground font-medium'
+                            ? 'text-foreground font-medium'
                             : 'text-muted-foreground hover:text-foreground',
                         )}
                       >
+                        <span
+                          aria-hidden="true"
+                          className={cn(
+                            'size-1.5 shrink-0',
+                            isActive ? 'bg-brand' : 'bg-transparent',
+                          )}
+                        />
                         {item.title}
                         <NavBadge badge={item.badge} />
                       </Link>

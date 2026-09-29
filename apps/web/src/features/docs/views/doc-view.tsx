@@ -18,6 +18,10 @@ export function DocView({ doc }: DocViewProps) {
   const tocContent = Array.isArray(doc.toc?.content) ? doc.toc.content : [];
   const currentPath = `/docs${doc.slugAsParams ? `/${doc.slugAsParams}` : ''}`;
   const docUrl = getAbsoluteUrl(doc.locale || 'en', `/docs/${doc.slugAsParams}`);
+  const crumbs = [
+    'docs',
+    ...doc.slugAsParams.split('/').filter((part) => part && part !== 'elements'),
+  ];
 
   // Element pages are named after their registry entry, so the last slug
   // segment resolves to the component's source file. Other pages get nothing.
@@ -50,17 +54,36 @@ export function DocView({ doc }: DocViewProps) {
       />
       <Container size="md" className="px-0">
         <Stack as="article" className="w-full min-w-0">
-          <div className="mt-4 mb-6">
+          <div className="mt-4 mb-12">
             <div>
-              <h1 className="font-heading text-foreground text-[1.75rem] leading-tight font-semibold tracking-tight">
+              <p className="text-muted-foreground flex flex-wrap items-center gap-2 font-mono text-xs">
+                {crumbs.map((crumb, index) => (
+                  <span key={`${crumb}-${index}`} className="flex items-center gap-2">
+                    {index > 0 && <span aria-hidden="true">/</span>}
+                    <span className={index === crumbs.length - 1 ? 'text-foreground' : undefined}>
+                      {crumb}
+                    </span>
+                  </span>
+                ))}
+              </p>
+              <h1 className="font-heading text-foreground mt-5 text-[clamp(2.5rem,7vw,4.5rem)] leading-[0.85] font-black tracking-[-0.075em] break-words uppercase">
                 {doc.title}
+                <span
+                  aria-hidden="true"
+                  className="bg-brand ml-[0.05em] inline-block size-[0.16em]"
+                />
               </h1>
               {doc.description && (
-                <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
+                <p className="text-foreground mt-6 max-w-[46ch] text-lg leading-snug font-semibold tracking-[-0.02em] text-pretty">
                   {doc.description}
                 </p>
               )}
-              <div className="mt-4 xl:hidden">
+              {doc.label && (
+                <span className="border-brand text-brand mt-5 inline-flex rounded-full border px-2.5 py-0.5 font-mono text-[11px]">
+                  {doc.label}
+                </span>
+              )}
+              <div className="mt-5 xl:hidden">
                 <DocActions
                   page={doc.title}
                   url={docUrl}

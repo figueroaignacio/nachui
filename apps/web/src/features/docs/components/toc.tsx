@@ -2,7 +2,6 @@
 
 import { useMounted } from '@/hooks/use-mounted';
 import { Separator } from '@repo/ui/components/separator';
-import { Typography } from '@repo/ui/components/typography';
 import { Skeleton } from '@repo/ui/components/skeleton';
 import { motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
@@ -88,9 +87,10 @@ export function Toc({ toc, footer }: TocPanelProps) {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
     >
-      <Typography variant="p" className="text-xs">
+      <p className="text-muted-foreground font-mono text-[11px] lowercase">
+        <span className="text-muted-foreground/50">./</span>
         {t('label')}
-      </Typography>
+      </p>
 
       <Tree tree={toc} activeItem={activeHeading} />
 

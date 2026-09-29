@@ -34,17 +34,19 @@ function PaginationLink({
   return (
     <Link
       href={item.href}
-      className={`border-border hover:bg-secondary group flex-1 rounded-lg border p-4 transition-colors ${isNext ? 'text-right' : ''}`}
+      className={`border-border hover:border-foreground group flex-1 rounded-xl border px-5 py-4 transition-colors ${isNext ? 'text-right' : ''}`}
     >
       <Stack gap="2">
         <span
-          className={`text-muted-foreground flex items-center gap-2 text-sm ${isNext ? 'justify-end' : ''}`}
+          className={`text-muted-foreground flex items-center gap-2 font-mono text-xs lowercase ${isNext ? 'justify-end' : ''}`}
         >
           {!isNext && <Icon className="h-4 w-4" />}
           {label}
           {isNext && <Icon className="h-4 w-4" />}
         </span>
-        <span className="font-medium group-hover:underline">{item.title}</span>
+        <span className="font-heading group-hover:text-brand text-lg leading-none font-black tracking-[-0.04em] uppercase transition-colors">
+          {item.title}
+        </span>
       </Stack>
     </Link>
   );

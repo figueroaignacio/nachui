@@ -175,6 +175,26 @@ body {
  * The tilt is what keeps it reading as a backdrop instead of a carousel you
  * are meant to operate, so the whole thing is inert.
  */
+[data-doc-prose] {
+  counter-reset: doc-section;
+}
+
+.doc-section-heading {
+  counter-increment: doc-section;
+}
+
+.doc-section-heading::before {
+  content: counter(doc-section, decimal-leading-zero);
+  display: inline-block;
+  margin-inline-end: 0.9rem;
+  vertical-align: 0.35em;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--muted-foreground);
+}
+
 .preview-stage {
   --preview-fade-y: 12%;
   --preview-fade-x: 7%;

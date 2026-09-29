@@ -81,29 +81,17 @@ export function Tree({ tree, level = 1, activeItem, onItemClick }: TreeProps) {
                 level === 2 && 'text-[11px]',
               )}
             >
-              <AnimatePresence mode="wait">
-                {isActive && (
-                  <motion.span
-                    layoutId="toc-active-bg"
-                    className="bg-muted absolute inset-0 rounded-md"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  />
-                )}
-              </AnimatePresence>
               <span className="relative z-10 flex h-3.5 w-3.5 shrink-0 items-center justify-center">
                 <AnimatePresence mode="wait">
                   {isActive ? (
                     <motion.span
                       key="active"
-                      className="bg-foreground block rounded-full"
+                      className="bg-brand block"
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0, opacity: 0 }}
                       transition={{ duration: 0.2, ease: 'backOut' }}
-                      style={{ width: level === 1 ? 5 : 3.5, height: level === 1 ? 5 : 3.5 }}
+                      style={{ width: level === 1 ? 6 : 4, height: level === 1 ? 6 : 4 }}
                     />
                   ) : null}
                 </AnimatePresence>

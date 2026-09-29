@@ -37,8 +37,8 @@ import { SkillsList } from './skills-list';
 // rather than size jumps or rules, so a page reads as one column of text.
 const headingStyles = {
   h1: 'font-heading mt-2 scroll-m-20 text-[1.75rem] font-semibold leading-tight tracking-tight text-foreground',
-  h2: 'font-heading mt-8 mb-2 scroll-m-20 text-xl font-semibold tracking-tight first:mt-0 text-foreground',
-  h3: 'font-heading mt-6 mb-2 scroll-m-20 text-base font-semibold tracking-tight text-foreground',
+  h2: 'doc-section-heading font-heading mt-16 mb-6 scroll-m-20 border-t-2 border-foreground pt-5 text-2xl leading-[0.95] font-black tracking-[-0.05em] uppercase first:mt-0 text-foreground md:text-[1.75rem]',
+  h3: 'font-heading mt-8 mb-3 scroll-m-20 text-base font-bold tracking-[-0.02em] text-foreground',
   h4: 'font-heading mt-5 mb-1.5 scroll-m-20 text-[15px] font-semibold tracking-tight text-foreground/90',
   h5: 'font-heading mt-6 scroll-m-20 text-[15px] font-semibold text-foreground/90',
   h6: 'font-heading mt-6 scroll-m-20 text-xs font-medium tracking-wide uppercase text-muted-foreground',
