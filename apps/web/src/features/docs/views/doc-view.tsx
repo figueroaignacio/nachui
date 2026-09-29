@@ -18,11 +18,6 @@ export function DocView({ doc }: DocViewProps) {
   const tocContent = Array.isArray(doc.toc?.content) ? doc.toc.content : [];
   const currentPath = `/docs${doc.slugAsParams ? `/${doc.slugAsParams}` : ''}`;
   const docUrl = getAbsoluteUrl(doc.locale || 'en', `/docs/${doc.slugAsParams}`);
-  const crumbs = [
-    'docs',
-    ...doc.slugAsParams.split('/').filter((part) => part && part !== 'elements'),
-  ];
-
   // Element pages are named after their registry entry, so the last slug
   // segment resolves to the component's source file. Other pages get nothing.
   const componentPath =
@@ -56,17 +51,7 @@ export function DocView({ doc }: DocViewProps) {
         <Stack as="article" className="w-full min-w-0">
           <div className="mt-4 mb-12">
             <div>
-              <p className="text-muted-foreground flex flex-wrap items-center gap-2 font-mono text-xs">
-                {crumbs.map((crumb, index) => (
-                  <span key={`${crumb}-${index}`} className="flex items-center gap-2">
-                    {index > 0 && <span aria-hidden="true">/</span>}
-                    <span className={index === crumbs.length - 1 ? 'text-foreground' : undefined}>
-                      {crumb}
-                    </span>
-                  </span>
-                ))}
-              </p>
-              <h1 className="font-heading text-foreground mt-5 text-[clamp(2.5rem,7vw,4.5rem)] leading-[0.85] font-black tracking-[-0.075em] break-words uppercase">
+              <h1 className="font-heading text-foreground text-[clamp(2.5rem,7vw,4.5rem)] leading-[0.85] font-black tracking-[-0.075em] break-words uppercase">
                 {doc.title}
                 <span
                   aria-hidden="true"
