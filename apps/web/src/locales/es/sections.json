@@ -3,9 +3,9 @@
     "badge": "UI · AI · Layout",
     "subheading1": "Un sistema de diseño tuyo, con elementos de UI, AI y layout",
     "subheading2": "",
-    "headline1": "Un sistema de diseño",
-    "headline2": "tuyo.",
-    "description": "Componentes de React copiados a tu repo como código plano. Sin wrappers, sin SDK, y tu IA lo lee como cualquier otro archivo.",
+    "headline1": "Tu UI",
+    "headline2": "es tuya",
+    "description": "Componentes de React copiados a tu repo como código plano. Botones, diálogos y menús. Composers de prompt, paneles de razonamiento y listas de tareas. Stacks, grillas y secciones. Sin wrappers, sin SDK, y tu IA lo lee como cualquier otro archivo.",
     "github": "Código abierto, el código es tuyo",
     "actions": [
       {

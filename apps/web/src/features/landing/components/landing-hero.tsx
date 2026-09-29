@@ -19,54 +19,50 @@ export function LandingHero() {
 
   return (
     <>
-      <section className="flex min-h-[calc(100svh-5rem)] w-full flex-col pt-14 pb-10 md:pt-24 md:pb-14">
-        <p className="border-border text-muted-foreground inline-flex w-fit items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-[11px] md:text-xs">
+      <section className="flex min-h-[calc(100svh-5rem)] w-full flex-col items-center justify-center py-16 text-center md:py-20">
+        <p className="border-border text-muted-foreground inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-[11px] md:text-xs">
           <span aria-hidden="true" className="bg-brand size-1.5" />
           {t('badge')}
         </p>
 
-        <h1 className="font-heading text-foreground mt-6 text-[16.5vw] leading-[0.82] font-black tracking-[-0.075em] uppercase md:mt-8 md:text-[10.5vw] min-[90rem]:text-[9.5rem]">
+        <h1 className="font-heading text-foreground mt-7 text-[clamp(4rem,22vw,12.25rem)] leading-[0.8] font-black tracking-[-0.075em] uppercase md:mt-8">
           <span className="sr-only">{t('subheading1')}</span>
           <span aria-hidden="true" className="block">
             {t('headline1')}
           </span>
-          <span
-            aria-hidden="true"
-            className="bg-brand text-brand-foreground mt-[0.04em] inline-block px-[0.06em] pt-[0.06em]"
-          >
+          <span aria-hidden="true" className="block">
             {t('headline2')}
+            <span className="bg-brand ml-[0.05em] inline-block size-[0.16em]" />
           </span>
         </h1>
 
-        <div className="border-foreground mt-auto flex flex-col gap-6 border-t-2 pt-6 md:flex-row md:items-start md:justify-between md:gap-12">
-          <p className="text-foreground max-w-[36ch] text-[17px] leading-tight font-bold tracking-[-0.02em] text-pretty md:text-lg lg:text-xl">
-            {t('description')}
-          </p>
+        <p className="text-muted-strong mt-7 max-w-[56ch] text-[15px] leading-relaxed md:mt-9 md:text-[17px]">
+          {t('description')}
+        </p>
 
-          <Button.Group
-            attached
-            className="w-full shrink-0 sm:w-auto [&>a:not(:first-child)]:-ml-px [&>a:not(:first-child)]:rounded-l-none [&>a:not(:last-child)]:rounded-r-none"
-          >
-            {actions.map((action) => (
-              <Link
-                key={action.href}
-                href={action.href}
-                className={cn(
-                  buttonVariants({ variant: action.variant }),
-                  'h-11 flex-1 rounded-[10px] px-2 font-mono text-xs sm:flex-none sm:px-4 sm:text-[13px] md:h-12 md:px-5 md:text-sm',
-                )}
-              >
-                {action.label}
-                {action.variant === 'default' && (
-                  <ArrowRightIcon size={15} aria-hidden="true" className="hidden sm:block" />
-                )}
-              </Link>
-            ))}
-          </Button.Group>
-        </div>
+        <Button.Group
+          attached
+          className="mt-8 w-full sm:w-auto md:mt-9 [&>a:not(:first-child)]:-ml-px [&>a:not(:first-child)]:rounded-l-none [&>a:not(:last-child)]:rounded-r-none"
+        >
+          {actions.map((action) => (
+            <Link
+              key={action.href}
+              href={action.href}
+              className={cn(
+                buttonVariants({ variant: action.variant }),
+                'h-11 flex-1 rounded-[10px] px-2 font-mono text-xs sm:flex-none sm:px-4 sm:text-[13px] md:px-5 md:text-sm',
+              )}
+            >
+              {action.label}
+              {action.variant === 'default' && (
+                <ArrowRightIcon size={15} aria-hidden="true" className="hidden sm:block" />
+              )}
+            </Link>
+          ))}
+        </Button.Group>
       </section>
 
-      <div className="mt-10 w-full md:mt-16">
+      <div className="w-full">
         <PreviewWall />
       </div>
     </>
