@@ -1,12 +1,4 @@
-'use client';
-
-import { Link } from '@/i18n/navigation';
-import { Button } from '@repo/ui/components/button';
 import { Frame } from '@repo/ui/components/frame';
-import { ArrowUpRightIcon } from '@repo/ui/icons/arrow-up-right';
-import { cn } from '@repo/ui/lib/cn';
-import { useTranslations } from 'next-intl';
-import { useState } from 'react';
 
 import { PreviewAccountAccess } from './preview-cards/preview-account-access';
 import { PreviewAgentRun } from './preview-cards/preview-agent-run';
@@ -19,12 +11,6 @@ import { PreviewDeployReview } from './preview-cards/preview-deploy-review';
 import { PreviewDistributeTrack } from './preview-cards/preview-distribute-track';
 import { PreviewDividendIncome } from './preview-cards/preview-dividend-income';
 import { PreviewInviteTeam } from './preview-cards/preview-invite-team';
-import {
-  PreviewLayoutCenter,
-  PreviewLayoutGrid,
-  PreviewLayoutSplit,
-  PreviewLayoutStack,
-} from './preview-cards/preview-layout';
 import { PreviewMilestoneForm } from './preview-cards/preview-milestone-form';
 import { PreviewModelRouting } from './preview-cards/preview-model-routing';
 import { PreviewNewChat } from './preview-cards/preview-new-chat';
@@ -36,19 +22,6 @@ import { PreviewPromptStarters } from './preview-cards/preview-prompt-starters';
 import { PreviewSavingsTargets } from './preview-cards/preview-savings-targets';
 import { PreviewSources } from './preview-cards/preview-sources';
 import { PreviewThinking } from './preview-cards/preview-thinking';
-
-type Category = 'ui' | 'ai' | 'layout';
-type Filter = 'all' | Category;
-
-type WallItem = {
-  id: string;
-  category: Category;
-  slug: string;
-  card: React.ReactNode;
-};
-
-const FILTERS: Filter[] = ['all', 'ui', 'ai', 'layout'];
-const CLAMP_AFTER = 12;
 
 function Framed({
   title,
@@ -70,166 +43,160 @@ function Framed({
   );
 }
 
-const ITEMS: WallItem[] = [
-  { id: 'ai-composer', category: 'ai', slug: 'prompt-input', card: <PreviewAiComposer /> },
-  { id: 'api-keys', category: 'ui', slug: 'switch', card: <PreviewApiKeys /> },
-  { id: 'agent-run', category: 'ai', slug: 'task', card: <PreviewAgentRun /> },
-  { id: 'layout-stack', category: 'layout', slug: 'stack', card: <PreviewLayoutStack /> },
-  { id: 'invite-team', category: 'ui', slug: 'avatar', card: <PreviewInviteTeam /> },
-  { id: 'context-window', category: 'ai', slug: 'context', card: <PreviewContextWindow /> },
-  { id: 'power-usage', category: 'ui', slug: 'card', card: <PreviewPowerUsage /> },
-  { id: 'layout-grid', category: 'layout', slug: 'grid', card: <PreviewLayoutGrid /> },
-  { id: 'thinking', category: 'ai', slug: 'chain-of-thought', card: <PreviewThinking /> },
-  { id: 'payout-threshold', category: 'ui', slug: 'progress', card: <PreviewPayoutThreshold /> },
+/**
+ * Every preview once, by id, so a column can name a card and the two columns
+ * that repeat one stay far apart on the wall.
+ */
+const CARDS: Record<string, React.ReactNode> = {
+  'ai-composer': <PreviewAiComposer />,
+  'agent-run': <PreviewAgentRun />,
+  thinking: <PreviewThinking />,
+  'context-window': <PreviewContextWindow />,
+  'prompt-starters': <PreviewPromptStarters />,
+  sources: <PreviewSources />,
+  'deploy-review': <PreviewDeployReview />,
+  'invite-team': <PreviewInviteTeam />,
+  'api-keys': <PreviewApiKeys />,
+  'model-routing': <PreviewModelRouting />,
+  'claimable-balance': <PreviewClaimableBalance />,
+  'savings-targets': <PreviewSavingsTargets />,
+  'power-usage': <PreviewPowerUsage />,
+  'notification-prefs': <PreviewNotificationPrefs />,
+  'payments-nav': <PreviewPaymentsNav />,
+  'payout-threshold': <PreviewPayoutThreshold />,
+  'dividend-income': <PreviewDividendIncome />,
+  'new-chat': <PreviewNewChat />,
+  'distribute-track': <PreviewDistributeTrack />,
+  milestone: (
+    <Framed title="Goals" description="Savings plan for the acme team.">
+      <PreviewMilestoneForm />
+    </Framed>
+  ),
+  'account-access': (
+    <Framed title="Security" description="Credentials and sessions.">
+      <PreviewAccountAccess />
+    </Framed>
+  ),
+  contribution: (
+    <Framed title="Activity" description="Contributions, last six months.">
+      <PreviewContributionHistory />
+    </Framed>
+  ),
+};
+
+type Column = {
+  id: string;
+  duration: string;
+  direction?: 'reverse';
+  cards: (keyof typeof CARDS)[];
+};
+
+/**
+ * Eight fixed-width columns so the plane is wider than any viewport and the
+ * tilt never shows its edge. Four cards each, because one copy of a column has
+ * to be taller than the stage or the loop shows a hole (see WallColumn). That
+ * is 32 slots for 22 cards, so ten repeat, each in a column far from its twin.
+ */
+const COLUMNS: Column[] = [
   {
-    id: 'notification-prefs',
-    category: 'ui',
-    slug: 'checkbox',
-    card: <PreviewNotificationPrefs />,
+    id: 'one',
+    duration: '96s',
+    cards: ['ai-composer', 'claimable-balance', 'savings-targets', 'model-routing'],
   },
   {
-    id: 'milestone',
-    category: 'ui',
-    slug: 'frame',
-    card: (
-      <Framed title="Goals" description="Savings plan for the acme team.">
-        <PreviewMilestoneForm />
-      </Framed>
-    ),
+    id: 'two',
+    duration: '122s',
+    direction: 'reverse',
+    cards: ['agent-run', 'milestone', 'power-usage', 'invite-team'],
   },
-  { id: 'prompt-starters', category: 'ai', slug: 'suggestion', card: <PreviewPromptStarters /> },
-  { id: 'layout-split', category: 'layout', slug: 'split', card: <PreviewLayoutSplit /> },
-  { id: 'deploy-review', category: 'ui', slug: 'badge', card: <PreviewDeployReview /> },
-  { id: 'model-routing', category: 'ui', slug: 'select', card: <PreviewModelRouting /> },
-  { id: 'sources', category: 'ai', slug: 'attachments', card: <PreviewSources /> },
   {
-    id: 'claimable-balance',
-    category: 'ui',
-    slug: 'separator',
-    card: <PreviewClaimableBalance />,
+    id: 'three',
+    duration: '108s',
+    cards: ['thinking', 'notification-prefs', 'payments-nav', 'context-window'],
   },
-  { id: 'layout-center', category: 'layout', slug: 'center', card: <PreviewLayoutCenter /> },
-  { id: 'new-chat', category: 'ui', slug: 'kbd', card: <PreviewNewChat /> },
-  { id: 'dividend-income', category: 'ui', slug: 'card', card: <PreviewDividendIncome /> },
-  { id: 'payments-nav', category: 'ui', slug: 'breadcrumb', card: <PreviewPaymentsNav /> },
   {
-    id: 'account-access',
-    category: 'ui',
-    slug: 'input',
-    card: (
-      <Framed title="Security" description="Credentials and sessions.">
-        <PreviewAccountAccess />
-      </Framed>
-    ),
+    id: 'four',
+    duration: '134s',
+    direction: 'reverse',
+    cards: ['sources', 'payout-threshold', 'dividend-income', 'prompt-starters'],
   },
-  { id: 'savings-targets', category: 'ui', slug: 'progress', card: <PreviewSavingsTargets /> },
-  { id: 'distribute-track', category: 'ui', slug: 'empty', card: <PreviewDistributeTrack /> },
   {
-    id: 'contribution',
-    category: 'ui',
-    slug: 'frame',
-    card: (
-      <Framed title="Activity" description="Contributions, last six months.">
-        <PreviewContributionHistory />
-      </Framed>
-    ),
+    id: 'five',
+    duration: '100s',
+    cards: ['deploy-review', 'invite-team', 'account-access', 'ai-composer'],
+  },
+  {
+    id: 'six',
+    duration: '126s',
+    direction: 'reverse',
+    cards: ['context-window', 'new-chat', 'distribute-track', 'agent-run'],
+  },
+  {
+    id: 'seven',
+    duration: '112s',
+    cards: ['prompt-starters', 'contribution', 'api-keys', 'thinking'],
+  },
+  {
+    id: 'eight',
+    duration: '140s',
+    direction: 'reverse',
+    cards: ['sources', 'claimable-balance', 'notification-prefs', 'model-routing'],
   },
 ];
 
-function WallCard({ item, openLabel }: { item: WallItem; openLabel: string }) {
-  const path = `${item.category}/${item.slug}`;
-
+/**
+ * Every card is rendered twice per column and the column travels exactly half
+ * its own height, so the second copy lands where the first started and the loop
+ * has no seam. Two things follow from that:
+ *
+ * The spacing lives on each card as a bottom margin rather than a flex gap,
+ * because a gap would not apply between the two copies and the seam would jump
+ * by one gap on every cycle.
+ *
+ * The visible band has to sit inside the first copy at every point of the
+ * cycle, which means one copy must be taller than the stage. Fewer or shorter
+ * cards than that and the column runs out of content mid cycle and shows a
+ * hole. That is also why the plane is anchored to the top of the stage and not
+ * centred on it.
+ */
+function WallColumn({ column }: { column: Column }) {
   return (
-    <div className="group relative mb-4 break-inside-avoid">
-      <div
-        aria-hidden="true"
-        inert
-        className="pointer-events-none transition-transform duration-300 ease-out select-none group-hover:-translate-y-1 max-md:[zoom:0.72]"
-      >
-        {item.card}
-      </div>
-      <div className="text-muted-foreground group-hover:text-brand mt-2 flex items-center justify-between font-mono text-[10px] transition-colors md:text-[11px]">
-        <span>{path}</span>
-        <ArrowUpRightIcon
-          size={12}
-          aria-hidden="true"
-          className="opacity-0 transition-opacity group-hover:opacity-100"
-        />
-      </div>
-      <Link
-        href={`/docs/elements/${path}`}
-        aria-label={`${openLabel} ${path}`}
-        className="focus-visible:ring-ring absolute inset-0 rounded-xl focus-visible:ring-2 focus-visible:outline-none"
-      />
+    <div
+      className="preview-column w-60 shrink-0"
+      data-direction={column.direction}
+      style={{ '--preview-duration': column.duration } as React.CSSProperties}
+    >
+      {[0, 1].map((copy) =>
+        column.cards.map((id, index) => (
+          <div key={`${column.id}-${copy}-${index}`} className="mb-3">
+            {CARDS[id]}
+          </div>
+        )),
+      )}
     </div>
   );
 }
 
+/**
+ * The hero wall: a masonry of real component previews, every column drifting on
+ * its own. The plane is wider than the stage, and the stage masks its own edges
+ * so cards fade in and out instead of getting sliced.
+ *
+ * It is decoration, so it is inert: no pointer, no focus, nothing for a screen
+ * reader.
+ */
 export function PreviewWall() {
-  const t = useTranslations('sections.home.wall');
-  const [filter, setFilter] = useState<Filter>('all');
-  const items = filter === 'all' ? ITEMS : ITEMS.filter((item) => item.category === filter);
-  const clamped = items.length > CLAMP_AFTER;
-
   return (
-    <section className="w-full pb-10 md:pb-16">
-      <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-10">
-        <div>
-          <p className="text-muted-foreground font-mono text-xs">
-            <span className="text-muted-foreground/60">./</span>
-            {t('label')}
-          </p>
-          <h2 className="font-heading text-foreground mt-3 text-[clamp(2.5rem,11vw,4.5rem)] leading-[0.84] font-black tracking-[-0.07em] uppercase md:mt-4">
-            <span className="block">{t('title1')}</span>
-            <span className="text-muted-foreground/60 block">{t('title2')}</span>
-          </h2>
-        </div>
-
-        <div className="flex flex-col gap-3 md:items-end">
-          <Button.Group attached aria-label={t('filterLabel')} className="w-full md:w-auto">
-            {FILTERS.map((id) => (
-              <Button
-                key={id}
-                size="sm"
-                variant={filter === id ? 'default' : 'outline'}
-                aria-pressed={filter === id}
-                onClick={() => setFilter(id)}
-                className="h-9 flex-1 font-mono md:flex-none md:px-4"
-              >
-                {t(`filters.${id}`)}
-              </Button>
-            ))}
-          </Button.Group>
-          <Link
-            href="/docs/elements/ui"
-            className="text-muted-foreground hover:text-foreground hidden items-center gap-1.5 font-mono text-xs transition-colors md:flex"
-          >
-            {t('browse')}
-            <ArrowUpRightIcon size={13} aria-hidden="true" />
-          </Link>
-        </div>
+    <div
+      aria-hidden="true"
+      inert
+      className="preview-stage pointer-events-none relative h-[28rem] overflow-hidden select-none md:h-[38rem] lg:h-[46rem]"
+    >
+      <div className="preview-plane absolute top-[-2rem] left-1/2 flex -translate-x-1/2 items-start gap-3">
+        {COLUMNS.map((column) => (
+          <WallColumn key={column.id} column={column} />
+        ))}
       </div>
-
-      <div
-        className={cn(
-          'mt-8 md:mt-10',
-          clamped && 'preview-fade max-h-[46rem] overflow-hidden md:max-h-[56rem]',
-        )}
-      >
-        <div className="columns-2 gap-3 md:columns-3 md:gap-4 lg:columns-4 xl:columns-5">
-          {items.map((item) => (
-            <WallCard key={item.id} item={item} openLabel={t('open')} />
-          ))}
-        </div>
-      </div>
-
-      <Link
-        href="/docs/elements/ui"
-        className="border-border text-foreground mt-6 flex h-12 items-center justify-center gap-2 rounded-[10px] border font-mono text-[13px] md:hidden"
-      >
-        {t('browse')}
-        <ArrowUpRightIcon size={13} aria-hidden="true" />
-      </Link>
-    </section>
+    </div>
   );
 }

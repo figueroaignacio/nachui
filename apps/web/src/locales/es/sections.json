@@ -88,20 +88,6 @@
           "description": "WCAG 2.2 y soporte de teclado en cada primitiva."
         }
       ]
-    },
-    "wall": {
-      "label": "preview",
-      "title1": "Componentes reales,",
-      "title2": "no capturas.",
-      "filterLabel": "Filtrar componentes",
-      "filters": {
-        "all": "Todos",
-        "ui": "UI",
-        "ai": "AI",
-        "layout": "Layout"
-      },
-      "browse": "ver todos los elementos",
-      "open": "Abrir"
     }
   },
   "bricks": {
