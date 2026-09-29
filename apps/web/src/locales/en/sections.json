@@ -87,6 +87,20 @@
           "description": "WCAG 2.2 and keyboard support in every primitive."
         }
       ]
+    },
+    "wall": {
+      "label": "preview",
+      "title1": "Real components,",
+      "title2": "not screenshots.",
+      "filterLabel": "Filter components",
+      "filters": {
+        "all": "All",
+        "ui": "UI",
+        "ai": "AI",
+        "layout": "Layout"
+      },
+      "browse": "browse all elements",
+      "open": "Open"
     }
   },
   "bricks": {
