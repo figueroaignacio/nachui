@@ -20,12 +20,7 @@ export function LandingHero() {
   return (
     <>
       <section className="flex min-h-[calc(100svh-5rem)] w-full flex-col items-center justify-center py-16 text-center md:py-20">
-        <p className="border-border text-muted-foreground inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-[11px] md:text-xs">
-          <span aria-hidden="true" className="bg-brand size-1.5" />
-          {t('badge')}
-        </p>
-
-        <h1 className="font-heading text-foreground mt-7 text-[clamp(4rem,22vw,12.25rem)] leading-[0.8] font-black tracking-[-0.075em] uppercase md:mt-8">
+        <h1 className="font-heading text-foreground text-[clamp(4rem,22vw,12.25rem)] leading-[0.8] font-black tracking-[-0.075em] uppercase">
           <span className="sr-only">{t('subheading1')}</span>
           <span aria-hidden="true" className="block">
             {t('headline1')}
