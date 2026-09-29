@@ -1,7 +1,10 @@
+'use client';
+
 import { Link } from '@/i18n/navigation';
 import { Frame } from '@repo/ui/components/frame';
 import { ArrowRightIcon } from '@repo/ui/icons/arrow-right';
 import { useTranslations } from 'next-intl';
+import { useEffect, useRef, useState } from 'react';
 
 import { PreviewAccountAccess } from './preview-cards/preview-account-access';
 import { PreviewAgentRun } from './preview-cards/preview-agent-run';
@@ -107,28 +110,33 @@ type Column = {
 };
 
 const CARD_IDS = Object.keys(CARDS) as CardId[];
-const COLUMN_COUNT = 10;
-const CARDS_PER_COLUMN = 6;
 const DURATIONS = [96, 122, 108, 134, 100, 126, 112, 140, 104, 118];
 
-const COLUMNS: Column[] = Array.from({ length: COLUMN_COUNT }, (_, column) => ({
-  id: `column-${column}`,
-  duration: `${DURATIONS[column % DURATIONS.length]}s`,
-  direction: column % 2 ? 'reverse' : undefined,
-  cards: Array.from(
-    { length: CARDS_PER_COLUMN },
-    (_, row) => CARD_IDS[(column * 5 + row * 7) % CARD_IDS.length] as CardId,
-  ),
-}));
+type Density = { columns: number; cards: number; loop: boolean };
 
-function WallColumn({ column }: { column: Column }) {
+const FULL: Density = { columns: 10, cards: 6, loop: true };
+const LIGHT: Density = { columns: 6, cards: 4, loop: false };
+
+function buildColumns({ columns, cards }: Density): Column[] {
+  return Array.from({ length: columns }, (_, column) => ({
+    id: `column-${column}`,
+    duration: `${DURATIONS[column % DURATIONS.length]}s`,
+    direction: column % 2 ? 'reverse' : undefined,
+    cards: Array.from(
+      { length: cards },
+      (_, row) => CARD_IDS[(column * 5 + row * 7) % CARD_IDS.length] as CardId,
+    ),
+  }));
+}
+
+function WallColumn({ column, loop }: { column: Column; loop: boolean }) {
   return (
     <div
       className="preview-column w-60 shrink-0"
       data-direction={column.direction}
       style={{ '--preview-duration': column.duration } as React.CSSProperties}
     >
-      {[0, 1].map((copy) =>
+      {(loop ? [0, 1] : [0]).map((copy) =>
         column.cards.map((id, index) => (
           <div key={`${column.id}-${copy}-${index}`} className="mb-3">
             {CARDS[id]}
@@ -139,8 +147,36 @@ function WallColumn({ column }: { column: Column }) {
   );
 }
 
+function useWallDensity(stage: React.RefObject<HTMLDivElement | null>) {
+  const [density, setDensity] = useState<Density | null>(null);
+
+  useEffect(() => {
+    const node = stage.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        observer.disconnect();
+        const animated =
+          window.matchMedia('(min-width: 40rem)').matches &&
+          !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        setDensity(animated ? FULL : LIGHT);
+      },
+      { rootMargin: '400px 0px' },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [stage]);
+
+  return density;
+}
+
 export function PreviewWall() {
   const t = useTranslations('sections.home.wall');
+  const stage = useRef<HTMLDivElement>(null);
+  const density = useWallDensity(stage);
 
   return (
     <section className="bleed-x relative overflow-hidden">
@@ -170,14 +206,16 @@ export function PreviewWall() {
       </div>
 
       <div
+        ref={stage}
         aria-hidden="true"
         inert
         className="preview-stage pointer-events-none relative mx-[calc(-1*var(--frame-bleed))] -mt-24 h-[34rem] overflow-hidden select-none md:-mt-40 md:h-[48rem] lg:h-[56rem]"
       >
         <div className="preview-plane absolute top-24 left-1/2 flex -translate-x-1/2 items-start gap-3 md:top-32">
-          {COLUMNS.map((column) => (
-            <WallColumn key={column.id} column={column} />
-          ))}
+          {density &&
+            buildColumns(density).map((column) => (
+              <WallColumn key={column.id} column={column} loop={density.loop} />
+            ))}
         </div>
       </div>
     </section>
