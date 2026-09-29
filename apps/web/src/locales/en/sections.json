@@ -87,6 +87,13 @@
           "description": "WCAG 2.2 and keyboard support in every primitive."
         }
       ]
+    },
+    "wall": {
+      "label": "preview",
+      "title1": "Real components,",
+      "title2": "not screenshots.",
+      "description": "UI, AI and layout elements rendered live. Copy any of them into your repo as plain source.",
+      "browse": "browse all elements"
     }
   },
   "bricks": {

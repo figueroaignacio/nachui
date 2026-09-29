@@ -1,4 +1,7 @@
+import { Link } from '@/i18n/navigation';
 import { Frame } from '@repo/ui/components/frame';
+import { ArrowRightIcon } from '@repo/ui/icons/arrow-right';
+import { useTranslations } from 'next-intl';
 
 import { PreviewAccountAccess } from './preview-cards/preview-account-access';
 import { PreviewAgentRun } from './preview-cards/preview-agent-run';
@@ -11,6 +14,12 @@ import { PreviewDeployReview } from './preview-cards/preview-deploy-review';
 import { PreviewDistributeTrack } from './preview-cards/preview-distribute-track';
 import { PreviewDividendIncome } from './preview-cards/preview-dividend-income';
 import { PreviewInviteTeam } from './preview-cards/preview-invite-team';
+import {
+  PreviewLayoutCenter,
+  PreviewLayoutGrid,
+  PreviewLayoutSplit,
+  PreviewLayoutStack,
+} from './preview-cards/preview-layout';
 import { PreviewMilestoneForm } from './preview-cards/preview-milestone-form';
 import { PreviewModelRouting } from './preview-cards/preview-model-routing';
 import { PreviewNewChat } from './preview-cards/preview-new-chat';
@@ -82,83 +91,36 @@ const CARDS: Record<string, React.ReactNode> = {
       <PreviewContributionHistory />
     </Framed>
   ),
+  'layout-stack': <PreviewLayoutStack />,
+  'layout-grid': <PreviewLayoutGrid />,
+  'layout-split': <PreviewLayoutSplit />,
+  'layout-center': <PreviewLayoutCenter />,
 };
+
+type CardId = keyof typeof CARDS;
 
 type Column = {
   id: string;
   duration: string;
   direction?: 'reverse';
-  cards: (keyof typeof CARDS)[];
+  cards: CardId[];
 };
 
-/**
- * Eight fixed-width columns so the plane is wider than any viewport and the
- * tilt never shows its edge. Four cards each, because one copy of a column has
- * to be taller than the stage or the loop shows a hole (see WallColumn). That
- * is 32 slots for 22 cards, so ten repeat, each in a column far from its twin.
- */
-const COLUMNS: Column[] = [
-  {
-    id: 'one',
-    duration: '96s',
-    cards: ['ai-composer', 'claimable-balance', 'savings-targets', 'model-routing'],
-  },
-  {
-    id: 'two',
-    duration: '122s',
-    direction: 'reverse',
-    cards: ['agent-run', 'milestone', 'power-usage', 'invite-team'],
-  },
-  {
-    id: 'three',
-    duration: '108s',
-    cards: ['thinking', 'notification-prefs', 'payments-nav', 'context-window'],
-  },
-  {
-    id: 'four',
-    duration: '134s',
-    direction: 'reverse',
-    cards: ['sources', 'payout-threshold', 'dividend-income', 'prompt-starters'],
-  },
-  {
-    id: 'five',
-    duration: '100s',
-    cards: ['deploy-review', 'invite-team', 'account-access', 'ai-composer'],
-  },
-  {
-    id: 'six',
-    duration: '126s',
-    direction: 'reverse',
-    cards: ['context-window', 'new-chat', 'distribute-track', 'agent-run'],
-  },
-  {
-    id: 'seven',
-    duration: '112s',
-    cards: ['prompt-starters', 'contribution', 'api-keys', 'thinking'],
-  },
-  {
-    id: 'eight',
-    duration: '140s',
-    direction: 'reverse',
-    cards: ['sources', 'claimable-balance', 'notification-prefs', 'model-routing'],
-  },
-];
+const CARD_IDS = Object.keys(CARDS) as CardId[];
+const COLUMN_COUNT = 10;
+const CARDS_PER_COLUMN = 6;
+const DURATIONS = [96, 122, 108, 134, 100, 126, 112, 140, 104, 118];
 
-/**
- * Every card is rendered twice per column and the column travels exactly half
- * its own height, so the second copy lands where the first started and the loop
- * has no seam. Two things follow from that:
- *
- * The spacing lives on each card as a bottom margin rather than a flex gap,
- * because a gap would not apply between the two copies and the seam would jump
- * by one gap on every cycle.
- *
- * The visible band has to sit inside the first copy at every point of the
- * cycle, which means one copy must be taller than the stage. Fewer or shorter
- * cards than that and the column runs out of content mid cycle and shows a
- * hole. That is also why the plane is anchored to the top of the stage and not
- * centred on it.
- */
+const COLUMNS: Column[] = Array.from({ length: COLUMN_COUNT }, (_, column) => ({
+  id: `column-${column}`,
+  duration: `${DURATIONS[column % DURATIONS.length]}s`,
+  direction: column % 2 ? 'reverse' : undefined,
+  cards: Array.from(
+    { length: CARDS_PER_COLUMN },
+    (_, row) => CARD_IDS[(column * 5 + row * 7) % CARD_IDS.length] as CardId,
+  ),
+}));
+
 function WallColumn({ column }: { column: Column }) {
   return (
     <div
@@ -177,26 +139,47 @@ function WallColumn({ column }: { column: Column }) {
   );
 }
 
-/**
- * The hero wall: a masonry of real component previews, every column drifting on
- * its own. The plane is wider than the stage, and the stage masks its own edges
- * so cards fade in and out instead of getting sliced.
- *
- * It is decoration, so it is inert: no pointer, no focus, nothing for a screen
- * reader.
- */
 export function PreviewWall() {
+  const t = useTranslations('sections.home.wall');
+
   return (
-    <div
-      aria-hidden="true"
-      inert
-      className="preview-stage pointer-events-none relative h-[28rem] overflow-hidden select-none md:h-[38rem] lg:h-[46rem]"
-    >
-      <div className="preview-plane absolute top-[-2rem] left-1/2 flex -translate-x-1/2 items-start gap-3">
-        {COLUMNS.map((column) => (
-          <WallColumn key={column.id} column={column} />
-        ))}
+    <section className="bleed-x relative overflow-hidden">
+      <div className="relative z-10 flex flex-col gap-6 pt-16 md:flex-row md:items-end md:justify-between md:gap-12 md:pt-24">
+        <div>
+          <p className="text-muted-foreground font-mono text-xs">
+            <span className="text-muted-foreground/60">./</span>
+            {t('label')}
+          </p>
+          <h2 className="font-heading text-foreground mt-4 text-[clamp(2.75rem,11vw,5.25rem)] leading-[0.84] font-black tracking-[-0.07em] uppercase">
+            <span className="block">{t('title1')}</span>
+            <span className="text-muted-foreground/60 block">{t('title2')}</span>
+          </h2>
+        </div>
+        <div className="flex max-w-sm flex-col gap-4">
+          <p className="text-muted-strong text-[15px] leading-relaxed md:text-base">
+            {t('description')}
+          </p>
+          <Link
+            href="/docs/elements/ui"
+            className="text-foreground hover:text-brand inline-flex w-fit items-center gap-2 font-mono text-xs transition-colors"
+          >
+            {t('browse')}
+            <ArrowRightIcon size={14} aria-hidden="true" />
+          </Link>
+        </div>
       </div>
-    </div>
+
+      <div
+        aria-hidden="true"
+        inert
+        className="preview-stage pointer-events-none relative mx-[calc(-1*var(--frame-bleed))] -mt-24 h-[34rem] overflow-hidden select-none md:-mt-40 md:h-[48rem] lg:h-[56rem]"
+      >
+        <div className="preview-plane absolute top-24 left-1/2 flex -translate-x-1/2 items-start gap-3 md:top-32">
+          {COLUMNS.map((column) => (
+            <WallColumn key={column.id} column={column} />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

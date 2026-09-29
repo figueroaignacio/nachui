@@ -207,35 +207,16 @@ body {
  * are meant to operate, so the whole thing is inert.
  */
 .preview-stage {
-  --preview-fade-y: 12%;
-  --preview-fade-x: 7%;
-
   mask-image:
-    linear-gradient(
-      to bottom,
-      transparent,
-      black var(--preview-fade-y),
-      black calc(100% - var(--preview-fade-y)),
-      transparent
-    ),
-    linear-gradient(
-      to right,
-      transparent,
-      black var(--preview-fade-x),
-      black calc(100% - var(--preview-fade-x)),
-      transparent
-    );
+    linear-gradient(to bottom, transparent 8%, black 42%, black 80%, transparent),
+    linear-gradient(to right, transparent, black 6%, black 94%, transparent);
   mask-composite: intersect;
 }
 
 .preview-plane {
-  --preview-tilt: 12deg;
-  --preview-yaw: -5deg;
-  --preview-roll: -4deg;
-  --preview-scale: 0.5;
+  --preview-scale: 0.45;
 
-  transform: perspective(1600px) rotateX(var(--preview-tilt)) rotateY(var(--preview-yaw))
-    rotateZ(var(--preview-roll)) scale(var(--preview-scale));
+  transform: perspective(1200px) rotateX(52deg) rotateZ(-18deg) scale(var(--preview-scale));
   transform-origin: 50% 0;
 }
 
@@ -248,13 +229,13 @@ body {
  */
 @media (min-width: 40rem) {
   .preview-plane {
-    --preview-scale: 0.7;
+    --preview-scale: 0.55;
   }
 }
 
 @media (min-width: 64rem) {
   .preview-plane {
-    --preview-scale: 1;
+    --preview-scale: 0.68;
   }
 }
 

@@ -88,6 +88,13 @@
           "description": "WCAG 2.2 y soporte de teclado en cada primitiva."
         }
       ]
+    },
+    "wall": {
+      "label": "preview",
+      "title1": "Componentes reales,",
+      "title2": "no capturas.",
+      "description": "Elementos de UI, AI y layout renderizados en vivo. Copiá cualquiera a tu repo como código plano.",
+      "browse": "ver todos los elementos"
     }
   },
   "bricks": {
