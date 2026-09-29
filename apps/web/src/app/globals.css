@@ -622,6 +622,11 @@ body {
   --brand-foreground: oklch(98.5% 0.002 85);
 }
 
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+}
+
 .dark {
   --background: oklch(7% 0 0);
   --card: oklch(12.5% 0 0);

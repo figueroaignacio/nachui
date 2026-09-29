@@ -3,6 +3,8 @@
     "badge": "UI · AI · Layout",
     "subheading1": "A design system you own, with UI, AI and layout elements",
     "subheading2": "",
+    "headline1": "Own",
+    "headline2": "your UI",
     "description": "React components copied into your repo as plain source. Buttons, dialogs and menus. Prompt composers, reasoning panels and task lists. Stacks, grids and sections. No wrappers, no SDK, and your AI reads it like any other file.",
     "actions": [
       {
@@ -82,6 +84,12 @@
           "description": "WCAG 2.2 and keyboard support in every primitive."
         }
       ]
+    },
+    "specimens": {
+      "deploy": "Deploy",
+      "cancel": "Cancel",
+      "switch": "Stream responses",
+      "prompt": "Ask anything about NachUI…"
     }
   },
   "bricks": {
