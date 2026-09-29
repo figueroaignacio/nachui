@@ -10,14 +10,17 @@
       {
         "label": "Get started",
         "href": "/docs",
-        "description": "Install the CLI and pull what you need.",
         "variant": "default"
       },
       {
-        "label": "Browse elements",
+        "label": "UI elements",
         "href": "/docs/elements/ui",
-        "description": "UI, AI and layout elements, each on its own page.",
-        "variant": "secondary"
+        "variant": "outline"
+      },
+      {
+        "label": "AI elements",
+        "href": "/docs/elements/ai",
+        "variant": "outline"
       }
     ],
     "tech": {
@@ -84,12 +87,6 @@
           "description": "WCAG 2.2 and keyboard support in every primitive."
         }
       ]
-    },
-    "specimens": {
-      "deploy": "Deploy",
-      "cancel": "Cancel",
-      "switch": "Stream responses",
-      "prompt": "Ask anything about NachUI…"
     }
   },
   "bricks": {

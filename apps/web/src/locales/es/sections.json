@@ -11,14 +11,17 @@
       {
         "label": "Comenzar",
         "href": "/docs",
-        "description": "Instalá la CLI y traé lo que necesites.",
         "variant": "default"
       },
       {
-        "label": "Ver elementos",
+        "label": "Elementos UI",
         "href": "/docs/elements/ui",
-        "description": "Elementos de UI, AI y layout, cada uno en su página.",
-        "variant": "secondary"
+        "variant": "outline"
+      },
+      {
+        "label": "Elementos AI",
+        "href": "/docs/elements/ai",
+        "variant": "outline"
       }
     ],
     "tech": {
@@ -85,12 +88,6 @@
           "description": "WCAG 2.2 y soporte de teclado en cada primitiva."
         }
       ]
-    },
-    "specimens": {
-      "deploy": "Publicar",
-      "cancel": "Cancelar",
-      "switch": "Respuestas en streaming",
-      "prompt": "Preguntá lo que quieras de NachUI…"
     }
   },
   "bricks": {
