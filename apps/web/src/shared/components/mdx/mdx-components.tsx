@@ -37,9 +37,9 @@ import { SkillsList } from './skills-list';
 // rather than size jumps or rules, so a page reads as one column of text.
 const headingStyles = {
   h1: 'font-heading mt-2 scroll-m-20 text-[1.75rem] font-semibold leading-tight tracking-tight text-foreground',
-  h2: 'doc-section-heading font-heading mt-16 mb-6 scroll-m-20 text-2xl leading-[0.95] font-black tracking-[-0.05em] uppercase first:mt-0 text-foreground md:text-[1.75rem]',
-  h3: 'font-heading mt-8 mb-3 scroll-m-20 text-base font-bold tracking-[-0.02em] text-foreground',
-  h4: 'font-heading mt-5 mb-1.5 scroll-m-20 text-[15px] font-semibold tracking-tight text-foreground/90',
+  h2: 'font-heading mt-16 mb-6 scroll-m-20 text-2xl leading-[0.95] font-black tracking-[-0.05em] uppercase first:mt-0 text-foreground md:text-[1.75rem]',
+  h3: 'font-heading mt-10 mb-3 scroll-m-20 text-base font-bold tracking-[-0.02em] text-foreground',
+  h4: 'font-heading mt-8 mb-2 scroll-m-20 text-[15px] font-semibold tracking-tight text-foreground/90',
   h5: 'font-heading mt-6 scroll-m-20 text-[15px] font-semibold text-foreground/90',
   h6: 'font-heading mt-6 scroll-m-20 text-xs font-medium tracking-wide uppercase text-muted-foreground',
 } as const;
@@ -95,7 +95,7 @@ function Link({ className, children, ...props }: React.AnchorHTMLAttributes<HTML
 function UnorderedList({ className, ...props }: React.HTMLAttributes<HTMLUListElement>) {
   return (
     <ul
-      className={cn('marker:text-muted-foreground/60 my-3 ml-5 list-disc space-y-1.5', className)}
+      className={cn('marker:text-muted-foreground/60 my-4 ml-5 list-disc space-y-1', className)}
       {...props}
     />
   );
@@ -105,7 +105,7 @@ function OrderedList({ className, ...props }: React.HTMLAttributes<HTMLOListElem
   return (
     <ol
       className={cn(
-        'marker:text-muted-foreground/70 my-4 ml-5 list-decimal space-y-2 marker:font-medium',
+        'marker:text-muted-foreground/70 my-4 ml-5 list-decimal space-y-1 marker:font-medium',
         className,
       )}
       {...props}
@@ -117,8 +117,8 @@ function ListItem({ className, ...props }: React.HTMLAttributes<HTMLLIElement>) 
   return (
     <li
       className={cn(
-        'text-foreground/80 pl-1 font-serif text-[17px] leading-[1.75]',
-        '[&>ol]:my-2 [&>ul]:my-2',
+        'text-foreground/80 pl-1 font-serif text-[17px] leading-[1.7]',
+        '[&>ol]:my-1.5 [&>ul]:my-1.5',
         className,
       )}
       {...props}
@@ -131,25 +131,27 @@ function Strong({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
 }
 
 function HorizontalRule({ className, ...props }: React.HTMLAttributes<HTMLHRElement>) {
-  return <hr className={cn('border-border/50 my-6', className)} {...props} />;
+  return <hr className={cn('border-border/50 my-10', className)} {...props} />;
 }
 
 const PLAIN_TEXT_FENCES = new Set(['tree', 'txt', 'text', 'plaintext']);
 
-export function Pre({ children }: { children: React.ReactNode }) {
+interface PreProps {
+  children: React.ReactNode;
+  'data-title'?: string;
+  collapsible?: boolean;
+}
+
+export function Pre({ children, 'data-title': title, collapsible }: PreProps) {
   if (!isValidElement(children)) {
     return <pre className="overflow-x-auto">{children}</pre>;
   }
 
-  // rehype-pretty-code replaces `class="language-x"` with `data-language`, so
-  // read both: raw MDX gives the class, the processed tree gives the attribute.
   const childProps = children.props as {
     className?: string;
-    'data-language'?: string;
     children?: React.ReactNode;
   };
-  const language =
-    childProps['data-language'] || childProps.className?.replace('language-', '') || 'tsx';
+  const language = childProps.className?.replace('language-', '') || 'tsx';
 
   const extractCode = (node: unknown): string => {
     if (!node) return '';
@@ -157,9 +159,6 @@ export function Pre({ children }: { children: React.ReactNode }) {
     if (Array.isArray(node)) return node.map(extractCode).join('');
     if (isValidElement(node)) {
       return extractCode((node.props as { children?: React.ReactNode }).children);
-    }
-    if (typeof node === 'object' && node !== null && 'value' in node) {
-      return String((node as Record<string, unknown>).value);
     }
     return '';
   };
@@ -170,14 +169,18 @@ export function Pre({ children }: { children: React.ReactNode }) {
   const isPlainText = PLAIN_TEXT_FENCES.has(language);
 
   return (
-    <div className="my-5 w-full overflow-x-auto">
-      <CodeBlock
-        code={code}
-        language={language}
-        showLineNumbers={!isPlainText}
-        className="min-w-0 shadow-sm"
-      />
-    </div>
+    <figure data-code-figure="">
+      {title && <figcaption data-code-title="">{title}</figcaption>}
+      <div className="w-full overflow-x-auto">
+        <CodeBlock
+          code={code}
+          language={language}
+          showLineNumbers={!isPlainText}
+          collapsible={collapsible}
+          className="min-w-0 shadow-sm"
+        />
+      </div>
+    </figure>
   );
 }
 

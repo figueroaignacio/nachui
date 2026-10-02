@@ -4,22 +4,24 @@ import { ContentRepository } from '@/lib/content-repository';
 import { buildAlternates, getAbsoluteUrl, getAssetUrl } from '@/lib/domains';
 import { allDocs as docs } from 'content-collections';
 import type { Metadata } from 'next';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
 type DocPageProps = {
-  slug: string[];
-  locale?: Locale;
+  slug?: string[];
+  locale: Locale;
 };
 
 async function getDocFromParams({ params }: { params: Promise<DocPageProps> }) {
   const parameters = await params;
   const slug = parameters.slug?.join('/') || '';
-  const locale = parameters.locale || 'en';
 
-  return ContentRepository.getDocBySlug(slug, locale);
+  return ContentRepository.getDocBySlug(slug, parameters.locale);
 }
 
 export default async function DocPage({ params }: { params: Promise<DocPageProps> }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const doc = await getDocFromParams({ params });
 
   if (!doc || !doc.published) {
@@ -34,13 +36,15 @@ export async function generateMetadata({
 }: {
   params: Promise<DocPageProps>;
 }): Promise<Metadata> {
-  const doc = await getDocFromParams({ params });
   const parameters = await params;
-  const locale = parameters.locale || 'en';
+  const { locale } = parameters;
+  setRequestLocale(locale);
+  const doc = await getDocFromParams({ params });
   const slugPath = parameters.slug?.join('/') || '';
 
   if (!doc) {
-    return { title: 'Documentation not found' };
+    const t = await getTranslations({ locale, namespace: 'docs.notFound' });
+    return { title: t('metaTitle') };
   }
 
   const metaTitle = doc.title;
@@ -88,6 +92,8 @@ export async function generateMetadata({
   };
 }
 
+// Every published doc, in both locales, including the `/docs` index (empty
+// slug). Anything else 404s without rendering on demand.
 export async function generateStaticParams(): Promise<{ slug: string[]; locale: string }[]> {
   if (!Array.isArray(docs)) {
     console.error('docs is not an array!', typeof docs);
@@ -95,11 +101,11 @@ export async function generateStaticParams(): Promise<{ slug: string[]; locale: 
   }
 
   return docs
-    .filter((doc) => doc.slugAsParams && doc.published)
+    .filter((doc) => doc.published)
     .map((doc) => ({
       slug: doc.slugAsParams.split('/').filter(Boolean),
       locale: doc.locale || 'en',
     }));
 }
 
-export const revalidate = 3600;
+export const dynamicParams = false;

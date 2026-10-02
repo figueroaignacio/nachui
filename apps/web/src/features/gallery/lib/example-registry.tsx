@@ -2,78 +2,61 @@
 // Run `pnpm --filter @repo/ui generate:registry` after adding a component,
 // a demo, a brick or an icon. The build fails if this file is out of date.
 
-import { Assistant as MessageAssistantExample } from '@repo/ui/src/examples/message/assistant';
-import { Attachments as BubbleAttachmentsExample } from '@repo/ui/src/examples/bubble/attachments';
-import { Confirm as DialogConfirmExample } from '@repo/ui/src/examples/dialog/confirm';
-import { Deployments as TimelineDeploymentsExample } from '@repo/ui/src/examples/timeline/deployments';
-import { Documents as FileUploadDocumentsExample } from '@repo/ui/src/examples/file-upload/documents';
-import { FeatureList as IconTileFeatureListExample } from '@repo/ui/src/examples/icon-tile/feature-list';
-import { Icons as AccordionIconsExample } from '@repo/ui/src/examples/accordion/icons';
-import { Inbox as EmptyInboxExample } from '@repo/ui/src/examples/empty/inbox';
-import { Nested as FrameNestedExample } from '@repo/ui/src/examples/frame/nested';
-import { Preferences as SwitchPreferencesExample } from '@repo/ui/src/examples/switch/preferences';
-import { Settings as TabsSettingsExample } from '@repo/ui/src/examples/tabs/settings';
-import { SignIn as InputSignInExample } from '@repo/ui/src/examples/input/sign-in';
-import { Stats as CardStatsExample } from '@repo/ui/src/examples/card/stats';
-import { Statuses as BadgeStatusesExample } from '@repo/ui/src/examples/badge/statuses';
-import { Table as PaginationTableExample } from '@repo/ui/src/examples/pagination/table';
-import { Team as AvatarTeamExample } from '@repo/ui/src/examples/avatar/team';
-import { Toolbar as ButtonToolbarExample } from '@repo/ui/src/examples/button/toolbar';
-import { TrackList as ContextMenuTrackListExample } from '@repo/ui/src/examples/context-menu/track-list';
+import dynamic from 'next/dynamic';
 
 export const EXAMPLE_COMPONENTS: Record<string, Record<string, React.ComponentType>> = {
   accordion: {
-    icons: AccordionIconsExample,
+    icons: dynamic(() => import('@repo/ui/src/examples/accordion/icons').then((m) => m.Icons)),
   },
   avatar: {
-    team: AvatarTeamExample,
+    team: dynamic(() => import('@repo/ui/src/examples/avatar/team').then((m) => m.Team)),
   },
   badge: {
-    statuses: BadgeStatusesExample,
+    statuses: dynamic(() => import('@repo/ui/src/examples/badge/statuses').then((m) => m.Statuses)),
   },
   bubble: {
-    attachments: BubbleAttachmentsExample,
+    attachments: dynamic(() => import('@repo/ui/src/examples/bubble/attachments').then((m) => m.Attachments)),
   },
   button: {
-    toolbar: ButtonToolbarExample,
+    toolbar: dynamic(() => import('@repo/ui/src/examples/button/toolbar').then((m) => m.Toolbar)),
   },
   card: {
-    stats: CardStatsExample,
+    stats: dynamic(() => import('@repo/ui/src/examples/card/stats').then((m) => m.Stats)),
   },
   'context-menu': {
-    'track-list': ContextMenuTrackListExample,
+    'track-list': dynamic(() => import('@repo/ui/src/examples/context-menu/track-list').then((m) => m.TrackList)),
   },
   dialog: {
-    confirm: DialogConfirmExample,
+    confirm: dynamic(() => import('@repo/ui/src/examples/dialog/confirm').then((m) => m.Confirm)),
   },
   empty: {
-    inbox: EmptyInboxExample,
+    inbox: dynamic(() => import('@repo/ui/src/examples/empty/inbox').then((m) => m.Inbox)),
   },
   'file-upload': {
-    documents: FileUploadDocumentsExample,
+    documents: dynamic(() => import('@repo/ui/src/examples/file-upload/documents').then((m) => m.Documents)),
   },
   frame: {
-    nested: FrameNestedExample,
+    nested: dynamic(() => import('@repo/ui/src/examples/frame/nested').then((m) => m.Nested)),
   },
   'icon-tile': {
-    'feature-list': IconTileFeatureListExample,
+    'feature-list': dynamic(() => import('@repo/ui/src/examples/icon-tile/feature-list').then((m) => m.FeatureList)),
   },
   input: {
-    'sign-in': InputSignInExample,
+    'sign-in': dynamic(() => import('@repo/ui/src/examples/input/sign-in').then((m) => m.SignIn)),
   },
   message: {
-    assistant: MessageAssistantExample,
+    assistant: dynamic(() => import('@repo/ui/src/examples/message/assistant').then((m) => m.Assistant)),
   },
   pagination: {
-    table: PaginationTableExample,
+    table: dynamic(() => import('@repo/ui/src/examples/pagination/table').then((m) => m.Table)),
   },
   switch: {
-    preferences: SwitchPreferencesExample,
+    preferences: dynamic(() => import('@repo/ui/src/examples/switch/preferences').then((m) => m.Preferences)),
   },
   tabs: {
-    settings: TabsSettingsExample,
+    settings: dynamic(() => import('@repo/ui/src/examples/tabs/settings').then((m) => m.Settings)),
   },
   timeline: {
-    deployments: TimelineDeploymentsExample,
+    deployments: dynamic(() => import('@repo/ui/src/examples/timeline/deployments').then((m) => m.Deployments)),
   },
 };

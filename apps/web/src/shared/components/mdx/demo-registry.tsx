@@ -2,626 +2,398 @@
 // Run `pnpm --filter @repo/ui generate:registry` after adding a component,
 // a demo, a brick or an icon. The build fails if this file is out of date.
 
-import { Alert as DialogAlert } from '@repo/ui/src/demos/dialog/alert';
-import { Alternate as TimelineAlternate } from '@repo/ui/src/demos/timeline/alternate';
-import { Attachments as PromptInputAttachments } from '@repo/ui/src/demos/prompt-input/attachments';
-import { AutoResize as TextareaAutoResize } from '@repo/ui/src/demos/textarea/auto-resize';
-import { Avatar as FileUploadAvatar } from '@repo/ui/src/demos/file-upload/avatar';
-import { AvatarGroup as AvatarGroupDemo } from '@repo/ui/src/demos/avatar/avatar-group';
-import { Axis as CenterAxis } from '@repo/ui/src/demos/center/axis';
-import { Backgrounds as SectionBackgrounds } from '@repo/ui/src/demos/section/backgrounds';
-import { Badges as NavigationMenuBadges } from '@repo/ui/src/demos/navigation-menu/badges';
-import { Bordered as CollapsibleBordered } from '@repo/ui/src/demos/collapsible/bordered';
-import { Both as ScrollAreaBoth } from '@repo/ui/src/demos/scroll-area/both';
-import { Card as CollapsibleCard } from '@repo/ui/src/demos/collapsible/card';
-import { Card as SkeletonCard } from '@repo/ui/src/demos/skeleton/card';
-import { Cards as AttachmentCards } from '@repo/ui/src/demos/attachment/cards';
-import { Centered as SectionCentered } from '@repo/ui/src/demos/section/centered';
-import { Checkboxes as DropdownMenuCheckboxes } from '@repo/ui/src/demos/dropdown-menu/checkboxes';
-import { Chips as AttachmentChips } from '@repo/ui/src/demos/attachment/chips';
-import { Collapsed as AccordionCollapsed } from '@repo/ui/src/demos/accordion/collapsed';
-import { Collapsed as BreadcrumbCollapsed } from '@repo/ui/src/demos/breadcrumb/collapsed';
-import { Collapsible as CodeBlockCollapsible } from '@repo/ui/src/demos/code-block/collapsible';
-import { Compact as CardCompact } from '@repo/ui/src/demos/card/compact';
-import { Compact as DataTableCompact } from '@repo/ui/src/demos/data-table/compact';
-import { Compact as FileUploadCompact } from '@repo/ui/src/demos/file-upload/compact';
-import { Compact as PaginationCompact } from '@repo/ui/src/demos/pagination/compact';
-import { Compact as TableCompact } from '@repo/ui/src/demos/table/compact';
-import { Controlled as SearchCommandControlled } from '@repo/ui/src/demos/search-command/controlled';
-import { CustomIcon as RatingCustomIcon } from '@repo/ui/src/demos/rating/custom-icon';
-import { CustomSeparator as BreadcrumbCustomSeparator } from '@repo/ui/src/demos/breadcrumb/custom-separator';
-import { CustomTag as TypographyCustomTag } from '@repo/ui/src/demos/typography/custom-tag';
-import { Danger as BannerDanger } from '@repo/ui/src/demos/banner/danger';
-import { Danger as CalloutDanger } from '@repo/ui/src/demos/callout/danger';
-import { Danger as SettingsRowDanger } from '@repo/ui/src/demos/settings-row/danger';
-import { Default as AccordionDefault } from '@repo/ui/src/demos/accordion/default';
-import { Default as ActionsDefault } from '@repo/ui/src/demos/actions/default';
-import { Default as AgentRunDefault } from '@repo/ui/src/demos/agent-run/default';
-import { Default as AspectRatioDefault } from '@repo/ui/src/demos/aspect-ratio/default';
-import { Default as AttachmentDefault } from '@repo/ui/src/demos/attachment/default';
-import { Default as AttachmentsDefault } from '@repo/ui/src/demos/attachments/default';
-import { Default as AvatarDefault } from '@repo/ui/src/demos/avatar/default';
-import { Default as BadgeDefault } from '@repo/ui/src/demos/badge/default';
-import { Default as BannerDefault } from '@repo/ui/src/demos/banner/default';
-import { Default as BreadcrumbDefault } from '@repo/ui/src/demos/breadcrumb/default';
-import { Default as BubbleDefault } from '@repo/ui/src/demos/bubble/default';
-import { Default as ButtonDefault } from '@repo/ui/src/demos/button/default';
-import { Default as CalloutDefault } from '@repo/ui/src/demos/callout/default';
-import { Default as CardDefault } from '@repo/ui/src/demos/card/default';
-import { Default as CenterDefault } from '@repo/ui/src/demos/center/default';
-import { Default as ChainOfThoughtDefault } from '@repo/ui/src/demos/chain-of-thought/default';
-import { Default as ChatDefault } from '@repo/ui/src/demos/chat/default';
-import { Default as CheckboxDefault } from '@repo/ui/src/demos/checkbox/default';
-import { Default as CodeBlockDefault } from '@repo/ui/src/demos/code-block/default';
-import { Default as CollapsibleDefault } from '@repo/ui/src/demos/collapsible/default';
-import { Default as CommandDefault } from '@repo/ui/src/demos/command/default';
-import { Default as ComposerDefault } from '@repo/ui/src/demos/composer/default';
-import { Default as ConfirmDefault } from '@repo/ui/src/demos/confirm/default';
-import { Default as ContainerDefault } from '@repo/ui/src/demos/container/default';
-import { Default as ContextDefault } from '@repo/ui/src/demos/context/default';
-import { Default as ContextMenuDefault } from '@repo/ui/src/demos/context-menu/default';
-import { Default as ConversationDefault } from '@repo/ui/src/demos/conversation/default';
-import { Default as DataTableDefault } from '@repo/ui/src/demos/data-table/default';
-import { Default as DialogDefault } from '@repo/ui/src/demos/dialog/default';
-import { Default as DockDefault } from '@repo/ui/src/demos/dock/default';
-import { Default as DrawerDefault } from '@repo/ui/src/demos/drawer/default';
-import { Default as DropdownMenuDefault } from '@repo/ui/src/demos/dropdown-menu/default';
-import { Default as EmptyDefault } from '@repo/ui/src/demos/empty/default';
-import { Default as FieldDefault } from '@repo/ui/src/demos/field/default';
-import { Default as FileUploadDefault } from '@repo/ui/src/demos/file-upload/default';
-import { Default as FlexDefault } from '@repo/ui/src/demos/flex/default';
-import { Default as FrameDefault } from '@repo/ui/src/demos/frame/default';
-import { Default as GridDefault } from '@repo/ui/src/demos/grid/default';
-import { Default as HoverCardDefault } from '@repo/ui/src/demos/hover-card/default';
-import { Default as IconTileDefault } from '@repo/ui/src/demos/icon-tile/default';
-import { Default as InputDefault } from '@repo/ui/src/demos/input/default';
-import { Default as KbdDefault } from '@repo/ui/src/demos/kbd/default';
-import { Default as LabelDefault } from '@repo/ui/src/demos/label/default';
-import { Default as MessageDefault } from '@repo/ui/src/demos/message/default';
-import { Default as NavigationMenuDefault } from '@repo/ui/src/demos/navigation-menu/default';
-import { Default as PaginationDefault } from '@repo/ui/src/demos/pagination/default';
-import { Default as PopoverDefault } from '@repo/ui/src/demos/popover/default';
-import { Default as ProgressDefault } from '@repo/ui/src/demos/progress/default';
-import { Default as PromptInputDefault } from '@repo/ui/src/demos/prompt-input/default';
-import { Default as RadioDefault } from '@repo/ui/src/demos/radio/default';
-import { Default as RatingDefault } from '@repo/ui/src/demos/rating/default';
-import { Default as ReasoningDefault } from '@repo/ui/src/demos/reasoning/default';
-import { Default as ResizableDefault } from '@repo/ui/src/demos/resizable/default';
-import { Default as ResponseDefault } from '@repo/ui/src/demos/response/default';
-import { Default as ScrollAreaDefault } from '@repo/ui/src/demos/scroll-area/default';
-import { Default as SearchCommandDefault } from '@repo/ui/src/demos/search-command/default';
-import { Default as SectionDefault } from '@repo/ui/src/demos/section/default';
-import { Default as SelectDefault } from '@repo/ui/src/demos/select/default';
-import { Default as SeparatorDefault } from '@repo/ui/src/demos/separator/default';
-import { Default as SettingsRowDefault } from '@repo/ui/src/demos/settings-row/default';
-import { Default as SheetDefault } from '@repo/ui/src/demos/sheet/default';
-import { Default as ShimmerDefault } from '@repo/ui/src/demos/shimmer/default';
-import { Default as SkeletonDefault } from '@repo/ui/src/demos/skeleton/default';
-import { Default as SourcesDefault } from '@repo/ui/src/demos/sources/default';
-import { Default as SpacerDefault } from '@repo/ui/src/demos/spacer/default';
-import { Default as SpinnerDefault } from '@repo/ui/src/demos/spinner/default';
-import { Default as SplitDefault } from '@repo/ui/src/demos/split/default';
-import { Default as SpriteDefault } from '@repo/ui/src/demos/sprite/default';
-import { Default as StackDefault } from '@repo/ui/src/demos/stack/default';
-import { Default as SuggestionDefault } from '@repo/ui/src/demos/suggestion/default';
-import { Default as SwitchDefault } from '@repo/ui/src/demos/switch/default';
-import { Default as TableDefault } from '@repo/ui/src/demos/table/default';
-import { Default as TabsDefault } from '@repo/ui/src/demos/tabs/default';
-import { Default as TaskDefault } from '@repo/ui/src/demos/task/default';
-import { Default as TextareaDefault } from '@repo/ui/src/demos/textarea/default';
-import { Default as TimelineDefault } from '@repo/ui/src/demos/timeline/default';
-import { Default as ToastDefault } from '@repo/ui/src/demos/toast/default';
-import { Default as ToolDefault } from '@repo/ui/src/demos/tool/default';
-import { Default as TooltipDefault } from '@repo/ui/src/demos/tooltip/default';
-import { Default as TreeDefault } from '@repo/ui/src/demos/tree/default';
-import { Default as TypographyDefault } from '@repo/ui/src/demos/typography/default';
-import { Destructive as BadgeDestructive } from '@repo/ui/src/demos/badge/destructive';
-import { Destructive as ButtonDestructive } from '@repo/ui/src/demos/button/destructive';
-import { Disabled as CheckboxDisabled } from '@repo/ui/src/demos/checkbox/disabled';
-import { Disabled as InputDisabled } from '@repo/ui/src/demos/input/disabled';
-import { Disabled as RadioDisabled } from '@repo/ui/src/demos/radio/disabled';
-import { Disabled as SwitchDisabled } from '@repo/ui/src/demos/switch/disabled';
-import { Dismissible as BannerDismissible } from '@repo/ui/src/demos/banner/dismissible';
-import { Fieldset as FieldFieldset } from '@repo/ui/src/demos/field/fieldset';
-import { Fixed as SpacerFixed } from '@repo/ui/src/demos/spacer/fixed';
-import { Form as DrawerForm } from '@repo/ui/src/demos/drawer/form';
-import { Ghost as ButtonGhost } from '@repo/ui/src/demos/button/ghost';
-import { Ghost as CardGhost } from '@repo/ui/src/demos/card/ghost';
-import { Grouped as MessageGrouped } from '@repo/ui/src/demos/message/grouped';
-import { GroupedItems as SelectGroupedItems } from '@repo/ui/src/demos/select/grouped-items';
-import { Half as RatingHalf } from '@repo/ui/src/demos/rating/half';
-import { Headings as TypographyHeadings } from '@repo/ui/src/demos/typography/headings';
-import { Hook as ConfirmHook } from '@repo/ui/src/demos/confirm/hook';
-import { Horizontal as FieldHorizontal } from '@repo/ui/src/demos/field/horizontal';
-import { Horizontal as ScrollAreaHorizontal } from '@repo/ui/src/demos/scroll-area/horizontal';
-import { Horizontal as TimelineHorizontal } from '@repo/ui/src/demos/timeline/horizontal';
-import { Icons as TimelineIcons } from '@repo/ui/src/demos/timeline/icons';
-import { Icons as TreeIcons } from '@repo/ui/src/demos/tree/icons';
-import { Images as FileUploadImages } from '@repo/ui/src/demos/file-upload/images';
-import { Indeterminate as ProgressIndeterminate } from '@repo/ui/src/demos/progress/indeterminate';
-import { Info as BannerInfo } from '@repo/ui/src/demos/banner/info';
-import { Info as CalloutInfo } from '@repo/ui/src/demos/callout/info';
-import { LeadMuted as TypographyLeadMuted } from '@repo/ui/src/demos/typography/lead-muted';
-import { LeftDates as TimelineLeftDates } from '@repo/ui/src/demos/timeline/left-dates';
-import { Lines as TreeLines } from '@repo/ui/src/demos/tree/lines';
-import { Link as ButtonLink } from '@repo/ui/src/demos/button/link';
-import { LinkPreview as HoverCardLinkPreview } from '@repo/ui/src/demos/hover-card/link-preview';
-import { Links as DockLinks } from '@repo/ui/src/demos/dock/links';
-import { Live as AgentRunLive } from '@repo/ui/src/demos/agent-run/live';
-import { Multiple as AccordionMultiple } from '@repo/ui/src/demos/accordion/multiple';
-import { Multiple as FileUploadMultiple } from '@repo/ui/src/demos/file-upload/multiple';
-import { Nested as ResizableNested } from '@repo/ui/src/demos/resizable/nested';
-import { Open as SourcesOpen } from '@repo/ui/src/demos/sources/open';
-import { Outline as BadgeOutline } from '@repo/ui/src/demos/badge/outline';
-import { Outline as ButtonOutline } from '@repo/ui/src/demos/button/outline';
-import { Outline as CardOutline } from '@repo/ui/src/demos/card/outline';
-import { Outline as EmptyOutline } from '@repo/ui/src/demos/empty/outline';
-import { Parts as SpriteParts } from '@repo/ui/src/demos/sprite/parts';
-import { PlusMinus as TreePlusMinus } from '@repo/ui/src/demos/tree/plus-minus';
-import { Positions as DrawerPositions } from '@repo/ui/src/demos/drawer/positions';
-import { Positions as ToastPositions } from '@repo/ui/src/demos/toast/positions';
-import { Positions as TooltipPositions } from '@repo/ui/src/demos/tooltip/positions';
-import { RadioGroup as DropdownMenuRadioGroup } from '@repo/ui/src/demos/dropdown-menu/radio-group';
-import { Radius as IconTileRadius } from '@repo/ui/src/demos/icon-tile/radius';
-import { Ratios as AspectRatioRatios } from '@repo/ui/src/demos/aspect-ratio/ratios';
-import { Ratios as SplitRatios } from '@repo/ui/src/demos/split/ratios';
-import { ReadOnly as RatingReadOnly } from '@repo/ui/src/demos/rating/read-only';
-import { Required as LabelRequired } from '@repo/ui/src/demos/label/required';
-import { Reverse as SplitReverse } from '@repo/ui/src/demos/split/reverse';
-import { Secondary as BadgeSecondary } from '@repo/ui/src/demos/badge/secondary';
-import { Secondary as ButtonSecondary } from '@repo/ui/src/demos/button/secondary';
-import { Seeds as SpriteSeeds } from '@repo/ui/src/demos/sprite/seeds';
-import { Sides as SheetSides } from '@repo/ui/src/demos/sheet/sides';
-import { Sizes as AvatarSizes } from '@repo/ui/src/demos/avatar/sizes';
-import { Sizes as ButtonSizes } from '@repo/ui/src/demos/button/sizes';
-import { Sizes as IconTileSizes } from '@repo/ui/src/demos/icon-tile/sizes';
-import { Sizes as InputSizes } from '@repo/ui/src/demos/input/sizes';
-import { Sizes as KbdSizes } from '@repo/ui/src/demos/kbd/sizes';
-import { Sizes as RatingSizes } from '@repo/ui/src/demos/rating/sizes';
-import { Sizes as SheetSizes } from '@repo/ui/src/demos/sheet/sizes';
-import { Sizes as ShimmerSizes } from '@repo/ui/src/demos/shimmer/sizes';
-import { Sizes as SpinnerSizes } from '@repo/ui/src/demos/spinner/sizes';
-import { Stacked as FrameStacked } from '@repo/ui/src/demos/frame/stacked';
-import { States as SpriteStates } from '@repo/ui/src/demos/sprite/states';
-import { Statuses as PromptInputStatuses } from '@repo/ui/src/demos/prompt-input/statuses';
-import { Statuses as TaskStatuses } from '@repo/ui/src/demos/task/statuses';
-import { Statuses as ToolStatuses } from '@repo/ui/src/demos/tool/statuses';
-import { Streaming as ChatStreaming } from '@repo/ui/src/demos/chat/streaming';
-import { Streaming as ComposerStreaming } from '@repo/ui/src/demos/composer/streaming';
-import { Streaming as ConversationStreaming } from '@repo/ui/src/demos/conversation/streaming';
-import { Streaming as ReasoningStreaming } from '@repo/ui/src/demos/reasoning/streaming';
-import { Streaming as ResponseStreaming } from '@repo/ui/src/demos/response/streaming';
-import { Striped as TableStriped } from '@repo/ui/src/demos/table/striped';
-import { Success as BannerSuccess } from '@repo/ui/src/demos/banner/success';
-import { Success as CalloutSuccess } from '@repo/ui/src/demos/callout/success';
-import { Text as IconTileText } from '@repo/ui/src/demos/icon-tile/text';
-import { Tones as IconTileTones } from '@repo/ui/src/demos/icon-tile/tones';
-import { Uploading as AttachmentUploading } from '@repo/ui/src/demos/attachment/uploading';
-import { UploadProgress as FileUploadUploadProgress } from '@repo/ui/src/demos/file-upload/upload-progress';
-import { Variants as AttachmentsVariants } from '@repo/ui/src/demos/attachments/variants';
-import { Variants as BannerVariants } from '@repo/ui/src/demos/banner/variants';
-import { Variants as BubbleVariants } from '@repo/ui/src/demos/bubble/variants';
-import { Variants as ButtonVariants } from '@repo/ui/src/demos/button/variants';
-import { Variants as CalloutVariants } from '@repo/ui/src/demos/callout/variants';
-import { Variants as IconTileVariants } from '@repo/ui/src/demos/icon-tile/variants';
-import { Variants as KbdVariants } from '@repo/ui/src/demos/kbd/variants';
-import { Variants as SpinnerVariants } from '@repo/ui/src/demos/spinner/variants';
-import { Variants as SuggestionVariants } from '@repo/ui/src/demos/suggestion/variants';
-import { Variants as ToastVariants } from '@repo/ui/src/demos/toast/variants';
-import { Vertical as ResizableVertical } from '@repo/ui/src/demos/resizable/vertical';
-import { Vertical as TabsVertical } from '@repo/ui/src/demos/tabs/vertical';
-import { Warning as BannerWarning } from '@repo/ui/src/demos/banner/warning';
-import { Warning as CalloutWarning } from '@repo/ui/src/demos/callout/warning';
-import { WithAction as ToastWithAction } from '@repo/ui/src/demos/toast/with-action';
-import { WithActions as TableWithActions } from '@repo/ui/src/demos/table/with-actions';
-import { WithCount as TextareaWithCount } from '@repo/ui/src/demos/textarea/with-count';
-import { WithError as FieldWithError } from '@repo/ui/src/demos/field/with-error';
-import { WithError as InputWithError } from '@repo/ui/src/demos/input/with-error';
-import { WithError as TextareaWithError } from '@repo/ui/src/demos/textarea/with-error';
-import { WithFallback as AvatarWithFallback } from '@repo/ui/src/demos/avatar/with-fallback';
-import { WithGroup as KbdWithGroup } from '@repo/ui/src/demos/kbd/with-group';
-import { WithIcon as BadgeWithIcon } from '@repo/ui/src/demos/badge/with-icon';
-import { WithIcon as InputWithIcon } from '@repo/ui/src/demos/input/with-icon';
-import { WithLabel as CheckboxWithLabel } from '@repo/ui/src/demos/checkbox/with-label';
-import { WithLabel as InputWithLabel } from '@repo/ui/src/demos/input/with-label';
-import { WithLabel as RadioWithLabel } from '@repo/ui/src/demos/radio/with-label';
-import { WithLabel as SeparatorWithLabel } from '@repo/ui/src/demos/separator/with-label';
-import { WithLabel as SwitchWithLabel } from '@repo/ui/src/demos/switch/with-label';
-import { WithLabel as TextareaWithLabel } from '@repo/ui/src/demos/textarea/with-label';
-import { WithMessage as ActionsWithMessage } from '@repo/ui/src/demos/actions/with-message';
-import { WithText as ConfirmWithText } from '@repo/ui/src/demos/confirm/with-text';
-import { WithValue as ProgressWithValue } from '@repo/ui/src/demos/progress/with-value';
+export type DemoLoader = () => Promise<React.ComponentType>;
 
-export const DEMO_COMPONENTS: Record<string, Record<string, React.ComponentType>> = {
+export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
   accordion: {
-    collapsed: AccordionCollapsed,
-    default: AccordionDefault,
-    multiple: AccordionMultiple,
+    collapsed: () => import('@repo/ui/src/demos/accordion/collapsed').then((m) => m.Collapsed),
+    default: () => import('@repo/ui/src/demos/accordion/default').then((m) => m.Default),
+    multiple: () => import('@repo/ui/src/demos/accordion/multiple').then((m) => m.Multiple),
   },
   actions: {
-    default: ActionsDefault,
-    'with-message': ActionsWithMessage,
+    default: () => import('@repo/ui/src/demos/actions/default').then((m) => m.Default),
+    'with-message': () => import('@repo/ui/src/demos/actions/with-message').then((m) => m.WithMessage),
   },
   'agent-run': {
-    default: AgentRunDefault,
-    live: AgentRunLive,
+    default: () => import('@repo/ui/src/demos/agent-run/default').then((m) => m.Default),
+    live: () => import('@repo/ui/src/demos/agent-run/live').then((m) => m.Live),
   },
   'aspect-ratio': {
-    default: AspectRatioDefault,
-    ratios: AspectRatioRatios,
+    default: () => import('@repo/ui/src/demos/aspect-ratio/default').then((m) => m.Default),
+    ratios: () => import('@repo/ui/src/demos/aspect-ratio/ratios').then((m) => m.Ratios),
   },
   attachment: {
-    cards: AttachmentCards,
-    chips: AttachmentChips,
-    default: AttachmentDefault,
-    uploading: AttachmentUploading,
+    cards: () => import('@repo/ui/src/demos/attachment/cards').then((m) => m.Cards),
+    chips: () => import('@repo/ui/src/demos/attachment/chips').then((m) => m.Chips),
+    default: () => import('@repo/ui/src/demos/attachment/default').then((m) => m.Default),
+    uploading: () => import('@repo/ui/src/demos/attachment/uploading').then((m) => m.Uploading),
   },
   attachments: {
-    default: AttachmentsDefault,
-    variants: AttachmentsVariants,
+    default: () => import('@repo/ui/src/demos/attachments/default').then((m) => m.Default),
+    variants: () => import('@repo/ui/src/demos/attachments/variants').then((m) => m.Variants),
   },
   avatar: {
-    'avatar-group': AvatarGroupDemo,
-    default: AvatarDefault,
-    sizes: AvatarSizes,
-    'with-fallback': AvatarWithFallback,
+    'avatar-group': () => import('@repo/ui/src/demos/avatar/avatar-group').then((m) => m.AvatarGroup),
+    default: () => import('@repo/ui/src/demos/avatar/default').then((m) => m.Default),
+    sizes: () => import('@repo/ui/src/demos/avatar/sizes').then((m) => m.Sizes),
+    'with-fallback': () => import('@repo/ui/src/demos/avatar/with-fallback').then((m) => m.WithFallback),
   },
   badge: {
-    default: BadgeDefault,
-    destructive: BadgeDestructive,
-    outline: BadgeOutline,
-    secondary: BadgeSecondary,
-    'with-icon': BadgeWithIcon,
+    default: () => import('@repo/ui/src/demos/badge/default').then((m) => m.Default),
+    destructive: () => import('@repo/ui/src/demos/badge/destructive').then((m) => m.Destructive),
+    outline: () => import('@repo/ui/src/demos/badge/outline').then((m) => m.Outline),
+    secondary: () => import('@repo/ui/src/demos/badge/secondary').then((m) => m.Secondary),
+    'with-icon': () => import('@repo/ui/src/demos/badge/with-icon').then((m) => m.WithIcon),
   },
   banner: {
-    danger: BannerDanger,
-    default: BannerDefault,
-    dismissible: BannerDismissible,
-    info: BannerInfo,
-    success: BannerSuccess,
-    variants: BannerVariants,
-    warning: BannerWarning,
+    danger: () => import('@repo/ui/src/demos/banner/danger').then((m) => m.Danger),
+    default: () => import('@repo/ui/src/demos/banner/default').then((m) => m.Default),
+    dismissible: () => import('@repo/ui/src/demos/banner/dismissible').then((m) => m.Dismissible),
+    info: () => import('@repo/ui/src/demos/banner/info').then((m) => m.Info),
+    success: () => import('@repo/ui/src/demos/banner/success').then((m) => m.Success),
+    variants: () => import('@repo/ui/src/demos/banner/variants').then((m) => m.Variants),
+    warning: () => import('@repo/ui/src/demos/banner/warning').then((m) => m.Warning),
   },
   breadcrumb: {
-    collapsed: BreadcrumbCollapsed,
-    'custom-separator': BreadcrumbCustomSeparator,
-    default: BreadcrumbDefault,
+    collapsed: () => import('@repo/ui/src/demos/breadcrumb/collapsed').then((m) => m.Collapsed),
+    'custom-separator': () => import('@repo/ui/src/demos/breadcrumb/custom-separator').then((m) => m.CustomSeparator),
+    default: () => import('@repo/ui/src/demos/breadcrumb/default').then((m) => m.Default),
   },
   bubble: {
-    default: BubbleDefault,
-    variants: BubbleVariants,
+    default: () => import('@repo/ui/src/demos/bubble/default').then((m) => m.Default),
+    variants: () => import('@repo/ui/src/demos/bubble/variants').then((m) => m.Variants),
   },
   button: {
-    default: ButtonDefault,
-    destructive: ButtonDestructive,
-    ghost: ButtonGhost,
-    link: ButtonLink,
-    outline: ButtonOutline,
-    secondary: ButtonSecondary,
-    sizes: ButtonSizes,
-    variants: ButtonVariants,
+    default: () => import('@repo/ui/src/demos/button/default').then((m) => m.Default),
+    destructive: () => import('@repo/ui/src/demos/button/destructive').then((m) => m.Destructive),
+    ghost: () => import('@repo/ui/src/demos/button/ghost').then((m) => m.Ghost),
+    link: () => import('@repo/ui/src/demos/button/link').then((m) => m.Link),
+    outline: () => import('@repo/ui/src/demos/button/outline').then((m) => m.Outline),
+    secondary: () => import('@repo/ui/src/demos/button/secondary').then((m) => m.Secondary),
+    sizes: () => import('@repo/ui/src/demos/button/sizes').then((m) => m.Sizes),
+    variants: () => import('@repo/ui/src/demos/button/variants').then((m) => m.Variants),
   },
   callout: {
-    danger: CalloutDanger,
-    default: CalloutDefault,
-    info: CalloutInfo,
-    success: CalloutSuccess,
-    variants: CalloutVariants,
-    warning: CalloutWarning,
+    danger: () => import('@repo/ui/src/demos/callout/danger').then((m) => m.Danger),
+    default: () => import('@repo/ui/src/demos/callout/default').then((m) => m.Default),
+    info: () => import('@repo/ui/src/demos/callout/info').then((m) => m.Info),
+    success: () => import('@repo/ui/src/demos/callout/success').then((m) => m.Success),
+    variants: () => import('@repo/ui/src/demos/callout/variants').then((m) => m.Variants),
+    warning: () => import('@repo/ui/src/demos/callout/warning').then((m) => m.Warning),
   },
   card: {
-    compact: CardCompact,
-    default: CardDefault,
-    ghost: CardGhost,
-    outline: CardOutline,
+    compact: () => import('@repo/ui/src/demos/card/compact').then((m) => m.Compact),
+    default: () => import('@repo/ui/src/demos/card/default').then((m) => m.Default),
+    ghost: () => import('@repo/ui/src/demos/card/ghost').then((m) => m.Ghost),
+    outline: () => import('@repo/ui/src/demos/card/outline').then((m) => m.Outline),
   },
   center: {
-    axis: CenterAxis,
-    default: CenterDefault,
+    axis: () => import('@repo/ui/src/demos/center/axis').then((m) => m.Axis),
+    default: () => import('@repo/ui/src/demos/center/default').then((m) => m.Default),
   },
   'chain-of-thought': {
-    default: ChainOfThoughtDefault,
+    default: () => import('@repo/ui/src/demos/chain-of-thought/default').then((m) => m.Default),
   },
   chat: {
-    default: ChatDefault,
-    streaming: ChatStreaming,
+    default: () => import('@repo/ui/src/demos/chat/default').then((m) => m.Default),
+    streaming: () => import('@repo/ui/src/demos/chat/streaming').then((m) => m.Streaming),
   },
   checkbox: {
-    default: CheckboxDefault,
-    disabled: CheckboxDisabled,
-    'with-label': CheckboxWithLabel,
+    default: () => import('@repo/ui/src/demos/checkbox/default').then((m) => m.Default),
+    disabled: () => import('@repo/ui/src/demos/checkbox/disabled').then((m) => m.Disabled),
+    'with-label': () => import('@repo/ui/src/demos/checkbox/with-label').then((m) => m.WithLabel),
   },
   'code-block': {
-    collapsible: CodeBlockCollapsible,
-    default: CodeBlockDefault,
+    collapsible: () => import('@repo/ui/src/demos/code-block/collapsible').then((m) => m.Collapsible),
+    default: () => import('@repo/ui/src/demos/code-block/default').then((m) => m.Default),
   },
   collapsible: {
-    bordered: CollapsibleBordered,
-    card: CollapsibleCard,
-    default: CollapsibleDefault,
+    bordered: () => import('@repo/ui/src/demos/collapsible/bordered').then((m) => m.Bordered),
+    card: () => import('@repo/ui/src/demos/collapsible/card').then((m) => m.Card),
+    default: () => import('@repo/ui/src/demos/collapsible/default').then((m) => m.Default),
   },
   command: {
-    default: CommandDefault,
+    default: () => import('@repo/ui/src/demos/command/default').then((m) => m.Default),
   },
   composer: {
-    default: ComposerDefault,
-    streaming: ComposerStreaming,
+    default: () => import('@repo/ui/src/demos/composer/default').then((m) => m.Default),
+    streaming: () => import('@repo/ui/src/demos/composer/streaming').then((m) => m.Streaming),
   },
   confirm: {
-    default: ConfirmDefault,
-    hook: ConfirmHook,
-    'with-text': ConfirmWithText,
+    default: () => import('@repo/ui/src/demos/confirm/default').then((m) => m.Default),
+    hook: () => import('@repo/ui/src/demos/confirm/hook').then((m) => m.Hook),
+    'with-text': () => import('@repo/ui/src/demos/confirm/with-text').then((m) => m.WithText),
   },
   container: {
-    default: ContainerDefault,
+    default: () => import('@repo/ui/src/demos/container/default').then((m) => m.Default),
   },
   context: {
-    default: ContextDefault,
+    default: () => import('@repo/ui/src/demos/context/default').then((m) => m.Default),
   },
   'context-menu': {
-    default: ContextMenuDefault,
+    default: () => import('@repo/ui/src/demos/context-menu/default').then((m) => m.Default),
   },
   conversation: {
-    default: ConversationDefault,
-    streaming: ConversationStreaming,
+    default: () => import('@repo/ui/src/demos/conversation/default').then((m) => m.Default),
+    streaming: () => import('@repo/ui/src/demos/conversation/streaming').then((m) => m.Streaming),
   },
   'data-table': {
-    compact: DataTableCompact,
-    default: DataTableDefault,
+    compact: () => import('@repo/ui/src/demos/data-table/compact').then((m) => m.Compact),
+    default: () => import('@repo/ui/src/demos/data-table/default').then((m) => m.Default),
   },
   dialog: {
-    alert: DialogAlert,
-    default: DialogDefault,
+    alert: () => import('@repo/ui/src/demos/dialog/alert').then((m) => m.Alert),
+    default: () => import('@repo/ui/src/demos/dialog/default').then((m) => m.Default),
   },
   dock: {
-    default: DockDefault,
-    links: DockLinks,
+    default: () => import('@repo/ui/src/demos/dock/default').then((m) => m.Default),
+    links: () => import('@repo/ui/src/demos/dock/links').then((m) => m.Links),
   },
   drawer: {
-    default: DrawerDefault,
-    form: DrawerForm,
-    positions: DrawerPositions,
+    default: () => import('@repo/ui/src/demos/drawer/default').then((m) => m.Default),
+    form: () => import('@repo/ui/src/demos/drawer/form').then((m) => m.Form),
+    positions: () => import('@repo/ui/src/demos/drawer/positions').then((m) => m.Positions),
   },
   'dropdown-menu': {
-    checkboxes: DropdownMenuCheckboxes,
-    default: DropdownMenuDefault,
-    'radio-group': DropdownMenuRadioGroup,
+    checkboxes: () => import('@repo/ui/src/demos/dropdown-menu/checkboxes').then((m) => m.Checkboxes),
+    default: () => import('@repo/ui/src/demos/dropdown-menu/default').then((m) => m.Default),
+    'radio-group': () => import('@repo/ui/src/demos/dropdown-menu/radio-group').then((m) => m.RadioGroup),
   },
   empty: {
-    default: EmptyDefault,
-    outline: EmptyOutline,
+    default: () => import('@repo/ui/src/demos/empty/default').then((m) => m.Default),
+    outline: () => import('@repo/ui/src/demos/empty/outline').then((m) => m.Outline),
   },
   field: {
-    default: FieldDefault,
-    fieldset: FieldFieldset,
-    horizontal: FieldHorizontal,
-    'with-error': FieldWithError,
+    default: () => import('@repo/ui/src/demos/field/default').then((m) => m.Default),
+    fieldset: () => import('@repo/ui/src/demos/field/fieldset').then((m) => m.Fieldset),
+    horizontal: () => import('@repo/ui/src/demos/field/horizontal').then((m) => m.Horizontal),
+    'with-error': () => import('@repo/ui/src/demos/field/with-error').then((m) => m.WithError),
   },
   'file-upload': {
-    avatar: FileUploadAvatar,
-    compact: FileUploadCompact,
-    default: FileUploadDefault,
-    images: FileUploadImages,
-    multiple: FileUploadMultiple,
-    'upload-progress': FileUploadUploadProgress,
+    avatar: () => import('@repo/ui/src/demos/file-upload/avatar').then((m) => m.Avatar),
+    compact: () => import('@repo/ui/src/demos/file-upload/compact').then((m) => m.Compact),
+    default: () => import('@repo/ui/src/demos/file-upload/default').then((m) => m.Default),
+    images: () => import('@repo/ui/src/demos/file-upload/images').then((m) => m.Images),
+    multiple: () => import('@repo/ui/src/demos/file-upload/multiple').then((m) => m.Multiple),
+    'upload-progress': () => import('@repo/ui/src/demos/file-upload/upload-progress').then((m) => m.UploadProgress),
   },
   flex: {
-    default: FlexDefault,
+    default: () => import('@repo/ui/src/demos/flex/default').then((m) => m.Default),
   },
   frame: {
-    default: FrameDefault,
-    stacked: FrameStacked,
+    default: () => import('@repo/ui/src/demos/frame/default').then((m) => m.Default),
+    stacked: () => import('@repo/ui/src/demos/frame/stacked').then((m) => m.Stacked),
   },
   grid: {
-    default: GridDefault,
+    default: () => import('@repo/ui/src/demos/grid/default').then((m) => m.Default),
   },
   'hover-card': {
-    default: HoverCardDefault,
-    'link-preview': HoverCardLinkPreview,
+    default: () => import('@repo/ui/src/demos/hover-card/default').then((m) => m.Default),
+    'link-preview': () => import('@repo/ui/src/demos/hover-card/link-preview').then((m) => m.LinkPreview),
   },
   'icon-tile': {
-    default: IconTileDefault,
-    radius: IconTileRadius,
-    sizes: IconTileSizes,
-    text: IconTileText,
-    tones: IconTileTones,
-    variants: IconTileVariants,
+    default: () => import('@repo/ui/src/demos/icon-tile/default').then((m) => m.Default),
+    radius: () => import('@repo/ui/src/demos/icon-tile/radius').then((m) => m.Radius),
+    sizes: () => import('@repo/ui/src/demos/icon-tile/sizes').then((m) => m.Sizes),
+    text: () => import('@repo/ui/src/demos/icon-tile/text').then((m) => m.Text),
+    tones: () => import('@repo/ui/src/demos/icon-tile/tones').then((m) => m.Tones),
+    variants: () => import('@repo/ui/src/demos/icon-tile/variants').then((m) => m.Variants),
   },
   input: {
-    default: InputDefault,
-    disabled: InputDisabled,
-    sizes: InputSizes,
-    'with-error': InputWithError,
-    'with-icon': InputWithIcon,
-    'with-label': InputWithLabel,
+    default: () => import('@repo/ui/src/demos/input/default').then((m) => m.Default),
+    disabled: () => import('@repo/ui/src/demos/input/disabled').then((m) => m.Disabled),
+    sizes: () => import('@repo/ui/src/demos/input/sizes').then((m) => m.Sizes),
+    'with-error': () => import('@repo/ui/src/demos/input/with-error').then((m) => m.WithError),
+    'with-icon': () => import('@repo/ui/src/demos/input/with-icon').then((m) => m.WithIcon),
+    'with-label': () => import('@repo/ui/src/demos/input/with-label').then((m) => m.WithLabel),
   },
   kbd: {
-    default: KbdDefault,
-    sizes: KbdSizes,
-    variants: KbdVariants,
-    'with-group': KbdWithGroup,
+    default: () => import('@repo/ui/src/demos/kbd/default').then((m) => m.Default),
+    sizes: () => import('@repo/ui/src/demos/kbd/sizes').then((m) => m.Sizes),
+    variants: () => import('@repo/ui/src/demos/kbd/variants').then((m) => m.Variants),
+    'with-group': () => import('@repo/ui/src/demos/kbd/with-group').then((m) => m.WithGroup),
   },
   label: {
-    default: LabelDefault,
-    required: LabelRequired,
+    default: () => import('@repo/ui/src/demos/label/default').then((m) => m.Default),
+    required: () => import('@repo/ui/src/demos/label/required').then((m) => m.Required),
   },
   message: {
-    default: MessageDefault,
-    grouped: MessageGrouped,
+    default: () => import('@repo/ui/src/demos/message/default').then((m) => m.Default),
+    grouped: () => import('@repo/ui/src/demos/message/grouped').then((m) => m.Grouped),
   },
   'navigation-menu': {
-    badges: NavigationMenuBadges,
-    default: NavigationMenuDefault,
+    badges: () => import('@repo/ui/src/demos/navigation-menu/badges').then((m) => m.Badges),
+    default: () => import('@repo/ui/src/demos/navigation-menu/default').then((m) => m.Default),
   },
   pagination: {
-    compact: PaginationCompact,
-    default: PaginationDefault,
+    compact: () => import('@repo/ui/src/demos/pagination/compact').then((m) => m.Compact),
+    default: () => import('@repo/ui/src/demos/pagination/default').then((m) => m.Default),
   },
   popover: {
-    default: PopoverDefault,
+    default: () => import('@repo/ui/src/demos/popover/default').then((m) => m.Default),
   },
   progress: {
-    default: ProgressDefault,
-    indeterminate: ProgressIndeterminate,
-    'with-value': ProgressWithValue,
+    default: () => import('@repo/ui/src/demos/progress/default').then((m) => m.Default),
+    indeterminate: () => import('@repo/ui/src/demos/progress/indeterminate').then((m) => m.Indeterminate),
+    'with-value': () => import('@repo/ui/src/demos/progress/with-value').then((m) => m.WithValue),
   },
   'prompt-input': {
-    attachments: PromptInputAttachments,
-    default: PromptInputDefault,
-    statuses: PromptInputStatuses,
+    attachments: () => import('@repo/ui/src/demos/prompt-input/attachments').then((m) => m.Attachments),
+    default: () => import('@repo/ui/src/demos/prompt-input/default').then((m) => m.Default),
+    statuses: () => import('@repo/ui/src/demos/prompt-input/statuses').then((m) => m.Statuses),
   },
   radio: {
-    default: RadioDefault,
-    disabled: RadioDisabled,
-    'with-label': RadioWithLabel,
+    default: () => import('@repo/ui/src/demos/radio/default').then((m) => m.Default),
+    disabled: () => import('@repo/ui/src/demos/radio/disabled').then((m) => m.Disabled),
+    'with-label': () => import('@repo/ui/src/demos/radio/with-label').then((m) => m.WithLabel),
   },
   rating: {
-    'custom-icon': RatingCustomIcon,
-    default: RatingDefault,
-    half: RatingHalf,
-    'read-only': RatingReadOnly,
-    sizes: RatingSizes,
+    'custom-icon': () => import('@repo/ui/src/demos/rating/custom-icon').then((m) => m.CustomIcon),
+    default: () => import('@repo/ui/src/demos/rating/default').then((m) => m.Default),
+    half: () => import('@repo/ui/src/demos/rating/half').then((m) => m.Half),
+    'read-only': () => import('@repo/ui/src/demos/rating/read-only').then((m) => m.ReadOnly),
+    sizes: () => import('@repo/ui/src/demos/rating/sizes').then((m) => m.Sizes),
   },
   reasoning: {
-    default: ReasoningDefault,
-    streaming: ReasoningStreaming,
+    default: () => import('@repo/ui/src/demos/reasoning/default').then((m) => m.Default),
+    streaming: () => import('@repo/ui/src/demos/reasoning/streaming').then((m) => m.Streaming),
   },
   resizable: {
-    default: ResizableDefault,
-    nested: ResizableNested,
-    vertical: ResizableVertical,
+    default: () => import('@repo/ui/src/demos/resizable/default').then((m) => m.Default),
+    nested: () => import('@repo/ui/src/demos/resizable/nested').then((m) => m.Nested),
+    vertical: () => import('@repo/ui/src/demos/resizable/vertical').then((m) => m.Vertical),
   },
   response: {
-    default: ResponseDefault,
-    streaming: ResponseStreaming,
+    default: () => import('@repo/ui/src/demos/response/default').then((m) => m.Default),
+    streaming: () => import('@repo/ui/src/demos/response/streaming').then((m) => m.Streaming),
   },
   'scroll-area': {
-    both: ScrollAreaBoth,
-    default: ScrollAreaDefault,
-    horizontal: ScrollAreaHorizontal,
+    both: () => import('@repo/ui/src/demos/scroll-area/both').then((m) => m.Both),
+    default: () => import('@repo/ui/src/demos/scroll-area/default').then((m) => m.Default),
+    horizontal: () => import('@repo/ui/src/demos/scroll-area/horizontal').then((m) => m.Horizontal),
   },
   'search-command': {
-    controlled: SearchCommandControlled,
-    default: SearchCommandDefault,
+    controlled: () => import('@repo/ui/src/demos/search-command/controlled').then((m) => m.Controlled),
+    default: () => import('@repo/ui/src/demos/search-command/default').then((m) => m.Default),
   },
   section: {
-    backgrounds: SectionBackgrounds,
-    centered: SectionCentered,
-    default: SectionDefault,
+    backgrounds: () => import('@repo/ui/src/demos/section/backgrounds').then((m) => m.Backgrounds),
+    centered: () => import('@repo/ui/src/demos/section/centered').then((m) => m.Centered),
+    default: () => import('@repo/ui/src/demos/section/default').then((m) => m.Default),
   },
   select: {
-    default: SelectDefault,
-    'grouped-items': SelectGroupedItems,
+    default: () => import('@repo/ui/src/demos/select/default').then((m) => m.Default),
+    'grouped-items': () => import('@repo/ui/src/demos/select/grouped-items').then((m) => m.GroupedItems),
   },
   separator: {
-    default: SeparatorDefault,
-    'with-label': SeparatorWithLabel,
+    default: () => import('@repo/ui/src/demos/separator/default').then((m) => m.Default),
+    'with-label': () => import('@repo/ui/src/demos/separator/with-label').then((m) => m.WithLabel),
   },
   'settings-row': {
-    danger: SettingsRowDanger,
-    default: SettingsRowDefault,
+    danger: () => import('@repo/ui/src/demos/settings-row/danger').then((m) => m.Danger),
+    default: () => import('@repo/ui/src/demos/settings-row/default').then((m) => m.Default),
   },
   sheet: {
-    default: SheetDefault,
-    sides: SheetSides,
-    sizes: SheetSizes,
+    default: () => import('@repo/ui/src/demos/sheet/default').then((m) => m.Default),
+    sides: () => import('@repo/ui/src/demos/sheet/sides').then((m) => m.Sides),
+    sizes: () => import('@repo/ui/src/demos/sheet/sizes').then((m) => m.Sizes),
   },
   shimmer: {
-    default: ShimmerDefault,
-    sizes: ShimmerSizes,
+    default: () => import('@repo/ui/src/demos/shimmer/default').then((m) => m.Default),
+    sizes: () => import('@repo/ui/src/demos/shimmer/sizes').then((m) => m.Sizes),
   },
   skeleton: {
-    card: SkeletonCard,
-    default: SkeletonDefault,
+    card: () => import('@repo/ui/src/demos/skeleton/card').then((m) => m.Card),
+    default: () => import('@repo/ui/src/demos/skeleton/default').then((m) => m.Default),
   },
   sources: {
-    default: SourcesDefault,
-    open: SourcesOpen,
+    default: () => import('@repo/ui/src/demos/sources/default').then((m) => m.Default),
+    open: () => import('@repo/ui/src/demos/sources/open').then((m) => m.Open),
   },
   spacer: {
-    default: SpacerDefault,
-    fixed: SpacerFixed,
+    default: () => import('@repo/ui/src/demos/spacer/default').then((m) => m.Default),
+    fixed: () => import('@repo/ui/src/demos/spacer/fixed').then((m) => m.Fixed),
   },
   spinner: {
-    default: SpinnerDefault,
-    sizes: SpinnerSizes,
-    variants: SpinnerVariants,
+    default: () => import('@repo/ui/src/demos/spinner/default').then((m) => m.Default),
+    sizes: () => import('@repo/ui/src/demos/spinner/sizes').then((m) => m.Sizes),
+    variants: () => import('@repo/ui/src/demos/spinner/variants').then((m) => m.Variants),
   },
   split: {
-    default: SplitDefault,
-    ratios: SplitRatios,
-    reverse: SplitReverse,
+    default: () => import('@repo/ui/src/demos/split/default').then((m) => m.Default),
+    ratios: () => import('@repo/ui/src/demos/split/ratios').then((m) => m.Ratios),
+    reverse: () => import('@repo/ui/src/demos/split/reverse').then((m) => m.Reverse),
   },
   sprite: {
-    default: SpriteDefault,
-    parts: SpriteParts,
-    seeds: SpriteSeeds,
-    states: SpriteStates,
+    default: () => import('@repo/ui/src/demos/sprite/default').then((m) => m.Default),
+    parts: () => import('@repo/ui/src/demos/sprite/parts').then((m) => m.Parts),
+    seeds: () => import('@repo/ui/src/demos/sprite/seeds').then((m) => m.Seeds),
+    states: () => import('@repo/ui/src/demos/sprite/states').then((m) => m.States),
   },
   stack: {
-    default: StackDefault,
+    default: () => import('@repo/ui/src/demos/stack/default').then((m) => m.Default),
   },
   suggestion: {
-    default: SuggestionDefault,
-    variants: SuggestionVariants,
+    default: () => import('@repo/ui/src/demos/suggestion/default').then((m) => m.Default),
+    variants: () => import('@repo/ui/src/demos/suggestion/variants').then((m) => m.Variants),
   },
   switch: {
-    default: SwitchDefault,
-    disabled: SwitchDisabled,
-    'with-label': SwitchWithLabel,
+    default: () => import('@repo/ui/src/demos/switch/default').then((m) => m.Default),
+    disabled: () => import('@repo/ui/src/demos/switch/disabled').then((m) => m.Disabled),
+    'with-label': () => import('@repo/ui/src/demos/switch/with-label').then((m) => m.WithLabel),
   },
   table: {
-    compact: TableCompact,
-    default: TableDefault,
-    striped: TableStriped,
-    'with-actions': TableWithActions,
+    compact: () => import('@repo/ui/src/demos/table/compact').then((m) => m.Compact),
+    default: () => import('@repo/ui/src/demos/table/default').then((m) => m.Default),
+    striped: () => import('@repo/ui/src/demos/table/striped').then((m) => m.Striped),
+    'with-actions': () => import('@repo/ui/src/demos/table/with-actions').then((m) => m.WithActions),
   },
   tabs: {
-    default: TabsDefault,
-    vertical: TabsVertical,
+    default: () => import('@repo/ui/src/demos/tabs/default').then((m) => m.Default),
+    vertical: () => import('@repo/ui/src/demos/tabs/vertical').then((m) => m.Vertical),
   },
   task: {
-    default: TaskDefault,
-    statuses: TaskStatuses,
+    default: () => import('@repo/ui/src/demos/task/default').then((m) => m.Default),
+    statuses: () => import('@repo/ui/src/demos/task/statuses').then((m) => m.Statuses),
   },
   textarea: {
-    'auto-resize': TextareaAutoResize,
-    default: TextareaDefault,
-    'with-count': TextareaWithCount,
-    'with-error': TextareaWithError,
-    'with-label': TextareaWithLabel,
+    'auto-resize': () => import('@repo/ui/src/demos/textarea/auto-resize').then((m) => m.AutoResize),
+    default: () => import('@repo/ui/src/demos/textarea/default').then((m) => m.Default),
+    'with-count': () => import('@repo/ui/src/demos/textarea/with-count').then((m) => m.WithCount),
+    'with-error': () => import('@repo/ui/src/demos/textarea/with-error').then((m) => m.WithError),
+    'with-label': () => import('@repo/ui/src/demos/textarea/with-label').then((m) => m.WithLabel),
   },
   timeline: {
-    alternate: TimelineAlternate,
-    default: TimelineDefault,
-    horizontal: TimelineHorizontal,
-    icons: TimelineIcons,
-    'left-dates': TimelineLeftDates,
+    alternate: () => import('@repo/ui/src/demos/timeline/alternate').then((m) => m.Alternate),
+    default: () => import('@repo/ui/src/demos/timeline/default').then((m) => m.Default),
+    horizontal: () => import('@repo/ui/src/demos/timeline/horizontal').then((m) => m.Horizontal),
+    icons: () => import('@repo/ui/src/demos/timeline/icons').then((m) => m.Icons),
+    'left-dates': () => import('@repo/ui/src/demos/timeline/left-dates').then((m) => m.LeftDates),
   },
   toast: {
-    default: ToastDefault,
-    positions: ToastPositions,
-    variants: ToastVariants,
-    'with-action': ToastWithAction,
+    default: () => import('@repo/ui/src/demos/toast/default').then((m) => m.Default),
+    positions: () => import('@repo/ui/src/demos/toast/positions').then((m) => m.Positions),
+    variants: () => import('@repo/ui/src/demos/toast/variants').then((m) => m.Variants),
+    'with-action': () => import('@repo/ui/src/demos/toast/with-action').then((m) => m.WithAction),
   },
   tool: {
-    default: ToolDefault,
-    statuses: ToolStatuses,
+    default: () => import('@repo/ui/src/demos/tool/default').then((m) => m.Default),
+    statuses: () => import('@repo/ui/src/demos/tool/statuses').then((m) => m.Statuses),
   },
   tooltip: {
-    default: TooltipDefault,
-    positions: TooltipPositions,
+    default: () => import('@repo/ui/src/demos/tooltip/default').then((m) => m.Default),
+    positions: () => import('@repo/ui/src/demos/tooltip/positions').then((m) => m.Positions),
   },
   tree: {
-    default: TreeDefault,
-    icons: TreeIcons,
-    lines: TreeLines,
-    'plus-minus': TreePlusMinus,
+    default: () => import('@repo/ui/src/demos/tree/default').then((m) => m.Default),
+    icons: () => import('@repo/ui/src/demos/tree/icons').then((m) => m.Icons),
+    lines: () => import('@repo/ui/src/demos/tree/lines').then((m) => m.Lines),
+    'plus-minus': () => import('@repo/ui/src/demos/tree/plus-minus').then((m) => m.PlusMinus),
   },
   typography: {
-    'custom-tag': TypographyCustomTag,
-    default: TypographyDefault,
-    headings: TypographyHeadings,
-    'lead-muted': TypographyLeadMuted,
+    'custom-tag': () => import('@repo/ui/src/demos/typography/custom-tag').then((m) => m.CustomTag),
+    default: () => import('@repo/ui/src/demos/typography/default').then((m) => m.Default),
+    headings: () => import('@repo/ui/src/demos/typography/headings').then((m) => m.Headings),
+    'lead-muted': () => import('@repo/ui/src/demos/typography/lead-muted').then((m) => m.LeadMuted),
   },
 };

@@ -1,8 +1,5 @@
-'use client';
-
 // Components
 import { Callout } from '@repo/ui/components/callout';
-import { CodeBlockWrapper } from './code-block-wrapper';
 import { CodeBlock } from './codeblock';
 
 interface ComponentSourceClientProps {
@@ -19,9 +16,7 @@ export function ComponentSourceClient({
   return (
     <div className={className}>
       {code ? (
-        <CodeBlockWrapper>
-          <CodeBlock code={code} language="tsx" />
-        </CodeBlockWrapper>
+        <CodeBlock code={code} language="tsx" collapsible />
       ) : (
         <Callout variant="danger">
           <Callout.Title>Unable to read the file</Callout.Title>

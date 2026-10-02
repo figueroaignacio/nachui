@@ -1,41 +1,84 @@
-'use client';
-
 import { fontCode } from '@/lib/font';
-import { Button } from '@repo/ui/components/button';
 import { Frame } from '@repo/ui/components/frame';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
-import { Highlight, type PrismTheme } from 'prism-react-renderer';
-import { useState } from 'react';
+import { normalizeTokens, Prism } from 'prism-react-renderer';
+import { CodeBlockCollapse } from './code-block-collapse';
 import { CopyButton } from './copy-button';
 
-const codeTheme: PrismTheme = {
-  plain: { color: 'var(--code-plain)', backgroundColor: 'transparent' },
-  styles: [
-    {
-      types: ['comment', 'prolog', 'doctype', 'cdata'],
-      style: { color: 'var(--code-comment)', fontStyle: 'italic' },
-    },
-    { types: ['punctuation', 'operator'], style: { color: 'var(--code-punctuation)' } },
-    {
-      types: ['keyword', 'builtin', 'important', 'atrule'],
-      style: { color: 'var(--code-keyword)' },
-    },
-    {
-      types: ['string', 'char', 'attr-value', 'inserted', 'regex'],
-      style: { color: 'var(--code-string)' },
-    },
-    {
-      types: ['function', 'class-name', 'maybe-class-name'],
-      style: { color: 'var(--code-function)' },
-    },
-    {
-      types: ['number', 'boolean', 'constant', 'symbol', 'attr-name', 'property'],
-      style: { color: 'var(--code-number)' },
-    },
-    { types: ['tag', 'selector', 'deleted'], style: { color: 'var(--code-tag)' } },
+const TOKEN_COLORS: [types: string[], style: React.CSSProperties][] = [
+  [
+    ['comment', 'prolog', 'doctype', 'cdata'],
+    { color: 'var(--code-comment)', fontStyle: 'italic' },
   ],
+  [['punctuation', 'operator'], { color: 'var(--code-punctuation)' }],
+  [['keyword', 'builtin', 'important', 'atrule'], { color: 'var(--code-keyword)' }],
+  [['string', 'char', 'attr-value', 'inserted', 'regex'], { color: 'var(--code-string)' }],
+  [['function', 'class-name', 'maybe-class-name'], { color: 'var(--code-function)' }],
+  [
+    ['number', 'boolean', 'constant', 'symbol', 'attr-name', 'property'],
+    { color: 'var(--code-number)' },
+  ],
+  [['tag', 'selector', 'deleted'], { color: 'var(--code-tag)' }],
+];
+
+const TOKEN_STYLES = new Map(
+  TOKEN_COLORS.flatMap(([types, style]) => types.map((type) => [type, style] as const)),
+);
+
+const PLAIN_STYLE: React.CSSProperties = {
+  color: 'var(--code-plain)',
+  backgroundColor: 'transparent',
 };
+
+interface Segment {
+  content: string;
+  style?: React.CSSProperties;
+}
+
+/**
+ * Tokenizes with the same Prism build prism-react-renderer ships, then folds
+ * neighbouring tokens of the same color into one span and leaves plain text
+ * bare. On the server the markup also travels in the RSC payload, so fewer
+ * elements keeps both the HTML and the payload small.
+ */
+function highlightLines(code: string, language: string): Segment[][] {
+  const lang = language.toLowerCase();
+  const grammar = Prism.languages[lang];
+  let lines = normalizeTokens([code]);
+
+  if (grammar) {
+    // The JSX grammar folds tag text into plain-text in an after-tokenize hook.
+    const env = { code, grammar, language: lang, tokens: [] as (string | Prism.Token)[] };
+    Prism.hooks.run('before-tokenize', env);
+    env.tokens = Prism.tokenize(code, grammar);
+    Prism.hooks.run('after-tokenize', env);
+    lines = normalizeTokens(env.tokens);
+  }
+
+  return lines.map((line) => {
+    const segments: Segment[] = [];
+    for (const token of line) {
+      let style: React.CSSProperties | undefined;
+      for (const type of token.types) {
+        const typeStyle = TOKEN_STYLES.get(type);
+        if (typeStyle) style = { ...style, ...typeStyle };
+      }
+
+      const previous = segments.at(-1);
+      if (
+        previous &&
+        previous.style?.color === style?.color &&
+        previous.style?.fontStyle === style?.fontStyle
+      ) {
+        previous.content += token.content;
+      } else if (token.content) {
+        segments.push({ content: token.content, style });
+      }
+    }
+    return segments;
+  });
+}
 
 interface CodeBlockProps {
   code: string;
@@ -47,6 +90,12 @@ interface CodeBlockProps {
   title?: string;
 }
 
+/**
+ * Highlights with Prism wherever it renders. From a server component (MDX,
+ * component previews and sources) the tokens are resolved on the server and
+ * only the copy and expand islands hydrate. Client callers like the chat or
+ * the icon drawer still highlight in the browser.
+ */
 export function CodeBlock({
   code,
   language = 'tsx',
@@ -57,10 +106,47 @@ export function CodeBlock({
   title,
 }: CodeBlockProps) {
   const t = useTranslations('components.codeblockWrapper');
-  const [isExpanded, setIsExpanded] = useState(false);
 
   const codeString = code.trim();
-  const isCollapsed = collapsible && !isExpanded;
+
+  const highlighted = (
+    <div
+      tabIndex={0}
+      role="region"
+      aria-label={t('region')}
+      className="hide-scrollbar focus-visible:ring-ring overflow-x-auto rounded-md focus-visible:ring-2 focus-visible:outline-none"
+    >
+      <pre
+        className={cn('w-fit min-w-full p-4 text-[13px] leading-[1.7]', fontCode.className)}
+        style={PLAIN_STYLE}
+      >
+        {highlightLines(codeString, language).map((line, i) => (
+          <div key={i} className="table-row">
+            {showLineNumbers && (
+              <span className="bg-code text-muted-foreground/60 sticky left-0 table-cell w-10 pr-4 text-right tabular-nums select-none">
+                {i + 1}
+              </span>
+            )}
+            <span className="table-cell pr-10">
+              {line.length === 1 && line[0]?.content === '\n' ? (
+                <span className="inline-block">{'\n'}</span>
+              ) : (
+                line.map((segment, key) =>
+                  segment.style ? (
+                    <span key={key} style={segment.style}>
+                      {segment.content}
+                    </span>
+                  ) : (
+                    segment.content
+                  ),
+                )
+              )}
+            </span>
+          </div>
+        ))}
+      </pre>
+    </div>
+  );
 
   const block = (
     <div
@@ -75,58 +161,15 @@ export function CodeBlock({
           className="bg-code/80 absolute top-2.5 right-2.5 z-20 rounded-sm p-1.5 backdrop-blur-sm"
         />
       )}
-      <div
-        className={cn(
-          'transition-[max-height] duration-400 ease-out motion-reduce:transition-none',
-          isCollapsed ? 'max-h-52 overflow-y-hidden' : 'max-h-128 overflow-y-auto',
-        )}
-      >
-        <div
-          tabIndex={0}
-          role="region"
-          aria-label={t('region')}
-          className="hide-scrollbar focus-visible:ring-ring overflow-x-auto rounded-md focus-visible:ring-2 focus-visible:outline-none"
-        >
-          <Highlight code={codeString} language={language} theme={codeTheme}>
-            {({ style, tokens, getLineProps, getTokenProps }) => (
-              <pre
-                className={cn('w-fit min-w-full p-4 text-[13px] leading-[1.7]', fontCode.className)}
-                style={{ ...style, backgroundColor: 'transparent' }}
-              >
-                {tokens.map((line, i) => {
-                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  const { key: _key, ...lineProps } = getLineProps({ line, key: i });
-                  return (
-                    <div key={i} {...lineProps} className={cn('table-row', lineProps.className)}>
-                      {showLineNumbers && (
-                        <span className="bg-code text-muted-foreground/60 sticky left-0 table-cell w-10 pr-4 text-right tabular-nums select-none">
-                          {i + 1}
-                        </span>
-                      )}
-                      <span className="table-cell pr-10">
-                        {line.map((token, key) => (
-                          <span key={key} {...getTokenProps({ token })} />
-                        ))}
-                      </span>
-                    </div>
-                  );
-                })}
-              </pre>
-            )}
-          </Highlight>
+      {collapsible ? (
+        <CodeBlockCollapse expandLabel={t('expand')} collapseLabel={t('collapse')}>
+          {highlighted}
+        </CodeBlockCollapse>
+      ) : (
+        <div className="max-h-128 overflow-y-auto transition-[max-height] duration-400 ease-out motion-reduce:transition-none">
+          {highlighted}
         </div>
-      </div>
-
-      {collapsible &&
-        (isCollapsed ? (
-          <div className="from-code via-code absolute inset-x-0 bottom-0 flex justify-center bg-linear-to-t to-transparent pt-16 pb-3">
-            <ExpandButton onClick={() => setIsExpanded(true)}>{t('expand')}</ExpandButton>
-          </div>
-        ) : (
-          <div className="border-rule flex justify-center border-t py-2">
-            <ExpandButton onClick={() => setIsExpanded(false)}>{t('collapse')}</ExpandButton>
-          </div>
-        ))}
+      )}
     </div>
   );
 
@@ -142,18 +185,5 @@ export function CodeBlock({
       </Frame.Header>
       <Frame.Panel className="bg-code border-border p-0">{block}</Frame.Panel>
     </Frame>
-  );
-}
-
-function ExpandButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
-  return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={onClick}
-      className="text-muted-foreground hover:text-foreground hover:bg-muted/50 h-7 rounded-sm font-mono"
-    >
-      {children}
-    </Button>
   );
 }

@@ -1,8 +1,5 @@
-'use client';
-
 import { Callout } from '@repo/ui/components/callout';
 import { Frame } from '@repo/ui/components/frame';
-import { Typography } from '@repo/ui/components/typography';
 import { cn } from '@repo/ui/lib/cn';
 import { CodeBlock } from './codeblock';
 
@@ -31,7 +28,7 @@ export function ComponentPreviewClient({
 
   return (
     <div data-no-select className={className}>
-      <Frame className="mt-5">
+      <Frame>
         <Frame.Panel
           className={cn(
             'bg-code flex min-h-72 items-center overflow-visible p-6 *:min-w-0 sm:p-8',
@@ -47,13 +44,7 @@ export function ComponentPreviewClient({
         )}
         {code ? (
           <Frame.Panel className="bg-code p-0">
-            <CodeBlock
-              code={code}
-              language="tsx"
-              showLineNumbers
-              collapsible
-              className="rounded-none border-0"
-            />
+            <CodeBlock code={code} language="tsx" collapsible className="rounded-none border-0" />
           </Frame.Panel>
         ) : (
           <Frame.Panel className="p-0">

@@ -84,7 +84,8 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
             </PageFrame>
             <Footer />
             {/* Mounted app-wide: the landing section and the docs pages share
-                the same assistant. */}
+                the same assistant. Only the launcher is eager; the engine and
+                window load on first use. */}
             <AiChat />
             <SiteDock />
           </Providers>

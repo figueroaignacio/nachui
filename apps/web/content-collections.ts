@@ -2,11 +2,8 @@ import { defineCollection, defineConfig } from '@content-collections/core';
 import GithubSlugger from 'github-slugger';
 import { compileMDX } from '@content-collections/mdx';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypeKatex from 'rehype-katex';
-import rehypePrettyCode, { type LineElement } from 'rehype-pretty-code';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
-import remarkMath from 'remark-math';
 import { visit } from 'unist-util-visit';
 import { z } from 'zod';
 
@@ -88,64 +85,33 @@ function extractToc(content: string) {
   return toc;
 }
 
+/**
+ * Lifts a fence's `title="..."` meta onto its `<pre>` as `data-title`, the only
+ * part of the meta the docs use. Highlighting happens when `Pre` renders, so
+ * this is all the build has to do for code blocks.
+ */
+function rehypeCodeTitle() {
+  return (tree: HastNode) => {
+    visit(tree, (node: HastNode) => {
+      if (node.type !== 'element' || node.tagName !== 'pre') return;
+
+      const code = node.children?.[0];
+      if (code?.tagName !== 'code') return;
+
+      const meta = (code.data as { meta?: string } | undefined)?.meta;
+      const title = meta?.match(/title="([^"]*)"/)?.[1];
+      if (title) {
+        node.properties ??= {};
+        node.properties['dataTitle'] = title;
+      }
+    });
+  };
+}
+
 function createRehypePlugins() {
   return [
     rehypeSlug,
-    rehypeKatex,
-    [
-      rehypePrettyCode,
-      {
-        theme: 'one-dark-pro',
-        keepBackground: false,
-        onVisitLine(node: LineElement) {
-          if (node.children.length === 0) {
-            node.children = [{ type: 'text', value: ' ' }];
-          }
-        },
-        onVisitHighlightedLine(node: LineElement) {
-          if (!node.properties.className) {
-            node.properties.className = [];
-          }
-          node.properties.className.push('line--highlighted');
-        },
-        onVisitHighlightedWord(node: LineElement) {
-          node.properties.className = ['word--highlighted'];
-        },
-      },
-    ],
-    () => (tree: HastNode) => {
-      visit(tree, (node: HastNode) => {
-        if (node?.type === 'element' && node?.tagName === 'div') {
-          if (node.properties && 'data-rehype-pretty-code-title' in node.properties) {
-            node.properties['data-rehype-pretty-code-title'] = 'Code';
-          }
-
-          if (!node.properties || !('data-rehype-pretty-code-fragment' in node.properties)) {
-            return;
-          }
-
-          const preElement = node.children?.at(-1);
-          if (!preElement || preElement.tagName !== 'pre' || !preElement.properties) {
-            return;
-          }
-
-          preElement.properties['__withMeta__'] = node.children?.at(0)?.tagName === 'div';
-
-          if (node.__rawString__) {
-            preElement.properties['__rawString__'] = node.__rawString__;
-          }
-          if (node.__src__) {
-            preElement.properties['__src__'] = node.__src__;
-          }
-          if (node.__event__) {
-            preElement.properties['__event__'] = node.__event__;
-          }
-          if (node.__style__) {
-            preElement.properties['__style__'] = node.__style__;
-          }
-        }
-      });
-    },
+    rehypeCodeTitle,
     [
       rehypeAutolinkHeadings,
       {
@@ -158,7 +124,7 @@ function createRehypePlugins() {
   ] as PluggableList;
 }
 
-const remarkPlugins = [remarkMath, remarkGfm];
+const remarkPlugins = [remarkGfm];
 
 const localeSchema = z.enum(['en', 'es']).default('en');
 const labelSchema = z.enum(['New', 'Updated']).optional();

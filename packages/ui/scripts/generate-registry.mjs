@@ -1,8 +1,9 @@
 /**
- * Generates the three catalogs that describe packages/ui, from the filesystem.
+ * Generates the catalogs that describe packages/ui, from the filesystem.
  *
  *   packages/ui/src/lib/registry.ts                        paths
- *   apps/web/src/shared/components/mdx/demo-registry.tsx   React imports
+ *   apps/web/src/shared/components/mdx/demo-registry.tsx   lazy demo loaders
+ *   apps/web/src/features/gallery/lib/example-registry.tsx lazy gallery examples
  *   apps/web/src/features/icons/lib/icon-registry.tsx      React imports
  *
  * They used to be maintained by hand, with the same keys in the same nested
@@ -128,12 +129,6 @@ function pascal(value) {
     .join('');
 }
 
-function demoAlias(component, variant) {
-  return variant.startsWith(`${component}-`)
-    ? `${pascal(variant)}Demo`
-    : `${pascal(component)}${pascal(variant)}`;
-}
-
 function emitRegistry(components, demos, examples, bricks, icons) {
   const lines = [GENERATED_HEADER];
 
@@ -221,39 +216,52 @@ function emitRegistry(components, demos, examples, bricks, icons) {
   return `${lines.join('\n')}\n`;
 }
 
-function emitVariantComponents(demos, { dir, exportName, aliasSuffix }) {
-  const imports = [];
-  const aliases = new Map();
+function variantImport(dir, component, variant) {
+  return `import('@repo/ui/${dir}/${component}/${variant}').then((m) => m.${pascal(variant)})`;
+}
 
-  for (const demo of demos) {
-    for (const variant of demo.variants) {
-      const alias = `${demoAlias(demo.component, variant)}${aliasSuffix}`;
-      const previous = aliases.get(alias);
-      if (previous) {
-        throw new Error(
-          `generate-registry: alias "${alias}" collides between ` +
-            `${previous} and ${demo.component}/${variant}. Rename one demo file.`,
-        );
-      }
-      aliases.set(alias, `${demo.component}/${variant}`);
-
-      imports.push({
-        alias,
-        statement: `import { ${pascal(variant)} as ${alias} } from '@repo/ui/${dir}/${demo.component}/${variant}';`,
-      });
-    }
-  }
-
-  imports.sort((a, b) => a.statement.localeCompare(b.statement));
-
+/**
+ * Demos render inside ComponentPreview, an async server component, so each
+ * entry is a loader it awaits. A docs page only loads the demos it shows
+ * instead of all of them, and a missing export still fails type-checking.
+ */
+function emitDemoComponents(demos) {
   const lines = [GENERATED_HEADER];
-  for (const entry of imports) lines.push(entry.statement);
+  lines.push('export type DemoLoader = () => Promise<React.ComponentType>;');
   lines.push('');
-  lines.push(`export const ${exportName}: Record<string, Record<string, React.ComponentType>> = {`);
+  lines.push('export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {');
   for (const demo of demos) {
     lines.push(`  ${key(demo.component)}: {`);
     for (const variant of demo.variants) {
-      lines.push(`    ${key(variant)}: ${demoAlias(demo.component, variant)}${aliasSuffix},`);
+      lines.push(
+        `    ${key(variant)}: () => ${variantImport(DEMOS_DIR, demo.component, variant)},`,
+      );
+    }
+    lines.push('  },');
+  }
+  lines.push('};');
+
+  return `${lines.join('\n')}\n`;
+}
+
+/**
+ * Gallery examples render from client components, so each one is wrapped in
+ * next/dynamic: it still server-renders, and a gallery page only ships the
+ * chunks of the examples it shows.
+ */
+function emitExampleComponents(examples) {
+  const lines = [GENERATED_HEADER];
+  lines.push("import dynamic from 'next/dynamic';");
+  lines.push('');
+  lines.push(
+    'export const EXAMPLE_COMPONENTS: Record<string, Record<string, React.ComponentType>> = {',
+  );
+  for (const example of examples) {
+    lines.push(`  ${key(example.component)}: {`);
+    for (const variant of example.variants) {
+      lines.push(
+        `    ${key(variant)}: dynamic(() => ${variantImport(EXAMPLES_DIR, example.component, variant)}),`,
+      );
     }
     lines.push('  },');
   }
@@ -303,19 +311,11 @@ function main() {
     { target: REGISTRY_TARGET, content: emitRegistry(components, demos, examples, bricks, icons) },
     {
       target: DEMO_COMPONENTS_TARGET,
-      content: emitVariantComponents(demos, {
-        dir: DEMOS_DIR,
-        exportName: 'DEMO_COMPONENTS',
-        aliasSuffix: '',
-      }),
+      content: emitDemoComponents(demos),
     },
     {
       target: EXAMPLE_COMPONENTS_TARGET,
-      content: emitVariantComponents(examples, {
-        dir: EXAMPLES_DIR,
-        exportName: 'EXAMPLE_COMPONENTS',
-        aliasSuffix: 'Example',
-      }),
+      content: emitExampleComponents(examples),
     },
     { target: ICON_COMPONENTS_TARGET, content: emitIconComponents(icons) },
   ];

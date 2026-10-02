@@ -1,5 +1,3 @@
-'use server';
-
 import { getDemoCode } from '@/features/docs/lib/get-component-code';
 import { Callout } from '@repo/ui/components/callout';
 import { ComponentPreviewClient } from './component-preview-client';
@@ -33,7 +31,8 @@ export async function ComponentPreview({
     );
   }
 
-  const DemoComponent = DEMO_COMPONENTS[component]?.[demo];
+  const loadDemo = DEMO_COMPONENTS[component]?.[demo];
+  const DemoComponent = loadDemo ? await loadDemo() : undefined;
 
   if (!DemoComponent) {
     return (

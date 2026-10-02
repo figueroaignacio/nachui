@@ -1,5 +1,3 @@
-'use client';
-
 import { cn } from '@repo/ui/lib/cn';
 import { Highlight, themes } from 'prism-react-renderer';
 import * as React from 'react';
