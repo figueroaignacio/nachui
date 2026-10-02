@@ -18,12 +18,19 @@ type AiAvatarProps = {
   size?: keyof typeof SIZES;
   expression?: AiExpression;
   follow?: boolean;
+  /** While the agent works, the eyes scan and the face glows like a lit screen. */
+  busy?: boolean;
 };
 
-export function AiAvatar({ size = 'md', expression = 'awake', follow = false }: AiAvatarProps) {
+export function AiAvatar({
+  size = 'md',
+  expression = 'awake',
+  follow = false,
+  busy = false,
+}: AiAvatarProps) {
   const SIZE = SIZES[size];
   const ref = useRef<SVGSVGElement>(null);
-  useGaze(ref, follow);
+  useGaze(ref, follow && !busy);
 
   return (
     <svg
@@ -32,11 +39,12 @@ export function AiAvatar({ size = 'md', expression = 'awake', follow = false }: 
       viewBox="0 0 24 24"
       width={SIZE}
       xmlns="http://www.w3.org/2000/svg"
-      data-expression={expression}
+      data-expression={busy ? 'working' : expression}
+      data-busy={busy || undefined}
       className="ai-avatar"
     >
       <title>Mate Agent</title>
-      <AiFace />
+      <AiFace lit={busy} />
     </svg>
   );
 }

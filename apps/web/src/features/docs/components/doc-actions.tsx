@@ -39,7 +39,7 @@ export function DocActions({
   layout = 'inline',
 }: DocActionsProps) {
   const t = useTranslations('components');
-  const { triggerExplanation } = useChatStore();
+  const triggerExplanation = useChatStore((s) => s.triggerExplanation);
   const { isCopied, copyToClipboard } = useCopyToClipboard(2000);
 
   const handleExplain = useCallback(() => {
@@ -73,7 +73,7 @@ export function DocActions({
 
   if (layout === 'rail') {
     return (
-      <div className="flex flex-col items-start gap-0.5">
+      <div className="flex flex-col items-start">
         <RailAction icon={<SparklesIcon size={14} />} onClick={handleExplain}>
           {t('explainButton.label')}
         </RailAction>
@@ -187,7 +187,7 @@ export function DocActions({
 }
 
 const RAIL_ACTION_CLASS =
-  'text-muted-foreground hover:text-foreground flex items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-xs leading-snug no-underline transition-colors duration-200 outline-none focus-visible:ring-1 [&_svg]:size-3.5 [&_svg]:shrink-0';
+  'text-muted-foreground hover:text-foreground flex items-center gap-2.5 rounded-md px-2 py-1 text-left text-xs leading-snug no-underline transition-colors duration-200 outline-none focus-visible:ring-1 [&_svg]:size-3.5 [&_svg]:shrink-0';
 
 function RailAction({
   href,

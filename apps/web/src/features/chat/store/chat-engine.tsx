@@ -1,58 +1,27 @@
 'use client';
 
-import { Suspense, useEffect } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
+
 import { useChat } from '../hooks/use-chat';
 import { useChatStore } from './chat-store';
-
-function ChatUrlSync() {
-  const searchParams = useSearchParams();
-  const isOpen = useChatStore((s) => s.isOpen);
-  const setIsOpen = useChatStore((s) => s.setIsOpen);
-  const router = useRouter();
-  const pathname = usePathname();
-
-  useEffect(() => {
-    if (!searchParams) return;
-    const chatParam = searchParams.get('chat');
-    if (chatParam === 'open' && !isOpen) {
-      setIsOpen(true);
-    } else if (chatParam === 'closed' && isOpen) {
-      setIsOpen(false);
-    }
-  }, [searchParams, isOpen, setIsOpen]);
-
-  useEffect(() => {
-    if (!searchParams) return;
-    const chatParam = searchParams.get('chat');
-    if (isOpen && chatParam === 'closed') {
-      const params = new URLSearchParams(searchParams.toString());
-      params.delete('chat');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      router.replace(`${pathname}?${params.toString()}` as any, { scroll: false });
-    } else if (!isOpen && chatParam === 'open') {
-      const params = new URLSearchParams(searchParams.toString());
-      params.delete('chat');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      router.replace(`${pathname}?${params.toString()}` as any, { scroll: false });
-    }
-  }, [isOpen, searchParams, pathname, router]);
-
-  return null;
-}
 
 export function ChatEngine() {
   const chatState = useChat();
   const sync = useChatStore((s) => s._sync);
+  const pendingMessage = useChatStore((s) => s.pendingMessage);
+  const takePendingMessage = useChatStore((s) => s.takePendingMessage);
+  const { isHydrated, sendMessage } = chatState;
 
   useEffect(() => {
+    // Until persisted history is restored the store keeps its placeholder
+    // actions, so anything sent meanwhile is queued instead of overwritten.
+    if (!isHydrated) return;
     sync({
       messages: chatState.messages,
       isLoading: chatState.isLoading,
       isStreaming: chatState.isStreaming,
       activeTool: chatState.activeTool,
       errorCode: chatState.errorCode,
-      messagesEndRef: chatState.messagesEndRef,
       sendMessage: chatState.sendMessage,
       handleSuggestionClick: chatState.handleSuggestionClick,
       stop: chatState.stop,
@@ -60,12 +29,12 @@ export function ChatEngine() {
       resetChat: chatState.resetChat,
     });
   }, [
+    isHydrated,
     chatState.messages,
     chatState.isLoading,
     chatState.isStreaming,
     chatState.activeTool,
     chatState.errorCode,
-    chatState.messagesEndRef,
     chatState.sendMessage,
     chatState.handleSuggestionClick,
     chatState.stop,
@@ -74,9 +43,11 @@ export function ChatEngine() {
     sync,
   ]);
 
-  return (
-    <Suspense fallback={null}>
-      <ChatUrlSync />
-    </Suspense>
-  );
+  useEffect(() => {
+    if (!isHydrated || !pendingMessage) return;
+    const message = takePendingMessage();
+    if (message) void sendMessage(message.content, message.quote);
+  }, [isHydrated, pendingMessage, takePendingMessage, sendMessage]);
+
+  return null;
 }

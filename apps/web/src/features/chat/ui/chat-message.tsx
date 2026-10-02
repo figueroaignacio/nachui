@@ -4,6 +4,14 @@ import { ChatAttachment } from './chat-attachment';
 import { ChatExplanationRequest } from './chat-explanation-request';
 import { ChatMarkdownContent } from './chat-markdown-content';
 
+function toPath(url: string) {
+  try {
+    return new URL(url).pathname;
+  } catch {
+    return undefined;
+  }
+}
+
 interface ChatMessageProps {
   message: Message;
   isStreaming?: boolean;
@@ -22,13 +30,17 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
       message.content.includes('SIEMPRE basandote en la documentación proporcionada.') ||
       message.content.includes('SIEMPRE basándote en la documentación proporcionada.'));
   const componentName = explainMatch ? explainMatch[1] : '';
+  const explainUrl = isExplanation
+    ? message.content.match(/Context: (\S+?)\.(?:\s|$)/)?.[1]
+    : undefined;
+  const explainHref = explainUrl ? toPath(explainUrl) : undefined;
 
   if (isUser) {
     return (
       <div className="flex flex-col items-end gap-1.5">
         {message.quote && <ChatAttachment text={message.quote} className="max-w-[85%]" />}
         {isExplanation ? (
-          <ChatExplanationRequest componentName={componentName} />
+          <ChatExplanationRequest componentName={componentName} href={explainHref} />
         ) : (
           <Bubble variant="muted" align="end" className="max-w-[85%] rounded-2xl rounded-br-md">
             <Bubble.Content className="py-2.5">{message.content}</Bubble.Content>

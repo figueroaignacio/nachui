@@ -3,22 +3,29 @@ import type { ToolName } from '../hooks/use-chat';
 import type { ChatErrorCode } from '../lib/chat-error';
 import { create } from 'zustand';
 
+interface PendingMessage {
+  content: string;
+  quote?: string;
+}
+
 interface ChatStore {
+  /** The engine (useChat) is lazy: it mounts once this flips to true. */
+  isActivated: boolean;
+  activate: () => void;
+  /** A message sent before the engine was ready, flushed once it hydrates. */
+  pendingMessage: PendingMessage | null;
+  takePendingMessage: () => PendingMessage | null;
+
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   openChat: () => void;
   closeChat: () => void;
-
-  isExpanded: boolean;
-  setIsExpanded: (isExpanded: boolean) => void;
-  toggleExpanded: () => void;
 
   messages: Message[];
   isLoading: boolean;
   isStreaming: boolean;
   activeTool: ToolName | null;
   errorCode: ChatErrorCode | null;
-  messagesEndRef: React.RefObject<HTMLDivElement | null> | null;
 
   attachment: string | null;
   setAttachment: (text: string | null) => void;
@@ -36,28 +43,37 @@ interface ChatStore {
 }
 
 export const useChatStore = create<ChatStore>((set, get) => ({
-  isOpen: false,
-  setIsOpen: (isOpen) => set({ isOpen }),
-  openChat: () => set({ isOpen: true }),
-  closeChat: () => set({ isOpen: false }),
+  isActivated: false,
+  activate: () => set({ isActivated: true }),
+  pendingMessage: null,
+  takePendingMessage: () => {
+    const { pendingMessage } = get();
+    if (pendingMessage) set({ pendingMessage: null });
+    return pendingMessage;
+  },
 
-  isExpanded: false,
-  setIsExpanded: (isExpanded) => set({ isExpanded }),
-  toggleExpanded: () => set((state) => ({ isExpanded: !state.isExpanded })),
+  isOpen: false,
+  setIsOpen: (isOpen) => set(isOpen ? { isOpen, isActivated: true } : { isOpen }),
+  openChat: () => set({ isOpen: true, isActivated: true }),
+  closeChat: () => set({ isOpen: false }),
 
   messages: [],
   isLoading: false,
   isStreaming: false,
   activeTool: null,
   errorCode: null,
-  messagesEndRef: null,
 
   attachment: null,
   setAttachment: (attachment) => set({ attachment }),
-  attachSelection: (text) => set({ attachment: text, isOpen: true }),
+  attachSelection: (text) => set({ attachment: text, isOpen: true, isActivated: true }),
 
-  sendMessage: async () => {},
-  handleSuggestionClick: () => {},
+  // Placeholders until the engine mounts and syncs the real actions.
+  sendMessage: async (content, quote) => {
+    set({ pendingMessage: { content, quote }, isActivated: true });
+  },
+  handleSuggestionClick: (text) => {
+    void get().sendMessage(text);
+  },
   stop: () => {},
   retry: () => {},
   resetChat: () => {},

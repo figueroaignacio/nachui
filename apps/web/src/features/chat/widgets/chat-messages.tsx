@@ -15,7 +15,7 @@ interface ChatMessagesProps {
   isStreaming: boolean;
   activeTool: ToolName | null;
   errorCode: ChatErrorCode | null;
-  endRef: RefObject<HTMLDivElement>;
+  endRef: RefObject<HTMLDivElement | null>;
   onSuggestionClick: (text: string) => void;
   onRetry: () => void;
 }

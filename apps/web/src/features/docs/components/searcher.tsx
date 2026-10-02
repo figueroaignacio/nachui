@@ -2,7 +2,7 @@
 
 import { useSearch } from '@/features/docs/hooks/use-search';
 import { useDialogFocus } from '@/hooks/use-dialog-focus';
-import { useKbdShortcut } from '@/hooks/use-kbd-shortcut';
+import { useKbdShortcut, useModKeyLabel } from '@/hooks/use-kbd-shortcut';
 import { useRouter } from '@/i18n/navigation';
 import { Button } from '@repo/ui/components/button';
 import { Dock } from '@repo/ui/components/dock';
@@ -38,7 +38,9 @@ export function Searcher({ variant = 'default' }: { variant?: 'default' | 'icon'
   const optionId = useCallback((index: number) => `${listboxId}-option-${index}`, [listboxId]);
   const hasOptions = activeItems.length > 0;
 
-  useKbdShortcut(['cmd', 'k'], () => setIsOpen((prev) => !prev));
+  const modKey = useModKeyLabel();
+
+  useKbdShortcut(['mod', 'k'], () => setIsOpen((prev) => !prev), { allowInEditable: true });
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -97,7 +99,7 @@ export function Searcher({ variant = 'default' }: { variant?: 'default' | 'icon'
             />
             <span className="flex-1 text-left">{t('placeholder')}</span>
             <div className="hidden items-center gap-0.5 sm:flex">
-              <Kbd size="sm">ctrl</Kbd>
+              <Kbd size="sm">{modKey}</Kbd>
               <span className="text-muted-foreground/50 text-[9px]">+</span>
               <Kbd size="sm">K</Kbd>
             </div>

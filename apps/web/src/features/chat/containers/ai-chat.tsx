@@ -1,48 +1,41 @@
 'use client';
 
-import { useKbdShortcut } from '@/hooks/use-kbd-shortcut';
-import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll';
-import { useMediaQuery } from '@/hooks/use-media-query';
+import { Suspense, useCallback, useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { AnimatePresence } from 'motion/react';
-import { useCallback, type RefObject } from 'react';
+
+import { useKbdShortcut } from '@/hooks/use-kbd-shortcut';
+
 import { useTextSelection } from '../hooks/use-text-selection';
+import { hasStoredChat } from '../lib/chat-storage';
+import { ChatUrlSync } from '../store/chat-url-sync';
 import { useChatStore } from '../store/chat-store';
 import { SelectionPrompt } from '../ui/selection-prompt';
-import { ChatWindow } from '../widgets/chat-window';
+
+// The engine (AI SDK) and the window (markdown, syntax highlighting) are
+// heavy, so they load on first use instead of with every page.
+const ChatEngine = dynamic(() => import('../store/chat-engine').then((m) => m.ChatEngine), {
+  ssr: false,
+});
+const ChatPanel = dynamic(() => import('./chat-panel').then((m) => m.ChatPanel), {
+  ssr: false,
+});
 
 export function AiChat() {
-  const {
-    isOpen,
-    setIsOpen,
-    isExpanded,
-    toggleExpanded,
-    messages,
-    isLoading,
-    isStreaming,
-    activeTool,
-    errorCode,
-    messagesEndRef,
-    sendMessage,
-    handleSuggestionClick,
-    retry,
-    resetChat,
-    stop,
-    attachment,
-    setAttachment,
-    attachSelection,
-  } = useChatStore();
+  const isOpen = useChatStore((s) => s.isOpen);
+  const isActivated = useChatStore((s) => s.isActivated);
+  const activate = useChatStore((s) => s.activate);
+  const setIsOpen = useChatStore((s) => s.setIsOpen);
+  const attachSelection = useChatStore((s) => s.attachSelection);
+  const [hasOpened, setHasOpened] = useState(false);
+
+  if (isOpen && !hasOpened) setHasOpened(true);
+
+  useEffect(() => {
+    if (hasStoredChat()) activate();
+  }, [activate]);
 
   const { selection, clear: clearSelection } = useTextSelection('[data-doc-prose]');
-
-  const submit = useCallback(
-    (text: string) => {
-      const quote = attachment ?? undefined;
-      setAttachment(null);
-      if (!isOpen) setIsOpen(true);
-      void sendMessage(text, quote);
-    },
-    [attachment, setAttachment, isOpen, setIsOpen, sendMessage],
-  );
 
   const handleAddSelection = useCallback(() => {
     if (!selection) return;
@@ -51,51 +44,21 @@ export function AiChat() {
     window.getSelection()?.removeAllRanges();
   }, [selection, attachSelection, clearSelection]);
 
-  const handleClose = useCallback(() => {
-    setIsOpen(false);
-    if (isExpanded) toggleExpanded();
-  }, [setIsOpen, isExpanded, toggleExpanded]);
-
-  useKbdShortcut(
-    ['ctrl', 'i'],
-    useCallback(() => {
-      if (!isOpen) setIsOpen(true);
-    }, [isOpen, setIsOpen]),
-  );
-
-  useKbdShortcut(
-    ['cmd', 'j'],
-    useCallback(() => setIsOpen(!isOpen), [isOpen, setIsOpen]),
-  );
-
-  const isMobile = useMediaQuery('(max-width: 47.99rem)');
-  useLockBodyScroll(isOpen && isMobile);
+  useKbdShortcut(['mod', 'i'], () => {
+    if (isOpen) return false;
+    setIsOpen(true);
+  });
 
   return (
     <div data-chat-open={isOpen ? 'true' : 'false'}>
+      <Suspense fallback={null}>
+        <ChatUrlSync />
+      </Suspense>
       <AnimatePresence>
         {selection && <SelectionPrompt selection={selection} onAdd={handleAddSelection} />}
       </AnimatePresence>
-      <ChatWindow
-        isOpen={isOpen}
-        isExpanded={isExpanded}
-        messages={messages}
-        isLoading={isLoading}
-        isStreaming={isStreaming}
-        activeTool={activeTool}
-        errorCode={errorCode}
-        messagesEndRef={messagesEndRef as RefObject<HTMLDivElement>}
-        onSubmit={submit}
-        onStop={stop}
-        onClose={handleClose}
-        onReset={resetChat}
-        attachment={attachment}
-        onRemoveAttachment={() => setAttachment(null)}
-        onSuggestionClick={handleSuggestionClick}
-        onRetry={retry}
-        onToggleExpand={toggleExpanded}
-        isModal={isMobile || isExpanded}
-      />
+      {isActivated && <ChatEngine />}
+      {hasOpened && <ChatPanel />}
     </div>
   );
 }

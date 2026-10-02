@@ -3,7 +3,6 @@ import { Callout } from '@repo/ui/components/callout';
 import { RefreshIcon } from '@repo/ui/icons/refresh';
 import { useTranslations } from 'next-intl';
 import type { ChatErrorCode } from '../lib/chat-error';
-import { AiPerch } from './ai-perch';
 
 interface ChatErrorProps {
   code: ChatErrorCode | null;
@@ -20,25 +19,22 @@ export function ChatError({ code, onRetry }: ChatErrorProps) {
   const canRetry = onRetry !== undefined && key !== 'auth' && key !== 'rate_limit';
 
   return (
-    <div className="relative">
-      <AiPerch className="ai-edge-perch" expression="startled" />
-      <Callout variant="danger">
-        <Callout.Title>{t(`${key}.title`)}</Callout.Title>
-        <Callout.Content>
-          <p>{t(`${key}.body`)}</p>
-          {canRetry && (
-            <Button
-              variant="link"
-              size="sm"
-              onClick={onRetry}
-              leftIcon={<RefreshIcon size={13} aria-hidden="true" />}
-              className="text-foreground/80 hover:text-foreground mt-3 underline"
-            >
-              {t('retry')}
-            </Button>
-          )}
-        </Callout.Content>
-      </Callout>
-    </div>
+    <Callout variant="danger">
+      <Callout.Title>{t(`${key}.title`)}</Callout.Title>
+      <Callout.Content>
+        <p>{t(`${key}.body`)}</p>
+        {canRetry && (
+          <Button
+            variant="link"
+            size="sm"
+            onClick={onRetry}
+            leftIcon={<RefreshIcon size={13} aria-hidden="true" />}
+            className="text-foreground/80 hover:text-foreground mt-3 underline"
+          >
+            {t('retry')}
+          </Button>
+        )}
+      </Callout.Content>
+    </Callout>
   );
 }

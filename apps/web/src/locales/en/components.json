@@ -51,6 +51,7 @@
     "messages": {
       "initial": "How can I assist you today?",
       "thinking": "Thinking",
+      "writing": "Writing",
       "reasoning": "Thought process",
       "tools": {
         "searchKnowledgeBase": "Searching the docs",
@@ -58,8 +59,7 @@
       },
       "copy": "Copy",
       "copied": "Copied",
-      "explainRequest": "Explain {component}",
-      "promptSent": "Prompt sent"
+      "explainLabel": "Explain this page"
     },
     "errors": {
       "retry": "Try again",
@@ -98,10 +98,10 @@
     },
     "header": {
       "reset": "New chat",
-      "expand": "Expand",
-      "collapse": "Collapse",
-      "close": "Close"
-    }
+      "close": "Close",
+      "confirmReset": "Confirm new chat"
+    },
+    "resize": "Resize chat"
   },
   "backButton": {
     "label": "Back"
