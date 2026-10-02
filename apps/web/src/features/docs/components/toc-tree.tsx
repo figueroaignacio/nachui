@@ -52,8 +52,8 @@ export function Tree({ tree, level = 1, activeItem, onItemClick }: TreeProps) {
 
   return (
     <ul
-      className={cn('m-0 list-none space-y-0.5', {
-        'mt-0.5 ml-3': level !== 1,
+      className={cn('m-0 list-none', {
+        'ml-3': level !== 1,
       })}
     >
       {tree.map((item, index) => {
@@ -76,7 +76,7 @@ export function Tree({ tree, level = 1, activeItem, onItemClick }: TreeProps) {
               href={item.url}
               onClick={() => onItemClick?.(item.url)}
               className={cn(
-                'group relative flex items-center gap-2.5 rounded-md px-2 py-1.5 text-xs leading-snug no-underline transition-colors duration-200 outline-none focus-visible:ring-1',
+                'group relative flex items-center gap-2.5 rounded-md px-2 py-1 text-xs leading-snug no-underline transition-colors duration-200 outline-none focus-visible:ring-1',
                 isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground/80',
                 level === 2 && 'text-[11px]',
               )}

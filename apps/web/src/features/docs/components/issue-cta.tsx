@@ -25,7 +25,7 @@ export function IssueCta({ pageTitle, pageUrl }: IssueCtaProps) {
   )}`;
 
   return (
-    <Card className="border-border/40 bg-card/10 relative mt-12 mb-6 p-5">
+    <Card className="border-border/40 bg-card/10 relative mt-16 p-5">
       <AiPerch className="ai-edge-perch" />
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <Stack gap="2">

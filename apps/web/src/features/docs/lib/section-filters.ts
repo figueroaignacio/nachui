@@ -63,3 +63,50 @@ export function visibleSections(sections: DocSection[], filter: string): DocSect
     ? sections
     : sections.filter((section) => section.title === filter);
 }
+
+function offsetWithin(container: HTMLElement, element: HTMLElement): number {
+  return (
+    element.getBoundingClientRect().top -
+    container.getBoundingClientRect().top +
+    container.scrollTop
+  );
+}
+
+export function scrollToSection(
+  container: HTMLElement,
+  id: string,
+  behavior: ScrollBehavior,
+  offset = 0,
+) {
+  const target = container.querySelector<HTMLElement>(`[data-section="${CSS.escape(id)}"]`);
+  if (!target) return;
+  container.scrollTo({ top: Math.max(0, offsetWithin(container, target) - offset), behavior });
+}
+
+export function revealActiveLink(container: HTMLElement, offset = 0, visibleRatio = 1): boolean {
+  const link = container.querySelector<HTMLElement>('[aria-current="page"]');
+  if (!link) return false;
+  const top = offsetWithin(container, link);
+  const bottom = top + link.offsetHeight;
+  const viewTop = container.scrollTop + offset;
+  const viewBottom = container.scrollTop + container.clientHeight * visibleRatio;
+  if (top >= viewTop && bottom <= viewBottom) return true;
+  const visibleHeight = container.clientHeight * visibleRatio - offset;
+  container.scrollTo({
+    top: Math.max(0, top - offset - (visibleHeight - link.offsetHeight) / 2),
+    behavior: 'instant',
+  });
+  return true;
+}
+
+export function sectionAtScroll(container: HTMLElement, offset = 0): string | undefined {
+  const sections = Array.from(container.querySelectorAll<HTMLElement>('[data-section]'));
+  if (sections.length === 0) return undefined;
+  const atBottom =
+    container.scrollTop + container.clientHeight >= container.scrollHeight - 2 &&
+    container.scrollTop > 0;
+  if (atBottom) return sections[sections.length - 1]?.dataset.section;
+  const line = container.scrollTop + offset + 8;
+  const passed = sections.filter((section) => offsetWithin(container, section) <= line);
+  return (passed[passed.length - 1] ?? sections[0])?.dataset.section;
+}

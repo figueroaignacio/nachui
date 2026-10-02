@@ -48,10 +48,10 @@ export function DocView({ doc }: DocViewProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(techArticleSchema) }}
       />
       <Container size="md" className="px-0">
-        <Stack as="article" className="w-full min-w-0">
-          <div className="mt-4 mb-12">
+        <Stack as="article" className="@container w-full min-w-0">
+          <div className="mt-4 mb-10">
             <div>
-              <h1 className="font-heading text-foreground text-[clamp(2.5rem,7vw,4.5rem)] leading-[0.85] font-black tracking-[-0.075em] break-words uppercase">
+              <h1 className="font-heading text-foreground text-[clamp(2rem,11cqi,4.5rem)] leading-[0.85] font-black tracking-[-0.075em] break-words uppercase">
                 {doc.title}
                 <span
                   aria-hidden="true"
@@ -59,16 +59,16 @@ export function DocView({ doc }: DocViewProps) {
                 />
               </h1>
               {doc.description && (
-                <p className="text-foreground mt-6 max-w-[46ch] text-lg leading-snug font-semibold tracking-[-0.02em] text-pretty">
+                <p className="text-foreground mt-5 max-w-[46ch] text-lg leading-snug font-semibold tracking-[-0.02em] text-pretty">
                   {doc.description}
                 </p>
               )}
               {doc.label && (
-                <span className="border-brand text-brand mt-5 inline-flex rounded-full border px-2.5 py-0.5 font-mono text-[11px]">
+                <span className="border-brand text-brand mt-4 inline-flex rounded-full border px-2.5 py-0.5 font-mono text-[11px]">
                   {doc.label}
                 </span>
               )}
-              <div className="mt-5 xl:hidden">
+              <div className="mt-6 xl:hidden">
                 <DocActions
                   page={doc.title}
                   url={docUrl}
@@ -80,7 +80,7 @@ export function DocView({ doc }: DocViewProps) {
               </div>
             </div>
           </div>
-          <div data-doc-prose className="min-w-0 flex-1">
+          <div data-doc-prose className="min-w-0 flex-1 *:first:mt-0">
             {doc.body ? (
               <MDXContent code={doc.body} />
             ) : (

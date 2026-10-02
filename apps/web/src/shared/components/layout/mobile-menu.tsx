@@ -14,7 +14,13 @@ import { springs, still } from '@repo/ui/lib/motion';
 import { motion, useDragControls, useReducedMotion, type PanInfo } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { buildSectionFilters, sectionOf } from '@/features/docs/lib/section-filters';
+import {
+  buildSectionFilters,
+  revealActiveLink,
+  scrollToSection,
+  sectionAtScroll,
+  sectionOf,
+} from '@/features/docs/lib/section-filters';
 import { LocaleSwitcher } from '../common/locale-switcher';
 import { Logo } from '../common/logo';
 import { ThemeToggle } from '../common/theme-toggle';
@@ -23,6 +29,7 @@ const SWIPE_CLOSE_THRESHOLD = 80;
 const SWIPE_CLOSE_VELOCITY = 600;
 const DRAG_CONSTRAINTS = { top: 0, bottom: 0 };
 const DRAG_ELASTIC = { top: 0, bottom: 0.9 };
+const SPY_LOCK_MS = 800;
 
 type MobileMenuPanelProps = {
   open: boolean;
@@ -37,12 +44,18 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
   const navigation = t.raw('ui.navigation') as Navigation[];
   const elementsMenu = t.raw('ui.elementsMenu') as { items: Navigation[] };
   const resourcesMenu = t.raw('ui.resourcesMenu') as { label: string; items: Navigation[] };
-  const menuLinks = [...elementsMenu.items, ...navigation].filter(
-    (item) => !isHiddenProductLink(item.href),
+  const docsHrefs = new Set(
+    docsNavigation.flatMap((section) => section.items.map((item) => item.href)),
   );
+  const isExtraLink = (item: Navigation) =>
+    !isHiddenProductLink(item.href) && !docsHrefs.has(item.href);
+  const menuLinks = [...elementsMenu.items, ...navigation].filter(isExtraLink);
+  const resourceLinks = resourcesMenu.items.filter(isExtraLink);
 
   const menuRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const anchorBarRef = useRef<HTMLDivElement>(null);
+  const spyLockedUntil = useRef(0);
   const toggleMenu = onClose;
   const shouldReduceMotion = useReducedMotion();
   const dragControls = useDragControls();
@@ -57,20 +70,38 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
   );
   const [anchor, setAnchor] = useState(currentSection);
   const anchors = buildSectionFilters(docsNavigation, t('docs.sidebar.all')).slice(1);
-  const activeAnchor = anchors.find((entry) => entry.id === anchor);
 
   const jumpTo = useCallback((id: string, behavior: ScrollBehavior) => {
     setAnchor(id);
-    const target = scrollRef.current?.querySelector<HTMLElement>(
-      `[data-section="${CSS.escape(id)}"]`,
-    );
-    target?.scrollIntoView({ behavior, block: 'start' });
+    const container = scrollRef.current;
+    if (!container) return;
+    spyLockedUntil.current = performance.now() + SPY_LOCK_MS;
+    scrollToSection(container, id, behavior, anchorBarRef.current?.offsetHeight ?? 0);
   }, []);
 
   useEffect(() => {
     if (!isMenuOpen) return;
-    jumpTo(currentSection, 'instant');
-  }, [isMenuOpen, currentSection, jumpTo]);
+    const container = scrollRef.current;
+    setAnchor(currentSection);
+    if (!container) return;
+    spyLockedUntil.current = performance.now() + SPY_LOCK_MS;
+    const barHeight = anchorBarRef.current?.offsetHeight ?? 0;
+    if (!revealActiveLink(container, barHeight)) {
+      scrollToSection(container, currentSection, 'instant', barHeight);
+    }
+  }, [isMenuOpen, currentSection, pathname]);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const onScroll = () => {
+      if (performance.now() < spyLockedUntil.current) return;
+      const section = sectionAtScroll(container, anchorBarRef.current?.offsetHeight ?? 0);
+      if (section) setAnchor(section);
+    };
+    container.addEventListener('scroll', onScroll, { passive: true });
+    return () => container.removeEventListener('scroll', onScroll);
+  }, []);
 
   useLockBodyScroll(isMenuOpen);
   useDialogBehavior({ open: isMenuOpen, onClose, ref: menuRef });
@@ -88,7 +119,7 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
       <motion.nav
         ref={menuRef}
         id="mobile-menu"
-        aria-label="Site"
+        aria-label={t('ui.dock.label')}
         tabIndex={-1}
         inert={!isMenuOpen}
         initial={false}
@@ -119,7 +150,7 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
           className="border-rule flex touch-none items-center justify-between border-b px-6 pt-2 pb-4"
         >
           <div className="flex items-center gap-x-3">
-            <Link href="/" onClick={toggleMenu} aria-label="NachUI home">
+            <Link href="/" onClick={toggleMenu} aria-label={t('ui.dock.homeLink')}>
               <Logo withText />
             </Link>
           </div>
@@ -131,18 +162,22 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
               size="icon"
               data-autofocus
               onClick={toggleMenu}
-              title="Close menu"
-              aria-label="Close menu"
-              aria-expanded={isMenuOpen}
+              title={t('ui.dock.close')}
+              aria-label={t('ui.dock.close')}
             >
               <XIcon size={20} aria-hidden="true" />
             </Button>
           </div>
         </div>
-        <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-6">
+        <div
+          ref={scrollRef}
+          className="flex-1 overflow-y-auto px-6 pt-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
+        >
           {menuLinks.length > 0 && (
             <div className="mb-8">
-              <Typography className="text-muted-foreground mb-2 px-2.5 text-xs">Menu</Typography>
+              <Typography className="text-muted-foreground mb-2 px-2.5 text-xs">
+                {t('ui.dock.menu')}
+              </Typography>
               <ul>
                 {menuLinks.map((item) => {
                   const isActive = pathname === item.href;
@@ -154,7 +189,7 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
                         onClick={toggleMenu}
                         aria-current={isActive ? 'page' : undefined}
                         className={cn(
-                          'flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors',
+                          'flex items-center gap-2 rounded-md px-2.5 py-2 text-sm transition-colors',
                           isActive
                             ? 'bg-card text-foreground font-medium'
                             : 'text-muted-foreground hover:text-foreground',
@@ -169,37 +204,40 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
               </ul>
             </div>
           )}
-          <div className="mb-8">
-            <Typography className="text-muted-foreground mb-2 px-2.5 text-xs">
-              {resourcesMenu.label}
-            </Typography>
-            <ul>
-              {resourcesMenu.items.map((item) => {
-                const isActive = pathname === item.href;
+          {resourceLinks.length > 0 && (
+            <div className="mb-8">
+              <Typography className="text-muted-foreground mb-2 px-2.5 text-xs">
+                {resourcesMenu.label}
+              </Typography>
+              <ul>
+                {resourceLinks.map((item) => {
+                  const isActive = pathname === item.href;
 
-                return (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      onClick={toggleMenu}
-                      aria-current={isActive ? 'page' : undefined}
-                      className={cn(
-                        'flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors',
-                        isActive
-                          ? 'bg-card text-foreground font-medium'
-                          : 'text-muted-foreground hover:text-foreground',
-                      )}
-                    >
-                      {item.title}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        onClick={toggleMenu}
+                        aria-current={isActive ? 'page' : undefined}
+                        className={cn(
+                          'flex items-center gap-2 rounded-md px-2.5 py-2 text-sm transition-colors',
+                          isActive
+                            ? 'bg-card text-foreground font-medium'
+                            : 'text-muted-foreground hover:text-foreground',
+                        )}
+                      >
+                        {item.title}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
           <div
+            ref={anchorBarRef}
             className="bg-background/90 sticky -top-6 z-10 -mx-6 mb-4 flex items-center gap-1 px-6 py-2 backdrop-blur-md"
-            role="tablist"
+            role="group"
             aria-label={t('docs.sidebar.filterLabel')}
           >
             {anchors.map(({ id, label, Icon }) => {
@@ -208,8 +246,7 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
                 <button
                   key={id}
                   type="button"
-                  role="tab"
-                  aria-selected={isActive}
+                  aria-pressed={isActive}
                   aria-label={label}
                   onClick={() => jumpTo(id, shouldReduceMotion ? 'instant' : 'smooth')}
                   className={cn(
@@ -230,16 +267,9 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
                 </button>
               );
             })}
-            <span className="text-muted-foreground ml-1 truncate text-xs" aria-live="polite">
-              {activeAnchor?.label}
-            </span>
           </div>
           {docsNavigation.map((section, sectionIndex) => (
-            <div
-              key={sectionIndex}
-              data-section={section.title}
-              className="mb-8 scroll-mt-14 last:mb-0"
-            >
+            <div key={sectionIndex} data-section={section.title} className="mb-8 last:mb-0">
               <Typography className="text-muted-foreground mb-2 flex items-center gap-1.5 px-2.5 text-xs">
                 {(() => {
                   const Icon = anchors.find((entry) => entry.id === section.title)?.Icon;
@@ -258,7 +288,7 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
                         onClick={toggleMenu}
                         aria-current={isActive ? 'page' : undefined}
                         className={cn(
-                          'flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors',
+                          'flex items-center gap-2 rounded-md px-2.5 py-2 text-sm transition-colors',
                           isActive
                             ? 'bg-card text-foreground font-medium'
                             : 'text-muted-foreground hover:text-foreground',

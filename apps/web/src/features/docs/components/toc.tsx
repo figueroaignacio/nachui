@@ -11,14 +11,14 @@ import { TocEntry, TocProps, Tree, useActiveItem } from './toc-tree';
 function SkeletonItem({ width, subitems }: { width: number; subitems?: number[] }) {
   return (
     <li>
-      <div className="flex items-center gap-2.5 px-2 py-1.5">
+      <div className="flex items-center gap-2.5 px-2 py-2">
         <Skeleton className="bg-secondary rounded-full" style={{ height: 9, width }} />
       </div>
       {subitems && (
-        <ul className="m-0 mt-0.5 ml-3 list-none space-y-0.5">
+        <ul className="m-0 ml-3 list-none">
           {subitems.map((subWidth, i) => (
             <li key={i}>
-              <div className="flex items-center gap-2.5 px-2 py-1.5">
+              <div className="flex items-center gap-2.5 px-2 py-2">
                 <Skeleton
                   className="bg-secondary rounded-full"
                   style={{ height: 8, width: subWidth }}
@@ -34,9 +34,9 @@ function SkeletonItem({ width, subitems }: { width: number; subitems?: number[] 
 
 function TocSkeleton() {
   return (
-    <div className="sticky top-10 h-[calc(100vh-9rem)] space-y-4">
-      <Skeleton className="bg-secondary h-2 w-14 rounded-full" />
-      <ul className="m-0 list-none space-y-0.5">
+    <div className="sticky top-10 h-[calc(100vh-9rem)]">
+      <Skeleton className="bg-secondary mx-2 mb-3 h-2 w-14 rounded-full" />
+      <ul className="m-0 list-none">
         <SkeletonItem width={88} />
         <SkeletonItem width={72} subitems={[96, 80]} />
         <SkeletonItem width={64} />
@@ -73,7 +73,7 @@ export function Toc({ toc, footer }: TocPanelProps) {
   const t = useTranslations('components.toc');
 
   if (!toc || toc.length === 0) {
-    return footer ? <div className="sticky top-10 space-y-4">{footer}</div> : null;
+    return footer ? <div className="sticky top-10">{footer}</div> : null;
   }
 
   if (!mounted) {
@@ -82,12 +82,12 @@ export function Toc({ toc, footer }: TocPanelProps) {
 
   return (
     <motion.div
-      className="hide-scrollbar sticky top-10 h-[calc(100vh-9rem)] space-y-4 overflow-y-auto"
+      className="hide-scrollbar sticky top-10 h-[calc(100vh-9rem)] overflow-y-auto"
       initial={{ opacity: 0, x: 8 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
     >
-      <p className="text-muted-foreground font-mono text-[11px] lowercase">
+      <p className="text-muted-foreground mb-2 px-2 font-mono text-[11px] lowercase">
         <span className="text-muted-foreground/50">./</span>
         {t('label')}
       </p>
@@ -95,8 +95,8 @@ export function Toc({ toc, footer }: TocPanelProps) {
       <Tree tree={toc} activeItem={activeHeading} />
 
       {footer && (
-        <div className="mt-6">
-          <Separator className="bg-border/40 mb-5" />
+        <div className="mt-5">
+          <Separator className="bg-border/40 mx-2 mb-4 w-auto" />
           {footer}
         </div>
       )}

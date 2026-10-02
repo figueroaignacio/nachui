@@ -62,6 +62,14 @@ body {
   transition: padding-right 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* While the chat edge is dragged the page follows the pointer 1:1, so the
+   easing that smooths opening and closing would only make it lag behind. */
+body:has([data-chat-resizer][data-dragging]),
+body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
+  transition: none;
+  user-select: none;
+}
+
 @media (min-width: 48rem) {
   /* Short of the panel by one gutter, so the content keeps its usual breathing
      room on the right instead of being squeezed against the panel. */
@@ -167,24 +175,26 @@ body {
   }
 }
 
-[data-doc-prose] {
-  counter-reset: doc-section;
-}
+/*
+ * Default rhythm between blocks in a doc. Elements that need a different gap
+ * (paragraph runs, headings) set it with their own margin utilities, which win
+ * over this layer.
+ */
+@layer components {
+  :where([data-doc-prose], .steps) > * + * {
+    margin-block-start: 1.5rem;
+  }
 
-.doc-section-heading {
-  counter-increment: doc-section;
-}
+  [data-code-figure] {
+    margin-block: 1.5rem;
+  }
 
-.doc-section-heading::before {
-  content: counter(doc-section, decimal-leading-zero);
-  display: inline-block;
-  margin-inline-end: 0.9rem;
-  vertical-align: 0.35em;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 400;
-  letter-spacing: 0;
-  color: var(--muted-foreground);
+  [data-code-title] {
+    margin-block-end: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+  }
 }
 
 .doc-section-mark {
@@ -259,6 +269,11 @@ body {
   .preview-column[data-direction='reverse'] {
     animation-direction: reverse;
   }
+
+  .preview-stage[data-paused] .preview-column {
+    animation-play-state: paused;
+    will-change: auto;
+  }
 }
 
 @keyframes preview-drift {
@@ -331,64 +346,17 @@ body {
   transform: scaleY(0.6);
 }
 
-.ai-scene {
-  --ai-cue: 0ms;
-
-  overflow: visible;
-}
-
-.ai-breathe {
-  animation: ai-breathe 3.6s ease-in-out infinite;
-}
-
-.ai-headset {
-  animation: ai-headset-on 420ms cubic-bezier(0.34, 1.4, 0.64, 1) var(--ai-cue) both;
-}
-
-.ai-laptop {
-  animation: ai-laptop-in 600ms cubic-bezier(0.25, 0.9, 0.35, 1) calc(var(--ai-cue) + 500ms) both;
-}
-
-.ai-lid {
-  transform-box: fill-box;
-  transform-origin: bottom center;
-  animation: ai-lid-open 450ms ease-out calc(var(--ai-cue) + 1000ms) both;
-}
-
-.ai-mark {
-  animation: ai-mark-on 400ms steps(1, end) calc(var(--ai-cue) + 1450ms) both;
-}
-
-.ai-spill {
-  opacity: 0;
-  animation: ai-spill-on 900ms ease-out calc(var(--ai-cue) + 1450ms) both;
-}
-
-.ai-glow {
-  opacity: 0;
-  animation: ai-face-lit 900ms ease-out calc(var(--ai-cue) + 1450ms) both;
-}
-
+.ai-glow,
 .ai-glint {
   opacity: 0;
-  animation: ai-glint-on 300ms steps(1, end) calc(var(--ai-cue) + 1450ms) both;
 }
 
-.ai-lean {
-  animation: ai-lean-in 500ms ease-out calc(var(--ai-cue) + 1400ms) both;
+[data-busy='true'] .ai-glow {
+  animation: ai-busy-glow 1.8s ease-in-out infinite;
 }
 
-.ai-hands {
-  opacity: 0;
-  animation: ai-hands-in 350ms ease-out calc(var(--ai-cue) + 1600ms) both;
-}
-
-.ai-hand {
-  animation: ai-key-tap 300ms steps(2, end) infinite;
-}
-
-.ai-hand:nth-child(2) {
-  animation-delay: 150ms;
+[data-busy='true'] .ai-glint {
+  opacity: 1;
 }
 
 [data-expression='working'] .ai-eyes {
@@ -458,86 +426,14 @@ body {
   }
 }
 
-@keyframes ai-breathe {
+@keyframes ai-busy-glow {
   0%,
   100% {
-    translate: 0 0;
+    opacity: 0.08;
   }
+
   50% {
-    translate: 0 0.22px;
-  }
-}
-
-@keyframes ai-laptop-in {
-  from {
-    translate: 0 15px;
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  80% {
-    translate: 0 -0.8px;
-  }
-  to {
-    translate: 0 0;
-    opacity: 1;
-  }
-}
-
-@keyframes ai-lid-open {
-  from {
-    scale: 1 0;
-  }
-  70% {
-    scale: 1 1.12;
-  }
-  to {
-    scale: 1 1;
-  }
-}
-
-@keyframes ai-face-lit {
-  from {
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.5;
-  }
-  55% {
-    opacity: 0.16;
-  }
-  to {
-    opacity: 0.16;
-  }
-}
-
-@keyframes ai-glint-on {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes ai-lean-in {
-  from {
-    translate: 0 0;
-  }
-  to {
-    translate: 0 0.55px;
-  }
-}
-
-@keyframes ai-hands-in {
-  from {
-    opacity: 0;
-    translate: 0 3px;
-  }
-  to {
-    opacity: 1;
-    translate: 0 0;
+    opacity: 0.4;
   }
 }
 
@@ -565,16 +461,6 @@ body {
   }
 }
 
-@keyframes ai-key-tap {
-  0%,
-  100% {
-    translate: 0 0;
-  }
-  50% {
-    translate: 0 -1px;
-  }
-}
-
 @keyframes ai-leg-swing {
   0%,
   100% {
@@ -582,50 +468,6 @@ body {
   }
   50% {
     translate: 0 -0.6px;
-  }
-}
-
-@keyframes ai-headset-on {
-  from {
-    translate: 0 -9px;
-    opacity: 0;
-  }
-  40% {
-    opacity: 1;
-  }
-  to {
-    translate: 0 0;
-    opacity: 1;
-  }
-}
-
-@keyframes ai-mark-on {
-  from {
-    fill: #2f2f2f;
-  }
-  20% {
-    fill: #d8f5ec;
-  }
-  45% {
-    fill: #a8e6d7;
-  }
-  to {
-    fill: #a8e6d7;
-  }
-}
-
-@keyframes ai-spill-on {
-  from {
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.9;
-  }
-  55% {
-    opacity: 0.45;
-  }
-  to {
-    opacity: 0.45;
   }
 }
 
@@ -640,26 +482,99 @@ body {
 }
 
 .dark {
-  --background: oklch(7% 0 0);
-  --card: oklch(12.5% 0 0);
-  --popover: oklch(14.5% 0 0);
-  --surface-muted: oklch(10% 0 0);
-  --secondary: oklch(18% 0 0);
-  --accent: oklch(18% 0 0);
-  --muted: oklch(18% 0 0);
-  --border: oklch(19% 0 0);
-  --input: oklch(26% 0 0);
-  --rule: oklch(19% 0 0);
-  --code: oklch(10% 0 0);
-  --info-surface: oklch(12.5% 0 0);
+  --background: oklch(9% 0.006 75);
+  --card: oklch(14% 0.0054 75);
+  --popover: oklch(16% 0.0051 75);
+  --surface-muted: oklch(11.5% 0.0057 75);
+  --secondary: oklch(19.5% 0.0045 75);
+  --accent: oklch(19.5% 0.0045 75);
+  --muted: oklch(19.5% 0.0045 75);
+  --border: oklch(21% 0.0042 75);
+  --input: oklch(28% 0.0033 75);
+  --rule: oklch(21% 0.0042 75);
+  --code: oklch(11.5% 0.0057 75);
+  --info-surface: oklch(14% 0.0054 75);
 
   --brand: oklch(78% 0.12 75);
   --brand-foreground: oklch(14.5% 0 0);
 
+  --silk-base: oklch(10% 0.006 75);
+  --silk-fold: oklch(17% 0.0054 75);
+  --silk-deep: oklch(26% 0.0054 75);
+  --silk-glow: oklch(70% 0.12 75 / 0.35);
+}
+
+/* Dark background explorations: activate one with data-ink on <html>. Temporary. */
+.dark[data-ink='black'] {
+  --background: oklch(7% 0 0);
+  --surface-muted: oklch(10% 0 0);
+  --code: oklch(10% 0 0);
+  --card: oklch(12.5% 0 0);
+  --info-surface: oklch(12.5% 0 0);
+  --popover: oklch(14.5% 0 0);
+  --secondary: oklch(18% 0 0);
+  --accent: oklch(18% 0 0);
+  --muted: oklch(18% 0 0);
+  --border: oklch(19% 0 0);
+  --rule: oklch(19% 0 0);
+  --input: oklch(26% 0 0);
   --silk-base: oklch(8% 0 0);
   --silk-fold: oklch(15% 0 0);
   --silk-deep: oklch(24% 0.006 80);
-  --silk-glow: oklch(70% 0.12 75 / 0.35);
+}
+
+.dark[data-ink='ink'] {
+  --background: oklch(9% 0.022 262);
+  --surface-muted: oklch(11.5% 0.0209 262);
+  --code: oklch(11.5% 0.0209 262);
+  --card: oklch(14% 0.0198 262);
+  --info-surface: oklch(14% 0.0198 262);
+  --popover: oklch(16% 0.0187 262);
+  --secondary: oklch(19.5% 0.0165 262);
+  --accent: oklch(19.5% 0.0165 262);
+  --muted: oklch(19.5% 0.0165 262);
+  --border: oklch(21% 0.0154 262);
+  --rule: oklch(21% 0.0154 262);
+  --input: oklch(28% 0.0121 262);
+  --silk-base: oklch(10% 0.022 262);
+  --silk-fold: oklch(17% 0.0198 262);
+  --silk-deep: oklch(26% 0.0198 262);
+}
+
+.dark[data-ink='espresso'] {
+  --background: oklch(9% 0.014 62);
+  --surface-muted: oklch(11.5% 0.0133 62);
+  --code: oklch(11.5% 0.0133 62);
+  --card: oklch(14% 0.0126 62);
+  --info-surface: oklch(14% 0.0126 62);
+  --popover: oklch(16% 0.0119 62);
+  --secondary: oklch(19.5% 0.0105 62);
+  --accent: oklch(19.5% 0.0105 62);
+  --muted: oklch(19.5% 0.0105 62);
+  --border: oklch(21% 0.0098 62);
+  --rule: oklch(21% 0.0098 62);
+  --input: oklch(28% 0.0077 62);
+  --silk-base: oklch(10% 0.014 62);
+  --silk-fold: oklch(17% 0.0126 62);
+  --silk-deep: oklch(26% 0.0126 62);
+}
+
+.dark[data-ink='carbon-warmer'] {
+  --background: oklch(9% 0.009 72);
+  --surface-muted: oklch(11.5% 0.0085 72);
+  --code: oklch(11.5% 0.0085 72);
+  --card: oklch(14% 0.0081 72);
+  --info-surface: oklch(14% 0.0081 72);
+  --popover: oklch(16% 0.0076 72);
+  --secondary: oklch(19.5% 0.0067 72);
+  --accent: oklch(19.5% 0.0067 72);
+  --muted: oklch(19.5% 0.0067 72);
+  --border: oklch(21% 0.0063 72);
+  --rule: oklch(21% 0.0063 72);
+  --input: oklch(28% 0.005 72);
+  --silk-base: oklch(10% 0.009 72);
+  --silk-fold: oklch(17% 0.0081 72);
+  --silk-deep: oklch(26% 0.0081 72);
 }
 
 /* The dock wears the same silk as the dome: a folded gradient with two slow

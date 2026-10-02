@@ -72,6 +72,8 @@
     "menu": "Menú",
     "label": "Navegación del sitio",
     "home": "Inicio",
+    "homeLink": "Inicio de NachUI",
+    "close": "Cerrar menú",
     "docs": "Documentación",
     "search": "Buscar",
     "ask": "Preguntar a la IA",

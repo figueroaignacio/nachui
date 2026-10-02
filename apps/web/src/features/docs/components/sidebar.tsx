@@ -9,7 +9,15 @@ import { springs, still } from '@repo/ui/lib/motion';
 import { motion, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import * as React from 'react';
-import { buildSectionFilters, sectionOf } from '../lib/section-filters';
+import {
+  buildSectionFilters,
+  revealActiveLink,
+  scrollToSection,
+  sectionAtScroll,
+  sectionOf,
+} from '../lib/section-filters';
+
+const SPY_LOCK_MS = 800;
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -25,29 +33,31 @@ export function Sidebar() {
   const navRef = React.useRef<HTMLElement>(null);
   const anchors = buildSectionFilters(docsNavigation, t('sidebar.all')).slice(1);
 
+  const spyLockedUntil = React.useRef(0);
+
   const jumpTo = React.useCallback((id: string, behavior: ScrollBehavior) => {
     setAnchor(id);
     const nav = navRef.current;
-    const target = nav?.querySelector<HTMLElement>(`[data-section="${CSS.escape(id)}"]`);
-    if (!nav || !target) return;
-    nav.scrollTo({ top: target.offsetTop, behavior });
+    if (!nav) return;
+    spyLockedUntil.current = performance.now() + SPY_LOCK_MS;
+    scrollToSection(nav, id, behavior);
   }, []);
 
   React.useEffect(() => {
-    jumpTo(current, 'instant');
-  }, [current, jumpTo]);
+    const nav = navRef.current;
+    setAnchor(current);
+    if (!nav) return;
+    spyLockedUntil.current = performance.now() + SPY_LOCK_MS;
+    if (!revealActiveLink(nav, 0, 0.85)) scrollToSection(nav, current, 'instant');
+  }, [current, pathname]);
 
   React.useEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
     const onScroll = () => {
-      const sections = Array.from(nav.querySelectorAll<HTMLElement>('[data-section]'));
-      const nearest = sections.reduce<HTMLElement | undefined>((best, section) => {
-        if (!best) return section;
-        const distance = Math.abs(section.offsetTop - nav.scrollTop);
-        return distance < Math.abs(best.offsetTop - nav.scrollTop) ? section : best;
-      }, undefined);
-      if (nearest?.dataset.section) setAnchor(nearest.dataset.section);
+      if (performance.now() < spyLockedUntil.current) return;
+      const section = sectionAtScroll(nav);
+      if (section) setAnchor(section);
     };
     nav.addEventListener('scroll', onScroll, { passive: true });
     return () => nav.removeEventListener('scroll', onScroll);
@@ -56,12 +66,7 @@ export function Sidebar() {
   return (
     <aside className="hidden lg:block lg:pr-6">
       <div className="sticky top-10 grid h-[calc(100vh-9rem)] grid-cols-[2.25rem_minmax(0,1fr)] gap-3">
-        <div
-          className="flex flex-col gap-1"
-          role="tablist"
-          aria-orientation="vertical"
-          aria-label={t('sidebar.filterLabel')}
-        >
+        <div className="flex flex-col gap-1" role="group" aria-label={t('sidebar.filterLabel')}>
           {anchors.map(({ id, label, Icon }) => {
             const isActive = id === anchor;
             return (
@@ -69,8 +74,7 @@ export function Sidebar() {
                 <Tooltip.Trigger asChild>
                   <button
                     type="button"
-                    role="tab"
-                    aria-selected={isActive}
+                    aria-pressed={isActive}
                     aria-label={label}
                     onClick={() => jumpTo(id, shouldReduceMotion ? 'instant' : 'smooth')}
                     className={cn(

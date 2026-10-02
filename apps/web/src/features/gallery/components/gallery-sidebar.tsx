@@ -42,17 +42,18 @@ export function GallerySidebar() {
     <aside className="lg:border-r lg:pr-8">
       <nav
         aria-label={t('eyebrow')}
-        className="hide-scrollbar sticky top-10 hidden h-[calc(100vh-9rem)] shrink-0 overflow-y-scroll mask-[linear-gradient(180deg,black_90%,transparent)] pt-6 pb-20 lg:block"
+        className="hide-scrollbar sticky top-10 hidden h-[calc(100vh-9rem)] shrink-0 overflow-y-scroll mask-[linear-gradient(180deg,black_90%,transparent)] pb-20 lg:block"
       >
-        <Input
-          size="sm"
-          value={filter}
-          onChange={(event) => setFilter(event.target.value)}
-          placeholder={t('filter')}
-          aria-label={t('filter')}
-          leftIcon={<SearchIcon size={14} />}
-          className="mb-3"
-        />
+        <div className="mb-3">
+          <Input
+            size="sm"
+            value={filter}
+            onChange={(event) => setFilter(event.target.value)}
+            placeholder={t('filter')}
+            aria-label={t('filter')}
+            leftIcon={<SearchIcon size={14} />}
+          />
+        </div>
         <ul>
           <li>
             <Link

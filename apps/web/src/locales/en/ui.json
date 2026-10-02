@@ -72,6 +72,8 @@
     "menu": "Menu",
     "label": "Site navigation",
     "home": "Home",
+    "homeLink": "NachUI home",
+    "close": "Close menu",
     "docs": "Docs",
     "search": "Search",
     "ask": "Ask AI",

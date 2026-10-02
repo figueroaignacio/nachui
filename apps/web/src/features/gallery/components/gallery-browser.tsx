@@ -48,15 +48,16 @@ export function GalleryBrowser() {
         <p className="text-muted-strong mt-2 max-w-xl text-sm leading-relaxed">
           {t('description', { count: total })}
         </p>
-        <Input
-          size="sm"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={t('search')}
-          aria-label={t('search')}
-          leftIcon={<SearchIcon size={14} />}
-          className="mt-4 max-w-xs"
-        />
+        <div className="mt-4 max-w-xs">
+          <Input
+            size="sm"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={t('search')}
+            aria-label={t('search')}
+            leftIcon={<SearchIcon size={14} />}
+          />
+        </div>
       </section>
 
       <Grid columns="1" gap="4" className="items-stretch sm:grid-cols-2 xl:grid-cols-3">
