@@ -65,7 +65,10 @@ DB workflow lives in `packages/db`: `db:generate`, `db:migrate`, `db:push`, `db:
 
 ## Conventions that matter here
 
-- Components in `packages/ui` must stay copy-paste ready and self-contained: runtime deps are limited to `clsx`, `tailwind-merge`, `motion` and `zod`. Icons are never a dependency: a primitive inlines the SVGs it needs as local components, and demos import from `packages/ui/src/icons/`. Never import docs/app data into a primitive; pass text and icons via props.
+- Components in `packages/ui` must stay copy-paste ready and self-contained: runtime deps are limited to `clsx`, `tailwind-merge`, `motion`, `class-variance-authority` and `zod`. Icons are never a dependency: a primitive inlines the SVGs it needs as local components, and demos import from `packages/ui/src/icons/`. Never import docs/app data into a primitive; pass text and icons via props.
+- Components must work in any React 19 setup (Next.js, Vite, TanStack Start, React Router), not just Next. No `next/*` or framework imports, type-only imports use `import type` / `type X` (Vite's Rolldown build fails with `MISSING_EXPORT` otherwise), and no unused imports (Vite's default tsconfig rejects them). Cross-file imports stay relative (`../lib/cn`, `../components/button`): the installation guide tells users to mirror `src/{components,ai,hybrids,lib}` so pasted files work unchanged.
+- The theme tokens in `apps/web/src/content/docs/{en,es}/installation.mdx` are a trimmed copy of `packages/ui/src/css/globals.css`. Update them when you add or rename a token that components use.
+- In MDX, use the flat names for client compound components (`TabsList`, `TabsTrigger`, `TabsContent`). `Tabs.Content` is undefined in the server render. Don't indent JSX closing tags that follow a markdown list, or MDX nests them in the list item.
 - Derive class strings with `cn(...)` (`packages/ui/src/lib`), never manual Tailwind string concatenation. Tailwind v4 has no config file; design tokens are CSS variables in `packages/ui/src/css/globals.css` (visual rules in `DESIGN.md`).
 - `'use client'` only when hooks or DOM APIs require it. MDX-rendered components must be deterministic (no random IDs, no `Date.now()` defaults).
 - Files: kebab-case components (`mobile-menu.tsx`), hooks in `packages/ui/src/hooks` prefixed `use`, tests colocated with `.test.ts(x)` suffix.

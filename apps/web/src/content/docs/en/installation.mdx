@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Integrate NachUI into your React project in less than two minutes. Install dependencies, setup Tailwind, and import component source code.
+description: Set up NachUI by hand in Next.js, Vite, TanStack Start or React Router. Install Tailwind CSS v4, add the shared helpers and theme tokens, then copy the components you need.
 published: true
 date: 2025-10-22
 locale: en
@@ -8,47 +8,163 @@ toc:
   visible: true
 ---
 
+NachUI is plain React and Tailwind CSS, so it works in any React 19 project. The CLI is still in progress, so for now the setup is manual. It takes a few minutes and you only do it once.
+
 <Callout variant="info">
   <Callout.Title>Prerequisites</Callout.Title>
-  <Callout.Content>Before you begin, make sure you have installed:</Callout.Content>
+  <Callout.Content>Before you begin, make sure your project has:</Callout.Content>
 </Callout>
 
-- **React 18+** or **Next.js 15+**
-- **TypeScript**
-- **Tailwind CSS v3+**
-- **Node.js 18+**
+- **React 19+**
+- **Tailwind CSS v4**
+- **TypeScript** (recommended, the source is written in it)
+- **Node.js 20+**
+
+## Not tied to Next.js
+
+Many components start with `'use client'`. That line is a React directive, not a Next.js feature. Frameworks that use React Server Components (like the Next.js App Router) read it to know which files run in the browser. Everywhere else, like Vite, TanStack Start or React Router, it is just a string that the bundler ignores. You can keep it in every setup.
+
+The components only import from `react`, `react-dom`, `motion`, `clsx`, `tailwind-merge` and `class-variance-authority`. No router, no font loader and no framework APIs.
 
 ## Step-by-step installation
 
 <Steps>
 
-#### Set up Tailwind CSS
+#### Set up your framework with Tailwind CSS v4
 
-If you don't have Tailwind CSS installed yet, follow the official guide:
+Pick your framework. If you already have a project with Tailwind CSS v4 running, skip to the next step and just note where your main stylesheet is.
 
-- [Install Tailwind CSS with Next.js](https://tailwindcss.com/docs/guides/nextjs)
-- [Install Tailwind CSS with Vite](https://tailwindcss.com/docs/guides/vite)
+<Tabs defaultValue="next" className="mt-5 w-full" size="sm">
+<TabsList>
+  <TabsTrigger value="next">Next.js</TabsTrigger>
+  <TabsTrigger value="vite">Vite</TabsTrigger>
+  <TabsTrigger value="tanstack">TanStack Start</TabsTrigger>
+  <TabsTrigger value="react-router">React Router</TabsTrigger>
+</TabsList>
 
-#### Install required dependencies
+<TabsContent value="next" className="mt-5">
 
-NachUI requires the following libraries to work properly:
+Create the app with TypeScript, Tailwind CSS, the App Router and a `src/` folder:
 
-<PackageManagerTabs command="install motion clsx tailwind-merge class-variance-authority" />
+```bash
+npx create-next-app@latest my-app --ts --tailwind --app --src-dir
+```
+
+Tailwind CSS v4 comes already wired through `@tailwindcss/postcss`, so there is nothing else to install.
+
+- **Source folder:** `src/`
+- **Main stylesheet:** `src/app/globals.css`
+
+If your existing project still runs Tailwind CSS v3, upgrade it first with `npx @tailwindcss/upgrade`.
+
+</TabsContent>
+
+<TabsContent value="vite" className="mt-5">
+
+Create a React and TypeScript app, then add Tailwind CSS with its Vite plugin:
+
+```bash
+npm create vite@latest my-app -- --template react-ts
+cd my-app
+npm install tailwindcss @tailwindcss/vite
+```
+
+Register the plugin next to the React one:
+
+```ts title="vite.config.ts"
+import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+});
+```
+
+- **Source folder:** `src/`
+- **Main stylesheet:** `src/index.css`, already imported in `src/main.tsx`
+
+</TabsContent>
+
+<TabsContent value="tanstack" className="mt-5">
+
+Create the app with the TanStack CLI and choose Tailwind CSS when it asks for add-ons:
+
+```bash
+npx @tanstack/cli@latest create
+```
+
+To add Tailwind CSS to an existing TanStack Start project instead, install it and register the Vite plugin:
+
+```bash
+npm install tailwindcss @tailwindcss/vite
+```
+
+```ts title="vite.config.ts"
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+  plugins: [tanstackStart(), viteReact(), tailwindcss()],
+});
+```
+
+Then create the stylesheet and link it from the root route:
+
+```css title="src/styles/app.css"
+@import 'tailwindcss';
+```
+
+```tsx title="src/routes/__root.tsx"
+import appCss from '../styles/app.css?url';
+
+export const Route = createRootRoute({
+  head: () => ({
+    links: [{ rel: 'stylesheet', href: appCss }],
+  }),
+});
+```
+
+- **Source folder:** `src/`
+- **Main stylesheet:** the one linked in `src/routes/__root.tsx`
+
+</TabsContent>
+
+<TabsContent value="react-router" className="mt-5">
+
+Create the app with the official template:
+
+```bash
+npx create-react-router@latest my-app
+```
+
+The template already ships with Tailwind CSS v4 and `@tailwindcss/vite`, so there is nothing else to install.
+
+- **Source folder:** `app/` (wherever this guide says `src/`, use `app/`)
+- **Main stylesheet:** `app/app.css`
+
+The template's stylesheet sets its own colors on `html` and `body`. You will replace that file in a later step, so you don't need to keep them.
+
+</TabsContent>
+</Tabs>
+
+#### Install the dependencies
+
+<PackageManagerTabs command="motion clsx tailwind-merge class-variance-authority" />
 
 These libraries are used for:
 
-- **motion**: Smooth animations and transitions (Framer Motion)
-- **clsx**: Conditional CSS class construction
-- **tailwind-merge**: Smart merging of Tailwind classes
-- **class-variance-authority**: Component variant management
+- **motion**: animations and transitions
+- **clsx**: conditional class names
+- **tailwind-merge**: merging Tailwind classes without conflicts
+- **class-variance-authority**: component variants
 
-Icons need no extra package. The components carry their own SVGs, and the optional [NachUI icon set](/icons) installs one file at a time with `npx nachui add icons/<name>`. Any other icon library works too, since every component takes icons through props.
+Icons need no extra package. The components carry their own SVGs, and the optional [NachUI icon set](/icons) is one file per icon that you copy the same way as a component. Any other icon library works too, since every component takes icons through props.
 
-#### Configure the `cn` function
+#### Add the `cn` helper
 
-Create a utility file for the `cn` function that will combine CSS classes:
+Inside your source folder, create the helper every component uses to combine classes:
 
-```typescript title="lib/cn.ts"
+```typescript title="src/lib/cn.ts"
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -57,13 +173,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 ```
 
-This function is used by all NachUI components to intelligently merge Tailwind classes.
-
-#### Configure the motion tokens
+#### Add the motion tokens
 
 Next to `cn`, create the file that holds the animation vocabulary. Every component that moves reads its springs and variants from here, so the whole library shares one physical material and you tune it in one place:
 
-```typescript title="lib/motion.ts"
+```typescript title="src/lib/motion.ts"
 import type { Transition, Variants } from 'motion/react';
 
 const spring = (stiffness: number, damping: number, mass: number): Transition => ({
@@ -228,71 +342,146 @@ export const cascade = {
 
 Three springs cover everything. `snappy` is for hover, press and toggles, `smooth` for panels, menus and collapsibles, and `gentle` for the big surfaces like dialogs. Floating elements open from the side of their trigger and leave faster than they arrived.
 
-#### Add CSS variables
+#### Add the theme tokens
 
-Add the color variables to your global CSS file (typically `globals.css` or `app.css`):
+Replace the contents of your main stylesheet (the one you noted in the first step) with the following. If your file already has its own `@import 'tailwindcss'` line, keep yours and paste everything below it.
 
 ```css
 @import 'tailwindcss';
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: oklch(99.405% 0.00011 271.152);
-  --foreground: oklch(0% 0 0);
-  --card: oklch(99.405% 0.00011 271.152);
-  --card-foreground: oklch(0% 0 0);
-  --popover: oklch(99.107% 0.00011 271.152);
-  --popover-foreground: oklch(0% 0 0);
-  --primary: oklch(53.934% 0.2714 286.753);
-  --primary-foreground: oklch(100% 0.00011 271.152);
-  --secondary: oklch(95.4% 0.00637 255.746);
-  --secondary-foreground: oklch(13.441% 0.00002 271.152);
-  --muted: oklch(97.015% 0.00011 271.152);
-  --muted-foreground: oklch(43.861% 0.00005 271.152);
-  --accent: oklch(93.929% 0.02887 266.393);
-  --accent-foreground: oklch(54.456% 0.19041 259.501);
-  --destructive: oklch(62.902% 0.19024 23.052);
-  --destructive-foreground: oklch(100% 0.00011 271.152);
-  --border: oklch(88.09% 0.00941 258.48);
-  --input: oklch(93.1% 0.00011 271.152);
-  --ring: oklch(0% 0 0);
-  --radius: 0.625rem;
-  --grid-color: oklch(0% 0 0 / 0.04);
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.03);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.06);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+  --background: oklch(99.1% 0.003 85);
+  --foreground: oklch(14.5% 0.004 75);
+
+  --card: oklch(100% 0 0);
+  --card-foreground: oklch(14.5% 0.004 75);
+
+  --popover: oklch(100% 0 0);
+  --popover-foreground: oklch(14.5% 0.004 75);
+
+  --surface-muted: oklch(96.5% 0.0045 85);
+
+  --primary: oklch(20.5% 0.005 75);
+  --primary-foreground: oklch(98.5% 0.002 85);
+  --secondary: oklch(96% 0.0045 85);
+  --secondary-foreground: oklch(20.5% 0.005 75);
+  --accent: oklch(96.8% 0.0045 85);
+  --accent-foreground: oklch(20.5% 0.005 75);
+
+  --muted: oklch(94.2% 0.005 85);
+  --muted-foreground: oklch(52% 0.0065 75);
+  --muted-strong: oklch(37% 0.006 75);
+
+  --inverse: oklch(14.5% 0.004 75);
+  --inverse-foreground: oklch(98.5% 0.002 85);
+
+  --border: oklch(91.5% 0.0055 85);
+  --border-interactive: oklch(65% 0.0065 75);
+  --input: oklch(87% 0.0065 85);
+  --ring: oklch(65% 0.0065 75);
+  --rule: oklch(91.5% 0.0055 85);
+
+  --radius: 0.75rem;
+
+  --destructive: oklch(53% 0.16 27.3);
+  --destructive-foreground: oklch(98.5% 0.002 85);
+  --destructive-text: oklch(48% 0.15 27.3);
+  --destructive-surface: oklch(96.5% 0.016 27.3);
+  --destructive-border: oklch(87% 0.068 27.3);
+
+  --warning: oklch(53% 0.108 90.4);
+  --warning-foreground: oklch(98.5% 0.002 85);
+  --warning-text: oklch(48% 0.098 90.4);
+  --warning-surface: oklch(96.5% 0.028 90.4);
+  --warning-border: oklch(87% 0.07 90.4);
+
+  --success: oklch(53% 0.156 135.6);
+  --success-foreground: oklch(98.5% 0.002 85);
+  --success-text: oklch(48% 0.14 135.6);
+  --success-surface: oklch(96.5% 0.028 135.6);
+  --success-border: oklch(87% 0.07 135.6);
+
+  --info: oklch(53% 0.16 260.8);
+  --info-foreground: oklch(98.5% 0.002 85);
+  --info-text: oklch(48% 0.15 260.8);
+  --info-surface: oklch(96.5% 0.016 260.8);
+  --info-border: oklch(87% 0.06 260.8);
+
+  --overlay: oklch(14.5% 0.004 75 / 0.5);
+
+  --elevation-sm: 0 1px 2px oklch(25% 0.01 75 / 0.07);
+  --elevation-md: 0 4px 12px -4px oklch(25% 0.01 75 / 0.11);
+  --elevation-lg: 0 12px 32px -12px oklch(25% 0.01 75 / 0.17);
+
+  --code: oklch(99.1% 0.003 85);
 }
 
 .dark {
-  --background: oklch(12% 0.01 260);
-  --foreground: oklch(98% 0.002 270);
-  --card: oklch(15% 0.01 260);
-  --card-foreground: oklch(98% 0.002 270);
-  --popover: oklch(10% 0.012 260);
-  --popover-foreground: oklch(98% 0.002 270);
-  --primary: oklch(61.319% 0.22952 291.745);
-  --primary-foreground: oklch(100% 0.00011 271.152);
-  --secondary: oklch(29.399% 0.01304 272.934);
-  --secondary-foreground: oklch(95.514% 0.00011 271.152);
-  --muted: oklch(29.399% 0.01304 272.934);
-  --muted-foreground: oklch(70.576% 0.00008 271.152);
-  --accent: oklch(27.95% 0.03688 260.049);
-  --primary-foreground: oklch(100% 0.00011 271.152);
-  --destructive: oklch(71.061% 0.16614 22.191);
-  --destructive-foreground: oklch(100% 0.00011 271.152);
-  --border: oklch(22% 0.01 260);
-  --input: oklch(18% 0.01 260);
-  --ring: oklch(29.968% 0.01228 258.414);
-  --grid-color: oklch(100% 0 0 / 0.02);
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+  --background: oklch(14.5% 0 0);
+  --foreground: oklch(98.5% 0 0);
+
+  --card: oklch(21.8% 0 0);
+  --card-foreground: oklch(98.5% 0 0);
+
+  --popover: oklch(23.9% 0 0);
+  --popover-foreground: oklch(98.5% 0 0);
+
+  --surface-muted: oklch(18.2% 0 0);
+
+  --primary: oklch(98.5% 0 0);
+  --primary-foreground: oklch(14.5% 0 0);
+  --secondary: oklch(26.9% 0 0);
+  --secondary-foreground: oklch(98.5% 0 0);
+  --accent: oklch(26.9% 0 0);
+  --accent-foreground: oklch(98.5% 0 0);
+
+  --muted: oklch(26.9% 0 0);
+  --muted-foreground: oklch(71.5% 0 0);
+  --muted-strong: oklch(87% 0 0);
+
+  --inverse: oklch(98.5% 0 0);
+  --inverse-foreground: oklch(14.5% 0 0);
+
+  --border: oklch(26.9% 0 0);
+  --border-interactive: oklch(51% 0 0);
+  --input: oklch(34.8% 0 0);
+  --ring: oklch(98.5% 0 0);
+  --rule: oklch(26.9% 0 0);
+
+  --destructive: oklch(71.1% 0.166 22.2);
+  --destructive-foreground: oklch(14.5% 0 0);
+  --destructive-text: oklch(71.1% 0.166 22.2);
+  --destructive-surface: oklch(20.6% 0.018 18.8);
+  --destructive-border: oklch(27.5% 0.042 20.1);
+
+  --warning: oklch(80% 0.111 78.2);
+  --warning-foreground: oklch(14.5% 0 0);
+  --warning-text: oklch(80% 0.111 78.2);
+  --warning-surface: oklch(22.1% 0.017 79.3);
+  --warning-border: oklch(31.5% 0.035 83.9);
+
+  --success: oklch(76.9% 0.118 148.9);
+  --success-foreground: oklch(14.5% 0 0);
+  --success-text: oklch(76.9% 0.118 148.9);
+  --success-surface: oklch(22.4% 0.025 153.7);
+  --success-border: oklch(32% 0.049 151.2);
+
+  --info: oklch(87% 0 0);
+  --info-foreground: oklch(14.5% 0 0);
+  --info-text: oklch(87% 0 0);
+  --info-surface: oklch(21.8% 0 0);
+  --info-border: oklch(32.1% 0 0);
+
+  --overlay: oklch(0% 0 0 / 0.72);
+
+  --elevation-sm: 0 1px 2px oklch(0% 0 0 / 0.5);
+  --elevation-md: 0 8px 24px -8px oklch(0% 0 0 / 0.65);
+  --elevation-lg: 0 10px 40px -15px oklch(0% 0 0 / 0.8);
+
+  --code: oklch(18.2% 0 0);
 }
-```
 
-#### Add variables to `@theme`
-
-```css
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -300,80 +489,148 @@ Add the color variables to your global CSS file (typically `globals.css` or `app
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+  --color-surface-muted: var(--surface-muted);
+
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted-strong: var(--muted-strong);
+  --color-inverse: var(--inverse);
+  --color-inverse-foreground: var(--inverse-foreground);
+
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-text: var(--destructive-text);
+  --color-destructive-surface: var(--destructive-surface);
+  --color-destructive-border: var(--destructive-border);
+
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-text: var(--warning-text);
+  --color-warning-surface: var(--warning-surface);
+  --color-warning-border: var(--warning-border);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-text: var(--success-text);
+  --color-success-surface: var(--success-surface);
+  --color-success-border: var(--success-border);
+
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-info-text: var(--info-text);
+  --color-info-surface: var(--info-surface);
+  --color-info-border: var(--info-border);
+
   --color-border: var(--border);
+  --color-border-interactive: var(--border-interactive);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) - 0.25rem);
-  --radius-md: calc(var(--radius) - 0.125rem);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 0.25rem);
-  --radius-2xl: calc(var(--radius) + 0.5rem);
+  --color-rule: var(--rule);
+  --color-overlay: var(--overlay);
+  --color-code: var(--code);
+
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.33);
+  --radius-xl: calc(var(--radius) * 1.66);
+  --radius-2xl: calc(var(--radius) * 2);
+
+  --shadow-sm: var(--elevation-sm);
+  --shadow-md: var(--elevation-md);
+  --shadow-lg: var(--elevation-lg);
+
+}
+
+@utility hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
 }
 ```
 
-#### Recommended Project Structure
+This is the default theme. Every color is a variable you own, so you can change it later without touching a component. [Theming](/docs/concepts/theming) explains how the tokens work.
 
-Here's the recommended folder structure for organizing NachUI components in your project:
+#### Organize the folders
+
+Components import each other and the helpers through relative paths, like `../lib/cn` or `../components/button`. If you keep this layout inside your source folder, every file you paste works as-is:
 
 <div className="mt-6">
-  <Tree defaultExpanded={['src', 'src/components', 'src/components/ui']}>
+  <Tree defaultExpanded={['src', 'src/components', 'src/lib']}>
     <TreeItem value="src" label="src">
-      <TreeItem value="src/app" label="app">
-        <TreeItem value="src/app/layout.tsx" label="layout.tsx" />
-        <TreeItem value="src/app/page.tsx" label="page.tsx" />
-        <TreeItem value="src/app/globals.css" label="globals.css" />
-      </TreeItem>
       <TreeItem value="src/components" label="components">
-        <TreeItem value="src/components/ui" label="ui">
-          <TreeItem value="src/components/ui/button.tsx" label="button.tsx" />
-          <TreeItem value="src/components/ui/card.tsx" label="card.tsx" />
-          <TreeItem value="src/components/ui/tabs.tsx" label="tabs.tsx" />
-          <TreeItem value="src/components/ui/more" label="..." />
-        </TreeItem>
-        <TreeItem value="src/components/header.tsx" label="header.tsx" />
-        <TreeItem value="src/components/footer.tsx" label="footer.tsx" />
+        <TreeItem value="src/components/button.tsx" label="button.tsx" />
+        <TreeItem value="src/components/card.tsx" label="card.tsx" />
+        <TreeItem value="src/components/dialog.tsx" label="dialog.tsx" />
+        <TreeItem value="src/components/more" label="..." />
+      </TreeItem>
+      <TreeItem value="src/ai" label="ai">
+        <TreeItem value="src/ai/prompt-input.tsx" label="prompt-input.tsx" />
+        <TreeItem value="src/ai/more" label="..." />
+      </TreeItem>
+      <TreeItem value="src/hybrids" label="hybrids">
+        <TreeItem value="src/hybrids/chat.tsx" label="chat.tsx" />
+        <TreeItem value="src/hybrids/more" label="..." />
       </TreeItem>
       <TreeItem value="src/lib" label="lib">
         <TreeItem value="src/lib/cn.ts" label="cn.ts" />
         <TreeItem value="src/lib/motion.ts" label="motion.ts" />
-        <TreeItem value="src/lib/utils.ts" label="utils.ts" />
       </TreeItem>
     </TreeItem>
-    <TreeItem value="package.json" label="package.json" />
-    <TreeItem value="tailwind.config.ts" label="tailwind.config.ts" />
-    <TreeItem value="tsconfig.json" label="tsconfig.json" />
   </Tree>
 </div>
 
-**Key directories:**
+- `components/`: UI and layout elements
+- `ai/`: AI elements
+- `hybrids/`: hybrids, which combine UI and AI elements
+- `lib/`: the `cn` helper and the motion tokens
 
-- `components/ui/` - NachUI components (copied from docs)
-- `lib/` - Utility functions like `cn`
+If you prefer another layout, like `components/ui/`, that works too. Just update the imports at the top of each file you paste to point at your folders, for example `@/lib/cn` in Next.js or `~/lib/cn` in React Router.
 
 </Steps>
 
-## How to use components
+## Add your first component
 
-Once your project is configured, you can start copying components:
+1. Open the page of the component you want, for example [Button](/docs/elements/ui/button).
+2. Copy the source from the **Manual** tab.
+3. Paste it into the matching folder, in this case `src/components/button.tsx`.
+4. If the page lists extra dependencies, install them.
+5. Import it and use it:
 
-1. Navigate to the component page you want to use
-2. Copy the component code
-3. Paste it into your project (typically in `components/ui/`)
-4. Adjust import paths if necessary
-5. Customize the component according to your needs
+```tsx
+import { Button } from './components/button';
+
+export function App() {
+  return <Button>Deploy</Button>;
+}
+```
+
+Some components use others. When a file imports something like `./label` or `../components/dialog`, copy that component too.
+
+## Dark mode
+
+The dark theme turns on when the `dark` class is on the `<html>` element. Toggle that class however your app handles theme switching.
 
 ## Next steps
 
-- Explore the [component gallery](/components) to see all available components
-- Read about [customization](/docs/customization) to learn how to adapt components to your design
-- Check out [examples](/examples) to see real-world use cases
+- Browse the [component gallery](/components) to see everything available
+- Read [Theming](/docs/concepts/theming) to adapt the tokens to your brand
+- Follow the [CLI](/docs/concepts/cli) page to see where automated installs are heading

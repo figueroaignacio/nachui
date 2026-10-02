@@ -1,6 +1,7 @@
 {
   "notFound": {
     "title": "Página no encontrada",
+    "metaTitle": "Documentación no encontrada",
     "description": "Lo sentimos, la página que estás buscando no existe o ha sido movida a otra ubicación.",
     "goHome": "Volver al inicio",
     "goDocs": "Ver documentación"
@@ -41,10 +42,6 @@
         {
           "title": "Tematización",
           "href": "/docs/concepts/theming"
-        },
-        {
-          "title": "Modo Oscuro",
-          "href": "/docs/concepts/dark-mode"
         },
         {
           "title": "Componentes compuestos",
