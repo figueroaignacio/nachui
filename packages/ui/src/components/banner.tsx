@@ -4,6 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { springs } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -167,12 +168,9 @@ const VARIANT_ICONS: Record<BannerVariant, React.ComponentType<IconProps> | unde
 
 // --- Animation constants ---
 
-const BANNER_TRANSITION = {
-  type: 'spring',
-  damping: 30,
-  stiffness: 400,
-  mass: 0.5,
-} as const;
+const BANNER_INITIAL = { opacity: 0, y: -8 } as const;
+const BANNER_ANIMATE = { opacity: 1, y: 0 } as const;
+const BANNER_TRANSITION = { ...springs.smooth, opacity: { duration: 0.2 } };
 
 const BANNER_EXIT = {
   opacity: 0,
@@ -259,6 +257,8 @@ const BannerRoot = ({
         <motion.div
           ref={ref}
           role={role}
+          initial={shouldReduceMotion ? REDUCED_MOTION_PROPS.initial : BANNER_INITIAL}
+          animate={shouldReduceMotion ? REDUCED_MOTION_PROPS.animate : BANNER_ANIMATE}
           exit={
             shouldReduceMotion
               ? { ...BANNER_EXIT, transition: REDUCED_MOTION_PROPS.transition }
@@ -283,7 +283,7 @@ const BannerRoot = ({
             <button
               type="button"
               onClick={handleClose}
-              className="focus-visible:ring-ring shrink-0 cursor-pointer rounded-md p-1 opacity-70 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none"
+              className="focus-visible:ring-ring -m-1.5 shrink-0 cursor-pointer rounded-md p-2.5 opacity-70 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none"
               aria-label="Dismiss banner"
             >
               <XIcon size={14} aria-hidden="true" />

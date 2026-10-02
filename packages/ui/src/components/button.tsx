@@ -1,7 +1,7 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
-import { AnimatePresence, HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import React from 'react';
 import { cn } from '../lib/cn';
 import { springs, tap } from '../lib/motion';
@@ -120,7 +120,18 @@ const ButtonRoot = ({
       style={BUTTON_STYLE}
       {...props}
     >
-      <AnimatePresence mode="popLayout" initial={false}>
+      <motion.span
+        className="flex items-center gap-2"
+        variants={CONTENT_VARIANTS}
+        initial={false}
+        animate={loading ? 'exit' : 'animate'}
+        transition={SWAP_TRANSITION}
+      >
+        {leftIcon ? <span className="shrink-0">{leftIcon}</span> : null}
+        <span>{children}</span>
+        {rightIcon ? <span className="shrink-0">{rightIcon}</span> : null}
+      </motion.span>
+      <AnimatePresence initial={false}>
         {loading ? (
           <motion.span
             key="loader"
@@ -129,26 +140,12 @@ const ButtonRoot = ({
             animate="animate"
             exit="exit"
             transition={SWAP_TRANSITION}
-            className="absolute flex items-center justify-center"
+            className="absolute inset-0 flex items-center justify-center"
             aria-hidden="true"
           >
             {loader ?? <LoaderIcon className="size-4 animate-spin" size={16} />}
           </motion.span>
-        ) : (
-          <motion.div
-            key="content"
-            className="flex items-center gap-2"
-            variants={CONTENT_VARIANTS}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={SWAP_TRANSITION}
-          >
-            {leftIcon ? <span className="shrink-0">{leftIcon}</span> : null}
-            <span>{children}</span>
-            {rightIcon ? <span className="shrink-0">{rightIcon}</span> : null}
-          </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </motion.button>
   );

@@ -284,9 +284,9 @@ const AttachmentRemove = ({
         onClick?.(event);
       }}
       className={cn(
-        'border-border bg-background text-muted-foreground hover:text-foreground focus-visible:ring-ring flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors focus-visible:ring-2 focus-visible:outline-none',
+        'border-border bg-background text-muted-foreground hover:text-foreground focus-visible:ring-ring relative flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors after:absolute after:-inset-2 focus-visible:ring-2 focus-visible:outline-none',
         variant === 'grid' &&
-          'absolute -top-2 -right-2 opacity-0 group-hover/attachment:opacity-100 focus-visible:opacity-100',
+          'absolute -top-2 -right-2 group-hover/attachment:opacity-100 focus-visible:opacity-100 [@media(hover:hover)]:opacity-0',
         variant === 'list' && 'ml-auto',
         className,
       )}

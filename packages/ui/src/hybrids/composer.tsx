@@ -167,31 +167,8 @@ type ComposerInputProps = Omit<
 type ComposerFooterProps = React.HTMLAttributes<HTMLDivElement>;
 type ComposerSendProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-const ValueBridge = ({
-  value,
-  defaultValue,
-  onValueChange,
-}: Pick<ComposerProps, 'value' | 'defaultValue' | 'onValueChange'>) => {
-  const { text, setText } = usePromptInput();
-  const seeded = React.useRef(false);
-
-  React.useEffect(() => {
-    if (seeded.current) return;
-    seeded.current = true;
-    if (value !== undefined) setText(value);
-    else if (defaultValue) setText(defaultValue);
-  }, [value, defaultValue, setText]);
-
-  React.useEffect(() => {
-    if (value !== undefined && value !== text) setText(value);
-  }, [value, text, setText]);
-
-  React.useEffect(() => {
-    onValueChange?.(text);
-  }, [text, onValueChange]);
-
-  return null;
-};
+const EMPTY_SUGGESTIONS: string[] = [];
+const EMPTY_MODELS: ComposerModel[] = [];
 
 const ComposerRoot = ({
   className,
@@ -202,9 +179,9 @@ const ComposerRoot = ({
   disabled = false,
   maxFiles,
   accept,
-  suggestions = [],
+  suggestions = EMPTY_SUGGESTIONS,
   sendOnSuggestion = true,
-  models = [],
+  models = EMPTY_MODELS,
   model,
   onModelChange,
   context,
@@ -221,19 +198,23 @@ const ComposerRoot = ({
     [labels],
   );
 
+  const blocked = disabled || status === 'streaming' || status === 'submitted';
+
   const send = React.useCallback(
     (message: ComposerMessage) => {
-      if (disabled || status === 'streaming' || status === 'submitted') return;
+      if (blocked) return;
       onSend(message);
     },
-    [disabled, status, onSend],
+    [blocked, onSend],
   );
 
   const handleSubmit = React.useCallback(
     (message: PromptInputMessage) => {
-      send({ text: message.text.trim(), files: message.files.map((entry) => entry.file) });
+      if (blocked) return false;
+      onSend({ text: message.text.trim(), files: message.files.map((entry) => entry.file) });
+      return true;
     },
-    [send],
+    [blocked, onSend],
   );
 
   const contextValue = React.useMemo<ComposerContextValue>(
@@ -275,11 +256,13 @@ const ComposerRoot = ({
         multiple
         maxFiles={maxFiles}
         accept={accept}
+        value={value}
+        defaultValue={defaultValue}
+        onValueChange={onValueChange}
         data-status={status}
         className={cn(disabled && 'opacity-60', className)}
         {...props}
       >
-        <ValueBridge value={value} defaultValue={defaultValue} onValueChange={onValueChange} />
         {children ?? (
           <>
             <ComposerSuggestions />

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
@@ -91,5 +92,25 @@ describe('Composer', () => {
     expect(screen.getByPlaceholderText('Ask')).toHaveValue('one');
     rerender(<Composer onSend={vi.fn()} value="two" placeholder="Ask" />);
     expect(screen.getByPlaceholderText('Ask')).toHaveValue('two');
+  });
+
+  it('reports typing to a controlled owner without looping', async () => {
+    function Controlled() {
+      const [value, setValue] = React.useState('');
+      return <Composer onSend={vi.fn()} value={value} onValueChange={setValue} placeholder="Ask" />;
+    }
+    render(<Controlled />);
+    const input = screen.getByPlaceholderText('Ask');
+    await userEvent.type(input, 'hi');
+    expect(input).toHaveValue('hi');
+  });
+
+  it('keeps the draft when Enter is pressed while streaming', async () => {
+    const onSend = vi.fn();
+    render(<Composer onSend={onSend} status="streaming" placeholder="Ask" />);
+    const input = screen.getByPlaceholderText('Ask');
+    await userEvent.type(input, 'next question{Enter}');
+    expect(onSend).not.toHaveBeenCalled();
+    expect(input).toHaveValue('next question');
   });
 });

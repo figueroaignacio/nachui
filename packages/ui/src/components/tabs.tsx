@@ -9,7 +9,7 @@ import { springs, still } from '../lib/motion';
 // --- CVA ---
 
 const tabsListVariants = cva(
-  'inline-flex rounded-md p-0.5 text-muted-foreground w-full sm:w-auto overflow-hidden',
+  'inline-flex max-w-full rounded-md p-0.5 text-muted-foreground w-full sm:w-auto overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
   {
     variants: {
       variant: {
@@ -29,7 +29,7 @@ const tabsListVariants = cva(
 );
 
 const tabsTriggerVariants = cva(
-  'relative inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 z-10 cursor-pointer',
+  'relative inline-flex shrink-0 items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 z-10 cursor-pointer',
   {
     variants: {
       variant: {
@@ -58,9 +58,8 @@ const tabsTriggerVariants = cva(
 interface TabsContextValue {
   activeTab: string;
   setActiveTab: (value: string) => void;
-  direction: number;
-  setDirection: (dir: number) => void;
   variant: NonNullable<TabsProps['variant']>;
+  size: NonNullable<TabsProps['size']>;
   layoutId: string;
 }
 
@@ -88,7 +87,7 @@ const TabsRoot = ({
   value: controlledValue,
   onValueChange,
   variant = 'default',
-  size: _size = 'default',
+  size = 'default',
   children,
   ref,
   ...props
@@ -96,7 +95,6 @@ const TabsRoot = ({
   const [internalValue, setInternalValue] = React.useState(defaultValue || '');
   const isControlled = controlledValue !== undefined;
   const activeTab = isControlled ? controlledValue : internalValue;
-  const [direction, setDirection] = React.useState(0);
   const layoutId = React.useId();
 
   const setActiveTab = React.useCallback(
@@ -109,17 +107,13 @@ const TabsRoot = ({
     [isControlled, onValueChange],
   );
 
+  const contextValue = React.useMemo(
+    () => ({ activeTab, setActiveTab, variant, size, layoutId }),
+    [activeTab, setActiveTab, variant, size, layoutId],
+  );
+
   return (
-    <TabsContext
-      value={{
-        activeTab,
-        setActiveTab,
-        direction,
-        setDirection,
-        variant,
-        layoutId,
-      }}
-    >
+    <TabsContext value={contextValue}>
       <div ref={ref} className={cn('w-full', className)} {...props}>
         {children}
       </div>
@@ -142,7 +136,7 @@ const TabsList = ({
   ref,
   ...props
 }: TabsListProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { variant: contextVariant } = useTabsContext();
+  const { variant: contextVariant, size: contextSize } = useTabsContext();
   const finalVariant = variant || contextVariant;
 
   return (
@@ -150,7 +144,10 @@ const TabsList = ({
       ref={ref}
       role="tablist"
       aria-orientation={orientation}
-      className={cn(tabsListVariants({ variant: finalVariant, size }), className)}
+      className={cn(
+        tabsListVariants({ variant: finalVariant, size: size || contextSize }),
+        className,
+      )}
       {...props}
     >
       {children}
@@ -171,42 +168,39 @@ const TabsTrigger = ({
   children,
   variant,
   size,
+  onClick,
+  onKeyDown,
   ref,
   ...props
 }: TabsTriggerProps & { ref?: React.Ref<HTMLButtonElement> }) => {
   const {
     activeTab,
     setActiveTab,
-    setDirection,
     variant: contextVariant,
+    size: contextSize,
     layoutId,
   } = useTabsContext();
   const isActive = activeTab === value;
   const finalVariant = variant || contextVariant;
+  const finalSize = size || contextSize;
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const shouldReduceMotion = useReducedMotion();
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const parent = buttonRef.current?.parentElement;
-    if (parent) {
-      const childrenArray = Array.from(parent.children);
-      const newIndex = childrenArray.indexOf(buttonRef.current!);
-      const currentIndex = childrenArray.findIndex(
-        (child) => child.getAttribute('data-state') === 'active',
-      );
-      if (currentIndex !== -1 && newIndex !== currentIndex) {
-        setDirection(newIndex > currentIndex ? 1 : -1);
-      }
-    }
+    onClick?.(e);
+    if (e.defaultPrevented) return;
     setActiveTab(value);
-    props.onClick?.(e);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    onKeyDown?.(e);
+    if (e.defaultPrevented) return;
     const parent = buttonRef.current?.parentElement;
     if (!parent) return;
 
-    const triggers = Array.from(parent.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const triggers = Array.from(
+      parent.querySelectorAll<HTMLButtonElement>('[role="tab"]:not(:disabled)'),
+    );
     const currentIndex = triggers.indexOf(buttonRef.current!);
 
     let newIndex = currentIndex;
@@ -252,10 +246,10 @@ const TabsTrigger = ({
       aria-controls={`${layoutId}-content-${value}`}
       tabIndex={isActive ? 0 : -1}
       data-state={isActive ? 'active' : 'inactive'}
+      className={cn(tabsTriggerVariants({ variant: finalVariant, size: finalSize }), className)}
+      {...props}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      className={cn(tabsTriggerVariants({ variant: finalVariant, size }), className)}
-      {...props}
     >
       <span className="inherit relative z-20">{children}</span>
       {isActive && (
@@ -265,7 +259,7 @@ const TabsTrigger = ({
             'absolute inset-0 z-10',
             finalVariant === 'underline'
               ? 'bg-foreground top-auto bottom-0 h-[1.5px]'
-              : 'bg-background border-border/30 rounded-sm border',
+              : 'bg-background dark:bg-input border-border/30 rounded-sm border shadow-sm',
           )}
           transition={shouldReduceMotion ? still : springs.smooth}
         />

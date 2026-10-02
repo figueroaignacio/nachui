@@ -78,11 +78,21 @@ function Checkbox({
   }, [indeterminate]);
 
   return (
-    <div className={cn('relative flex shrink-0 items-center justify-center', className)}>
+    <div
+      className={cn(
+        "relative flex shrink-0 items-center justify-center before:absolute before:-inset-2 before:content-['']",
+        className,
+      )}
+      onClick={(event) => {
+        if (event.target !== event.currentTarget) return;
+        if (event.currentTarget.closest('label')) return;
+        innerRef.current?.click();
+      }}
+    >
       <input
         type="checkbox"
         ref={mergedRef}
-        className="peer focus-visible:ring-ring border-primary checked:bg-primary checked:text-primary-foreground text-primary-foreground bg-background indeterminate:bg-primary size-4 shrink-0 cursor-pointer appearance-none rounded-sm border transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        className="peer focus-visible:ring-ring border-primary checked:bg-primary checked:text-primary-foreground text-primary-foreground bg-background indeterminate:bg-primary ring-offset-background relative size-4 shrink-0 cursor-pointer appearance-none rounded-sm border transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         onChange={(e) => {
           onChange?.(e);
           onCheckedChange?.(e.target.checked);

@@ -55,8 +55,20 @@ vi.mock('motion/react', async () => {
           {children}
         </div>
       ),
+      span: ({
+        children,
+        _initial,
+        _animate,
+        _exit,
+        _variants,
+        _transition,
+        ...props
+      }: React.ComponentProps<'span'> & Record<string, unknown>) => (
+        <span {...(props as React.ComponentProps<'span'>)}>{children}</span>
+      ),
     },
     useMotionValue: () => ({ set: vi.fn(), get: () => 0 }),
+    useDragControls: () => ({ start: vi.fn() }),
     useTransform: () => ({ set: vi.fn(), get: () => 0 }),
     useReducedMotion: () => false,
     AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,

@@ -46,6 +46,7 @@ interface ResizableContextValue {
   constraintsRef: React.RefObject<PanelConstraints[]>;
   containerRef: React.RefObject<HTMLDivElement | null>;
   resizeAt: (handleIndex: number, delta: number) => void;
+  resizeTo: (handleIndex: number, target: number) => void;
   setDragging: (dragging: boolean) => void;
 }
 
@@ -136,34 +137,60 @@ const ResizableRoot = ({
   const constraintsRef = React.useRef(constraints);
   constraintsRef.current = constraints;
 
-  const resizeAt = React.useCallback((handleIndex: number, delta: number) => {
-    setSizes((previous) => {
-      const current =
-        previous.length === constraintsRef.current.length
-          ? previous
-          : initialSizes(constraintsRef.current);
-      const before = current[handleIndex];
-      const after = current[handleIndex + 1];
-      const beforeRule = constraintsRef.current[handleIndex];
-      const afterRule = constraintsRef.current[handleIndex + 1];
-      if (before === undefined || after === undefined || !beforeRule || !afterRule) {
-        return current;
-      }
+  const resizeBy = React.useCallback(
+    (handleIndex: number, getDelta: (before: number) => number) => {
+      setSizes((previous) => {
+        const current =
+          previous.length === constraintsRef.current.length
+            ? previous
+            : initialSizes(constraintsRef.current);
+        const before = current[handleIndex];
+        const after = current[handleIndex + 1];
+        const beforeRule = constraintsRef.current[handleIndex];
+        const afterRule = constraintsRef.current[handleIndex + 1];
+        if (before === undefined || after === undefined || !beforeRule || !afterRule) {
+          return previous;
+        }
 
-      const maxGrow = Math.min(beforeRule.maxSize - before, after - afterRule.minSize);
-      const maxShrink = Math.min(before - beforeRule.minSize, afterRule.maxSize - after);
-      const applied = clamp(delta, -maxShrink, maxGrow);
-      if (applied === 0) return current;
+        const maxGrow = Math.min(beforeRule.maxSize - before, after - afterRule.minSize);
+        const maxShrink = Math.min(before - beforeRule.minSize, afterRule.maxSize - after);
+        const applied = clamp(getDelta(before), -maxShrink, maxGrow);
+        if (applied === 0) return previous;
 
-      const next = [...current];
-      next[handleIndex] = before + applied;
-      next[handleIndex + 1] = after - applied;
-      onLayoutRef.current?.(next);
-      return next;
-    });
-  }, []);
+        const next = [...current];
+        next[handleIndex] = before + applied;
+        next[handleIndex + 1] = after - applied;
+        return next;
+      });
+    },
+    [],
+  );
 
-  const context = { direction, sizes: layout, constraintsRef, containerRef, resizeAt, setDragging };
+  const resizeAt = React.useCallback(
+    (handleIndex: number, delta: number) => resizeBy(handleIndex, () => delta),
+    [resizeBy],
+  );
+
+  const resizeTo = React.useCallback(
+    (handleIndex: number, target: number) => resizeBy(handleIndex, (before) => target - before),
+    [resizeBy],
+  );
+
+  const initialSizesRef = React.useRef(sizes);
+  React.useEffect(() => {
+    if (sizes === initialSizesRef.current) return;
+    onLayoutRef.current?.(sizes);
+  }, [sizes]);
+
+  const context = {
+    direction,
+    sizes: layout,
+    constraintsRef,
+    containerRef,
+    resizeAt,
+    resizeTo,
+    setDragging,
+  };
 
   return (
     <ResizableContext value={context}>
@@ -233,7 +260,7 @@ const ResizableHandle = ({
   ref,
   ...props
 }: ResizableHandleProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { direction, sizes, constraintsRef, containerRef, resizeAt, setDragging } =
+  const { direction, sizes, constraintsRef, containerRef, resizeAt, resizeTo, setDragging } =
     useResizableContext();
   const index = React.use(HandleIndexContext);
   const dragRef = React.useRef<{ start: number; before: number; after: number } | null>(null);
@@ -269,8 +296,7 @@ const ResizableHandle = ({
     if (total === 0) return;
     const current = isHorizontal ? event.clientX : event.clientY;
     const deltaPercent = ((current - drag.start) / total) * 100;
-    const target = drag.before + deltaPercent;
-    resizeAt(index, target - before);
+    resizeTo(index, drag.before + deltaPercent);
   };
 
   const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -324,10 +350,10 @@ const ResizableHandle = ({
       onPointerCancel={handlePointerUp}
       onKeyDown={handleKeyDown}
       className={cn(
-        'bg-border focus-visible:ring-ring relative flex shrink-0 touch-none items-center justify-center outline-none focus-visible:ring-1 focus-visible:ring-offset-1 data-[disabled]:pointer-events-none',
+        'bg-border focus-visible:ring-ring ring-offset-background relative flex shrink-0 touch-none items-center justify-center outline-none focus-visible:ring-1 focus-visible:ring-offset-1 data-[disabled]:pointer-events-none',
         isHorizontal
-          ? 'w-px cursor-col-resize after:absolute after:inset-y-0 after:left-1/2 after:w-2 after:-translate-x-1/2'
-          : 'h-px w-full cursor-row-resize after:absolute after:inset-x-0 after:top-1/2 after:h-2 after:-translate-y-1/2',
+          ? 'w-px cursor-col-resize after:absolute after:inset-y-0 after:left-1/2 after:w-2 after:-translate-x-1/2 pointer-coarse:after:w-6'
+          : 'h-px w-full cursor-row-resize after:absolute after:inset-x-0 after:top-1/2 after:h-2 after:-translate-y-1/2 pointer-coarse:after:h-6',
         className,
       )}
       {...props}

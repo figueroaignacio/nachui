@@ -11,6 +11,7 @@ import {
 } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { springs, still, tap } from '../lib/motion';
 import { Tooltip } from './tooltip';
 
 type DockContextValue = {
@@ -51,8 +52,8 @@ const DockRoot = ({
   label = 'Dock',
   className,
   children,
-  onMouseMove,
-  onMouseLeave,
+  onPointerMove,
+  onPointerLeave,
   ...props
 }: DockProps) => {
   const reduceMotion = useReducedMotion();
@@ -70,14 +71,16 @@ const DockRoot = ({
         data-hidden={hidden ? 'true' : undefined}
         initial={false}
         animate={hidden ? { y: 96, opacity: 0 } : { y: 0, opacity: 1 }}
-        transition={reduceMotion ? { duration: 0 } : BAR_TRANSITION}
-        onMouseMove={(event) => {
-          mouseX.set(event.clientX);
-          onMouseMove?.(event);
+        transition={reduceMotion ? still : BAR_TRANSITION}
+        inert={hidden || undefined}
+        onPointerMove={(event) => {
+          if (event.pointerType === 'mouse') mouseX.set(event.clientX);
+          else mouseX.set(Infinity);
+          onPointerMove?.(event);
         }}
-        onMouseLeave={(event) => {
+        onPointerLeave={(event) => {
           mouseX.set(Infinity);
-          onMouseLeave?.(event);
+          onPointerLeave?.(event);
         }}
         style={{ height: itemSize + 12 }}
         className={cn(
@@ -117,11 +120,13 @@ const DockItem = ({
   ...props
 }: DockItemProps) => {
   const { mouseX, magnify, itemSize, magnifiedSize, range } = useDockContext();
+  const reduceMotion = useReducedMotion();
   const containerRef = React.useRef<HTMLSpanElement>(null);
 
   const distance = useTransform(mouseX, (x) => {
+    if (!magnify || !Number.isFinite(x)) return Infinity;
     const bounds = containerRef.current?.getBoundingClientRect();
-    if (!bounds || !magnify) return Infinity;
+    if (!bounds) return Infinity;
     return x - (bounds.left + bounds.width / 2);
   });
   const targetSize = useTransform(
@@ -170,9 +175,10 @@ const DockItem = ({
       <Tooltip.Trigger asChild>
         <motion.span
           ref={containerRef}
+          tabIndex={-1}
           style={{ width: size, height: size }}
-          whileTap={{ scale: 0.86 }}
-          transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+          whileTap={reduceMotion ? undefined : tap}
+          transition={springs.snappy}
           className={cn(
             'hover:bg-muted data-[active=true]:bg-muted/70 relative flex shrink-0 items-center justify-center rounded-full transition-colors',
             containerClassName,

@@ -31,15 +31,42 @@ function ChevronDownIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) 
 
 const MENU_STYLE = { willChange: 'opacity, transform, filter' } as const;
 
-const CLOSE_DELAY_MS = 150;
+const VIEWPORT_PADDING = 8;
+
+function useViewportShift(ref: React.RefObject<HTMLElement | null>, open: boolean) {
+  const [shift, setShift] = React.useState(0);
+
+  React.useLayoutEffect(() => {
+    if (!open) return;
+    const measure = () => {
+      const el = ref.current;
+      if (!el) return;
+      const { transform, translate } = el.style;
+      el.style.transform = 'none';
+      el.style.translate = '';
+      const rect = el.getBoundingClientRect();
+      el.style.transform = transform;
+      el.style.translate = translate;
+      const viewport = document.documentElement.clientWidth || window.innerWidth;
+      if (!rect.width || !viewport) return;
+      let next = 0;
+      if (rect.right > viewport - VIEWPORT_PADDING) next = viewport - VIEWPORT_PADDING - rect.right;
+      if (rect.left + next < VIEWPORT_PADDING) next = VIEWPORT_PADDING - rect.left;
+      setShift(Math.round(next));
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [open, ref]);
+
+  return shift;
+}
 
 // --- Item context ---
 
 interface NavigationMenuItemContextType {
   open: boolean;
   setOpen: (open: boolean) => void;
-  scheduleClose: () => void;
-  cancelClose: () => void;
   id: string;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
 }
@@ -77,26 +104,11 @@ const NavigationMenuItem = ({
   const id = React.useId();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
-  const closeTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const cancelClose = React.useCallback(() => {
-    if (closeTimer.current) {
-      clearTimeout(closeTimer.current);
-      closeTimer.current = null;
-    }
-  }, []);
-
-  const scheduleClose = React.useCallback(() => {
-    cancelClose();
-    closeTimer.current = setTimeout(() => setOpen(false), CLOSE_DELAY_MS);
-  }, [cancelClose]);
-
-  React.useEffect(() => cancelClose, [cancelClose]);
 
   React.useEffect(() => {
     if (!open) return;
 
-    const handleClickOutside = (e: MouseEvent) => {
+    const handlePointerDownOutside = (e: PointerEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setOpen(false);
       }
@@ -109,13 +121,15 @@ const NavigationMenuItem = ({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('pointerdown', handlePointerDownOutside);
     document.addEventListener('keydown', handleEscape);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('pointerdown', handlePointerDownOutside);
       document.removeEventListener('keydown', handleEscape);
     };
   }, [open]);
+
+  const contextValue = React.useMemo(() => ({ open, setOpen, id, triggerRef }), [open, id]);
 
   const mergedRef = React.useCallback(
     (node: HTMLDivElement | null) => {
@@ -127,9 +141,7 @@ const NavigationMenuItem = ({
   );
 
   return (
-    <NavigationMenuItemContext
-      value={{ open, setOpen, scheduleClose, cancelClose, id, triggerRef }}
-    >
+    <NavigationMenuItemContext value={contextValue}>
       <div ref={mergedRef} className={cn('relative', className)} {...props}>
         {children}
       </div>
@@ -167,7 +179,7 @@ const NavigationMenuTrigger = ({
         onClick?.(e);
       }}
       className={cn(
-        'text-muted-foreground hover:text-foreground focus-visible:ring-ring flex cursor-pointer items-center gap-1 rounded-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+        'text-muted-foreground hover:text-foreground focus-visible:ring-ring ring-offset-background flex min-h-9 cursor-pointer items-center gap-1 rounded-md px-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
         open && 'text-foreground',
         className,
       )}
@@ -187,19 +199,26 @@ NavigationMenuTrigger.displayName = 'NavigationMenuTrigger';
 const NavigationMenuContent = ({ className, children, ...props }: HTMLMotionProps<'div'>) => {
   const { open, id } = useNavigationMenuItem();
   const shouldReduceMotion = useReducedMotion();
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  const shift = useViewportShift(contentRef, open);
+  const style = React.useMemo(
+    () => ({ ...MENU_STYLE, translate: shift ? `${shift}px` : undefined }),
+    [shift],
+  );
 
   return (
     <AnimatePresence>
       {open && (
         <motion.div
+          ref={contentRef}
           id={id}
           variants={shouldReduceMotion ? reveal : floatingVariants.bottom}
           initial="hidden"
           animate="visible"
           exit="exit"
-          style={MENU_STYLE}
+          style={style}
           className={cn(
-            'border-border bg-popover absolute top-full left-0 z-50 mt-2 w-72 rounded-lg border p-1.5 shadow-lg',
+            'bg-popover text-popover-foreground border-border absolute top-full left-0 z-50 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-md border p-1 shadow-md',
             floatingOrigin.bottom,
             className,
           )}

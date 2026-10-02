@@ -1,9 +1,14 @@
 'use client';
 
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
-import { collapse, springs } from '../lib/motion';
+import { collapse, springs, still } from '../lib/motion';
+
+const INSTANT_COLLAPSE: Variants = {
+  closed: { height: 0, opacity: 0, transition: still },
+  open: { height: 'auto', opacity: 1, transition: still },
+};
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -214,6 +219,7 @@ const ChainOfThoughtContent = ({
   ...props
 }: ChainOfThoughtContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const { open, id } = useChainOfThoughtContext();
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <AnimatePresence initial={false}>
@@ -223,7 +229,7 @@ const ChainOfThoughtContent = ({
           id={`${id}-content`}
           role="region"
           aria-labelledby={`${id}-trigger`}
-          variants={collapse}
+          variants={shouldReduceMotion ? INSTANT_COLLAPSE : collapse}
           initial="closed"
           animate="open"
           exit="closed"
@@ -277,7 +283,11 @@ const ChainOfThoughtStep = ({
       {...props}
     >
       {status === 'active' && !shouldReduceMotion ? (
-        <motion.span className="contents" animate={PULSE_ANIMATE} transition={PULSE_TRANSITION}>
+        <motion.span
+          className="flex shrink-0 self-start"
+          animate={PULSE_ANIMATE}
+          transition={PULSE_TRANSITION}
+        >
           {indicator}
         </motion.span>
       ) : (

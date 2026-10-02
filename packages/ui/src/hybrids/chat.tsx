@@ -106,6 +106,21 @@ interface ChatContextValue {
 
 const ChatContext = React.createContext<ChatContextValue | null>(null);
 
+type ChatItemContextValue = Pick<
+  ChatContextValue,
+  'status' | 'labels' | 'onRetry' | 'onFeedback' | 'renderMarkdown'
+>;
+
+const ChatItemContext = React.createContext<ChatItemContextValue | null>(null);
+
+const useChatItem = (): ChatItemContextValue => {
+  const context = React.use(ChatItemContext);
+  if (!context) {
+    throw new Error('Chat components must be used within Chat');
+  }
+  return context;
+};
+
 const useChat = (): ChatContextValue => {
   const context = React.use(ChatContext);
   if (!context) {
@@ -204,6 +219,34 @@ const ChatRoot = ({
     [partialLabels, placeholder, emptyTitle, emptyDescription],
   );
 
+  const callbacks = React.useRef({ onRetry, onFeedback });
+
+  React.useEffect(() => {
+    callbacks.current = { onRetry, onFeedback };
+  });
+
+  const retry = React.useCallback((messageId: string) => {
+    callbacks.current.onRetry?.(messageId);
+  }, []);
+
+  const feedback = React.useCallback((messageId: string, value: ChatFeedback) => {
+    callbacks.current.onFeedback?.(messageId, value);
+  }, []);
+
+  const hasRetry = onRetry !== undefined;
+  const hasFeedback = onFeedback !== undefined;
+
+  const itemValue = React.useMemo<ChatItemContextValue>(
+    () => ({
+      status,
+      labels,
+      onRetry: hasRetry ? retry : undefined,
+      onFeedback: hasFeedback ? feedback : undefined,
+      renderMarkdown,
+    }),
+    [status, labels, hasRetry, retry, hasFeedback, feedback, renderMarkdown],
+  );
+
   const value = React.useMemo<ChatContextValue>(
     () => ({
       messages,
@@ -233,19 +276,21 @@ const ChatRoot = ({
 
   return (
     <ChatContext value={value}>
-      <div
-        ref={ref}
-        data-status={status}
-        className={cn('flex h-full min-h-0 w-full flex-col', className)}
-        {...props}
-      >
-        {children ?? (
-          <>
-            <ChatThread />
-            <ChatComposer />
-          </>
-        )}
-      </div>
+      <ChatItemContext value={itemValue}>
+        <div
+          ref={ref}
+          data-status={status}
+          className={cn('flex h-full min-h-0 w-full flex-col', className)}
+          {...props}
+        >
+          {children ?? (
+            <>
+              <ChatThread />
+              <ChatComposer />
+            </>
+          )}
+        </div>
+      </ChatItemContext>
     </ChatContext>
   );
 };
@@ -288,8 +333,18 @@ const ChatThread = ({
 
 ChatThread.displayName = 'ChatThread';
 
+const ChatText = React.memo(function ChatText({
+  text,
+  renderMarkdown,
+}: {
+  text: string;
+  renderMarkdown: (text: string) => React.ReactNode;
+}) {
+  return React.useMemo(() => renderMarkdown(text), [text, renderMarkdown]);
+});
+
 const ChatUserMessage = ({ message }: { message: ChatMessage }) => {
-  const { labels } = useChat();
+  const { labels } = useChatItem();
   const text = messageText(message);
   const files = message.parts.filter((part): part is ChatFilePart => part.type === 'file');
 
@@ -319,7 +374,7 @@ const ChatUserMessage = ({ message }: { message: ChatMessage }) => {
 };
 
 const ChatAssistantMessage = ({ message, isLast }: { message: ChatMessage; isLast: boolean }) => {
-  const { status, labels, onRetry, onFeedback, renderMarkdown } = useChat();
+  const { status, labels, onRetry, onFeedback, renderMarkdown } = useChatItem();
   const streaming = isLast && status === 'streaming';
   const text = messageText(message);
 
@@ -337,7 +392,7 @@ const ChatAssistantMessage = ({ message, isLast }: { message: ChatMessage; isLas
                 </Reasoning>
               );
             case 'text':
-              return <React.Fragment key={index}>{renderMarkdown(part.text)}</React.Fragment>;
+              return <ChatText key={index} text={part.text} renderMarkdown={renderMarkdown} />;
             case 'code':
               return (
                 <CodeBlock key={index} code={part.code} language={part.language} className="my-3">
@@ -405,13 +460,13 @@ const ChatAssistantMessage = ({ message, isLast }: { message: ChatMessage; isLas
   );
 };
 
-const ChatMessageItem = ({
+const ChatMessageItem = React.memo(function ChatMessageItem({
   className,
   message,
   isLast = false,
   ref,
   ...props
-}: ChatMessageProps & { ref?: React.Ref<HTMLDivElement> }) => {
+}: ChatMessageProps & { ref?: React.Ref<HTMLDivElement> }) {
   const isUser = message.role === 'user';
 
   return (
@@ -429,7 +484,7 @@ const ChatMessageItem = ({
       )}
     </Message>
   );
-};
+});
 
 ChatMessageItem.displayName = 'ChatMessage';
 
@@ -490,8 +545,9 @@ const ChatComposer = ({
   const busy = status === 'submitted' || status === 'streaming';
 
   const handleSubmit = (message: PromptInputMessage) => {
-    if (busy) return;
+    if (busy) return false;
     onSend({ text: message.text, files: message.files.map((file) => file.file) });
+    return true;
   };
 
   return (
@@ -553,6 +609,46 @@ function toolStatus(state?: string, errorText?: string): ToolStatus {
   return 'pending';
 }
 
+const MESSAGE_CACHE_LIMIT = 500;
+const messageCache = new Map<string, ChatMessage>();
+
+function samePart(a: ChatPart, b: ChatPart): boolean {
+  if (a.type === 'sources' || b.type === 'sources') {
+    if (a.type !== 'sources' || b.type !== 'sources') return false;
+    return (
+      a.items.length === b.items.length &&
+      a.items.every(
+        (item, index) => item.href === b.items[index]?.href && item.title === b.items[index]?.title,
+      )
+    );
+  }
+  const left = a as Record<string, unknown>;
+  const right = b as Record<string, unknown>;
+  const keys = Object.keys(left);
+  return (
+    keys.length === Object.keys(right).length &&
+    keys.every((key) => Object.is(left[key], right[key]))
+  );
+}
+
+function reuseMessage(next: ChatMessage): ChatMessage {
+  const cached = messageCache.get(next.id);
+  if (
+    cached &&
+    cached.role === next.role &&
+    cached.parts.length === next.parts.length &&
+    cached.parts.every((part, index) => {
+      const other = next.parts[index];
+      return other !== undefined && samePart(part, other);
+    })
+  ) {
+    return cached;
+  }
+  if (messageCache.size >= MESSAGE_CACHE_LIMIT) messageCache.clear();
+  messageCache.set(next.id, next);
+  return next;
+}
+
 function toChatMessages(uiMessages: UIMessageLike[]): ChatMessage[] {
   return uiMessages
     .filter((message) => message.role === 'user' || message.role === 'assistant')
@@ -589,7 +685,7 @@ function toChatMessages(uiMessages: UIMessageLike[]): ChatMessage[] {
         }
       }
 
-      return { id: message.id, role: message.role as ChatRole, parts };
+      return reuseMessage({ id: message.id, role: message.role as ChatRole, parts });
     });
 }
 

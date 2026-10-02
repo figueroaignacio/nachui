@@ -190,6 +190,32 @@ function useFileUpload(options: UseFileUploadOptions = {}): UseFileUploadReturn 
   const [errors, setErrors] = React.useState<string[]>([]);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const dragDepth = React.useRef(0);
+  const filesRef = React.useRef(files);
+
+  const syncInput = React.useCallback(() => {
+    const input = inputRef.current;
+    if (!input || typeof DataTransfer === 'undefined') return;
+    try {
+      const transfer = new DataTransfer();
+      for (const entry of filesRef.current) {
+        if (!isFileMetadata(entry.file)) transfer.items.add(entry.file);
+      }
+      input.files = transfer.files;
+    } catch {
+      return;
+    }
+  }, []);
+
+  React.useEffect(() => {
+    filesRef.current = files;
+    syncInput();
+  }, [files, syncInput]);
+
+  React.useEffect(() => {
+    return () => {
+      filesRef.current.forEach(revokePreview);
+    };
+  }, []);
 
   const commit = React.useCallback(
     (next: FileWithPreview[]) => {
@@ -311,8 +337,9 @@ function useFileUpload(options: UseFileUploadOptions = {}): UseFileUploadReturn 
     (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.files) addFiles(event.target.files);
       event.target.value = '';
+      syncInput();
     },
-    [addFiles],
+    [addFiles, syncInput],
   );
 
   const getInputProps = React.useCallback(
@@ -653,7 +680,7 @@ const FileUploadItemRemove = ({
       data-slot="file-upload-item-remove"
       disabled={disabled}
       className={cn(
-        'text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring inline-flex size-7 shrink-0 items-center justify-center rounded-md transition-colors outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-40 [&_svg]:size-4',
+        'text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring relative inline-flex size-7 shrink-0 items-center justify-center rounded-md transition-colors outline-none before:absolute before:-inset-1 focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-40 [&_svg]:size-4',
         className,
       )}
       onClick={(event) => {
@@ -719,7 +746,7 @@ const FileUploadClear = ({
       data-slot="file-upload-clear"
       disabled={disabled}
       className={cn(
-        'text-muted-foreground hover:text-foreground self-start text-xs underline-offset-4 transition-colors hover:underline disabled:pointer-events-none disabled:opacity-40',
+        'text-muted-foreground hover:text-foreground relative self-start text-xs underline-offset-4 transition-colors before:absolute before:-inset-x-2 before:-inset-y-2 hover:underline disabled:pointer-events-none disabled:opacity-40',
         className,
       )}
       onClick={(event) => {

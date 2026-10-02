@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
-import { collapse, collapseInner, springs, tap } from '../lib/motion';
+import { collapse, collapseInner, springs, still, tap } from '../lib/motion';
 
 const CHEVRON_VARIANTS = {
   open: { rotate: 180 },
@@ -13,6 +13,11 @@ const CHEVRON_VARIANTS = {
 const CHEVRON_STYLE = { willChange: 'transform' } as const;
 
 const CONTENT_STYLE = { willChange: 'opacity, transform, filter' } as const;
+
+const REDUCED_COLLAPSE = {
+  closed: { height: 0, opacity: 0, transition: still },
+  open: { height: 'auto', opacity: 1, transition: still },
+} as const;
 
 // --- Context ---
 
@@ -75,21 +80,22 @@ const AccordionRoot = ({
           : [...prev, itemValue];
       };
 
+      const nextValue = updater(openItems);
       if (!isControlled) {
-        setUncontrolledValue((prev) => {
-          const newValue = updater(prev);
-          onValueChange?.(newValue);
-          return newValue;
-        });
-      } else {
-        onValueChange?.(updater(openItems));
+        setUncontrolledValue(nextValue);
       }
+      onValueChange?.(nextValue);
     },
     [type, isControlled, openItems, onValueChange],
   );
 
+  const contextValue = React.useMemo<AccordionContextValue>(
+    () => ({ type, openItems, toggleItem, baseId }),
+    [type, openItems, toggleItem, baseId],
+  );
+
   return (
-    <AccordionContext value={{ type, openItems, toggleItem, baseId }}>
+    <AccordionContext value={contextValue}>
       <div ref={ref} data-accordion-root="" className={cn('w-full space-y-2', className)}>
         {children}
       </div>
@@ -178,7 +184,7 @@ const AccordionTrigger = ({
       whileTap={shouldReduceMotion ? undefined : tap}
       transition={springs.snappy}
       className={cn(
-        'group hover:text-muted-foreground flex w-full items-center justify-between py-3.5 text-left text-sm font-medium transition-colors',
+        'group hover:text-muted-foreground ring-offset-background focus-visible:ring-ring flex w-full items-center justify-between rounded-sm py-3.5 text-left text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
         className,
       )}
     >
@@ -222,6 +228,7 @@ const AccordionContent = ({
 }: AccordionContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const { openItems, baseId } = useAccordionContext();
   const isOpen = openItems.includes(value);
+  const shouldReduceMotion = useReducedMotion();
   const triggerId = `${baseId}-trigger-${slugify(value)}`;
   const contentId = `${baseId}-content-${slugify(value)}`;
 
@@ -234,18 +241,18 @@ const AccordionContent = ({
           role="region"
           aria-labelledby={triggerId}
           key="content"
-          variants={collapse}
+          variants={shouldReduceMotion ? REDUCED_COLLAPSE : collapse}
           initial="closed"
           animate="open"
           exit="closed"
           className={cn('overflow-hidden text-sm', className)}
         >
           <motion.div
-            variants={collapseInner}
+            variants={shouldReduceMotion ? undefined : collapseInner}
             initial="closed"
             animate="open"
             exit="closed"
-            style={CONTENT_STYLE}
+            style={shouldReduceMotion ? undefined : CONTENT_STYLE}
             className="text-muted-foreground pt-0 pb-4"
           >
             {children}

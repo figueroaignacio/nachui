@@ -4,6 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { springs, still } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -143,7 +144,9 @@ const ICON_VARIANTS = {
   closed: { rotate: 0 },
 } as const;
 
-const ICON_TRANSITION = { type: 'spring', stiffness: 300, damping: 20 } as const;
+const ICON_TRANSITION = springs.snappy;
+const MAX_CONTENT_HEIGHT = 288;
+const VIEWPORT_PADDING = 8;
 const ICON_STYLE = { willChange: 'transform' } as const;
 const CONTENT_STYLE = { willChange: 'opacity, transform' } as const;
 
@@ -152,8 +155,8 @@ const CONTENT_OPEN = {
   scale: 1,
   y: 0,
   visibility: 'visible' as const,
-  transition: { type: 'spring', duration: 0.3, bounce: 0, opacity: { duration: 0.15 } },
-} as const;
+  transition: { ...springs.smooth, opacity: { duration: 0.15 } },
+};
 
 const CONTENT_CLOSED = {
   bottom: {
@@ -188,7 +191,7 @@ function useClickOutside(
 ) {
   React.useEffect(() => {
     if (!enabled) return;
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+    const handlePointerDownOutside = (event: PointerEvent) => {
       if (
         ref.current?.contains(event.target as Node) ||
         triggerRef.current?.contains(event.target as Node)
@@ -197,12 +200,8 @@ function useClickOutside(
       }
       handler();
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
-    };
+    document.addEventListener('pointerdown', handlePointerDownOutside);
+    return () => document.removeEventListener('pointerdown', handlePointerDownOutside);
   }, [ref, triggerRef, handler, enabled]);
 }
 
@@ -431,6 +430,7 @@ const SelectContent = ({
     useSelectContext();
   const shouldReduceMotion = useReducedMotion();
   const [position, setPosition] = React.useState<'bottom' | 'top'>('bottom');
+  const [maxHeight, setMaxHeight] = React.useState(MAX_CONTENT_HEIGHT);
 
   const closeWithoutFocus = React.useCallback(
     () => closeMenu({ restoreFocus: false }),
@@ -440,12 +440,38 @@ const SelectContent = ({
   useClickOutside(listRef, triggerRef, closeWithoutFocus, isOpen);
 
   React.useLayoutEffect(() => {
-    if (!isOpen || !triggerRef.current) return;
-    const triggerRect = triggerRef.current.getBoundingClientRect();
-    const contentHeight = listRef.current?.offsetHeight || 240;
-    const spaceBelow = window.innerHeight - triggerRect.bottom;
-    setPosition(spaceBelow < contentHeight + 20 ? 'top' : 'bottom');
-  }, [isOpen, triggerRef, listRef]);
+    if (!isOpen) return;
+
+    const measure = () => {
+      const trigger = triggerRef.current;
+      if (!trigger) return;
+      const triggerRect = trigger.getBoundingClientRect();
+      const list = listRef.current;
+      const border = list ? list.offsetHeight - list.clientHeight : 0;
+      const contentHeight = Math.min(
+        MAX_CONTENT_HEIGHT,
+        (list?.scrollHeight || 240) + Math.max(border, 0),
+      );
+      const viewportHeight = window.innerHeight;
+      const spaceBelow = viewportHeight - triggerRect.bottom - sideOffset;
+      const spaceAbove = triggerRect.top - sideOffset;
+      const fitsBelow = spaceBelow >= contentHeight + VIEWPORT_PADDING;
+      const nextPosition = fitsBelow || spaceBelow >= spaceAbove ? 'bottom' : 'top';
+      const available = nextPosition === 'bottom' ? spaceBelow : spaceAbove;
+      setPosition(nextPosition);
+      setMaxHeight(Math.max(0, Math.min(MAX_CONTENT_HEIGHT, available - VIEWPORT_PADDING)));
+    };
+
+    measure();
+
+    const viewport = window.visualViewport;
+    window.addEventListener('resize', measure);
+    viewport?.addEventListener('resize', measure);
+    return () => {
+      window.removeEventListener('resize', measure);
+      viewport?.removeEventListener('resize', measure);
+    };
+  }, [isOpen, triggerRef, listRef, sideOffset]);
 
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -504,6 +530,10 @@ const SelectContent = ({
       ? { top: `calc(100% + ${sideOffset}px)` }
       : { bottom: `calc(100% + ${sideOffset}px)` };
 
+  const closedState = shouldReduceMotion
+    ? { ...CONTENT_CLOSED[position], scale: 1, y: 0, transition: still }
+    : CONTENT_CLOSED[position];
+
   return (
     <motion.div
       ref={listRef}
@@ -517,13 +547,13 @@ const SelectContent = ({
       animate={
         isOpen
           ? shouldReduceMotion
-            ? { ...CONTENT_OPEN, transition: { duration: 0 } }
+            ? { ...CONTENT_OPEN, transition: still }
             : CONTENT_OPEN
-          : CONTENT_CLOSED[position]
+          : closedState
       }
-      style={{ ...verticalStyle, ...CONTENT_STYLE }}
+      style={{ ...verticalStyle, ...CONTENT_STYLE, maxHeight }}
       className={cn(
-        'bg-popover text-popover-foreground border-border absolute right-0 left-0 z-50 max-h-72 overflow-y-auto rounded-md border p-1 shadow-md outline-none',
+        'bg-popover text-popover-foreground border-border absolute right-0 left-0 z-50 overflow-y-auto rounded-md border p-1 shadow-md outline-none',
         position === 'bottom' ? 'origin-top' : 'origin-bottom',
         className,
       )}
@@ -544,11 +574,12 @@ const SelectItem = ({
   const itemRef = React.useRef<HTMLDivElement>(null);
   const isSelected = selectedValue === value;
 
+  const staticLabel = textValue ?? (typeof children === 'string' ? children : undefined);
+
   React.useLayoutEffect(() => {
-    const label =
-      textValue ?? (typeof children === 'string' ? children : itemRef.current?.textContent) ?? '';
+    const label = staticLabel ?? itemRef.current?.textContent ?? '';
     return registerItem(value, label.trim());
-  }, [value, textValue, children, registerItem]);
+  }, [value, staticLabel, registerItem]);
 
   const handleClick = React.useCallback(() => {
     if (!disabled) selectValue(value);
@@ -565,7 +596,7 @@ const SelectItem = ({
       tabIndex={disabled ? undefined : -1}
       onClick={handleClick}
       className={cn(
-        'relative flex cursor-pointer items-center gap-2 rounded-sm py-1.5 pr-8 pl-2.5 text-sm outline-none select-none',
+        'relative flex cursor-pointer items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-none select-none',
         'transition-colors duration-150',
         'hover:bg-muted focus-visible:bg-muted focus:bg-muted',
         disabled && 'pointer-events-none opacity-40',
@@ -592,7 +623,7 @@ const SelectLabel = ({ children, className }: SelectLabelProps): React.JSX.Eleme
   <div
     role="presentation"
     className={cn(
-      'text-muted-foreground px-2.5 py-1.5 text-xs font-semibold tracking-wider uppercase',
+      'text-muted-foreground px-2 py-1.5 text-xs font-semibold tracking-wider uppercase',
       className,
     )}
   >

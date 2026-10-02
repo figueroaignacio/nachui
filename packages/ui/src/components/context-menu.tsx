@@ -179,7 +179,7 @@ const ContextMenuTrigger = ({
       onTouchMove={clearLongPress}
       onKeyDown={handleKeyDown}
       className={cn(
-        'focus-visible:ring-ring select-none focus-visible:ring-1 focus-visible:outline-none',
+        'ring-offset-background focus-visible:ring-ring select-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
         className,
       )}
       {...props}
@@ -219,16 +219,12 @@ const ContextMenuContent = ({
 
   React.useEffect(() => {
     if (!isOpen) return;
-    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
+    const handlePointerDown = (event: PointerEvent) => {
       if (contentRef.current?.contains(event.target as Node)) return;
       closeMenu({ restoreFocus: false });
     };
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('touchstart', handlePointerDown);
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('touchstart', handlePointerDown);
-    };
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => document.removeEventListener('pointerdown', handlePointerDown);
   }, [isOpen, closeMenu]);
 
   React.useEffect(() => {
@@ -298,11 +294,11 @@ const ContextMenuContent = ({
             ...CONTEXT_MENU_STYLE,
           }}
           className={cn(
-            'border-border bg-background absolute z-50 min-w-48 origin-top-left overflow-hidden rounded-md border',
+            'bg-popover text-popover-foreground border-border absolute z-50 min-w-48 origin-top-left overflow-hidden rounded-md border shadow-md',
             className,
           )}
         >
-          <div className="flex flex-col gap-0.5 p-1.5">{children}</div>
+          <div className="flex flex-col gap-0.5 p-1">{children}</div>
         </motion.div>
       )}
     </AnimatePresence>
@@ -311,7 +307,7 @@ const ContextMenuContent = ({
 
 const itemClassName = (disabled: boolean, variant: 'default' | 'destructive') =>
   cn(
-    'relative flex cursor-pointer items-center gap-2 rounded-sm px-3 py-1.5 text-sm outline-none select-none',
+    'relative flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none select-none',
     'transition-colors duration-150',
     'hover:bg-muted focus-visible:bg-muted focus:bg-muted',
     disabled && 'pointer-events-none opacity-40',
@@ -378,7 +374,7 @@ const ContextMenuLabel = ({
     <div
       role="presentation"
       className={cn(
-        'text-muted-foreground px-3 py-2 text-xs font-semibold tracking-wider uppercase',
+        'text-muted-foreground px-2 py-2 text-xs font-semibold tracking-wider uppercase',
         className,
       )}
     >

@@ -1,9 +1,9 @@
 'use client';
 
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
-import { collapse, springs } from '../lib/motion';
+import { collapse, springs, still } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -50,6 +50,11 @@ function ChevronDownIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) 
     </svg>
   );
 }
+
+const INSTANT_COLLAPSE: Variants = {
+  closed: { height: 0, opacity: 0, transition: still },
+  open: { height: 'auto', opacity: 1, transition: still },
+};
 
 const PULSE_ANIMATE = { opacity: [0.4, 1, 0.4] };
 const PULSE_TRANSITION = { repeat: Infinity, duration: 1.6, ease: 'easeInOut' } as const;
@@ -110,13 +115,18 @@ const ReasoningRoot = ({
   const isOpen = isControlled ? controlledOpen : internalOpen;
   const id = React.useId();
 
-  const setIsOpen = React.useCallback(
-    (next: boolean) => {
-      if (!isControlled) setInternalOpen(next);
-      onOpenChange?.(next);
-    },
-    [isControlled, onOpenChange],
-  );
+  const isControlledRef = React.useRef(isControlled);
+  const onOpenChangeRef = React.useRef(onOpenChange);
+
+  React.useEffect(() => {
+    isControlledRef.current = isControlled;
+    onOpenChangeRef.current = onOpenChange;
+  });
+
+  const setIsOpen = React.useCallback((next: boolean) => {
+    if (!isControlledRef.current) setInternalOpen(next);
+    onOpenChangeRef.current?.(next);
+  }, []);
 
   React.useEffect(() => {
     if (isStreaming) {
@@ -216,6 +226,7 @@ const ReasoningContent = ({
   ...props
 }: ReasoningContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const { isOpen, id } = useReasoning();
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <AnimatePresence initial={false}>
@@ -225,7 +236,7 @@ const ReasoningContent = ({
           id={`${id}-content`}
           role="region"
           aria-labelledby={`${id}-trigger`}
-          variants={collapse}
+          variants={shouldReduceMotion ? INSTANT_COLLAPSE : collapse}
           initial="closed"
           animate="open"
           exit="closed"

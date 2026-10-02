@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { springs } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -34,12 +35,13 @@ const SCROLL_BUTTON_VARIANTS = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { type: 'spring', stiffness: 400, damping: 26 },
+    transition: springs.smooth,
   },
   exit: { opacity: 0, y: 6, scale: 0.94, transition: { duration: 0.12 } },
 } as const;
 
 const BOTTOM_THRESHOLD = 8;
+const PROGRAMMATIC_SCROLL_TIMEOUT = 1000;
 
 interface ConversationContextValue {
   stuck: boolean;
@@ -99,23 +101,58 @@ const ConversationRoot = ({
     onStickChangeRef.current?.(next);
   }, []);
 
+  const programmaticRef = React.useRef(false);
+  const programmaticTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const endProgrammaticScroll = React.useCallback(() => {
+    programmaticRef.current = false;
+    if (programmaticTimer.current) {
+      clearTimeout(programmaticTimer.current);
+      programmaticTimer.current = null;
+    }
+  }, []);
+
+  React.useEffect(() => endProgrammaticScroll, [endProgrammaticScroll]);
+
   const scrollToBottom = React.useCallback(
     (behavior: ScrollBehavior = 'smooth') => {
       const element = scrollRef.current;
       if (!element) return;
       if (typeof element.scrollTo === 'function') {
+        if (behavior === 'smooth') {
+          endProgrammaticScroll();
+          programmaticRef.current = true;
+          programmaticTimer.current = setTimeout(
+            endProgrammaticScroll,
+            PROGRAMMATIC_SCROLL_TIMEOUT,
+          );
+        }
         element.scrollTo({ top: element.scrollHeight, behavior });
       } else {
         element.scrollTop = element.scrollHeight;
       }
       setStuck(true);
     },
-    [setStuck],
+    [endProgrammaticScroll, setStuck],
   );
+
+  React.useEffect(() => {
+    const element = scrollRef.current;
+    if (!element) return;
+    const events = ['scrollend', 'wheel', 'touchstart', 'keydown', 'pointerdown'] as const;
+    for (const name of events) {
+      element.addEventListener(name, endProgrammaticScroll, { passive: true });
+    }
+    return () => {
+      for (const name of events) element.removeEventListener(name, endProgrammaticScroll);
+    };
+  }, [endProgrammaticScroll]);
 
   useIsomorphicLayoutEffect(() => {
     const element = scrollRef.current;
     if (!element || !stickToBottom) return;
+
+    let frame: number | null = null;
 
     const pin = () => {
       if (stuckRef.current) {
@@ -123,11 +160,19 @@ const ConversationRoot = ({
       }
     };
 
+    const schedulePin = () => {
+      if (frame !== null) return;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        pin();
+      });
+    };
+
     pin();
 
     if (typeof ResizeObserver === 'undefined') return;
 
-    const observer = new ResizeObserver(pin);
+    const observer = new ResizeObserver(schedulePin);
     observer.observe(element);
     for (const child of Array.from(element.children)) {
       observer.observe(child);
@@ -141,12 +186,16 @@ const ConversationRoot = ({
               for (const node of Array.from(record.addedNodes)) {
                 if (node instanceof Element) observer.observe(node);
               }
+              for (const node of Array.from(record.removedNodes)) {
+                if (node instanceof Element) observer.unobserve(node);
+              }
             }
-            pin();
+            schedulePin();
           });
-    mutation?.observe(element, { childList: true, subtree: true, characterData: true });
+    mutation?.observe(element, { childList: true });
 
     return () => {
+      if (frame !== null) cancelAnimationFrame(frame);
       observer.disconnect();
       mutation?.disconnect();
     };
@@ -174,7 +223,7 @@ const ConversationRoot = ({
         aria-live="polite"
         data-stuck={stuck ? 'true' : 'false'}
         onScroll={(event) => {
-          setStuck(isAtBottom(event.currentTarget));
+          if (!programmaticRef.current) setStuck(isAtBottom(event.currentTarget));
           onScroll?.(event);
         }}
         className={cn('relative min-h-0 w-full overflow-y-auto overscroll-contain', className)}

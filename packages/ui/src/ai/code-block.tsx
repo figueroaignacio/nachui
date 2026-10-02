@@ -201,16 +201,19 @@ const CodeBlockCopyButton = ({
       onClick={(event) => {
         onClick?.(event);
         if (event.defaultPrevented) return;
-        const write = navigator.clipboard?.writeText(code);
-        void Promise.resolve(write).then(() => {
-          onCopied?.(code);
-          setCopied(true);
-          if (timeout.current) clearTimeout(timeout.current);
-          timeout.current = setTimeout(() => setCopied(false), COPIED_TIMEOUT);
-        });
+        if (!navigator.clipboard?.writeText) return;
+        navigator.clipboard.writeText(code).then(
+          () => {
+            onCopied?.(code);
+            setCopied(true);
+            if (timeout.current) clearTimeout(timeout.current);
+            timeout.current = setTimeout(() => setCopied(false), COPIED_TIMEOUT);
+          },
+          () => undefined,
+        );
       }}
       className={cn(
-        'bg-code/80 text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:ring-ring data-[copied]:text-success-text absolute top-2 right-2 inline-flex size-7 items-center justify-center rounded-md opacity-0 backdrop-blur-sm transition-opacity group-hover/code:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none data-[copied]:opacity-100',
+        'bg-code/80 text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:ring-ring data-[copied]:text-success-text absolute top-2 right-2 inline-flex size-7 items-center justify-center rounded-md backdrop-blur-sm transition-opacity group-hover/code:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none data-[copied]:opacity-100 pointer-coarse:size-9 [@media(hover:hover)]:opacity-0',
         className,
       )}
       {...props}

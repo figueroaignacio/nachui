@@ -94,7 +94,7 @@ describe('ContextMenu', () => {
     fireEvent.contextMenu(screen.getByText('Right click here'), { clientX: 10, clientY: 10 });
     await screen.findByRole('menu');
 
-    fireEvent.mouseDown(document.body);
+    fireEvent.pointerDown(document.body);
 
     await waitFor(() => {
       expect(screen.queryByRole('menu')).not.toBeInTheDocument();

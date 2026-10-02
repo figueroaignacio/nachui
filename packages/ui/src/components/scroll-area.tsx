@@ -192,9 +192,26 @@ const ScrollAreaBar = ({
       for (const child of Array.from(viewport.children)) observer.observe(child);
     }
 
+    let mutations: MutationObserver | undefined;
+    if (typeof MutationObserver !== 'undefined') {
+      mutations = new MutationObserver((records) => {
+        for (const record of records) {
+          for (const node of Array.from(record.addedNodes)) {
+            if (node instanceof Element) observer?.observe(node);
+          }
+          for (const node of Array.from(record.removedNodes)) {
+            if (node instanceof Element) observer?.unobserve(node);
+          }
+        }
+        measure();
+      });
+      mutations.observe(viewport, { childList: true });
+    }
+
     return () => {
       viewport.removeEventListener('scroll', measure);
       observer?.disconnect();
+      mutations?.disconnect();
     };
   }, [measure, viewportRef]);
 

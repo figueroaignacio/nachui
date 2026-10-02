@@ -36,6 +36,12 @@ const RATING_SIZE_CLASSES: Record<RatingSize, string> = {
   lg: 'size-7',
 };
 
+const RATING_HIT_CLASSES: Record<RatingSize, string> = {
+  sm: 'pointer-coarse:p-2',
+  default: 'pointer-coarse:p-1.5',
+  lg: 'pointer-coarse:p-0.5',
+};
+
 interface RatingProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'onChange' | 'defaultValue'
@@ -100,7 +106,7 @@ const RatingRoot = ({
     [isControlled, max, onValueChange],
   );
 
-  const valueFromPointer = (event: React.PointerEvent<HTMLButtonElement>, index: number) => {
+  const valueFromPointer = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
     if (precision === 1) return index + 1;
     const rect = event.currentTarget.getBoundingClientRect();
     const ratio = rect.width > 0 ? (event.clientX - rect.left) / rect.width : 1;
@@ -202,9 +208,9 @@ const RatingRoot = ({
                 if (!interactive || event.pointerType === 'touch') return;
                 setHoverValue(valueFromPointer(event, index));
               }}
-              onPointerDown={(event) => {
+              onClick={(event) => {
                 if (!interactive) return;
-                const next = valueFromPointer(event, index);
+                const next = event.detail === 0 ? itemValue : valueFromPointer(event, index);
                 setValue(allowClear && next === value ? 0 : next);
                 setHoverValue(null);
               }}
@@ -215,7 +221,8 @@ const RatingRoot = ({
                 }
               }}
               className={cn(
-                'focus-visible:ring-ring inline-flex cursor-pointer rounded-sm transition-transform outline-none focus-visible:ring-2 focus-visible:ring-offset-1',
+                'focus-visible:ring-ring ring-offset-background inline-flex cursor-pointer rounded-sm transition-transform outline-none focus-visible:ring-2 focus-visible:ring-offset-1',
+                RATING_HIT_CLASSES[size],
                 interactive && 'hover:scale-110',
                 disabled && 'pointer-events-none',
               )}

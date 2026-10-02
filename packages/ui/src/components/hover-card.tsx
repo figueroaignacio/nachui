@@ -30,6 +30,43 @@ const HOVER_CARD_POSITION_CLASSES = {
 
 const HOVER_CARD_STYLE = { willChange: 'opacity, transform, filter' } as const;
 
+const VIEWPORT_PADDING = 8;
+
+function useViewportShift(ref: React.RefObject<HTMLElement | null>, open: boolean) {
+  const [shift, setShift] = React.useState(0);
+
+  React.useLayoutEffect(() => {
+    if (!open) return;
+    const measure = () => {
+      const el = ref.current;
+      if (!el) return;
+      const { transform, translate } = el.style;
+      el.style.transform = 'none';
+      el.style.translate = '';
+      const rect = el.getBoundingClientRect();
+      el.style.transform = transform;
+      el.style.translate = translate;
+      const viewport = document.documentElement.clientWidth || window.innerWidth;
+      if (!rect.width || !viewport) return;
+      let next = 0;
+      if (rect.right > viewport - VIEWPORT_PADDING) next = viewport - VIEWPORT_PADDING - rect.right;
+      if (rect.left + next < VIEWPORT_PADDING) next = VIEWPORT_PADDING - rect.left;
+      setShift(Math.round(next));
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [open, ref]);
+
+  return shift;
+}
+
+function shiftTranslate(shift: number, centeredX: boolean, centeredY: boolean) {
+  if (!shift) return undefined;
+  const x = centeredX ? `calc(-50% + ${shift}px)` : `${shift}px`;
+  return centeredY ? `${x} -50%` : x;
+}
+
 type HoverCardSide = 'top' | 'bottom' | 'left' | 'right';
 type HoverCardAlign = 'start' | 'center' | 'end';
 
@@ -40,6 +77,7 @@ interface HoverCardContextValue {
   scheduleClose: () => void;
   openNow: () => void;
   closeNow: () => void;
+  rootRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const HoverCardContext = React.createContext<HoverCardContextValue | null>(null);
@@ -72,6 +110,7 @@ const HoverCardRoot = ({
   const open = isControlled ? controlledOpen : uncontrolledOpen;
   const id = React.useId();
   const timer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rootRef = React.useRef<HTMLDivElement>(null);
 
   const setOpen = React.useCallback(
     (next: boolean) => {
@@ -118,13 +157,15 @@ const HoverCardRoot = ({
   }, [open, closeNow]);
 
   const context = React.useMemo(
-    () => ({ open, id, scheduleOpen, scheduleClose, openNow, closeNow }),
+    () => ({ open, id, scheduleOpen, scheduleClose, openNow, closeNow, rootRef }),
     [open, id, scheduleOpen, scheduleClose, openNow, closeNow],
   );
 
   return (
     <HoverCardContext value={context}>
-      <div className="relative inline-flex">{children}</div>
+      <div ref={rootRef} className="relative inline-flex">
+        {children}
+      </div>
     </HoverCardContext>
   );
 };
@@ -142,10 +183,13 @@ const HoverCardTrigger = ({
   onPointerLeave,
   onFocus,
   onBlur,
+  onPointerDown,
+  onClick,
   ref,
   ...props
 }: HoverCardTriggerProps & { ref?: React.Ref<HTMLElement> }) => {
-  const { open, id, scheduleOpen, scheduleClose, openNow, closeNow } = useHoverCardContext();
+  const { open, id, scheduleOpen, scheduleClose, openNow, rootRef } = useHoverCardContext();
+  const lastPointerType = React.useRef<string | null>(null);
 
   const handlers = {
     onPointerEnter: (event: React.PointerEvent<HTMLElement>) => {
@@ -154,7 +198,15 @@ const HoverCardTrigger = ({
     },
     onPointerLeave: (event: React.PointerEvent<HTMLElement>) => {
       onPointerLeave?.(event);
-      scheduleClose();
+      if (event.pointerType !== 'touch') scheduleClose();
+    },
+    onPointerDown: (event: React.PointerEvent<HTMLElement>) => {
+      onPointerDown?.(event);
+      lastPointerType.current = event.pointerType;
+    },
+    onClick: (event: React.MouseEvent<HTMLElement>) => {
+      onClick?.(event);
+      if (lastPointerType.current === 'touch') openNow();
     },
     onFocus: (event: React.FocusEvent<HTMLElement>) => {
       onFocus?.(event);
@@ -162,7 +214,9 @@ const HoverCardTrigger = ({
     },
     onBlur: (event: React.FocusEvent<HTMLElement>) => {
       onBlur?.(event);
-      closeNow();
+      const next = event.relatedTarget as Node | null;
+      if (next && rootRef.current?.contains(next)) return;
+      scheduleClose();
     },
   };
 
@@ -177,15 +231,19 @@ const HoverCardTrigger = ({
     const childProps = child.props as {
       onPointerEnter?: (event: React.PointerEvent<HTMLElement>) => void;
       onPointerLeave?: (event: React.PointerEvent<HTMLElement>) => void;
+      onPointerDown?: (event: React.PointerEvent<HTMLElement>) => void;
+      onClick?: (event: React.MouseEvent<HTMLElement>) => void;
       onFocus?: (event: React.FocusEvent<HTMLElement>) => void;
       onBlur?: (event: React.FocusEvent<HTMLElement>) => void;
       className?: string;
+      tabIndex?: number;
     };
 
     return React.cloneElement(child, {
       ...props,
       ...shared,
       ref,
+      tabIndex: childProps.tabIndex ?? props.tabIndex ?? 0,
       className: cn(className, childProps.className),
       onPointerEnter: (event: React.PointerEvent<HTMLElement>) => {
         childProps.onPointerEnter?.(event);
@@ -194,6 +252,14 @@ const HoverCardTrigger = ({
       onPointerLeave: (event: React.PointerEvent<HTMLElement>) => {
         childProps.onPointerLeave?.(event);
         handlers.onPointerLeave(event);
+      },
+      onPointerDown: (event: React.PointerEvent<HTMLElement>) => {
+        childProps.onPointerDown?.(event);
+        handlers.onPointerDown(event);
+      },
+      onClick: (event: React.MouseEvent<HTMLElement>) => {
+        childProps.onClick?.(event);
+        handlers.onClick(event);
       },
       onFocus: (event: React.FocusEvent<HTMLElement>) => {
         childProps.onFocus?.(event);
@@ -236,10 +302,13 @@ const HoverCardContent = ({
   children,
   onPointerEnter,
   onPointerLeave,
+  onBlur,
   ...props
 }: HoverCardContentProps) => {
-  const { open, id, openNow, scheduleClose } = useHoverCardContext();
+  const { open, id, openNow, scheduleClose, rootRef } = useHoverCardContext();
   const shouldReduceMotion = useReducedMotion();
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  const shift = useViewportShift(contentRef, open);
 
   const offsetStyle = React.useMemo(
     () => ({
@@ -248,14 +317,20 @@ const HoverCardContent = ({
       ...(side === 'left' && { marginRight: sideOffset }),
       ...(side === 'right' && { marginLeft: sideOffset }),
       ...HOVER_CARD_STYLE,
+      translate: shiftTranslate(
+        shift,
+        align === 'center' && (side === 'top' || side === 'bottom'),
+        align === 'center' && (side === 'left' || side === 'right'),
+      ),
     }),
-    [side, sideOffset],
+    [side, sideOffset, align, shift],
   );
 
   return (
     <AnimatePresence>
       {open && (
         <motion.div
+          ref={contentRef}
           id={id}
           data-slot="hover-card-content"
           data-side={side}
@@ -271,10 +346,16 @@ const HoverCardContent = ({
           }}
           onPointerLeave={(event) => {
             onPointerLeave?.(event);
+            if (event.pointerType !== 'touch') scheduleClose();
+          }}
+          onBlur={(event) => {
+            onBlur?.(event);
+            const next = event.relatedTarget as Node | null;
+            if (next && rootRef.current?.contains(next)) return;
             scheduleClose();
           }}
           className={cn(
-            'bg-popover text-popover-foreground absolute z-50 w-64 rounded-md border p-4 shadow-md outline-none',
+            'bg-popover text-popover-foreground border-border absolute z-50 w-64 max-w-[calc(100vw-2rem)] rounded-md border p-4 shadow-md outline-none',
             HOVER_CARD_POSITION_CLASSES[side][align],
             floatingOrigin[side],
             className,

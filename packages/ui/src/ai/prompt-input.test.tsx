@@ -102,4 +102,15 @@ describe('PromptInput', () => {
     );
     expect(screen.getByRole('button')).toHaveAttribute('data-status', 'streaming');
   });
+
+  it('keeps the draft when onSubmit returns false', async () => {
+    render(
+      <PromptInput onSubmit={() => false}>
+        <PromptInput.Textarea placeholder="Ask anything" />
+      </PromptInput>,
+    );
+    const textarea = screen.getByPlaceholderText('Ask anything');
+    await userEvent.type(textarea, 'Keep me{Enter}');
+    expect(textarea).toHaveValue('Keep me');
+  });
 });

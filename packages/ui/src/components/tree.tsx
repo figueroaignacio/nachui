@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { collapse } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -105,13 +106,6 @@ interface TreeItemProps {
   className?: string;
 }
 
-const GROUP_VARIANTS = {
-  open: { height: 'auto', opacity: 1 },
-  closed: { height: 0, opacity: 0 },
-} as const;
-
-const GROUP_TRANSITION = { duration: 0.2, ease: 'easeOut' } as const;
-
 const TreeContext = React.createContext<TreeContextValue | null>(null);
 const DepthContext = React.createContext(0);
 
@@ -126,6 +120,18 @@ function getVisibleItems(container: HTMLElement | null): HTMLElement[] {
   return Array.from(
     container.querySelectorAll<HTMLElement>('[role="treeitem"]:not([aria-disabled="true"])'),
   );
+}
+
+function syncTabStop(container: HTMLElement | null) {
+  if (!container) return;
+  const items = getVisibleItems(container);
+  const active = typeof document === 'undefined' ? null : document.activeElement;
+  const stop =
+    items.find((item) => item === active) ??
+    items.find((item) => item.getAttribute('aria-selected') === 'true') ??
+    items.find((item) => item.tabIndex === 0) ??
+    items[0];
+  for (const item of items) item.tabIndex = item === stop ? 0 : -1;
 }
 
 function getParentItem(row: HTMLElement): HTMLElement | null {
@@ -216,6 +222,18 @@ const TreeRoot = ({
     }
   }, []);
 
+  React.useLayoutEffect(() => {
+    syncTabStop(rootRef.current);
+  });
+
+  React.useEffect(() => {
+    const root = rootRef.current;
+    if (!root || typeof MutationObserver === 'undefined') return;
+    const observer = new MutationObserver(() => syncTabStop(root));
+    observer.observe(root, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
+
   const contextValue = React.useMemo(
     () => ({ expanded, toggleExpanded, selected, select, indent, toggleIcon, showLines }),
     [expanded, toggleExpanded, selected, select, indent, toggleIcon, showLines],
@@ -228,6 +246,7 @@ const TreeRoot = ({
         role="tree"
         aria-label={label}
         onKeyDown={handleKeyDown}
+        onFocus={() => syncTabStop(rootRef.current)}
         className={cn('w-full text-sm', className)}
       >
         {children}
@@ -278,7 +297,7 @@ const TreeItem = ({
     <div data-tree-item="">
       <div
         role="treeitem"
-        tabIndex={disabled ? undefined : 0}
+        tabIndex={disabled ? undefined : -1}
         aria-expanded={hasChildren ? isOpen : undefined}
         aria-selected={hasChildren ? undefined : isSelected}
         aria-level={depth + 1}
@@ -336,8 +355,7 @@ const TreeItem = ({
               initial={shouldReduceMotion ? false : 'closed'}
               animate="open"
               exit={shouldReduceMotion ? undefined : 'closed'}
-              variants={GROUP_VARIANTS}
-              transition={GROUP_TRANSITION}
+              variants={collapse}
               className={cn('ml-3.5 overflow-hidden', showLines && 'border-border border-l')}
               style={{ paddingLeft: Math.max(indent - 8, 4) }}
             >

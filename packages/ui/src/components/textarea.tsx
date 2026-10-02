@@ -10,7 +10,7 @@ const textareaVariants = cva(
   {
     variants: {
       size: {
-        sm: 'min-h-14 px-2.5 py-1.5 text-xs',
+        sm: 'min-h-14 px-2.5 py-1.5 text-base md:text-xs',
         default: 'min-h-16 px-3 py-2 text-base md:text-sm',
         lg: 'min-h-20 px-4 py-2.5 text-base',
       },
@@ -87,6 +87,9 @@ const TextareaCount = ({
 );
 TextareaCount.displayName = 'TextareaCount';
 
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
+
 function valueLength(value: unknown): number {
   if (typeof value === 'string') return value.length;
   if (typeof value === 'number') return String(value).length;
@@ -153,9 +156,23 @@ const TextareaRoot = ({
     node.style.overflowY = next > limit ? 'auto' : 'hidden';
   }, [autoResize, maxRows]);
 
-  React.useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     fitToContent();
   }, [fitToContent, value]);
+
+  React.useEffect(() => {
+    const node = innerRef.current;
+    if (!node || !autoResize || typeof ResizeObserver === 'undefined') return;
+    let lastWidth = node.getBoundingClientRect().width;
+    const observer = new ResizeObserver((entries) => {
+      const width = entries[0]?.contentRect.width ?? lastWidth;
+      if (width === lastWidth) return;
+      lastWidth = width;
+      fitToContent();
+    });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [autoResize, fitToContent]);
 
   const describedBy =
     [

@@ -140,7 +140,7 @@ const ActionsButton = ({
       title={label}
       data-active={active ? 'true' : undefined}
       className={cn(
-        'text-muted-foreground hover:text-foreground hover:bg-secondary focus-visible:ring-ring inline-flex size-7 shrink-0 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
+        'text-muted-foreground hover:text-foreground hover:bg-secondary focus-visible:ring-ring inline-flex size-7 shrink-0 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 pointer-coarse:size-9',
         'data-[active=true]:text-foreground [&>svg]:size-3.5 [&>svg]:shrink-0',
         className,
       )}
@@ -174,8 +174,12 @@ const ActionsCopy = ({
       label={copied ? copiedLabel : label}
       active={copied}
       onClick={(event) => {
-        void navigator.clipboard?.writeText(text).then(() => setCopied(true));
         onClick?.(event);
+        if (event.defaultPrevented || !navigator.clipboard?.writeText) return;
+        navigator.clipboard.writeText(text).then(
+          () => setCopied(true),
+          () => undefined,
+        );
       }}
       {...props}
     >

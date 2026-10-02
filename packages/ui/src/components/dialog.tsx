@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cloneElement } from 'react';
 import { createPortal } from 'react-dom';
@@ -40,6 +40,15 @@ const FOCUSABLE_SELECTOR = [
   'textarea:not([disabled])',
   '[tabindex]:not([tabindex="-1"])',
 ].join(', ');
+
+function isTopmostLayer(node: HTMLElement | null, target: EventTarget | null) {
+  if (!node) return false;
+  const owner = target instanceof Element ? target.closest('[aria-modal="true"]') : null;
+  if (owner) return owner === node;
+  const layers = document.querySelectorAll('[aria-modal="true"]');
+  return layers[layers.length - 1] === node;
+}
+
 function lockPageScroll() {
   const root = document.documentElement;
   const depth = Number(root.dataset.scrollLocked ?? '0');
@@ -113,28 +122,32 @@ const DialogRoot = ({
 
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : uncontrolledOpen;
+  const openRef = React.useRef(open);
+  const onOpenChangeRef = React.useRef(onOpenChange);
+
+  React.useLayoutEffect(() => {
+    openRef.current = open;
+    onOpenChangeRef.current = onOpenChange;
+  });
 
   const setOpen = React.useCallback(
     (value: boolean | ((prev: boolean) => boolean)) => {
+      const next = typeof value === 'function' ? value(openRef.current) : value;
+      openRef.current = next;
       if (!isControlled) {
-        setUncontrolledOpen(value);
+        setUncontrolledOpen(next);
       }
-
-      if (onOpenChange) {
-        const newValue = typeof value === 'function' ? value(open) : value;
-        onOpenChange(newValue);
-      }
+      onOpenChangeRef.current?.(next);
     },
-    [isControlled, onOpenChange, open],
+    [isControlled],
   );
 
-  return (
-    <DialogContext
-      value={{ open, setOpen, id, hasTitle, setHasTitle, hasDescription, setHasDescription }}
-    >
-      {children}
-    </DialogContext>
+  const value = React.useMemo<DialogContextType>(
+    () => ({ open, setOpen, id, hasTitle, setHasTitle, hasDescription, setHasDescription }),
+    [open, setOpen, id, hasTitle, hasDescription],
   );
+
+  return <DialogContext value={value}>{children}</DialogContext>;
 };
 
 interface DialogTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -255,7 +268,7 @@ const DialogOverlay = ({
       animate="visible"
       exit="exit"
       style={OVERLAY_STYLE}
-      className={cn('bg-overlay fixed inset-0 z-200', className)}
+      className={cn('bg-overlay fixed inset-0 z-500', className)}
       onClick={() => setOpen(false)}
       {...props}
     />
@@ -283,11 +296,17 @@ const DialogContent = ({
 
     triggerRef.current = document.activeElement as HTMLElement;
 
-    const trapFocus = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
-
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.defaultPrevented) return;
       const content = contentRef.current;
-      if (!content) return;
+      if (!content || !isTopmostLayer(content, e.target)) return;
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setOpen(false);
+        return;
+      }
+      if (e.key !== 'Tab') return;
 
       const focusable = Array.from(content.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
       if (focusable.length === 0) return;
@@ -308,12 +327,7 @@ const DialogContent = ({
       }
     };
 
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
-    };
-
-    document.addEventListener('keydown', trapFocus);
-    document.addEventListener('keydown', handleEscape);
+    document.addEventListener('keydown', handleKeyDown);
 
     requestAnimationFrame(() => {
       const content = contentRef.current;
@@ -326,8 +340,7 @@ const DialogContent = ({
     const releasePageScroll = lockPageScroll();
 
     return () => {
-      document.removeEventListener('keydown', trapFocus);
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('keydown', handleKeyDown);
       releasePageScroll();
       triggerRef.current?.focus();
     };
@@ -356,13 +369,13 @@ const DialogContent = ({
             exit="exit"
             style={DIALOG_STYLE}
             className={cn(
-              'bg-background fixed top-[50%] left-[50%] z-500 grid w-full max-w-xl translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 outline-none',
+              'bg-background fixed top-[50%] left-[50%] z-500 grid max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-xl translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto rounded-lg border p-6 shadow-lg outline-none',
               className,
             )}
             {...props}
           >
             {children}
-            <DialogClose className="ring-offset-background focus-visible:ring-ring absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none">
+            <DialogClose className="ring-offset-background focus-visible:ring-ring absolute top-2 right-2 rounded-sm p-2 opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none">
               <XIcon className="h-4 w-4" size={16} />
               <span className="sr-only">Close</span>
             </DialogClose>

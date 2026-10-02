@@ -3,13 +3,14 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { springs } from '../lib/motion';
 
-const PANEL_TRANSITION = { type: 'spring', stiffness: 420, damping: 32, mass: 0.7 } as const;
 const PANEL_INITIAL = { opacity: 0, y: 6, scale: 0.98 } as const;
 const PANEL_ANIMATE = { opacity: 1, y: 0, scale: 1 } as const;
 const PANEL_EXIT = { opacity: 0, y: 4, scale: 0.98 } as const;
 const REDUCED_INITIAL = { opacity: 0 } as const;
 const REDUCED_ANIMATE = { opacity: 1 } as const;
+const REDUCED_TRANSITION = { duration: 0.1 } as const;
 
 const RADIUS = 7;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
@@ -26,6 +27,7 @@ interface ContextContextValue {
   percent: number;
   open: boolean;
   setOpen: (open: boolean) => void;
+  toggle: () => void;
   id: string;
 }
 
@@ -87,6 +89,10 @@ const ContextRoot = ({
   usedTokens,
   open: controlledOpen,
   onOpenChange,
+  onPointerEnter,
+  onPointerLeave,
+  onFocus,
+  onBlur,
   children,
   ref,
   ...props
@@ -104,12 +110,31 @@ const ContextRoot = ({
     [isControlled, onOpenChange],
   );
 
+  const transientRef = React.useRef(false);
+
+  const peek = () => {
+    if (open) return;
+    transientRef.current = true;
+    setOpen(true);
+  };
+
+  const dismiss = () => {
+    transientRef.current = false;
+    setOpen(false);
+  };
+
+  const toggle = React.useCallback(() => {
+    const pinned = open && !transientRef.current;
+    transientRef.current = false;
+    setOpen(!pinned);
+  }, [open, setOpen]);
+
   const safeMax = maxTokens > 0 ? maxTokens : 1;
   const percent = Math.min(Math.max(usedTokens / safeMax, 0), 1);
 
   const value = React.useMemo<ContextContextValue>(
-    () => ({ maxTokens, usedTokens, percent, open, setOpen, id }),
-    [maxTokens, usedTokens, percent, open, setOpen, id],
+    () => ({ maxTokens, usedTokens, percent, open, setOpen, toggle, id }),
+    [maxTokens, usedTokens, percent, open, setOpen, toggle, id],
   );
 
   return (
@@ -117,11 +142,21 @@ const ContextRoot = ({
       <div
         ref={ref}
         data-state={open ? 'open' : 'closed'}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-        onFocus={() => setOpen(true)}
+        onPointerEnter={(event) => {
+          onPointerEnter?.(event);
+          if (event.pointerType === 'mouse') peek();
+        }}
+        onPointerLeave={(event) => {
+          onPointerLeave?.(event);
+          if (event.pointerType === 'mouse') dismiss();
+        }}
+        onFocus={(event) => {
+          onFocus?.(event);
+          peek();
+        }}
         onBlur={(event) => {
-          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false);
+          onBlur?.(event);
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) dismiss();
         }}
         className={cn('relative inline-flex', className)}
         {...props}
@@ -137,10 +172,11 @@ ContextRoot.displayName = 'Context';
 const ContextTrigger = ({
   className,
   children,
+  onClick,
   ref,
   ...props
 }: ContextTriggerProps & { ref?: React.Ref<HTMLButtonElement> }) => {
-  const { percent, open, setOpen, id, usedTokens, maxTokens } = useContextMeter();
+  const { percent, open, toggle, id, usedTokens, maxTokens } = useContextMeter();
   const rounded = Math.round(percent * 100);
 
   return (
@@ -151,7 +187,10 @@ const ContextTrigger = ({
       aria-expanded={open}
       aria-controls={`${id}-content`}
       aria-label={`${formatTokens(usedTokens)} of ${formatTokens(maxTokens)} tokens used`}
-      onClick={() => setOpen(!open)}
+      onClick={(event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented) toggle();
+      }}
       className={cn(
         'border-border bg-background text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex h-8 items-center gap-1.5 rounded-full border pr-2.5 pl-1.5 text-xs tabular-nums transition-colors focus-visible:ring-2 focus-visible:outline-none',
         className,
@@ -206,9 +245,9 @@ const ContextContent = ({
           initial={shouldReduceMotion ? REDUCED_INITIAL : PANEL_INITIAL}
           animate={shouldReduceMotion ? REDUCED_ANIMATE : PANEL_ANIMATE}
           exit={shouldReduceMotion ? REDUCED_INITIAL : PANEL_EXIT}
-          transition={shouldReduceMotion ? { duration: 0.1 } : PANEL_TRANSITION}
+          transition={shouldReduceMotion ? REDUCED_TRANSITION : springs.smooth}
           className={cn(
-            'border-border bg-popover text-popover-foreground absolute z-50 w-64 rounded-lg border p-3 shadow-[var(--elevation-md)]',
+            'border-border bg-popover text-popover-foreground absolute z-50 w-64 rounded-md border p-3 shadow-md',
             side === 'bottom' ? 'top-full mt-2' : 'bottom-full mb-2',
             align === 'start' && 'left-0',
             align === 'center' && 'left-1/2 -translate-x-1/2',

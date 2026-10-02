@@ -83,6 +83,8 @@ const DROPDOWN_ICON_VARIANTS = {
 const DROPDOWN_ICON_STYLE = { willChange: 'transform' } as const;
 const DROPDOWN_CONTENT_STYLE = { willChange: 'opacity, transform, filter' } as const;
 
+const VIEWPORT_PADDING = 8;
+
 const ALIGN_CLASSES = {
   start: 'left-0',
   center: 'left-1/2 -translate-x-1/2',
@@ -109,7 +111,7 @@ function useClickOutside(
 ) {
   React.useEffect(() => {
     if (!enabled) return;
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+    const handlePointerDownOutside = (event: PointerEvent) => {
       if (
         ref.current?.contains(event.target as Node) ||
         triggerRef.current?.contains(event.target as Node)
@@ -118,12 +120,8 @@ function useClickOutside(
       }
       handler();
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
-    };
+    document.addEventListener('pointerdown', handlePointerDownOutside);
+    return () => document.removeEventListener('pointerdown', handlePointerDownOutside);
   }, [ref, triggerRef, handler, enabled]);
 }
 
@@ -261,7 +259,7 @@ const DropdownMenuTrigger = ({
         'inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium',
         'text-foreground border-border border',
         'hover:bg-muted transition-colors',
-        'focus-visible:ring-ring focus-visible:ring-1 focus-visible:outline-none',
+        'ring-offset-background focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
         className,
       )}
       {...triggerA11yProps}
@@ -289,6 +287,7 @@ const DropdownMenuContent = ({
   const { isOpen, closeMenu, contentId, triggerId, triggerRef } = useDropdownContext();
   const contentRef = React.useRef<HTMLDivElement>(null);
   const [position, setPosition] = React.useState<'bottom' | 'top'>('bottom');
+  const [resolvedAlign, setResolvedAlign] = React.useState(align);
 
   const closeWithoutFocus = React.useCallback(
     () => closeMenu({ restoreFocus: false }),
@@ -300,33 +299,62 @@ const DropdownMenuContent = ({
   React.useLayoutEffect(() => {
     if (!isOpen || !triggerRef.current) return;
 
-    let ticking = false;
+    const measure = () => {
+      if (!triggerRef.current) return;
+      const triggerRect = triggerRef.current.getBoundingClientRect();
+      const contentHeight = contentRef.current?.offsetHeight || 200;
+      const contentWidth = contentRef.current?.offsetWidth || 0;
+      const windowHeight = window.innerHeight;
+      const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
+      const spaceBelow = windowHeight - triggerRect.bottom;
+      const spaceAbove = triggerRect.top;
 
-    const updatePosition = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        if (!triggerRef.current) return;
-        const triggerRect = triggerRef.current.getBoundingClientRect();
-        const contentHeight = contentRef.current?.offsetHeight || 200;
-        const windowHeight = window.innerHeight;
-        const spaceBelow = windowHeight - triggerRect.bottom;
+      setPosition(
+        spaceBelow < contentHeight + sideOffset + VIEWPORT_PADDING && spaceAbove > spaceBelow
+          ? 'top'
+          : 'bottom',
+      );
 
-        const newPosition = spaceBelow < contentHeight + 20 ? 'top' : 'bottom';
-        setPosition(newPosition);
-        ticking = false;
+      if (!contentWidth || !viewportWidth) {
+        setResolvedAlign(align);
+        return;
+      }
+      const maxRight = viewportWidth - VIEWPORT_PADDING;
+      const fitsStart = triggerRect.left + contentWidth <= maxRight;
+      const fitsEnd = triggerRect.right - contentWidth >= VIEWPORT_PADDING;
+      const centerLeft = triggerRect.left + triggerRect.width / 2 - contentWidth / 2;
+      const fitsCenter = centerLeft >= VIEWPORT_PADDING && centerLeft + contentWidth <= maxRight;
+
+      let next = align;
+      if (align === 'start' && !fitsStart && fitsEnd) next = 'end';
+      else if (align === 'end' && !fitsEnd && fitsStart) next = 'start';
+      else if (align === 'center' && !fitsCenter) {
+        if (fitsStart) next = 'start';
+        else if (fitsEnd) next = 'end';
+      }
+      setResolvedAlign(next);
+    };
+
+    measure();
+
+    let frame: number | null = null;
+    const scheduleMeasure = () => {
+      if (frame !== null) return;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        measure();
       });
     };
 
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', scheduleMeasure);
+    window.addEventListener('scroll', scheduleMeasure, true);
 
     return () => {
-      window.removeEventListener('resize', updatePosition);
-      window.removeEventListener('scroll', updatePosition, true);
+      if (frame !== null) cancelAnimationFrame(frame);
+      window.removeEventListener('resize', scheduleMeasure);
+      window.removeEventListener('scroll', scheduleMeasure, true);
     };
-  }, [isOpen, triggerRef]);
+  }, [isOpen, triggerRef, align, sideOffset]);
 
   // Move focus to the first item when the menu opens.
   React.useEffect(() => {
@@ -378,14 +406,14 @@ const DropdownMenuContent = ({
 
   const transformOriginClass =
     position === 'bottom'
-      ? align === 'start'
+      ? resolvedAlign === 'start'
         ? 'origin-top-left'
-        : align === 'end'
+        : resolvedAlign === 'end'
           ? 'origin-top-right'
           : 'origin-top'
-      : align === 'start'
+      : resolvedAlign === 'start'
         ? 'origin-bottom-left'
-        : align === 'end'
+        : resolvedAlign === 'end'
           ? 'origin-bottom-right'
           : 'origin-bottom';
 
@@ -409,14 +437,13 @@ const DropdownMenuContent = ({
           exit="exit"
           style={{ ...verticalStyle, ...DROPDOWN_CONTENT_STYLE }}
           className={cn(
-            'border-border absolute z-50 min-w-48 overflow-hidden rounded-md border',
-            'bg-background',
-            ALIGN_CLASSES[align],
+            'bg-popover text-popover-foreground border-border absolute z-50 min-w-48 overflow-hidden rounded-md border shadow-md',
+            ALIGN_CLASSES[resolvedAlign],
             transformOriginClass,
             className,
           )}
         >
-          <div className="flex flex-col gap-0.5 p-1.5">{children}</div>
+          <div className="flex flex-col gap-0.5 p-1">{children}</div>
         </motion.div>
       )}
     </AnimatePresence>
@@ -425,7 +452,7 @@ const DropdownMenuContent = ({
 
 const itemClassName = (disabled: boolean, variant: 'default' | 'destructive') =>
   cn(
-    'relative flex cursor-pointer items-center rounded-sm px-3 py-1.5 text-sm outline-none select-none',
+    'relative flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none select-none',
     'transition-colors duration-150',
     'hover:bg-muted focus-visible:bg-muted focus:bg-muted',
     disabled && 'pointer-events-none opacity-40',
@@ -523,7 +550,7 @@ const DropdownLabel = ({
     <div
       role="presentation"
       className={cn(
-        'text-muted-foreground px-3 py-2 text-xs font-semibold tracking-wider uppercase',
+        'text-muted-foreground px-2 py-2 text-xs font-semibold tracking-wider uppercase',
         className,
       )}
     >

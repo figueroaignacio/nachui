@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
+import { springs } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -123,10 +124,14 @@ function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
 type ToastPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
 const POSITION_CLASSES: Record<ToastPosition, string> = {
-  'top-left': 'top-0 left-0 flex-col',
-  'top-right': 'top-0 right-0 flex-col items-end',
-  'bottom-left': 'bottom-0 left-0 flex-col',
-  'bottom-right': 'bottom-0 right-0 flex-col items-end',
+  'top-left':
+    'top-0 left-0 flex-col pt-[max(1rem,env(safe-area-inset-top))] pl-[max(1rem,env(safe-area-inset-left))]',
+  'top-right':
+    'top-0 right-0 flex-col items-end pt-[max(1rem,env(safe-area-inset-top))] pr-[max(1rem,env(safe-area-inset-right))]',
+  'bottom-left':
+    'bottom-0 left-0 flex-col pb-[max(1rem,env(safe-area-inset-bottom))] pl-[max(1rem,env(safe-area-inset-left))]',
+  'bottom-right':
+    'bottom-0 right-0 flex-col items-end pb-[max(1rem,env(safe-area-inset-bottom))] pr-[max(1rem,env(safe-area-inset-right))]',
 } as const;
 
 // --- Animation constants ---
@@ -143,12 +148,7 @@ const TOAST_EXIT_BY_POSITION: Record<ToastPosition, Record<string, number | stri
   'bottom-right': { opacity: 0, x: 100, scale: 0.95, filter: 'blur(4px)' },
 } as const;
 
-const TOAST_TRANSITION = {
-  type: 'spring',
-  damping: 30,
-  stiffness: 400,
-  mass: 0.4,
-} as const;
+const TOAST_TRANSITION = springs.smooth;
 
 const TOAST_EXIT_TRANSITION = { duration: 0.2, ease: 'easeIn' } as const;
 const REDUCED_MOTION_PROPS = {
@@ -161,7 +161,7 @@ const REDUCED_MOTION_PROPS = {
 // --- CVA variants ---
 
 const toastVariants = cva(
-  'pointer-events-auto relative flex w-full items-center gap-3 overflow-hidden rounded-md border p-3.5 bg-background',
+  'pointer-events-auto relative flex w-full items-center gap-3 overflow-hidden rounded-md border p-3.5 bg-popover shadow-md',
   {
     variants: {
       variant: {
@@ -232,20 +232,32 @@ interface ToastItemProps {
 }
 
 function ToastItem({ toast: t, onDismiss, position }: ToastItemProps) {
-  const [paused, setPaused] = React.useState(false);
+  const [hovered, setHovered] = React.useState(false);
+  const [focused, setFocused] = React.useState(false);
+  const paused = hovered || focused;
   const isUrgent = t.variant === 'error' || t.variant === 'warning';
   const shouldReduceMotion = useReducedMotion();
+  const duration = t.duration ?? 5000;
+  const remainingRef = React.useRef(duration);
 
   React.useEffect(() => {
-    const duration = t.duration ?? 5000;
+    remainingRef.current = duration;
+  }, [duration]);
+
+  React.useEffect(() => {
     if (duration <= 0 || paused) return;
 
+    const startedAt = Date.now();
     const timer = setTimeout(() => {
       onDismiss(t.id);
-    }, duration);
+    }, remainingRef.current);
 
-    return () => clearTimeout(timer);
-  }, [t.id, t.duration, onDismiss, paused]);
+    return () => {
+      clearTimeout(timer);
+      const elapsed = Date.now() - startedAt;
+      remainingRef.current = Math.max(remainingRef.current - elapsed, 0);
+    };
+  }, [t.id, duration, onDismiss, paused]);
 
   const VariantIcon = VARIANT_ICONS[t.variant ?? 'default'];
 
@@ -262,10 +274,16 @@ function ToastItem({ toast: t, onDismiss, position }: ToastItemProps) {
       transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : TOAST_TRANSITION}
       role={isUrgent ? 'alert' : 'status'}
       aria-live={isUrgent ? 'assertive' : 'polite'}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
+      onPointerEnter={(event) => {
+        if (event.pointerType === 'mouse') setHovered(true);
+      }}
+      onPointerLeave={(event) => {
+        if (event.pointerType === 'mouse') setHovered(false);
+      }}
+      onFocus={() => setFocused(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false);
+      }}
       className={cn(toastVariants({ variant: t.variant }), 'flex-col')}
     >
       <div className="flex w-full items-center gap-2">
@@ -362,7 +380,7 @@ function ToastProvider({
             role="region"
             aria-label="Notifications"
             className={cn(
-              'pointer-events-none fixed z-9999 flex max-h-screen gap-2 p-4',
+              'pointer-events-none fixed z-9999 flex max-h-dvh w-full max-w-sm gap-2 p-4',
               POSITION_CLASSES[position],
             )}
           >

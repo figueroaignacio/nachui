@@ -65,7 +65,7 @@ export function Default() {
         ))}
         <DropdownMenu.Separator />
         <DropdownMenu.Item variant="destructive">
-          <LogOutIcon className="mr-2 size-4" />
+          <LogOutIcon className="size-4" />
           Sign out
         </DropdownMenu.Item>
       </DropdownMenu.Content>

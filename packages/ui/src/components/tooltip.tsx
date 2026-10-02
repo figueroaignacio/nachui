@@ -30,6 +30,7 @@ interface TooltipContextType {
   setOpen: (open: boolean) => void;
   delayDuration: number;
   id: string;
+  rootRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const TooltipContext = React.createContext<TooltipContextType | undefined>(undefined);
@@ -74,10 +75,27 @@ const TooltipRoot = ({
   );
 
   const id = React.useId();
+  const rootRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (!open) return;
+    const handlePointerDown = (e: PointerEvent) => {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => document.removeEventListener('pointerdown', handlePointerDown);
+  }, [open, setOpen]);
+
+  const contextValue = React.useMemo(
+    () => ({ open, setOpen, delayDuration, id, rootRef }),
+    [open, setOpen, delayDuration, id],
+  );
 
   return (
-    <TooltipContext value={{ open, setOpen, delayDuration, id }}>
-      <div className="relative flex h-fit w-fit items-center justify-center">{children}</div>
+    <TooltipContext value={contextValue}>
+      <div ref={rootRef} className="relative flex h-fit w-fit items-center justify-center">
+        {children}
+      </div>
     </TooltipContext>
   );
 };
@@ -106,13 +124,16 @@ function TooltipTrigger({ children, asChild = false, className, ...props }: Tool
     return () => document.removeEventListener('keydown', handleEscape);
   }, [open, setOpen]);
 
-  const handleMouseEnter = () => {
+  const handlePointerEnter = (e: React.PointerEvent) => {
+    if (e.pointerType !== 'mouse') return;
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setOpen(true);
     }, delayDuration);
   };
 
-  const handleMouseLeave = () => {
+  const handlePointerLeave = (e: React.PointerEvent) => {
+    if (e.pointerType !== 'mouse') return;
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setOpen(false);
   };
@@ -126,32 +147,44 @@ function TooltipTrigger({ children, asChild = false, className, ...props }: Tool
     setOpen(false);
   };
 
+  const {
+    onPointerEnter: propsPointerEnter,
+    onPointerLeave: propsPointerLeave,
+    onFocus: propsFocus,
+    onBlur: propsBlur,
+    ...restProps
+  } = props;
+
   if (asChild && React.isValidElement(children)) {
     const childProps = children.props as {
-      onMouseEnter?: (e: React.MouseEvent) => void;
-      onMouseLeave?: (e: React.MouseEvent) => void;
+      onPointerEnter?: (e: React.PointerEvent) => void;
+      onPointerLeave?: (e: React.PointerEvent) => void;
       onFocus?: (e: React.FocusEvent) => void;
       onBlur?: (e: React.FocusEvent) => void;
       className?: string;
     };
 
     return React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
-      ...props,
+      ...restProps,
       'aria-describedby': open ? id : undefined,
-      onMouseEnter: (e: React.MouseEvent) => {
-        handleMouseEnter();
-        childProps.onMouseEnter?.(e);
+      onPointerEnter: (e: React.PointerEvent<HTMLElement>) => {
+        handlePointerEnter(e);
+        propsPointerEnter?.(e);
+        childProps.onPointerEnter?.(e);
       },
-      onMouseLeave: (e: React.MouseEvent) => {
-        handleMouseLeave();
-        childProps.onMouseLeave?.(e);
+      onPointerLeave: (e: React.PointerEvent<HTMLElement>) => {
+        handlePointerLeave(e);
+        propsPointerLeave?.(e);
+        childProps.onPointerLeave?.(e);
       },
-      onFocus: (e: React.FocusEvent) => {
+      onFocus: (e: React.FocusEvent<HTMLElement>) => {
         handleFocus();
+        propsFocus?.(e);
         childProps.onFocus?.(e);
       },
-      onBlur: (e: React.FocusEvent) => {
+      onBlur: (e: React.FocusEvent<HTMLElement>) => {
         handleBlur();
+        propsBlur?.(e);
         childProps.onBlur?.(e);
       },
       className: cn(className, childProps.className),
@@ -164,11 +197,23 @@ function TooltipTrigger({ children, asChild = false, className, ...props }: Tool
       // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- the wrapper must be focusable so keyboard users can summon the tooltip when the child isn't interactive
       tabIndex={0}
       className={cn('cursor-pointer', className)}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      {...props}
+      {...restProps}
+      onPointerEnter={(e) => {
+        handlePointerEnter(e);
+        propsPointerEnter?.(e);
+      }}
+      onPointerLeave={(e) => {
+        handlePointerLeave(e);
+        propsPointerLeave?.(e);
+      }}
+      onFocus={(e) => {
+        handleFocus();
+        propsFocus?.(e);
+      }}
+      onBlur={(e) => {
+        handleBlur();
+        propsBlur?.(e);
+      }}
     >
       {children}
     </div>
@@ -214,7 +259,7 @@ const TooltipContent = ({
           exit="exit"
           style={sideOffsetStyle}
           className={cn(
-            'bg-foreground text-background absolute z-50 rounded-sm px-2.5 py-1 text-xs whitespace-nowrap',
+            'bg-foreground text-background absolute z-50 w-max max-w-[min(20rem,calc(100vw-2rem))] rounded-sm px-2.5 py-1 text-xs whitespace-normal',
             TOOLTIP_POSITION_CLASSES[side],
             floatingOrigin[side],
             className,

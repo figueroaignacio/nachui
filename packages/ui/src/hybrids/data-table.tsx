@@ -192,18 +192,31 @@ const columnText = <T,>(column: DataTableColumn<T>, row: T): string | null => {
   return typeof cell === 'string' || typeof cell === 'number' ? String(cell) : null;
 };
 
-function applyDataTable<T>(data: T[], query: DataTableQuery<T>): DataTableResult<T> {
+const createRowText = <T,>(data: T[], columns: DataTableColumn<T>[]) => {
+  const cache: (string | undefined)[] = [];
+  return (index: number): string => {
+    const cached = cache[index];
+    if (cached !== undefined) return cached;
+    const row = data[index] as T;
+    const text = columns
+      .map((column) => columnText(column, row) ?? '')
+      .join('\u0000')
+      .toLowerCase();
+    cache[index] = text;
+    return text;
+  };
+};
+
+function applyDataTable<T>(
+  data: T[],
+  query: DataTableQuery<T>,
+  rowText?: (index: number) => string,
+): DataTableResult<T> {
   const { columns, filter = '', sort = null, page = 1, pageSize = 10 } = query;
   const needle = filter.trim().toLowerCase();
+  const readText = needle ? (rowText ?? createRowText(data, columns)) : null;
 
-  let rows = needle
-    ? data.filter((row) =>
-        columns.some((column) => {
-          const text = columnText(column, row);
-          return text !== null && text.toLowerCase().includes(needle);
-        }),
-      )
-    : [...data];
+  let rows = readText ? data.filter((_, index) => readText(index).includes(needle)) : [...data];
 
   const sortColumn = sort ? columns.find((column) => column.id === sort.id) : undefined;
   if (sort && sortColumn?.sortValue) {
@@ -308,7 +321,10 @@ function DataTableRoot<T>({
   const [internalSort, setInternalSort] = React.useState<DataTableSort | null>(null);
   const sort = controlledSort === undefined ? internalSort : controlledSort;
   const [internalSelected, setInternalSelected] = React.useState<Set<string>>(() => new Set());
-  const selected = controlledSelected === undefined ? internalSelected : toSet(controlledSelected);
+  const selected = React.useMemo(
+    () => (controlledSelected === undefined ? internalSelected : toSet(controlledSelected)),
+    [controlledSelected, internalSelected],
+  );
   const [page, setPageState] = React.useState(1);
   const [hiddenIds, setHiddenIds] = React.useState<Set<string>>(
     () => new Set(columns.filter((column) => column.hidden).map((column) => column.id)),
@@ -350,9 +366,11 @@ function DataTableRoot<T>({
     [columns, hiddenIds],
   );
 
+  const rowText = React.useMemo(() => createRowText(data, columns), [data, columns]);
+
   const result = React.useMemo(
-    () => applyDataTable(data, { columns, filter, sort, page, pageSize }),
-    [data, columns, filter, sort, page, pageSize],
+    () => applyDataTable(data, { columns, filter, sort, page, pageSize }, rowText),
+    [data, columns, filter, sort, page, pageSize, rowText],
   );
 
   const setPage = React.useCallback(
@@ -583,7 +601,7 @@ const DataTableContent = ({
                       typeof column.header === 'string' ? labels.sortBy(column.header) : undefined
                     }
                     className={cn(
-                      'hover:text-foreground focus-visible:ring-ring -mx-1 inline-flex items-center gap-1.5 rounded-sm px-1 transition-colors focus-visible:ring-2 focus-visible:outline-none',
+                      'hover:text-foreground focus-visible:ring-ring -mx-1 -my-1 inline-flex min-h-8 items-center gap-1.5 rounded-sm px-1 py-1 transition-colors focus-visible:ring-2 focus-visible:outline-none',
                       active && 'text-foreground',
                       column.align === 'end' && 'flex-row-reverse',
                     )}

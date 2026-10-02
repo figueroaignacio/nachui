@@ -1,8 +1,9 @@
 'use client';
 
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { collapse, springs, still } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -126,31 +127,13 @@ function DotIcon({ size = 24, ...props }: IconProps) {
   );
 }
 
-const TOOL_CONTENT_VARIANTS = {
-  open: {
-    height: 'auto',
-    opacity: 1,
-    transition: {
-      height: {
-        duration: 0.25,
-        ease: [0.04, 0.62, 0.23, 0.98] as [number, number, number, number],
-      },
-      opacity: { duration: 0.2, delay: 0.04 },
-    },
-  },
-  closed: {
-    height: 0,
-    opacity: 0,
-    transition: {
-      height: { duration: 0.2, ease: [0.04, 0.62, 0.23, 0.98] as [number, number, number, number] },
-      opacity: { duration: 0.12 },
-    },
-  },
-} as const;
+const INSTANT_COLLAPSE: Variants = {
+  closed: { height: 0, opacity: 0, transition: still },
+  open: { height: 'auto', opacity: 1, transition: still },
+};
 
 const SPIN_ANIMATE = { rotate: 360 };
 const SPIN_TRANSITION = { repeat: Infinity, duration: 1, ease: 'linear' } as const;
-const CHEVRON_TRANSITION = { type: 'spring', stiffness: 300, damping: 20 } as const;
 
 type ToolStatus = 'pending' | 'running' | 'complete' | 'error';
 
@@ -338,7 +321,7 @@ const ToolHeader = ({
         aria-hidden="true"
         className="text-muted-foreground flex shrink-0"
         animate={shouldReduceMotion ? undefined : { rotate: open ? 180 : 0 }}
-        transition={CHEVRON_TRANSITION}
+        transition={springs.snappy}
       >
         <ChevronDownIcon size={14} />
       </motion.span>
@@ -355,6 +338,7 @@ const ToolContent = ({
   ...props
 }: ToolContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const { open, id } = useToolContext();
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <AnimatePresence initial={false}>
@@ -364,7 +348,7 @@ const ToolContent = ({
           id={`${id}-content`}
           role="region"
           aria-labelledby={`${id}-trigger`}
-          variants={TOOL_CONTENT_VARIANTS}
+          variants={shouldReduceMotion ? INSTANT_COLLAPSE : collapse}
           initial="closed"
           animate="open"
           exit="closed"

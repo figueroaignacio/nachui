@@ -40,6 +40,14 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(', ');
 
+function isTopmostLayer(node: HTMLElement | null, target: EventTarget | null) {
+  if (!node) return false;
+  const owner = target instanceof Element ? target.closest('[aria-modal="true"]') : null;
+  if (owner) return owner === node;
+  const layers = document.querySelectorAll('[aria-modal="true"]');
+  return layers[layers.length - 1] === node;
+}
+
 function lockPageScroll() {
   const root = document.documentElement;
   const depth = Number(root.dataset.scrollLocked ?? '0');
@@ -72,8 +80,8 @@ type SheetSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 const SIDE_CLASSES: Record<SheetSide, string> = {
   right: 'inset-y-0 right-0 h-full border-l',
   left: 'inset-y-0 left-0 h-full border-r',
-  top: 'inset-x-0 top-0 w-full border-b',
-  bottom: 'inset-x-0 bottom-0 w-full border-t',
+  top: 'inset-x-0 top-0 w-full border-b pt-[env(safe-area-inset-top)]',
+  bottom: 'inset-x-0 bottom-0 w-full border-t pb-[env(safe-area-inset-bottom)]',
 };
 
 const HORIZONTAL_SIZE: Record<SheetSize, string> = {
@@ -81,15 +89,15 @@ const HORIZONTAL_SIZE: Record<SheetSize, string> = {
   md: 'w-96',
   lg: 'w-[32rem]',
   xl: 'w-[40rem]',
-  full: 'w-screen',
+  full: 'w-full',
 };
 
 const VERTICAL_SIZE: Record<SheetSize, string> = {
-  sm: 'max-h-[40vh]',
-  md: 'max-h-[60vh]',
-  lg: 'max-h-[80vh]',
-  xl: 'max-h-[92vh]',
-  full: 'h-screen',
+  sm: 'max-h-[40dvh]',
+  md: 'max-h-[60dvh]',
+  lg: 'max-h-[80dvh]',
+  xl: 'max-h-[92dvh]',
+  full: 'h-dvh',
 };
 
 const OVERLAY_STYLE = { willChange: 'opacity' } as const;
@@ -154,13 +162,18 @@ const SheetRoot = ({
 
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : internalOpen;
+  const onOpenChangeRef = React.useRef(onOpenChange);
+
+  React.useLayoutEffect(() => {
+    onOpenChangeRef.current = onOpenChange;
+  });
 
   const setOpen = React.useCallback(
     (next: boolean) => {
       if (!isControlled) setInternalOpen(next);
-      onOpenChange?.(next);
+      onOpenChangeRef.current?.(next);
     },
-    [isControlled, onOpenChange],
+    [isControlled],
   );
 
   React.useEffect(() => {
@@ -234,7 +247,7 @@ const SheetOverlay = ({ className }: { className?: string }) => {
       animate="visible"
       exit="exit"
       style={OVERLAY_STYLE}
-      className={cn('bg-overlay fixed inset-0 z-300 backdrop-blur-xs', className)}
+      className={cn('bg-overlay fixed inset-0 z-500 backdrop-blur-xs', className)}
       onClick={() => setOpen(false)}
     />
   );
@@ -267,14 +280,17 @@ const SheetContent = ({
     restoreRef.current = document.activeElement as HTMLElement;
 
     const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented) return;
+      const content = contentRef.current;
+      if (!content || !isTopmostLayer(content, event.target)) return;
+
       if (event.key === 'Escape') {
+        event.preventDefault();
         setOpen(false);
         return;
       }
       if (event.key !== 'Tab') return;
 
-      const content = contentRef.current;
-      if (!content) return;
       const focusable = Array.from(content.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
       if (focusable.length === 0) return;
 
@@ -333,7 +349,7 @@ const SheetContent = ({
             exit="exit"
             style={PANEL_STYLE}
             className={cn(
-              'bg-background border-border fixed z-300 flex max-w-full flex-col shadow-2xl outline-none',
+              'bg-background border-border fixed z-500 flex max-w-full flex-col shadow-lg outline-none',
               SIDE_CLASSES[side],
               horizontal ? HORIZONTAL_SIZE[size] : VERTICAL_SIZE[size],
               className,

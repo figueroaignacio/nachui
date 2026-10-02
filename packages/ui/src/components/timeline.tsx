@@ -36,7 +36,7 @@ const timelineVariants = cva('group/timeline m-0 flex list-none p-0', {
   variants: {
     orientation: {
       vertical: 'flex-col',
-      horizontal: 'w-full flex-row',
+      horizontal: 'w-full flex-row overflow-x-auto',
     },
     alternate: {
       true: '',
@@ -142,7 +142,7 @@ const TimelineItem = ({
         data-active={active ? '' : undefined}
         className={cn(
           'group/item relative flex flex-1 flex-col gap-0.5',
-          orientation === 'vertical' ? 'ps-8 pb-8 last:pb-0' : 'pe-8 pt-8 last:pe-0',
+          orientation === 'vertical' ? 'ps-8 pb-8 last:pb-0' : 'min-w-32 pe-8 pt-8 last:pe-0',
           className,
         )}
         {...props}

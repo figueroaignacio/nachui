@@ -41,6 +41,43 @@ const POPOVER_POSITION_CLASSES = {
 
 const POPOVER_STYLE = { willChange: 'opacity, transform, filter' } as const;
 
+const VIEWPORT_PADDING = 8;
+
+function useViewportShift(ref: React.RefObject<HTMLElement | null>, open: boolean) {
+  const [shift, setShift] = React.useState(0);
+
+  React.useLayoutEffect(() => {
+    if (!open) return;
+    const measure = () => {
+      const el = ref.current;
+      if (!el) return;
+      const { transform, translate } = el.style;
+      el.style.transform = 'none';
+      el.style.translate = '';
+      const rect = el.getBoundingClientRect();
+      el.style.transform = transform;
+      el.style.translate = translate;
+      const viewport = document.documentElement.clientWidth || window.innerWidth;
+      if (!rect.width || !viewport) return;
+      let next = 0;
+      if (rect.right > viewport - VIEWPORT_PADDING) next = viewport - VIEWPORT_PADDING - rect.right;
+      if (rect.left + next < VIEWPORT_PADDING) next = VIEWPORT_PADDING - rect.left;
+      setShift(Math.round(next));
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [open, ref]);
+
+  return shift;
+}
+
+function shiftTranslate(shift: number, centeredX: boolean, centeredY: boolean) {
+  if (!shift) return undefined;
+  const x = centeredX ? `calc(-50% + ${shift}px)` : `${shift}px`;
+  return centeredY ? `${x} -50%` : x;
+}
+
 // --- Context ---
 
 interface PopoverContextType {
@@ -96,7 +133,7 @@ const PopoverRoot = ({
   React.useEffect(() => {
     if (!open) return;
 
-    const handleClickOutside = (e: MouseEvent) => {
+    const handlePointerDownOutside = (e: PointerEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setOpen(false);
       }
@@ -109,10 +146,10 @@ const PopoverRoot = ({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('pointerdown', handlePointerDownOutside);
     document.addEventListener('keydown', handleEscape);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('pointerdown', handlePointerDownOutside);
       document.removeEventListener('keydown', handleEscape);
     };
   }, [open, setOpen]);
@@ -236,6 +273,7 @@ const PopoverContent = ({
   const { open, id, setOpen } = usePopoverContext();
   const contentRef = React.useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
+  const shift = useViewportShift(contentRef, open);
 
   // Move focus into the popover when it opens so keyboard users can reach its content.
   React.useEffect(() => {
@@ -253,8 +291,13 @@ const PopoverContent = ({
       ...(side === 'left' && { marginRight: sideOffset }),
       ...(side === 'right' && { marginLeft: sideOffset }),
       ...POPOVER_STYLE,
+      translate: shiftTranslate(
+        shift,
+        side === 'top' || side === 'bottom',
+        side === 'left' || side === 'right',
+      ),
     }),
-    [side, sideOffset],
+    [side, sideOffset, shift],
   );
 
   return (
@@ -271,7 +314,7 @@ const PopoverContent = ({
           exit="exit"
           style={sideOffsetStyle}
           className={cn(
-            'bg-popover text-popover-foreground absolute z-50 w-72 rounded-md border p-4 shadow-sm outline-none',
+            'bg-popover text-popover-foreground border-border absolute z-50 w-72 max-w-[calc(100vw-2rem)] rounded-md border p-4 shadow-md outline-none',
             POPOVER_POSITION_CLASSES[side],
             floatingOrigin[side],
             className,
@@ -283,7 +326,7 @@ const PopoverContent = ({
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="ring-offset-background focus-visible:ring-ring absolute top-3 right-3 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="ring-offset-background focus-visible:ring-ring absolute top-1 right-1 rounded-md p-2 opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               <XIcon className="h-4 w-4" size={16} />
               <span className="sr-only">Close</span>

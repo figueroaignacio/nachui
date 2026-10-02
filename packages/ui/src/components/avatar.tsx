@@ -35,9 +35,10 @@ export interface AvatarProps
 
 const AvatarRoot = ({ className, size, ...props }: AvatarProps) => {
   const [status, setStatus] = React.useState<'loading' | 'loaded' | 'error'>('loading');
+  const contextValue = React.useMemo<AvatarContextValue>(() => ({ status, setStatus }), [status]);
 
   return (
-    <AvatarContext value={{ status, setStatus }}>
+    <AvatarContext value={contextValue}>
       <span className={cn(avatarVariants({ size }), className)} {...props} />
     </AvatarContext>
   );
@@ -57,16 +58,33 @@ const AvatarImage = ({
   ...props
 }: AvatarImageProps) => {
   const { status, setStatus } = useAvatarContext();
+  const imgRef = React.useRef<HTMLImageElement>(null);
+  const onLoadingStatusChangeRef = React.useRef(onLoadingStatusChange);
 
   React.useEffect(() => {
-    if (!src) setStatus('error');
-    else setStatus('loading');
+    onLoadingStatusChangeRef.current = onLoadingStatusChange;
+  });
+
+  React.useEffect(() => {
+    if (!src) {
+      setStatus('error');
+      return;
+    }
+    const img = imgRef.current;
+    if (img?.complete) {
+      const next = img.naturalWidth > 0 ? 'loaded' : 'error';
+      setStatus(next);
+      onLoadingStatusChangeRef.current?.(next);
+      return;
+    }
+    setStatus('loading');
   }, [src, setStatus]);
 
   if (status === 'error') return null;
 
   return (
     <img
+      ref={imgRef}
       src={src}
       alt=""
       className={cn('aspect-square h-full w-full object-cover', className)}

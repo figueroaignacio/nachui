@@ -353,7 +353,7 @@ const SearchCommandInput = ({
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
       if (results.length) setActiveIndex((activeIndex - 1 + results.length) % results.length);
-    } else if (event.key === 'Enter') {
+    } else if (event.key === 'Enter' && !event.nativeEvent.isComposing && event.keyCode !== 229) {
       event.preventDefault();
       const item = results[activeIndex];
       if (item) select(item);
@@ -380,7 +380,7 @@ const SearchCommandInput = ({
         onChange={(event) => setQuery(event.target.value)}
         onKeyDown={handleKeyDown}
         className={cn(
-          'text-foreground placeholder:text-muted-foreground h-12 w-full bg-transparent text-sm outline-none',
+          'text-foreground placeholder:text-muted-foreground h-12 w-full bg-transparent text-base outline-none md:text-sm',
           className,
         )}
         {...props}
@@ -398,7 +398,16 @@ const SearchCommandList = ({
   ref,
   ...props
 }: SearchCommandListProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { results, id, labels } = useSearchCommand();
+  const { results, activeIndex, id, labels } = useSearchCommand();
+  const activeId = results[activeIndex]?.id;
+
+  React.useEffect(() => {
+    if (activeId === undefined) return;
+    const option = document.getElementById(`${id}-${activeId}`);
+    if (option && typeof option.scrollIntoView === 'function') {
+      option.scrollIntoView({ block: 'nearest' });
+    }
+  }, [activeId, id]);
 
   const groups = React.useMemo(() => {
     const order: string[] = [];

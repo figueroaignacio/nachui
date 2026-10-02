@@ -4,9 +4,9 @@ import { motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 
-const SHIMMER_ANIMATE = { backgroundPosition: ['200% center', '-200% center'] };
+const SHIMMER_ANIMATE = { backgroundPosition: ['100% center', '0% center'] };
 const SHIMMER_STYLE = {
-  backgroundSize: '200% 100%',
+  backgroundSize: '250% 100%',
   backgroundRepeat: 'no-repeat',
 } as const;
 

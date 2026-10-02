@@ -146,8 +146,8 @@ export const Command = ({
         aria-label={copied ? 'Copied!' : 'Copy command'}
         title={copied ? 'Copied!' : 'Copy to clipboard'}
         className={cn(
-          'text-muted-foreground hover:text-foreground shrink-0 rounded p-0.5 transition-colors',
-          'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none',
+          'text-muted-foreground hover:text-foreground -m-1.5 shrink-0 rounded p-2 transition-colors',
+          'focus-visible:ring-ring ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none',
           copied && 'text-success hover:text-success',
         )}
       >

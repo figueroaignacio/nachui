@@ -1,10 +1,10 @@
 'use client';
 
 import { cva } from 'class-variance-authority';
-import { AnimatePresence, HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
-import { collapse, collapseInner, springs, tap } from '../lib/motion';
+import { collapse, collapseInner, springs, still, tap } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -32,6 +32,11 @@ function ChevronDownIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) 
 
 const COLLAPSIBLE_CONTENT_STYLE = { willChange: 'height, opacity' } as const;
 
+const REDUCED_COLLAPSE = {
+  closed: { height: 0, opacity: 0, transition: still },
+  open: { height: 'auto', opacity: 1, transition: still },
+} as const;
+
 // --- CVA ---
 
 const collapsibleVariants = cva('', {
@@ -51,7 +56,7 @@ const collapsibleTriggerVariants = cva(
   [
     'flex w-full items-center justify-between',
     'transition-all duration-200',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-background focus-visible:ring-offset-2',
     'disabled:pointer-events-none disabled:opacity-50',
   ].join(' '),
   {
@@ -200,9 +205,15 @@ const CollapsibleTrigger = ({
 
   const chevron = chevronIcon ?? <ChevronDownIcon className="h-4 w-4 shrink-0" size={16} />;
 
-  if (asChild && React.isValidElement(children)) {
+  if (asChild && React.isValidElement<React.HTMLAttributes<HTMLElement>>(children)) {
+    const childOnClick = children.props.onClick;
     return React.cloneElement(children, {
-      onClick: handleClick,
+      id: children.props.id ?? `${id}-trigger`,
+      onClick: (e: React.MouseEvent<HTMLElement>) => {
+        childOnClick?.(e);
+        if (e.defaultPrevented) return;
+        handleClick(e as React.MouseEvent<HTMLButtonElement>);
+      },
       'data-state': isOpen ? 'open' : 'closed',
       'aria-expanded': isOpen,
       'aria-controls': `${id}-content`,
@@ -260,6 +271,7 @@ const CollapsibleContent = ({
   ...props
 }: CollapsibleContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const { isOpen, variant, id } = useCollapsibleContext();
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <AnimatePresence initial={false} mode="sync">
@@ -269,15 +281,20 @@ const CollapsibleContent = ({
           id={`${id}-content`}
           role="region"
           aria-labelledby={`${id}-trigger`}
-          variants={collapse}
+          variants={shouldReduceMotion ? REDUCED_COLLAPSE : collapse}
           initial="closed"
           animate="open"
           exit="closed"
-          style={COLLAPSIBLE_CONTENT_STYLE}
+          style={shouldReduceMotion ? undefined : COLLAPSIBLE_CONTENT_STYLE}
           className={cn(collapsibleContentVariants({ variant }), className)}
           {...props}
         >
-          <motion.div variants={collapseInner} initial="closed" animate="open" exit="closed">
+          <motion.div
+            variants={shouldReduceMotion ? undefined : collapseInner}
+            initial="closed"
+            animate="open"
+            exit="closed"
+          >
             {children}
           </motion.div>
         </motion.div>

@@ -408,7 +408,7 @@ const AttachmentActions = ({
       className={cn(
         'flex shrink-0 items-center gap-0.5',
         variant === 'card' &&
-          'absolute top-1.5 right-1.5 opacity-0 transition-opacity group-focus-within/attachment:opacity-100 group-hover/attachment:opacity-100',
+          'absolute top-1.5 right-1.5 transition-opacity group-focus-within/attachment:opacity-100 group-hover/attachment:opacity-100 [@media(hover:hover)]:opacity-0',
         className,
       )}
       {...props}
@@ -418,7 +418,7 @@ const AttachmentActions = ({
 AttachmentActions.displayName = 'AttachmentActions';
 
 const actionClassName =
-  'text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50';
+  'text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring relative inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 pointer-coarse:before:absolute';
 
 const AttachmentRemove = ({
   className,
@@ -436,7 +436,9 @@ const AttachmentRemove = ({
       data-slot="attachment-remove"
       className={cn(
         actionClassName,
-        variant === 'chip' ? 'size-5 [&_svg]:size-3' : 'size-7 [&_svg]:size-3.5',
+        variant === 'chip'
+          ? 'size-5 pointer-coarse:before:-inset-1.5 [&_svg]:size-3'
+          : 'size-7 pointer-coarse:before:-inset-0.5 [&_svg]:size-3.5',
         variant === 'card' && 'bg-background/80 backdrop-blur-sm',
         className,
       )}
@@ -464,7 +466,9 @@ const AttachmentDownload = ({
       data-slot="attachment-download"
       className={cn(
         actionClassName,
-        variant === 'chip' ? 'size-5 [&_svg]:size-3' : 'size-7 [&_svg]:size-3.5',
+        variant === 'chip'
+          ? 'size-5 pointer-coarse:before:-inset-1.5 [&_svg]:size-3'
+          : 'size-7 pointer-coarse:before:-inset-0.5 [&_svg]:size-3.5',
         variant === 'card' && 'bg-background/80 backdrop-blur-sm',
         className,
       )}

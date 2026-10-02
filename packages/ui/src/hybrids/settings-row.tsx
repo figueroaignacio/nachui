@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { Badge } from '../components/badge';
 import { Button, type ButtonProps } from '../components/button';
 import { Input, type InputProps } from '../components/input';
 import { Label } from '../components/label';

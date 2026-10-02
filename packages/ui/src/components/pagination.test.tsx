@@ -74,8 +74,11 @@ describe('Pagination', () => {
     expect(screen.getByText('Next')).toHaveClass('sr-only');
   });
 
-  it('hides the ellipsis from assistive tech', () => {
+  it('announces the ellipsis label and hides the icon', () => {
     render(<Pagination.Ellipsis data-testid="ellipsis" />);
-    expect(screen.getByTestId('ellipsis')).toHaveAttribute('aria-hidden', 'true');
+    const ellipsis = screen.getByTestId('ellipsis');
+    expect(ellipsis).not.toHaveAttribute('aria-hidden');
+    expect(screen.getByText('More pages')).toHaveClass('sr-only');
+    expect(ellipsis.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
   });
 });

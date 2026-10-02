@@ -198,9 +198,15 @@ function matchesAccept(file: File, accept?: string): boolean {
 
 interface PromptInputProps extends Omit<
   React.FormHTMLAttributes<HTMLFormElement>,
-  'onSubmit' | 'onError'
+  'onSubmit' | 'onError' | 'value' | 'defaultValue'
 > {
-  onSubmit?: (message: PromptInputMessage, event: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit?: (
+    message: PromptInputMessage,
+    event: React.FormEvent<HTMLFormElement>,
+  ) => void | boolean | Promise<void | boolean>;
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
   accept?: string;
   multiple?: boolean;
   maxFiles?: number;
@@ -248,11 +254,28 @@ const PromptInputRoot = ({
   globalDrop = false,
   clearOnSubmit = true,
   onError,
+  value: controlledText,
+  defaultValue = '',
+  onValueChange,
   children,
   ref,
   ...props
 }: PromptInputProps & { ref?: React.Ref<HTMLFormElement> }) => {
-  const [text, setText] = React.useState('');
+  const [internalText, setInternalText] = React.useState(defaultValue);
+  const isControlled = controlledText !== undefined;
+  const text = isControlled ? controlledText : internalText;
+  const isControlledRef = React.useRef(isControlled);
+  const onValueChangeRef = React.useRef(onValueChange);
+
+  React.useEffect(() => {
+    isControlledRef.current = isControlled;
+    onValueChangeRef.current = onValueChange;
+  });
+
+  const setText = React.useCallback((next: string) => {
+    if (!isControlledRef.current) setInternalText(next);
+    onValueChangeRef.current?.(next);
+  }, []);
   const [files, setFiles] = React.useState<PromptInputFile[]>([]);
   const filesRef = React.useRef<PromptInputFile[]>(files);
   const [dragging, setDragging] = React.useState(false);
@@ -339,10 +362,17 @@ const PromptInputRoot = ({
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!text.trim() && files.length === 0) return;
-    onSubmit?.({ text, files }, event);
-    if (clearOnSubmit) {
+    const result = onSubmit?.({ text, files }, event);
+    if (!clearOnSubmit) return;
+    const reset = (outcome: void | boolean) => {
+      if (outcome === false) return;
       setText('');
       clear();
+    };
+    if (result instanceof Promise) {
+      result.then(reset, () => undefined);
+    } else {
+      reset(result);
     }
   };
 
@@ -466,7 +496,7 @@ const PromptInputAttachments = ({
               type="button"
               aria-label={`Remove ${file.filename}`}
               onClick={() => remove(file.id)}
-              className="text-muted-foreground hover:text-foreground focus-visible:ring-ring flex size-5 shrink-0 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:outline-none"
+              className="text-muted-foreground hover:text-foreground focus-visible:ring-ring relative flex size-5 shrink-0 items-center justify-center rounded-full transition-colors after:absolute after:-inset-2 focus-visible:ring-2 focus-visible:outline-none"
             >
               <XIcon size={12} />
             </button>
@@ -515,7 +545,7 @@ const PromptInputTextarea = ({
         }
       }}
       className={cn(
-        'text-foreground placeholder:text-muted-foreground w-full resize-none bg-transparent px-3 py-3 text-sm leading-relaxed outline-none',
+        'text-foreground placeholder:text-muted-foreground w-full resize-none bg-transparent px-3 py-3 text-base leading-relaxed outline-none md:text-sm',
         className,
       )}
       {...props}
