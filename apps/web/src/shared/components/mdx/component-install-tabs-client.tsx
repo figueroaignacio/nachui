@@ -19,14 +19,17 @@ const CLI_COMMANDS = {
 type Manager = keyof typeof CLI_COMMANDS;
 const MANAGERS: Manager[] = ['pnpm', 'npm', 'yarn', 'bun'];
 
+// The CLI is still being built. Flip this back on once `nachui add` ships.
+const CLI_ENABLED = false;
+
 export function ComponentInstallTabsClient({
   component,
   manualContent,
 }: ComponentInstallTabsClientProps) {
   return (
-    <Tabs defaultValue="cli" className="mt-5 w-full" size="sm">
+    <Tabs defaultValue={CLI_ENABLED ? 'cli' : 'manual'} className="mt-5 w-full" size="sm">
       <Tabs.List variant="unstyled">
-        <Tabs.Trigger value="cli" variant="underline">
+        <Tabs.Trigger value="cli" variant="underline" disabled={!CLI_ENABLED}>
           CLI
         </Tabs.Trigger>
         <Tabs.Trigger value="manual" variant="underline">
