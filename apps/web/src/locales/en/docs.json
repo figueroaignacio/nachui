@@ -15,16 +15,16 @@
           "href": "/docs"
         },
         {
+          "title": "AI",
+          "href": "/docs/elements/ai"
+        },
+        {
           "title": "UI",
           "href": "/docs/elements/ui"
         },
         {
           "title": "Layout",
           "href": "/docs/elements/layout"
-        },
-        {
-          "title": "AI",
-          "href": "/docs/elements/ai"
         },
         {
           "title": "Hybrids",
@@ -63,6 +63,95 @@
         {
           "title": "Skills",
           "href": "/docs/concepts/skills"
+        }
+      ]
+    },
+    {
+      "title": "AI",
+      "items": [
+        {
+          "title": "Actions",
+          "href": "/docs/elements/ai/actions",
+          "description": "The row of copy, retry and feedback buttons under an answer.",
+          "badge": "new"
+        },
+        {
+          "title": "Attachments",
+          "href": "/docs/elements/ai/attachments",
+          "description": "Files hanging off a message or a composer, as a grid, a row of chips or a list.",
+          "badge": "new"
+        },
+        {
+          "title": "Chain of Thought",
+          "href": "/docs/elements/ai/chain-of-thought",
+          "description": "The steps an agent walked through, with search results and images attached to each one.",
+          "badge": "new"
+        },
+        {
+          "title": "Code Block",
+          "href": "/docs/elements/ai/code-block",
+          "description": "Code in an answer, with a copy button, line numbers and a collapse for long snippets.",
+          "badge": "new"
+        },
+        {
+          "title": "Context",
+          "href": "/docs/elements/ai/context",
+          "description": "How much of the context window is spent, as a meter with the breakdown on hover.",
+          "badge": "new"
+        },
+        {
+          "title": "Conversation",
+          "href": "/docs/elements/ai/conversation",
+          "description": "The scrolling thread that keeps the newest message in view while it streams.",
+          "badge": "new"
+        },
+        {
+          "title": "Prompt Input",
+          "href": "/docs/elements/ai/prompt-input",
+          "description": "The composer, with a growing textarea, attachments, a toolbar and a submit button that knows the stream.",
+          "badge": "new"
+        },
+        {
+          "title": "Reasoning",
+          "href": "/docs/elements/ai/reasoning",
+          "description": "The model's thinking, open while it streams and folded away once the answer starts.",
+          "badge": "new"
+        },
+        {
+          "title": "Response",
+          "href": "/docs/elements/ai/response",
+          "description": "The assistant's answer, with a caret while it streams and a skeleton before the first token.",
+          "badge": "new"
+        },
+        {
+          "title": "Shimmer",
+          "href": "/docs/elements/ai/shimmer",
+          "description": "Text with a light sweeping across it, for the moment before the model answers.",
+          "badge": "new"
+        },
+        {
+          "title": "Sources",
+          "href": "/docs/elements/ai/sources",
+          "description": "The citations behind an answer, folded under a count until the reader wants them.",
+          "badge": "new"
+        },
+        {
+          "title": "Suggestion",
+          "href": "/docs/elements/ai/suggestion",
+          "description": "Prompt starters in a row that scrolls, one click away from being sent.",
+          "badge": "new"
+        },
+        {
+          "title": "Task",
+          "href": "/docs/elements/ai/task",
+          "description": "A collapsible step with a status, for showing what an agent did and which files it touched.",
+          "badge": "new"
+        },
+        {
+          "title": "Tool",
+          "href": "/docs/elements/ai/tool",
+          "description": "A tool call with its status, input and output, folded into a card.",
+          "badge": "new"
         }
       ]
     },
@@ -399,95 +488,6 @@
           "title": "Section",
           "href": "/docs/elements/layout/section",
           "description": "Page sections with consistent rhythm, background tones and a header.",
-          "badge": "new"
-        }
-      ]
-    },
-    {
-      "title": "AI",
-      "items": [
-        {
-          "title": "Actions",
-          "href": "/docs/elements/ai/actions",
-          "description": "The row of copy, retry and feedback buttons under an answer.",
-          "badge": "new"
-        },
-        {
-          "title": "Attachments",
-          "href": "/docs/elements/ai/attachments",
-          "description": "Files hanging off a message or a composer, as a grid, a row of chips or a list.",
-          "badge": "new"
-        },
-        {
-          "title": "Chain of Thought",
-          "href": "/docs/elements/ai/chain-of-thought",
-          "description": "The steps an agent walked through, with search results and images attached to each one.",
-          "badge": "new"
-        },
-        {
-          "title": "Code Block",
-          "href": "/docs/elements/ai/code-block",
-          "description": "Code in an answer, with a copy button, line numbers and a collapse for long snippets.",
-          "badge": "new"
-        },
-        {
-          "title": "Context",
-          "href": "/docs/elements/ai/context",
-          "description": "How much of the context window is spent, as a meter with the breakdown on hover.",
-          "badge": "new"
-        },
-        {
-          "title": "Conversation",
-          "href": "/docs/elements/ai/conversation",
-          "description": "The scrolling thread that keeps the newest message in view while it streams.",
-          "badge": "new"
-        },
-        {
-          "title": "Prompt Input",
-          "href": "/docs/elements/ai/prompt-input",
-          "description": "The composer, with a growing textarea, attachments, a toolbar and a submit button that knows the stream.",
-          "badge": "new"
-        },
-        {
-          "title": "Reasoning",
-          "href": "/docs/elements/ai/reasoning",
-          "description": "The model's thinking, open while it streams and folded away once the answer starts.",
-          "badge": "new"
-        },
-        {
-          "title": "Response",
-          "href": "/docs/elements/ai/response",
-          "description": "The assistant's answer, with a caret while it streams and a skeleton before the first token.",
-          "badge": "new"
-        },
-        {
-          "title": "Shimmer",
-          "href": "/docs/elements/ai/shimmer",
-          "description": "Text with a light sweeping across it, for the moment before the model answers.",
-          "badge": "new"
-        },
-        {
-          "title": "Sources",
-          "href": "/docs/elements/ai/sources",
-          "description": "The citations behind an answer, folded under a count until the reader wants them.",
-          "badge": "new"
-        },
-        {
-          "title": "Suggestion",
-          "href": "/docs/elements/ai/suggestion",
-          "description": "Prompt starters in a row that scrolls, one click away from being sent.",
-          "badge": "new"
-        },
-        {
-          "title": "Task",
-          "href": "/docs/elements/ai/task",
-          "description": "A collapsible step with a status, for showing what an agent did and which files it touched.",
-          "badge": "new"
-        },
-        {
-          "title": "Tool",
-          "href": "/docs/elements/ai/tool",
-          "description": "A tool call with its status, input and output, folded into a card.",
           "badge": "new"
         }
       ]
