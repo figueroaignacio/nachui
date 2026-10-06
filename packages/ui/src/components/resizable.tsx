@@ -3,35 +3,6 @@
 import * as React from 'react';
 import { cn } from '../lib/cn';
 
-type IconProps = React.SVGProps<SVGSVGElement> & {
-  size?: number | string;
-};
-
-function GripVerticalIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={strokeWidth}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      {...props}
-    >
-      <circle cx="9" cy="6" r="1" />
-      <circle cx="15" cy="6" r="1" />
-      <circle cx="9" cy="12" r="1" />
-      <circle cx="15" cy="12" r="1" />
-      <circle cx="9" cy="18" r="1" />
-      <circle cx="15" cy="18" r="1" />
-    </svg>
-  );
-}
-
 type ResizableDirection = 'horizontal' | 'vertical';
 
 interface PanelConstraints {
@@ -264,6 +235,7 @@ const ResizableHandle = ({
     useResizableContext();
   const index = React.use(HandleIndexContext);
   const dragRef = React.useRef<{ start: number; before: number; after: number } | null>(null);
+  const [active, setActive] = React.useState(false);
   const isHorizontal = direction === 'horizontal';
 
   const before = sizes[index] ?? 0;
@@ -286,6 +258,7 @@ const ResizableHandle = ({
       after: sizes[index + 1] ?? 0,
     };
     setDragging(true);
+    setActive(true);
   };
 
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -304,6 +277,7 @@ const ResizableHandle = ({
     if (!dragRef.current) return;
     dragRef.current = null;
     setDragging(false);
+    setActive(false);
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
@@ -344,13 +318,14 @@ const ResizableHandle = ({
       data-slot="resizable-handle"
       data-direction={direction}
       data-disabled={disabled ? '' : undefined}
+      data-active={active ? '' : undefined}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerUp}
       onKeyDown={handleKeyDown}
       className={cn(
-        'bg-border focus-visible:ring-ring ring-offset-background relative flex shrink-0 touch-none items-center justify-center outline-none focus-visible:ring-1 focus-visible:ring-offset-1 data-[disabled]:pointer-events-none',
+        'group/handle bg-border focus-visible:ring-ring ring-offset-background relative flex shrink-0 touch-none items-center justify-center outline-none focus-visible:ring-1 focus-visible:ring-offset-1 data-[disabled]:pointer-events-none',
         isHorizontal
           ? 'w-px cursor-col-resize after:absolute after:inset-y-0 after:left-1/2 after:w-2 after:-translate-x-1/2 pointer-coarse:after:w-6'
           : 'h-px w-full cursor-row-resize after:absolute after:inset-x-0 after:top-1/2 after:h-2 after:-translate-y-1/2 pointer-coarse:after:h-6',
@@ -362,12 +337,12 @@ const ResizableHandle = ({
         <span
           aria-hidden="true"
           className={cn(
-            'bg-border text-muted-foreground z-10 flex items-center justify-center rounded-sm border',
-            isHorizontal ? 'h-6 w-3.5' : 'h-3.5 w-6 rotate-90',
+            'bg-border-interactive/70 group-hover/handle:bg-foreground/85 group-data-[active]/handle:bg-foreground/85 group-focus-visible/handle:bg-ring z-10 shrink-0 rounded-full transition-[width,height,background-color] duration-200 motion-reduce:transition-none',
+            isHorizontal
+              ? 'h-7 w-[3px] group-hover/handle:h-11 group-data-[active]/handle:h-11'
+              : 'h-[3px] w-7 group-hover/handle:w-11 group-data-[active]/handle:w-11',
           )}
-        >
-          <GripVerticalIcon size={12} className="size-3" />
-        </span>
+        />
       )}
     </div>
   );

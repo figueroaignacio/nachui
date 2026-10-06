@@ -141,9 +141,10 @@ export function ChatWindow(props: ChatWindowProps) {
               <Resizable key={resize.groupKey} data-chat-resizer onLayout={resize.onLayout}>
                 <Resizable.Panel {...resize.page} />
                 <Resizable.Handle
+                  withHandle
                   aria-label={t('resize')}
                   onDoubleClick={resize.reset}
-                  className="hover:bg-border-interactive focus-visible:bg-ring [[data-dragging]_&]:bg-border-interactive pointer-events-auto z-10 bg-transparent transition-colors duration-150"
+                  className="hover:bg-border-interactive/60 data-[active]:bg-border-interactive/60 pointer-events-auto z-10 bg-transparent transition-colors duration-150"
                 />
                 <Resizable.Panel {...resize.chat} className="pointer-events-auto min-w-0">
                   <motion.div
