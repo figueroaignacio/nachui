@@ -6,7 +6,7 @@ import type { DocItem, DocSection } from '@/lib/definitions';
 import { Tooltip } from '@repo/ui/components/tooltip';
 import { cn } from '@repo/ui/lib/cn';
 import { springs, still } from '@repo/ui/lib/motion';
-import { motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import * as React from 'react';
 import {
@@ -16,11 +16,69 @@ import {
   sectionAtScroll,
   sectionOf,
 } from '../lib/section-filters';
+import type { SidebarPreview as SidebarPreviewData } from '../lib/sidebar-previews';
+import { SidebarPreview } from './sidebar-preview';
 
 const SPY_LOCK_MS = 800;
+const PREVIEW_OPEN_DELAY = 350;
+const PREVIEW_CLOSE_DELAY = 150;
 
-export function Sidebar() {
+interface SidebarProps {
+  previews?: Record<string, SidebarPreviewData>;
+}
+
+interface HoveredItem {
+  item: DocItem;
+  preview: SidebarPreviewData;
+  rect: DOMRect;
+}
+
+export function Sidebar({ previews = {} }: SidebarProps) {
   const pathname = usePathname();
+  const [hovered, setHovered] = React.useState<HoveredItem | null>(null);
+  const previewTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isPreviewOpen = React.useRef(false);
+
+  React.useEffect(() => {
+    isPreviewOpen.current = hovered !== null;
+  }, [hovered]);
+
+  const clearPreviewTimer = React.useCallback(() => {
+    if (previewTimer.current) clearTimeout(previewTimer.current);
+    previewTimer.current = null;
+  }, []);
+
+  const showPreview = React.useCallback(
+    (item: DocItem, rect: DOMRect) => {
+      const preview = previews[item.href];
+      clearPreviewTimer();
+      if (!preview) {
+        previewTimer.current = setTimeout(() => setHovered(null), PREVIEW_CLOSE_DELAY);
+        return;
+      }
+      if (isPreviewOpen.current) {
+        setHovered({ item, preview, rect });
+        return;
+      }
+      previewTimer.current = setTimeout(
+        () => setHovered({ item, preview, rect }),
+        PREVIEW_OPEN_DELAY,
+      );
+    },
+    [previews, clearPreviewTimer],
+  );
+
+  const hidePreview = React.useCallback(() => {
+    clearPreviewTimer();
+    previewTimer.current = setTimeout(() => setHovered(null), PREVIEW_CLOSE_DELAY);
+  }, [clearPreviewTimer]);
+
+  React.useEffect(() => {
+    clearPreviewTimer();
+    setHovered(null);
+  }, [pathname, clearPreviewTimer]);
+
+  React.useEffect(() => clearPreviewTimer, [clearPreviewTimer]);
   const t = useTranslations('docs');
   const docsNavigation = t.raw('navigation') as DocSection[];
   const shouldReduceMotion = useReducedMotion();
@@ -62,6 +120,17 @@ export function Sidebar() {
     nav.addEventListener('scroll', onScroll, { passive: true });
     return () => nav.removeEventListener('scroll', onScroll);
   }, []);
+
+  React.useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    const close = () => {
+      clearPreviewTimer();
+      setHovered(null);
+    };
+    nav.addEventListener('scroll', close, { passive: true });
+    return () => nav.removeEventListener('scroll', close);
+  }, [clearPreviewTimer]);
 
   return (
     <aside className="hidden lg:block lg:pr-6">
@@ -120,6 +189,15 @@ export function Sidebar() {
                         target={item.target}
                         rel={item.target ? 'noopener noreferrer' : undefined}
                         aria-current={isActive ? 'page' : undefined}
+                        onPointerEnter={(event) => {
+                          if (event.pointerType !== 'mouse') return;
+                          showPreview(item, event.currentTarget.getBoundingClientRect());
+                        }}
+                        onPointerLeave={hidePreview}
+                        onClick={() => {
+                          clearPreviewTimer();
+                          setHovered(null);
+                        }}
                         className={cn(
                           'flex items-center gap-2.5 px-2.5 py-1 text-[13px] transition-colors',
                           isActive
@@ -145,6 +223,19 @@ export function Sidebar() {
           ))}
         </nav>
       </div>
+      <AnimatePresence>
+        {hovered && navRef.current && (
+          <SidebarPreview
+            key="sidebar-preview"
+            preview={hovered.preview}
+            badge={hovered.item.badge}
+            anchor={hovered.rect}
+            edge={navRef.current.getBoundingClientRect().right}
+            onPointerEnter={clearPreviewTimer}
+            onPointerLeave={hidePreview}
+          />
+        )}
+      </AnimatePresence>
     </aside>
   );
 }
