@@ -197,17 +197,6 @@ body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
   }
 }
 
-.doc-section-mark {
-  padding-inline: 0.06em;
-  background-image: linear-gradient(
-    to top,
-    color-mix(in oklab, var(--brand) 30%, transparent) 0.34em,
-    transparent 0.34em
-  );
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-}
-
 /*
  * The hero wall: a masonry of real component previews drifting up a plane
  * tilted away from the reader. Columns keep their natural card heights, which
