@@ -1,14 +1,18 @@
+import { NavBadge } from '@/components/common/nav-badge';
 import { MDXContent } from '@/components/mdx/mdx-content';
 import { DocActions } from '@/features/docs/components/doc-actions';
 import { DocsPagination } from '@/features/docs/components/docs-pagination';
 import { IssueCta } from '@/features/docs/components/issue-cta';
 import { Toc } from '@/features/docs/components/toc';
+import type { DocBadge } from '@/lib/definitions';
 import { GITHUB_REPO_URL, getAbsoluteUrl } from '@/lib/domains';
 import { Callout } from '@repo/ui/components/callout';
 import { Stack } from '@repo/ui/layout/stack';
 import { COMPONENT_REGISTRY } from '@repo/ui/registry';
 import { Container } from '@repo/ui/src/layout/container';
 import type { Doc } from 'content-collections';
+
+const DOC_BADGES: readonly string[] = ['new', 'updated'] satisfies DocBadge[];
 
 type DocViewProps = {
   doc: Doc;
@@ -63,10 +67,14 @@ export function DocView({ doc }: DocViewProps) {
                   {doc.description}
                 </p>
               )}
-              {doc.label && (
-                <span className="border-brand text-brand mt-4 inline-flex rounded-full border px-2.5 py-0.5 font-mono text-[11px]">
-                  {doc.label}
-                </span>
+              {doc.label && DOC_BADGES.includes(doc.label.toLowerCase()) ? (
+                <NavBadge badge={doc.label.toLowerCase() as DocBadge} className="mt-4" />
+              ) : (
+                doc.label && (
+                  <span className="border-brand text-brand mt-4 inline-flex rounded-full border px-2.5 py-0.5 font-mono text-[11px]">
+                    {doc.label}
+                  </span>
+                )
               )}
               <div className="mt-6 xl:hidden">
                 <DocActions
