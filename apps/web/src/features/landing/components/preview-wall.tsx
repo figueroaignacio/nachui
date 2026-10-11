@@ -18,10 +18,9 @@ export type WallDensity = { columns: number; cards: number; loop: boolean };
 const FULL: WallDensity = { columns: 10, cards: 6, loop: true };
 const LIGHT: WallDensity = { columns: 6, cards: 4, loop: false };
 
-const PreviewPlane = dynamic(
-  () => import('./preview-wall-plane').then((m) => m.PreviewPlane),
-  { ssr: false },
-);
+const PreviewPlane = dynamic(() => import('./preview-wall-plane').then((m) => m.PreviewPlane), {
+  ssr: false,
+});
 
 /**
  * Picks the density the first time the stage nears the viewport, then keeps
@@ -69,7 +68,7 @@ export function PreviewWall() {
             <span className="text-muted-foreground/60">./</span>
             {t('label')}
           </p>
-          <h2 className="font-heading text-foreground mt-4 text-[clamp(2.75rem,11vw,5.25rem)] leading-[0.84] font-black tracking-[-0.07em] uppercase">
+          <h2 className="font-heading text-foreground mt-4 text-[clamp(2.25rem,min(11vw,6vh),2.75rem)] leading-[0.95] font-bold tracking-[-0.04em] uppercase lg:text-[clamp(2.75rem,min(4.5vw,8vh),3.25rem)]">
             <span className="block">{t('title1')}</span>
             <span className="text-muted-foreground/60 block">{t('title2')}</span>
           </h2>

@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist, Geist_Mono, Schibsted_Grotesk } from 'next/font/google';
 
 export const fontSans = Geist({
   subsets: ['latin'],
@@ -7,7 +7,7 @@ export const fontSans = Geist({
   preload: true,
 });
 
-export const fontHeading = Geist({
+export const fontHeading = Schibsted_Grotesk({
   subsets: ['latin'],
   variable: '--font-heading',
   display: 'swap',

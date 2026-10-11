@@ -20,7 +20,7 @@ export function LandingHero() {
   return (
     <>
       <section className="flex min-h-[calc(100svh-5rem)] w-full flex-col items-center justify-center py-16 text-center md:py-20">
-        <h1 className="font-heading text-foreground text-[clamp(4rem,22vw,12.25rem)] leading-[0.8] font-black tracking-[-0.075em] uppercase">
+        <h1 className="font-heading text-foreground text-[clamp(2.25rem,min(11vw,6vh),2.75rem)] leading-[0.95] font-bold tracking-[-0.04em] uppercase lg:text-[clamp(2.75rem,min(4.5vw,8vh),3.25rem)]">
           <span className="sr-only">{t('subheading1')}</span>
           <span aria-hidden="true" className="block">
             {t('headline1')}

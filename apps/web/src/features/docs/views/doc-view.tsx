@@ -55,7 +55,7 @@ export function DocView({ doc }: DocViewProps) {
         <Stack as="article" className="@container w-full min-w-0">
           <div className="mt-4 mb-10">
             <div>
-              <h1 className="font-heading text-foreground text-[clamp(2rem,11cqi,4.5rem)] leading-[0.85] font-black tracking-[-0.075em] break-words uppercase">
+              <h1 className="font-heading text-foreground text-[clamp(2.25rem,min(11vw,6vh),2.75rem)] leading-[0.95] font-bold tracking-[-0.04em] break-words uppercase lg:text-[clamp(2.75rem,min(4.5vw,8vh),3.25rem)]">
                 {doc.title}
                 <span
                   aria-hidden="true"

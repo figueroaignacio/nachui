@@ -54,7 +54,7 @@ export function LandingInstall() {
       <div className="scroll-reveal flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-12">
         <div className="flex flex-col lg:w-[40%] lg:shrink-0">
           <p className="section-label">{t('label')}</p>
-          <h2 className="font-heading text-foreground mt-3 text-lg leading-tight font-semibold tracking-tight md:text-xl">
+          <h2 className="font-heading text-foreground mt-3 text-xl leading-tight font-semibold tracking-[-0.025em]">
             {t('line1')}
             <span className="text-muted-foreground block">{t('line2')}</span>
           </h2>
