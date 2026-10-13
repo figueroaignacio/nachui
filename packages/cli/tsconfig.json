@@ -1,14 +1,11 @@
 {
+  "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "strict": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "declaration": false,
+    "declarationMap": false,
+    "lib": ["es2022"],
+    "noEmit": true,
+    "types": ["node"]
   },
-  "include": ["src/**/*"]
+  "include": ["src", "tsup.config.ts", "vitest.config.ts"]
 }

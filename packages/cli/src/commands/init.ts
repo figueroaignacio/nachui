@@ -1,146 +1,170 @@
 import * as p from '@clack/prompts';
 import kleur from 'kleur';
-import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { api } from '../lib/api.js';
-import { detectPackageManager, getInstallCommand } from '../lib/package-manager.js';
 
-export async function initCommand() {
-  p.intro(kleur.bgCyan().black(' NachUI - Initialization '));
-  const s = p.spinner();
+import { api } from '../lib/api.js';
+import { CONFIG_FILE, readConfig } from '../lib/config.js';
+import { reportError } from '../lib/errors.js';
+import { fileState, writeFileSafely } from '../lib/files.js';
+import { installPath, resolveInside } from '../lib/layout.js';
+import { CancelledError, confirmOrCancel, ensurePackages } from '../lib/prompts.js';
+
+export interface InitOptions {
+  yes?: boolean;
+}
+
+const TOKEN_MARKER = '/* NachUI Tokens */';
+const TAILWIND_IMPORT = '@import "tailwindcss";';
+const CN_DEPENDENCIES = ['clsx', 'tailwind-merge'];
+
+function detectStylesheet(cwd: string): string {
+  const exists = (file: string) => fs.existsSync(path.join(cwd, file));
+  const hasSrc = exists('src');
+  const isNext = ['next.config.mjs', 'next.config.js', 'next.config.ts'].some(exists);
+
+  const candidates = isNext
+    ? ['src/app/globals.css', 'app/globals.css', 'src/styles/globals.css', 'styles/globals.css']
+    : ['src/index.css', 'src/styles.css', 'src/main.css', 'app/app.css', 'index.css'];
+
+  const fallback = isNext
+    ? hasSrc
+      ? 'src/app/globals.css'
+      : 'app/globals.css'
+    : hasSrc
+      ? 'src/index.css'
+      : 'index.css';
+
+  return candidates.find(exists) ?? fallback;
+}
+
+async function chooseTheme(themes: string[], yes: boolean | undefined): Promise<string> {
+  const fallback = themes.includes('default') ? 'default' : themes[0];
+  if (!fallback) throw new Error('The registry has no themes.');
+  if (yes) return fallback;
+
+  const selected = await p.select({
+    message: 'Select a theme for your project:',
+    options: themes.map((t) => ({ value: t, label: t.charAt(0).toUpperCase() + t.slice(1) })),
+    initialValue: fallback,
+  });
+  if (p.isCancel(selected)) throw new CancelledError();
+  return selected;
+}
+
+/**
+ * Puts the theme tokens into the stylesheet. A second run replaces the
+ * previous tokens after the marker. Existing styles are only discarded when
+ * the user says so; the default keeps them and appends the tokens.
+ */
+async function writeTokens(cwd: string, cssPath: string, css: string, yes: boolean | undefined) {
+  const absolute = resolveInside(cwd, cssPath);
+  const tokens = css
+    .replace(/@import\s+['"]tailwindcss['"];?\s*\n/g, '')
+    .replace(/@source\s+['"][^'"]+['"];?\s*\n/g, '');
+  const block = `${TOKEN_MARKER}\n${tokens.trim()}\n`;
+
+  if (!fs.existsSync(absolute)) {
+    writeFileSafely(absolute, `${TAILWIND_IMPORT}\n\n${block}`);
+    return 'created';
+  }
+
+  const content = fs.readFileSync(absolute, 'utf8');
+  const hasImport = /@import\s+['"]tailwindcss['"]/.test(content);
+
+  if (content.includes(TOKEN_MARKER)) {
+    const before = content.slice(0, content.indexOf(TOKEN_MARKER)).trim();
+    const header = hasImport ? before : `${TAILWIND_IMPORT}\n\n${before}`.trim();
+    fs.writeFileSync(absolute, `${header}\n\n${block}`);
+    return 'replaced the previous tokens in';
+  }
+
+  const wipe =
+    !yes &&
+    (await confirmOrCancel(
+      `${cssPath} already has styles. Replace them with the NachUI tokens? Choosing no keeps them and appends the tokens.`,
+      false,
+    ));
+
+  if (wipe) {
+    fs.writeFileSync(absolute, `${TAILWIND_IMPORT}\n\n${block}`);
+    return 'replaced the contents of';
+  }
+
+  const prefix = hasImport ? '' : `${TAILWIND_IMPORT}\n\n`;
+  fs.writeFileSync(absolute, `${prefix}${content.trim()}\n\n${block}`);
+  return 'appended the tokens to';
+}
+
+export async function initCommand(options: InitOptions = {}) {
   const cwd = process.cwd();
+  const s = p.spinner();
 
   try {
+    const existing = readConfig(cwd);
+
     s.start('Fetching available themes...');
-    const themes = await api.getThemes();
-    s.stop(kleur.green('Themes loaded.'));
-
-    const selectedTheme = await p.select({
-      message: 'Select a theme for your project:',
-      options: themes.map((t) => ({
-        value: t,
-        label: t.charAt(0).toUpperCase() + t.slice(1),
-      })),
-      initialValue: 'default',
-    });
-
-    if (p.isCancel(selectedTheme)) {
-      p.cancel('Operation cancelled.');
-      return;
+    let themes: string[];
+    try {
+      themes = await api.getThemes();
+    } finally {
+      s.stop('Themes loaded.');
     }
 
-    s.start(`Downloading ${kleur.cyan(selectedTheme as string)} assets...`);
-    const { css, config, utils } = await api.getTheme(selectedTheme as string);
-    s.stop(kleur.green(`Assets for ${selectedTheme} ready.`));
+    const theme = await chooseTheme(themes, options.yes);
 
-    const nextConfigFiles = ['next.config.mjs', 'next.config.js', 'next.config.ts'];
-    const isNext = nextConfigFiles.some((file) => fs.existsSync(path.join(cwd, file)));
-
-    let cssRelativePath = '';
-    if (isNext) {
-      const nextPaths = [
-        'src/app/globals.css',
-        'app/globals.css',
-        'src/pages/globals.css',
-        'pages/globals.css',
-      ];
-      cssRelativePath =
-        nextPaths.find((p) => fs.existsSync(path.join(cwd, p))) ||
-        (fs.existsSync(path.join(cwd, 'src')) ? 'src/app/globals.css' : 'app/globals.css');
-    } else {
-      const vitePaths = ['src/index.css', 'index.css', 'src/main.css', 'main.css'];
-      cssRelativePath =
-        vitePaths.find((p) => fs.existsSync(path.join(cwd, p))) ||
-        (fs.existsSync(path.join(cwd, 'src')) ? 'src/index.css' : 'index.css');
+    s.start(`Downloading the ${kleur.cyan(theme)} theme...`);
+    let assets;
+    try {
+      assets = await api.getTheme(theme);
+    } finally {
+      s.stop(`Theme ${theme} ready.`);
     }
 
-    const finalConfig = {
-      ...config,
-      tailwind: { ...config.tailwind, css: cssRelativePath },
+    const cssPath = existing?.tailwind?.css || detectStylesheet(cwd);
+    const baseDir = existing?.baseDir ?? (fs.existsSync(path.join(cwd, 'src')) ? 'src' : '.');
+    const apiTailwind = (assets.config.tailwind ?? {}) as Record<string, unknown>;
+
+    const config = {
+      ...existing,
+      ...assets.config,
+      baseDir,
+      tailwind: { ...existing?.tailwind, ...apiTailwind, css: cssPath },
     };
-    fs.writeFileSync(path.join(cwd, 'nachui.json'), JSON.stringify(finalConfig, null, 2));
+    fs.writeFileSync(path.join(cwd, CONFIG_FILE), `${JSON.stringify(config, null, 2)}\n`);
 
-    const absoluteCssPath = path.join(cwd, cssRelativePath);
-    const sanitizedCss = css
-      .replace(/@import\s+['"]tailwindcss['"];\n/g, '')
-      .replace(/@source\s+['"][^'"]+['"];\n/g, '');
-    const tokenIdentifier = '/* NachUI Tokens */';
-    const tailwindImport = '@import "tailwindcss";';
-    const fullNachUIContent = `${tokenIdentifier}\n${sanitizedCss}`;
+    const cssAction = await writeTokens(cwd, cssPath, assets.css, options.yes);
 
-    if (fs.existsSync(absoluteCssPath)) {
-      const content = fs.readFileSync(absoluteCssPath, 'utf8');
+    const cnPath = installPath({ slug: 'lib/cn' }, baseDir);
+    const cnAbsolute = resolveInside(cwd, cnPath);
+    const cnState = fileState(cnAbsolute, assets.utils);
+    let cnNote = `${cnPath} is up to date`;
 
-      if (content.includes(tokenIdentifier)) {
-        const parts = content.split(tokenIdentifier);
-        const header = parts[0].includes(tailwindImport)
-          ? parts[0].trim()
-          : tailwindImport + '\n\n' + parts[0].trim();
-        const updatedContent = header + '\n\n' + fullNachUIContent;
-        fs.writeFileSync(absoluteCssPath, updatedContent.trim());
-      } else {
-        const confirmWipe = await p.confirm({
-          message: `Existing styles detected in ${cssRelativePath}. Do you want to wipe them and apply NachUI reset?`,
-          initialValue: true,
-        });
-
-        if (confirmWipe && !p.isCancel(confirmWipe)) {
-          fs.writeFileSync(absoluteCssPath, tailwindImport + '\n\n' + fullNachUIContent);
-          p.log.info(kleur.blue('CSS file cleaned and NachUI tokens applied.'));
-        } else {
-          const hasImport = content.includes(tailwindImport);
-          const prefix = hasImport ? '' : tailwindImport + '\n\n';
-          fs.writeFileSync(absoluteCssPath, prefix + content.trim() + '\n\n' + fullNachUIContent);
-        }
-      }
-    } else {
-      fs.mkdirSync(path.dirname(absoluteCssPath), { recursive: true });
-      fs.writeFileSync(absoluteCssPath, tailwindImport + '\n\n' + fullNachUIContent);
+    if (cnState === 'create') {
+      writeFileSafely(cnAbsolute, assets.utils);
+      cnNote = `wrote ${cnPath}`;
+    } else if (cnState === 'conflict') {
+      const replace =
+        !options.yes &&
+        (await confirmOrCancel(`${cnPath} already exists and differs. Overwrite it?`, false));
+      if (replace) writeFileSafely(cnAbsolute, assets.utils);
+      cnNote = replace ? `overwrote ${cnPath}` : `kept your ${cnPath}`;
     }
 
-    const garbage = path.join(cwd, 'index.css');
-    if (isNext && fs.existsSync(garbage) && cssRelativePath !== 'index.css') {
-      fs.unlinkSync(garbage);
-    }
+    await ensurePackages(CN_DEPENDENCIES, { yes: options.yes, cwd });
 
-    const utilsRelativePath = config.aliases.utils.replace('@/', 'src/') + '.ts';
-    const utilsPath = path.join(cwd, utilsRelativePath);
-    if (!fs.existsSync(path.dirname(utilsPath)))
-      fs.mkdirSync(path.dirname(utilsPath), { recursive: true });
-    fs.writeFileSync(utilsPath, utils);
-
-    const utilsDeps = ['clsx', 'tailwind-merge'];
-    const pkgPath = path.join(cwd, 'package.json');
-    if (fs.existsSync(pkgPath)) {
-      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
-      const installedDeps = { ...pkg.dependencies, ...pkg.devDependencies };
-      const missingDeps = utilsDeps.filter((dep) => !installedDeps[dep]);
-
-      if (missingDeps.length > 0) {
-        const shouldInstall = await p.confirm({
-          message: `Install missing dependencies: ${missingDeps.join(', ')}?`,
-          initialValue: true,
-        });
-        if (shouldInstall && !p.isCancel(shouldInstall)) {
-          const instS = p.spinner();
-          instS.start('Installing...');
-          try {
-            const agent = detectPackageManager();
-            const installCmd = getInstallCommand(agent, missingDeps);
-            execSync(installCmd, { stdio: 'ignore' });
-            instS.stop(kleur.green('Installed.'));
-          } catch {
-            instS.stop(kleur.red('Failed.'));
-          }
-        }
-      }
-    }
-
-    p.note(`Theme: ${selectedTheme}\nStyles: ${cssRelativePath}`, 'Setup Successful');
-    p.outro(kleur.bgGreen().black(' NachUI ') + ' Ready!');
+    p.note(
+      [
+        `Theme: ${theme}`,
+        `Styles: ${cssAction} ${cssPath}`,
+        `Helpers: ${cnNote}`,
+        `Components go under ${baseDir === '.' ? 'the project root' : `${baseDir}/`} (set baseDir in ${CONFIG_FILE} to change it)`,
+      ].join('\n'),
+      'Setup complete',
+    );
+    p.outro(`${kleur.bgGreen().black(' NachUI ')} Ready!`);
   } catch (error) {
-    s.stop(kleur.red('Init failed.'));
-    console.error(error);
+    s.stop();
+    reportError(error);
   }
 }

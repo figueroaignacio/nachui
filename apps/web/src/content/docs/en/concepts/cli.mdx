@@ -8,7 +8,7 @@ date: 2026-04-10
 locale: en
 ---
 
-The NachUI CLI is the fastest way to manage components in your project. It connects to the official registry and lets you install, update, and remove components without leaving your terminal.
+The NachUI CLI is the fastest way to manage components in your project. It connects to the official registry and installs a component together with every file it imports, in the same folder layout as the NachUI source, so the imports between files work unchanged. The [installation guide](/docs/installation) covers the manual route.
 
 ## Installation
 
@@ -24,47 +24,35 @@ npx nachui <command>
 
 ### init
 
-Initializes NachUI in your project. This is the **first command you should run**. It will:
+Sets up NachUI in your project. This is the **first command you should run**. It will:
 
-1. Fetch the available themes from the registry.
-2. Ask you to select a theme interactively.
-3. Create a `nachui.json` configuration file in the root of your project.
-4. Inject the CSS design tokens into your stylesheet (`src/app/globals.css` for Next.js or `src/index.css` for Vite).
-5. Generate the `cn` utility function in the path defined by `aliases.utils`.
+1. Fetch the available themes from the registry and ask you to pick one.
+2. Create a `nachui.json` configuration file in the root of your project.
+3. Add the theme tokens to your stylesheet (`src/app/globals.css` for Next.js, `src/index.css` for Vite).
+4. Write the `cn` helper to `src/lib/cn.ts`.
+5. Offer to install `clsx` and `tailwind-merge`.
 
 <div className="my-12">
   <Command command="pnpm dlx nachui init" />
 </div>
 
+If your stylesheet already has styles, `init` asks before replacing them. The default answer keeps them and adds the tokens at the end. Running `init` again replaces the tokens from the previous run instead of adding a second copy. Pass `--yes` to accept the defaults without prompts; it never replaces your files.
+
 After running `init`, your project will contain a `nachui.json` file like this:
 
 ```json
 {
-  "$schema": "...",
-  "style": "default",
+  "style": "oklch",
+  "baseDir": "src",
   "tailwind": {
-    "config": "",
-    "baseColor": "zinc",
     "css": "src/app/globals.css"
-  },
-  "aliases": {
-    "components": "@/components/ui",
-    "utils": "@/lib/utils"
   }
 }
 ```
 
-<Callout variant="info" className="mt-4">
-  <Callout.Title>Info</Callout.Title>
-  <Callout.Content>
-    If `nachui.json` already exists, `init` will detect it and skip re-injecting tokens to avoid
-    duplicates.
-  </Callout.Content>
-</Callout>
-
 ### add
 
-Adds a component from the registry to your project. Requires `nachui.json` to exist (run `init` first).
+Adds one or more components from the registry. Requires `nachui.json` to exist (run `init` first).
 
 <div className="my-12">
   <Command command="pnpm dlx nachui add <component>" />
@@ -78,10 +66,30 @@ Adds a component from the registry to your project. Requires `nachui.json` to ex
 
 **What it does:**
 
-- Fetches the component source code from the registry.
-- Writes the component file to the path defined in `aliases.components` (e.g., `src/components/ui/button.tsx`).
-- Checks if the component has external dependencies.
-- If missing dependencies are found, prompts you to install them automatically using your package manager (npm, pnpm, yarn, or bun — auto-detected).
+- Fetches the component and every file it imports, like `lib/cn.ts`, `lib/motion.ts` or another component.
+- Writes each file into the folder of its family inside `baseDir`, so the imports between them work unchanged.
+- Skips files that are already identical, and asks before replacing a file you changed.
+- Checks the npm packages they need and offers to install the missing ones with your package manager (npm, pnpm, yarn or bun, detected from your lockfile).
+
+For example, `nachui add hybrids/confirm` writes:
+
+```
+src/
+  hybrids/confirm.tsx
+  components/button.tsx
+  components/dialog.tsx
+  components/input.tsx
+  components/label.tsx
+  lib/cn.ts
+  lib/motion.ts
+```
+
+| Flag              | Effect                                                                           |
+| ----------------- | -------------------------------------------------------------------------------- |
+| `-o, --overwrite` | Replace files that differ from the registry without asking                       |
+| `-y, --yes`       | Skip prompts: install missing packages, keep files that differ from the registry |
+
+A name that exists in more than one family, like `tool`, needs its family: `nachui add ai/tool`.
 
 <Callout variant="success" className="mt-4">
   <Callout.Title>Tip</Callout.Title>
@@ -101,19 +109,19 @@ Lists all components currently available in the NachUI registry.
 **Output example:**
 
 ```
-→ Button   (button)
-→ Input    (input)
-    Deps: react-hook-form
-→ Dialog   (dialog)
+→ button   (ui/button)
+    npm: class-variance-authority, motion, react
+→ chat     (hybrids/chat)
+    npm: react
 ```
 
-Each entry shows the component name, its slug (used with `add`/`update`/`remove`), and any required dependencies.
+Each entry shows the component name, its slug (used with `add`, `update` and `remove`), and the npm packages it imports.
 
 ---
 
 ### update
 
-Fetches the latest version of an already-installed component from the registry and overwrites the local file.
+Fetches the latest version of an installed component and replaces your local file.
 
 <div className="my-12">
   <Command command="pnpm dlx nachui update <component>" />
@@ -135,14 +143,14 @@ Fetches the latest version of an already-installed component from the registry a
 
 The command will:
 
-1. Verify the component is installed (the file exists in `aliases.components`).
-2. Fetch the latest code from the registry.
-3. Ask for confirmation before writing.
-4. Replace the local file with the updated version.
+1. Check that the component is installed where `add` puts it, for example `src/components/button.tsx`.
+2. Fetch the latest code from the registry and ask before writing.
+3. Add any file the new version imports that you don't have yet.
+4. List shared files that differ from the registry, like `lib/cn.ts`, and only replace them if you agree, since other components use them too.
 
 ### remove
 
-Removes an installed component from your project by deleting its file (or folder) from the components directory.
+Removes an installed component by deleting its file.
 
 <div className="my-12">
   <Command command="pnpm dlx nachui remove <component>" />
@@ -154,7 +162,7 @@ Removes an installed component from your project by deleting its file (or folder
   <Command command="pnpm dlx nachui remove button" />
 </div>
 
-The command looks for `button.tsx` (or a `button/` folder) inside `src/components/ui/`. If found, it asks for confirmation before permanently deleting the file.
+The command looks for the component in every family folder under `baseDir` and asks for confirmation before deleting it. Shared files such as `lib/cn.ts` are kept, because other components may use them. Pass `--yes` to skip the confirmation.
 
 <Callout variant="warning" className="mt-4">
   <Callout.Title>Warning</Callout.Title>
@@ -191,13 +199,18 @@ The command looks for `button.tsx` (or a `button/` folder) inside `src/component
 
 ## Configuration file
 
-The `nachui.json` file is created by `init` and is required by the `add`, `update`, and `remove` commands. It controls where components and utilities are placed inside your project.
+The `nachui.json` file is created by `init` and is required by the `add`, `update`, and `remove` commands.
 
-| Field                | Description                               |
-| -------------------- | ----------------------------------------- |
-| `style`              | The selected theme style                  |
-| `tailwind.css`       | Path to your main CSS file                |
-| `aliases.components` | Import alias for the components directory |
-| `aliases.utils`      | Import alias for the `cn` utility         |
+| Field          | Description                                                                                           |
+| -------------- | ----------------------------------------------------------------------------------------------------- |
+| `style`        | The color format of the theme                                                                         |
+| `baseDir`      | Folder that holds `components/`, `layout/`, `ai/`, `hybrids/`, `icons/` and `lib/`. Defaults to `src` |
+| `tailwind.css` | Path to the stylesheet that holds the theme tokens                                                    |
 
-If this file is missing, most commands will fail and ask you to run `nachui init` first.
+Files go to `<baseDir>/<family folder>/<name>`: UI elements to `components/`, layout elements to `layout/`, and AI elements, hybrids, icons and helpers to `ai/`, `hybrids/`, `icons/` and `lib/`. That is the same layout as the NachUI source, which is why the relative imports in each file work without edits.
+
+Tailwind CSS v4 has no config file, so there is nothing else to point at: the theme lives in CSS variables in your stylesheet.
+
+A `nachui.json` from an older version of the CLI still works. It has no `baseDir`, so components go under `src/`. Components that version installed in `src/components/ui/` are left where they are; move them to `src/components/` if you want `update` to find them.
+
+To use a local or self-hosted registry, set `NACHUI_API_URL`, for example `NACHUI_API_URL=http://localhost:3001/api/v1 npx nachui list`.

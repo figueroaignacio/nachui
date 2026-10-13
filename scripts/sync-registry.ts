@@ -1,126 +1,171 @@
-import { components, db, type ComponentFamily } from '@repo/db';
+/**
+ * Pushes the component catalog into the registry table the API and CLI serve.
+ *
+ *   pnpm registry:sync                 upsert every item, report stale rows
+ *   pnpm registry:sync --prune         also delete stale qualified rows
+ *   pnpm registry:sync --dry-run       print the plan, touch nothing
+ *
+ * Items are every component under the family directories plus whatever they
+ * reach through relative imports (`lib/cn`, `lib/motion`, hooks, sibling
+ * components). Each item records those relative imports as
+ * `registryDependencies`, which the CLI installs alongside it.
+ *
+ * Any error (an unresolvable import, a failed upsert) exits non-zero after
+ * the run, so CI and humans notice.
+ */
+
+import type { ComponentFamily } from '@repo/db';
 import fs from 'node:fs';
 import path from 'node:path';
 import { FAMILIES, ICONS_DIR } from '../packages/ui/src/lib/registry';
+import { buildCatalogGraph, findStaleSlugs, type CatalogItem } from './lib/catalog-graph';
 
-const UI_PACKAGE_ROOT = path.resolve(process.cwd(), 'packages/ui');
+const PRUNE = process.argv.includes('--prune');
+const DRY_RUN = process.argv.includes('--dry-run');
 
-function extractDependencies(code: string): string[] {
-  const dependencies: string[] = [];
-  const importRegex = /from\s+['"]([^'"]+)['"]/g;
-  let match;
+const UI_SRC = path.resolve(process.cwd(), 'packages/ui/src');
 
-  while ((match = importRegex.exec(code)) !== null) {
-    let dep = match[1];
+/** `src/components` becomes `components`, relative to `packages/ui/src`. */
+function srcDir(codeDir: string): string {
+  return codeDir.replace(/^src\//, '');
+}
 
-    if (dep && !dep.startsWith('.') && !dep.startsWith('@repo/')) {
-      const parts = dep.split('/');
+const SEED_FAMILIES: Array<{ family: string; dir: string }> = [
+  ...FAMILIES.map((f) => ({ family: f.id as string, dir: srcDir(f.codeDir) })),
+  { family: 'icons', dir: srcDir(ICONS_DIR) },
+];
 
-      if (dep.startsWith('@')) {
-        if (parts.length >= 2) {
-          dep = `${parts[0]}/${parts[1]}`;
-        }
-      } else {
-        dep = parts[0] as string;
-      }
+/** Support directories: synced only when a component imports from them. */
+const SUPPORT_FAMILIES = [
+  { family: 'lib', dir: 'lib' },
+  { family: 'hooks', dir: 'hooks' },
+];
 
-      if (dep === 'motion') {
-        dependencies.push('motion');
-      } else {
-        dependencies.push(dep);
-      }
+const dirFamilies = new Map(
+  [...SEED_FAMILIES, ...SUPPORT_FAMILIES].map(({ family, dir }) => [dir, family]),
+);
+
+function listSeeds(): string[] {
+  const seeds: string[] = [];
+
+  for (const { dir } of SEED_FAMILIES) {
+    const absolute = path.join(UI_SRC, dir);
+    if (!fs.existsSync(absolute)) {
+      throw new Error(`Family directory not found: ${absolute}`);
+    }
+
+    for (const entry of fs.readdirSync(absolute, { withFileTypes: true })) {
+      if (!entry.isFile()) continue;
+      if (!entry.name.endsWith('.tsx') || entry.name.includes('.test.')) continue;
+      seeds.push(`${dir}/${entry.name}`);
     }
   }
 
-  return [...new Set(dependencies)];
+  return seeds.sort();
 }
 
-function toSlug(family: ComponentFamily, name: string): string {
-  return `${family}/${name.toLowerCase()}`;
+function describe(item: CatalogItem): string {
+  const npm = item.dependencies.join(', ') || 'none';
+  const registry = item.registryDependencies.join(', ') || 'none';
+  return `${item.slug.padEnd(28)} npm: ${npm} | registry: ${registry}`;
 }
 
-async function processFamily(family: ComponentFamily, codeDir: string) {
-  const dirPath = path.join(UI_PACKAGE_ROOT, codeDir);
+async function main() {
+  const graph = buildCatalogGraph({
+    seeds: listSeeds(),
+    dirFamilies,
+    readFile: (file) => fs.readFileSync(path.join(UI_SRC, file), 'utf8'),
+    exists: (file) => fs.existsSync(path.join(UI_SRC, file)),
+  });
 
-  if (!fs.existsSync(dirPath)) {
-    console.error(`❌ Error: Root path not found: ${dirPath}`);
-    return 0;
+  if (graph.errors.length > 0) {
+    console.error('The catalog has problems, nothing was synced:');
+    for (const error of graph.errors) console.error(`  ${error}`);
+    process.exitCode = 1;
+    return;
   }
 
-  let synced = 0;
+  console.log(`Resolved ${graph.items.length} registry items.\n`);
 
-  for (const item of fs.readdirSync(dirPath)) {
-    const itemPath = path.join(dirPath, item);
-    const stats = fs.statSync(itemPath);
+  if (DRY_RUN) {
+    for (const item of graph.items) console.log(`  ${describe(item)}`);
+    console.log('\nDry run. Nothing was written.');
+    return;
+  }
 
-    let code = '',
-      name = '';
+  const { components, db, inArray } = await import('@repo/db');
 
-    if (stats.isDirectory()) {
-      const files = fs.readdirSync(itemPath);
-      const componentFile = files.find((f: string) => f.endsWith('.tsx') && !f.includes('.test.'));
-      if (!componentFile) continue;
-      code = fs.readFileSync(path.join(itemPath, componentFile), 'utf8');
-      name = item;
-    } else if (item.endsWith('.tsx') && !item.includes('.test.')) {
-      code = fs.readFileSync(itemPath, 'utf8');
-      name = item.replace('.tsx', '');
-    } else continue;
+  let failed = 0;
 
-    const slug = toSlug(family, name);
-    const deps = extractDependencies(code);
-    console.log(`📦 Syncing: ${slug}...`);
+  for (const item of graph.items) {
+    const code = fs.readFileSync(path.join(UI_SRC, item.file), 'utf8');
+    // The schema narrows `type` to the component families, but the column is
+    // plain text and support items (lib, hooks) live in it too.
+    const type = item.family as ComponentFamily;
+    const values = {
+      name: item.name,
+      slug: item.slug,
+      code,
+      type,
+      dependencies: item.dependencies,
+      registryDependencies: item.registryDependencies,
+    };
 
     try {
       await db
         .insert(components)
-        .values({
-          name,
-          slug,
-          code,
-          type: family,
-          dependencies: deps,
-          registryDependencies: [],
-        })
+        .values(values)
         .onConflictDoUpdate({
           target: components.slug,
-          set: {
-            name,
-            code,
-            type: family,
-            dependencies: deps,
-            updatedAt: new Date(),
-          },
+          set: { ...values, updatedAt: new Date() },
         });
-
-      synced++;
-      console.log(`✅ ${slug} ready. (Deps: ${deps.join(', ') || 'none'})`);
+      console.log(`  synced ${describe(item)}`);
     } catch (error) {
-      console.error(`❌ Error syncing ${slug}:`, error);
+      failed++;
+      console.error(`  failed ${item.slug}:`, error);
     }
   }
 
-  return synced;
-}
+  const rows = await db.select({ slug: components.slug }).from(components);
+  const stale = findStaleSlugs(
+    rows.map((r) => r.slug),
+    graph.items.map((i) => i.slug),
+  );
+  const staleQualified = stale.filter((slug) => slug.includes('/'));
+  const staleBare = stale.filter((slug) => !slug.includes('/'));
 
-async function syncRegistry() {
-  console.log('🚀 Starting sync registry...');
-
-  let total = 0;
-  for (const family of FAMILIES) {
-    console.log(`\n── ${family.id} (${family.codeDir})`);
-    total += await processFamily(family.id, family.codeDir);
+  if (staleQualified.length > 0) {
+    if (PRUNE) {
+      await db.delete(components).where(inArray(components.slug, staleQualified));
+      console.log(`\nPruned ${staleQualified.length} rows with no source file:`);
+    } else {
+      console.log(
+        `\n${staleQualified.length} rows have no source file. Re-run with --prune to delete them:`,
+      );
+    }
+    for (const slug of staleQualified) console.log(`  ${slug}`);
   }
 
-  console.log(`\n── icons (${ICONS_DIR})`);
-  total += await processFamily('icons', ICONS_DIR);
+  if (staleBare.length > 0) {
+    console.log(`\n${staleBare.length} rows still use a bare slug and were left alone:`);
+    for (const slug of staleBare) console.log(`  ${slug}`);
+    console.log('  Run `pnpm registry:migrate-slugs` to qualify them.');
+  }
 
-  console.log(
-    `\n✨ Syncing finished successfully. ${total} components across ${FAMILIES.length + 1} families.`,
-  );
-  console.log('   Rows whose slug is not yet qualified are left untouched.');
-  console.log('   Run `pnpm registry:migrate-slugs` once to convert them.');
-  process.exit(0);
+  const synced = graph.items.length - failed;
+  console.log(`\nSynced ${synced} of ${graph.items.length} items.`);
+
+  if (failed > 0) {
+    console.error(`${failed} items failed to sync.`);
+    process.exitCode = 1;
+  }
 }
 
-syncRegistry();
+main()
+  .catch((error) => {
+    console.error('Registry sync failed:', error);
+    process.exitCode = 1;
+  })
+  .finally(() => {
+    process.exit();
+  });

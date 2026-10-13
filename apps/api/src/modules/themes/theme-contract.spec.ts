@@ -4,6 +4,21 @@ import { THEME_CONTRACT, THEME_CONTRACT_ROOT_ONLY } from './theme-contract';
 
 const cssDir = path.join(__dirname, 'css');
 const themes = readdirSync(cssDir).filter((f) => f.endsWith('.css'));
+const uiGlobals = readFileSync(
+  path.resolve(__dirname, '../../../../../packages/ui/src/css/globals.css'),
+  'utf8',
+);
+
+function themeBlock(css: string): string {
+  const start = css.indexOf('@theme');
+  if (start === -1) return '';
+  return css.slice(start, css.indexOf('\n}', start));
+}
+
+/** The Tailwind utilities a stylesheet maps to tokens: `bg-success-surface`, `shadow-md`. */
+function utilityMappings(css: string): string[] {
+  return [...themeBlock(css).matchAll(/(--(?:color|shadow)-[\w-]+)\s*:/g)].map((m) => m[1]);
+}
 
 function declaredIn(css: string, selector: ':root' | '.dark'): Set<string> {
   const start = css.indexOf(`${selector} {`);
@@ -18,12 +33,34 @@ describe('theme contract', () => {
     expect(themes.length).toBeGreaterThan(0);
   });
 
+  it('matches the tokens the component package declares', () => {
+    const declared = declaredIn(uiGlobals, ':root');
+    const missing = [...THEME_CONTRACT, ...THEME_CONTRACT_ROOT_ONLY].filter(
+      (token) => !declared.has(token),
+    );
+    expect(missing).toEqual([]);
+  });
+
   describe.each(themes)('%s', (file) => {
     const css = readFileSync(path.join(cssDir, file), 'utf8');
 
     it.each([':root', '.dark'] as const)('declares every contract token in %s', (selector) => {
       const declared = declaredIn(css, selector);
       const missing = THEME_CONTRACT.filter((token) => !declared.has(token));
+      expect(missing).toEqual([]);
+    });
+
+    it('is a Tailwind v4 stylesheet with no config file', () => {
+      expect(css).toMatch(/@import ['"]tailwindcss['"];/);
+      expect(css).toMatch(/@custom-variant dark/);
+      expect(css).not.toMatch(/@config\b|@tailwind\b/);
+    });
+
+    // Installed components use utilities like `bg-success-surface`; a theme
+    // without the mapping renders them unstyled.
+    it('maps every color and shadow utility the components use', () => {
+      const mapped = new Set(utilityMappings(css));
+      const missing = utilityMappings(uiGlobals).filter((name) => !mapped.has(name));
       expect(missing).toEqual([]);
     });
 

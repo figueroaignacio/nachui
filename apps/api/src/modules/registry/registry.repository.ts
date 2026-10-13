@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Component, components, db, eq, like, NewComponent } from '@repo/db';
+import { normalizeSlug } from './slug';
 
 /** What a short-form lookup found. Ambiguity is a result, not an error. */
 export type SlugResolution =
   | { status: 'found'; component: Component }
   | { status: 'not-found' }
+  | { status: 'invalid' }
   | { status: 'ambiguous'; candidates: string[] };
 
 @Injectable()
@@ -16,6 +18,7 @@ export class RegistryRepository {
         slug: components.slug,
         type: components.type,
         dependencies: components.dependencies,
+        registryDependencies: components.registryDependencies,
       })
       .from(components);
   }
@@ -30,7 +33,7 @@ export class RegistryRepository {
   }
 
   /**
-   * Lookup by bare component name, `button`.
+   * Lookup by bare component name, `button`, or qualified slug, `ui/button`.
    *
    * Slugs are qualified as `family/name`, but the published CLI sends the bare
    * name and users type it, so it has to keep resolving. It only fails when the
@@ -38,13 +41,16 @@ export class RegistryRepository {
    * qualified slug was introduced for.
    */
   async resolve(input: string): Promise<SlugResolution> {
-    const value = input.toLowerCase();
+    const value = normalizeSlug(input);
+
+    if (!value) return { status: 'invalid' };
 
     if (value.includes('/')) {
       const component = await this.findBySlug(value);
       return component ? { status: 'found', component } : { status: 'not-found' };
     }
 
+    // `value` is validated above, so it cannot carry LIKE wildcards.
     const matches = await db
       .select()
       .from(components)
@@ -60,7 +66,7 @@ export class RegistryRepository {
       return { status: 'ambiguous', candidates: matches.map((m) => m.slug).sort() };
     }
 
-    return { status: 'found', component: matches[0]! };
+    return { status: 'found', component: matches[0] };
   }
 
   async upsert(data: NewComponent) {

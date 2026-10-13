@@ -8,7 +8,7 @@ date: 2026-04-10
 locale: es
 ---
 
-El CLI de NachUI es la forma más rápida de gestionar componentes en tu proyecto. Se conecta al registro oficial y te permite instalar, actualizar y eliminar componentes sin salir de tu terminal.
+El CLI de NachUI es la forma más rápida de gestionar componentes en tu proyecto. Se conecta al registro oficial e instala cada componente junto con todos los archivos que importa, con la misma estructura de carpetas que el código fuente de NachUI, así los imports entre archivos funcionan sin cambios. La [guía de instalación](/docs/installation) cubre el camino manual.
 
 ## Instalación
 
@@ -24,47 +24,35 @@ npx nachui <comando>
 
 ### init
 
-Inicializa NachUI en tu proyecto. Este es el **primer comando que debes ejecutar**. Se encargará de:
+Prepara NachUI en tu proyecto. Este es el **primer comando que debes ejecutar**. Se encargará de:
 
-1. Obtener los temas disponibles desde el registro.
-2. Pedirte que selecciones un tema de forma interactiva.
-3. Crear un archivo de configuración `nachui.json` en la raíz de tu proyecto.
-4. Inyectar los tokens CSS de diseño en tu hoja de estilos (`src/app/globals.css` para Next.js o `src/index.css` para Vite).
-5. Generar la función utilitaria `cn` en la ruta definida por `aliases.utils`.
+1. Obtener los temas disponibles desde el registro y pedirte que elijas uno.
+2. Crear un archivo de configuración `nachui.json` en la raíz de tu proyecto.
+3. Agregar los tokens del tema a tu hoja de estilos (`src/app/globals.css` para Next.js, `src/index.css` para Vite).
+4. Escribir el helper `cn` en `src/lib/cn.ts`.
+5. Ofrecerte instalar `clsx` y `tailwind-merge`.
 
 <div className="my-12">
   <Command command="pnpm dlx nachui init" />
 </div>
 
-Después de ejecutar `init`, tu proyecto contendrá un archivo `nachui.json` similar a este:
+Si tu hoja de estilos ya tiene estilos, `init` pregunta antes de reemplazarlos. La respuesta por defecto los conserva y agrega los tokens al final. Si vuelves a ejecutar `init`, reemplaza los tokens de la vez anterior en lugar de sumar una segunda copia. Con `--yes` acepta los valores por defecto sin preguntar y nunca reemplaza tus archivos.
+
+Después de ejecutar `init`, tu proyecto tendrá un archivo `nachui.json` como este:
 
 ```json
 {
-  "$schema": "...",
-  "style": "default",
+  "style": "oklch",
+  "baseDir": "src",
   "tailwind": {
-    "config": "",
-    "baseColor": "zinc",
     "css": "src/app/globals.css"
-  },
-  "aliases": {
-    "components": "@/components/ui",
-    "utils": "@/lib/utils"
   }
 }
 ```
 
-<Callout variant="info" className="mt-4">
-  <Callout.Title>Info</Callout.Title>
-  <Callout.Content>
-    Si `nachui.json` ya existe, `init` lo detectará y omitirá la re-inyección de tokens para evitar
-    duplicados.
-  </Callout.Content>
-</Callout>
-
 ### add
 
-Agrega un componente del registro a tu proyecto. Requiere que exista `nachui.json` (ejecuta `init` primero).
+Agrega uno o más componentes del registro. Requiere que exista `nachui.json` (ejecuta `init` primero).
 
 <div className="my-12">
   <Command command="pnpm dlx nachui add <component>" />
@@ -78,10 +66,30 @@ Agrega un componente del registro a tu proyecto. Requiere que exista `nachui.jso
 
 **¿Qué hace?**
 
-- Obtiene el código fuente del componente desde el registro.
-- Escribe el archivo del componente en la ruta definida en `aliases.components` (ej: `src/components/ui/button.tsx`).
-- Verifica si el componente tiene dependencias externas.
-- Si faltan dependencias, te preguntará si deseas instalarlas automáticamente usando tu gestor de paquetes (npm, pnpm, yarn o bun — detectado automáticamente).
+- Descarga el componente y cada archivo que importa, como `lib/cn.ts`, `lib/motion.ts` u otro componente.
+- Escribe cada archivo en la carpeta de su familia dentro de `baseDir`, así los imports entre ellos funcionan sin cambios.
+- Omite los archivos que ya son idénticos y pregunta antes de reemplazar uno que modificaste.
+- Revisa los paquetes de npm que necesitan y ofrece instalar los que falten con tu gestor de paquetes (npm, pnpm, yarn o bun, detectado por tu lockfile).
+
+Por ejemplo, `nachui add hybrids/confirm` escribe:
+
+```
+src/
+  hybrids/confirm.tsx
+  components/button.tsx
+  components/dialog.tsx
+  components/input.tsx
+  components/label.tsx
+  lib/cn.ts
+  lib/motion.ts
+```
+
+| Flag              | Efecto                                                                              |
+| ----------------- | ----------------------------------------------------------------------------------- |
+| `-o, --overwrite` | Reemplaza sin preguntar los archivos que difieren del registro                      |
+| `-y, --yes`       | Sin preguntas: instala los paquetes que falten y conserva los archivos que difieren |
+
+Un nombre que existe en más de una familia, como `tool`, necesita su familia: `nachui add ai/tool`.
 
 <Callout variant="success" className="mt-4">
   <Callout.Title>Tip</Callout.Title>
@@ -101,17 +109,19 @@ Lista todos los componentes disponibles actualmente en el registro de NachUI.
 **Ejemplo de salida:**
 
 ```
-→ Button   (button)
-→ Input    (input)
-    Deps: react-hook-form
-→ Dialog   (dialog)
+→ button   (ui/button)
+    npm: class-variance-authority, motion, react
+→ chat     (hybrids/chat)
+    npm: react
 ```
 
-Cada entrada muestra el nombre del componente, su slug (usado con `add`/`update`/`remove`) y las dependencias requeridas.
+Cada entrada muestra el nombre del componente, su slug (el que usas con `add`, `update` y `remove`) y los paquetes de npm que importa.
+
+---
 
 ### update
 
-Obtiene la última versión de un componente ya instalado desde el registro y sobreescribe el archivo local.
+Descarga la última versión de un componente instalado y reemplaza tu archivo local.
 
 <div className="my-12">
   <Command command="pnpm dlx nachui update <component>" />
@@ -124,38 +134,38 @@ Obtiene la última versión de un componente ya instalado desde el registro y so
 </div>
 
 <Callout variant="warning" className="mt-4">
-  <Callout.Title>Importante</Callout.Title>
+  <Callout.Title>Advertencia</Callout.Title>
   <Callout.Content>
-    Al ejecutar `update` se sobrescribirán tus cambios locales en ese componente. Se te pedirá
+    Ejecutar `update` **sobrescribirá tus cambios locales** en ese componente. Se te pedirá
     confirmación antes de aplicar la actualización.
   </Callout.Content>
 </Callout>
 
 El comando:
 
-1. Verifica que el componente está instalado (el archivo existe en `aliases.components`).
-2. Obtiene el código más reciente desde el registro.
-3. Pide confirmación antes de escribir.
-4. Reemplaza el archivo local con la versión actualizada.
+1. Verifica que el componente esté donde lo pone `add`, por ejemplo `src/components/button.tsx`.
+2. Descarga el código más reciente del registro y pregunta antes de escribir.
+3. Agrega los archivos nuevos que importe la nueva versión y que todavía no tengas.
+4. Lista los archivos compartidos que difieren del registro, como `lib/cn.ts`, y solo los reemplaza si aceptas, porque otros componentes también los usan.
 
 ### remove
 
-Elimina un componente instalado de tu proyecto borrando su archivo (o carpeta) del directorio de componentes.
+Elimina un componente instalado borrando su archivo.
+
+<div className="my-12">
+  <Command command="pnpm dlx nachui remove <component>" />
+</div>
+
+**Ejemplo:**
 
 <div className="my-12">
   <Command command="pnpm dlx nachui remove button" />
 </div>
 
-**Ejemplo:**
-
-```bash
-pnpm dlx nachui remove button
-```
-
-El comando busca `button.tsx` (o una carpeta `button/`) dentro de `src/components/ui/`. Si lo encuentra, pide confirmación antes de eliminarlo de forma permanente.
+El comando busca el componente en cada carpeta de familia dentro de `baseDir` y pide confirmación antes de borrarlo. Los archivos compartidos como `lib/cn.ts` se conservan, porque otros componentes pueden usarlos. Con `--yes` omite la confirmación.
 
 <Callout variant="warning" className="mt-4">
-  <Callout.Title>Importante</Callout.Title>
+  <Callout.Title>Advertencia</Callout.Title>
   <Callout.Content>
     Esta acción no se puede deshacer. Asegúrate de que ya no necesitas el componente antes de
     confirmar.
@@ -166,23 +176,23 @@ El comando busca `button.tsx` (o una carpeta `button/`) dentro de `src/component
 
 <Steps>
 
-#### Inicializar NachUI en tu proyecto
+#### Inicializa NachUI en tu proyecto
 
 <Command command="pnpm dlx nachui init" />
 
-#### Ver los componentes disponibles
+#### Explora los componentes disponibles
 
 <Command command="pnpm dlx nachui list" />
 
-#### Agregar un componente
+#### Agrega un componente
 
 <Command command="pnpm dlx nachui add button" />
 
-#### Actualizar un componente a la última versión
+#### Actualiza un componente a la última versión
 
 <Command command="pnpm dlx nachui update button" />
 
-#### Eliminar un componente que ya no necesitas
+#### Elimina un componente que ya no necesitas
 
 <Command command="pnpm dlx nachui remove button" />
 
@@ -190,13 +200,18 @@ El comando busca `button.tsx` (o una carpeta `button/`) dentro de `src/component
 
 ## Archivo de configuración
 
-El archivo `nachui.json` es creado por `init` y es requerido por los comandos `add`, `update` y `remove`. Controla dónde se colocan los componentes y utilidades dentro de tu proyecto.
+`init` crea el archivo `nachui.json`, y lo necesitan los comandos `add`, `update` y `remove`.
 
-| Campo                | Descripción                                            |
-| -------------------- | ------------------------------------------------------ |
-| `style`              | El estilo de tema seleccionado                         |
-| `tailwind.css`       | Ruta a tu archivo CSS principal                        |
-| `aliases.components` | Alias de importación para el directorio de componentes |
-| `aliases.utils`      | Alias de importación para la utilidad `cn`             |
+| Campo          | Descripción                                                                                            |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| `style`        | El formato de color del tema                                                                           |
+| `baseDir`      | Carpeta que contiene `components/`, `layout/`, `ai/`, `hybrids/`, `icons/` y `lib/`. Por defecto `src` |
+| `tailwind.css` | Ruta a la hoja de estilos que tiene los tokens del tema                                                |
 
-Si este archivo no existe, la mayoría de los comandos fallarán y te pedirán que ejecutes `nachui init` primero.
+Los archivos van a `<baseDir>/<carpeta de la familia>/<nombre>`: los elementos de UI a `components/`, los de layout a `layout/`, y los elementos de IA, híbridos, íconos y helpers a `ai/`, `hybrids/`, `icons/` y `lib/`. Es la misma estructura que el código fuente de NachUI, por eso los imports relativos de cada archivo funcionan sin editarlos.
+
+Tailwind CSS v4 no tiene archivo de configuración, así que no hay nada más que indicar: el tema vive en variables CSS dentro de tu hoja de estilos.
+
+Un `nachui.json` de una versión anterior del CLI sigue funcionando. No tiene `baseDir`, así que los componentes van a `src/`. Los componentes que esa versión instaló en `src/components/ui/` quedan donde están; muévelos a `src/components/` si quieres que `update` los encuentre.
+
+Para usar un registro local o propio, define `NACHUI_API_URL`, por ejemplo `NACHUI_API_URL=http://localhost:3001/api/v1 npx nachui list`.

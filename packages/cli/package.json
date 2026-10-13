@@ -19,11 +19,17 @@
   "scripts": {
     "test:dev": "tsx src/index.ts",
     "build": "tsup",
+    "lint": "eslint . --max-warnings 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "prepublishOnly": "pnpm build",
     "release": "pnpm build && npm publish",
     "release:patch": "npm version patch && pnpm release",
     "release:minor": "npm version minor && pnpm release",
     "check-types": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=18.17"
   },
   "dependencies": {
     "@clack/prompts": "^1.5.1",
@@ -32,10 +38,13 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/node": "^25.9.2",
-    "dotenv": "^17.4.2",
+    "eslint": "^10.4.1",
     "tsup": "^8.5.1",
     "tsx": "^4.22.4",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.8"
   }
 }

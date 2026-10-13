@@ -14,6 +14,7 @@
     "prepare": "husky",
     "registry:sync": "tsx --env-file=packages/db/.env scripts/sync-registry.ts",
     "registry:migrate-slugs": "tsx --env-file=packages/db/.env scripts/migrate-slugs.ts",
+    "test:scripts": "tsx --test scripts/lib/catalog-graph.test.ts",
     "checks": "pnpm --filter web checks"
   },
   "lint-staged": {

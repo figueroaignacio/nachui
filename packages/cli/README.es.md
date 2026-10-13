@@ -30,11 +30,11 @@ Construido con prompts interactivos elegantes, validación de errores útil y co
 Puedes ejecutar el CLI directamente a través de `npx` (o tu gestor de paquetes preferido) sin necesidad de instalarlo globalmente.
 
 ```bash
-# Inicializar NachUI en tu proyecto
+# Preparar los tokens del tema, nachui.json y el helper cn
 npx nachui init
 
-# Agregar un componente específico
-npx nachui add button
+# Agregar componentes con todos los archivos que importan
+npx nachui add button hybrids/confirm
 
 # Listar todos los componentes disponibles
 npx nachui list
@@ -46,7 +46,23 @@ npx nachui update button
 npx nachui remove button
 ```
 
+`add` escribe cada archivo en `<baseDir>/<carpeta de la familia>/<nombre>`, con la misma estructura que el código de NachUI (`components/`, `layout/`, `ai/`, `hybrids/`, `icons/`, `lib/`), así los imports relativos como `../lib/cn` se resuelven. `baseDir` está en `nachui.json` y por defecto es `src`.
+
+Flags: `add --overwrite` reemplaza los archivos que difieren del registro, `--yes` omite las preguntas en todos los comandos y nunca reemplaza archivos que modificaste (salvo `update --yes`, que actualiza el componente que nombraste).
+
+Define `NACHUI_API_URL` para usar un registro local o propio, por ejemplo `http://localhost:3001/api/v1`.
+
+## Desarrollo
+
+```bash
+pnpm --filter nachui test         # vitest
+pnpm --filter nachui check-types
+pnpm --filter nachui lint
+pnpm --filter nachui build
+```
+
 ## Arquitectura
 
-- `src/commands`: Contiene todas las acciones del CLI (`init`, `add`, `list`, `update`, `remove`).
-- `src/index.ts`: El punto de entrada principal que procesa y ejecuta los comandos mediante `commander`.
+- `src/commands`: un archivo por comando (`init`, `add`, `list`, `update`, `remove`).
+- `src/lib`: el cliente del registro, la lectura de `nachui.json`, la ubicación de los archivos, la resolución del árbol de dependencias y el manejo del gestor de paquetes.
+- `src/index.ts`: el punto de entrada, que procesa los argumentos con `commander`.
