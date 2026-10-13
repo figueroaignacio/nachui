@@ -1,13 +1,13 @@
 {
   "home": {
-    "subheading1": "Amor al arte: un sistema de diseño para UI, IA y layout, hecho porque me gusta hacerlo",
-    "headline1": "Amor",
-    "headline2": "al arte",
-    "definition": "/aˈmoɾ al ˈaɾte/ · hacer algo solo porque te gusta hacerlo",
-    "description": "Así está hecho NachUI. No hay versión paga, no hay startup atrás, no hay popup pidiéndote el mail. Es un sistema de diseño para UI, IA y layout que sigo construyendo porque me gusta construirlo. Llevátelo y usalo para lo que quieras.",
+    "subheading1": "Nada de más, nada de menos: componentes de React para UI, IA y layout que copiás y son tuyos",
+    "headline1": "Nada de más",
+    "headline2": "Nada de menos",
+    "tagline": "mínimo por defecto · detallado a propósito",
+    "description": "Pocos colores, líneas finas, nada de decoración porque sí. Lo que queda se llevó las horas: anillos de foco, soporte de teclado, estados diseñados de verdad. Componentes de React que copiás a tu repo y son tuyos.",
     "actions": [
       {
-        "label": "Llevátelo",
+        "label": "Copiá el primero",
         "href": "/docs",
         "variant": "default"
       },
@@ -24,9 +24,9 @@
     ],
     "wall": {
       "label": "preview",
-      "title1": "Detalles",
-      "title2": "a propósito.",
-      "description": "Anillos de foco que aparecen cuando los necesitás, menús que se manejan con el teclado, animaciones que saben cuándo parar. Las partes que nadie captura, renderizadas en vivo. Copiá cualquiera a tu repo como código plano.",
+      "title1": "Componentes reales,",
+      "title2": "corriendo en vivo.",
+      "description": "Elementos de UI, IA y layout renderizados acá, no capturas. Copiá cualquiera a tu repo como código plano.",
       "browse": "ver todos los elementos"
     }
   },

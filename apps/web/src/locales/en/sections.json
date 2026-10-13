@@ -1,13 +1,13 @@
 {
   "home": {
-    "subheading1": "Amor al arte: a design system for UI, AI and layout, built for the love of it",
-    "headline1": "Amor",
-    "headline2": "al arte",
-    "definition": "/aˈmoɾ al ˈaɾte/ · doing something only because you love doing it",
-    "description": "That's NachUI. There's no paid tier, no startup behind it, no popup asking for your email. Just a design system for UI, AI and layout that I keep building because I like building it. Take it and use it for whatever you want.",
+    "subheading1": "Nothing extra, nothing missing: React components for UI, AI and layout that you copy and own",
+    "headline1": "Nothing extra",
+    "headline2": "Nothing missing",
+    "tagline": "minimal by default · detailed on purpose",
+    "description": "Few colors, thin lines, no decoration for its own sake. What's left got the hours: focus rings, keyboard support, states that were actually designed. React components you copy into your repo and own.",
     "actions": [
       {
-        "label": "Take it",
+        "label": "Copy your first one",
         "href": "/docs",
         "variant": "default"
       },
@@ -24,9 +24,9 @@
     ],
     "wall": {
       "label": "preview",
-      "title1": "Details",
-      "title2": "on purpose.",
-      "description": "Focus rings that show up when you need them, menus you can drive with a keyboard, motion that knows when to stop. The parts nobody screenshots, rendered live. Copy any of them into your repo as plain source.",
+      "title1": "Real components,",
+      "title2": "running live.",
+      "description": "UI, AI and layout elements rendered right here, not screenshots. Copy any of them into your repo as plain source.",
       "browse": "browse all elements"
     }
   },
