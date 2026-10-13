@@ -1,4 +1,4 @@
-import { Controller, Get, Res } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Res } from '@nestjs/common';
 import express from 'express';
 import { AppService } from './app.service';
 
@@ -13,8 +13,10 @@ export class AppController {
   }
 
   @Get('health')
-  checkSystem() {
-    return this.appService.getHealthCheck();
+  async checkSystem(@Res({ passthrough: true }) res: express.Response) {
+    const report = await this.appService.getHealthCheck();
+    if (report.status !== 'ok') res.status(HttpStatus.SERVICE_UNAVAILABLE);
+    return report;
   }
 
   @Get('blame')
