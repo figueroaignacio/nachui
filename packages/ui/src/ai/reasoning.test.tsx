@@ -46,7 +46,7 @@ describe('Reasoning', () => {
   it('accepts a custom label', () => {
     render(
       <Reasoning duration={2}>
-        <Reasoning.Trigger getLabel={(streaming, duration) => `took ${duration}s`} />
+        <Reasoning.Trigger getLabel={(_streaming, duration) => `took ${duration}s`} />
       </Reasoning>,
     );
     expect(screen.getByRole('button', { name: /took 2s/ })).toBeInTheDocument();
