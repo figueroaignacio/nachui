@@ -11,7 +11,7 @@
     "start": "nest start",
     "dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node -r dotenv/config dist/main",
+    "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --max-warnings 0",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -35,7 +35,8 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.2"
+    "rxjs": "^7.8.2",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
