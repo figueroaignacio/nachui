@@ -1,7 +1,8 @@
-import { getDemoCode } from '../lib/get-component-code';
-import { Callout } from '@repo/ui/components/callout';
-import { ComponentPreviewClient } from './component-preview-client';
 import { DEMO_COMPONENTS } from '@/components/mdx/demo-registry';
+import { Callout } from '@repo/ui/components/callout';
+import { getTranslations } from 'next-intl/server';
+import { getDemoCode } from '../lib/get-component-code';
+import { ComponentPreviewClient } from './component-preview-client';
 
 interface ComponentPreviewProps {
   component: string;
@@ -19,14 +20,13 @@ export async function ComponentPreview({
   align = 'center',
 }: ComponentPreviewProps) {
   const { code, filePath, error } = await getDemoCode(component, demo);
+  const t = await getTranslations('docs.preview');
 
   if (error) {
     return (
       <Callout variant="danger" className="my-4">
-        <Callout.Title>Unable to load demo</Callout.Title>
-        <Callout.Content>
-          {error ?? `Error: Demo "${demo}" not found for component "${component}".`}
-        </Callout.Content>
+        <Callout.Title>{t('loadError')}</Callout.Title>
+        <Callout.Content>{error}</Callout.Content>
       </Callout>
     );
   }
@@ -37,10 +37,8 @@ export async function ComponentPreview({
   if (!DemoComponent) {
     return (
       <Callout variant="danger" className="my-4">
-        <Callout.Title>Missing demo import</Callout.Title>
-        <Callout.Content>
-          Error: Demo component not imported for &quot;{component}/{demo}&quot;.
-        </Callout.Content>
+        <Callout.Title>{t('missingTitle')}</Callout.Title>
+        <Callout.Content>{t('missingDescription', { component, demo })}</Callout.Content>
       </Callout>
     );
   }

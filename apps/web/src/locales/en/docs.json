@@ -557,5 +557,11 @@
   "componentsList": {
     "emptyTitle": "No components found",
     "emptyDescription": "There is no \"{section}\" section in the docs navigation."
+  },
+  "renderError": "This page could not be rendered.",
+  "preview": {
+    "loadError": "This demo could not load",
+    "missingTitle": "Demo not registered",
+    "missingDescription": "There is no \"{demo}\" demo for {component} in the demo registry."
   }
 }

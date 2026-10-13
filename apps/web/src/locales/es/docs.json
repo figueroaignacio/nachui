@@ -557,5 +557,11 @@
   "componentsList": {
     "emptyTitle": "No hay componentes",
     "emptyDescription": "No existe la sección \"{section}\" en la navegación de la documentación."
+  },
+  "renderError": "No se pudo mostrar esta página.",
+  "preview": {
+    "loadError": "No se pudo cargar este demo",
+    "missingTitle": "Demo no registrado",
+    "missingDescription": "No hay un demo \"{demo}\" para {component} en el registro de demos."
   }
 }

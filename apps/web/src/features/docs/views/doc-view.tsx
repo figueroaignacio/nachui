@@ -1,18 +1,18 @@
 import { NavBadge } from '@/components/common/nav-badge';
-import { MDXContent } from '../mdx/mdx-content';
 import { DocActions } from '@/features/docs/components/doc-actions';
 import { DocsPagination } from '@/features/docs/components/docs-pagination';
 import { IssueCta } from '@/features/docs/components/issue-cta';
 import { Toc } from '@/features/docs/components/toc';
-import { useDocsSections } from '@/hooks/use-docs-sections';
 import { SITE_URL } from '@/lib/constants';
-import { findDocItem } from '@/lib/docs-navigation';
+import { findDocItem, getDocsSections } from '@/lib/docs-navigation';
 import { GITHUB_REPO_URL, getAbsoluteUrl } from '@/lib/domains';
 import { Callout } from '@repo/ui/components/callout';
 import { Stack } from '@repo/ui/layout/stack';
 import { COMPONENT_REGISTRY } from '@repo/ui/registry';
 import { Container } from '@repo/ui/src/layout/container';
 import type { Doc } from 'content-collections';
+import { useTranslations } from 'next-intl';
+import { MDXContent } from '../mdx/mdx-content';
 
 type DocViewProps = {
   doc: Doc;
@@ -21,7 +21,8 @@ type DocViewProps = {
 export function DocView({ doc }: DocViewProps) {
   const tocContent = Array.isArray(doc.toc?.content) ? doc.toc.content : [];
   const currentPath = `/docs${doc.slugAsParams ? `/${doc.slugAsParams}` : ''}`;
-  const badge = findDocItem(useDocsSections(), currentPath)?.badge;
+  const t = useTranslations('docs');
+  const badge = findDocItem(getDocsSections(t), currentPath)?.badge;
   const docUrl = getAbsoluteUrl(doc.locale || 'en', `/docs/${doc.slugAsParams}`);
   // Element pages are named after their registry entry, so the last slug
   // segment resolves to the component's source file. Other pages get nothing.
@@ -85,7 +86,7 @@ export function DocView({ doc }: DocViewProps) {
               <MDXContent code={doc.body} />
             ) : (
               <Callout variant="danger">
-                <Callout.Title>Unable to render this page</Callout.Title>
+                <Callout.Title>{t('renderError')}</Callout.Title>
               </Callout>
             )}
           </div>

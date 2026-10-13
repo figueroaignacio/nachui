@@ -4,5 +4,15 @@
     "description": "The page you are looking for does not exist, or it has been moved.",
     "actionBack": "Go back",
     "actionHome": "Go home"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "An unexpected error stopped this page from loading. Try again, and reload if it keeps happening.",
+    "retry": "Try again"
+  },
+  "globalError": {
+    "title": "The site failed to load",
+    "description": "Something broke before the page could render. Try again in a moment.",
+    "retry": "Try again"
   }
 }
