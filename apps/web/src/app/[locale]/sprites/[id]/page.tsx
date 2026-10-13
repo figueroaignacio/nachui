@@ -1,11 +1,12 @@
 import { CAST, findMember } from '@/features/sprites/lib/cast';
 import { SpriteView } from '@/features/sprites/views/sprite-view';
 import { buildAlternates, getAbsoluteUrl } from '@/lib/domains';
+import type { Locale } from '@/lib/constants';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 type PageProps = {
-  params: Promise<{ locale: string; id: string }>;
+  params: Promise<{ locale: Locale; id: string }>;
 };
 
 export function generateStaticParams() {

@@ -3,7 +3,7 @@ import { Callout } from '@repo/ui/components/callout';
 import { ComponentSourceClient } from './component-source-client';
 
 // Utils
-import { getComponentSourceCode } from '@/features/docs/lib/get-component-code';
+import { getComponentSourceCode } from '../lib/get-component-code';
 
 interface ComponentSourceProps {
   component: string;

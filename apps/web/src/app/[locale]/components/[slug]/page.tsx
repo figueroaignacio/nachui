@@ -4,17 +4,16 @@ import {
   humanize,
 } from '@/features/gallery/lib/gallery-registry';
 import { GalleryComponentView } from '@/features/gallery/views/gallery-component-view';
-import { buildAlternates, getAbsoluteUrl, getAssetUrl, locales } from '@/lib/domains';
+import { findDocItem, getDocsSections } from '@/lib/docs-navigation';
+import { buildAlternates, getAbsoluteUrl, getAssetUrl } from '@/lib/domains';
+import { LOCALES, type Locale } from '@/lib/constants';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
 type PageProps = {
-  params: Promise<{ locale: string; slug: string }>;
+  params: Promise<{ locale: Locale; slug: string }>;
 };
-
-type DocsNavItem = { title: string; href: string; description?: string };
-type DocsNavSection = { title: string; items: DocsNavItem[] };
 
 export default async function GalleryComponentPage({ params }: PageProps) {
   const { locale, slug } = await params;
@@ -29,7 +28,7 @@ export default async function GalleryComponentPage({ params }: PageProps) {
 }
 
 export function generateStaticParams() {
-  return locales.flatMap((locale) => getAllGallerySlugs().map((slug) => ({ locale, slug })));
+  return LOCALES.flatMap((locale) => getAllGallerySlugs().map((slug) => ({ locale, slug })));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -41,10 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const tDocs = await getTranslations({ locale, namespace: 'docs' });
-  const sections = tDocs.raw('navigation') as DocsNavSection[];
-  const doc = sections
-    .flatMap((section) => section.items)
-    .find((item) => item.href === entry.docsHref);
+  const doc = findDocItem(getDocsSections(tDocs), entry.docsHref);
 
   const title = doc?.title ?? humanize(slug);
   const t = await getTranslations({ locale, namespace: 'sections.gallery' });

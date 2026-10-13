@@ -1,6 +1,6 @@
+import { fromRepoRoot } from '@/lib/repo-root';
 import { COMPONENT_REGISTRY, DEMO_REGISTRY } from '@repo/ui/registry';
 import fs from 'fs';
-import path from 'path';
 
 type ComponentCodeResult = {
   code: string | null;
@@ -28,10 +28,10 @@ type ComponentCodeResult = {
 export function rewriteDemoImports(code: string): string {
   return code
     .replaceAll(
-      /from ['"]\.\.\/\.\.\/(components|layout|ai|hybrids|icons)\//g,
-      "from '@/components/ui/",
+      /from (['"])\.\.\/\.\.\/(?:components|layout|ai|hybrids|icons)\//g,
+      'from $1@/components/ui/',
     )
-    .replaceAll(/from ['"]\.\.\/\.\.\/lib\//g, "from '@/lib/");
+    .replaceAll(/from (['"])\.\.\/\.\.\/lib\//g, 'from $1@/lib/');
 }
 
 /**
@@ -48,7 +48,7 @@ export async function getComponentSourceCode(componentName: string): Promise<Com
     };
   }
 
-  const filePath = path.join(process.cwd(), '../../', componentPath);
+  const filePath = fromRepoRoot(componentPath);
 
   try {
     const code = await fs.promises.readFile(filePath, 'utf-8');
@@ -90,7 +90,7 @@ export async function getDemoCode(
     };
   }
 
-  const filePath = path.join(process.cwd(), '../../', demoPath);
+  const filePath = fromRepoRoot(demoPath);
 
   try {
     const code = rewriteDemoImports(await fs.promises.readFile(filePath, 'utf-8'));

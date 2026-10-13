@@ -7,7 +7,7 @@ import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { findMember } from '../lib/cast';
 
-const STATES: SpriteState[] = ['idle', 'walk', 'work', 'loop'];
+const STATES = ['idle', 'walk', 'work', 'loop'] as const satisfies readonly SpriteState[];
 
 export async function SpriteView({ id }: { id: string }) {
   const member = findMember(id);

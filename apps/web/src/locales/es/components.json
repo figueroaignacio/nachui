@@ -22,10 +22,6 @@
   "mobileToc": {
     "label": "Tabla de contenido"
   },
-  "footer": {
-    "copyright": "Todos los derechos reservados",
-    "headline": "Desarrollador Fullstack & Estudiante de Programación"
-  },
   "codeblockWrapper": {
     "expand": "Ver código completo",
     "collapse": "Contraer",
@@ -39,7 +35,6 @@
     },
     "launcher": {
       "placeholder": "Haz una pregunta...",
-      "resume": "Volver al chat",
       "shortcut": "Ctrl+I",
       "send": "Enviar mensaje",
       "stop": "Detener la respuesta"
@@ -49,7 +44,6 @@
       "remove": "Quitar selección"
     },
     "messages": {
-      "initial": "¿Cómo puedo ayudarte hoy?",
       "thinking": "Pensando",
       "writing": "Escribiendo",
       "reasoning": "Proceso de pensamiento",
@@ -58,7 +52,6 @@
         "getComponentCode": "Leyendo el código del componente"
       },
       "copy": "Copiar",
-      "copied": "Copiado",
       "explainLabel": "Explicar esta página"
     },
     "errors": {
@@ -106,9 +99,6 @@
   "backButton": {
     "label": "Atrás"
   },
-  "postCard": {
-    "action": "Leer Más"
-  },
   "editOnGithub": {
     "label": "Editar esta página"
   },
@@ -140,13 +130,6 @@
   },
   "skipLink": {
     "label": "Saltar al contenido principal"
-  },
-  "githubStar": {
-    "heroLabel": "Dame una estrella en GitHub",
-    "starAction": "Star",
-    "tocTitle": "¿Te gusta NachUI?",
-    "tocSubtitle": "Una estrella en GitHub me ayuda mucho",
-    "ariaLabel": "Dar estrella a NachUI en GitHub"
   },
   "landingLogoCta": {
     "label": "mcp",

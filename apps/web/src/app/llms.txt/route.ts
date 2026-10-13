@@ -1,6 +1,6 @@
 import { ICON_CATALOG } from '@/features/icons/lib/icons';
 import { ContentRepository } from '@/lib/content-repository';
-import { baseUrl } from '@/lib/domains';
+import { SITE_URL } from '@/lib/constants';
 
 export async function GET() {
   const docs = ContentRepository.getDocs('en')
@@ -16,7 +16,7 @@ export async function GET() {
 
     const lines = entries.map(
       (doc) =>
-        `- [${doc.title}](${baseUrl}/en/docs${doc.slugAsParams ? `/${doc.slugAsParams}` : ''}.md)${
+        `- [${doc.title}](${SITE_URL}/en/docs${doc.slugAsParams ? `/${doc.slugAsParams}` : ''}.md)${
           doc.description ? `: ${doc.description}` : ''
         }`,
     );
@@ -29,7 +29,7 @@ export async function GET() {
     return (
       `## Icons\n\n` +
       `An optional icon set drawn on a 24x24 grid with a 1.5 stroke. Each icon is one self-contained React component; ` +
-      `install with \`npx nachui add icons/<name>\` or copy it from ${baseUrl}/en/icons.\n\n` +
+      `install with \`npx nachui add icons/<name>\` or copy it from ${SITE_URL}/en/icons.\n\n` +
       `Available: ${names}.`
     );
   };
@@ -43,7 +43,7 @@ export async function GET() {
     section('AI elements', 'elements/ai'),
     section('Hybrid elements', 'elements/hybrids'),
     iconsSection(),
-    `## Optional\n\n- [Sitemap](${baseUrl}/sitemap.xml)\n- [Docs index (JSON)](${baseUrl}/api/docs)`,
+    `## Optional\n\n- [Sitemap](${SITE_URL}/sitemap.xml)\n- [Docs index (JSON)](${SITE_URL}/api/docs)`,
   ];
 
   const body = `${blocks.filter(Boolean).join('\n\n')}\n`;

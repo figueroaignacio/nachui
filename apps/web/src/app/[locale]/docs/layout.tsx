@@ -1,5 +1,6 @@
 import { Sidebar } from '@/features/docs/components/sidebar';
 import { getSidebarPreviews } from '@/features/docs/lib/sidebar-previews';
+import { ContentRepository } from '@/lib/content-repository';
 import { Grid } from '@repo/ui/layout/grid';
 
 interface DocsLayoutProps {
@@ -9,7 +10,7 @@ interface DocsLayoutProps {
 
 export default async function DocsLayout({ children, params }: DocsLayoutProps) {
   const { locale } = await params;
-  const previews = getSidebarPreviews(locale);
+  const previews = getSidebarPreviews(ContentRepository.getDocs(), locale);
 
   return (
     <Grid

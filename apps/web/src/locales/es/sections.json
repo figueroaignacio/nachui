@@ -1,13 +1,10 @@
 {
   "home": {
-    "badge": "UI · AI · Layout",
     "subheading1": "Amor al arte: un sistema de diseño para UI, IA y layout, hecho porque me gusta hacerlo",
-    "subheading2": "",
     "headline1": "Amor",
     "headline2": "al arte",
     "definition": "/aˈmoɾ al ˈaɾte/ · hacer algo solo porque te gusta hacerlo",
     "description": "Así está hecho NachUI. No hay versión paga, no hay startup atrás, no hay popup pidiéndote el mail. Es un sistema de diseño para UI, IA y layout que sigo construyendo porque me gusta construirlo. Llevátelo y usalo para lo que quieras.",
-    "github": "Código abierto, el código es tuyo",
     "actions": [
       {
         "label": "Llevátelo",
@@ -25,71 +22,6 @@
         "variant": "outline"
       }
     ],
-    "tech": {
-      "title": "El Stack Técnico.",
-      "subtitle": "Sin wrappers. Solo primitivas directas.",
-      "technologies": [
-        {
-          "name": "TypeScript",
-          "description": "Tipado estricto para una confiabilidad total en tiempo de compilación"
-        },
-        {
-          "name": "React",
-          "description": "Hooks de componentes primitivos y bucles de renderizado"
-        },
-        {
-          "name": "Next.js",
-          "description": "Páginas y enrutamiento full-stack de alto rendimiento"
-        },
-        {
-          "name": "Tailwind CSS",
-          "description": "Estilizado por utilidades atómicas con tokens de variables personalizados"
-        },
-        {
-          "name": "Motion",
-          "description": "Transiciones sutiles y silenciosas para el feedback del usuario"
-        }
-      ]
-    },
-    "features": {
-      "title": "Todo lo que necesitas.",
-      "subtitle": "Absoluto cero ruido.",
-      "description": "Un sistema de diseño creado para no interponerse en tu camino. Velocidad de carga instantánea, jerarquías tipográficas limpias y control absoluto del código.",
-      "items": [
-        {
-          "title": "Elementos UI",
-          "description": "Botones, inputs, diálogos, menús, frames, tablas. Las piezas de todos los días, con una sola voz."
-        },
-        {
-          "title": "Elementos AI",
-          "description": "Composer de prompt, razonamiento, chain of thought, tareas, ventana de contexto, adjuntos, sugerencias. Props que entran, sin SDK atado."
-        },
-        {
-          "title": "Elementos de layout",
-          "description": "Stack, grid, split, section, container, spacer. Estructura sin escribir un CSS propio."
-        },
-        {
-          "title": "Código tuyo",
-          "description": "Sin paquete en runtime ni actualizaciones de terceros. Cada línea está en tu repo para leer y cambiar."
-        },
-        {
-          "title": "Una CLI",
-          "description": "Agrega componentes, tokens y layouts a tu proyecto con un comando."
-        },
-        {
-          "title": "Legible para tu IA",
-          "description": "Código plano, un índice llms.txt, docs en markdown y skills instalables. El asistente de las docs lee los mismos archivos."
-        },
-        {
-          "title": "Minimalista por defecto",
-          "description": "Tonos cálidos warm bone, líneas finas, jerarquía tipográfica clara. Fácil de reestilizar porque hay poco que deshacer."
-        },
-        {
-          "title": "Accesible",
-          "description": "WCAG 2.2 y soporte de teclado en cada primitiva."
-        }
-      ]
-    },
     "wall": {
       "label": "preview",
       "title1": "Detalles",

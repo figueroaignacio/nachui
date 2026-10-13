@@ -1,8 +1,8 @@
 'use client';
 
-import { usePathname, useRouter } from '@/i18n/navigation';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { Badge } from '@repo/ui/components/badge';
-import { Button } from '@repo/ui/components/button';
+import { Button, buttonVariants } from '@repo/ui/components/button';
 import { Empty } from '@repo/ui/components/empty';
 import { Frame } from '@repo/ui/components/frame';
 import { ChevronLeftIcon } from '@repo/ui/icons/chevron-left';
@@ -43,13 +43,10 @@ export default function NotFound() {
               >
                 {t('actionBack')}
               </Button>
-              <Button
-                size="sm"
-                leftIcon={<HomeIcon className="size-4" />}
-                onClick={() => router.push('/')}
-              >
+              <Link href="/" className={buttonVariants({ size: 'sm' })}>
+                <HomeIcon className="size-4" aria-hidden="true" />
                 {t('actionHome')}
-              </Button>
+              </Link>
             </Empty.Content>
           </Empty>
         </Frame.Panel>

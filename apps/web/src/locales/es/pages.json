@@ -4,5 +4,15 @@
     "description": "La página que buscas no existe o ha sido movida.",
     "actionBack": "Volver",
     "actionHome": "Ir al inicio"
+  },
+  "error": {
+    "title": "Algo salió mal",
+    "description": "Un error inesperado impidió cargar esta página. Probá de nuevo y, si sigue pasando, recargá.",
+    "retry": "Reintentar"
+  },
+  "globalError": {
+    "title": "El sitio no pudo cargar",
+    "description": "Algo se rompió antes de que la página pudiera mostrarse. Probá de nuevo en un momento.",
+    "retry": "Reintentar"
   }
 }

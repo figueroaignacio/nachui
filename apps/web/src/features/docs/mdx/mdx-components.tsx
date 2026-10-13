@@ -1,4 +1,4 @@
-import { DocsFaq } from '@/features/docs/components/docs-faq';
+import { DocsFaq } from '../components/docs-faq';
 import { Callout } from '@repo/ui/components/callout';
 import { Steps } from '@repo/ui/components/steps';
 import { AlertTriangleIcon } from '@repo/ui/icons/alert-triangle';
@@ -6,7 +6,7 @@ import { cn } from '@repo/ui/lib/cn';
 import { Command } from '@repo/ui/src/components/command';
 import { isValidElement } from 'react';
 import { CodeBlockWrapper } from './code-block-wrapper';
-import { CodeBlock } from './codeblock';
+import { CodeBlock } from '@/components/mdx/codeblock';
 import { ComponentInstallTabs } from './component-install-tabs';
 import { ComponentPreview } from './component-preview';
 import { ComponentSource } from './component-source';
@@ -29,7 +29,7 @@ import {
   MdxTabsList,
   MdxTabsTrigger,
 } from './compound-components';
-import { InlineCode } from './inline-code';
+import { InlineCode } from '@/components/mdx/inline-code';
 import { PackageManagerTabs } from './package-manager-tabs';
 import { SkillsList } from './skills-list';
 

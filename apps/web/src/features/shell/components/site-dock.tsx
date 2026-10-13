@@ -5,7 +5,7 @@ import { GitHubIcon } from '@/components/common/github-icon';
 import { useChatStore } from '@/features/chat/store/chat-store';
 import { Searcher } from '@/features/docs/components/searcher';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
-import { locales } from '@/i18n/routing';
+import { LOCALES } from '@/lib/constants';
 import { GITHUB_REPO_URL } from '@/lib/domains';
 import { isHiddenProductLink } from '@/lib/hidden-product-links';
 import { Badge } from '@repo/ui/components/badge';
@@ -18,8 +18,8 @@ import { LinkIcon } from '@repo/ui/icons/link';
 import { LayoutIcon } from '@repo/ui/icons/layout';
 import { LayoutGridIcon } from '@repo/ui/icons/layout-grid';
 import { MoonIcon } from '@repo/ui/icons/moon';
-import { Logo } from '../common/logo';
-import { MobileMenuPanel } from './mobile-menu';
+import { Logo } from '@/components/common/logo';
+import { MobileMenuPanel } from '@/features/docs/components/mobile-menu';
 import { PackageIcon } from '@repo/ui/icons/package';
 import { PanelLeftIcon } from '@repo/ui/icons/panel-left';
 import { PuzzleIcon } from '@repo/ui/icons/puzzle';
@@ -168,10 +168,11 @@ const LOCALE_NAMES: Record<string, string> = {
 export function SiteDock() {
   const t = useTranslations('ui.dock');
   const tUi = useTranslations('ui');
-  const rawMenu = tUi.raw('elementsMenu') as ElementsMenu;
   const elementsMenu: ElementsMenu = {
-    ...rawMenu,
-    items: rawMenu.items.filter((item) => !isHiddenProductLink(item.href)),
+    label: tUi('elementsMenu.label'),
+    items: (tUi.raw('elementsMenu.items') as MenuItem[]).filter(
+      (item) => !isHiddenProductLink(item.href),
+    ),
   };
   const pathname = usePathname();
   const router = useRouter();
@@ -181,7 +182,10 @@ export function SiteDock() {
   const autoHidden = useDockAutoHide();
   const chatOpen = useChatStore((state) => state.isOpen);
   const openChat = useChatStore((state) => state.openChat);
-  const resourcesMenu = tUi.raw('resourcesMenu') as ElementsMenu;
+  const resourcesMenu: ElementsMenu = {
+    label: tUi('resourcesMenu.label'),
+    items: tUi.raw('resourcesMenu.items') as MenuItem[],
+  };
   const [openPanel, setOpenPanel] = useState<'product' | 'resources' | null>(null);
   const togglePanel = (panel: 'product' | 'resources') =>
     setOpenPanel((previous) => (previous === panel ? null : panel));
@@ -194,7 +198,7 @@ export function SiteDock() {
   const menuActive = (menu: ElementsMenu) =>
     menu.items.some((item) => pathname === item.href || pathname.startsWith(`${item.href}/`));
 
-  const nextLocale = locales.find((code) => code !== locale) ?? locale;
+  const nextLocale = LOCALES.find((code) => code !== locale) ?? locale;
   const switchLocale = () => {
     startTransition(() => {
       router.replace({ pathname }, { locale: nextLocale as Locale });

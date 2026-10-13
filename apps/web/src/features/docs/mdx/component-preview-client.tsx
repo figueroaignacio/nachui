@@ -1,7 +1,7 @@
 import { Callout } from '@repo/ui/components/callout';
 import { Frame } from '@repo/ui/components/frame';
 import { cn } from '@repo/ui/lib/cn';
-import { CodeBlock } from './codeblock';
+import { CodeBlock } from '@/components/mdx/codeblock';
 
 interface ComponentPreviewClientProps {
   componentPreview: React.ReactNode;

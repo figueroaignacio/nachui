@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from '@/i18n/navigation';
-import { locales } from '@/i18n/routing';
+import { LOCALES } from '@/lib/constants';
 import { Button } from '@repo/ui/components/button';
 import { DropdownMenu } from '@repo/ui/components/dropdown-menu';
 import { CheckIcon } from '@repo/ui/icons/check';
@@ -47,7 +47,7 @@ export function LocaleSwitcher() {
         <DropdownMenu.Label className="tracking-normal normal-case">
           {t('heading')}
         </DropdownMenu.Label>
-        {locales.map((localeOption) => {
+        {LOCALES.map((localeOption) => {
           const isCurrent = locale === localeOption;
 
           return (

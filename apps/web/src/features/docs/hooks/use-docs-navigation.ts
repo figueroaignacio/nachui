@@ -1,22 +1,9 @@
-import { useTranslations } from 'next-intl';
+import { useDocsSections } from '@/hooks/use-docs-sections';
 import { useMemo } from 'react';
 
-type NavItem = {
-  title: string;
-  href: string;
-};
-
-type NavSection = {
-  title: string;
-  items: NavItem[];
-};
-
 export function useDocsNavigation(currentPath: string) {
-  const t = useTranslations('docs');
-  const docsNavigation = t.raw('navigation') as NavSection[];
+  const docsNavigation = useDocsSections();
 
-  // useMemo — allItems is rebuilt from the full navigation on every render without this
-  // (rerender-memo rule: extract expensive work into memoized computation)
   const { prev, next } = useMemo(() => {
     const allItems = docsNavigation.flatMap((section) => section.items);
     const currentIndex = allItems.findIndex((item) => item.href === currentPath);

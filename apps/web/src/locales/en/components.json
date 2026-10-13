@@ -22,10 +22,6 @@
   "mobileToc": {
     "label": "Table of contents"
   },
-  "footer": {
-    "copyright": "All rights reserved",
-    "headline": "Fullstack Developer & Pogramming Student"
-  },
   "codeblockWrapper": {
     "expand": "View full code",
     "collapse": "Collapse",
@@ -39,7 +35,6 @@
     },
     "launcher": {
       "placeholder": "Ask a question...",
-      "resume": "Back to the chat",
       "shortcut": "Ctrl+I",
       "send": "Send message",
       "stop": "Stop generating"
@@ -49,7 +44,6 @@
       "remove": "Remove selection"
     },
     "messages": {
-      "initial": "How can I assist you today?",
       "thinking": "Thinking",
       "writing": "Writing",
       "reasoning": "Thought process",
@@ -58,7 +52,6 @@
         "getComponentCode": "Reading the component source"
       },
       "copy": "Copy",
-      "copied": "Copied",
       "explainLabel": "Explain this page"
     },
     "errors": {
@@ -106,9 +99,6 @@
   "backButton": {
     "label": "Back"
   },
-  "postCard": {
-    "action": "Read More"
-  },
   "editOnGithub": {
     "label": "Edit this page"
   },
@@ -140,13 +130,6 @@
   },
   "skipLink": {
     "label": "Skip to main content"
-  },
-  "githubStar": {
-    "heroLabel": "Star me on GitHub",
-    "starAction": "Star",
-    "tocTitle": "Like NachUI?",
-    "tocSubtitle": "Star on GitHub helps me a lot",
-    "ariaLabel": "Star NachUI on GitHub"
   },
   "landingLogoCta": {
     "label": "mcp",

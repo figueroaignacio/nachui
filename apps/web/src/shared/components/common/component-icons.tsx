@@ -1,4 +1,3 @@
-import type { IconComponentProps } from '@/features/icons/lib/icon-registry';
 import { AlignCenterIcon } from '@repo/ui/icons/align-center';
 import { BellIcon } from '@repo/ui/icons/bell';
 import { BrowserIcon } from '@repo/ui/icons/browser';
@@ -35,6 +34,8 @@ import { TextCursorInputIcon } from '@repo/ui/icons/text-cursor-input';
 import { ToggleIcon } from '@repo/ui/icons/toggle';
 import { TypeIcon } from '@repo/ui/icons/type';
 import { UserCircleIcon } from '@repo/ui/icons/user-circle';
+
+type IconComponentProps = React.SVGProps<SVGSVGElement> & { size?: number | string };
 
 /**
  * Maps a docs slug (the last segment of its href) to the icon shown in the
@@ -92,6 +93,6 @@ export function getComponentIcon(href: string): IconComponent {
 }
 
 export function ComponentIcon({ href, ...props }: IconComponentProps & { href: string }) {
-  const Icon = getComponentIcon(href);
+  const Icon = COMPONENT_ICONS[href.split('/').pop() || ''] ?? FALLBACK_ICON;
   return <Icon {...props} />;
 }

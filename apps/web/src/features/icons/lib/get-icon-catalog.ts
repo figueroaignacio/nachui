@@ -1,6 +1,6 @@
+import { fromRepoRoot } from '@/lib/repo-root';
 import { ICON_REGISTRY } from '@repo/ui/registry';
 import fs from 'fs';
-import path from 'path';
 import { ICON_CATALOG, iconComponentName, type IconEntry } from './icons';
 
 export type CatalogIcon = IconEntry & {
@@ -70,7 +70,7 @@ export async function getIconCatalog(): Promise<CatalogIcon[]> {
   return Promise.all(
     ICON_CATALOG.map(async (entry) => {
       const relativePath = ICON_REGISTRY[entry.name];
-      const filePath = path.join(process.cwd(), '../../', relativePath);
+      const filePath = fromRepoRoot(relativePath);
       const jsx = await fs.promises.readFile(filePath, 'utf-8');
 
       return {

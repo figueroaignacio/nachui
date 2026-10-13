@@ -1,17 +1,9 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useDocsSections } from '@/hooks/use-docs-sections';
+import type { DocItem } from '@/lib/definitions';
+import { getDocItems } from '@/lib/docs-navigation';
 
-export type DocsNavItem = {
-  title: string;
-  href: string;
-  description?: string;
-  badge?: 'new' | 'updated';
-};
-type DocsNavSection = { title: string; items: DocsNavItem[] };
-
-export function useDocsItems(): DocsNavItem[] {
-  const t = useTranslations('docs');
-  const sections = t.raw('navigation') as DocsNavSection[];
-  return sections.flatMap((section) => section.items);
+export function useDocsItems(): DocItem[] {
+  return getDocItems(useDocsSections());
 }

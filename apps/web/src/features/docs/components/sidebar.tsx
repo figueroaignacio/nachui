@@ -3,6 +3,7 @@
 import { NavBadge } from '@/components/common/nav-badge';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { DocItem, DocSection } from '@/lib/definitions';
+import { getDocsSections } from '@/lib/docs-navigation';
 import { Tooltip } from '@repo/ui/components/tooltip';
 import { cn } from '@repo/ui/lib/cn';
 import { springs, still } from '@repo/ui/lib/motion';
@@ -31,6 +32,7 @@ interface HoveredItem {
   item: DocItem;
   preview: SidebarPreviewData;
   rect: DOMRect;
+  edge: number;
 }
 
 export function Sidebar({ previews = {} }: SidebarProps) {
@@ -38,6 +40,7 @@ export function Sidebar({ previews = {} }: SidebarProps) {
   const [hovered, setHovered] = React.useState<HoveredItem | null>(null);
   const previewTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const isPreviewOpen = React.useRef(false);
+  const navRef = React.useRef<HTMLElement>(null);
 
   React.useEffect(() => {
     isPreviewOpen.current = hovered !== null;
@@ -51,19 +54,18 @@ export function Sidebar({ previews = {} }: SidebarProps) {
   const showPreview = React.useCallback(
     (item: DocItem, rect: DOMRect) => {
       const preview = previews[item.href];
+      const nav = navRef.current;
       clearPreviewTimer();
-      if (!preview) {
+      if (!preview || !nav) {
         previewTimer.current = setTimeout(() => setHovered(null), PREVIEW_CLOSE_DELAY);
         return;
       }
+      const next = { item, preview, rect, edge: nav.getBoundingClientRect().right };
       if (isPreviewOpen.current) {
-        setHovered({ item, preview, rect });
+        setHovered(next);
         return;
       }
-      previewTimer.current = setTimeout(
-        () => setHovered({ item, preview, rect }),
-        PREVIEW_OPEN_DELAY,
-      );
+      previewTimer.current = setTimeout(() => setHovered(next), PREVIEW_OPEN_DELAY);
     },
     [previews, clearPreviewTimer],
   );
@@ -73,14 +75,10 @@ export function Sidebar({ previews = {} }: SidebarProps) {
     previewTimer.current = setTimeout(() => setHovered(null), PREVIEW_CLOSE_DELAY);
   }, [clearPreviewTimer]);
 
-  React.useEffect(() => {
-    clearPreviewTimer();
-    setHovered(null);
-  }, [pathname, clearPreviewTimer]);
+  React.useEffect(() => clearPreviewTimer, [pathname, clearPreviewTimer]);
 
-  React.useEffect(() => clearPreviewTimer, [clearPreviewTimer]);
   const t = useTranslations('docs');
-  const docsNavigation = t.raw('navigation') as DocSection[];
+  const docsNavigation = getDocsSections(t);
   const shouldReduceMotion = useReducedMotion();
 
   const current = React.useMemo(
@@ -88,7 +86,13 @@ export function Sidebar({ previews = {} }: SidebarProps) {
     [docsNavigation, pathname],
   );
   const [anchor, setAnchor] = React.useState(current);
-  const navRef = React.useRef<HTMLElement>(null);
+  const [renderedPath, setRenderedPath] = React.useState(pathname);
+
+  if (renderedPath !== pathname) {
+    setRenderedPath(pathname);
+    setAnchor(current);
+    setHovered(null);
+  }
   const anchors = buildSectionFilters(docsNavigation, t('sidebar.all')).slice(1);
 
   const spyLockedUntil = React.useRef(0);
@@ -103,7 +107,6 @@ export function Sidebar({ previews = {} }: SidebarProps) {
 
   React.useEffect(() => {
     const nav = navRef.current;
-    setAnchor(current);
     if (!nav) return;
     spyLockedUntil.current = performance.now() + SPY_LOCK_MS;
     if (!revealActiveLink(nav, 0, 0.85)) scrollToSection(nav, current, 'instant');
@@ -174,7 +177,7 @@ export function Sidebar({ previews = {} }: SidebarProps) {
           className="hide-scrollbar relative min-h-0 overflow-y-scroll mask-[linear-gradient(180deg,black_90%,transparent)] pb-20"
         >
           {docsNavigation.map((section: DocSection) => (
-            <div key={section.title} data-section={section.title} className="mb-6 last:mb-0">
+            <div key={section.id} data-section={section.id} className="mb-6 last:mb-0">
               <p className="text-muted-foreground px-2.5 font-mono text-[11px] lowercase">
                 <span className="text-muted-foreground/50">./</span>
                 {section.title}
@@ -224,13 +227,13 @@ export function Sidebar({ previews = {} }: SidebarProps) {
         </nav>
       </div>
       <AnimatePresence>
-        {hovered && navRef.current && (
+        {hovered && (
           <SidebarPreview
             key="sidebar-preview"
             preview={hovered.preview}
             badge={hovered.item.badge}
             anchor={hovered.rect}
-            edge={navRef.current.getBoundingClientRect().right}
+            edge={hovered.edge}
             onPointerEnter={clearPreviewTimer}
             onPointerLeave={hidePreview}
           />

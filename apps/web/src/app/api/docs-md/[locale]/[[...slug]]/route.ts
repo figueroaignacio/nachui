@@ -1,5 +1,5 @@
 import { ContentRepository } from '@/lib/content-repository';
-import { locales, type SupportedLocale } from '@/lib/domains';
+import { isLocale } from '@/lib/constants';
 
 export async function GET(
   _request: Request,
@@ -7,7 +7,7 @@ export async function GET(
 ) {
   const { locale, slug } = await params;
 
-  if (!locales.includes(locale as SupportedLocale)) {
+  if (!isLocale(locale)) {
     return new Response('Not found', { status: 404 });
   }
 

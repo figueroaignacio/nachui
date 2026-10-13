@@ -5,16 +5,16 @@
   "scripts": {
     "dev": "next dev",
     "build": "pnpm checks && next build",
-    "checks": "node ../../packages/ui/scripts/generate-registry.mjs --check && node scripts/check-navigation.mjs && node scripts/check-demos.mjs",
+    "checks": "node ../../packages/ui/scripts/generate-registry.mjs --check && node scripts/check-navigation.mjs && node scripts/check-locales.mjs && node scripts/check-demos.mjs",
     "start": "next start",
     "lint": "eslint src --max-warnings 0",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@ai-sdk/react": "^4.0.55",
     "@vercel/analytics": "^2.0.1",
     "ai": "^7.0.52",
-    "date-fns": "^4.4.0",
     "motion": "^12.43.0",
     "nach-themes": "^4.0.1",
     "next": "16.3.0",
@@ -42,6 +42,7 @@
     "@types/react-dom": "^19.2.4",
     "github-slugger": "^2.0.0",
     "tailwindcss": "^4.3.3",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.8"
   }
 }

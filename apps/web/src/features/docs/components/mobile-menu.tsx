@@ -4,7 +4,8 @@ import { NavBadge } from '@/components/common/nav-badge';
 import { useDialogBehavior } from '@/hooks/use-dialog-behavior';
 import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll';
 import { Link, usePathname } from '@/i18n/navigation';
-import type { DocSection, Navigation } from '@/lib/definitions';
+import { useDocsSections } from '@/hooks/use-docs-sections';
+import type { Navigation } from '@/lib/definitions';
 import { isHiddenProductLink } from '@/lib/hidden-product-links';
 import { Button } from '@repo/ui/components/button';
 import { Typography } from '@repo/ui/components/typography';
@@ -13,17 +14,17 @@ import { cn } from '@repo/ui/lib/cn';
 import { springs, still } from '@repo/ui/lib/motion';
 import { motion, useDragControls, useReducedMotion, type PanInfo } from 'motion/react';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   buildSectionFilters,
   revealActiveLink,
   scrollToSection,
   sectionAtScroll,
   sectionOf,
-} from '@/features/docs/lib/section-filters';
-import { LocaleSwitcher } from '../common/locale-switcher';
-import { Logo } from '../common/logo';
-import { ThemeToggle } from '../common/theme-toggle';
+} from '../lib/section-filters';
+import { LocaleSwitcher } from '@/components/common/locale-switcher';
+import { Logo } from '@/components/common/logo';
+import { ThemeToggle } from '@/components/common/theme-toggle';
 
 const SWIPE_CLOSE_THRESHOLD = 80;
 const SWIPE_CLOSE_VELOCITY = 600;
@@ -40,16 +41,19 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
   const t = useTranslations();
   const pathname = usePathname();
 
-  const docsNavigation = t.raw('docs.navigation') as DocSection[];
+  const docsNavigation = useDocsSections();
   const navigation = t.raw('ui.navigation') as Navigation[];
-  const elementsMenu = t.raw('ui.elementsMenu') as { items: Navigation[] };
-  const resourcesMenu = t.raw('ui.resourcesMenu') as { label: string; items: Navigation[] };
+  const elementsMenuItems = t.raw('ui.elementsMenu.items') as Navigation[];
+  const resourcesMenu = {
+    label: t('ui.resourcesMenu.label'),
+    items: t.raw('ui.resourcesMenu.items') as Navigation[],
+  };
   const docsHrefs = new Set(
     docsNavigation.flatMap((section) => section.items.map((item) => item.href)),
   );
   const isExtraLink = (item: Navigation) =>
     !isHiddenProductLink(item.href) && !docsHrefs.has(item.href);
-  const menuLinks = [...elementsMenu.items, ...navigation].filter(isExtraLink);
+  const menuLinks = [...elementsMenuItems, ...navigation].filter(isExtraLink);
   const resourceLinks = resourcesMenu.items.filter(isExtraLink);
 
   const menuRef = useRef<HTMLElement>(null);
@@ -64,11 +68,15 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
     if (info.offset.y > SWIPE_CLOSE_THRESHOLD || info.velocity.y > SWIPE_CLOSE_VELOCITY) onClose();
   };
 
-  const currentSection = useMemo(
-    () => sectionOf(docsNavigation, pathname),
-    [docsNavigation, pathname],
-  );
+  const currentSection = sectionOf(docsNavigation, pathname);
   const [anchor, setAnchor] = useState(currentSection);
+  const openPath = isMenuOpen ? pathname : null;
+  const [syncedPath, setSyncedPath] = useState(openPath);
+
+  if (syncedPath !== openPath) {
+    setSyncedPath(openPath);
+    if (openPath !== null) setAnchor(currentSection);
+  }
   const anchors = buildSectionFilters(docsNavigation, t('docs.sidebar.all')).slice(1);
 
   const jumpTo = useCallback((id: string, behavior: ScrollBehavior) => {
@@ -82,7 +90,6 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
   useEffect(() => {
     if (!isMenuOpen) return;
     const container = scrollRef.current;
-    setAnchor(currentSection);
     if (!container) return;
     spyLockedUntil.current = performance.now() + SPY_LOCK_MS;
     const barHeight = anchorBarRef.current?.offsetHeight ?? 0;
@@ -269,10 +276,10 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
             })}
           </div>
           {docsNavigation.map((section, sectionIndex) => (
-            <div key={sectionIndex} data-section={section.title} className="mb-8 last:mb-0">
+            <div key={sectionIndex} data-section={section.id} className="mb-8 last:mb-0">
               <Typography className="text-muted-foreground mb-2 flex items-center gap-1.5 px-2.5 text-xs">
                 {(() => {
-                  const Icon = anchors.find((entry) => entry.id === section.title)?.Icon;
+                  const Icon = anchors.find((entry) => entry.id === section.id)?.Icon;
                   return Icon ? <Icon size={12} /> : null;
                 })()}
                 {section.title}

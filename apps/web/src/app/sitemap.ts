@@ -1,63 +1,68 @@
-import { allDocs as docs } from 'content-collections';
 import { BRICK_CATEGORIES } from '@/features/bricks/lib/bricks-registry';
-import { buildAlternates, getDomainForLocale, locales } from '@/lib/domains';
+import { getAllGallerySlugs } from '@/features/gallery/lib/gallery-registry';
+import { CAST } from '@/features/sprites/lib/cast';
+import { ContentRepository } from '@/lib/content-repository';
+import { LOCALES, type Locale } from '@/lib/constants';
+import { buildAlternates, getAbsoluteUrl } from '@/lib/domains';
 import type { MetadataRoute } from 'next';
 
 type SitemapEntry = MetadataRoute.Sitemap[number];
 
-function entry(
-  locale: string,
-  path: string,
-  opts: { changeFrequency: SitemapEntry['changeFrequency']; priority: number; lastModified?: Date },
-): SitemapEntry {
-  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+interface EntryOptions {
+  changeFrequency: SitemapEntry['changeFrequency'];
+  priority: number;
+  /** Only set when the real date is known; a build timestamp tells crawlers nothing. */
+  lastModified?: Date;
+}
+
+function entry(locale: Locale, path: string, options: EntryOptions): SitemapEntry {
   return {
-    url: `${getDomainForLocale(locale)}${cleanPath}`,
-    lastModified: opts.lastModified ?? new Date(),
-    changeFrequency: opts.changeFrequency,
-    priority: opts.priority,
+    url: getAbsoluteUrl(locale, path),
+    ...(options.lastModified && { lastModified: options.lastModified }),
+    changeFrequency: options.changeFrequency,
+    priority: options.priority,
     alternates: {
-      languages: buildAlternates(cleanPath),
+      languages: buildAlternates(path),
     },
   };
 }
 
+const STATIC_PAGES: [path: string, options: EntryOptions][] = [
+  ['/', { changeFrequency: 'weekly', priority: 1 }],
+  ['/docs', { changeFrequency: 'weekly', priority: 0.9 }],
+  ['/components', { changeFrequency: 'weekly', priority: 0.9 }],
+  ['/bricks', { changeFrequency: 'weekly', priority: 0.9 }],
+  ['/icons', { changeFrequency: 'weekly', priority: 0.8 }],
+  ['/sprites', { changeFrequency: 'monthly', priority: 0.6 }],
+  ['/about', { changeFrequency: 'monthly', priority: 0.7 }],
+];
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticPages: MetadataRoute.Sitemap = locales.flatMap((locale) => [
-    entry(locale, '/', { changeFrequency: 'daily', priority: 1 }),
-    entry(locale, '/docs', { changeFrequency: 'weekly', priority: 0.9 }),
-    entry(locale, '/docs/elements/ui', { changeFrequency: 'weekly', priority: 0.9 }),
-    entry(locale, '/about', { changeFrequency: 'monthly', priority: 0.7 }),
-    entry(locale, '/bricks', { changeFrequency: 'daily', priority: 0.9 }),
-    entry(locale, '/icons', { changeFrequency: 'weekly', priority: 0.8 }),
-  ]);
+  return LOCALES.flatMap((locale) => {
+    const staticPages = STATIC_PAGES.map(([path, options]) => entry(locale, path, options));
 
-  const docPages: MetadataRoute.Sitemap = docs
-    .filter((doc) => doc.published)
-    .flatMap((doc) => {
-      return locales.map((locale) => {
-        const localizedDoc = docs.find((d) => d.locale === locale && d.slug === doc.slug);
-        const slugPath = localizedDoc?.slugAsParams || doc.slugAsParams || '';
-
-        return entry(locale, `/docs/${slugPath}`, {
+    const docPages = ContentRepository.getDocs(locale)
+      .filter((doc) => doc.published && doc.slugAsParams !== '')
+      .map((doc) =>
+        entry(locale, `/docs/${doc.slugAsParams}`, {
           changeFrequency: 'weekly',
           priority: 0.8,
-          lastModified: localizedDoc?.date ? new Date(localizedDoc.date) : undefined,
-        });
-      });
-    });
+          lastModified: doc.date ? new Date(doc.date) : undefined,
+        }),
+      );
 
-  const brickPages: MetadataRoute.Sitemap = BRICK_CATEGORIES.flatMap((category) => {
-    return locales.map((locale) => {
-      return entry(locale, `/bricks/${category.slug}`, {
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      });
-    });
+    const brickPages = BRICK_CATEGORIES.map((category) =>
+      entry(locale, `/bricks/${category.slug}`, { changeFrequency: 'weekly', priority: 0.8 }),
+    );
+
+    const componentPages = getAllGallerySlugs().map((slug) =>
+      entry(locale, `/components/${slug}`, { changeFrequency: 'weekly', priority: 0.7 }),
+    );
+
+    const spritePages = CAST.map((member) =>
+      entry(locale, `/sprites/${member.id}`, { changeFrequency: 'monthly', priority: 0.4 }),
+    );
+
+    return [...staticPages, ...docPages, ...brickPages, ...componentPages, ...spritePages];
   });
-
-  const allPages = [...staticPages, ...docPages, ...brickPages];
-  const uniquePages = Array.from(new Map(allPages.map((page) => [page.url, page])).values());
-
-  return uniquePages;
 }

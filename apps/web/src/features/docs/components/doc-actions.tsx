@@ -3,7 +3,7 @@
 import { GitHubIcon } from '@/components/common/github-icon';
 import { useChatStore } from '@/features/chat/store/chat-store';
 import { AiAvatar } from '@/features/chat/ui/ai-avatar';
-import { useCopyToClipboard } from '@/features/docs/hooks/use-copy-to-clipboard';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { getDocEditUrl } from '@/lib/domains';
 import { Button } from '@repo/ui/components/button';
 import { DropdownMenu } from '@repo/ui/components/dropdown-menu';
@@ -20,8 +20,7 @@ type DocActionsProps = {
   page: string;
   url: string;
   filePath: string;
-  rawContent: string;
-  /** Locale-prefixed path to this page's markdown source. */
+  /** Locale-prefixed path to this page's markdown source, fetched on copy. */
   rawPath: string;
   /** GitHub URL of the component's source file, on element pages. */
   sourceUrl?: string;
@@ -33,7 +32,6 @@ export function DocActions({
   page,
   url,
   filePath,
-  rawContent,
   rawPath,
   sourceUrl,
   layout = 'inline',
@@ -41,6 +39,14 @@ export function DocActions({
   const t = useTranslations('components');
   const triggerExplanation = useChatStore((s) => s.triggerExplanation);
   const { isCopied, copyToClipboard } = useCopyToClipboard(2000);
+
+  const copyMarkdown = useCallback(() => {
+    const markdown = fetch(rawPath).then((response) => {
+      if (!response.ok) throw new Error(`GET ${rawPath} returned ${response.status}`);
+      return response.text();
+    });
+    void copyToClipboard(markdown);
+  }, [rawPath, copyToClipboard]);
 
   const handleExplain = useCallback(() => {
     const prompt = t('explainButton.prompt', { page, url });
@@ -79,7 +85,7 @@ export function DocActions({
         </RailAction>
         <RailAction
           icon={isCopied ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
-          onClick={() => copyToClipboard(rawContent)}
+          onClick={copyMarkdown}
         >
           {isCopied ? t('copyMarkdown.copied') : t('copyMarkdown.label')}
         </RailAction>
@@ -118,7 +124,7 @@ export function DocActions({
         variant="outline"
         size="sm"
         className="h-8 gap-2 border-r-0 px-4"
-        onClick={() => copyToClipboard(rawContent)}
+        onClick={copyMarkdown}
         leftIcon={isCopied ? <CheckIcon size={16} /> : <CopyIcon size={16} />}
       >
         <span>{isCopied ? t('copyMarkdown.copied') : t('copyMarkdown.label')}</span>

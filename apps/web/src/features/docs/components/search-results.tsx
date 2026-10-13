@@ -1,7 +1,7 @@
 import { NavBadge } from '@/components/common/nav-badge';
 import { AiAvatar } from '@/features/chat/ui/ai-avatar';
 import { Link } from '@/i18n/navigation';
-import type { DocBadge, NavigationSection, SearchResultItem } from '@/lib/definitions';
+import type { DocBadge, DocSection, SearchResultItem } from '@/lib/definitions';
 import { Dialog } from '@repo/ui/components/dialog';
 import { Empty } from '@repo/ui/components/empty';
 import { Separator } from '@repo/ui/components/separator';
@@ -12,7 +12,7 @@ import { useEffect, useRef } from 'react';
 interface SearchResultsProps {
   query: string;
   results: SearchResultItem[];
-  navigation: NavigationSection[];
+  navigation: DocSection[];
   selectedIndex: number;
   listboxId: string;
   optionId: (index: number) => string;
@@ -152,7 +152,7 @@ export function SearchResults({
       className="max-h-[320px] overflow-y-auto px-2 pb-2"
     >
       {navigation.map((section) => (
-        <div key={section.title} role="group" aria-label={section.title}>
+        <div key={section.id} role="group" aria-label={section.title}>
           <SectionHeader label={section.title} />
           <ul role="presentation" className="space-y-0.5">
             {section.items.map((item) => {

@@ -1,5 +1,4 @@
-import type { NavigationSection } from '@/lib/definitions';
-import { useTranslations } from 'next-intl';
+import { useDocsSections } from '@/hooks/use-docs-sections';
 import { useCallback, useMemo, useState } from 'react';
 import { flattenNavigationItems } from '../lib/flatten-navigation-items';
 import { searchItems } from '../lib/search-items';
@@ -7,8 +6,7 @@ import { searchItems } from '../lib/search-items';
 export function useSearch() {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const t = useTranslations('docs');
-  const navigation = t.raw('navigation') as NavigationSection[];
+  const navigation = useDocsSections();
 
   const allItems = useMemo(() => flattenNavigationItems(navigation), [navigation]);
 

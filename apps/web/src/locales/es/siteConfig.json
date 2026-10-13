@@ -1,20 +1,4 @@
 {
   "title": "Un sistema de diseño tuyo: elementos de UI, AI y layout para React.",
-  "description": "Componentes de React copiados a tu repo como código plano. Elementos de UI, elementos AI para chat y agentes, y primitivas de layout, sin wrappers ni SDK. Un índice llms.txt, docs en markdown y skills instalables para que tu IA lea lo mismo que vos.",
-  "openGraph": {
-    "type": "website",
-    "siteName": "NachUI",
-    "images": [
-      {
-        "url": "/opengraph-image",
-        "width": 1200,
-        "height": 630,
-        "alt": "Componentes de React copiados a tu repo como código plano. Elementos de UI, elementos AI para chat y agentes, y primitivas de layout, sin wrappers ni SDK. Un índice llms.txt, docs en markdown y skills instalables para que tu IA lea lo mismo que vos."
-      }
-    ]
-  },
-  "twitter": {
-    "card": "summary_large_image",
-    "images": ["/opengraph-image"]
-  }
+  "description": "Componentes de React copiados a tu repo como código plano. Elementos de UI, elementos AI para chat y agentes, y primitivas de layout, sin wrappers ni SDK. Un índice llms.txt, docs en markdown y skills instalables para que tu IA lea lo mismo que vos."
 }

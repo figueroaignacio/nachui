@@ -1,6 +1,6 @@
 'use client';
 
-import { useCopyToClipboard } from '@/features/docs/hooks/use-copy-to-clipboard';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { CheckIcon } from '@repo/ui/icons/check';
 import { CopyIcon } from '@repo/ui/icons/copy';
 import { cn } from '@repo/ui/lib/cn';

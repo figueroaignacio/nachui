@@ -1,5 +1,5 @@
 import { DocView } from '@/features/docs/views/doc-view';
-import type { Locale } from '@/i18n/routing';
+import type { Locale } from '@/lib/constants';
 import { ContentRepository } from '@/lib/content-repository';
 import { buildAlternates, getAbsoluteUrl, getAssetUrl } from '@/lib/domains';
 import { allDocs as docs } from 'content-collections';
@@ -16,7 +16,8 @@ async function getDocFromParams({ params }: { params: Promise<DocPageProps> }) {
   const parameters = await params;
   const slug = parameters.slug?.join('/') || '';
 
-  return ContentRepository.getDocBySlug(slug, parameters.locale);
+  const doc = ContentRepository.getDocBySlug(slug, parameters.locale);
+  return doc?.published ? doc : undefined;
 }
 
 export default async function DocPage({ params }: { params: Promise<DocPageProps> }) {
@@ -24,7 +25,7 @@ export default async function DocPage({ params }: { params: Promise<DocPageProps
   setRequestLocale(locale);
   const doc = await getDocFromParams({ params });
 
-  if (!doc || !doc.published) {
+  if (!doc) {
     notFound();
   }
 

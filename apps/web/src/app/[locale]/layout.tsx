@@ -4,10 +4,12 @@ import { ThemeInitScript } from '@/components/common/theme-init-script';
 import { AiChat } from '@/features/chat/containers/ai-chat';
 import { Backdrop } from '@/components/layout/backdrop';
 import { Footer } from '@/components/layout/footer';
-import { SiteDock } from '@/components/layout/site-dock';
+import { SiteDock } from '@/features/shell/components/site-dock';
 import { PageFrame } from '@/components/layout/page-frame';
 import { Providers } from '@/components/providers';
 import { routing } from '@/i18n/routing';
+import { SITE_URL } from '@/lib/constants';
+import { getAbsoluteUrl, getAssetUrl } from '@/lib/domains';
 import { SPRITE_CSS } from '@repo/ui/components/sprite';
 import { fontCode, fontHeading, fontSans, fontSerif } from '@/lib/font';
 import { Analytics } from '@vercel/analytics/next';
@@ -15,6 +17,8 @@ import type { Metadata } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+
+const DEFAULT_OG_IMAGE = getAssetUrl('/images/og/og-home.png');
 
 interface LocaleLayoutProps {
   children: React.ReactNode;
@@ -45,7 +49,7 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     name: 'NachUI',
-    url: process.env.NEXT_PUBLIC_APP_URL || 'https://nachui.tech',
+    url: SITE_URL,
     description: t('description'),
     applicationCategory: 'DeveloperApplication',
     operatingSystem: 'Web',
@@ -97,12 +101,11 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
 
 export async function generateMetadata({ params }: LocaleLayoutProps): Promise<Metadata> {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
   const t = await getTranslations({ locale, namespace: 'siteConfig' });
-  const baseUrlVal = process.env.NEXT_PUBLIC_APP_URL || 'https://nachui.tech';
-  const appUrl = `${baseUrlVal}/${locale}`;
 
   return {
-    metadataBase: new URL(baseUrlVal),
+    metadataBase: new URL(SITE_URL),
     title: {
       default: 'NachUI',
       template: `%s · NachUI`,
@@ -114,12 +117,14 @@ export async function generateMetadata({ params }: LocaleLayoutProps): Promise<M
       siteName: 'NachUI',
       type: 'website',
       locale,
-      url: appUrl,
+      url: getAbsoluteUrl(locale),
+      images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: t('title') }],
     },
     twitter: {
       card: 'summary_large_image',
       title: 'NachUI',
       description: t('description'),
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }

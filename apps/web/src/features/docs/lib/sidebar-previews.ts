@@ -1,4 +1,12 @@
-import { allDocs } from 'content-collections';
+/** The fields of a content-collections doc this module reads. */
+export interface PreviewSourceDoc {
+  locale: string;
+  published: boolean;
+  raw: string;
+  slugAsParams: string;
+  title: string;
+  description?: string;
+}
 
 export interface SidebarPreview {
   title: string;
@@ -15,10 +23,13 @@ const attribute = (tag: string, name: string) => tag.match(new RegExp(`\\b${name
  * The sidebar uses it to preview a component before opening its page; pages
  * without a demo (concepts, guides) are left out.
  */
-export function getSidebarPreviews(locale: string): Record<string, SidebarPreview> {
+export function getSidebarPreviews(
+  docs: readonly PreviewSourceDoc[],
+  locale: string,
+): Record<string, SidebarPreview> {
   const previews: Record<string, SidebarPreview> = {};
 
-  for (const doc of allDocs) {
+  for (const doc of docs) {
     if (doc.locale !== locale || !doc.published) continue;
     const tag = doc.raw.match(PREVIEW_TAG)?.[0];
     if (!tag) continue;

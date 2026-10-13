@@ -2,12 +2,12 @@
 
 import type { Message } from '@/lib/definitions';
 import { useChat as useAIChat } from '@ai-sdk/react';
-import { useLocalStorage } from '@repo/ui/hooks/use-local-storage';
 import type { UIMessage as AIMessage } from 'ai';
 import { DefaultChatTransport, getToolName, isToolUIPart } from 'ai';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { classifyChatError } from '../lib/chat-error';
 import { CHAT_STORAGE_KEY } from '../lib/chat-storage';
+import { useLocalStorage } from './use-local-storage';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
