@@ -68,7 +68,7 @@ export function useDialogBehavior({ open, onClose, ref, trap = true }: DialogBeh
     return () => {
       cancelAnimationFrame(frame);
       document.removeEventListener('keydown', handleKeyDown);
-      if (ref.current?.contains(document.activeElement)) previouslyFocused?.focus();
+      if (panel?.contains(document.activeElement)) previouslyFocused?.focus();
     };
   }, [open, onClose, ref, trap]);
 }

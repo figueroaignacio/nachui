@@ -34,16 +34,14 @@ function useElapsedSeconds() {
  */
 export function ChatReasoning({ activeTool }: ChatReasoningProps) {
   const t = useTranslations('components.chat.messages');
-  const [steps, setSteps] = useState<string[]>([]);
   const seconds = useElapsedSeconds();
 
   const current = activeTool ? t(`tools.${activeTool}`) : t('thinking');
+  const [steps, setSteps] = useState<string[]>(() => [current]);
 
-  useEffect(() => {
-    setSteps((previous) =>
-      previous[previous.length - 1] === current ? previous : [...previous, current],
-    );
-  }, [current]);
+  if (steps[steps.length - 1] !== current) {
+    setSteps([...steps, current]);
+  }
 
   return (
     <div className="w-full min-w-0">

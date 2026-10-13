@@ -92,6 +92,6 @@ export function getComponentIcon(href: string): IconComponent {
 }
 
 export function ComponentIcon({ href, ...props }: IconComponentProps & { href: string }) {
-  const Icon = getComponentIcon(href);
+  const Icon = COMPONENT_ICONS[href.split('/').pop() || ''] ?? FALLBACK_ICON;
   return <Icon {...props} />;
 }

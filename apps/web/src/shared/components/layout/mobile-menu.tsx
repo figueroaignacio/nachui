@@ -13,7 +13,7 @@ import { cn } from '@repo/ui/lib/cn';
 import { springs, still } from '@repo/ui/lib/motion';
 import { motion, useDragControls, useReducedMotion, type PanInfo } from 'motion/react';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   buildSectionFilters,
   revealActiveLink,
@@ -64,11 +64,15 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
     if (info.offset.y > SWIPE_CLOSE_THRESHOLD || info.velocity.y > SWIPE_CLOSE_VELOCITY) onClose();
   };
 
-  const currentSection = useMemo(
-    () => sectionOf(docsNavigation, pathname),
-    [docsNavigation, pathname],
-  );
+  const currentSection = sectionOf(docsNavigation, pathname);
   const [anchor, setAnchor] = useState(currentSection);
+  const openPath = isMenuOpen ? pathname : null;
+  const [syncedPath, setSyncedPath] = useState(openPath);
+
+  if (syncedPath !== openPath) {
+    setSyncedPath(openPath);
+    if (openPath !== null) setAnchor(currentSection);
+  }
   const anchors = buildSectionFilters(docsNavigation, t('docs.sidebar.all')).slice(1);
 
   const jumpTo = useCallback((id: string, behavior: ScrollBehavior) => {
@@ -82,7 +86,6 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
   useEffect(() => {
     if (!isMenuOpen) return;
     const container = scrollRef.current;
-    setAnchor(currentSection);
     if (!container) return;
     spyLockedUntil.current = performance.now() + SPY_LOCK_MS;
     const barHeight = anchorBarRef.current?.offsetHeight ?? 0;

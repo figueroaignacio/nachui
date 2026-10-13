@@ -23,32 +23,48 @@ const MAX_SCALE = 0.75;
 
 const loadedDemos = new Map<string, React.ComponentType>();
 
-function useDemo(component: string, demo: string) {
+type DemoState =
+  | { status: 'loading' }
+  | { status: 'ready'; Demo: React.ComponentType }
+  | { status: 'failed' };
+
+interface LoadResult {
+  key: string;
+  state: DemoState;
+}
+
+function useDemo(component: string, demo: string): DemoState {
   const key = `${component}/${demo}`;
-  const [Demo, setDemo] = React.useState<React.ComponentType | null>(
-    () => loadedDemos.get(key) ?? null,
-  );
+  const [result, setResult] = React.useState<LoadResult | null>(null);
 
   React.useEffect(() => {
-    const cached = loadedDemos.get(key);
-    if (cached) {
-      setDemo(() => cached);
-      return;
-    }
+    const load = DEMO_COMPONENTS[component]?.[demo];
+    if (!load || loadedDemos.has(key)) return;
     let alive = true;
-    setDemo(null);
-    DEMO_COMPONENTS[component]?.[demo]?.()
+    const settle = (state: DemoState) => {
+      if (alive) setResult({ key, state });
+    };
+    load()
       .then((loaded) => {
         loadedDemos.set(key, loaded);
-        if (alive) setDemo(() => loaded);
+        settle({ status: 'ready', Demo: loaded });
       })
-      .catch(() => {});
+      .catch((error: unknown) => {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error(`Failed to load the ${key} demo for the sidebar preview`, error);
+        }
+        settle({ status: 'failed' });
+      });
     return () => {
       alive = false;
     };
   }, [key, component, demo]);
 
-  return Demo;
+  const cached = loadedDemos.get(key);
+  if (cached) return { status: 'ready', Demo: cached };
+  if (!DEMO_COMPONENTS[component]?.[demo]) return { status: 'failed' };
+  if (result?.key === key) return result.state;
+  return { status: 'loading' };
 }
 
 /**
@@ -129,7 +145,7 @@ export function SidebarPreview({
   onPointerLeave,
 }: SidebarPreviewProps) {
   const shouldReduceMotion = useReducedMotion();
-  const Demo = useDemo(preview.component, preview.demo);
+  const demoState = useDemo(preview.component, preview.demo);
 
   const top = Math.min(
     Math.max(anchor.top + anchor.height / 2 - CARD_HEIGHT / 2, EDGE),
@@ -162,10 +178,12 @@ export function SidebarPreview({
           inert
           className="bg-surface-muted border-border relative h-[180px] overflow-hidden border-b"
         >
-          {Demo ? (
-            <FittedDemo Demo={Demo} />
-          ) : (
+          {demoState.status === 'ready' && <FittedDemo Demo={demoState.Demo} />}
+          {demoState.status === 'loading' && (
             <div className="bg-muted/60 absolute inset-6 animate-pulse rounded-md motion-reduce:animate-none" />
+          )}
+          {demoState.status === 'failed' && (
+            <div className="bg-muted/40 absolute inset-6 rounded-md" />
           )}
         </div>
         <div className="flex flex-col gap-1 px-4 pt-3 pb-3.5">

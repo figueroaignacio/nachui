@@ -35,7 +35,9 @@ function storeWidth(width: number | null) {
   try {
     if (width === null) window.localStorage.removeItem(STORAGE_KEY);
     else window.localStorage.setItem(STORAGE_KEY, String(width));
-  } catch {}
+  } catch {
+    return;
+  }
 }
 
 function setChatWidthVar(width: number | null) {

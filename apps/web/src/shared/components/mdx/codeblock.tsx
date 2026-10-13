@@ -111,6 +111,7 @@ export function CodeBlock({
 
   const highlighted = (
     <div
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- a scrollable code region must be reachable by keyboard so it can be scrolled (WCAG 2.1.1)
       tabIndex={0}
       role="region"
       aria-label={t('region')}
