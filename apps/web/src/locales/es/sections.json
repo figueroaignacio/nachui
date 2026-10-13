@@ -1,15 +1,16 @@
 {
   "home": {
     "badge": "UI · AI · Layout",
-    "subheading1": "Un sistema de diseño tuyo, con elementos de UI, AI y layout",
+    "subheading1": "Amor al arte: un sistema de diseño para UI, IA y layout, hecho porque me gusta hacerlo",
     "subheading2": "",
-    "headline1": "Tu UI",
-    "headline2": "es tuya",
-    "description": "Componentes de React copiados a tu repo como código plano. Botones, diálogos y menús. Composers de prompt, paneles de razonamiento y listas de tareas. Stacks, grillas y secciones. Sin wrappers, sin SDK, y tu IA lo lee como cualquier otro archivo.",
+    "headline1": "Amor",
+    "headline2": "al arte",
+    "definition": "/aˈmoɾ al ˈaɾte/ · hacer algo solo porque te gusta hacerlo",
+    "description": "Así está hecho NachUI. No hay versión paga, no hay startup atrás, no hay popup pidiéndote el mail. Es un sistema de diseño para UI, IA y layout que sigo construyendo porque me gusta construirlo. Llevátelo y usalo para lo que quieras.",
     "github": "Código abierto, el código es tuyo",
     "actions": [
       {
-        "label": "Comenzar",
+        "label": "Llevátelo",
         "href": "/docs",
         "variant": "default"
       },
@@ -91,9 +92,9 @@
     },
     "wall": {
       "label": "preview",
-      "title1": "Componentes reales,",
-      "title2": "no capturas.",
-      "description": "Elementos de UI, AI y layout renderizados en vivo. Copiá cualquiera a tu repo como código plano.",
+      "title1": "Detalles",
+      "title2": "a propósito.",
+      "description": "Anillos de foco que aparecen cuando los necesitás, menús que se manejan con el teclado, animaciones que saben cuándo parar. Las partes que nadie captura, renderizadas en vivo. Copiá cualquiera a tu repo como código plano.",
       "browse": "ver todos los elementos"
     }
   },

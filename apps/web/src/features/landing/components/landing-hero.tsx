@@ -31,7 +31,9 @@ export function LandingHero() {
           </span>
         </h1>
 
-        <p className="text-muted-strong mt-7 max-w-[56ch] text-[15px] leading-relaxed md:mt-9 md:text-[17px]">
+        <p className="text-muted-foreground mt-4 font-mono text-xs md:mt-5">{t('definition')}</p>
+
+        <p className="text-muted-strong mt-6 max-w-[56ch] text-[15px] leading-relaxed md:mt-7 md:text-[17px]">
           {t('description')}
         </p>
 

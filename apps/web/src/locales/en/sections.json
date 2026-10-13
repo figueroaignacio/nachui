@@ -1,14 +1,15 @@
 {
   "home": {
     "badge": "UI · AI · Layout",
-    "subheading1": "A design system you own, with UI, AI and layout elements",
+    "subheading1": "Amor al arte: a design system for UI, AI and layout, built for the love of it",
     "subheading2": "",
-    "headline1": "Own",
-    "headline2": "your UI",
-    "description": "React components copied into your repo as plain source. Buttons, dialogs and menus. Prompt composers, reasoning panels and task lists. Stacks, grids and sections. No wrappers, no SDK, and your AI reads it like any other file.",
+    "headline1": "Amor",
+    "headline2": "al arte",
+    "definition": "/aˈmoɾ al ˈaɾte/ · doing something only because you love doing it",
+    "description": "That's NachUI. There's no paid tier, no startup behind it, no popup asking for your email. Just a design system for UI, AI and layout that I keep building because I like building it. Take it and use it for whatever you want.",
     "actions": [
       {
-        "label": "Get started",
+        "label": "Take it",
         "href": "/docs",
         "variant": "default"
       },
@@ -90,9 +91,9 @@
     },
     "wall": {
       "label": "preview",
-      "title1": "Real components,",
-      "title2": "not screenshots.",
-      "description": "UI, AI and layout elements rendered live. Copy any of them into your repo as plain source.",
+      "title1": "Details",
+      "title2": "on purpose.",
+      "description": "Focus rings that show up when you need them, menus you can drive with a keyboard, motion that knows when to stop. The parts nobody screenshots, rendered live. Copy any of them into your repo as plain source.",
       "browse": "browse all elements"
     }
   },
