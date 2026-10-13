@@ -124,6 +124,7 @@ const skills = defineCollection({
   schema: z.object({
     name: z.string(),
     description: z.string(),
+    content: z.string(),
   }),
   // Skills are documented as a list on /docs/concepts/skills, not as pages of
   // their own, so only the frontmatter is needed. The bodies live in

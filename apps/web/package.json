@@ -8,7 +8,7 @@
     "checks": "node ../../packages/ui/scripts/generate-registry.mjs --check && node scripts/check-navigation.mjs && node scripts/check-locales.mjs && node scripts/check-demos.mjs",
     "start": "next start",
     "lint": "eslint src --max-warnings 0",
-    "check-types": "tsc --noEmit",
+    "check-types": "content-collections build && tsc --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
@@ -31,6 +31,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@content-collections/cli": "^0.1.9",
     "@content-collections/core": "^0.15.2",
     "@content-collections/mdx": "^0.2.2",
     "@content-collections/next": "^0.2.11",
