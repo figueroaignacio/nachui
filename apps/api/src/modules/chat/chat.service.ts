@@ -1,27 +1,36 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { nachUIAgent } from '@repo/ai';
+import { createNachUIAgent } from '@repo/ai';
+import type { NachUIAgent } from '@repo/ai';
 import { pipeAgentUIStreamToResponse } from 'ai';
 import type { Response } from 'express';
+import { RegistryRepository } from '../registry/registry.repository';
+import { RagService } from '../rag/rag.service';
 import { chatErrorMessage, classifyChatError, formatChatError, isAbortError } from './chat-error';
 
 @Injectable()
 export class ChatService {
   private readonly logger = new Logger(ChatService.name);
+  private readonly agent: NachUIAgent;
+
+  constructor(ragService: RagService, registryRepository: RegistryRepository) {
+    this.agent = createNachUIAgent({
+      searchKnowledgeBase: ({ query, locale, topK }) => ragService.search(query, locale, topK),
+      getComponent: (name) => registryRepository.resolve(name),
+    });
+  }
 
   async streamChat(messages: unknown[], res: Response, abortSignal?: AbortSignal): Promise<void> {
     await pipeAgentUIStreamToResponse({
       response: res,
-      agent: nachUIAgent,
+      agent: this.agent,
       uiMessages: messages,
       abortSignal,
-      onStepFinish: ({ usage, toolCalls }) => {
+      onStepEnd: ({ usage, toolCalls }) => {
         this.logger.log(
           `Step finished | Tokens: ${usage?.inputTokens ?? 0}in/${usage?.outputTokens ?? 0}out`,
         );
-        if (toolCalls && toolCalls.length > 0) {
-          for (const call of toolCalls) {
-            this.logger.log(`Tool: ${call.toolName}`);
-          }
+        for (const call of toolCalls ?? []) {
+          this.logger.log(`Tool: ${call.toolName}`);
         }
       },
       onError: (err: unknown) => {
