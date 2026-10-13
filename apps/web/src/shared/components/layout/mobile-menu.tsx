@@ -4,7 +4,8 @@ import { NavBadge } from '@/components/common/nav-badge';
 import { useDialogBehavior } from '@/hooks/use-dialog-behavior';
 import { useLockBodyScroll } from '@/hooks/use-lock-body-scroll';
 import { Link, usePathname } from '@/i18n/navigation';
-import type { DocSection, Navigation } from '@/lib/definitions';
+import { useDocsSections } from '@/hooks/use-docs-sections';
+import type { Navigation } from '@/lib/definitions';
 import { isHiddenProductLink } from '@/lib/hidden-product-links';
 import { Button } from '@repo/ui/components/button';
 import { Typography } from '@repo/ui/components/typography';
@@ -40,16 +41,19 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
   const t = useTranslations();
   const pathname = usePathname();
 
-  const docsNavigation = t.raw('docs.navigation') as DocSection[];
+  const docsNavigation = useDocsSections();
   const navigation = t.raw('ui.navigation') as Navigation[];
-  const elementsMenu = t.raw('ui.elementsMenu') as { items: Navigation[] };
-  const resourcesMenu = t.raw('ui.resourcesMenu') as { label: string; items: Navigation[] };
+  const elementsMenuItems = t.raw('ui.elementsMenu.items') as Navigation[];
+  const resourcesMenu = {
+    label: t('ui.resourcesMenu.label'),
+    items: t.raw('ui.resourcesMenu.items') as Navigation[],
+  };
   const docsHrefs = new Set(
     docsNavigation.flatMap((section) => section.items.map((item) => item.href)),
   );
   const isExtraLink = (item: Navigation) =>
     !isHiddenProductLink(item.href) && !docsHrefs.has(item.href);
-  const menuLinks = [...elementsMenu.items, ...navigation].filter(isExtraLink);
+  const menuLinks = [...elementsMenuItems, ...navigation].filter(isExtraLink);
   const resourceLinks = resourcesMenu.items.filter(isExtraLink);
 
   const menuRef = useRef<HTMLElement>(null);
@@ -272,10 +276,10 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
             })}
           </div>
           {docsNavigation.map((section, sectionIndex) => (
-            <div key={sectionIndex} data-section={section.title} className="mb-8 last:mb-0">
+            <div key={sectionIndex} data-section={section.id} className="mb-8 last:mb-0">
               <Typography className="text-muted-foreground mb-2 flex items-center gap-1.5 px-2.5 text-xs">
                 {(() => {
-                  const Icon = anchors.find((entry) => entry.id === section.title)?.Icon;
+                  const Icon = anchors.find((entry) => entry.id === section.id)?.Icon;
                   return Icon ? <Icon size={12} /> : null;
                 })()}
                 {section.title}

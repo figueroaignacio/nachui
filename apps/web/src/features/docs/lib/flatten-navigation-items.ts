@@ -1,6 +1,6 @@
-import type { NavigationSection, SearchResultItem } from '@/lib/definitions';
+import type { DocSection, SearchResultItem } from '@/lib/definitions';
 
-export function flattenNavigationItems(sections: NavigationSection[]): SearchResultItem[] {
+export function flattenNavigationItems(sections: DocSection[]): SearchResultItem[] {
   return sections.flatMap((section) =>
     section.items.map((item) => ({
       title: item.title,

@@ -7,7 +7,9 @@
 export function flattenKeys(value, prefix = '') {
   if (Array.isArray(value)) {
     if (value.length === 0) return [prefix];
-    return value.flatMap((item, index) => flattenKeys(item, prefix ? `${prefix}.${index}` : `${index}`));
+    return value.flatMap((item, index) =>
+      flattenKeys(item, prefix ? `${prefix}.${index}` : `${index}`),
+    );
   }
   if (value !== null && typeof value === 'object') {
     const entries = Object.entries(value);
@@ -38,7 +40,8 @@ export function findLocaleKeyMismatches(messagesByLocale, reference) {
       if (!keys.has(key)) problems.push(`[${locale}] missing "${key}" (present in ${reference})`);
     }
     for (const key of keys) {
-      if (!referenceKeys.has(key)) problems.push(`[${locale}] has extra "${key}" (not in ${reference})`);
+      if (!referenceKeys.has(key))
+        problems.push(`[${locale}] has extra "${key}" (not in ${reference})`);
     }
   }
 

@@ -9,12 +9,18 @@ interface ChatErrorProps {
   onRetry?: () => void;
 }
 
-const WITH_COPY = new Set<string>(['offline', 'rate_limit', 'auth', 'timeout', 'upstream']);
+type CodeWithCopy = Exclude<ChatErrorCode, 'aborted'>;
+
+const WITH_COPY = new Set<ChatErrorCode>(['offline', 'rate_limit', 'auth', 'timeout', 'upstream']);
+
+function hasCopy(code: ChatErrorCode | null): code is CodeWithCopy {
+  return code !== null && WITH_COPY.has(code);
+}
 
 export function ChatError({ code, onRetry }: ChatErrorProps) {
   const t = useTranslations('components.chat.errors');
 
-  const key = code && WITH_COPY.has(code) ? code : 'unknown';
+  const key: CodeWithCopy = hasCopy(code) ? code : 'unknown';
 
   const canRetry = onRetry !== undefined && key !== 'auth' && key !== 'rate_limit';
 

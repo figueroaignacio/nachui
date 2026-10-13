@@ -1,7 +1,11 @@
 import type { SpriteParts } from '@repo/ui/components/sprite';
+import type { Messages } from 'next-intl';
+
+/** Every member needs a name and a note under `sections.sprites.cast`. */
+export type CastId = keyof Messages['sections']['sprites']['cast'];
 
 export type CastMember = {
-  id: string;
+  id: CastId;
   seed: string;
   parts: SpriteParts;
 };

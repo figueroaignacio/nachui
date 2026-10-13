@@ -168,10 +168,11 @@ const LOCALE_NAMES: Record<string, string> = {
 export function SiteDock() {
   const t = useTranslations('ui.dock');
   const tUi = useTranslations('ui');
-  const rawMenu = tUi.raw('elementsMenu') as ElementsMenu;
   const elementsMenu: ElementsMenu = {
-    ...rawMenu,
-    items: rawMenu.items.filter((item) => !isHiddenProductLink(item.href)),
+    label: tUi('elementsMenu.label'),
+    items: (tUi.raw('elementsMenu.items') as MenuItem[]).filter(
+      (item) => !isHiddenProductLink(item.href),
+    ),
   };
   const pathname = usePathname();
   const router = useRouter();
@@ -181,7 +182,10 @@ export function SiteDock() {
   const autoHidden = useDockAutoHide();
   const chatOpen = useChatStore((state) => state.isOpen);
   const openChat = useChatStore((state) => state.openChat);
-  const resourcesMenu = tUi.raw('resourcesMenu') as ElementsMenu;
+  const resourcesMenu: ElementsMenu = {
+    label: tUi('resourcesMenu.label'),
+    items: tUi.raw('resourcesMenu.items') as MenuItem[],
+  };
   const [openPanel, setOpenPanel] = useState<'product' | 'resources' | null>(null);
   const togglePanel = (panel: 'product' | 'resources') =>
     setOpenPanel((previous) => (previous === panel ? null : panel));

@@ -99,6 +99,7 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
 
 export async function generateMetadata({ params }: LocaleLayoutProps): Promise<Metadata> {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
   const t = await getTranslations({ locale, namespace: 'siteConfig' });
 
   return {

@@ -90,6 +90,41 @@ function checkBadgeParity(byLocale, problems) {
   }
 }
 
+const SECTION_ID = /^[a-z][a-z0-9-]*$/;
+
+/** Code finds docs sections by `id`, never by the translated title, so every
+ * section needs one, unique, and in the same order in every locale. */
+function checkSectionIds(problems) {
+  const idsByLocale = LOCALES.map((locale) => {
+    const docs = JSON.parse(
+      readFileSync(join(APP_ROOT, `src/locales/${locale}/docs.json`), 'utf8'),
+    );
+    const ids = (docs.navigation ?? []).map((section) => section.id);
+    const seen = new Set();
+    ids.forEach((id, index) => {
+      const title = docs.navigation[index]?.title;
+      if (typeof id !== 'string' || !SECTION_ID.test(id)) {
+        problems.push(
+          `[${locale}] docs.json > ${title} needs an "id" in kebab-case (got ${JSON.stringify(id)})`,
+        );
+      } else if (seen.has(id)) {
+        problems.push(`[${locale}] docs.json has the section id "${id}" more than once`);
+      }
+      seen.add(id);
+    });
+    return [locale, ids.join(', ')];
+  });
+
+  const [reference, ...rest] = idsByLocale;
+  for (const [locale, ids] of rest) {
+    if (ids !== reference[1]) {
+      problems.push(
+        `docs.json section ids differ across locales: ${reference[0]}=[${reference[1]}], ${locale}=[${ids}]`,
+      );
+    }
+  }
+}
+
 function readFrontmatter(filePath) {
   const raw = readFileSync(filePath, 'utf8');
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -195,6 +230,8 @@ function main() {
       unchecked.push(`[${locale}] ${href}  (${source})`);
     }
   }
+
+  checkSectionIds(problems);
 
   checkBadgeParity(
     LOCALES.map((locale) => [locale, collectBadges(locale, problems)]),

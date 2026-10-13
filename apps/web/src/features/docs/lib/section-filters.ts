@@ -40,28 +40,22 @@ function labelOf(section: DocSection, index: number): string {
 
 export function sectionOf(sections: DocSection[], pathname: string): string {
   const exact = sections.find((section) => section.items.some((item) => item.href === pathname));
-  if (exact) return exact.title;
+  if (exact) return exact.id;
   const byPrefix = sections.find((section) =>
     section.items.some((item) => item.href !== '/docs' && pathname.startsWith(`${item.href}/`)),
   );
-  return byPrefix?.title ?? ALL_SECTIONS;
+  return byPrefix?.id ?? ALL_SECTIONS;
 }
 
 export function buildSectionFilters(sections: DocSection[], allLabel: string): SectionFilter[] {
   return [
     { id: ALL_SECTIONS, label: allLabel, Icon: GridIcon },
     ...sections.map((section, index) => ({
-      id: section.title,
+      id: section.id,
       label: labelOf(section, index),
       Icon: iconOf(section),
     })),
   ];
-}
-
-export function visibleSections(sections: DocSection[], filter: string): DocSection[] {
-  return filter === ALL_SECTIONS
-    ? sections
-    : sections.filter((section) => section.title === filter);
 }
 
 function offsetWithin(container: HTMLElement, element: HTMLElement): number {

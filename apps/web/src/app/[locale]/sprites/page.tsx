@@ -1,10 +1,11 @@
 import { SpritesView } from '@/features/sprites/views/sprites-view';
 import { buildAlternates, getAbsoluteUrl } from '@/lib/domains';
+import type { Locale } from '@/lib/constants';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 type PageProps = {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: Locale }>;
 };
 
 export default async function SpritesPage({ params }: PageProps) {

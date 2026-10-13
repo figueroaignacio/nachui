@@ -1,10 +1,11 @@
 import { GalleryView } from '@/features/gallery/views/gallery-view';
 import { buildAlternates, getAbsoluteUrl, getAssetUrl } from '@/lib/domains';
+import type { Locale } from '@/lib/constants';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 type PageProps = {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: Locale }>;
 };
 
 export default async function ComponentsPage({ params }: PageProps) {

@@ -1,13 +1,13 @@
 import { getAllCategorySlugs, getBrickCategory } from '@/features/bricks/lib/bricks-registry';
 import { BrickCategoryView } from '@/features/bricks/views/brick-category-view';
 import { buildAlternates, getAbsoluteUrl, getAssetUrl } from '@/lib/domains';
-import { LOCALES } from '@/lib/constants';
+import { LOCALES, type Locale } from '@/lib/constants';
 import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
 type PageProps = {
-  params: Promise<{ locale: string; category: string }>;
+  params: Promise<{ locale: Locale; category: string }>;
 };
 
 export default async function BricksCategoryPage({ params }: PageProps) {

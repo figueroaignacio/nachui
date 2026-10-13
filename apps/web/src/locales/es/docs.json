@@ -8,6 +8,7 @@
   },
   "navigation": [
     {
+      "id": "start",
       "title": "Secciones",
       "items": [
         {
@@ -33,6 +34,7 @@
       ]
     },
     {
+      "id": "concepts",
       "title": "Conceptos",
       "items": [
         {
@@ -67,6 +69,7 @@
       ]
     },
     {
+      "id": "ai",
       "title": "AI",
       "items": [
         {
@@ -156,6 +159,7 @@
       ]
     },
     {
+      "id": "ui",
       "title": "UI",
       "items": [
         {
@@ -438,6 +442,7 @@
       ]
     },
     {
+      "id": "layout",
       "title": "Layout",
       "items": [
         {
@@ -493,6 +498,7 @@
       ]
     },
     {
+      "id": "hybrids",
       "title": "Hybrids",
       "items": [
         {
@@ -547,5 +553,9 @@
   "sidebar": {
     "all": "Todo",
     "filterLabel": "Filtrar el sidebar por sección"
+  },
+  "componentsList": {
+    "emptyTitle": "No hay componentes",
+    "emptyDescription": "No existe la sección \"{section}\" en la navegación de la documentación."
   }
 }

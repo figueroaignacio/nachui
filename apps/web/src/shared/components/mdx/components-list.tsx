@@ -1,34 +1,29 @@
-'use client';
-
+import { useDocsSections } from '@/hooks/use-docs-sections';
 import { Empty } from '@repo/ui/components/empty';
 import { useTranslations } from 'next-intl';
-import { ComponentGrid, type ComponentGridItem } from '../common/component-grid';
+import { ComponentGrid } from '../common/component-grid';
 
-type DocsNavigationSection = {
-  title: string;
-  items: ComponentGridItem[];
-};
+/**
+ * Grid of every item in one docs navigation section. `section` is the
+ * section's stable `id` from docs.json (case-insensitive), so it reads the same
+ * in both locales.
+ */
+export function ComponentsList({ section = 'ui' }: { section?: string }) {
+  const t = useTranslations('docs.componentsList');
+  const sections = useDocsSections();
+  const id = section.toLowerCase();
+  const match = sections.find((candidate) => candidate.id === id);
 
-export function ComponentsList({ section }: { section?: string }) {
-  const t = useTranslations('docs');
-  const docsNavigation = t.raw('navigation') as DocsNavigationSection[];
-
-  const componentsSection = docsNavigation.find((s) =>
-    section ? s.title.toLowerCase() === section.toLowerCase() : s.title === 'UI',
-  );
-
-  if (!componentsSection) {
+  if (!match) {
     return (
       <Empty variant="outline" className="my-6">
         <Empty.Header>
-          <Empty.Title>No components found</Empty.Title>
-          <Empty.Description>
-            There is no section named &quot;{section || 'Components'}&quot; in the navigation.
-          </Empty.Description>
+          <Empty.Title>{t('emptyTitle')}</Empty.Title>
+          <Empty.Description>{t('emptyDescription', { section })}</Empty.Description>
         </Empty.Header>
       </Empty>
     );
   }
 
-  return <ComponentGrid items={componentsSection.items} className="mt-6" />;
+  return <ComponentGrid items={match.items} className="mt-6" />;
 }

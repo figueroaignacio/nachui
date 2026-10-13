@@ -3,6 +3,7 @@
 import { NavBadge } from '@/components/common/nav-badge';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { DocItem, DocSection } from '@/lib/definitions';
+import { getDocsSections } from '@/lib/docs-navigation';
 import { Tooltip } from '@repo/ui/components/tooltip';
 import { cn } from '@repo/ui/lib/cn';
 import { springs, still } from '@repo/ui/lib/motion';
@@ -77,7 +78,7 @@ export function Sidebar({ previews = {} }: SidebarProps) {
   React.useEffect(() => clearPreviewTimer, [pathname, clearPreviewTimer]);
 
   const t = useTranslations('docs');
-  const docsNavigation = t.raw('navigation') as DocSection[];
+  const docsNavigation = getDocsSections(t);
   const shouldReduceMotion = useReducedMotion();
 
   const current = React.useMemo(
@@ -176,7 +177,7 @@ export function Sidebar({ previews = {} }: SidebarProps) {
           className="hide-scrollbar relative min-h-0 overflow-y-scroll mask-[linear-gradient(180deg,black_90%,transparent)] pb-20"
         >
           {docsNavigation.map((section: DocSection) => (
-            <div key={section.title} data-section={section.title} className="mb-6 last:mb-0">
+            <div key={section.id} data-section={section.id} className="mb-6 last:mb-0">
               <p className="text-muted-foreground px-2.5 font-mono text-[11px] lowercase">
                 <span className="text-muted-foreground/50">./</span>
                 {section.title}
