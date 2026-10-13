@@ -1,4 +1,4 @@
-export const baseUrl = 'https://nachui.tech';
+import { DEFAULT_LOCALE, LOCALES, SITE_URL } from './constants';
 
 export const GITHUB_REPO_URL = 'https://github.com/figueroaignacio/ui';
 
@@ -18,13 +18,8 @@ export function getDocEditUrl(sourceFilePath: string): string {
   return `${GITHUB_REPO_URL}/edit/main/${DOCS_CONTENT_ROOT}/${sourceFilePath}`;
 }
 
-export const locales = ['en', 'es'] as const;
-export type SupportedLocale = (typeof locales)[number];
-
-export const defaultLocale: SupportedLocale = 'en';
-
 export function getDomainForLocale(locale: string): string {
-  return `${baseUrl}/${locale}`;
+  return `${SITE_URL}/${locale}`;
 }
 
 function normalizePath(path: string): string {
@@ -34,7 +29,7 @@ function normalizePath(path: string): string {
 
 /** Absolute URL of a *page*, which always lives under a locale segment. */
 export function getAbsoluteUrl(locale: string, path = ''): string {
-  return `${baseUrl}/${locale}${normalizePath(path)}`;
+  return `${SITE_URL}/${locale}${normalizePath(path)}`;
 }
 
 /**
@@ -44,7 +39,7 @@ export function getAbsoluteUrl(locale: string, path = ''): string {
  * crawler tries to fetch the og:image.
  */
 export function getAssetUrl(path: string): string {
-  return `${baseUrl}${normalizePath(path)}`;
+  return `${SITE_URL}${normalizePath(path)}`;
 }
 
 export function buildAlternates(path = '') {
@@ -52,10 +47,10 @@ export function buildAlternates(path = '') {
   const cleanPath = cleaned.startsWith('/') ? cleaned : `/${cleaned}`;
 
   const languages: Record<string, string> = {};
-  for (const locale of locales) {
-    languages[locale] = `${baseUrl}/${locale}${cleanPath}`;
+  for (const locale of LOCALES) {
+    languages[locale] = `${SITE_URL}/${locale}${cleanPath}`;
   }
-  languages['x-default'] = `${baseUrl}/${defaultLocale}${cleanPath}`;
+  languages['x-default'] = `${SITE_URL}/${DEFAULT_LOCALE}${cleanPath}`;
 
   return languages;
 }

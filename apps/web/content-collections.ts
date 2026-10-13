@@ -7,6 +7,8 @@ import remarkGfm from 'remark-gfm';
 import { visit } from 'unist-util-visit';
 import { z } from 'zod';
 
+import { DEFAULT_LOCALE, LOCALES } from './src/shared/lib/constants';
+
 type HastNode = {
   type: string;
   tagName?: string;
@@ -126,12 +128,14 @@ function createRehypePlugins() {
 
 const remarkPlugins = [remarkGfm];
 
-const localeSchema = z.enum(['en', 'es']).default('en');
+const localeSchema = z.enum(LOCALES).default(DEFAULT_LOCALE);
 const labelSchema = z.enum(['New', 'Updated']).optional();
 
 function computeSlugFields(meta: { filePath: string; path: string }, locale: string) {
   const slugParts = meta.path.split('/');
-  const cleanedSlug = slugParts.filter((part) => part !== 'en' && part !== 'es').join('/');
+  const cleanedSlug = slugParts
+    .filter((part) => !(LOCALES as readonly string[]).includes(part))
+    .join('/');
 
   return {
     slug: cleanedSlug,

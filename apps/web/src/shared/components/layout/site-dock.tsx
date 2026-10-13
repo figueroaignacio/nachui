@@ -5,7 +5,7 @@ import { GitHubIcon } from '@/components/common/github-icon';
 import { useChatStore } from '@/features/chat/store/chat-store';
 import { Searcher } from '@/features/docs/components/searcher';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
-import { locales } from '@/i18n/routing';
+import { LOCALES } from '@/lib/constants';
 import { GITHUB_REPO_URL } from '@/lib/domains';
 import { isHiddenProductLink } from '@/lib/hidden-product-links';
 import { Badge } from '@repo/ui/components/badge';
@@ -194,7 +194,7 @@ export function SiteDock() {
   const menuActive = (menu: ElementsMenu) =>
     menu.items.some((item) => pathname === item.href || pathname.startsWith(`${item.href}/`));
 
-  const nextLocale = locales.find((code) => code !== locale) ?? locale;
+  const nextLocale = LOCALES.find((code) => code !== locale) ?? locale;
   const switchLocale = () => {
     startTransition(() => {
       router.replace({ pathname }, { locale: nextLocale as Locale });

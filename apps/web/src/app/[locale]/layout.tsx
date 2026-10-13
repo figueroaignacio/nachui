@@ -8,6 +8,8 @@ import { SiteDock } from '@/components/layout/site-dock';
 import { PageFrame } from '@/components/layout/page-frame';
 import { Providers } from '@/components/providers';
 import { routing } from '@/i18n/routing';
+import { SITE_URL } from '@/lib/constants';
+import { getAbsoluteUrl } from '@/lib/domains';
 import { SPRITE_CSS } from '@repo/ui/components/sprite';
 import { fontCode, fontHeading, fontSans, fontSerif } from '@/lib/font';
 import { Analytics } from '@vercel/analytics/next';
@@ -45,7 +47,7 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     name: 'NachUI',
-    url: process.env.NEXT_PUBLIC_APP_URL || 'https://nachui.tech',
+    url: SITE_URL,
     description: t('description'),
     applicationCategory: 'DeveloperApplication',
     operatingSystem: 'Web',
@@ -98,11 +100,9 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
 export async function generateMetadata({ params }: LocaleLayoutProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'siteConfig' });
-  const baseUrlVal = process.env.NEXT_PUBLIC_APP_URL || 'https://nachui.tech';
-  const appUrl = `${baseUrlVal}/${locale}`;
 
   return {
-    metadataBase: new URL(baseUrlVal),
+    metadataBase: new URL(SITE_URL),
     title: {
       default: 'NachUI',
       template: `%s · NachUI`,
@@ -114,7 +114,7 @@ export async function generateMetadata({ params }: LocaleLayoutProps): Promise<M
       siteName: 'NachUI',
       type: 'website',
       locale,
-      url: appUrl,
+      url: getAbsoluteUrl(locale),
     },
     twitter: {
       card: 'summary_large_image',

@@ -4,7 +4,8 @@ import {
   humanize,
 } from '@/features/gallery/lib/gallery-registry';
 import { GalleryComponentView } from '@/features/gallery/views/gallery-component-view';
-import { buildAlternates, getAbsoluteUrl, getAssetUrl, locales } from '@/lib/domains';
+import { buildAlternates, getAbsoluteUrl, getAssetUrl } from '@/lib/domains';
+import { LOCALES } from '@/lib/constants';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -29,7 +30,7 @@ export default async function GalleryComponentPage({ params }: PageProps) {
 }
 
 export function generateStaticParams() {
-  return locales.flatMap((locale) => getAllGallerySlugs().map((slug) => ({ locale, slug })));
+  return LOCALES.flatMap((locale) => getAllGallerySlugs().map((slug) => ({ locale, slug })));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

@@ -1,6 +1,7 @@
 import { allDocs as docs } from 'content-collections';
 import { BRICK_CATEGORIES } from '@/features/bricks/lib/bricks-registry';
-import { buildAlternates, getDomainForLocale, locales } from '@/lib/domains';
+import { LOCALES as locales } from '@/lib/constants';
+import { buildAlternates, getDomainForLocale } from '@/lib/domains';
 import type { MetadataRoute } from 'next';
 
 type SitemapEntry = MetadataRoute.Sitemap[number];

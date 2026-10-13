@@ -1,5 +1,5 @@
 import { DocView } from '@/features/docs/views/doc-view';
-import type { Locale } from '@/i18n/routing';
+import type { Locale } from '@/lib/constants';
 import { ContentRepository } from '@/lib/content-repository';
 import { buildAlternates, getAbsoluteUrl, getAssetUrl } from '@/lib/domains';
 import { allDocs as docs } from 'content-collections';

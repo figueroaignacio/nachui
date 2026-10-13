@@ -5,6 +5,7 @@ import { DocsPagination } from '@/features/docs/components/docs-pagination';
 import { IssueCta } from '@/features/docs/components/issue-cta';
 import { Toc } from '@/features/docs/components/toc';
 import type { DocBadge } from '@/lib/definitions';
+import { SITE_URL } from '@/lib/constants';
 import { GITHUB_REPO_URL, getAbsoluteUrl } from '@/lib/domains';
 import { Callout } from '@repo/ui/components/callout';
 import { Stack } from '@repo/ui/layout/stack';
@@ -37,7 +38,7 @@ export function DocView({ doc }: DocViewProps) {
     publisher: {
       '@type': 'Organization',
       name: 'NachUI',
-      url: 'https://nachui.tech',
+      url: SITE_URL,
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
