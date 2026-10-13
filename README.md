@@ -27,7 +27,7 @@ Right now the recommended path is copying by hand:
 
 That's it. Each file only depends on `clsx`, `tailwind-merge` and, for some components, `motion`, `class-variance-authority` or `zod`.
 
-There is also a CLI (`npx nachui add button`). It works, but I'm reworking it, so expect changes. Its docs are at [nachui.tech/en/docs/concepts/cli](https://nachui.tech/en/docs/concepts/cli).
+There is also a CLI (`npx nachui add button`), but I'm reworking it, so for now the manual path is the safer bet. Its docs are at [nachui.tech/en/docs/concepts/cli](https://nachui.tech/en/docs/concepts/cli).
 
 ## Docs for AI agents
 
