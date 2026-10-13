@@ -421,6 +421,7 @@ SheetFooter.displayName = 'SheetFooter';
 
 const SheetTitle = ({
   className,
+  children,
   ref,
   ...props
 }: SheetTitleProps & { ref?: React.Ref<HTMLHeadingElement> }) => {
@@ -437,7 +438,9 @@ const SheetTitle = ({
       id={`${id}-title`}
       className={cn('text-lg leading-tight font-semibold tracking-tight', className)}
       {...props}
-    />
+    >
+      {children}
+    </h2>
   );
 };
 

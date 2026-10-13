@@ -195,13 +195,15 @@ const ContextMenuContent = ({
 }: ContextMenuContentProps): React.JSX.Element | null => {
   const { isOpen, point, closeMenu, rootRef, contentId, triggerId } = useContextMenuContext();
   const contentRef = React.useRef<HTMLDivElement>(null);
-  const [coords, setCoords] = React.useState<{ left: number; top: number } | null>(null);
+  const [placement, setPlacement] = React.useState<{
+    point: { x: number; y: number };
+    left: number;
+    top: number;
+  } | null>(null);
+  const coords = placement?.point === point ? placement : null;
 
   React.useLayoutEffect(() => {
-    if (!isOpen) {
-      setCoords(null);
-      return;
-    }
+    if (!isOpen) return;
     const content = contentRef.current;
     const root = rootRef.current;
     if (!content || !root) return;
@@ -214,7 +216,7 @@ const ContextMenuContent = ({
     x = Math.max(VIEWPORT_PADDING, x);
     y = Math.max(VIEWPORT_PADDING, y);
 
-    setCoords({ left: x - rootRect.left, top: y - rootRect.top });
+    setPlacement({ point, left: x - rootRect.left, top: y - rootRect.top });
   }, [isOpen, point, rootRef]);
 
   React.useEffect(() => {

@@ -9,9 +9,8 @@ export function LinkPreview() {
       <HoverCard openDelay={200}>
         <HoverCard.Trigger asChild>
           <a
-            href="#"
+            href="#release-v2-24-0"
             className="text-foreground font-medium underline underline-offset-4"
-            onClick={(event) => event.preventDefault()}
           >
             v2.24.0 release
           </a>

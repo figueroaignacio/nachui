@@ -244,6 +244,7 @@ const TreeRoot = ({
       <div
         ref={rootRef}
         role="tree"
+        tabIndex={-1}
         aria-label={label}
         onKeyDown={handleKeyDown}
         onFocus={() => syncTabStop(rootRef.current)}
@@ -297,7 +298,7 @@ const TreeItem = ({
     <div data-tree-item="">
       <div
         role="treeitem"
-        tabIndex={disabled ? undefined : -1}
+        tabIndex={-1}
         aria-expanded={hasChildren ? isOpen : undefined}
         aria-selected={hasChildren ? undefined : isSelected}
         aria-level={depth + 1}

@@ -79,6 +79,7 @@ function Checkbox({
 
   return (
     <div
+      role="presentation"
       className={cn(
         "relative flex shrink-0 items-center justify-center before:absolute before:-inset-2 before:content-['']",
         className,

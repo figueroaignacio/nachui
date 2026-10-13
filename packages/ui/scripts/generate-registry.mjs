@@ -325,7 +325,7 @@ function main() {
     const absolute = join(REPO_ROOT, target);
 
     if (check) {
-      let current = '';
+      let current;
       try {
         current = readFileSync(absolute, 'utf8');
       } catch {

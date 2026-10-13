@@ -525,6 +525,15 @@ const SelectContent = ({
     [listRef, closeMenu, selectValue],
   );
 
+  const handleClick = React.useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const option = (e.target as Element).closest<HTMLElement>('[role="option"]');
+      if (!option || option.getAttribute('aria-disabled') === 'true') return;
+      if (option.dataset.value !== undefined) selectValue(option.dataset.value);
+    },
+    [selectValue],
+  );
+
   const verticalStyle =
     position === 'bottom'
       ? { top: `calc(100% + ${sideOffset}px)` }
@@ -543,6 +552,7 @@ const SelectContent = ({
       aria-hidden={!isOpen}
       tabIndex={-1}
       onKeyDown={handleKeyDown}
+      onClick={handleClick}
       initial={false}
       animate={
         isOpen
@@ -570,7 +580,7 @@ const SelectItem = ({
   disabled = false,
   className,
 }: SelectItemProps): React.JSX.Element => {
-  const { value: selectedValue, selectValue, registerItem } = useSelectContext();
+  const { value: selectedValue, registerItem } = useSelectContext();
   const itemRef = React.useRef<HTMLDivElement>(null);
   const isSelected = selectedValue === value;
 
@@ -581,10 +591,6 @@ const SelectItem = ({
     return registerItem(value, label.trim());
   }, [value, staticLabel, registerItem]);
 
-  const handleClick = React.useCallback(() => {
-    if (!disabled) selectValue(value);
-  }, [disabled, selectValue, value]);
-
   return (
     <div
       ref={itemRef}
@@ -593,8 +599,7 @@ const SelectItem = ({
       aria-disabled={disabled || undefined}
       data-value={value}
       data-selected={isSelected}
-      tabIndex={disabled ? undefined : -1}
-      onClick={handleClick}
+      tabIndex={-1}
       className={cn(
         'relative flex cursor-pointer items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-none select-none',
         'transition-colors duration-150',

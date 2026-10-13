@@ -13,7 +13,7 @@ export function Default() {
         {links.map((link, index) => (
           <a
             key={link}
-            href="#"
+            href={`#${link.toLowerCase().replace(' ', '-')}`}
             className={
               index === 0
                 ? 'bg-muted rounded-md px-3 py-1.5 text-sm font-medium'

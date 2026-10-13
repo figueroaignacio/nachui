@@ -378,7 +378,7 @@ const PromptInputRoot = ({
 
   const value = React.useMemo<PromptInputContextValue>(
     () => ({ text, setText, files, add, remove, clear, openFileDialog, dragging, accept, id }),
-    [text, files, add, remove, clear, openFileDialog, dragging, accept, id],
+    [text, setText, files, add, remove, clear, openFileDialog, dragging, accept, id],
   );
 
   return (

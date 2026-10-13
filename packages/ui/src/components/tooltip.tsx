@@ -187,7 +187,6 @@ function TooltipTrigger({ children, asChild = false, className, ...props }: Tool
   return (
     <div
       aria-describedby={open ? id : undefined}
-      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- the wrapper must be focusable so keyboard users can summon the tooltip when the child isn't interactive
       tabIndex={0}
       className={cn('cursor-pointer', className)}
       {...restProps}

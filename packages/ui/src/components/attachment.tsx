@@ -207,29 +207,35 @@ function formatFileSize(bytes: number, decimals = 1): string {
   return `${rounded} ${SIZE_UNITS[exponent]}`;
 }
 
-function iconForType(
-  type: string | undefined,
-  name: string | undefined,
-): React.ComponentType<IconProps> {
+const TYPE_ICONS = {
+  image: ImageIcon,
+  video: VideoIcon,
+  audio: MusicIcon,
+  document: FileTextIcon,
+  archive: ArchiveIcon,
+  file: FileIcon,
+} satisfies Record<string, React.ComponentType<IconProps>>;
+
+function kindForType(type: string | undefined, name: string | undefined): keyof typeof TYPE_ICONS {
   const mime = (type ?? '').toLowerCase();
   const extension = (name ?? '').toLowerCase().split('.').pop() ?? '';
 
-  if (mime.startsWith('image/')) return ImageIcon;
-  if (mime.startsWith('video/')) return VideoIcon;
-  if (mime.startsWith('audio/')) return MusicIcon;
-  if (mime === 'application/pdf' || extension === 'pdf') return FileTextIcon;
+  if (mime.startsWith('image/')) return 'image';
+  if (mime.startsWith('video/')) return 'video';
+  if (mime.startsWith('audio/')) return 'audio';
+  if (mime === 'application/pdf' || extension === 'pdf') return 'document';
   if (
     mime.includes('zip') ||
     mime.includes('compressed') ||
     ['zip', 'rar', '7z', 'gz', 'tar'].includes(extension)
   ) {
-    return ArchiveIcon;
+    return 'archive';
   }
-  return FileIcon;
+  return 'file';
 }
 
 function AttachmentTypeIcon({ type, name }: { type?: string; name?: string }) {
-  const Icon = iconForType(type, name);
+  const Icon = TYPE_ICONS[kindForType(type, name)];
   return <Icon aria-hidden="true" />;
 }
 

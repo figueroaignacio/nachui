@@ -84,6 +84,8 @@ const DEFAULT_LABELS: SearchCommandLabels = {
 
 const isMac = () => typeof navigator !== 'undefined' && /mac|iphone|ipad/i.test(navigator.platform);
 
+const subscribeToNothing = () => () => {};
+
 const defaultFilter = (item: SearchItem, query: string): boolean => {
   const needle = query.trim().toLowerCase();
   if (!needle) return true;
@@ -154,7 +156,11 @@ const SearchCommandRoot = ({
   const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
   const [query, setQueryState] = React.useState('');
   const [activeIndex, setActiveIndex] = React.useState(0);
-  const [modifier, setModifier] = React.useState('Ctrl');
+  const modifier = React.useSyncExternalStore(
+    subscribeToNothing,
+    () => (isMac() ? '⌘' : 'Ctrl'),
+    () => 'Ctrl',
+  );
   const id = React.useId();
 
   const isControlled = controlledOpen !== undefined;
@@ -175,10 +181,6 @@ const SearchCommandRoot = ({
   const setQuery = React.useCallback((next: string) => {
     setQueryState(next);
     setActiveIndex(0);
-  }, []);
-
-  React.useEffect(() => {
-    if (isMac()) setModifier('⌘');
   }, []);
 
   React.useEffect(() => {

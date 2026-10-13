@@ -131,7 +131,6 @@ const ReasoningRoot = ({
   React.useEffect(() => {
     if (isStreaming) {
       startedAt.current = Date.now();
-      setTrackedDuration(undefined);
       setIsOpen(true);
       return;
     }
@@ -143,7 +142,7 @@ const ReasoningRoot = ({
     }
   }, [isStreaming, setIsOpen]);
 
-  const duration = controlledDuration ?? trackedDuration;
+  const duration = controlledDuration ?? (isStreaming ? undefined : trackedDuration);
 
   const value = React.useMemo<ReasoningContextValue>(
     () => ({ isStreaming, isOpen, setIsOpen, duration, id }),
