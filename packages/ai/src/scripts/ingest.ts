@@ -1,75 +1,63 @@
-import { and, count, db, docChunks, eq, max } from '@repo/db';
-import { createHash } from 'crypto';
-import { chunkDocument } from '../lib/chunker.js';
-import { embedDocuments } from '../lib/embeddings.js';
+import { and, client, count, db, docChunks, eq, gte, max, min, sql } from '@repo/db';
+import { CHUNKER_VERSION, chunkDocument, DEFAULT_MAX_CHUNK_SIZE } from '../lib/chunker.js';
+import { hashDocContent, type EmbeddingSettings } from '../lib/content-hash.js';
+import { parseDocsCatalog, type CatalogDoc } from '../lib/docs-catalog.js';
+import {
+  DOCUMENT_TASK_TYPE,
+  EMBEDDING_DIMENSIONS,
+  EMBEDDING_MODEL_ID,
+  embedDocuments,
+} from '../lib/embeddings.js';
+import { getIngestEnv } from '../lib/env.js';
 
-interface DocInput {
-  slug: string;
-  title: string;
-  locale: 'en' | 'es';
-  description: string;
-  raw: string;
-}
-
-// ─── Config ────────────────────────────────────────────────────────────────
-const EMBED_BATCH_SIZE = 5; // chunks por request a Gemini
-const EMBED_BATCH_DELAY_MS = 2000; // espera entre batches (2s → 30 req/min max)
-const DOC_DELAY_MS = 1000; // espera entre docs
+const EMBED_BATCH_SIZE = 5;
+const EMBED_BATCH_DELAY_MS = 2000;
+const DOC_DELAY_MS = 1000;
 const MAX_ATTEMPTS = 5;
-// ───────────────────────────────────────────────────────────────────────────
 
-function hashContent(doc: DocInput): string {
-  return createHash('sha256')
-    .update(`${doc.raw}${doc.title}${doc.description}`)
-    .digest('hex')
-    .slice(0, 16);
-}
-
-async function fetchDocs(frontendUrl: string): Promise<DocInput[]> {
-  const res = await fetch(`${frontendUrl}/api/docs`);
-  if (!res.ok) throw new Error(`Failed to fetch docs: ${res.status}`);
-  const data = (await res.json()) as { success: boolean; docs: DocInput[] };
-  if (!data.success) throw new Error('Docs API returned error');
-  return data.docs;
-}
+const EMBEDDING_SETTINGS: EmbeddingSettings = {
+  chunkerVersion: CHUNKER_VERSION,
+  maxChunkSize: DEFAULT_MAX_CHUNK_SIZE,
+  embeddingModel: EMBEDDING_MODEL_ID,
+  dimensions: EMBEDDING_DIMENSIONS,
+  taskType: DOCUMENT_TASK_TYPE,
+};
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/**
- * Genera embeddings en batches pequeños con delay entre cada uno,
- * para no explotar el rate limit de Gemini.
- */
+const docKey = (doc: { slug: string; locale: string }) => `${doc.locale}:${doc.slug}`;
+
+async function fetchDocs(frontendUrl: string): Promise<CatalogDoc[]> {
+  const res = await fetch(`${frontendUrl}/api/docs`);
+  if (!res.ok) throw new Error(`Failed to fetch docs: ${res.status}`);
+  return parseDocsCatalog(await res.json());
+}
+
+/** Embeds in small batches with a pause in between to stay under Gemini's rate limit. */
 async function embedInBatches(texts: string[]): Promise<number[][]> {
   const results: number[][] = [];
+  const totalBatches = Math.ceil(texts.length / EMBED_BATCH_SIZE);
 
   for (let i = 0; i < texts.length; i += EMBED_BATCH_SIZE) {
     const batch = texts.slice(i, i + EMBED_BATCH_SIZE);
     const batchNum = Math.floor(i / EMBED_BATCH_SIZE) + 1;
-    const totalBatches = Math.ceil(texts.length / EMBED_BATCH_SIZE);
 
-    console.log(`    🔢 Batch ${batchNum}/${totalBatches} (${batch.length} chunks)...`);
+    console.log(`    Batch ${batchNum}/${totalBatches} (${batch.length} chunks)`);
 
-    let attempts = 0;
-    let success = false;
-
-    while (!success && attempts < MAX_ATTEMPTS) {
+    for (let attempt = 1; ; attempt++) {
       try {
-        const embeddings = await embedDocuments(batch);
-        results.push(...embeddings);
-        success = true;
+        results.push(...(await embedDocuments(batch)));
+        break;
       } catch (error) {
-        attempts++;
-        // Exponential backoff: 30s, 60s, 120s, 240s
-        const waitMs = 30_000 * Math.pow(2, attempts - 1);
+        if (attempt >= MAX_ATTEMPTS) throw error;
+        const waitMs = 30_000 * 2 ** (attempt - 1);
         console.log(
-          `    ⚠️  Rate limit en batch ${batchNum} (intento ${attempts}/${MAX_ATTEMPTS}). Esperando ${waitMs / 1000}s...`,
+          `    Batch ${batchNum} failed (attempt ${attempt}/${MAX_ATTEMPTS}), retrying in ${waitMs / 1000}s`,
         );
-        if (attempts >= MAX_ATTEMPTS) throw error;
         await sleep(waitMs);
       }
     }
 
-    // Delay entre batches (excepto el último)
     if (i + EMBED_BATCH_SIZE < texts.length) {
       await sleep(EMBED_BATCH_DELAY_MS);
     }
@@ -78,104 +66,147 @@ async function embedInBatches(texts: string[]): Promise<number[][]> {
   return results;
 }
 
-async function ingest() {
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+async function readStoredState(doc: CatalogDoc) {
+  const [stored] = await db
+    .select({
+      count: count(),
+      minHash: min(docChunks.contentHash),
+      maxHash: max(docChunks.contentHash),
+    })
+    .from(docChunks)
+    .where(and(eq(docChunks.docSlug, doc.slug), eq(docChunks.locale, doc.locale)));
 
-  console.log('📚 Fetching docs...');
-  const docs = await fetchDocs(frontendUrl);
-  console.log(`Found ${docs.length} docs\n`);
+  return {
+    count: stored?.count ?? 0,
+    hash: stored?.minHash === stored?.maxHash ? (stored?.minHash ?? null) : null,
+  };
+}
 
-  let totalChunks = 0;
-  let skipped = 0;
+/** Embeds first, then swaps the doc's chunks in one transaction. */
+async function ingestDoc(doc: CatalogDoc): Promise<'skipped' | number> {
+  const chunks = chunkDocument(doc.raw, EMBEDDING_SETTINGS.maxChunkSize);
+  const contentHash = hashDocContent(doc, EMBEDDING_SETTINGS);
+  const stored = await readStoredState(doc);
 
-  for (const [docIndex, doc] of docs.entries()) {
-    console.log(`[${docIndex + 1}/${docs.length}] 📄 ${doc.title} (${doc.locale})`);
+  const unchanged = stored.count === chunks.length && stored.hash === contentHash;
+  if (unchanged || (chunks.length === 0 && stored.count === 0)) {
+    return 'skipped';
+  }
 
-    const chunks = chunkDocument(doc.raw);
+  const embeddings = chunks.length > 0 ? await embedInBatches(chunks.map((c) => c.content)) : [];
+  if (embeddings.length !== chunks.length) {
+    throw new Error(`Got ${embeddings.length} embeddings for ${chunks.length} chunks`);
+  }
 
-    if (chunks.length === 0) {
-      console.log('  ⚠️  Sin chunks, skipping\n');
-      continue;
+  const now = new Date();
+  const rows = chunks.map((chunk, i) => ({
+    docSlug: doc.slug,
+    docTitle: doc.title,
+    locale: doc.locale,
+    chunkIndex: chunk.index,
+    content: chunk.content,
+    embedding: embeddings[i]!,
+    contentHash,
+    metadata: { section: chunk.section, description: doc.description },
+    updatedAt: now,
+  }));
+
+  await db.transaction(async (tx) => {
+    if (rows.length > 0) {
+      await tx
+        .insert(docChunks)
+        .values(rows)
+        .onConflictDoUpdate({
+          target: [docChunks.docSlug, docChunks.locale, docChunks.chunkIndex],
+          set: {
+            docTitle: sql`excluded.doc_title`,
+            content: sql`excluded.content`,
+            embedding: sql`excluded.embedding`,
+            contentHash: sql`excluded.content_hash`,
+            metadata: sql`excluded.metadata`,
+            updatedAt: sql`excluded.updated_at`,
+          },
+        });
     }
 
-    const contentHash = hashContent(doc);
+    await tx
+      .delete(docChunks)
+      .where(
+        and(
+          eq(docChunks.docSlug, doc.slug),
+          eq(docChunks.locale, doc.locale),
+          gte(docChunks.chunkIndex, rows.length),
+        ),
+      );
+  });
 
-    const [existing] = await db
-      .select({
-        count: count(),
-        contentHash: max(docChunks.contentHash),
-      })
-      .from(docChunks)
+  return rows.length;
+}
+
+/** Deletes chunks of docs that are no longer in the published catalog. */
+async function purgeRemovedDocs(docs: CatalogDoc[]): Promise<number> {
+  const live = new Set(docs.map(docKey));
+  const stored = await db
+    .selectDistinct({ slug: docChunks.docSlug, locale: docChunks.locale })
+    .from(docChunks);
+
+  const stale = stored.filter((doc) => !live.has(docKey(doc)));
+
+  for (const doc of stale) {
+    console.log(`  Removing chunks of ${docKey(doc)}`);
+    await db
+      .delete(docChunks)
       .where(and(eq(docChunks.docSlug, doc.slug), eq(docChunks.locale, doc.locale)));
+  }
 
-    const existingCount = existing?.count ?? 0;
-    const existingHash = existing?.contentHash ?? null;
-    const isComplete = existingCount === chunks.length;
-    const isUnchanged = existingHash === contentHash;
+  return stale.length;
+}
 
-    if (isComplete && isUnchanged) {
-      console.log(`  ⏭️  Ya ingresado y sin cambios (${existingCount} chunks), skipping\n`);
-      totalChunks += existingCount;
+async function ingest() {
+  const env = getIngestEnv();
+
+  console.log(`Fetching docs from ${env.FRONTEND_URL}/api/docs`);
+  const docs = await fetchDocs(env.FRONTEND_URL);
+  console.log(`Found ${docs.length} published docs\n`);
+
+  if (docs.length === 0) {
+    throw new Error('The catalog is empty. Refusing to continue, it would purge every chunk.');
+  }
+
+  let embedded = 0;
+  let skipped = 0;
+  let totalChunks = 0;
+
+  for (const [index, doc] of docs.entries()) {
+    console.log(`[${index + 1}/${docs.length}] ${doc.title} (${doc.locale})`);
+
+    const result = await ingestDoc(doc);
+
+    if (result === 'skipped') {
+      console.log('  Unchanged, skipping\n');
       skipped++;
       continue;
     }
 
-    if (existingCount > 0 && !isUnchanged) {
-      console.log(`  🔄 Contenido modificado, re-ingresando...`);
-    } else if (!isComplete && existingCount > 0) {
-      console.log(
-        `  ⚠️  Ingesta parcial (${existingCount}/${chunks.length} chunks), re-ingresando...`,
-      );
-    }
+    console.log(`  Stored ${result} chunks\n`);
+    embedded++;
+    totalChunks += result;
 
-    console.log(
-      `  📦 ${chunks.length} chunks → ${Math.ceil(chunks.length / EMBED_BATCH_SIZE)} batches`,
-    );
-
-    try {
-      // Borrar solo el locale correcto
-      await db
-        .delete(docChunks)
-        .where(and(eq(docChunks.docSlug, doc.slug), eq(docChunks.locale, doc.locale)));
-
-      const texts = chunks.map((c) => c.content);
-      const embeddings = await embedInBatches(texts);
-
-      const rows = chunks.map((chunk, i) => ({
-        docSlug: doc.slug,
-        docTitle: doc.title,
-        locale: doc.locale,
-        chunkIndex: chunk.index,
-        content: chunk.content,
-        embedding: embeddings[i]!,
-        contentHash,
-        metadata: {
-          section: chunk.section,
-          description: doc.description,
-        },
-      }));
-
-      await db.insert(docChunks).values(rows);
-      totalChunks += chunks.length;
-      console.log(`  ✅ Insertados ${chunks.length} chunks\n`);
-    } catch (error) {
-      console.error(`  ❌ Falló después de ${MAX_ATTEMPTS} intentos, abortando:`, error);
-      throw error;
-    }
-
-    // Pausa entre docs para no acumular presión en el rate limit
-    if (docIndex < docs.length - 1) {
+    if (index < docs.length - 1) {
       await sleep(DOC_DELAY_MS);
     }
   }
 
+  const purged = await purgeRemovedDocs(docs);
+
   console.log(
-    `🎉 Done! Procesados: ${docs.length - skipped} | Skipped: ${skipped} | Total chunks: ${totalChunks}`,
+    `Done. Embedded: ${embedded} | Unchanged: ${skipped} | Purged: ${purged} | New chunks: ${totalChunks}`,
   );
-  process.exit(0);
 }
 
-ingest().catch((err) => {
-  console.error('❌ Ingest failed:', err);
-  process.exit(1);
-});
+ingest()
+  .catch((err: unknown) => {
+    console.error('Ingest failed:', err);
+    process.exitCode = 1;
+  })
+  .finally(() => client.end());

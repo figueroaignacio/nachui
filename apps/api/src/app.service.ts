@@ -1,7 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { DatabaseHealth } from './common/health/database-health';
 
 @Injectable()
 export class AppService {
+  private readonly logger = new Logger(AppService.name);
+
+  constructor(private readonly databaseHealth: DatabaseHealth) {}
+
   getWelcomeMessage(): string {
     const uptime = this.formatUptime(process.uptime());
     return `
@@ -39,7 +44,7 @@ export class AppService {
   GET  /api/v1/registry
   GET  /api/v1/registry/:slug
   GET  /api/v1/themes
-  GET  /api/v1/docs
+  POST /api/v1/chat
 
 ──────────────────────────────────────────────────────────────────
   STATUS   RUNNING (Unlike your last deploy)
@@ -49,12 +54,24 @@ export class AppService {
 `;
   }
 
-  getHealthCheck() {
+  async getHealthCheck() {
+    const database = await this.databaseHealth.check();
+    const healthy = database.status === 'up';
+
+    if (!healthy) {
+      this.logger.error(`Health check: database is down (${database.error})`);
+    }
+
     return {
-      status: 'stable',
+      status: healthy ? ('ok' as const) : ('degraded' as const),
       engine: 'NestJS + Drizzle',
-      database: 'Connected (and judging you)',
-      message: 'The registry is alive. Your CSS, however, is a disaster.',
+      database: {
+        status: database.status,
+        latencyMs: database.latencyMs,
+      },
+      message: healthy
+        ? 'The registry is alive. Your CSS, however, is a disaster.'
+        : 'The database is not answering. For once, it is not your fault.',
       timestamp: new Date().toISOString(),
       system: {
         memory: `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`,

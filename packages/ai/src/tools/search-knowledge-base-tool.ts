@@ -1,73 +1,80 @@
-import { tool, type UIToolInvocation } from 'ai';
+import { tool, type Tool, type UIToolInvocation } from 'ai';
 import { z } from 'zod';
-import { getEnv } from '../lib/env.js';
 
-const searchResponseSchema = z.object({
-  found: z.boolean(),
-  results: z.array(
-    z.object({
-      title: z.string(),
-      slug: z.string(),
-      content: z.string(),
-      section: z.string().optional(),
-      similarity: z.number(),
-    }),
-  ),
+export const DOC_LOCALES = ['en', 'es'] as const;
+export type DocLocale = (typeof DOC_LOCALES)[number];
+
+export const MAX_SEARCH_QUERY_LENGTH = 500;
+export const MAX_SEARCH_TOP_K = 20;
+
+export type KnowledgeBaseResult = {
+  title: string;
+  slug: string;
+  content: string;
+  section?: string | null;
+  similarity: number;
+};
+
+export type KnowledgeBaseSearchParams = {
+  query: string;
+  locale: DocLocale;
+  topK: number;
+};
+
+/** Data access the tool needs. The API wires it to its RAG service. */
+export type SearchKnowledgeBase = (
+  params: KnowledgeBaseSearchParams,
+) => Promise<KnowledgeBaseResult[]>;
+
+const inputSchema = z.object({
+  query: z.string().min(1).max(MAX_SEARCH_QUERY_LENGTH).describe('The search query'),
+  locale: z.enum(DOC_LOCALES).optional().default('en'),
+  topK: z.number().int().min(1).max(MAX_SEARCH_TOP_K).optional().default(5),
 });
 
-export const searchKnowledgeBaseTool = tool({
-  description:
-    'Search NachUI documentation using semantic search. Use for ANY question about components, props, usage, or concepts.',
-  inputSchema: z.object({
-    query: z.string().describe('The search query'),
-    locale: z.enum(['en', 'es']).optional().default('en'),
-    topK: z.number().optional().default(5),
+const outputSchema = z.discriminatedUnion('found', [
+  z.object({
+    found: z.literal(true),
+    results: z.array(
+      z.object({
+        title: z.string(),
+        slug: z.string(),
+        content: z.string(),
+        section: z.string().nullish(),
+        similarity: z.number(),
+      }),
+    ),
   }),
-  execute: async ({ query, locale, topK }) => {
-    const env = getEnv();
-    try {
-      const res = await fetch(`${env.API_URL}/api/v1/rag/search`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': env.NACHUI_API_KEY,
-        },
-        body: JSON.stringify({ query, locale, topK }),
-      });
+  z.object({ found: z.literal(false), message: z.string() }),
+]);
 
-      if (!res.ok) {
-        return {
-          found: false as const,
-          message: `RAG search failed: ${res.status}`,
-        };
+export type SearchKnowledgeBaseInput = z.infer<typeof inputSchema>;
+export type SearchKnowledgeBaseOutput = z.infer<typeof outputSchema>;
+export type SearchKnowledgeBaseTool = Tool<SearchKnowledgeBaseInput, SearchKnowledgeBaseOutput>;
+
+export function createSearchKnowledgeBaseTool(
+  search: SearchKnowledgeBase,
+): SearchKnowledgeBaseTool {
+  return tool({
+    description:
+      'Search NachUI documentation using semantic search. Use for ANY question about components, props, usage, or concepts.',
+    inputSchema,
+    outputSchema,
+    execute: async ({ query, locale, topK }): Promise<SearchKnowledgeBaseOutput> => {
+      try {
+        const results = await search({ query, locale, topK });
+
+        if (results.length === 0) {
+          return { found: false, message: `No relevant docs found for "${query}"` };
+        }
+
+        return { found: true, results };
+      } catch (error) {
+        console.error('[searchKnowledgeBase] error:', error);
+        return { found: false, message: 'Search failed.' };
       }
+    },
+  });
+}
 
-      const data = await res.json();
-      const parsed = searchResponseSchema.safeParse(data);
-
-      if (!parsed.success) {
-        return {
-          found: false as const,
-          message: 'Invalid RAG response format',
-        };
-      }
-
-      if (!parsed.data.found || parsed.data.results.length === 0) {
-        return {
-          found: false as const,
-          message: `No relevant docs found for "${query}"`,
-        };
-      }
-
-      return {
-        found: true as const,
-        results: parsed.data.results,
-      };
-    } catch (error) {
-      console.error('[searchKnowledgeBase] error:', error);
-      return { found: false as const, message: 'Search failed.' };
-    }
-  },
-});
-
-export type SearchKnowledgeBaseToolInvocation = UIToolInvocation<typeof searchKnowledgeBaseTool>;
+export type SearchKnowledgeBaseToolInvocation = UIToolInvocation<SearchKnowledgeBaseTool>;

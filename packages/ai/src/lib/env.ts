@@ -1,18 +1,18 @@
 import { z } from 'zod';
 
-const envSchema = z.object({
-  API_URL: z.string().url().default('http://localhost:3001'),
-  NACHUI_API_KEY: z.string().min(1).default('dev-api-key'),
-  GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1).optional(), // optional locally but needed for AI
+const ingestEnvSchema = z.object({
+  GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1),
+  FRONTEND_URL: z.url().default('http://localhost:3000'),
 });
 
-export type Env = z.infer<typeof envSchema>;
+export type IngestEnv = z.infer<typeof ingestEnvSchema>;
 
-export function getEnv(): Env {
-  const result = envSchema.safeParse(process.env);
+/** Env the ingest script needs. `POSTGRES_URL` is checked by `@repo/db`. */
+export function getIngestEnv(source: NodeJS.ProcessEnv = process.env): IngestEnv {
+  const result = ingestEnvSchema.safeParse(source);
   if (!result.success) {
     throw new Error(
-      `Missing or invalid env vars: ${JSON.stringify(result.error.flatten().fieldErrors)}`,
+      `Missing or invalid env vars: ${JSON.stringify(z.flattenError(result.error).fieldErrors)}`,
     );
   }
   return result.data;
