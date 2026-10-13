@@ -30,11 +30,11 @@ Built with gorgeous interactive prompts, helpful validation, and intuitive comma
 You can run the CLI directly via `npx` (or your package manager of choice) without installing it globally.
 
 ```bash
-# Initialize NachUI in your project
+# Set up the theme tokens, nachui.json and the cn helper
 npx nachui init
 
-# Add a specific component
-npx nachui add button
+# Add components with every file they import
+npx nachui add button hybrids/confirm
 
 # List all available components
 npx nachui list
@@ -46,7 +46,23 @@ npx nachui update button
 npx nachui remove button
 ```
 
+`add` writes each file to `<baseDir>/<family folder>/<name>`, mirroring the NachUI source (`components/`, `layout/`, `ai/`, `hybrids/`, `icons/`, `lib/`), so relative imports such as `../lib/cn` resolve. `baseDir` lives in `nachui.json` and defaults to `src`.
+
+Flags: `add --overwrite` replaces files that differ from the registry, `--yes` skips prompts on every command and never replaces files you changed (except `update --yes`, which updates the component you named).
+
+Set `NACHUI_API_URL` to point the CLI at a local or self-hosted registry, for example `http://localhost:3001/api/v1`.
+
+## Development
+
+```bash
+pnpm --filter nachui test         # vitest
+pnpm --filter nachui check-types
+pnpm --filter nachui lint
+pnpm --filter nachui build
+```
+
 ## Architecture
 
-- `src/commands`: Contains all CLI action logic (`init`, `add`, `list`, `update`, `remove`).
-- `src/index.ts`: The main entry point parsing terminal instructions via `commander`.
+- `src/commands`: one file per command (`init`, `add`, `list`, `update`, `remove`).
+- `src/lib`: the registry client, `nachui.json` parsing, the install layout, dependency tree resolution and package manager handling.
+- `src/index.ts`: the entry point, which parses arguments with `commander`.
