@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
-import { RagController } from './rag.controller';
 import { RagRepository } from './rag.repository';
 import { RagService } from './rag.service';
 
+/**
+ * Semantic search over the ingested docs. It has no HTTP surface: the chat
+ * agent calls `RagService` in process, so the per-call Gemini embedding cost
+ * stays behind the chat endpoint's throttle.
+ */
 @Module({
-  controllers: [RagController],
   providers: [RagService, RagRepository],
-  exports: [RagService, RagRepository],
+  exports: [RagService],
 })
 export class RagModule {}

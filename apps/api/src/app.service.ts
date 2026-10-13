@@ -39,7 +39,7 @@ export class AppService {
   GET  /api/v1/registry
   GET  /api/v1/registry/:slug
   GET  /api/v1/themes
-  GET  /api/v1/docs
+  POST /api/v1/chat
 
 ──────────────────────────────────────────────────────────────────
   STATUS   RUNNING (Unlike your last deploy)
