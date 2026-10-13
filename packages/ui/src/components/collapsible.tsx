@@ -5,6 +5,7 @@ import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { collapse, collapseInner, springs, still, tap } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -134,19 +135,17 @@ const CollapsibleRoot = ({
   ref,
   ...props
 }: CollapsibleProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
-  const isControlled = controlledOpen !== undefined;
-  const isOpen = isControlled ? controlledOpen : internalOpen;
+  const [isOpen, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
 
   const setIsOpen = React.useCallback(
     (open: boolean) => {
-      if (disabled) return;
-      if (!isControlled) {
-        setInternalOpen(open);
-      }
-      onOpenChange?.(open);
+      if (!disabled) setOpen(open);
     },
-    [disabled, isControlled, onOpenChange],
+    [disabled, setOpen],
   );
 
   const id = React.useId();

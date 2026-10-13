@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { collapse, springs, still } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 const INSTANT_COLLAPSE: Variants = {
   closed: { height: 0, opacity: 0, transition: still },
@@ -155,18 +156,12 @@ const TaskRoot = ({
   ref,
   ...props
 }: TaskProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : internalOpen;
+  const [open, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const id = React.useId();
-
-  const setOpen = React.useCallback(
-    (next: boolean) => {
-      if (!isControlled) setInternalOpen(next);
-      onOpenChange?.(next);
-    },
-    [isControlled, onOpenChange],
-  );
 
   const value = React.useMemo<TaskContextValue>(() => ({ open, setOpen, id }), [open, setOpen, id]);
 

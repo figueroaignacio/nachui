@@ -7,6 +7,7 @@ import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
 import { focusFirst, isTopmostLayer, lockPageScroll, trapFocus, useIsClient } from '../lib/overlay';
 import { backdrop, reveal, surface } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -69,32 +70,14 @@ const DialogRoot = ({
   open: controlledOpen,
   onOpenChange,
 }: DialogProps) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const [open, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const [hasTitle, setHasTitle] = React.useState(false);
   const [hasDescription, setHasDescription] = React.useState(false);
   const id = React.useId();
-
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : uncontrolledOpen;
-  const openRef = React.useRef(open);
-  const onOpenChangeRef = React.useRef(onOpenChange);
-
-  React.useLayoutEffect(() => {
-    openRef.current = open;
-    onOpenChangeRef.current = onOpenChange;
-  });
-
-  const setOpen = React.useCallback(
-    (value: boolean | ((prev: boolean) => boolean)) => {
-      const next = typeof value === 'function' ? value(openRef.current) : value;
-      openRef.current = next;
-      if (!isControlled) {
-        setUncontrolledOpen(next);
-      }
-      onOpenChangeRef.current?.(next);
-    },
-    [isControlled],
-  );
 
   const value = React.useMemo<DialogContextType>(
     () => ({ open, setOpen, id, hasTitle, setHasTitle, hasDescription, setHasDescription }),

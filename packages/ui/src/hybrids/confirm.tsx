@@ -5,6 +5,7 @@ import { Button } from '../components/button';
 import { Dialog } from '../components/dialog';
 import { Input } from '../components/input';
 import { cn } from '../lib/cn';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type ConfirmVariant = 'default' | 'destructive';
 
@@ -82,13 +83,14 @@ const ConfirmRoot = ({
   className,
   children,
 }: ConfirmProps) => {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
+  const [open, setStoredOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const [pending, setPending] = React.useState(false);
   const [typed, setTyped] = React.useState('');
   const mounted = React.useRef(true);
-
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : internalOpen;
 
   React.useEffect(() => {
     mounted.current = true;
@@ -99,11 +101,10 @@ const ConfirmRoot = ({
 
   const setOpen = React.useCallback(
     (next: boolean) => {
-      if (!isControlled) setInternalOpen(next);
-      onOpenChange?.(next);
+      setStoredOpen(next);
       if (!next) setTyped('');
     },
-    [isControlled, onOpenChange],
+    [setStoredOpen],
   );
 
   const labels = React.useMemo<ConfirmLabels>(

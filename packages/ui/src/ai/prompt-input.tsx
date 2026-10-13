@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -261,21 +262,11 @@ const PromptInputRoot = ({
   ref,
   ...props
 }: PromptInputProps & { ref?: React.Ref<HTMLFormElement> }) => {
-  const [internalText, setInternalText] = React.useState(defaultValue);
-  const isControlled = controlledText !== undefined;
-  const text = isControlled ? controlledText : internalText;
-  const isControlledRef = React.useRef(isControlled);
-  const onValueChangeRef = React.useRef(onValueChange);
-
-  React.useEffect(() => {
-    isControlledRef.current = isControlled;
-    onValueChangeRef.current = onValueChange;
+  const [text, setText] = useControllableState({
+    value: controlledText,
+    defaultValue,
+    onChange: onValueChange,
   });
-
-  const setText = React.useCallback((next: string) => {
-    if (!isControlledRef.current) setInternalText(next);
-    onValueChangeRef.current?.(next);
-  }, []);
   const [files, setFiles] = React.useState<PromptInputFile[]>([]);
   const filesRef = React.useRef<PromptInputFile[]>(files);
   const [dragging, setDragging] = React.useState(false);

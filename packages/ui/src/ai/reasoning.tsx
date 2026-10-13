@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { collapse, springs, still } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -108,25 +109,14 @@ const ReasoningRoot = ({
   ref,
   ...props
 }: ReasoningProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
+  const [isOpen, setIsOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const [trackedDuration, setTrackedDuration] = React.useState<number | undefined>(undefined);
   const startedAt = React.useRef<number | null>(null);
-  const isControlled = controlledOpen !== undefined;
-  const isOpen = isControlled ? controlledOpen : internalOpen;
   const id = React.useId();
-
-  const isControlledRef = React.useRef(isControlled);
-  const onOpenChangeRef = React.useRef(onOpenChange);
-
-  React.useEffect(() => {
-    isControlledRef.current = isControlled;
-    onOpenChangeRef.current = onOpenChange;
-  });
-
-  const setIsOpen = React.useCallback((next: boolean) => {
-    if (!isControlledRef.current) setInternalOpen(next);
-    onOpenChangeRef.current?.(next);
-  }, []);
 
   React.useEffect(() => {
     if (isStreaming) {

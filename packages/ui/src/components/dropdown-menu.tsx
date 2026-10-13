@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { floatingVariants, reveal, springs, tap } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -131,19 +132,12 @@ const DropdownMenuRoot = ({
   open: controlledOpen,
   onOpenChange,
 }: DropdownMenuProps): React.JSX.Element => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const [isOpen, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const triggerRef = React.useRef<HTMLButtonElement>(null);
-
-  const isControlled = controlledOpen !== undefined;
-  const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
-
-  const setOpen = React.useCallback(
-    (next: boolean) => {
-      if (!isControlled) setUncontrolledOpen(next);
-      onOpenChange?.(next);
-    },
-    [isControlled, onOpenChange],
-  );
 
   const openMenu = React.useCallback(() => setOpen(true), [setOpen]);
 

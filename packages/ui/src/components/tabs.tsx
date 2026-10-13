@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { springs, still } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 const tabsListVariants = cva(
   'inline-flex max-w-full rounded-md p-0.5 text-muted-foreground w-full sm:w-auto overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
@@ -86,20 +87,12 @@ const TabsRoot = ({
   ref,
   ...props
 }: TabsProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const [internalValue, setInternalValue] = React.useState(defaultValue || '');
-  const isControlled = controlledValue !== undefined;
-  const activeTab = isControlled ? controlledValue : internalValue;
+  const [activeTab, setActiveTab] = useControllableState({
+    value: controlledValue,
+    defaultValue: defaultValue || '',
+    onChange: onValueChange,
+  });
   const layoutId = React.useId();
-
-  const setActiveTab = React.useCallback(
-    (newValue: string) => {
-      if (!isControlled) {
-        setInternalValue(newValue);
-      }
-      onValueChange?.(newValue);
-    },
-    [isControlled, onValueChange],
-  );
 
   const contextValue = React.useMemo(
     () => ({ activeTab, setActiveTab, variant, size, layoutId }),

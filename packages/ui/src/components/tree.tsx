@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { collapse } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -153,11 +154,14 @@ const TreeRoot = ({
   label = 'Tree',
 }: TreeProps): React.JSX.Element => {
   const [expanded, setExpanded] = React.useState<Set<string>>(() => new Set(defaultExpanded));
-  const [uncontrolledSelected, setUncontrolledSelected] = React.useState(defaultSelected);
+  const [selected, select] = useControllableState<string | undefined>({
+    value: controlledSelected,
+    defaultValue: defaultSelected,
+    onChange: (value) => {
+      if (value !== undefined) onSelectedChange?.(value);
+    },
+  });
   const rootRef = React.useRef<HTMLDivElement>(null);
-
-  const isControlled = controlledSelected !== undefined;
-  const selected = isControlled ? controlledSelected : uncontrolledSelected;
 
   const toggleExpanded = React.useCallback((value: string) => {
     setExpanded((prev) => {
@@ -167,14 +171,6 @@ const TreeRoot = ({
       return next;
     });
   }, []);
-
-  const select = React.useCallback(
-    (value: string) => {
-      if (!isControlled) setUncontrolledSelected(value);
-      onSelectedChange?.(value);
-    },
-    [isControlled, onSelectedChange],
-  );
 
   const handleKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;

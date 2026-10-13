@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Dialog } from '../components/dialog';
 import { Kbd, KbdGroup } from '../components/kbd';
 import { cn } from '../lib/cn';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -153,7 +154,11 @@ const SearchCommandRoot = ({
   className,
   children,
 }: SearchCommandProps) => {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
+  const [open, setStoredOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const [query, setQueryState] = React.useState('');
   const [activeIndex, setActiveIndex] = React.useState(0);
   const modifier = React.useSyncExternalStore(
@@ -163,19 +168,15 @@ const SearchCommandRoot = ({
   );
   const id = React.useId();
 
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : internalOpen;
-
   const setOpen = React.useCallback(
     (next: boolean) => {
-      if (!isControlled) setInternalOpen(next);
-      onOpenChange?.(next);
+      setStoredOpen(next);
       if (!next) {
         setQueryState('');
         setActiveIndex(0);
       }
     },
-    [isControlled, onOpenChange],
+    [setStoredOpen],
   );
 
   const setQuery = React.useCallback((next: string) => {

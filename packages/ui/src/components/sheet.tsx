@@ -6,6 +6,7 @@ import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
 import { focusFirst, isTopmostLayer, lockPageScroll, trapFocus, useIsClient } from '../lib/overlay';
 import { backdrop, reveal, slideVariants, springs, tap } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -113,26 +114,14 @@ const SheetRoot = ({
   open: controlledOpen,
   onOpenChange,
 }: SheetProps) => {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
+  const [open, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const [hasTitle, setHasTitle] = React.useState(false);
   const [hasDescription, setHasDescription] = React.useState(false);
   const id = React.useId();
-
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : internalOpen;
-  const onOpenChangeRef = React.useRef(onOpenChange);
-
-  React.useLayoutEffect(() => {
-    onOpenChangeRef.current = onOpenChange;
-  });
-
-  const setOpen = React.useCallback(
-    (next: boolean) => {
-      if (!isControlled) setInternalOpen(next);
-      onOpenChangeRef.current?.(next);
-    },
-    [isControlled],
-  );
 
   React.useEffect(() => {
     if (!open) return;

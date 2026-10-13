@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { springs, still } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -231,25 +232,19 @@ const SelectRoot = ({
   required,
   className,
 }: SelectProps): React.JSX.Element => {
-  const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue);
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const [value, setValue] = useControllableState({
+    value: controlledValue,
+    defaultValue,
+    onChange: onValueChange,
+  });
+  const [isOpen, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const [labels, setLabels] = React.useState<ReadonlyMap<string, string>>(() => new Map());
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
-
-  const isValueControlled = controlledValue !== undefined;
-  const value = isValueControlled ? controlledValue : uncontrolledValue;
-
-  const isOpenControlled = controlledOpen !== undefined;
-  const isOpen = isOpenControlled ? controlledOpen : uncontrolledOpen;
-
-  const setOpen = React.useCallback(
-    (next: boolean) => {
-      if (!isOpenControlled) setUncontrolledOpen(next);
-      onOpenChange?.(next);
-    },
-    [isOpenControlled, onOpenChange],
-  );
 
   const openMenu = React.useCallback(() => {
     if (!disabled) setOpen(true);
@@ -270,11 +265,10 @@ const SelectRoot = ({
 
   const selectValue = React.useCallback(
     (next: string) => {
-      if (!isValueControlled) setUncontrolledValue(next);
-      if (next !== value) onValueChange?.(next);
+      setValue(next);
       closeMenu();
     },
-    [isValueControlled, value, onValueChange, closeMenu],
+    [setValue, closeMenu],
   );
 
   const registerItem = React.useCallback((itemValue: string, label: string) => {

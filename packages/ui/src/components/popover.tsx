@@ -4,6 +4,7 @@ import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { floatingOrigin, floatingVariants, reveal } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -106,23 +107,14 @@ const PopoverRoot = ({
   open: controlledOpen,
   onOpenChange,
 }: PopoverProps) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const [open, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const id = React.useId();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
-
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : uncontrolledOpen;
-
-  const setOpen = React.useCallback(
-    (newState: boolean) => {
-      if (!isControlled) {
-        setUncontrolledOpen(newState);
-      }
-      onOpenChange?.(newState);
-    },
-    [isControlled, onOpenChange],
-  );
 
   React.useEffect(() => {
     if (!open) return;

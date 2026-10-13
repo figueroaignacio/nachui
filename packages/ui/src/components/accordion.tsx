@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { collapse, collapseInner, springs, still, tap } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 const CHEVRON_VARIANTS = {
   open: { rotate: 180 },
@@ -56,33 +57,25 @@ const AccordionRoot = ({
   onValueChange,
   ref,
 }: AccordionProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const [uncontrolledValue, setUncontrolledValue] = React.useState<string[]>(() => {
-    if (!defaultValue) return [];
-    return Array.isArray(defaultValue) ? defaultValue : [defaultValue];
+  const [openItems, setOpenItems] = useControllableState<string[]>({
+    value,
+    defaultValue: defaultValue ? [defaultValue].flat() : [],
+    onChange: onValueChange,
   });
   const baseId = React.useId();
 
-  const isControlled = value !== undefined;
-  const openItems = isControlled ? value : uncontrolledValue;
-
   const toggleItem = React.useCallback(
     (itemValue: string) => {
-      const updater = (prev: string[]) => {
+      setOpenItems((prev) => {
         if (type === 'single') {
           return prev.includes(itemValue) ? [] : [itemValue];
         }
         return prev.includes(itemValue)
           ? prev.filter((v) => v !== itemValue)
           : [...prev, itemValue];
-      };
-
-      const nextValue = updater(openItems);
-      if (!isControlled) {
-        setUncontrolledValue(nextValue);
-      }
-      onValueChange?.(nextValue);
+      });
     },
-    [type, isControlled, openItems, onValueChange],
+    [type, setOpenItems],
   );
 
   const contextValue = React.useMemo<AccordionContextValue>(

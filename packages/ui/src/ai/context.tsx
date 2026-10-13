@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { springs } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 const PANEL_INITIAL = { opacity: 0, y: 6, scale: 0.98 } as const;
 const PANEL_ANIMATE = { opacity: 1, y: 0, scale: 1 } as const;
@@ -97,18 +98,12 @@ const ContextRoot = ({
   ref,
   ...props
 }: ContextProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const [internalOpen, setInternalOpen] = React.useState(false);
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : internalOpen;
+  const [open, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: false,
+    onChange: onOpenChange,
+  });
   const id = React.useId();
-
-  const setOpen = React.useCallback(
-    (next: boolean) => {
-      if (!isControlled) setInternalOpen(next);
-      onOpenChange?.(next);
-    },
-    [isControlled, onOpenChange],
-  );
 
   const transientRef = React.useRef(false);
 
