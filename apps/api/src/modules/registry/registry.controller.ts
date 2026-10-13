@@ -1,4 +1,11 @@
-import { ConflictException, Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+} from '@nestjs/common';
 import { RegistryRepository } from './registry.repository';
 
 @Controller('registry')
@@ -32,13 +39,19 @@ export class RegistryController {
 
     if (result.status === 'found') return result.component;
 
-    if (result.status === 'ambiguous') {
-      throw new ConflictException(
-        `NachUI: '${input}' existe en más de una familia (${result.candidates.join(', ')}). ` +
-          `Pedilo con el nombre completo, por ejemplo '${result.candidates[0]}'.`,
+    if (result.status === 'invalid') {
+      throw new BadRequestException(
+        `NachUI: '${input}' is not a valid slug. Use a name like 'button' or 'ui/button'.`,
       );
     }
 
-    throw new NotFoundException(`NachUI: El componente '${input}' no existe.`);
+    if (result.status === 'ambiguous') {
+      throw new ConflictException(
+        `NachUI: '${input}' exists in more than one family (${result.candidates.join(', ')}). ` +
+          `Ask for it by its full name, for example '${result.candidates[0]}'.`,
+      );
+    }
+
+    throw new NotFoundException(`NachUI: the component '${input}' does not exist.`);
   }
 }
