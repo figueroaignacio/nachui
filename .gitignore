@@ -40,3 +40,5 @@ yarn-error.log*
 *.pem
 
 .idea
+# Claude Code agent worktrees
+.claude/worktrees/

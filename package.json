@@ -18,11 +18,11 @@
     "checks": "pnpm --filter web checks"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --max-warnings 0 --fix",
+    "*.{json,md,mdx,yml,yaml,css}": [
       "prettier --write"
     ],
-    "*.{json,md,mdx,yml,yaml,css}": [
+    "*.{js,jsx,mjs,cjs,ts,tsx}": [
+      "eslint --max-warnings 0 --fix",
       "prettier --write"
     ]
   },
