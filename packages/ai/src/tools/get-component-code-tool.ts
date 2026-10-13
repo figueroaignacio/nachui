@@ -11,6 +11,7 @@ export type ComponentSource = {
 export type ComponentLookup =
   | { status: 'found'; component: ComponentSource }
   | { status: 'not-found' }
+  | { status: 'invalid' }
   | { status: 'ambiguous'; candidates: string[] };
 
 /** Data access the tool needs. The API wires it to its registry repository. */
@@ -52,6 +53,13 @@ export function createGetComponentCodeTool(getComponent: GetComponent): GetCompo
           return {
             found: false,
             message: `"${componentName}" exists in more than one family (${result.candidates.join(', ')}). Ask again with the qualified slug.`,
+          };
+        }
+
+        if (result.status === 'invalid') {
+          return {
+            found: false,
+            message: `"${componentName}" is not a valid component name. Use a name like \`button\` or a slug like \`ui/button\`.`,
           };
         }
 
