@@ -21,10 +21,10 @@ import {
   scrollToSection,
   sectionAtScroll,
   sectionOf,
-} from '@/features/docs/lib/section-filters';
-import { LocaleSwitcher } from '../common/locale-switcher';
-import { Logo } from '../common/logo';
-import { ThemeToggle } from '../common/theme-toggle';
+} from '../lib/section-filters';
+import { LocaleSwitcher } from '@/components/common/locale-switcher';
+import { Logo } from '@/components/common/logo';
+import { ThemeToggle } from '@/components/common/theme-toggle';
 
 const SWIPE_CLOSE_THRESHOLD = 80;
 const SWIPE_CLOSE_VELOCITY = 600;

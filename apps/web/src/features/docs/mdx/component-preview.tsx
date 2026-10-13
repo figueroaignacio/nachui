@@ -1,7 +1,7 @@
-import { getDemoCode } from '@/features/docs/lib/get-component-code';
+import { getDemoCode } from '../lib/get-component-code';
 import { Callout } from '@repo/ui/components/callout';
 import { ComponentPreviewClient } from './component-preview-client';
-import { DEMO_COMPONENTS } from './demo-registry';
+import { DEMO_COMPONENTS } from '@/components/mdx/demo-registry';
 
 interface ComponentPreviewProps {
   component: string;

@@ -1,7 +1,7 @@
 import { useDocsSections } from '@/hooks/use-docs-sections';
 import { Empty } from '@repo/ui/components/empty';
 import { useTranslations } from 'next-intl';
-import { ComponentGrid } from '../common/component-grid';
+import { ComponentGrid } from '@/components/common/component-grid';
 
 /**
  * Grid of every item in one docs navigation section. `section` is the

@@ -1,5 +1,5 @@
 import { NavBadge } from '@/components/common/nav-badge';
-import { MDXContent } from '@/components/mdx/mdx-content';
+import { MDXContent } from '../mdx/mdx-content';
 import { DocActions } from '@/features/docs/components/doc-actions';
 import { DocsPagination } from '@/features/docs/components/docs-pagination';
 import { IssueCta } from '@/features/docs/components/issue-cta';

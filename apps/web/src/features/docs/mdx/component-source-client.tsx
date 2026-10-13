@@ -1,6 +1,6 @@
 // Components
 import { Callout } from '@repo/ui/components/callout';
-import { CodeBlock } from './codeblock';
+import { CodeBlock } from '@/components/mdx/codeblock';
 
 interface ComponentSourceClientProps {
   code: string | null;

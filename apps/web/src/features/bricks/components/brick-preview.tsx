@@ -1,7 +1,7 @@
 'use client';
 
 import type { BrickSourceFile } from '@/features/bricks/lib/get-brick-source';
-import { useCopyToClipboard } from '@/features/docs/hooks/use-copy-to-clipboard';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { Callout } from '@repo/ui/components/callout';
 import { Tabs } from '@repo/ui/components/tabs';
 import { CheckIcon } from '@repo/ui/icons/check';

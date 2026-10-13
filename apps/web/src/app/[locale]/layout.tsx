@@ -4,7 +4,7 @@ import { ThemeInitScript } from '@/components/common/theme-init-script';
 import { AiChat } from '@/features/chat/containers/ai-chat';
 import { Backdrop } from '@/components/layout/backdrop';
 import { Footer } from '@/components/layout/footer';
-import { SiteDock } from '@/components/layout/site-dock';
+import { SiteDock } from '@/features/shell/components/site-dock';
 import { PageFrame } from '@/components/layout/page-frame';
 import { Providers } from '@/components/providers';
 import { routing } from '@/i18n/routing';

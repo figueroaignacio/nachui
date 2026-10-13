@@ -3,7 +3,7 @@
 import { GitHubIcon } from '@/components/common/github-icon';
 import { useChatStore } from '@/features/chat/store/chat-store';
 import { AiAvatar } from '@/features/chat/ui/ai-avatar';
-import { useCopyToClipboard } from '@/features/docs/hooks/use-copy-to-clipboard';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { getDocEditUrl } from '@/lib/domains';
 import { Button } from '@repo/ui/components/button';
 import { DropdownMenu } from '@repo/ui/components/dropdown-menu';
