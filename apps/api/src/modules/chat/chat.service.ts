@@ -1,6 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { createNachUIAgent } from '@repo/ai';
-import type { NachUIAgent } from '@repo/ai';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { createNachUIAgent, validateChatMessages } from '@repo/ai';
+import type { NachUIAgent, NachUIAgentUIMessage } from '@repo/ai';
 import { pipeAgentUIStreamToResponse } from 'ai';
 import type { Response } from 'express';
 import { RegistryRepository } from '../registry/registry.repository';
@@ -19,7 +19,23 @@ export class ChatService {
     });
   }
 
-  async streamChat(messages: unknown[], res: Response, abortSignal?: AbortSignal): Promise<void> {
+  /** Rejects forged or oversized threads with a 400 before any model call. */
+  async validateMessages(messages: unknown): Promise<NachUIAgentUIMessage[]> {
+    const result = await validateChatMessages(messages, this.agent.tools);
+
+    if (!result.success) {
+      this.logger.warn(`Rejected chat payload: ${result.error}. ${result.detail ?? ''}`.trim());
+      throw new BadRequestException(result.error);
+    }
+
+    return result.messages;
+  }
+
+  async streamChat(
+    messages: NachUIAgentUIMessage[],
+    res: Response,
+    abortSignal?: AbortSignal,
+  ): Promise<void> {
     await pipeAgentUIStreamToResponse({
       response: res,
       agent: this.agent,

@@ -13,9 +13,11 @@ export class ChatController {
   @Throttle({ default: { ttl: 60_000, limit: 10 } })
   @Post()
   async chat(@Body() createChatDto: CreateChatDto, @Res() res: Response, @Req() req: Request) {
+    const messages = await this.chatService.validateMessages(createChatDto.messages);
+
     const abortController = new AbortController();
     req.on('close', () => abortController.abort());
 
-    await this.chatService.streamChat(createChatDto.messages ?? [], res, abortController.signal);
+    await this.chatService.streamChat(messages, res, abortController.signal);
   }
 }

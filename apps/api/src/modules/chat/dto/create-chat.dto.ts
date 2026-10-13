@@ -1,16 +1,15 @@
-import { ArrayMaxSize, ArrayNotEmpty, IsArray } from 'class-validator';
-import type { UIMessage } from 'ai';
+import { ArrayMaxSize, ArrayNotEmpty, IsArray, IsObject } from 'class-validator';
+import { CHAT_LIMITS } from '@repo/ai';
 
 /**
- * The client replays the whole thread on every turn, so the only bound worth
- * setting is an abuse ceiling: high enough that a real conversation never hits
- * it, low enough that nobody can hand the model an unbounded transcript.
+ * First line of defense, before the body reaches the AI SDK. The thorough
+ * checks (roles, part types, text size, tool schemas) run in
+ * `ChatService.validateMessages`, which needs the agent's tools.
  */
-const MAX_MESSAGES = 200;
-
 export class CreateChatDto {
   @IsArray()
   @ArrayNotEmpty()
-  @ArrayMaxSize(MAX_MESSAGES)
-  messages!: UIMessage[];
+  @ArrayMaxSize(CHAT_LIMITS.maxMessages)
+  @IsObject({ each: true })
+  messages!: unknown[];
 }

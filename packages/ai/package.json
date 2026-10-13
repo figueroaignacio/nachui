@@ -36,6 +36,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "check-types": "tsc --noEmit",
+    "test": "vitest run",
     "ingest": "tsx --env-file=../../packages/db/.env --env-file=../../apps/web/.env src/scripts/ingest.ts"
   },
   "dependencies": {
