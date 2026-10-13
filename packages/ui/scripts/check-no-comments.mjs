@@ -54,7 +54,13 @@ function walk(dir) {
  * lines above) finds them all. JSX text is skipped because it is content.
  */
 export function findComments(text, fileName = 'source.tsx') {
-  const source = ts.createSourceFile(fileName, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const source = ts.createSourceFile(
+    fileName,
+    text,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TSX,
+  );
   const seen = new Set();
   const comments = [];
 

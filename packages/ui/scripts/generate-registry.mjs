@@ -22,21 +22,10 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { BRICKS_DIR, DEMOS_DIR, EXAMPLES_DIR, FAMILIES, ICONS_DIR } from './families.mjs';
 
 const UI_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const REPO_ROOT = resolve(UI_ROOT, '../..');
-
-const FAMILIES = [
-  { id: 'ui', codeDir: 'src/components', docsSegment: 'elements/ui' },
-  { id: 'layout', codeDir: 'src/layout', docsSegment: 'elements/layout' },
-  { id: 'ai', codeDir: 'src/ai', docsSegment: 'elements/ai' },
-  { id: 'hybrids', codeDir: 'src/hybrids', docsSegment: 'elements/hybrids' },
-];
-
-const DEMOS_DIR = 'src/demos';
-const EXAMPLES_DIR = 'src/examples';
-const BRICKS_DIR = 'src/bricks';
-const ICONS_DIR = 'src/icons';
 
 const GENERATED_HEADER = [
   '// GENERATED FILE, DO NOT EDIT.',
@@ -50,28 +39,43 @@ const DEMO_COMPONENTS_TARGET = 'apps/web/src/shared/components/mdx/demo-registry
 const EXAMPLE_COMPONENTS_TARGET = 'apps/web/src/features/gallery/lib/example-registry.tsx';
 const ICON_COMPONENTS_TARGET = 'apps/web/src/features/icons/lib/icon-registry.tsx';
 
+class ScanError extends Error {}
+
+/**
+ * Reads a directory under packages/ui. A missing or unreadable directory is
+ * a wrong path, not an empty family, so it throws instead of returning [] and
+ * quietly writing an empty registry.
+ */
 function listDir(relPath) {
   try {
     return readdirSync(join(UI_ROOT, relPath), { withFileTypes: true });
-  } catch {
-    return [];
+  } catch (error) {
+    throw new ScanError(`cannot read packages/ui/${relPath} (${error.code ?? error.message})`);
   }
+}
+
+/** Every scan has to find something; an empty result means the layout moved. */
+function nonEmpty(items, what) {
+  if (items.length === 0) {
+    throw new ScanError(`found no ${what}. Check the paths in scripts/families.mjs.`);
+  }
+  return items;
 }
 
 function scanComponents() {
   const components = [];
 
   for (const family of FAMILIES) {
-    for (const entry of listDir(family.codeDir)) {
-      if (!entry.isFile() || !entry.name.endsWith('.tsx')) continue;
-      if (entry.name.endsWith('.test.tsx')) continue;
-
-      components.push({
+    const found = listDir(family.codeDir)
+      .filter((entry) => entry.isFile() && entry.name.endsWith('.tsx'))
+      .filter((entry) => !entry.name.endsWith('.test.tsx'))
+      .map((entry) => ({
         name: entry.name.replace(/\.tsx$/, ''),
         family: family.id,
         path: `packages/ui/${family.codeDir}/${entry.name}`,
-      });
-    }
+      }));
+
+    components.push(...nonEmpty(found, `components in ${family.codeDir} (family "${family.id}")`));
   }
 
   return components.sort((a, b) => a.name.localeCompare(b.name));
@@ -296,14 +300,16 @@ function emitIconComponents(icons) {
 function main() {
   const check = process.argv.includes('--check');
 
-  const components = scanComponents();
-  const demos = scanVariants(DEMOS_DIR);
-  const examples = scanVariants(EXAMPLES_DIR);
-  const bricks = scanBricks();
-  const icons = scanIcons();
-
-  if (components.length === 0 || demos.length === 0) {
-    console.error('generate-registry: scanned nothing. The family paths are wrong.');
+  let components, demos, examples, bricks, icons;
+  try {
+    components = scanComponents();
+    demos = nonEmpty(scanVariants(DEMOS_DIR), `demos in ${DEMOS_DIR}`);
+    examples = nonEmpty(scanVariants(EXAMPLES_DIR), `examples in ${EXAMPLES_DIR}`);
+    bricks = nonEmpty(scanBricks(), `bricks in ${BRICKS_DIR}`);
+    icons = nonEmpty(scanIcons(), `icons in ${ICONS_DIR}`);
+  } catch (error) {
+    if (!(error instanceof ScanError)) throw error;
+    console.error(`generate-registry FAILED: ${error.message}`);
     process.exit(1);
   }
 

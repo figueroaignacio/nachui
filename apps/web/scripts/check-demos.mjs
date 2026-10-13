@@ -17,15 +17,28 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  COMPONENT_IMPORT_DIRS,
+  DEMOS_DIR,
+  EXAMPLES_DIR,
+  LIB_IMPORT_DIR,
+} from '../../../packages/ui/scripts/families.mjs';
 
 const APP_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const UI_SRC = resolve(APP_ROOT, '../../packages/ui/src');
-const DEMOS_ROOT = join(UI_SRC, 'demos');
-const EXAMPLES_ROOT = join(UI_SRC, 'examples');
+const UI_ROOT = resolve(APP_ROOT, '../../packages/ui');
+const UI_SRC = join(UI_ROOT, 'src');
+const DEMOS_ROOT = join(UI_ROOT, DEMOS_DIR);
+const EXAMPLES_ROOT = join(UI_ROOT, EXAMPLES_DIR);
 
-// Must stay in sync with rewriteDemoImports. A new family directory in
-// packages/ui has to be added in both places, and this check is what says so.
-const REWRITTEN_FAMILIES = ['components', 'layout', 'ai', 'hybrids', 'icons', 'lib'];
+// The family list comes from packages/ui/scripts/families.mjs, the same list
+// the registry generator uses. rewriteDemoImports keeps its own regex over
+// the same directories; when a family is added there, this check flags every
+// demo that imports from it until the rewrite matches too.
+const REWRITTEN_FAMILIES = [...COMPONENT_IMPORT_DIRS, LIB_IMPORT_DIR];
+const COMPONENT_IMPORT = new RegExp(
+  `import\\s+\\{([^}]+)\\}\\s+from\\s+['"]\\.\\./\\.\\./(${COMPONENT_IMPORT_DIRS.join('|')})/([^'"]+)['"]`,
+  'g',
+);
 
 const hasClientDirective = (source) => /^\s*(['"])use client\1/.test(source);
 
@@ -43,9 +56,7 @@ function findServerBoundaryReads(source) {
   if (hasClientDirective(source)) return [];
 
   const importedFrom = new Map();
-  for (const [, names, dir, file] of source.matchAll(
-    /import\s+\{([^}]+)\}\s+from\s+['"]\.\.\/\.\.\/(components|layout|ai|hybrids)\/([^'"]+)['"]/g,
-  )) {
+  for (const [, names, dir, file] of source.matchAll(COMPONENT_IMPORT)) {
     for (const name of names.split(',')) {
       const local = name
         .trim()
