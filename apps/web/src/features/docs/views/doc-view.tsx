@@ -74,7 +74,6 @@ export function DocView({ doc }: DocViewProps) {
                   page={doc.title}
                   url={docUrl}
                   filePath={doc.sourceFilePath}
-                  rawContent={doc.raw}
                   rawPath={`/${doc.locale || 'en'}${currentPath}.md`}
                   sourceUrl={sourceUrl}
                 />
@@ -103,7 +102,6 @@ export function DocView({ doc }: DocViewProps) {
               page={doc.title}
               url={docUrl}
               filePath={doc.sourceFilePath}
-              rawContent={doc.raw}
               rawPath={`/${doc.locale || 'en'}${currentPath}.md`}
               sourceUrl={sourceUrl}
             />
