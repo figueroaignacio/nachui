@@ -5,6 +5,7 @@ import * as React from 'react';
 import { cloneElement } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
+import { focusFirst, isTopmostLayer, lockPageScroll, trapFocus, useIsClient } from '../lib/overlay';
 import { backdrop, reveal, surface } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
@@ -30,49 +31,6 @@ function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
       <path d="m6 6 12 12" />
     </svg>
   );
-}
-
-const FOCUSABLE_SELECTOR = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
-  '[tabindex]:not([tabindex="-1"])',
-].join(', ');
-
-function isTopmostLayer(node: HTMLElement | null, target: EventTarget | null) {
-  if (!node) return false;
-  const owner = target instanceof Element ? target.closest('[aria-modal="true"]') : null;
-  if (owner) return owner === node;
-  const layers = document.querySelectorAll('[aria-modal="true"]');
-  return layers[layers.length - 1] === node;
-}
-
-function lockPageScroll() {
-  const root = document.documentElement;
-  const depth = Number(root.dataset.scrollLocked ?? '0');
-
-  if (depth === 0) {
-    const gutter = window.innerWidth - root.clientWidth;
-    root.dataset.scrollLockedOverflow = document.body.style.overflow;
-    if (gutter > 0) root.style.paddingRight = `${gutter}px`;
-    document.body.style.overflow = 'hidden';
-  }
-  root.dataset.scrollLocked = String(depth + 1);
-
-  return () => {
-    const remaining = Number(root.dataset.scrollLocked ?? '1') - 1;
-    if (remaining > 0) {
-      root.dataset.scrollLocked = String(remaining);
-      return;
-    }
-
-    document.body.style.overflow = root.dataset.scrollLockedOverflow ?? '';
-    root.style.paddingRight = '';
-    delete root.dataset.scrollLocked;
-    delete root.dataset.scrollLockedOverflow;
-  };
 }
 
 const OVERLAY_STYLE = { willChange: 'opacity' } as const;
@@ -197,12 +155,7 @@ interface DialogPortalProps {
 }
 
 const DialogPortal = ({ children }: DialogPortalProps) => {
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
+  const mounted = useIsClient();
 
   if (!mounted) return null;
 
@@ -302,40 +255,19 @@ const DialogContent = ({
         setOpen(false);
         return;
       }
-      if (e.key !== 'Tab') return;
-
-      const focusable = Array.from(content.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
-      if (focusable.length === 0) return;
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (e.shiftKey) {
-        if (document.activeElement === first) {
-          e.preventDefault();
-          last?.focus();
-        }
-      } else {
-        if (document.activeElement === last) {
-          e.preventDefault();
-          first?.focus();
-        }
-      }
+      trapFocus(e, content);
     };
 
     document.addEventListener('keydown', handleKeyDown);
 
-    requestAnimationFrame(() => {
-      const content = contentRef.current;
-      if (content) {
-        const focusable = content.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
-        (focusable ?? content).focus();
-      }
+    const frame = requestAnimationFrame(() => {
+      if (contentRef.current) focusFirst(contentRef.current);
     });
 
     const releasePageScroll = lockPageScroll();
 
     return () => {
+      cancelAnimationFrame(frame);
       document.removeEventListener('keydown', handleKeyDown);
       releasePageScroll();
       triggerRef.current?.focus();
