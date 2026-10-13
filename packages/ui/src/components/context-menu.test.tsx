@@ -1,36 +1,9 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import type * as React from 'react';
 import { ContextMenu } from './context-menu';
 
-vi.mock('motion/react', async () => {
-  return {
-    motion: {
-      div: ({
-        children,
-        style,
-        _initial,
-        _animate,
-        _exit,
-        _variants,
-        _transition,
-        ref,
-        ...props
-      }: React.ComponentProps<'div'> & Record<string, unknown>) => (
-        <div
-          ref={ref as React.Ref<HTMLDivElement>}
-          style={style as React.CSSProperties}
-          {...(props as React.ComponentProps<'div'>)}
-        >
-          {children}
-        </div>
-      ),
-    },
-    useReducedMotion: () => false,
-    AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
-  };
-});
+vi.mock('motion/react');
 
 function renderMenu(handleAction = vi.fn()) {
   render(
@@ -136,5 +109,48 @@ describe('ContextMenu', () => {
 
     fireEvent.keyDown(menu, { key: 'ArrowDown' });
     expect(screen.getByText('Copy')).toHaveFocus();
+  });
+
+  it('can be controlled with open and onOpenChange', async () => {
+    const onOpenChange = vi.fn();
+    const { rerender } = render(
+      <ContextMenu open onOpenChange={onOpenChange}>
+        <ContextMenu.Trigger>Area</ContextMenu.Trigger>
+        <ContextMenu.Content>
+          <ContextMenu.Item>Copy</ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu>,
+    );
+
+    expect(screen.getByRole('menu')).toBeInTheDocument();
+
+    fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(screen.getByRole('menu')).toBeInTheDocument();
+
+    rerender(
+      <ContextMenu open={false} onOpenChange={onOpenChange}>
+        <ContextMenu.Trigger>Area</ContextMenu.Trigger>
+        <ContextMenu.Content>
+          <ContextMenu.Item>Copy</ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu>,
+    );
+
+    await waitFor(() => expect(screen.queryByRole('menu')).not.toBeInTheDocument());
+  });
+
+  it('starts open with defaultOpen', () => {
+    render(
+      <ContextMenu defaultOpen>
+        <ContextMenu.Trigger>Area</ContextMenu.Trigger>
+        <ContextMenu.Content>
+          <ContextMenu.Item>Copy</ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu>,
+    );
+
+    expect(screen.getByRole('menu')).toBeInTheDocument();
+    expect(screen.getByText('Area')).toHaveAttribute('aria-expanded', 'true');
   });
 });

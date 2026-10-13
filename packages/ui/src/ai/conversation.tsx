@@ -92,7 +92,10 @@ const ConversationRoot = ({
   const [stuck, setStuckState] = React.useState(true);
   const stuckRef = React.useRef(true);
   const onStickChangeRef = React.useRef(onStickChange);
-  onStickChangeRef.current = onStickChange;
+
+  React.useLayoutEffect(() => {
+    onStickChangeRef.current = onStickChange;
+  });
 
   const setStuck = React.useCallback((next: boolean) => {
     if (stuckRef.current === next) return;

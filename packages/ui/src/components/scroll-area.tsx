@@ -33,6 +33,11 @@ interface ScrollAreaProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const MIN_THUMB_SIZE = 18;
 
+function assignRef<T>(ref: React.Ref<T> | undefined, node: T) {
+  if (typeof ref === 'function') ref(node);
+  else if (ref) ref.current = node;
+}
+
 const ScrollAreaRoot = ({
   type = 'hover',
   orientation = 'vertical',
@@ -54,10 +59,7 @@ const ScrollAreaRoot = ({
   const mergedViewportRef = React.useCallback(
     (node: HTMLDivElement | null) => {
       viewportRef.current = node;
-      if (typeof externalViewportRef === 'function') externalViewportRef(node);
-      else if (externalViewportRef) {
-        (externalViewportRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-      }
+      assignRef(externalViewportRef, node);
     },
     [externalViewportRef],
   );

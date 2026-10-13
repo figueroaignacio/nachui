@@ -4,6 +4,7 @@ import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { floatingOrigin, floatingVariants, reveal } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -29,8 +30,6 @@ function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
     </svg>
   );
 }
-
-// --- Animation constants ---
 
 const POPOVER_POSITION_CLASSES = {
   top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
@@ -78,8 +77,6 @@ function shiftTranslate(shift: number, centeredX: boolean, centeredY: boolean) {
   return centeredY ? `${x} -50%` : x;
 }
 
-// --- Context ---
-
 interface PopoverContextType {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -97,8 +94,6 @@ const usePopoverContext = () => {
   return context;
 };
 
-// --- Components ---
-
 interface PopoverProps {
   children: React.ReactNode;
   defaultOpen?: boolean;
@@ -112,23 +107,14 @@ const PopoverRoot = ({
   open: controlledOpen,
   onOpenChange,
 }: PopoverProps) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const [open, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const id = React.useId();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
-
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : uncontrolledOpen;
-
-  const setOpen = React.useCallback(
-    (newState: boolean) => {
-      if (!isControlled) {
-        setUncontrolledOpen(newState);
-      }
-      onOpenChange?.(newState);
-    },
-    [isControlled, onOpenChange],
-  );
 
   React.useEffect(() => {
     if (!open) return;
@@ -260,6 +246,7 @@ interface PopoverContentProps extends HTMLMotionProps<'div'> {
   sideOffset?: number;
   children?: React.ReactNode;
   showClose?: boolean;
+  closeLabel?: string;
 }
 
 const PopoverContent = ({
@@ -268,6 +255,7 @@ const PopoverContent = ({
   className,
   children,
   showClose = false,
+  closeLabel = 'Close',
   ...props
 }: PopoverContentProps) => {
   const { open, id, setOpen } = usePopoverContext();
@@ -275,7 +263,6 @@ const PopoverContent = ({
   const shouldReduceMotion = useReducedMotion();
   const shift = useViewportShift(contentRef, open);
 
-  // Move focus into the popover when it opens so keyboard users can reach its content.
   React.useEffect(() => {
     if (!open) return;
     const frame = requestAnimationFrame(() => {
@@ -329,7 +316,7 @@ const PopoverContent = ({
               className="ring-offset-background focus-visible:ring-ring absolute top-1 right-1 rounded-md p-2 opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               <XIcon className="h-4 w-4" size={16} />
-              <span className="sr-only">Close</span>
+              <span className="sr-only">{closeLabel}</span>
             </button>
           )}
         </motion.div>

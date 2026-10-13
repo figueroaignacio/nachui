@@ -8,28 +8,19 @@ const TEXT =
 
 export function Streaming() {
   const [count, setCount] = useState(0);
-  const [running, setRunning] = useState(true);
+  const streaming = count < TEXT.length;
 
   useEffect(() => {
-    if (!running) return;
-    if (count >= TEXT.length) {
-      setRunning(false);
-      return;
-    }
+    if (!streaming) return;
     const timer = setTimeout(() => setCount((value) => value + 2), 30);
     return () => clearTimeout(timer);
-  }, [count, running]);
-
-  const restart = () => {
-    setCount(0);
-    setRunning(true);
-  };
+  }, [count, streaming]);
 
   return (
     <div className="flex w-full max-w-lg flex-col gap-4">
       <button
         type="button"
-        onClick={restart}
+        onClick={() => setCount(0)}
         className="border-border hover:bg-muted w-fit rounded-full border px-3 py-1.5 text-xs transition-colors"
       >
         Stream again
@@ -37,7 +28,7 @@ export function Streaming() {
       {count === 0 ? (
         <Response.Skeleton />
       ) : (
-        <Response isStreaming={running}>
+        <Response isStreaming={streaming}>
           <p>{TEXT.slice(0, count)}</p>
         </Response>
       )}

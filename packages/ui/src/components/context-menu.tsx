@@ -4,10 +4,11 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { floatingVariants, reveal } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 interface ContextMenuContextValue {
   isOpen: boolean;
-  point: { x: number; y: number };
+  point: { x: number; y: number } | null;
   openAt: (x: number, y: number) => void;
   closeMenu: (options?: { restoreFocus?: boolean }) => void;
   rootRef: React.RefObject<HTMLDivElement | null>;
@@ -19,6 +20,8 @@ interface ContextMenuContextValue {
 interface ContextMenuProps {
   children: React.ReactNode;
   className?: string;
+  open?: boolean;
+  defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
 
@@ -64,10 +67,16 @@ function getMenuItems(container: HTMLElement | null): HTMLElement[] {
 const ContextMenuRoot = ({
   children,
   className,
+  open,
+  defaultOpen = false,
   onOpenChange,
 }: ContextMenuProps): React.JSX.Element => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [point, setPoint] = React.useState({ x: 0, y: 0 });
+  const [isOpen, setIsOpen] = useControllableState({
+    value: open,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
+  const [point, setPoint] = React.useState<{ x: number; y: number } | null>(null);
   const rootRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLDivElement>(null);
 
@@ -75,20 +84,18 @@ const ContextMenuRoot = ({
     (x: number, y: number) => {
       setPoint({ x, y });
       setIsOpen(true);
-      onOpenChange?.(true);
     },
-    [onOpenChange],
+    [setIsOpen],
   );
 
   const closeMenu = React.useCallback(
     (options?: { restoreFocus?: boolean }) => {
       setIsOpen(false);
-      onOpenChange?.(false);
       if (options?.restoreFocus !== false) {
         triggerRef.current?.focus();
       }
     },
-    [onOpenChange],
+    [setIsOpen],
   );
 
   const id = React.useId();
@@ -193,29 +200,33 @@ const ContextMenuContent = ({
   children,
   className,
 }: ContextMenuContentProps): React.JSX.Element | null => {
-  const { isOpen, point, closeMenu, rootRef, contentId, triggerId } = useContextMenuContext();
+  const { isOpen, point, closeMenu, rootRef, triggerRef, contentId, triggerId } =
+    useContextMenuContext();
   const contentRef = React.useRef<HTMLDivElement>(null);
-  const [coords, setCoords] = React.useState<{ left: number; top: number } | null>(null);
+  const [placement, setPlacement] = React.useState<{
+    point: { x: number; y: number } | null;
+    left: number;
+    top: number;
+  } | null>(null);
+  const coords = placement?.point === point ? placement : null;
 
   React.useLayoutEffect(() => {
-    if (!isOpen) {
-      setCoords(null);
-      return;
-    }
+    if (!isOpen) return;
     const content = contentRef.current;
-    const root = rootRef.current;
+    const root = rootRef.current ?? content?.parentElement;
     if (!content || !root) return;
 
     const rootRect = root.getBoundingClientRect();
-    let x = point.x;
-    let y = point.y;
+    const triggerRect = triggerRef.current?.getBoundingClientRect() ?? rootRect;
+    let x = point?.x ?? triggerRect.left;
+    let y = point?.y ?? triggerRect.bottom;
     x = Math.min(x, window.innerWidth - content.offsetWidth - VIEWPORT_PADDING);
     y = Math.min(y, window.innerHeight - content.offsetHeight - VIEWPORT_PADDING);
     x = Math.max(VIEWPORT_PADDING, x);
     y = Math.max(VIEWPORT_PADDING, y);
 
-    setCoords({ left: x - rootRect.left, top: y - rootRect.top });
-  }, [isOpen, point, rootRef]);
+    setPlacement({ point, left: x - rootRect.left, top: y - rootRect.top });
+  }, [isOpen, point, rootRef, triggerRef]);
 
   React.useEffect(() => {
     if (!isOpen) return;

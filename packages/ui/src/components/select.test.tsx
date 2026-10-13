@@ -2,10 +2,9 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Select } from './select';
 
-function renderSelect(props: React.ComponentProps<typeof Select> = { children: null }) {
-  const { children: _children, ...rest } = props;
+function renderSelect(props: Omit<React.ComponentProps<typeof Select>, 'children'> = {}) {
   return render(
-    <Select {...rest}>
+    <Select {...props}>
       <Select.Trigger placeholder="Pick one" />
       <Select.Content>
         <Select.Item value="one">One</Select.Item>
@@ -25,13 +24,13 @@ describe('Select', () => {
   });
 
   it('shows the label of the default value', () => {
-    renderSelect({ defaultValue: 'two', children: null });
+    renderSelect({ defaultValue: 'two' });
     expect(screen.getByRole('combobox')).toHaveTextContent('Two');
   });
 
   it('opens on click and selects an option', () => {
     const onValueChange = vi.fn();
-    renderSelect({ onValueChange, children: null });
+    renderSelect({ onValueChange });
     const trigger = screen.getByRole('combobox');
     fireEvent.click(trigger);
     expect(trigger).toHaveAttribute('aria-expanded', 'true');
@@ -42,7 +41,7 @@ describe('Select', () => {
   });
 
   it('marks the selected option', () => {
-    renderSelect({ defaultValue: 'one', children: null });
+    renderSelect({ defaultValue: 'one' });
     fireEvent.click(screen.getByRole('combobox'));
     const options = screen.getAllByRole('option', { hidden: true });
     expect(options[0]).toHaveAttribute('aria-selected', 'true');
@@ -59,12 +58,12 @@ describe('Select', () => {
   });
 
   it('respects the disabled state', () => {
-    renderSelect({ disabled: true, children: null });
+    renderSelect({ disabled: true });
     expect(screen.getByRole('combobox')).toBeDisabled();
   });
 
   it('renders a hidden input when given a name', () => {
-    const { container } = renderSelect({ name: 'plan', defaultValue: 'two', children: null });
+    const { container } = renderSelect({ name: 'plan', defaultValue: 'two' });
     expect(container.querySelector('input[name="plan"]')).toHaveValue('two');
   });
 });

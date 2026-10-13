@@ -1,7 +1,5 @@
 import { Skeleton } from '../../components/skeleton';
 
-// Two placeholder rows shaped like the members table: avatar, name, email,
-// role badge and a row action.
 const rows = ['first', 'second'];
 
 export function Default() {

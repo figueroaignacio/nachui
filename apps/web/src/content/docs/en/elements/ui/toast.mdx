@@ -66,11 +66,12 @@ Choose where toasts appear on screen. Click a position to select it, then trigge
 
 ### Toast.Provider
 
-| Prop        | Type                                                                 | Default          | Description                       |
-| ----------- | -------------------------------------------------------------------- | ---------------- | --------------------------------- |
-| `children`  | `React.ReactNode`                                                    | —                | The app content.                  |
-| `maxToasts` | `number`                                                             | `5`              | Maximum number of visible toasts. |
-| `position`  | `"top-left"` \| `"top-right"` \| `"bottom-left"` \| `"bottom-right"` | `"bottom-right"` | Where toasts appear on screen.    |
+| Prop        | Type                                                                 | Default          | Description                                                                              |
+| ----------- | -------------------------------------------------------------------- | ---------------- | ---------------------------------------------------------------------------------------- |
+| `children`  | `React.ReactNode`                                                    | —                | The app content.                                                                         |
+| `maxToasts` | `number`                                                             | `5`              | Maximum number of visible toasts.                                                        |
+| `position`  | `"top-left"` \| `"top-right"` \| `"bottom-left"` \| `"bottom-right"` | `"bottom-right"` | Where toasts appear on screen.                                                           |
+| `labels`    | `Partial<ToastLabels>`                                               | -                | Accessible names: `region` (`"Notifications"`) and `dismiss` (`"Dismiss notification"`). |
 
 ### useToast()
 

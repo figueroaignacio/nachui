@@ -2,49 +2,10 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import type * as React from 'react';
+import { Dialog } from './dialog';
 import { Sheet } from './sheet';
 
-vi.mock('motion/react', async () => {
-  const strip = (props: Record<string, unknown>) => {
-    const {
-      initial: _initial,
-      animate: _animate,
-      exit: _exit,
-      variants: _variants,
-      transition: _transition,
-      whileTap: _whileTap,
-      style: _style,
-      ...rest
-    } = props;
-    return rest;
-  };
-  return {
-    motion: {
-      div: ({ children, ref, ...props }: React.ComponentProps<'div'> & Record<string, unknown>) => (
-        <div
-          ref={ref as React.Ref<HTMLDivElement>}
-          {...(strip(props) as React.ComponentProps<'div'>)}
-        >
-          {children}
-        </div>
-      ),
-      button: ({
-        children,
-        ref,
-        ...props
-      }: React.ComponentProps<'button'> & Record<string, unknown>) => (
-        <button
-          ref={ref as React.Ref<HTMLButtonElement>}
-          {...(strip(props) as React.ComponentProps<'button'>)}
-        >
-          {children}
-        </button>
-      ),
-    },
-    AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-    useReducedMotion: () => false,
-  };
-});
+vi.mock('motion/react');
 
 function Example(props: Partial<React.ComponentProps<typeof Sheet.Content>>) {
   return (
@@ -129,5 +90,70 @@ describe('Sheet', () => {
       'aria-haspopup',
       'dialog',
     );
+  });
+});
+
+describe('Sheet keyboard and focus', () => {
+  it('moves focus in on open and keeps Tab inside', async () => {
+    const user = userEvent.setup();
+    render(<Example />);
+    await user.click(screen.getByRole('button', { name: 'Open' }));
+
+    const close = screen.getByRole('button', { name: 'Close' });
+    await waitFor(() => expect(close).toHaveFocus());
+
+    await user.tab();
+    expect(screen.getByRole('button', { name: 'Apply' })).toHaveFocus();
+    await user.tab();
+    expect(screen.getByRole('button', { name: 'Done' })).toHaveFocus();
+    await user.tab();
+    expect(close).toHaveFocus();
+    await user.tab({ shift: true });
+    expect(screen.getByRole('button', { name: 'Done' })).toHaveFocus();
+  });
+
+  it('gives focus back to the trigger when it closes', async () => {
+    const user = userEvent.setup();
+    render(<Example />);
+    const trigger = screen.getByRole('button', { name: 'Open' });
+    await user.click(trigger);
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Close' })).toHaveFocus());
+
+    await user.keyboard('{Escape}');
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(trigger).toHaveFocus();
+  });
+
+  it('shares the page scroll lock with a dialog stacked under it', async () => {
+    const user = userEvent.setup();
+    render(
+      <Dialog>
+        <Dialog.Trigger>Edit</Dialog.Trigger>
+        <Dialog.Content>
+          <Dialog.Title>Edit row</Dialog.Title>
+          <Example />
+        </Dialog.Content>
+      </Dialog>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Edit' }));
+    await user.click(await screen.findByRole('button', { name: 'Open' }));
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Apply' })).toBeVisible());
+    expect(document.documentElement.dataset.scrollLocked).toBe('2');
+
+    await user.click(screen.getByRole('button', { name: 'Done' }));
+
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog', { name: 'Filters' })).not.toBeInTheDocument(),
+    );
+    expect(screen.getByRole('dialog', { name: 'Edit row' })).toBeInTheDocument();
+    expect(document.body.style.overflow).toBe('hidden');
+
+    await user.keyboard('{Escape}');
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(document.body.style.overflow).toBe('');
+    expect(document.documentElement.dataset.scrollLocked).toBeUndefined();
   });
 });

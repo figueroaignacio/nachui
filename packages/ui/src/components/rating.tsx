@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -90,20 +91,18 @@ const RatingRoot = ({
   ref,
   ...props
 }: RatingProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue);
+  const [value, setStoredValue] = useControllableState({
+    value: controlledValue,
+    defaultValue,
+    onChange: onValueChange,
+  });
   const [hoverValue, setHoverValue] = React.useState<number | null>(null);
-  const isControlled = controlledValue !== undefined;
-  const value = isControlled ? controlledValue : uncontrolledValue;
   const interactive = !readOnly && !disabled;
   const displayed = hoverValue ?? value;
 
   const setValue = React.useCallback(
-    (next: number) => {
-      const clamped = Math.min(Math.max(next, 0), max);
-      if (!isControlled) setUncontrolledValue(clamped);
-      onValueChange?.(clamped);
-    },
-    [isControlled, max, onValueChange],
+    (next: number) => setStoredValue(Math.min(Math.max(next, 0), max)),
+    [max, setStoredValue],
   );
 
   const valueFromPointer = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
@@ -175,7 +174,7 @@ const RatingRoot = ({
       }}
       className={cn(
         'inline-flex items-center gap-2',
-        disabled && 'cursor-not-allowed opacity-50',
+        disabled && 'cursor-not-allowed opacity-40',
         className,
       )}
       {...props}

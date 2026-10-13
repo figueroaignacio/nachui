@@ -5,7 +5,16 @@ import * as React from 'react';
 import { cloneElement } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
+import {
+  assignRef,
+  focusFirst,
+  isTopmostLayer,
+  lockPageScroll,
+  trapFocus,
+  useIsClient,
+} from '../lib/overlay';
 import { backdrop, reveal, surface } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -32,53 +41,8 @@ function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
   );
 }
 
-const FOCUSABLE_SELECTOR = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
-  '[tabindex]:not([tabindex="-1"])',
-].join(', ');
-
-function isTopmostLayer(node: HTMLElement | null, target: EventTarget | null) {
-  if (!node) return false;
-  const owner = target instanceof Element ? target.closest('[aria-modal="true"]') : null;
-  if (owner) return owner === node;
-  const layers = document.querySelectorAll('[aria-modal="true"]');
-  return layers[layers.length - 1] === node;
-}
-
-function lockPageScroll() {
-  const root = document.documentElement;
-  const depth = Number(root.dataset.scrollLocked ?? '0');
-
-  if (depth === 0) {
-    const gutter = window.innerWidth - root.clientWidth;
-    root.dataset.scrollLockedOverflow = document.body.style.overflow;
-    if (gutter > 0) root.style.paddingRight = `${gutter}px`;
-    document.body.style.overflow = 'hidden';
-  }
-  root.dataset.scrollLocked = String(depth + 1);
-
-  return () => {
-    const remaining = Number(root.dataset.scrollLocked ?? '1') - 1;
-    if (remaining > 0) {
-      root.dataset.scrollLocked = String(remaining);
-      return;
-    }
-
-    document.body.style.overflow = root.dataset.scrollLockedOverflow ?? '';
-    root.style.paddingRight = '';
-    delete root.dataset.scrollLocked;
-    delete root.dataset.scrollLockedOverflow;
-  };
-}
-
 const OVERLAY_STYLE = { willChange: 'opacity' } as const;
 const DIALOG_STYLE = { willChange: 'opacity, transform, filter' } as const;
-
-// --- Context ---
 
 type DialogContextType = {
   open: boolean;
@@ -100,8 +64,6 @@ const useDialogContext = () => {
   return context;
 };
 
-// --- Components ---
-
 interface DialogProps {
   children: React.ReactNode;
   defaultOpen?: boolean;
@@ -115,32 +77,14 @@ const DialogRoot = ({
   open: controlledOpen,
   onOpenChange,
 }: DialogProps) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const [open, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const [hasTitle, setHasTitle] = React.useState(false);
   const [hasDescription, setHasDescription] = React.useState(false);
   const id = React.useId();
-
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : uncontrolledOpen;
-  const openRef = React.useRef(open);
-  const onOpenChangeRef = React.useRef(onOpenChange);
-
-  React.useLayoutEffect(() => {
-    openRef.current = open;
-    onOpenChangeRef.current = onOpenChange;
-  });
-
-  const setOpen = React.useCallback(
-    (value: boolean | ((prev: boolean) => boolean)) => {
-      const next = typeof value === 'function' ? value(openRef.current) : value;
-      openRef.current = next;
-      if (!isControlled) {
-        setUncontrolledOpen(next);
-      }
-      onOpenChangeRef.current?.(next);
-    },
-    [isControlled],
-  );
 
   const value = React.useMemo<DialogContextType>(
     () => ({ open, setOpen, id, hasTitle, setHasTitle, hasDescription, setHasDescription }),
@@ -201,12 +145,7 @@ interface DialogPortalProps {
 }
 
 const DialogPortal = ({ children }: DialogPortalProps) => {
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
+  const mounted = useIsClient();
 
   if (!mounted) return null;
 
@@ -278,11 +217,15 @@ DialogOverlay.displayName = 'DialogOverlay';
 
 interface DialogContentProps extends HTMLMotionProps<'div'> {
   children?: React.ReactNode;
+  showClose?: boolean;
+  closeLabel?: string;
 }
 
 const DialogContent = ({
   className,
   children,
+  showClose = true,
+  closeLabel = 'Close',
   ref,
   ...props
 }: DialogContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
@@ -306,40 +249,19 @@ const DialogContent = ({
         setOpen(false);
         return;
       }
-      if (e.key !== 'Tab') return;
-
-      const focusable = Array.from(content.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
-      if (focusable.length === 0) return;
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (e.shiftKey) {
-        if (document.activeElement === first) {
-          e.preventDefault();
-          last?.focus();
-        }
-      } else {
-        if (document.activeElement === last) {
-          e.preventDefault();
-          first?.focus();
-        }
-      }
+      trapFocus(e, content);
     };
 
     document.addEventListener('keydown', handleKeyDown);
 
-    requestAnimationFrame(() => {
-      const content = contentRef.current;
-      if (content) {
-        const focusable = content.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
-        (focusable ?? content).focus();
-      }
+    const frame = requestAnimationFrame(() => {
+      if (contentRef.current) focusFirst(contentRef.current);
     });
 
     const releasePageScroll = lockPageScroll();
 
     return () => {
+      cancelAnimationFrame(frame);
       document.removeEventListener('keydown', handleKeyDown);
       releasePageScroll();
       triggerRef.current?.focus();
@@ -354,8 +276,7 @@ const DialogContent = ({
           <motion.div
             ref={(node) => {
               contentRef.current = node;
-              if (typeof ref === 'function') ref(node);
-              else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+              assignRef(ref, node);
             }}
             role="dialog"
             aria-modal="true"
@@ -375,10 +296,12 @@ const DialogContent = ({
             {...props}
           >
             {children}
-            <DialogClose className="ring-offset-background focus-visible:ring-ring absolute top-2 right-2 rounded-sm p-2 opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none">
-              <XIcon className="h-4 w-4" size={16} />
-              <span className="sr-only">Close</span>
-            </DialogClose>
+            {showClose && (
+              <DialogClose className="ring-offset-background focus-visible:ring-ring absolute top-2 right-2 rounded-sm p-2 opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none">
+                <XIcon className="h-4 w-4" size={16} />
+                <span className="sr-only">{closeLabel}</span>
+              </DialogClose>
+            )}
           </motion.div>
         </DialogPortal>
       )}

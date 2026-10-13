@@ -62,8 +62,6 @@ function useViewportShift(ref: React.RefObject<HTMLElement | null>, open: boolea
   return shift;
 }
 
-// --- Item context ---
-
 interface NavigationMenuItemContextType {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -82,8 +80,6 @@ const useNavigationMenuItem = () => {
   }
   return context;
 };
-
-// --- Components ---
 
 const NavigationMenuRoot = ({
   className,
@@ -244,11 +240,6 @@ interface NavigationMenuLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorE
   badge?: React.ReactNode;
 }
 
-/**
- * A menu row: icon box, title with optional badge, and a muted description.
- * Pass `asChild` with a routing `<Link>` as the only child to keep client-side
- * (and locale-aware) navigation; the row content is injected into it.
- */
 const NavigationMenuLink = ({
   asChild,
   icon,
@@ -257,6 +248,7 @@ const NavigationMenuLink = ({
   badge,
   className,
   children,
+  href,
   onClick,
   ...props
 }: NavigationMenuLinkProps) => {
@@ -305,6 +297,7 @@ const NavigationMenuLink = ({
 
   return (
     <a
+      href={href}
       className={rowClassName}
       onClick={(e) => {
         onClick?.(e as React.MouseEvent<HTMLAnchorElement>);

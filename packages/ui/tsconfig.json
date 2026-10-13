@@ -3,8 +3,11 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
+    "verbatimModuleSyntax": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
-  "include": ["src", "vitest.setup.ts"],
+  "include": ["src", "__mocks__", "vitest.setup.ts"],
   "exclude": ["node_modules", "dist"]
 }

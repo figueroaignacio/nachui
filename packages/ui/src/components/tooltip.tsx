@@ -4,8 +4,7 @@ import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { floatingOrigin, floatingVariants, reveal } from '../lib/motion';
-
-// --- Animation constants (module level) ---
+import { useControllableState } from '../lib/use-controllable-state';
 
 const TOOLTIP_POSITION_CLASSES = {
   top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
@@ -22,8 +21,6 @@ const TOOLTIP_ARROW_CLASSES = {
 } as const;
 
 const TOOLTIP_STYLE = { willChange: 'opacity, transform, filter' } as const;
-
-// --- Context ---
 
 interface TooltipContextType {
   open: boolean;
@@ -43,11 +40,10 @@ const useTooltip = () => {
   return context;
 };
 
-// --- Components ---
-
 interface TooltipProps {
   children: React.ReactNode;
   delayDuration?: number;
+  defaultOpen?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
@@ -55,24 +51,15 @@ interface TooltipProps {
 const TooltipRoot = ({
   children,
   delayDuration = 200,
+  defaultOpen = false,
   open: controlledOpen,
   onOpenChange,
 }: TooltipProps) => {
-  const [internalOpen, setInternalOpen] = React.useState(false);
-
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : internalOpen;
-
-  const setOpen = React.useCallback(
-    (newState: boolean) => {
-      if (isControlled) {
-        onOpenChange?.(newState);
-      } else {
-        setInternalOpen(newState);
-      }
-    },
-    [isControlled, onOpenChange],
-  );
+  const [open, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
 
   const id = React.useId();
   const rootRef = React.useRef<HTMLDivElement>(null);
@@ -114,7 +101,6 @@ function TooltipTrigger({ children, asChild = false, className, ...props }: Tool
     };
   }, []);
 
-  // WCAG 1.4.13: the tooltip must be dismissible without moving the pointer.
   React.useEffect(() => {
     if (!open) return;
     const handleEscape = (e: KeyboardEvent) => {
@@ -194,7 +180,6 @@ function TooltipTrigger({ children, asChild = false, className, ...props }: Tool
   return (
     <div
       aria-describedby={open ? id : undefined}
-      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- the wrapper must be focusable so keyboard users can summon the tooltip when the child isn't interactive
       tabIndex={0}
       className={cn('cursor-pointer', className)}
       {...restProps}

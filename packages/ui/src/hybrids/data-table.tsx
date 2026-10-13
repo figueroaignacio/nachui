@@ -8,6 +8,7 @@ import { Input } from '../components/input';
 import { Pagination } from '../components/pagination';
 import { Table } from '../components/table';
 import { cn } from '../lib/cn';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -290,6 +291,8 @@ interface DataTableProps<T> extends Omit<React.HTMLAttributes<HTMLDivElement>, '
   children?: React.ReactNode;
 }
 
+const EMPTY_SELECTION: string[] = [];
+
 const toSet = (value: Set<string> | string[] | undefined): Set<string> =>
   value instanceof Set ? value : new Set(value ?? []);
 
@@ -316,15 +319,22 @@ function DataTableRoot<T>({
 }: DataTableProps<T> & { ref?: React.Ref<HTMLDivElement> }) {
   const labels = React.useMemo(() => ({ ...DEFAULT_LABELS, ...labelOverrides }), [labelOverrides]);
 
-  const [internalFilter, setInternalFilter] = React.useState('');
-  const filter = controlledFilter ?? internalFilter;
-  const [internalSort, setInternalSort] = React.useState<DataTableSort | null>(null);
-  const sort = controlledSort === undefined ? internalSort : controlledSort;
-  const [internalSelected, setInternalSelected] = React.useState<Set<string>>(() => new Set());
-  const selected = React.useMemo(
-    () => (controlledSelected === undefined ? internalSelected : toSet(controlledSelected)),
-    [controlledSelected, internalSelected],
-  );
+  const [filter, setStoredFilter] = useControllableState({
+    value: controlledFilter,
+    defaultValue: '',
+    onChange: onFilterChange,
+  });
+  const [sort, setSort] = useControllableState<DataTableSort | null>({
+    value: controlledSort,
+    defaultValue: null,
+    onChange: onSortChange,
+  });
+  const [rawSelected, setRawSelected] = useControllableState<Set<string> | string[]>({
+    value: controlledSelected,
+    defaultValue: EMPTY_SELECTION,
+    onChange: (next) => onSelectedChange?.([...next]),
+  });
+  const selected = React.useMemo(() => toSet(rawSelected), [rawSelected]);
   const [page, setPageState] = React.useState(1);
   const [hiddenIds, setHiddenIds] = React.useState<Set<string>>(
     () => new Set(columns.filter((column) => column.hidden).map((column) => column.id)),
@@ -332,33 +342,28 @@ function DataTableRoot<T>({
 
   const setFilter = React.useCallback(
     (next: string) => {
-      if (controlledFilter === undefined) setInternalFilter(next);
-      onFilterChange?.(next);
+      setStoredFilter(next);
       setPageState(1);
     },
-    [controlledFilter, onFilterChange],
+    [setStoredFilter],
   );
 
   const toggleSort = React.useCallback(
     (id: string) => {
-      const next: DataTableSort | null =
-        sort?.id !== id
+      setSort((current) =>
+        current?.id !== id
           ? { id, direction: 'asc' }
-          : sort.direction === 'asc'
+          : current.direction === 'asc'
             ? { id, direction: 'desc' }
-            : null;
-      if (controlledSort === undefined) setInternalSort(next);
-      onSortChange?.(next);
+            : null,
+      );
     },
-    [sort, controlledSort, onSortChange],
+    [setSort],
   );
 
   const commitSelected = React.useCallback(
-    (next: Set<string>) => {
-      if (controlledSelected === undefined) setInternalSelected(next);
-      onSelectedChange?.([...next]);
-    },
-    [controlledSelected, onSelectedChange],
+    (next: Set<string>) => setRawSelected(next),
+    [setRawSelected],
   );
 
   const visibleColumns = React.useMemo(

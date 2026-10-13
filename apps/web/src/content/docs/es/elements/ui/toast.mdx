@@ -66,11 +66,12 @@ Elegí dónde aparecen los toasts en pantalla. Hacé click en una posición para
 
 ### Toast.Provider
 
-| Prop        | Tipo                                                                 | Por defecto      | Descripción                            |
-| ----------- | -------------------------------------------------------------------- | ---------------- | -------------------------------------- |
-| `children`  | `React.ReactNode`                                                    | —                | El contenido de la app.                |
-| `maxToasts` | `number`                                                             | `5`              | Número máximo de toasts visibles.      |
-| `position`  | `"top-left"` \| `"top-right"` \| `"bottom-left"` \| `"bottom-right"` | `"bottom-right"` | Dónde aparecen los toasts en pantalla. |
+| Prop        | Tipo                                                                 | Por defecto      | Descripción                                                                              |
+| ----------- | -------------------------------------------------------------------- | ---------------- | ---------------------------------------------------------------------------------------- |
+| `children`  | `React.ReactNode`                                                    | —                | El contenido de la app.                                                                  |
+| `maxToasts` | `number`                                                             | `5`              | Número máximo de toasts visibles.                                                        |
+| `position`  | `"top-left"` \| `"top-right"` \| `"bottom-left"` \| `"bottom-right"` | `"bottom-right"` | Dónde aparecen los toasts en pantalla.                                                   |
+| `labels`    | `Partial<ToastLabels>`                                               | -                | Nombres accesibles: `region` (`"Notifications"`) y `dismiss` (`"Dismiss notification"`). |
 
 ### useToast()
 

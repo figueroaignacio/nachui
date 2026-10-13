@@ -761,13 +761,6 @@ const RATIO: Record<SpriteState, number> = {
   loop: 28 / 32,
 };
 
-/*
- * The drawing is built as strings rather than JSX so the exact same markup can
- * come out of the React component and out of `spriteToSvg`, which servers call
- * without React. Two renderers over one drawing would drift; one drawing with
- * two thin wrappers cannot.
- */
-
 const rect = (x: number, y: number, w: number, h: number, fill: string, cls?: string) =>
   `<rect${cls ? ` class="${cls}"` : ''} x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}"/>`;
 
@@ -857,12 +850,10 @@ export interface SpriteToSvgOptions {
   parts?: Partial<SpriteParts>;
   state?: SpriteState;
   size?: number;
-  /** Skip the inline stylesheet when the page already carries SPRITE_CSS. */
   withStyles?: boolean;
   label?: string;
 }
 
-/** The whole sprite as one standalone SVG string, ready to serve or save. */
 export function spriteToSvg({
   seed = 'nachui',
   parts: override,
@@ -887,17 +878,10 @@ export function spriteToSvg({
 }
 
 interface SpriteProps extends Omit<React.SVGAttributes<SVGSVGElement>, 'children'> {
-  /** Any string. The same string always builds the same sprite. */
   seed?: string;
-  /** Overrides whatever the seed picked, slot by slot. */
   parts?: Partial<SpriteParts>;
   state?: SpriteState;
   size?: number;
-  /**
-   * Inline the animations inside the SVG itself. The registry ships this one
-   * file and a standalone SVG has no stylesheet to lean on, so this is how the
-   * sprite moves anywhere the page's CSS cannot reach it.
-   */
   withStyles?: boolean;
   ref?: React.Ref<SVGSVGElement>;
 }

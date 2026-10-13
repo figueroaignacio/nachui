@@ -18,7 +18,7 @@ export function SignIn() {
           Remember me
         </Label>
         <a
-          href="#"
+          href="#forgot-password"
           className="text-muted-foreground hover:text-foreground text-xs underline-offset-4 hover:underline"
         >
           Forgot password?

@@ -1,79 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
 import type * as React from 'react';
+import { describe, expect, it, vi } from 'vitest';
 import { Drawer } from './drawer';
 
-// Mock motion to disable AnimatePresence delay for Portals
-vi.mock('motion/react', async () => {
-  return {
-    motion: {
-      button: ({
-        children,
-        _style,
-        _initial,
-        _animate,
-        _exit,
-        _variants,
-        _transition,
-        _drag,
-        _dragConstraints,
-        _dragElastic,
-        _onDragEnd,
-        _whileTap,
-        _whileHover,
-        _layoutId,
-        ref,
-        ...props
-      }: React.ComponentProps<'button'> & Record<string, unknown>) => (
-        <button
-          ref={ref as React.Ref<HTMLButtonElement>}
-          {...(props as React.ComponentProps<'button'>)}
-        >
-          {children}
-        </button>
-      ),
-      div: ({
-        children,
-        _style,
-        _initial,
-        _animate,
-        _exit,
-        _variants,
-        _transition,
-        _drag,
-        _dragConstraints,
-        _dragElastic,
-        _onDragEnd,
-        _whileTap,
-        _whileHover,
-        _layoutId,
-        ref,
-        ...props
-      }: React.ComponentProps<'div'> & Record<string, unknown>) => (
-        <div ref={ref as React.Ref<HTMLDivElement>} {...(props as React.ComponentProps<'div'>)}>
-          {children}
-        </div>
-      ),
-      span: ({
-        children,
-        _initial,
-        _animate,
-        _exit,
-        _variants,
-        _transition,
-        ...props
-      }: React.ComponentProps<'span'> & Record<string, unknown>) => (
-        <span {...(props as React.ComponentProps<'span'>)}>{children}</span>
-      ),
-    },
-    useMotionValue: () => ({ set: vi.fn(), get: () => 0 }),
-    useDragControls: () => ({ start: vi.fn() }),
-    useTransform: () => ({ set: vi.fn(), get: () => 0 }),
-    useReducedMotion: () => false,
-    AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
-  };
-});
+vi.mock('motion/react');
 
 describe('Drawer', () => {
   it('opens and closes appropriately', async () => {
@@ -112,5 +43,67 @@ describe('Drawer', () => {
     await waitFor(() => {
       expect(screen.queryByText('Drawer Title')).not.toBeInTheDocument();
     });
+  });
+});
+
+function Example(props: Partial<React.ComponentProps<typeof Drawer.Content>>) {
+  return (
+    <Drawer>
+      <Drawer.Trigger>Share</Drawer.Trigger>
+      <Drawer.Content {...props}>
+        <Drawer.Title>Share link</Drawer.Title>
+        <input aria-label="Email" />
+        <button type="button">Send</button>
+      </Drawer.Content>
+    </Drawer>
+  );
+}
+
+describe('Drawer keyboard and focus', () => {
+  it('focuses the first control, traps Tab and locks page scroll', async () => {
+    const user = userEvent.setup();
+    render(<Example />);
+
+    await user.click(screen.getByRole('button', { name: 'Share' }));
+    const close = await screen.findByRole('button', { name: 'Close' });
+    await waitFor(() => expect(close).toHaveFocus());
+    expect(document.body.style.overflow).toBe('hidden');
+
+    await user.tab();
+    expect(screen.getByRole('textbox', { name: 'Email' })).toHaveFocus();
+    await user.tab();
+    expect(screen.getByRole('button', { name: 'Send' })).toHaveFocus();
+    await user.tab();
+    expect(close).toHaveFocus();
+    await user.tab({ shift: true });
+    expect(screen.getByRole('button', { name: 'Send' })).toHaveFocus();
+  });
+
+  it('closes on Escape, restores focus and releases the scroll lock', async () => {
+    const user = userEvent.setup();
+    render(<Example />);
+    const trigger = screen.getByRole('button', { name: 'Share' });
+    await user.click(trigger);
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Close' })).toHaveFocus());
+
+    await user.keyboard('{Escape}');
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(trigger).toHaveFocus();
+    expect(document.body.style.overflow).toBe('');
+  });
+
+  it('can hide or rename the close button', async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<Example closeLabel="Cerrar" />);
+    await user.click(screen.getByRole('button', { name: 'Share' }));
+    expect(await screen.findByRole('button', { name: 'Cerrar' })).toBeInTheDocument();
+    unmount();
+
+    render(<Example showClose={false} />);
+    await user.click(screen.getByRole('button', { name: 'Share' }));
+    await screen.findByRole('dialog');
+    await waitFor(() => expect(screen.getByRole('textbox', { name: 'Email' })).toHaveFocus());
+    expect(screen.queryByRole('button', { name: 'Close' })).not.toBeInTheDocument();
   });
 });

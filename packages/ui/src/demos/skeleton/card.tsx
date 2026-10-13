@@ -1,7 +1,5 @@
 import { Skeleton } from '../../components/skeleton';
 
-// Placeholder for a project card: preview image, title, two lines of summary,
-// then the owner row and the deploy status at the bottom.
 const summaryLines = ['h-3.5 w-full', 'h-3.5 w-4/5'];
 
 export function Card() {

@@ -14,7 +14,7 @@ interface PanelConstraints {
 interface ResizableContextValue {
   direction: ResizableDirection;
   sizes: number[];
-  constraintsRef: React.RefObject<PanelConstraints[]>;
+  constraints: PanelConstraints[];
   containerRef: React.RefObject<HTMLDivElement | null>;
   resizeAt: (handleIndex: number, delta: number) => void;
   resizeTo: (handleIndex: number, target: number) => void;
@@ -74,26 +74,36 @@ const ResizableRoot = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = React.useState(false);
 
-  const constraints: PanelConstraints[] = [];
-  let panelCount = 0;
+  const childArray = React.Children.toArray(children);
+  const isPanel = (child: React.ReactNode): child is React.ReactElement<ResizablePanelProps> =>
+    React.isValidElement(child) && child.type === ResizablePanel;
+  const panelPositions = childArray.flatMap((child, position) =>
+    isPanel(child) ? [position] : [],
+  );
+  const constraints: PanelConstraints[] = childArray.filter(isPanel).map((panel) => ({
+    defaultSize: panel.props.defaultSize,
+    minSize: panel.props.minSize ?? 10,
+    maxSize: panel.props.maxSize ?? 100,
+  }));
 
-  const items = React.Children.map(children, (child) => {
+  const items = childArray.map((child, position) => {
     if (!React.isValidElement(child)) return child;
 
     if (child.type === ResizablePanel) {
-      const panelProps = child.props as ResizablePanelProps;
-      constraints.push({
-        defaultSize: panelProps.defaultSize,
-        minSize: panelProps.minSize ?? 10,
-        maxSize: panelProps.maxSize ?? 100,
-      });
-      const index = panelCount;
-      panelCount += 1;
-      return <PanelIndexContext value={index}>{child}</PanelIndexContext>;
+      return (
+        <PanelIndexContext key={child.key} value={panelPositions.indexOf(position)}>
+          {child}
+        </PanelIndexContext>
+      );
     }
 
     if (child.type === ResizableHandle) {
-      return <HandleIndexContext value={panelCount - 1}>{child}</HandleIndexContext>;
+      const panelsBefore = panelPositions.filter((panel) => panel < position).length;
+      return (
+        <HandleIndexContext key={child.key} value={panelsBefore - 1}>
+          {child}
+        </HandleIndexContext>
+      );
     }
 
     return child;
@@ -103,10 +113,12 @@ const ResizableRoot = ({
   const layout = sizes.length === constraints.length ? sizes : initialSizes(constraints);
 
   const onLayoutRef = React.useRef(onLayout);
-  onLayoutRef.current = onLayout;
-
   const constraintsRef = React.useRef(constraints);
-  constraintsRef.current = constraints;
+
+  React.useLayoutEffect(() => {
+    onLayoutRef.current = onLayout;
+    constraintsRef.current = constraints;
+  });
 
   const resizeBy = React.useCallback(
     (handleIndex: number, getDelta: (before: number) => number) => {
@@ -156,7 +168,7 @@ const ResizableRoot = ({
   const context = {
     direction,
     sizes: layout,
-    constraintsRef,
+    constraints,
     containerRef,
     resizeAt,
     resizeTo,
@@ -231,7 +243,7 @@ const ResizableHandle = ({
   ref,
   ...props
 }: ResizableHandleProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { direction, sizes, constraintsRef, containerRef, resizeAt, resizeTo, setDragging } =
+  const { direction, sizes, constraints, containerRef, resizeAt, resizeTo, setDragging } =
     useResizableContext();
   const index = React.use(HandleIndexContext);
   const dragRef = React.useRef<{ start: number; before: number; after: number } | null>(null);
@@ -239,7 +251,7 @@ const ResizableHandle = ({
   const isHorizontal = direction === 'horizontal';
 
   const before = sizes[index] ?? 0;
-  const rule = constraintsRef.current[index];
+  const rule = constraints[index];
 
   const containerSize = () => {
     const container = containerRef.current;

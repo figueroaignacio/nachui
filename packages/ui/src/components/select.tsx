@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { springs, still } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -231,25 +232,19 @@ const SelectRoot = ({
   required,
   className,
 }: SelectProps): React.JSX.Element => {
-  const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue);
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const [value, setValue] = useControllableState({
+    value: controlledValue,
+    defaultValue,
+    onChange: onValueChange,
+  });
+  const [isOpen, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const [labels, setLabels] = React.useState<ReadonlyMap<string, string>>(() => new Map());
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
-
-  const isValueControlled = controlledValue !== undefined;
-  const value = isValueControlled ? controlledValue : uncontrolledValue;
-
-  const isOpenControlled = controlledOpen !== undefined;
-  const isOpen = isOpenControlled ? controlledOpen : uncontrolledOpen;
-
-  const setOpen = React.useCallback(
-    (next: boolean) => {
-      if (!isOpenControlled) setUncontrolledOpen(next);
-      onOpenChange?.(next);
-    },
-    [isOpenControlled, onOpenChange],
-  );
 
   const openMenu = React.useCallback(() => {
     if (!disabled) setOpen(true);
@@ -270,11 +265,10 @@ const SelectRoot = ({
 
   const selectValue = React.useCallback(
     (next: string) => {
-      if (!isValueControlled) setUncontrolledValue(next);
-      if (next !== value) onValueChange?.(next);
+      setValue(next);
       closeMenu();
     },
-    [isValueControlled, value, onValueChange, closeMenu],
+    [setValue, closeMenu],
   );
 
   const registerItem = React.useCallback((itemValue: string, label: string) => {
@@ -525,6 +519,15 @@ const SelectContent = ({
     [listRef, closeMenu, selectValue],
   );
 
+  const handleClick = React.useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const option = (e.target as Element).closest<HTMLElement>('[role="option"]');
+      if (!option || option.getAttribute('aria-disabled') === 'true') return;
+      if (option.dataset.value !== undefined) selectValue(option.dataset.value);
+    },
+    [selectValue],
+  );
+
   const verticalStyle =
     position === 'bottom'
       ? { top: `calc(100% + ${sideOffset}px)` }
@@ -543,6 +546,7 @@ const SelectContent = ({
       aria-hidden={!isOpen}
       tabIndex={-1}
       onKeyDown={handleKeyDown}
+      onClick={handleClick}
       initial={false}
       animate={
         isOpen
@@ -570,7 +574,7 @@ const SelectItem = ({
   disabled = false,
   className,
 }: SelectItemProps): React.JSX.Element => {
-  const { value: selectedValue, selectValue, registerItem } = useSelectContext();
+  const { value: selectedValue, registerItem } = useSelectContext();
   const itemRef = React.useRef<HTMLDivElement>(null);
   const isSelected = selectedValue === value;
 
@@ -581,10 +585,6 @@ const SelectItem = ({
     return registerItem(value, label.trim());
   }, [value, staticLabel, registerItem]);
 
-  const handleClick = React.useCallback(() => {
-    if (!disabled) selectValue(value);
-  }, [disabled, selectValue, value]);
-
   return (
     <div
       ref={itemRef}
@@ -593,8 +593,7 @@ const SelectItem = ({
       aria-disabled={disabled || undefined}
       data-value={value}
       data-selected={isSelected}
-      tabIndex={disabled ? undefined : -1}
-      onClick={handleClick}
+      tabIndex={-1}
       className={cn(
         'relative flex cursor-pointer items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-none select-none',
         'transition-colors duration-150',

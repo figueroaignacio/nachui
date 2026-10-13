@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -261,21 +262,11 @@ const PromptInputRoot = ({
   ref,
   ...props
 }: PromptInputProps & { ref?: React.Ref<HTMLFormElement> }) => {
-  const [internalText, setInternalText] = React.useState(defaultValue);
-  const isControlled = controlledText !== undefined;
-  const text = isControlled ? controlledText : internalText;
-  const isControlledRef = React.useRef(isControlled);
-  const onValueChangeRef = React.useRef(onValueChange);
-
-  React.useEffect(() => {
-    isControlledRef.current = isControlled;
-    onValueChangeRef.current = onValueChange;
+  const [text, setText] = useControllableState({
+    value: controlledText,
+    defaultValue,
+    onChange: onValueChange,
   });
-
-  const setText = React.useCallback((next: string) => {
-    if (!isControlledRef.current) setInternalText(next);
-    onValueChangeRef.current?.(next);
-  }, []);
   const [files, setFiles] = React.useState<PromptInputFile[]>([]);
   const filesRef = React.useRef<PromptInputFile[]>(files);
   const [dragging, setDragging] = React.useState(false);
@@ -378,7 +369,7 @@ const PromptInputRoot = ({
 
   const value = React.useMemo<PromptInputContextValue>(
     () => ({ text, setText, files, add, remove, clear, openFileDialog, dragging, accept, id }),
-    [text, files, add, remove, clear, openFileDialog, dragging, accept, id],
+    [text, setText, files, add, remove, clear, openFileDialog, dragging, accept, id],
   );
 
   return (
@@ -570,7 +561,7 @@ const PromptInputButton = ({
       aria-label={label}
       title={label}
       className={cn(
-        'text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-2 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0',
+        'text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-2 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&>svg]:size-4 [&>svg]:shrink-0',
         variant === 'ghost' && 'hover:bg-muted',
         variant === 'outline' && 'border-border hover:bg-muted border',
         className,

@@ -5,6 +5,7 @@ import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { collapse, collapseInner, springs, still, tap } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -37,8 +38,6 @@ const REDUCED_COLLAPSE = {
   open: { height: 'auto', opacity: 1, transition: still },
 } as const;
 
-// --- CVA ---
-
 const collapsibleVariants = cva('', {
   variants: {
     variant: {
@@ -57,7 +56,7 @@ const collapsibleTriggerVariants = cva(
     'flex w-full items-center justify-between',
     'transition-all duration-200',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-background focus-visible:ring-offset-2',
-    'disabled:pointer-events-none disabled:opacity-50',
+    'disabled:pointer-events-none disabled:opacity-40',
   ].join(' '),
   {
     variants: {
@@ -85,8 +84,6 @@ const collapsibleContentVariants = cva('overflow-hidden', {
     variant: 'default',
   },
 });
-
-// --- Context ---
 
 interface CollapsibleContextValue {
   isOpen: boolean;
@@ -127,8 +124,6 @@ const useCollapsibleContext = (): CollapsibleContextValue => {
   return context;
 };
 
-// --- Components ---
-
 const CollapsibleRoot = ({
   className,
   defaultOpen = false,
@@ -140,19 +135,17 @@ const CollapsibleRoot = ({
   ref,
   ...props
 }: CollapsibleProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
-  const isControlled = controlledOpen !== undefined;
-  const isOpen = isControlled ? controlledOpen : internalOpen;
+  const [isOpen, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
 
   const setIsOpen = React.useCallback(
     (open: boolean) => {
-      if (disabled) return;
-      if (!isControlled) {
-        setInternalOpen(open);
-      }
-      onOpenChange?.(open);
+      if (!disabled) setOpen(open);
     },
-    [disabled, isControlled, onOpenChange],
+    [disabled, setOpen],
   );
 
   const id = React.useId();

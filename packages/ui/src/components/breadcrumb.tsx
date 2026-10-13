@@ -47,13 +47,22 @@ function MoreHorizontalIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProp
   );
 }
 
-const BreadcrumbRoot = ({ className, ...props }: React.ComponentProps<'nav'>) => {
-  return <nav aria-label="breadcrumb" className={className} {...props} />;
+const BreadcrumbRoot = ({
+  className,
+  ref,
+  ...props
+}: React.HTMLAttributes<HTMLElement> & { ref?: React.Ref<HTMLElement> }) => {
+  return <nav ref={ref} aria-label="breadcrumb" className={className} {...props} />;
 };
 
-const BreadcrumbList = ({ className, ...props }: React.ComponentProps<'ol'>) => {
+const BreadcrumbList = ({
+  className,
+  ref,
+  ...props
+}: React.OlHTMLAttributes<HTMLOListElement> & { ref?: React.Ref<HTMLOListElement> }) => {
   return (
     <ol
+      ref={ref}
       className={cn(
         'text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm wrap-break-word sm:gap-2.5',
         className,
@@ -63,15 +72,24 @@ const BreadcrumbList = ({ className, ...props }: React.ComponentProps<'ol'>) => 
   );
 };
 
-const BreadcrumbItem = ({ className, ...props }: React.ComponentProps<'li'>) => {
-  return <li className={cn('inline-flex items-center gap-1.5', className)} {...props} />;
+const BreadcrumbItem = ({
+  className,
+  ref,
+  ...props
+}: React.LiHTMLAttributes<HTMLLIElement> & { ref?: React.Ref<HTMLLIElement> }) => {
+  return <li ref={ref} className={cn('inline-flex items-center gap-1.5', className)} {...props} />;
 };
 
-type BreadcrumbLinkProps = React.ComponentProps<'a'> & {
+type BreadcrumbLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   children: React.ReactNode;
 };
 
-const BreadcrumbLink = ({ className, children, ...props }: BreadcrumbLinkProps) => {
+const BreadcrumbLink = ({
+  className,
+  children,
+  ref,
+  ...props
+}: BreadcrumbLinkProps & { ref?: React.Ref<HTMLAnchorElement> }) => {
   const isLinkComponent =
     React.isValidElement(children) &&
     (typeof children.type === 'function' || typeof children.type === 'object');
@@ -81,21 +99,36 @@ const BreadcrumbLink = ({ className, children, ...props }: BreadcrumbLinkProps) 
   }
 
   return (
-    <a className={cn('hover:text-foreground', className)} {...props}>
+    <a ref={ref} className={cn('hover:text-foreground', className)} {...props}>
       {children}
     </a>
   );
 };
 
-const BreadcrumbPage = ({ className, ...props }: React.ComponentProps<'span'>) => {
+const BreadcrumbPage = ({
+  className,
+  ref,
+  ...props
+}: React.HTMLAttributes<HTMLSpanElement> & { ref?: React.Ref<HTMLSpanElement> }) => {
   return (
-    <span aria-current="page" className={cn('text-foreground font-normal', className)} {...props} />
+    <span
+      ref={ref}
+      aria-current="page"
+      className={cn('text-foreground font-normal', className)}
+      {...props}
+    />
   );
 };
 
-const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentProps<'li'>) => {
+const BreadcrumbSeparator = ({
+  children,
+  className,
+  ref,
+  ...props
+}: React.LiHTMLAttributes<HTMLLIElement> & { ref?: React.Ref<HTMLLIElement> }) => {
   return (
     <li
+      ref={ref}
       role="presentation"
       aria-hidden="true"
       className={cn('[&>svg]:size-3.5', className)}
@@ -106,9 +139,14 @@ const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentP
   );
 };
 
-const BreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<'span'>) => {
+const BreadcrumbEllipsis = ({
+  className,
+  ref,
+  ...props
+}: React.HTMLAttributes<HTMLSpanElement> & { ref?: React.Ref<HTMLSpanElement> }) => {
   return (
     <span
+      ref={ref}
       role="presentation"
       aria-hidden="true"
       className={cn('flex size-9 items-center justify-center', className)}

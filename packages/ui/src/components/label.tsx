@@ -22,7 +22,7 @@ function Label({
       ref={ref}
       data-slot="label"
       className={cn(
-        'flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50',
+        'flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-40 peer-disabled:cursor-not-allowed peer-disabled:opacity-40',
         className,
       )}
       {...props}
@@ -40,8 +40,6 @@ function Label({
     </label>
   );
 
-  // Only wrap when a description is present, so the label keeps working as a
-  // direct sibling of its control (peer-* styles, inline layouts).
   if (!description) return label;
 
   return (

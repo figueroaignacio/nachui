@@ -29,7 +29,7 @@ export function Disabled() {
             disabled
           />
           <div className="flex flex-col gap-1">
-            <Label htmlFor={policy.id} className="opacity-50">
+            <Label htmlFor={policy.id} className="opacity-40">
               {policy.label}
             </Label>
             <span className="text-muted-foreground text-xs">{policy.hint}</span>

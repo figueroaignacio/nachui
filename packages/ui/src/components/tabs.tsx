@@ -5,8 +5,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { springs, still } from '../lib/motion';
-
-// --- CVA ---
+import { useControllableState } from '../lib/use-controllable-state';
 
 const tabsListVariants = cva(
   'inline-flex max-w-full rounded-md p-0.5 text-muted-foreground w-full sm:w-auto overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
@@ -29,7 +28,7 @@ const tabsListVariants = cva(
 );
 
 const tabsTriggerVariants = cva(
-  'relative inline-flex shrink-0 items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 z-10 cursor-pointer',
+  'relative inline-flex shrink-0 items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 z-10 cursor-pointer',
   {
     variants: {
       variant: {
@@ -53,8 +52,6 @@ const tabsTriggerVariants = cva(
   },
 );
 
-// --- Context ---
-
 interface TabsContextValue {
   activeTab: string;
   setActiveTab: (value: string) => void;
@@ -70,8 +67,6 @@ function useTabsContext() {
   if (!context) throw new Error('Tabs components must be used within Tabs');
   return context;
 }
-
-// --- Components ---
 
 interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {
   defaultValue?: string;
@@ -92,20 +87,12 @@ const TabsRoot = ({
   ref,
   ...props
 }: TabsProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const [internalValue, setInternalValue] = React.useState(defaultValue || '');
-  const isControlled = controlledValue !== undefined;
-  const activeTab = isControlled ? controlledValue : internalValue;
+  const [activeTab, setActiveTab] = useControllableState({
+    value: controlledValue,
+    defaultValue: defaultValue || '',
+    onChange: onValueChange,
+  });
   const layoutId = React.useId();
-
-  const setActiveTab = React.useCallback(
-    (newValue: string) => {
-      if (!isControlled) {
-        setInternalValue(newValue);
-      }
-      onValueChange?.(newValue);
-    },
-    [isControlled, onValueChange],
-  );
 
   const contextValue = React.useMemo(
     () => ({ activeTab, setActiveTab, variant, size, layoutId }),

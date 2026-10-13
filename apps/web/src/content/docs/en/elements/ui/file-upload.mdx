@@ -147,4 +147,4 @@ const { files, errors, isDragging, openFileDialog, getInputProps, getDropzonePro
 
 ### FileUpload.Dropzone, FileUpload.Trigger, FileUpload.ItemPreview, FileUpload.ItemInfo, FileUpload.ItemRemove, FileUpload.Errors, FileUpload.Clear
 
-Parts wired to the shared state. Each accepts `className` and the standard attributes of the element it renders. `ItemRemove` ships with an English `aria-label` you can override.
+Parts wired to the shared state. Each accepts `className` and the standard attributes of the element it renders. `ItemRemove` takes a `label` prop for its accessible name, `"Remove file"` by default.

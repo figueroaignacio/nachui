@@ -41,4 +41,12 @@ describe('Spinner', () => {
     render(<Spinner data-testid="spinner" />);
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
+
+  it('announces "Loading" by default and accepts a translated label', () => {
+    const { rerender } = render(<Spinner />);
+    expect(screen.getByRole('status', { name: 'Loading' })).toBeInTheDocument();
+
+    rerender(<Spinner label="Cargando" />);
+    expect(screen.getByRole('status', { name: 'Cargando' })).toBeInTheDocument();
+  });
 });

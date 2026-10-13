@@ -46,4 +46,9 @@ describe('Command', () => {
 
     expect(container.firstChild).toHaveClass('my-custom-class');
   });
+
+  it('accepts translated labels', () => {
+    render(<Command command="pnpm dev" labels={{ copy: 'Copiar comando' }} />);
+    expect(screen.getByRole('button', { name: 'Copiar comando' })).toBeInTheDocument();
+  });
 });

@@ -4,38 +4,11 @@ import { describe, expect, it, vi } from 'vitest';
 import type * as React from 'react';
 import { Tree } from './tree';
 
-vi.mock('motion/react', async () => {
-  return {
-    motion: {
-      div: ({
-        children,
-        style,
-        _initial,
-        _animate,
-        _exit,
-        _variants,
-        _transition,
-        ref,
-        ...props
-      }: React.ComponentProps<'div'> & Record<string, unknown>) => (
-        <div
-          ref={ref as React.Ref<HTMLDivElement>}
-          style={style as React.CSSProperties}
-          {...(props as React.ComponentProps<'div'>)}
-        >
-          {children}
-        </div>
-      ),
-    },
-    useReducedMotion: () => false,
-    AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
-  };
-});
+vi.mock('motion/react');
 
-function renderTree(props: React.ComponentProps<typeof Tree> = { children: null }) {
-  const { children: _children, ...rest } = props;
+function renderTree(props: Omit<React.ComponentProps<typeof Tree>, 'children'> = {}) {
   return render(
-    <Tree {...rest}>
+    <Tree {...props}>
       <Tree.Item value="src" label="src">
         <Tree.Item value="src/components" label="components">
           <Tree.Item value="button.tsx" label="button.tsx" />
@@ -73,13 +46,13 @@ describe('Tree', () => {
   });
 
   it('respects defaultExpanded', () => {
-    renderTree({ children: null, defaultExpanded: ['src', 'src/components'] });
+    renderTree({ defaultExpanded: ['src', 'src/components'] });
     expect(screen.getByText('button.tsx')).toBeInTheDocument();
   });
 
   it('selects leaves and reports the value', async () => {
     const handleChange = vi.fn();
-    renderTree({ children: null, onSelectedChange: handleChange });
+    renderTree({ onSelectedChange: handleChange });
 
     await userEvent.click(screen.getByText('package.json'));
     expect(handleChange).toHaveBeenCalledWith('package.json');
@@ -91,13 +64,13 @@ describe('Tree', () => {
 
   it('does not select branches', async () => {
     const handleChange = vi.fn();
-    renderTree({ children: null, onSelectedChange: handleChange });
+    renderTree({ onSelectedChange: handleChange });
     await userEvent.click(screen.getByText('src'));
     expect(handleChange).not.toHaveBeenCalled();
   });
 
   it('supports controlled selection', () => {
-    renderTree({ children: null, selected: 'package.json' });
+    renderTree({ selected: 'package.json' });
     expect(screen.getByText('package.json').closest('[role="treeitem"]')).toHaveAttribute(
       'aria-selected',
       'true',

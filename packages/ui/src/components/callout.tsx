@@ -144,8 +144,6 @@ const CalloutRoot = ({
   ...props
 }: CalloutProps) => {
   const resolvedVariant: CalloutVariant = variant ?? 'default';
-  // Callouts are static content: "note" avoids the unnamed-region and
-  // spurious-alert announcements of region/alert roles.
   const role = 'note';
   const resolvedIcon = icon ?? getDefaultIcon(resolvedVariant);
 

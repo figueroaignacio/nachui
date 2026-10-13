@@ -4,7 +4,16 @@ import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
+import {
+  assignRef,
+  focusFirst,
+  isTopmostLayer,
+  lockPageScroll,
+  trapFocus,
+  useIsClient,
+} from '../lib/overlay';
 import { backdrop, reveal, slideVariants, springs, tap } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -29,49 +38,6 @@ function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
       <path d="m6 6 12 12" />
     </svg>
   );
-}
-
-const FOCUSABLE_SELECTOR = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
-  '[tabindex]:not([tabindex="-1"])',
-].join(', ');
-
-function isTopmostLayer(node: HTMLElement | null, target: EventTarget | null) {
-  if (!node) return false;
-  const owner = target instanceof Element ? target.closest('[aria-modal="true"]') : null;
-  if (owner) return owner === node;
-  const layers = document.querySelectorAll('[aria-modal="true"]');
-  return layers[layers.length - 1] === node;
-}
-
-function lockPageScroll() {
-  const root = document.documentElement;
-  const depth = Number(root.dataset.scrollLocked ?? '0');
-
-  if (depth === 0) {
-    const gutter = window.innerWidth - root.clientWidth;
-    root.dataset.scrollLockedOverflow = document.body.style.overflow;
-    if (gutter > 0) root.style.paddingRight = `${gutter}px`;
-    document.body.style.overflow = 'hidden';
-  }
-  root.dataset.scrollLocked = String(depth + 1);
-
-  return () => {
-    const remaining = Number(root.dataset.scrollLocked ?? '1') - 1;
-    if (remaining > 0) {
-      root.dataset.scrollLocked = String(remaining);
-      return;
-    }
-
-    document.body.style.overflow = root.dataset.scrollLockedOverflow ?? '';
-    root.style.paddingRight = '';
-    delete root.dataset.scrollLocked;
-    delete root.dataset.scrollLockedOverflow;
-  };
 }
 
 type SheetSide = 'top' | 'bottom' | 'left' | 'right';
@@ -155,26 +121,14 @@ const SheetRoot = ({
   open: controlledOpen,
   onOpenChange,
 }: SheetProps) => {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
+  const [open, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const [hasTitle, setHasTitle] = React.useState(false);
   const [hasDescription, setHasDescription] = React.useState(false);
   const id = React.useId();
-
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : internalOpen;
-  const onOpenChangeRef = React.useRef(onOpenChange);
-
-  React.useLayoutEffect(() => {
-    onOpenChangeRef.current = onOpenChange;
-  });
-
-  const setOpen = React.useCallback(
-    (next: boolean) => {
-      if (!isControlled) setInternalOpen(next);
-      onOpenChangeRef.current?.(next);
-    },
-    [isControlled],
-  );
 
   React.useEffect(() => {
     if (!open) return;
@@ -264,15 +218,10 @@ const SheetContent = ({
   ...props
 }: SheetContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const { open, setOpen, id, hasTitle, hasDescription } = useSheetContext();
-  const [mounted, setMounted] = React.useState(false);
+  const mounted = useIsClient();
   const contentRef = React.useRef<HTMLDivElement>(null);
   const restoreRef = React.useRef<HTMLElement | null>(null);
   const shouldReduceMotion = useReducedMotion();
-
-  React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- SSR-safe portal mount flag
-    setMounted(true);
-  }, []);
 
   React.useEffect(() => {
     if (!open) return;
@@ -289,32 +238,17 @@ const SheetContent = ({
         setOpen(false);
         return;
       }
-      if (event.key !== 'Tab') return;
-
-      const focusable = Array.from(content.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
-      if (focusable.length === 0) return;
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last?.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first?.focus();
-      }
+      trapFocus(event, content);
     };
 
     document.addEventListener('keydown', onKeyDown);
 
-    requestAnimationFrame(() => {
-      const content = contentRef.current;
-      if (!content) return;
-      (content.querySelector<HTMLElement>(FOCUSABLE_SELECTOR) ?? content).focus();
+    const frame = requestAnimationFrame(() => {
+      if (contentRef.current) focusFirst(contentRef.current);
     });
 
     return () => {
+      cancelAnimationFrame(frame);
       document.removeEventListener('keydown', onKeyDown);
       restoreRef.current?.focus();
     };
@@ -332,8 +266,7 @@ const SheetContent = ({
           <motion.div
             ref={(node) => {
               contentRef.current = node;
-              if (typeof ref === 'function') ref(node);
-              else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+              assignRef(ref, node);
             }}
             id={`${id}-content`}
             role="dialog"
@@ -421,6 +354,7 @@ SheetFooter.displayName = 'SheetFooter';
 
 const SheetTitle = ({
   className,
+  children,
   ref,
   ...props
 }: SheetTitleProps & { ref?: React.Ref<HTMLHeadingElement> }) => {
@@ -437,7 +371,9 @@ const SheetTitle = ({
       id={`${id}-title`}
       className={cn('text-lg leading-tight font-semibold tracking-tight', className)}
       {...props}
-    />
+    >
+      {children}
+    </h2>
   );
 };
 

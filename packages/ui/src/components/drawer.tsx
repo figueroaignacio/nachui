@@ -12,7 +12,16 @@ import {
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
+import {
+  assignRef,
+  focusFirst,
+  isTopmostLayer,
+  lockPageScroll,
+  trapFocus,
+  useIsClient,
+} from '../lib/overlay';
 import { backdrop, reveal, slideVariants } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 import { Button, type ButtonProps } from './button';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
@@ -45,51 +54,6 @@ const DRAWER_CONTENT_STYLE = { willChange: 'transform' } as const;
 const CLOSE_BUTTON_TAP = { scale: 0.9 } as const;
 const SWIPE_CLOSE_THRESHOLD = 80;
 
-const FOCUSABLE_SELECTOR = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
-  '[tabindex]:not([tabindex="-1"])',
-].join(', ');
-
-function isTopmostLayer(node: HTMLElement | null, target: EventTarget | null) {
-  if (!node) return false;
-  const owner = target instanceof Element ? target.closest('[aria-modal="true"]') : null;
-  if (owner) return owner === node;
-  const layers = document.querySelectorAll('[aria-modal="true"]');
-  return layers[layers.length - 1] === node;
-}
-
-function lockPageScroll() {
-  const root = document.documentElement;
-  const depth = Number(root.dataset.scrollLocked ?? '0');
-
-  if (depth === 0) {
-    const gutter = window.innerWidth - root.clientWidth;
-    root.dataset.scrollLockedOverflow = document.body.style.overflow;
-    if (gutter > 0) root.style.paddingRight = `${gutter}px`;
-    document.body.style.overflow = 'hidden';
-  }
-  root.dataset.scrollLocked = String(depth + 1);
-
-  return () => {
-    const remaining = Number(root.dataset.scrollLocked ?? '1') - 1;
-    if (remaining > 0) {
-      root.dataset.scrollLocked = String(remaining);
-      return;
-    }
-
-    document.body.style.overflow = root.dataset.scrollLockedOverflow ?? '';
-    root.style.paddingRight = '';
-    delete root.dataset.scrollLocked;
-    delete root.dataset.scrollLockedOverflow;
-  };
-}
-
-// --- Context ---
-
 type DrawerContextProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -108,8 +72,6 @@ function useDrawerContext() {
   return ctx;
 }
 
-// --- Components ---
-
 interface DrawerProps {
   children: React.ReactNode;
   defaultOpen?: boolean;
@@ -123,32 +85,14 @@ const DrawerRoot = ({
   open: controlledOpen,
   onOpenChange,
 }: DrawerProps) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const [open, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const [hasTitle, setHasTitle] = React.useState(false);
   const [hasDescription, setHasDescription] = React.useState(false);
   const id = React.useId();
-
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : uncontrolledOpen;
-  const openRef = React.useRef(open);
-  const onOpenChangeRef = React.useRef(onOpenChange);
-
-  React.useLayoutEffect(() => {
-    openRef.current = open;
-    onOpenChangeRef.current = onOpenChange;
-  });
-
-  const setOpen = React.useCallback(
-    (value: boolean | ((prev: boolean) => boolean)) => {
-      const next = typeof value === 'function' ? value(openRef.current) : value;
-      openRef.current = next;
-      if (!isControlled) {
-        setUncontrolledOpen(next);
-      }
-      onOpenChangeRef.current?.(next);
-    },
-    [isControlled],
-  );
 
   React.useEffect(() => {
     if (!open) return;
@@ -201,8 +145,6 @@ const DrawerOverlay = ({ className }: { className?: string }) => {
   );
 };
 
-// --- CVA ---
-
 const drawerVariants = cva(
   'fixed z-500 flex flex-col overflow-hidden bg-background border shadow-lg rounded-2xl',
   {
@@ -224,6 +166,8 @@ interface DrawerContentProps
   extends Omit<HTMLMotionProps<'div'>, 'children'>, VariantProps<typeof drawerVariants> {
   children: React.ReactNode;
   showDragHandle?: boolean;
+  showClose?: boolean;
+  closeLabel?: string;
 }
 
 const DrawerContent = ({
@@ -231,10 +175,13 @@ const DrawerContent = ({
   className,
   side = 'bottom',
   showDragHandle = true,
+  showClose = true,
+  closeLabel = 'Close',
+  ref,
   ...props
-}: DrawerContentProps) => {
+}: DrawerContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const { open, setOpen, id, hasTitle, hasDescription } = useDrawerContext();
-  const [mounted, setMounted] = React.useState(false);
+  const mounted = useIsClient();
   const contentRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLElement | null>(null);
 
@@ -242,11 +189,6 @@ const DrawerContent = ({
   const dragX = useMotionValue(0);
   const dragControls = useDragControls();
   const shouldReduceMotion = useReducedMotion();
-
-  React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- SSR-safe portal mount flag
-    setMounted(true);
-  }, []);
 
   React.useEffect(() => {
     if (!open) return;
@@ -263,38 +205,17 @@ const DrawerContent = ({
         setOpen(false);
         return;
       }
-      if (e.key !== 'Tab') return;
-
-      const focusable = Array.from(content.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
-      if (focusable.length === 0) return;
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (e.shiftKey) {
-        if (document.activeElement === first) {
-          e.preventDefault();
-          last?.focus();
-        }
-      } else {
-        if (document.activeElement === last) {
-          e.preventDefault();
-          first?.focus();
-        }
-      }
+      trapFocus(e, content);
     };
 
     document.addEventListener('keydown', handleKeyDown);
 
-    requestAnimationFrame(() => {
-      const content = contentRef.current;
-      if (content) {
-        const focusable = content.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
-        (focusable ?? content).focus();
-      }
+    const frame = requestAnimationFrame(() => {
+      if (contentRef.current) focusFirst(contentRef.current);
     });
 
     return () => {
+      cancelAnimationFrame(frame);
       document.removeEventListener('keydown', handleKeyDown);
       triggerRef.current?.focus();
     };
@@ -340,7 +261,10 @@ const DrawerContent = ({
         <>
           <DrawerOverlay />
           <motion.div
-            ref={contentRef}
+            ref={(node: HTMLDivElement | null) => {
+              contentRef.current = node;
+              assignRef(ref, node);
+            }}
             role="dialog"
             aria-modal="true"
             aria-labelledby={hasTitle ? `${id}-title` : undefined}
@@ -375,22 +299,24 @@ const DrawerContent = ({
                   <div className="bg-muted-foreground/30 h-1 w-10 cursor-grab rounded-full active:cursor-grabbing" />
                 </div>
               )}
-              <div
-                className={cn(
-                  'flex justify-end px-4 pt-2 pb-0',
-                  isVertical && 'mx-auto w-full max-w-lg',
-                )}
-              >
-                <motion.button
-                  type="button"
-                  whileTap={shouldReduceMotion ? undefined : CLOSE_BUTTON_TAP}
-                  onClick={() => setOpen(false)}
-                  className="hover:bg-muted focus-visible:ring-ring rounded-full p-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
-                  aria-label="Close"
+              {showClose && (
+                <div
+                  className={cn(
+                    'flex justify-end px-4 pt-2 pb-0',
+                    isVertical && 'mx-auto w-full max-w-lg',
+                  )}
                 >
-                  <XIcon className="h-4 w-4" size={16} />
-                </motion.button>
-              </div>
+                  <motion.button
+                    type="button"
+                    whileTap={shouldReduceMotion ? undefined : CLOSE_BUTTON_TAP}
+                    onClick={() => setOpen(false)}
+                    className="hover:bg-muted focus-visible:ring-ring rounded-full p-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                    aria-label={closeLabel}
+                  >
+                    <XIcon className="h-4 w-4" size={16} />
+                  </motion.button>
+                </div>
+              )}
             </div>
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
               <div className={cn('px-5 pt-2 pb-5', isVertical && 'mx-auto w-full max-w-lg')}>

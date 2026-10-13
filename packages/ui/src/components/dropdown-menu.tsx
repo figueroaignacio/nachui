@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { floatingVariants, reveal, springs, tap } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -28,8 +29,6 @@ function ChevronDownIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) 
     </svg>
   );
 }
-
-// --- Interfaces ---
 
 interface DropdownContextValue {
   isOpen: boolean;
@@ -73,8 +72,6 @@ interface DropdownMenuItemProps {
   asChild?: boolean;
 }
 
-// --- Animation constants (module level) ---
-
 const DROPDOWN_ICON_VARIANTS = {
   open: { rotate: 180 },
   closed: { rotate: 0 },
@@ -91,8 +88,6 @@ const ALIGN_CLASSES = {
   end: 'right-0',
 } as const;
 
-// --- Context ---
-
 const DropdownContext = React.createContext<DropdownContextValue | null>(null);
 
 const useDropdownContext = (): DropdownContextValue => {
@@ -100,8 +95,6 @@ const useDropdownContext = (): DropdownContextValue => {
   if (!context) throw new Error('Dropdown components must be used within DropdownMenu');
   return context;
 };
-
-// --- Helpers ---
 
 function useClickOutside(
   ref: React.RefObject<HTMLElement | null>,
@@ -132,8 +125,6 @@ function getMenuItems(container: HTMLElement | null): HTMLElement[] {
   );
 }
 
-// --- Components ---
-
 const DropdownMenuRoot = ({
   children,
   className,
@@ -141,19 +132,12 @@ const DropdownMenuRoot = ({
   open: controlledOpen,
   onOpenChange,
 }: DropdownMenuProps): React.JSX.Element => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
+  const [isOpen, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const triggerRef = React.useRef<HTMLButtonElement>(null);
-
-  const isControlled = controlledOpen !== undefined;
-  const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
-
-  const setOpen = React.useCallback(
-    (next: boolean) => {
-      if (!isControlled) setUncontrolledOpen(next);
-      onOpenChange?.(next);
-    },
-    [isControlled, onOpenChange],
-  );
 
   const openMenu = React.useCallback(() => setOpen(true), [setOpen]);
 
@@ -356,7 +340,6 @@ const DropdownMenuContent = ({
     };
   }, [isOpen, triggerRef, align, sideOffset]);
 
-  // Move focus to the first item when the menu opens.
   React.useEffect(() => {
     if (!isOpen) return;
     const frame = requestAnimationFrame(() => {

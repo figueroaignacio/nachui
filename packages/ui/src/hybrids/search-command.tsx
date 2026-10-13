@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Dialog } from '../components/dialog';
 import { Kbd, KbdGroup } from '../components/kbd';
 import { cn } from '../lib/cn';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -84,6 +85,8 @@ const DEFAULT_LABELS: SearchCommandLabels = {
 
 const isMac = () => typeof navigator !== 'undefined' && /mac|iphone|ipad/i.test(navigator.platform);
 
+const subscribeToNothing = () => () => {};
+
 const defaultFilter = (item: SearchItem, query: string): boolean => {
   const needle = query.trim().toLowerCase();
   if (!needle) return true;
@@ -151,34 +154,34 @@ const SearchCommandRoot = ({
   className,
   children,
 }: SearchCommandProps) => {
-  const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
+  const [open, setStoredOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const [query, setQueryState] = React.useState('');
   const [activeIndex, setActiveIndex] = React.useState(0);
-  const [modifier, setModifier] = React.useState('Ctrl');
+  const modifier = React.useSyncExternalStore(
+    subscribeToNothing,
+    () => (isMac() ? '⌘' : 'Ctrl'),
+    () => 'Ctrl',
+  );
   const id = React.useId();
-
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : internalOpen;
 
   const setOpen = React.useCallback(
     (next: boolean) => {
-      if (!isControlled) setInternalOpen(next);
-      onOpenChange?.(next);
+      setStoredOpen(next);
       if (!next) {
         setQueryState('');
         setActiveIndex(0);
       }
     },
-    [isControlled, onOpenChange],
+    [setStoredOpen],
   );
 
   const setQuery = React.useCallback((next: string) => {
     setQueryState(next);
     setActiveIndex(0);
-  }, []);
-
-  React.useEffect(() => {
-    if (isMac()) setModifier('⌘');
   }, []);
 
   React.useEffect(() => {
@@ -492,7 +495,7 @@ const SearchCommandItem = ({
       select(item);
     },
     className: cn(
-      'text-foreground data-[active]:bg-secondary flex w-full cursor-default items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors select-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50',
+      'text-foreground data-[active]:bg-secondary flex w-full cursor-default items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors select-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40',
       className,
     ),
   };

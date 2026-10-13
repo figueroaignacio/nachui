@@ -4,6 +4,7 @@ import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { floatingOrigin, floatingVariants, reveal } from '../lib/motion';
+import { useControllableState } from '../lib/use-controllable-state';
 
 const HOVER_CARD_POSITION_CLASSES = {
   top: {
@@ -105,20 +106,14 @@ const HoverCardRoot = ({
   openDelay = 500,
   closeDelay = 200,
 }: HoverCardProps) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen);
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : uncontrolledOpen;
+  const [open, setOpen] = useControllableState({
+    value: controlledOpen,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const id = React.useId();
   const timer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const rootRef = React.useRef<HTMLDivElement>(null);
-
-  const setOpen = React.useCallback(
-    (next: boolean) => {
-      if (!isControlled) setUncontrolledOpen(next);
-      onOpenChange?.(next);
-    },
-    [isControlled, onOpenChange],
-  );
 
   const clearTimer = React.useCallback(() => {
     if (timer.current) clearTimeout(timer.current);
