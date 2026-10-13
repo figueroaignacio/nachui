@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
+import { fromRepoRoot } from '@/lib/repo-root';
 import { BRICK_REGISTRY } from '@repo/ui/registry';
 
 type BrickCategoryKey = keyof typeof BRICK_REGISTRY;
@@ -32,17 +33,14 @@ export async function getBrickSourceCode(
     return { files: null, error: `Brick "${brickId}" not found in category "${category}".` };
   }
 
-  // Registry paths are relative to monorepo root
-  const toAbsolutePath = (rel: string) => path.join(process.cwd(), '..', '..', rel);
-
   const readOneFile = async (rel: string): Promise<BrickSourceFile> => {
-    const absolutePath = toAbsolutePath(rel);
+    const absolutePath = fromRepoRoot(rel);
     const code = await fs.readFile(absolutePath, 'utf-8');
     return { filePath: rel, code };
   };
 
   const readDirectory = async (relDir: string): Promise<BrickSourceFile[]> => {
-    const absoluteDir = toAbsolutePath(relDir);
+    const absoluteDir = fromRepoRoot(relDir);
 
     const results: BrickSourceFile[] = [];
 
@@ -79,7 +77,7 @@ export async function getBrickSourceCode(
       return { files: null, error: `Invalid registry entry for brick "${brickId}".` };
     }
 
-    const absolutePath = toAbsolutePath(relativePath);
+    const absolutePath = fromRepoRoot(relativePath);
     const stat = await fs.stat(absolutePath);
 
     if (stat.isDirectory()) {
