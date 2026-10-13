@@ -342,6 +342,15 @@ export const cascade = {
 
 Tres springs cubren todo. `snappy` es para hover, press y toggles, `smooth` para paneles, menús y collapsibles, y `gentle` para las superficies grandes como los diálogos. Los elementos flotantes abren desde el lado de su trigger y se van más rápido de lo que llegaron.
 
+#### Agrega los helpers de estado y overlays
+
+En `lib/` viven dos archivos más, y solo los necesitas cuando agregas un componente que los importa:
+
+- [`use-controllable-state.ts`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/lib/use-controllable-state.ts) permite que un componente funcione de las dos maneras: le pasas `value` u `open` y lo controlas tú, o no los pasas y él maneja su propio estado. La mayoría de los componentes con estado lo usan.
+- [`overlay.ts`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/lib/overlay.ts) tiene lo que comparten los diálogos, sheets, drawers y toasts: el bloqueo del scroll, el focus trap y el chequeo de qué capa está arriba.
+
+Si un archivo que pegas importa `../lib/use-controllable-state` o `../lib/overlay`, copia ese helper en `src/lib/`, junto a `cn.ts`. La CLI lo hace por ti.
+
 #### Agrega los tokens del tema
 
 Reemplaza el contenido de tu hoja de estilos principal (la que anotaste en el primer paso) por lo siguiente. Si tu archivo ya tiene su propia línea `@import 'tailwindcss'`, conserva la tuya y pega todo lo demás debajo.
@@ -544,7 +553,6 @@ Reemplaza el contenido de tu hoja de estilos principal (la que anotaste en el pr
   --shadow-sm: var(--elevation-sm);
   --shadow-md: var(--elevation-md);
   --shadow-lg: var(--elevation-lg);
-
 }
 
 @utility hide-scrollbar {
@@ -593,6 +601,8 @@ Los componentes se importan entre sí y a los helpers con rutas relativas, como 
       <TreeItem value="src/lib" label="lib">
         <TreeItem value="src/lib/cn.ts" label="cn.ts" />
         <TreeItem value="src/lib/motion.ts" label="motion.ts" />
+        <TreeItem value="src/lib/overlay.ts" label="overlay.ts" />
+        <TreeItem value="src/lib/use-controllable-state.ts" label="use-controllable-state.ts" />
       </TreeItem>
     </TreeItem>
   </Tree>
@@ -601,7 +611,7 @@ Los componentes se importan entre sí y a los helpers con rutas relativas, como 
 - `components/`: elementos de UI y de layout
 - `ai/`: elementos de IA
 - `hybrids/`: híbridos, que combinan elementos de UI y de IA
-- `lib/`: el helper `cn` y los tokens de movimiento
+- `lib/`: el helper `cn`, los tokens de movimiento y los helpers compartidos
 
 Si prefieres otra estructura, como `components/ui/`, también funciona. Solo actualiza los imports al principio de cada archivo que pegues para que apunten a tus carpetas, por ejemplo `@/lib/cn` en Next.js o `~/lib/cn` en React Router.
 

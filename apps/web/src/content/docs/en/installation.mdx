@@ -342,6 +342,15 @@ export const cascade = {
 
 Three springs cover everything. `snappy` is for hover, press and toggles, `smooth` for panels, menus and collapsibles, and `gentle` for the big surfaces like dialogs. Floating elements open from the side of their trigger and leave faster than they arrived.
 
+#### Add the state and overlay helpers
+
+Two more files live in `lib/`, and you only need them once you add a component that imports them:
+
+- [`use-controllable-state.ts`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/lib/use-controllable-state.ts) lets a component work both ways: you pass `value` or `open` and control it, or you leave them out and it keeps its own state. Most stateful components use it.
+- [`overlay.ts`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/lib/overlay.ts) holds what dialogs, sheets, drawers and toasts share: the scroll lock, the focus trap and the check for which layer is on top.
+
+If a file you paste imports `../lib/use-controllable-state` or `../lib/overlay`, copy that helper into `src/lib/` next to `cn.ts`. The CLI does this for you.
+
 #### Add the theme tokens
 
 Replace the contents of your main stylesheet (the one you noted in the first step) with the following. If your file already has its own `@import 'tailwindcss'` line, keep yours and paste everything below it.
@@ -544,7 +553,6 @@ Replace the contents of your main stylesheet (the one you noted in the first ste
   --shadow-sm: var(--elevation-sm);
   --shadow-md: var(--elevation-md);
   --shadow-lg: var(--elevation-lg);
-
 }
 
 @utility hide-scrollbar {
@@ -593,6 +601,8 @@ Components import each other and the helpers through relative paths, like `../li
       <TreeItem value="src/lib" label="lib">
         <TreeItem value="src/lib/cn.ts" label="cn.ts" />
         <TreeItem value="src/lib/motion.ts" label="motion.ts" />
+        <TreeItem value="src/lib/overlay.ts" label="overlay.ts" />
+        <TreeItem value="src/lib/use-controllable-state.ts" label="use-controllable-state.ts" />
       </TreeItem>
     </TreeItem>
   </Tree>
@@ -601,7 +611,7 @@ Components import each other and the helpers through relative paths, like `../li
 - `components/`: UI and layout elements
 - `ai/`: AI elements
 - `hybrids/`: hybrids, which combine UI and AI elements
-- `lib/`: the `cn` helper and the motion tokens
+- `lib/`: the `cn` helper, the motion tokens and the shared helpers
 
 If you prefer another layout, like `components/ui/`, that works too. Just update the imports at the top of each file you paste to point at your folders, for example `@/lib/cn` in Next.js or `~/lib/cn` in React Router.
 
