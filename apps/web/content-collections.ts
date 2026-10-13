@@ -168,14 +168,15 @@ const docs = defineCollection({
     });
 
     const slugFields = computeSlugFields(document._meta, document.locale);
+    const { content, ...frontmatter } = document;
 
     return {
-      ...document,
+      ...frontmatter,
       ...slugFields,
       body,
-      raw: document.content,
+      raw: content,
       toc: {
-        content: extractToc(document.content),
+        content: extractToc(content),
         visible: document.toc?.visible ?? true,
       },
     };
