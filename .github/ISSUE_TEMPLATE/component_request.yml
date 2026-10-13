@@ -1,0 +1,47 @@
+name: Component request
+description: Suggest a new component, or a variant of an existing one.
+title: '[Component]: '
+labels: ['enhancement']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tell me what you'd build with it. Real use cases help me decide what to work on next.
+  - type: dropdown
+    id: family
+    attributes:
+      label: Which family?
+      options:
+        - UI element
+        - AI element
+        - Layout element
+        - Hybrid
+        - Icon
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      placeholder: 'date picker'
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: What would you use it for?
+      description: The problem it solves in your project.
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Links to similar components elsewhere, sketches or screenshots.
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Want to build it?
+      options:
+        - label: I'd like to open a PR for this myself.

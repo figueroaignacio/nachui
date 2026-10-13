@@ -1,155 +1,78 @@
-# AGENTS.md - NachUI Operator Manual
+# AGENTS.md
 
-This guide outlines the essential commands and coding conventions for agents working inside the NachUI monorepo.
+This file provides guidance to coding agents (Codex, Cursor, Copilot and others) when working with code in this repository.
 
-## Repository Snapshot
+NachUI is a copy-paste, dependency-free React component library plus its documentation site. The docs are deliberately AI-readable: every page is also served as markdown (`/llms.txt`, `.md` suffix on docs URLs, `/api/docs` JSON catalog).
 
-- Monorepo managed by pnpm 9 + Turbo on Node >= 18.
-- apps/docs: Next.js 16 docs app with @content-collections (MDX pipeline) and Vercel AI SDK.
-- apps/api: Backend API package.
-- packages/ui: React 19 component catalog using Tailwind CSS v4, Vitest, and class-variance-authority.
-- packages/ai: AI SDK helpers (Vercel AI SDK + Google Gemini).
-- packages/cli: CLI utilities.
-- packages/db: Database utilities.
-- packages/typescript-config: strict base + react-library presets.
+Note: `CLAUDE.md` carries the same guidance for Claude Code. Keep the two files in sync: when you change one, change the other.
 
-## Prerequisites
+## Workspace layout
 
-- Install dependencies once with `pnpm install`; lockfile is pnpm-lock.yaml.
-- Use `pnpm --filter <target>` to scope commands instead of `cd`.
-- Content collections cache lives in `apps/docs/.content-collections`; delete only when rebuild is required.
-- Secrets (e.g., Google AI keys) belong in `apps/docs/.env`; never commit populated files.
+pnpm 9 + Turborepo monorepo, Node >= 18. Scope commands with `pnpm --filter <name>` instead of `cd`.
 
-## Root Scripts
+- `apps/web` (filter: `web`): Next.js 16 App Router docs site. next-intl (`en`/`es` locales), MDX via @content-collections, Tailwind CSS v4.
+- `apps/api` (filter: `api`): NestJS server (default port 3001). Modules: `chat`, `docs`, `rag`, `registry`, `themes`.
+- `packages/ui` (filter: `@repo/ui`): the component catalog itself. Only workspace with frontend tests (Vitest + React Testing Library).
+- `packages/ai` (filter: `@repo/ai`): Vercel AI SDK + Google Gemini agent, tools, prompts, and the RAG ingest pipeline.
+- `packages/db` (filter: `@repo/db`): Drizzle ORM + Postgres.
+- `packages/cli` (filter: `nachui`): the published `nachui` CLI (commander + clack).
+- `packages/eslint-config`, `packages/typescript-config`: shared strict presets (`noUncheckedIndexedAccess` is on; array access returns `T | undefined`).
 
-Turbo fan-out commands available at repo root:
+## Commands
 
 ```bash
-pnpm build        # Runs every workspace build (tsup, content-collections, next, vitest build targets)
-pnpm dev          # Starts docs dev server + package watchers
-pnpm lint         # Dispatches workspace lint tasks
-pnpm start        # Launches production servers after build
-pnpm format       # Prettier with Tailwind plugin
+pnpm install                       # once; lockfile is pnpm-lock.yaml
+pnpm dev / build / lint / test     # turbo fan-out across workspaces
+pnpm format                        # prettier + tailwind class sorting
+pnpm --filter web dev              # docs site dev server
+pnpm --filter api dev              # nest start --watch
 ```
 
-Use pnpm workspace filters for targeted work:
+Tests:
 
 ```bash
-pnpm --filter @repo/ui lint
-pnpm --filter docs dev
-pnpm --filter @repo/ai build
+pnpm --filter @repo/ui test:run                       # ui: vitest, CI style
+pnpm --filter @repo/ui vitest run src/lib/cn.test.ts  # single file
+pnpm --filter @repo/ui vitest run src/components/button.test.tsx -t "name"  # single case
+pnpm --filter api test                                # api: jest
+pnpm --filter api test:e2e                            # api: e2e config
 ```
 
-## Workspace Commands
+Type-check: `pnpm --filter @repo/ui type-check`, `pnpm --filter web check-types`, `pnpm --filter @repo/ai check-types` (script names differ per package).
 
-- apps/docs:
-  - `pnpm --filter docs dev` runs `next dev`.
-  - `pnpm --filter docs build` executes `next build`.
-  - `pnpm --filter docs start` launches production Next.js (requires a prior build).
-- apps/api:
-  - `pnpm --filter api dev` runs the API server.
-  - `pnpm --filter api build` builds the API.
-- packages/ui:
-  - `pnpm --filter @repo/ui lint` uses ESLint with `--max-warnings 0`.
-  - `pnpm --filter @repo/ui type-check` invokes tsc with the react-library preset.
-- packages/ai:
-  - `pnpm --filter @repo/ai build` calls tsup for cjs/esm bundles plus declarations.
-  - `pnpm --filter @repo/ai dev` runs tsup --watch for local iteration.
-  - `pnpm --filter @repo/ai check-types` runs tsc --noEmit.
+Lint is enforced at `--max-warnings 0` (also via husky + lint-staged on commit). Commits follow Conventional Commits, enforced by commitlint.
 
-## Testing Playbook
+## The registry pipeline (core architecture)
 
-- All automated tests live in `packages/ui` and use Vitest + React Testing Library.
-- Common scripts (run from root or within the package):
+The component catalog is described by generated files, and the web build fails if they are stale:
 
-```bash
-pnpm --filter @repo/ui test             # Vitest watch mode
-pnpm --filter @repo/ui test:run         # CI-style run
-pnpm --filter @repo/ui test:coverage    # Coverage output
-pnpm --filter @repo/ui test:ui          # Vitest UI dashboard
-```
+1. `packages/ui/scripts/generate-registry.mjs` scans `packages/ui/src/{components,layout,demos,examples,bricks,icons}` and writes GENERATED files: `packages/ui/src/lib/registry.ts` (paths), `apps/web/src/shared/components/mdx/demo-registry.tsx` (React imports for live MDX demos), `apps/web/src/features/gallery/lib/example-registry.tsx` and `apps/web/src/features/icons/lib/icon-registry.tsx`. Never edit these by hand.
+2. After adding or renaming a component, demo, brick, or icon, run `pnpm --filter @repo/ui generate:registry`.
+3. `web`'s build runs `checks` first: registry freshness (`--check`), `scripts/check-navigation.mjs` (every nav href must resolve to a published doc or brick), and `scripts/check-demos.mjs`. A new docs page must have `published` frontmatter or the nav check fails.
+4. `pnpm registry:sync` (root) pushes component source + inferred npm dependencies into Postgres via `@repo/db`, which the API `registry` module and CLI serve. Requires `packages/db/.env`.
 
-- Run a single spec via native vitest CLI:
+Icons are their own family: one self-contained file per icon in `packages/ui/src/icons/` (rules in `DESIGN.md`, section 6), metadata in `apps/web/src/features/icons/lib/icons.ts` (the `/icons` page fails the build if the two drift), served by the CLI as `icons/<name>`. The web catalog is `/icons`, not a docs page.
 
-```bash
-pnpm --filter @repo/ui vitest run src/lib/cn.test.ts
-pnpm --filter @repo/ui vitest run src/components/button.test.tsx -t "renders loading state"
-```
+So a new component typically touches: the component in `packages/ui/src/components/` (or `layout/`), a demo in `packages/ui/src/demos/`, regenerated registry files, and MDX docs in `apps/web/src/content/docs/{en,es}/`. Both locales exist for every page.
 
-- No automated tests exist for apps/docs or packages/ai yet.
+Nav items in `apps/web/src/locales/{en,es}/docs.json` accept an optional `"badge": "new" | "updated"` that renders a chip in the sidebar, mobile menu, and search results (labels under `docs.badges`). Set it in both locales when shipping or reworking a component and remove it once it is no longer recent; `check-navigation.mjs` fails the build on invalid values or locale mismatches.
 
-## Formatting & Static Analysis
+## AI/RAG pipeline
 
-- Prettier (.prettierrc) => tabWidth 2, semi true, singleQuote true, trailingComma all, printWidth 100, arrowParens always, plus prettier-plugin-tailwindcss.
-- Run `pnpm format` before shipping shared changes to keep Tailwind classes auto-sorted.
-- ESLint currently targets packages/ui; fix warnings because the CLI enforces `--max-warnings 0`.
-- TypeScript configs enable strict mode, isolated modules, and `noUncheckedIndexedAccess`; array access returns `T | undefined`.
+`pnpm --filter @repo/ai ingest` fetches the docs catalog from the running web app's `/api/docs`, chunks and embeds pages with Gemini (rate-limited in batches), and upserts into the `docChunks` table keyed by content hash. The API `chat`/`rag` modules answer over those embeddings. Env: `GOOGLE_GENERATIVE_AI_API_KEY` (apps/web/.env), `POSTGRES_URL` (packages/db/.env).
 
-## Import Ordering
+DB workflow lives in `packages/db`: `db:generate`, `db:migrate`, `db:push`, `db:studio` (drizzle-kit).
 
-1. Core platform modules (`react`, `next/navigation`).
-2. Third-party packages (motion, zod, etc.).
-3. Workspace aliases (@repo/ui, @repo/ai, @/lib, @/features).
-4. Relative paths (`./component`, `../lib/cn`).
+## Conventions that matter here
 
-- Separate groups with a blank line and prefer `import type { Foo }` for type-only references.
-
-## React & Component Patterns
-
-- Function components by default; add `'use client'` only when hooks or DOM APIs require it.
-- Keep primitives dependency-free by accepting text/icons via props rather than importing docs data.
-- Derive class strings via `cn(...)`; never build Tailwind strings manually.
-- Declare CVA configs outside the component, export them, and share the associated `VariantProps`.
-- Forward refs for interactive primitives and set `displayName`.
-- Store Motion variants/transitions as top-level constants for memoization.
-- Hooks live under `packages/ui/src/hooks`, use camelCase names prefixed with `use`.
-- MDX-friendly components must be deterministic; avoid random IDs or Date.now defaults.
-- Context helpers should throw when accessed outside providers:
-
-```typescript
-const ChatContext = React.createContext<ChatContextValue | null>(null);
-export const useChatContext = () => {
-  const ctx = React.useContext(ChatContext);
-  if (!ctx) throw new Error('useChatContext must be used within ChatProvider');
-  return ctx;
-};
-```
-
-## Styling & Tailwind
-
-- Tailwind CSS v4 removes the config file; rely on utilities and CSS variables in `packages/ui/src/css/globals.css`.
-- Keep class order semantic (layout → spacing → typography → color → effects) before Prettier re-sorts.
-- Reuse CSS variables such as `var(--surface-muted)` instead of repeating literal hex values.
-- Prefer responsive primitives (`grid-cols-[auto,1fr]`, `[mask-image:linear-gradient(...)]`) to custom CSS blocks.
-- Use Motion transitions for animation timing; fall back to CSS keyframes only when necessary.
-
-## Naming & File Organization
-
-- Files: kebab-case for components (`mobile-menu.tsx`), camelCase for helpers, PascalCase for React exports.
-- Components + props: `ComponentName` + `ComponentNameProps`; hooks always start with `use`.
-- Constants default to camelCase; reserve SCREAMING_SNAKE_CASE for configuration objects.
-- Tests live next to the source with the `.test.ts`/`.test.tsx` suffix.
-- Demo/story content belongs under `packages/ui/src/demos`; docs import via the registry entry.
-
-## Type Usage & Error Handling
-
-- Provide explicit prop and return types; prefer `type` aliases for unions and use `interface` only when extension is needed.
-- Validate user-supplied data (AI prompts, search queries) with Zod before invoking AI helpers.
-- Model async flows with discriminated unions like `{ status: 'idle' | 'loading' | 'error' | 'ready' }`.
-- Re-throw caught errors with contextual detail so downstream UI can surface actionable messages.
-- Never swallow promise rejections; return the promise or handle it inside try/catch.
-- Memoize expensive computations (content indexes, chat history) rather than mutating module scope.
-
-## Git & Commit Rules
-
-- Follow Conventional Commits enforced by `commitlint.config.ts` (feat, fix, docs, style, refactor, perf, test, chore).
-- Keep commits tightly scoped; avoid formatting unrelated files just to appease linting.
-- Never commit populated `.env` files or generated build output.
-
-## AI Policy References
-
-- Cursor-specific rules: none found in `.cursor/` or `.cursorrules`.
-- Copilot instructions: none present under `.github/copilot-instructions.md`.
-- Treat this document as the single source of truth for automated workflows.
-
-Keep components copy-paste ready, run the listed commands before shipping, and default to clarity over cleverness.
+- Components in `packages/ui` must stay copy-paste ready and self-contained: runtime deps are limited to `clsx`, `tailwind-merge`, `motion`, `class-variance-authority` and `zod`. Icons are never a dependency: a primitive inlines the SVGs it needs as local components, and demos import from `packages/ui/src/icons/`. Never import docs/app data into a primitive; pass text and icons via props.
+- Components must work in any React 19 setup (Next.js, Vite, TanStack Start, React Router), not just Next. No `next/*` or framework imports, type-only imports use `import type` / `type X` (Vite's Rolldown build fails with `MISSING_EXPORT` otherwise), and no unused imports (Vite's default tsconfig rejects them). Cross-file imports stay relative (`../lib/cn`, `../components/button`): the installation guide tells users to mirror `src/{components,ai,hybrids,lib}` so pasted files work unchanged.
+- The theme tokens in `apps/web/src/content/docs/{en,es}/installation.mdx` are a trimmed copy of `packages/ui/src/css/globals.css`. Update them when you add or rename a token that components use.
+- In MDX, use the flat names for client compound components (`TabsList`, `TabsTrigger`, `TabsContent`). `Tabs.Content` is undefined in the server render. Don't indent JSX closing tags that follow a markdown list, or MDX nests them in the list item.
+- Derive class strings with `cn(...)` (`packages/ui/src/lib`), never manual Tailwind string concatenation. Tailwind v4 has no config file; design tokens are CSS variables in `packages/ui/src/css/globals.css` (visual rules in `DESIGN.md`).
+- `'use client'` only when hooks or DOM APIs require it. MDX-rendered components must be deterministic (no random IDs, no `Date.now()` defaults).
+- Files: kebab-case components (`mobile-menu.tsx`), hooks in `packages/ui/src/hooks` prefixed `use`, tests colocated with `.test.ts(x)` suffix.
+- Import order: platform (react, next/_) → third-party → workspace aliases (@repo/_, @/\*) → relative, blank line between groups, `import type` for type-only imports.
+- `apps/web/src/proxy.ts` is the next-intl middleware; app routes live under `src/app/[locale]/`, feature code under `src/features/`, shared UI under `src/shared/`.
+- User-facing copy (docs, landing, READMEs) should read human-written: no em dashes, no AI-sounding boilerplate.
+- Secrets go in the per-package `.env` files listed above; never commit populated ones.

@@ -2,80 +2,103 @@
 
 [English] | [Español](./README.es.md)
 
-### A Design System You Actually Own, and Your AI Can Read.
+React components you copy into your project and own. No package to install, no wrapper to fight, just source files you can read and change.
 
-**NachUI** is a **copy-paste, dependency-free** design system for React in three parts: UI elements (buttons, inputs, dialogs, menus, frames), AI elements for chat and agent interfaces (prompt composers, reasoning panels, task lists, context window) that take data through props with no SDK attached, and layout elements (stack, grid, split, section). Built with **React**, **Next.js**, **Tailwind**, and **Motion**, and copied into your repo as plain source.
+The catalog has five parts:
 
-It is also written for whatever agent you have open next to it. Nothing gets compiled away, so a coding assistant works from the same plain source you do, and the documentation is published in a form it can actually read.
+- **UI elements**: buttons, inputs, dialogs, menus, tabs, frames and the rest of the basics.
+- **AI elements**: pieces for chat and agent interfaces (prompt input, reasoning, tool calls, sources, context window). They take data through props, so they work with whatever SDK you use.
+- **Layout elements**: stack, grid, split, section.
+- **Hybrids**: several elements fused into one piece, like a whole chat, a composer or an agent run.
+- **Icons**: one self-contained file per icon, so you only copy the ones you use.
 
-## The Vision
+Everything is plain React 19 and Tailwind CSS v4, animated with [Motion](https://motion.dev). It works in Next.js, Vite, TanStack Start or React Router.
 
-Standard development often sacrifices ownership for speed. **NachUI** provides both:
+The docs are also written for the agent sitting next to you in the editor. Every page is published as markdown too, so Claude Code, Cursor or anything else can read the real API instead of guessing it.
 
-- **Full Code Ownership**: No `node_modules` lock-in. You own the primitive source code.
-- **Zero Wrappers**: Styled with **Tailwind CSS v4** and animated with **Framer Motion** with zero runtime package overhead.
-- **Zero-Bloat Strategy**: Each component is independent, readable, and ready for customization.
-- **AI-Readable by Design**: Local source files, an `llms.txt` index, raw markdown docs, and installable agent skills. There is no black box for an assistant to guess around.
+Live site: **[nachui.tech](https://nachui.tech)**
 
-## The Tech Stack
+## Using the components
 
-This monorepo leverages modern tooling to ensure scalability and developer efficiency.
+Right now the recommended path is copying by hand:
 
-| Technology         | Purpose                                                           | Rationale                                                                |
-| :----------------- | :---------------------------------------------------------------- | :----------------------------------------------------------------------- |
-| **Workspace**      | [Turbo](https://turbo.build/) + [pnpm](https://pnpm.io/)          | Fast execution and efficient shared caching.                             |
-| **Core Engine**    | [Next.js 16](https://nextjs.org/)                                 | Advanced React 19 patterns with full App Router and RSC support.         |
-| **Visual Layer**   | [Tailwind CSS v4](https://tailwindcss.com/)                       | Pure CSS variables architecture with zero runtime overhead.              |
-| **Content Rail**   | [Velite](https://velite.js.org/)                                  | Type-safe content transformation for a unified documentation schema.     |
-| **AI Integration** | [Google Gemini 2.5](https://deepmind.google/technologies/gemini/) | Context-aware reasoning via the [Vercel AI SDK](https://sdk.vercel.ai/). |
-| **Motion**         | [Framer Motion](https://www.framer.com/motion/)                   | Physics-based interactions.                                              |
+1. Follow the [installation guide](https://nachui.tech/en/docs/installation) once. It sets up Tailwind, the `cn` helper and the theme tokens.
+2. Open a component in the docs, copy its source into your project and use it.
 
-## Repository Structure
+That's it. Each file only depends on `clsx`, `tailwind-merge` and, for some components, `motion`, `class-variance-authority` or `zod`.
 
-The project is structured as a **Turborepo monorepo** with clean architectural boundaries:
+There is also a CLI (`npx nachui add button`), but I'm reworking it, so for now the manual path is the safer bet. Its docs are at [nachui.tech/en/docs/concepts/cli](https://nachui.tech/en/docs/concepts/cli).
 
-### Applications
+## Docs for AI agents
 
-- **[apps/docs](apps/docs)**: The Documentation Portal. Featuring real-time component previews and an AI assistant.
+| URL                                                   | What you get                                                  |
+| :---------------------------------------------------- | :------------------------------------------------------------ |
+| [`/llms.txt`](https://nachui.tech/llms.txt)           | Index of every published page, linking to its markdown.       |
+| `/{locale}/docs/**.md`                                | Add `.md` to any docs URL and you get the raw page.           |
+| [`/api/docs`](https://nachui.tech/api/docs)           | The whole catalog as JSON, if you want to index it.           |
+| [Skills](https://nachui.tech/en/docs/concepts/skills) | Installable instructions that teach an agent the conventions. |
 
-### Core Logic & Packages
+The [llms.txt guide](https://nachui.tech/en/docs/concepts/llms-txt) shows how to set it up in each tool.
 
-- **[packages/ui](packages/ui)**: The Primitive Layer. React components styled with the latest Tailwind v4 standards.
-- **[packages/ai](packages/ai)**: The AI Assistant. Orchestrates LLM interactions and context-aware responses.
-- **[packages/typescript-config](packages/typescript-config)** & **[packages/eslint-config](packages/eslint-config)**: Unified strict-mode defaults and styling enforcement across the entire workspace.
+## Repo map
 
-## AI-Powered Documentation
+pnpm + Turborepo monorepo.
 
-NachUI features an integrated **Gemini-powered assistant**. Built with the Vercel AI SDK, it offers context-aware guidance, providing a technical pair-programming experience focused on NachUI's architectural patterns and component customization.
+| Path                         | Filter                    | What it is                                                                           |
+| :--------------------------- | :------------------------ | :----------------------------------------------------------------------------------- |
+| `apps/web`                   | `web`                     | The docs site. Next.js 16, next-intl (`en`/`es`), MDX via content-collections.       |
+| `apps/api`                   | `api`                     | NestJS server (port 3001). Serves the registry, themes, docs and the chat assistant. |
+| `packages/ui`                | `@repo/ui`                | The components themselves, plus demos, icons and their tests.                        |
+| `packages/ai`                | `@repo/ai`                | The docs assistant: Vercel AI SDK + Gemini, prompts and the RAG ingest script.       |
+| `packages/db`                | `@repo/db`                | Drizzle ORM + Postgres schema and migrations.                                        |
+| `packages/cli`               | `nachui`                  | The published `nachui` CLI.                                                          |
+| `packages/eslint-config`     | `@repo/eslint-config`     | Shared ESLint config.                                                                |
+| `packages/typescript-config` | `@repo/typescript-config` | Shared strict tsconfig presets.                                                      |
+| `scripts`                    |                           | `registry:sync`, which pushes component source into Postgres.                        |
 
-## Built for AI Agents Too
+## Local development
 
-The docs are not only a website. Every page is also served in a form your own agent can read:
-
-| Surface                                               | What it gives an agent                                          |
-| :---------------------------------------------------- | :-------------------------------------------------------------- |
-| [`/llms.txt`](https://nachui.tech/llms.txt)           | An index of every published page, each linking to its markdown. |
-| `/{locale}/docs/**.md`                                | The markdown source of a page. Add `.md` to any docs URL.       |
-| [`/api/docs`](https://nachui.tech/api/docs)           | The same catalog as JSON, if you want to index it yourself.     |
-| [Skills](https://nachui.tech/en/docs/concepts/skills) | Installable instructions that teach an agent the conventions.   |
-
-You only have to point Claude Code, Cursor or Windsurf at the index once. The [llms.txt guide](https://nachui.tech/en/docs/concepts/llms-txt) has the setup for each tool.
-
-## Quick Start
-
-Ensure you have [pnpm](https://pnpm.io/) installed, then:
+You need Node >= 22.22.1 and pnpm 9.
 
 ```bash
-# Initialize the workspace
 pnpm install
-
-# Launch the unified development environment
-pnpm dev
-
-# Generate production-ready bundles
-pnpm build
+pnpm --filter web dev    # just the docs site, enough for component work
+pnpm dev                 # everything, including the API
 ```
 
-## Developed by Ignacio Figueroa
+Use `pnpm --filter <name>` to run anything in one workspace.
 
-If NachUI accelerates your workflow, consider supporting the project with a ⭐ on GitHub.
+### Environment variables
+
+Working on components and docs pages doesn't need any of these. They are for the chat assistant, the database and the registry. Each workspace that needs one has a `.env.example` next to where the `.env` goes; copy it and fill it in.
+
+| File               | Used by                                          | Variables                                                                                                |
+| :----------------- | :----------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
+| `apps/web/.env`    | docs site, `@repo/ai` ingest                     | `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_API_URL`, `GOOGLE_GENERATIVE_AI_API_KEY`                             |
+| `apps/api/.env`    | API                                              | `PORT`, `FRONTEND_URL`, `FRONTEND_URLS`, `PORTFOLIO_URL`, `POSTGRES_URL`, `GOOGLE_GENERATIVE_AI_API_KEY` |
+| `packages/db/.env` | drizzle-kit, migrations, `registry:sync`, ingest | `POSTGRES_URL`                                                                                           |
+
+The CLI reads `NACHUI_API_KEY` at build time. You only need it if you are building the CLI yourself.
+
+### The registry
+
+`packages/ui/scripts/generate-registry.mjs` scans the component, demo, example, brick and icon folders and writes the registry files the docs import. After adding or renaming one of those, run `pnpm --filter @repo/ui generate:registry`; the web build fails if the generated files are stale.
+
+## Tests and checks
+
+```bash
+pnpm test                              # all workspaces
+pnpm --filter @repo/ui test:run        # component tests (Vitest + Testing Library)
+pnpm --filter api test                 # API tests (Jest)
+pnpm lint                              # ESLint, --max-warnings 0
+pnpm --filter <name> check-types       # tsc in one workspace
+pnpm --filter web checks               # registry, navigation and demo checks
+```
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md). For security issues, see [SECURITY.md](./SECURITY.md).
+
+## License
+
+[MIT](./LICENSE). Made por amor al arte by [Ignacio Figueroa](https://github.com/figueroaignacio).

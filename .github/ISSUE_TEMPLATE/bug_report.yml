@@ -1,0 +1,51 @@
+name: Bug report
+description: Something is broken in a component, the docs site or the CLI.
+title: '[Bug]: '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. A small reproduction saves a lot of back and forth.
+        Security problems go through a private report instead, see SECURITY.md.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where is it?
+      options:
+        - A component
+        - The docs site (nachui.tech)
+        - The CLI
+        - The API
+        - Something else
+    validations:
+      required: true
+  - type: input
+    id: component
+    attributes:
+      label: Component or page
+      description: Which component, docs page or command.
+      placeholder: 'dialog, /en/docs/installation, nachui add button'
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what you got instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How to reproduce it
+      description: Steps, a code snippet, or a link to a repo or sandbox.
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Framework and version, React version, browser.
+      placeholder: 'Vite 7, React 19.2, Chrome 140'
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: Screenshots, console errors, or anything that helps.

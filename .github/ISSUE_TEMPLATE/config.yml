@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://nachui.tech/en/docs
+    about: Installation, every component and the CLI. Worth a look before opening an issue.
+  - name: Report a security problem
+    url: https://github.com/figueroaignacio/nachui/security/advisories/new
+    about: Please report vulnerabilities privately, not as a public issue.
