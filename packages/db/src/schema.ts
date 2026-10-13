@@ -1,4 +1,14 @@
-import { index, integer, jsonb, pgTable, text, timestamp, uuid, vector } from 'drizzle-orm/pg-core';
+import {
+  index,
+  integer,
+  jsonb,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+  vector,
+} from 'drizzle-orm/pg-core';
 
 export type ComponentFamily = 'ui' | 'layout' | 'ai' | 'hybrids' | 'icons';
 
@@ -41,6 +51,7 @@ export const docChunks = pgTable(
     index('doc_chunks_embedding_idx').using('hnsw', table.embedding.op('vector_cosine_ops')),
     index('doc_chunks_locale_idx').on(table.locale),
     index('doc_chunks_slug_idx').on(table.docSlug),
+    uniqueIndex('doc_chunks_doc_chunk_unique').on(table.docSlug, table.locale, table.chunkIndex),
   ],
 );
 
