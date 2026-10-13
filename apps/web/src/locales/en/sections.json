@@ -1,8 +1,6 @@
 {
   "home": {
-    "badge": "UI · AI · Layout",
     "subheading1": "Amor al arte: a design system for UI, AI and layout, built for the love of it",
-    "subheading2": "",
     "headline1": "Amor",
     "headline2": "al arte",
     "definition": "/aˈmoɾ al ˈaɾte/ · doing something only because you love doing it",
@@ -24,71 +22,6 @@
         "variant": "outline"
       }
     ],
-    "tech": {
-      "title": "The Tech Stack.",
-      "subtitle": "No wrappers. Just direct primitives.",
-      "technologies": [
-        {
-          "name": "TypeScript",
-          "description": "Strict type-safety for compile-time reliability"
-        },
-        {
-          "name": "React",
-          "description": "Primitive component hooks and render loops"
-        },
-        {
-          "name": "Next.js",
-          "description": "High-performance full-stack pages and routing"
-        },
-        {
-          "name": "Tailwind CSS",
-          "description": "Atomic utility styling with custom variable tokens"
-        },
-        {
-          "name": "Motion",
-          "description": "Quiet, subtle transitions for user feedback"
-        }
-      ]
-    },
-    "features": {
-      "title": "Everything you need.",
-      "subtitle": "Absolute zero noise.",
-      "description": "A design system built to get out of your way. Fast page speeds, clean type hierarchies, and total codebase control.",
-      "items": [
-        {
-          "title": "UI elements",
-          "description": "Buttons, inputs, dialogs, menus, frames, tables. The everyday pieces, in one voice."
-        },
-        {
-          "title": "AI elements",
-          "description": "Prompt composer, reasoning, chain of thought, tasks, context window, attachments, suggestions. Props in, no SDK attached."
-        },
-        {
-          "title": "Layout elements",
-          "description": "Stack, grid, split, section, container, spacer. Structure without a CSS file of your own."
-        },
-        {
-          "title": "Source you own",
-          "description": "No runtime package, no upstream updates. Every line is in your repo to read and change."
-        },
-        {
-          "title": "A CLI",
-          "description": "Adds components, tokens and layouts to your project with one command."
-        },
-        {
-          "title": "Readable by your AI",
-          "description": "Plain source, an llms.txt index, raw markdown docs and installable skills. The docs assistant reads the same files."
-        },
-        {
-          "title": "Minimal by default",
-          "description": "Warm bone tones, thin rules, clear type hierarchy. Easy to restyle because there is little to undo."
-        },
-        {
-          "title": "Accessible",
-          "description": "WCAG 2.2 and keyboard support in every primitive."
-        }
-      ]
-    },
     "wall": {
       "label": "preview",
       "title1": "Details",
