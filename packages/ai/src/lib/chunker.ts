@@ -4,11 +4,15 @@ export interface Chunk {
   section?: string;
 }
 
+/** Bump when the splitting strategy changes so the ingest re-embeds every doc. */
+export const CHUNKER_VERSION = 1;
+export const DEFAULT_MAX_CHUNK_SIZE = 1500;
+
 /**
  * Split MDX content into semantic chunks.
  * Strategy: Split on headings (## / ###), then split long sections by paragraphs.
  */
-export function chunkDocument(raw: string, maxChunkSize = 1500): Chunk[] {
+export function chunkDocument(raw: string, maxChunkSize = DEFAULT_MAX_CHUNK_SIZE): Chunk[] {
   const sections = raw.split(/(?=^#{2,3}\s)/m);
   const chunks: Chunk[] = [];
   let index = 0;

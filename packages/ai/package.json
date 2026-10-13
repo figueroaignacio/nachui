@@ -37,7 +37,7 @@
     "dev": "tsup --watch",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
-    "ingest": "tsx --env-file=../../packages/db/.env --env-file=../../apps/web/.env src/scripts/ingest.ts"
+    "ingest": "tsx --env-file-if-exists=../../packages/db/.env --env-file-if-exists=../../apps/web/.env --env-file-if-exists=.env src/scripts/ingest.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.34",
