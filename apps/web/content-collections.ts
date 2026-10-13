@@ -129,7 +129,6 @@ function createRehypePlugins() {
 const remarkPlugins = [remarkGfm];
 
 const localeSchema = z.enum(LOCALES).default(DEFAULT_LOCALE);
-const labelSchema = z.enum(['New', 'Updated']).optional();
 
 function computeSlugFields(meta: { filePath: string; path: string }, locale: string) {
   const slugParts = meta.path.split('/');
@@ -154,7 +153,6 @@ const docs = defineCollection({
     description: z.string(),
     published: z.boolean().default(false),
     date: z.coerce.date().default(new Date()),
-    label: labelSchema,
     locale: localeSchema,
     content: z.string(),
     toc: z
