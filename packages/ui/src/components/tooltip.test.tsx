@@ -1,39 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import type * as React from 'react';
 import { Tooltip, TooltipProvider } from './tooltip';
 
-vi.mock('motion/react', async () => {
-  return {
-    motion: {
-      div: ({
-        children,
-        _style,
-        _initial,
-        _animate,
-        _exit,
-        _variants,
-        _transition,
-        _drag,
-        _dragConstraints,
-        _dragElastic,
-        _onDragEnd,
-        _whileTap,
-        _whileHover,
-        _layoutId,
-        ref,
-        ...props
-      }: React.ComponentProps<'div'> & Record<string, unknown>) => (
-        <div ref={ref as React.Ref<HTMLDivElement>} {...(props as React.ComponentProps<'div'>)}>
-          {children}
-        </div>
-      ),
-    },
-    useReducedMotion: () => false,
-    AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
-  };
-});
+vi.mock('motion/react');
 
 describe('Tooltip', () => {
   it('shows and hides tooltip on hover', async () => {

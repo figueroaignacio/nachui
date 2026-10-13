@@ -4,47 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type * as React from 'react';
 import { Sheet } from './sheet';
 
-vi.mock('motion/react', async () => {
-  const strip = (props: Record<string, unknown>) => {
-    const {
-      initial: _initial,
-      animate: _animate,
-      exit: _exit,
-      variants: _variants,
-      transition: _transition,
-      whileTap: _whileTap,
-      style: _style,
-      ...rest
-    } = props;
-    return rest;
-  };
-  return {
-    motion: {
-      div: ({ children, ref, ...props }: React.ComponentProps<'div'> & Record<string, unknown>) => (
-        <div
-          ref={ref as React.Ref<HTMLDivElement>}
-          {...(strip(props) as React.ComponentProps<'div'>)}
-        >
-          {children}
-        </div>
-      ),
-      button: ({
-        children,
-        ref,
-        ...props
-      }: React.ComponentProps<'button'> & Record<string, unknown>) => (
-        <button
-          ref={ref as React.Ref<HTMLButtonElement>}
-          {...(strip(props) as React.ComponentProps<'button'>)}
-        >
-          {children}
-        </button>
-      ),
-    },
-    AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-    useReducedMotion: () => false,
-  };
-});
+vi.mock('motion/react');
 
 function Example(props: Partial<React.ComponentProps<typeof Sheet.Content>>) {
   return (

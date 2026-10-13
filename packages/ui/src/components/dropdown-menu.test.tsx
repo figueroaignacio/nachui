@@ -1,86 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import type * as React from 'react';
 import { DropdownMenu } from './dropdown-menu';
 
-vi.mock('motion/react', async () => {
-  return {
-    motion: {
-      button: ({
-        children,
-        _style,
-        _initial,
-        _animate,
-        _exit,
-        _variants,
-        _transition,
-        _drag,
-        _dragConstraints,
-        _dragElastic,
-        _onDragEnd,
-        _whileTap,
-        _whileHover,
-        _layoutId,
-        ref,
-        ...props
-      }: React.ComponentProps<'button'> & Record<string, unknown>) => (
-        <button
-          ref={ref as React.Ref<HTMLButtonElement>}
-          {...(props as React.ComponentProps<'button'>)}
-        >
-          {children}
-        </button>
-      ),
-      div: ({
-        children,
-        _style,
-        _initial,
-        _animate,
-        _exit,
-        _variants,
-        _transition,
-        _drag,
-        _dragConstraints,
-        _dragElastic,
-        _onDragEnd,
-        _whileTap,
-        _whileHover,
-        _layoutId,
-        ref,
-        ...props
-      }: React.ComponentProps<'div'> & Record<string, unknown>) => (
-        <div ref={ref as React.Ref<HTMLDivElement>} {...(props as React.ComponentProps<'div'>)}>
-          {children}
-        </div>
-      ),
-      span: ({
-        children,
-        _style,
-        _initial,
-        _animate,
-        _exit,
-        _variants,
-        _transition,
-        _drag,
-        _dragConstraints,
-        _dragElastic,
-        _onDragEnd,
-        _whileTap,
-        _whileHover,
-        _layoutId,
-        ref,
-        ...props
-      }: React.ComponentProps<'span'> & Record<string, unknown>) => (
-        <span ref={ref as React.Ref<HTMLSpanElement>} {...(props as React.ComponentProps<'span'>)}>
-          {children}
-        </span>
-      ),
-    },
-    useReducedMotion: () => false,
-    AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
-  };
-});
+vi.mock('motion/react');
 
 describe('DropdownMenu', () => {
   it('opens and closes appropriately', async () => {

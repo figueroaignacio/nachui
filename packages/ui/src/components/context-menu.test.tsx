@@ -1,36 +1,9 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import type * as React from 'react';
 import { ContextMenu } from './context-menu';
 
-vi.mock('motion/react', async () => {
-  return {
-    motion: {
-      div: ({
-        children,
-        style,
-        _initial,
-        _animate,
-        _exit,
-        _variants,
-        _transition,
-        ref,
-        ...props
-      }: React.ComponentProps<'div'> & Record<string, unknown>) => (
-        <div
-          ref={ref as React.Ref<HTMLDivElement>}
-          style={style as React.CSSProperties}
-          {...(props as React.ComponentProps<'div'>)}
-        >
-          {children}
-        </div>
-      ),
-    },
-    useReducedMotion: () => false,
-    AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
-  };
-});
+vi.mock('motion/react');
 
 function renderMenu(handleAction = vi.fn()) {
   render(

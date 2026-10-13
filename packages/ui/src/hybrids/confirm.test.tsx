@@ -1,64 +1,9 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Confirm, ConfirmProvider, useConfirm } from './confirm';
 
-vi.mock('motion/react', async () => {
-  const strip = (props: Record<string, unknown>) => {
-    const {
-      style: _style,
-      initial: _initial,
-      animate: _animate,
-      exit: _exit,
-      variants: _variants,
-      transition: _transition,
-      whileTap: _whileTap,
-      whileHover: _whileHover,
-      layoutId: _layoutId,
-      ...rest
-    } = props;
-    return rest;
-  };
-  return {
-    motion: {
-      div: ({ children, ref, ...props }: React.ComponentProps<'div'> & Record<string, unknown>) => (
-        <div
-          ref={ref as React.Ref<HTMLDivElement>}
-          {...(strip(props) as React.ComponentProps<'div'>)}
-        >
-          {children}
-        </div>
-      ),
-      button: ({
-        children,
-        ref,
-        ...props
-      }: React.ComponentProps<'button'> & Record<string, unknown>) => (
-        <button
-          ref={ref as React.Ref<HTMLButtonElement>}
-          {...(strip(props) as React.ComponentProps<'button'>)}
-        >
-          {children}
-        </button>
-      ),
-      span: ({
-        children,
-        ref,
-        ...props
-      }: React.ComponentProps<'span'> & Record<string, unknown>) => (
-        <span
-          ref={ref as React.Ref<HTMLSpanElement>}
-          {...(strip(props) as React.ComponentProps<'span'>)}
-        >
-          {children}
-        </span>
-      ),
-    },
-    useReducedMotion: () => true,
-    AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
-  };
-});
+vi.mock('motion/react');
 
 function Deferred() {
   let resolve!: () => void;
