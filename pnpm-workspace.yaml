@@ -3,5 +3,3 @@ packages:
   - 'packages/*'
 
 hoist: true
-npmFlags:
-  - '--legacy-peer-deps'

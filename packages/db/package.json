@@ -18,7 +18,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "pnpm exec tsx --env-file=.env src/migrate.ts",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "check-types": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",

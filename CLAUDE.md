@@ -38,7 +38,7 @@ pnpm --filter api test                                # api: jest
 pnpm --filter api test:e2e                            # api: e2e config
 ```
 
-Type-check: `pnpm --filter @repo/ui type-check`, `pnpm --filter web check-types`, `pnpm --filter @repo/ai check-types` (script names differ per package).
+Type-check: `pnpm check-types` (turbo fan-out), or `pnpm --filter <name> check-types` for one workspace. Every workspace uses the same script name.
 
 Lint is enforced at `--max-warnings 0` (also via husky + lint-staged on commit). Commits follow Conventional Commits, enforced by commitlint.
 

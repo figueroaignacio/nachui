@@ -34,13 +34,13 @@
     "generate:registry": "node scripts/generate-registry.mjs",
     "check:registry": "node scripts/generate-registry.mjs --check",
     "lint": "eslint . --max-warnings 0",
-    "test": "vitest",
+    "test": "vitest run",
     "test:run": "vitest run",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "test:coverage:watch": "vitest --coverage",
-    "type-check": "tsc --noEmit"
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "clsx": "^2.1.1",

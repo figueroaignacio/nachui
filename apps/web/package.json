@@ -7,7 +7,7 @@
     "build": "pnpm checks && next build",
     "checks": "node ../../packages/ui/scripts/generate-registry.mjs --check && node scripts/check-navigation.mjs && node scripts/check-demos.mjs",
     "start": "next start",
-    "lint": "eslint src",
+    "lint": "eslint src --max-warnings 0",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {

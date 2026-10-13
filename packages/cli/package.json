@@ -21,7 +21,8 @@
     "prepublishOnly": "pnpm build",
     "release": "pnpm build && npm publish",
     "release:patch": "npm version patch && pnpm release",
-    "release:minor": "npm version minor && pnpm release"
+    "release:minor": "npm version minor && pnpm release",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@clack/prompts": "^1.5.1",

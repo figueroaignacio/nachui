@@ -3,3 +3,11 @@ dist
 build
 coverage
 .env
+.next
+.content-collections
+.agents
+pnpm-lock.yaml
+packages/ui/src/lib/registry.ts
+apps/web/src/shared/components/mdx/demo-registry.tsx
+apps/web/src/features/gallery/lib/example-registry.tsx
+apps/web/src/features/icons/lib/icon-registry.tsx
