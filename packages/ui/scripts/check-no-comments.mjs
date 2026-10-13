@@ -31,12 +31,6 @@ const SCANNED_DIRS = [
   'src/icons',
 ];
 
-/**
- * steps.tsx and snippet.tsx are moving into apps/web and stop being catalog
- * source. Entries for files that no longer exist are harmless.
- */
-const IGNORED_FILES = new Set(['src/components/steps.tsx', 'src/components/snippet.tsx']);
-
 function walk(dir) {
   const files = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -102,7 +96,6 @@ function main() {
     }
     for (const file of files) {
       const rel = relative(UI_ROOT, file);
-      if (IGNORED_FILES.has(rel)) continue;
       for (const comment of findComments(readFileSync(file, 'utf8'), file)) {
         failures.push(`${rel}:${comment.line}  ${comment.text}`);
       }
