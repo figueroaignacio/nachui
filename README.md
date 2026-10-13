@@ -44,17 +44,17 @@ The [llms.txt guide](https://nachui.tech/en/docs/concepts/llms-txt) shows how to
 
 pnpm + Turborepo monorepo.
 
-| Path                         | Filter                    | What it is                                                                           |
-| :--------------------------- | :------------------------ | :----------------------------------------------------------------------------------- |
-| `apps/web`                   | `web`                     | The docs site. Next.js 16, next-intl (`en`/`es`), MDX via content-collections.       |
-| `apps/api`                   | `api`                     | NestJS server (port 3001). Serves the registry, themes, docs and the chat assistant. |
-| `packages/ui`                | `@repo/ui`                | The components themselves, plus demos, icons and their tests.                        |
-| `packages/ai`                | `@repo/ai`                | The docs assistant: Vercel AI SDK + Gemini, prompts and the RAG ingest script.       |
-| `packages/db`                | `@repo/db`                | Drizzle ORM + Postgres schema and migrations.                                        |
-| `packages/cli`               | `nachui`                  | The published `nachui` CLI.                                                          |
-| `packages/eslint-config`     | `@repo/eslint-config`     | Shared ESLint config.                                                                |
-| `packages/typescript-config` | `@repo/typescript-config` | Shared strict tsconfig presets.                                                      |
-| `scripts`                    |                           | `registry:sync`, which pushes component source into Postgres.                        |
+| Path                         | Filter                    | What it is                                                                     |
+| :--------------------------- | :------------------------ | :----------------------------------------------------------------------------- |
+| `apps/web`                   | `web`                     | The docs site. Next.js 16, next-intl (`en`/`es`), MDX via content-collections. |
+| `apps/api`                   | `api`                     | NestJS server (port 3001). Serves the registry, themes and the chat assistant. |
+| `packages/ui`                | `@repo/ui`                | The components themselves, plus demos, icons and their tests.                  |
+| `packages/ai`                | `@repo/ai`                | The docs assistant: Vercel AI SDK + Gemini, prompts and the RAG ingest script. |
+| `packages/db`                | `@repo/db`                | Drizzle ORM + Postgres schema and migrations.                                  |
+| `packages/cli`               | `nachui`                  | The published `nachui` CLI.                                                    |
+| `packages/eslint-config`     | `@repo/eslint-config`     | Shared ESLint config.                                                          |
+| `packages/typescript-config` | `@repo/typescript-config` | Shared strict tsconfig presets.                                                |
+| `scripts`                    |                           | `registry:sync`, which pushes component source into Postgres.                  |
 
 ## Local development
 
@@ -72,13 +72,14 @@ Use `pnpm --filter <name>` to run anything in one workspace.
 
 Working on components and docs pages doesn't need any of these. They are for the chat assistant, the database and the registry. Each workspace that needs one has a `.env.example` next to where the `.env` goes; copy it and fill it in.
 
-| File               | Used by                                          | Variables                                                                                                |
-| :----------------- | :----------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
-| `apps/web/.env`    | docs site, `@repo/ai` ingest                     | `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_API_URL`, `GOOGLE_GENERATIVE_AI_API_KEY`                             |
-| `apps/api/.env`    | API                                              | `PORT`, `FRONTEND_URL`, `FRONTEND_URLS`, `PORTFOLIO_URL`, `POSTGRES_URL`, `GOOGLE_GENERATIVE_AI_API_KEY` |
-| `packages/db/.env` | drizzle-kit, migrations, `registry:sync`, ingest | `POSTGRES_URL`                                                                                           |
+| File               | Used by                                           | Variables                                                                        |
+| :----------------- | :------------------------------------------------ | :------------------------------------------------------------------------------- |
+| `apps/web/.env`    | docs site                                         | `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_API_URL` (both optional)                     |
+| `apps/api/.env`    | API, refuses to boot if a required one is missing | `POSTGRES_URL`, `GOOGLE_GENERATIVE_AI_API_KEY`, `FRONTEND_URLS`, optional `PORT` |
+| `packages/db/.env` | drizzle-kit, migrations, `registry:sync`, ingest  | `POSTGRES_URL`                                                                   |
+| `packages/ai/.env` | the RAG ingest                                    | `GOOGLE_GENERATIVE_AI_API_KEY`, `FRONTEND_URL` (the running docs site)           |
 
-The CLI reads `NACHUI_API_KEY` at build time. You only need it if you are building the CLI yourself.
+The CLI needs nothing at build time. To point it at another API, set `NACHUI_API_URL` when you run it.
 
 ### The registry
 
@@ -88,11 +89,10 @@ The CLI reads `NACHUI_API_KEY` at build time. You only need it if you are buildi
 
 ```bash
 pnpm test                              # all workspaces
-pnpm --filter @repo/ui test:run        # component tests (Vitest + Testing Library)
-pnpm --filter api test                 # API tests (Jest)
 pnpm lint                              # ESLint, --max-warnings 0
-pnpm --filter <name> check-types       # tsc in one workspace
-pnpm --filter web checks               # registry, navigation and demo checks
+pnpm check-types                       # tsc in every workspace
+pnpm checks                            # registry, comments, navigation, locales and demos
+pnpm --filter <name> test              # tests for one workspace
 ```
 
 ## Contributing

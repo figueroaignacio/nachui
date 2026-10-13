@@ -2,80 +2,103 @@
 
 [English](./README.md) | [Español]
 
-### Un sistema de diseño que realmente te pertenece, y que tu IA puede leer.
+Componentes de React que copiás a tu proyecto y son tuyos. No hay paquete para instalar ni wrapper con el que pelearte: son archivos de código que podés leer y cambiar.
 
-**NachUI** es un sistema de diseño para React **copy-paste y sin dependencias** en tres partes: elementos de UI (botones, inputs, diálogos, menús, frames), elementos AI para interfaces de chat y agentes (composers de prompt, paneles de razonamiento, listas de tareas, ventana de contexto) que reciben los datos por props sin SDK atado, y elementos de layout (stack, grid, split, section). Construido con **React**, **Next.js**, **Tailwind** y **Motion**, y copiado a tu repo como código plano.
+El catálogo tiene cinco partes:
 
-También está escrito para el agente que tengas abierto al lado. Nada queda compilado, así que un asistente de código trabaja sobre el mismo código plano que vos, y la documentación se publica en un formato que puede leer de verdad.
+- **Elementos UI**: botones, inputs, diálogos, menús, tabs, frames y el resto de lo básico.
+- **Elementos AI**: piezas para interfaces de chat y agentes (prompt input, razonamiento, tool calls, fuentes, ventana de contexto). Reciben los datos por props, así que funcionan con el SDK que uses.
+- **Elementos de layout**: stack, grid, split, section.
+- **Hybrids**: varios elementos fusionados en una sola pieza, como un chat completo, un composer o la corrida de un agente.
+- **Íconos**: un archivo autocontenido por ícono, así copiás solo los que usás.
 
-## La Visión
+Todo es React 19 y Tailwind CSS v4, animado con [Motion](https://motion.dev). Funciona en Next.js, Vite, TanStack Start o React Router.
 
-El desarrollo estándar suele sacrificar la propiedad del código por la velocidad. **NachUI** ofrece ambos mundos:
+Los docs también están escritos para el agente que tenés al lado en el editor. Cada página se publica además como markdown, así que Claude Code, Cursor o lo que uses puede leer la API real en vez de adivinarla.
 
-- **Propiedad total del código**: Sin bloqueos por `node_modules`. Eres el dueño del código fuente de las primitivas.
-- **Sin wrappers de paquetes**: Diseñado con **Tailwind CSS v4** y animado con **Framer Motion** sin sobrecarga de dependencias en tiempo de ejecución.
-- **Estrategia sin exceso**: Cada componente es independiente, legible y está listo para ser modificado.
-- **Legible para la IA por diseño**: Archivos fuente locales, un índice `llms.txt`, documentación en markdown crudo y skills instalables para agentes. No hay ninguna caja negra que un asistente tenga que adivinar.
+Sitio: **[nachui.tech](https://nachui.tech)**
 
-## Stack Tecnológico
+## Cómo usar los componentes
 
-Este monorepo utiliza herramientas modernas para garantizar la escalabilidad y la eficiencia en el desarrollo.
+Por ahora el camino recomendado es copiar a mano:
 
-| Tecnología             | Propósito                                                         | Razón                                                                         |
-| :--------------------- | :---------------------------------------------------------------- | :---------------------------------------------------------------------------- |
-| **Espacio de Trabajo** | [Turbo](https://turbo.build/) + [pnpm](https://pnpm.io/)          | Ejecución rápida y almacenamiento en caché compartido eficiente.              |
-| **Motor Principal**    | [Next.js 16](https://nextjs.org/)                                 | Patrones avanzados de React 19 con soporte total para App Router y RSC.       |
-| **Capa Visual**        | [Tailwind CSS v4](https://tailwindcss.com/)                       | Arquitectura de variables CSS puras sin sobrecarga en tiempo de ejecución.    |
-| **Contenido**          | [Velite](https://velite.js.org/)                                  | Transformación de contenido con seguridad de tipos para un esquema unificado. |
-| **Integración de IA**  | [Google Gemini 2.5](https://deepmind.google/technologies/gemini/) | Razonamiento contextual a través del [Vercel AI SDK](https://sdk.vercel.ai/). |
-| **Movimiento**         | [Framer Motion](https://www.framer.com/motion/)                   | Interacciones basadas en física.                                              |
+1. Seguí la [guía de instalación](https://nachui.tech/es/docs/installation) una vez. Configura Tailwind, el helper `cn` y los tokens del tema.
+2. Abrí un componente en los docs, copiá su código a tu proyecto y usalo.
 
-## Estructura del Repositorio
+Nada más. Cada archivo depende solo de `clsx`, `tailwind-merge` y, en algunos componentes, de `motion`, `class-variance-authority` o `zod`.
 
-El proyecto está estructurado como un **monorepo de Turborepo** con límites arquitectónicos claros:
+También hay una CLI (`npx nachui add button`), pero la estoy rehaciendo, así que por ahora el camino manual es el más seguro. Sus docs están en [nachui.tech/es/docs/concepts/cli](https://nachui.tech/es/docs/concepts/cli).
 
-### Aplicaciones
+## Docs para agentes de IA
 
-- **[apps/docs](apps/docs)**: El Portal de Documentación. Con previsualizaciones de componentes en tiempo real y un asistente de IA.
+| URL                                                   | Qué obtenés                                                          |
+| :---------------------------------------------------- | :------------------------------------------------------------------- |
+| [`/llms.txt`](https://nachui.tech/llms.txt)           | Índice de todas las páginas publicadas, con link a su markdown.      |
+| `/{locale}/docs/**.md`                                | Agregale `.md` a cualquier URL de los docs y te llega la página.     |
+| [`/api/docs`](https://nachui.tech/api/docs)           | El catálogo completo en JSON, por si lo querés indexar.              |
+| [Skills](https://nachui.tech/es/docs/concepts/skills) | Instrucciones instalables que le enseñan las convenciones al agente. |
 
-### Lógica Central y Paquetes
+La [guía de llms.txt](https://nachui.tech/es/docs/concepts/llms-txt) muestra cómo configurarlo en cada herramienta.
 
-- **[packages/ui](packages/ui)**: La Capa de Primitivas. Componentes React de alta fidelidad estilizados con los últimos estándares de Tailwind v4.
-- **[packages/ai](packages/ai)**: El Asistente de IA. Orquesta las interacciones con LLMs y proporciona respuestas contextuales.
-- **[packages/typescript-config](packages/typescript-config)** y **[packages/eslint-config](packages/eslint-config)**: Ajustes predeterminados de modo estricto unificados y cumplimiento de estilo en todo el espacio de trabajo.
+## Mapa del repo
 
-## Documentación Asistida por IA
+Monorepo con pnpm y Turborepo.
 
-NachUI incluye un **asistente potenciado por Gemini**. Construido con el Vercel AI SDK, ofrece orientación contextual, proporcionando una experiencia de programación en pareja centrada en los patrones arquitectónicos de NachUI y la personalización de componentes.
+| Ruta                         | Filtro                    | Qué es                                                                                    |
+| :--------------------------- | :------------------------ | :---------------------------------------------------------------------------------------- |
+| `apps/web`                   | `web`                     | El sitio de docs. Next.js 16, next-intl (`en`/`es`), MDX con content-collections.         |
+| `apps/api`                   | `api`                     | Servidor NestJS (puerto 3001). Sirve el registry, los temas y el asistente de chat.       |
+| `packages/ui`                | `@repo/ui`                | Los componentes, con sus demos, íconos y tests.                                           |
+| `packages/ai`                | `@repo/ai`                | El asistente de los docs: Vercel AI SDK + Gemini, prompts y el script de ingesta del RAG. |
+| `packages/db`                | `@repo/db`                | Schema y migraciones de Drizzle ORM + Postgres.                                           |
+| `packages/cli`               | `nachui`                  | La CLI `nachui` que se publica en npm.                                                    |
+| `packages/eslint-config`     | `@repo/eslint-config`     | Config compartida de ESLint.                                                              |
+| `packages/typescript-config` | `@repo/typescript-config` | Presets estrictos de tsconfig compartidos.                                                |
+| `scripts`                    |                           | `registry:sync`, que sube el código de los componentes a Postgres.                        |
 
-## También hecho para agentes de IA
+## Desarrollo local
 
-La documentación no es solo un sitio web. Cada página también se sirve en un formato que tu propio agente puede leer:
-
-| Recurso                                               | Qué le da a un agente                                                  |
-| :---------------------------------------------------- | :--------------------------------------------------------------------- |
-| [`/llms.txt`](https://nachui.tech/llms.txt)           | Un índice de todas las páginas publicadas, cada una con su markdown.   |
-| `/{locale}/docs/**.md`                                | La fuente en markdown de una página. Agregá `.md` a cualquier URL.     |
-| [`/api/docs`](https://nachui.tech/api/docs)           | El mismo catálogo en JSON, por si querés armar tu propio índice.       |
-| [Skills](https://nachui.tech/es/docs/concepts/skills) | Instrucciones instalables que le enseñan las convenciones a un agente. |
-
-Solo tenés que apuntar Claude Code, Cursor o Windsurf al índice una vez. La [guía de llms.txt](https://nachui.tech/es/docs/concepts/llms-txt) tiene la configuración de cada herramienta.
-
-## Inicio Rápido
-
-Asegúrate de tener [pnpm](https://pnpm.io/) instalado:
+Necesitás Node >= 22.22.1 y pnpm 9.
 
 ```bash
-# Inicializar el espacio de trabajo
 pnpm install
-
-# Iniciar el entorno de desarrollo unificado
-pnpm dev
-
-# Generar los paquetes listos para producción
-pnpm build
+pnpm --filter web dev    # solo el sitio de docs, alcanza para trabajar en componentes
+pnpm dev                 # todo, incluida la API
 ```
 
-## Desarrollado por Ignacio Figueroa
+Usá `pnpm --filter <nombre>` para correr cualquier cosa en un solo workspace.
 
-Si NachUI acelera tu flujo de trabajo, considera apoyar el proyecto con una ⭐ en GitHub.
+### Variables de entorno
+
+Para trabajar en componentes y páginas de docs no hace falta ninguna. Son para el asistente de chat, la base de datos y el registry. Cada workspace que necesita una tiene un `.env.example` donde va el `.env`: copialo y completalo.
+
+| Archivo            | Lo usa                                             | Variables                                                                        |
+| :----------------- | :------------------------------------------------- | :------------------------------------------------------------------------------- |
+| `apps/web/.env`    | el sitio de docs                                   | `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_API_URL` (las dos opcionales)                |
+| `apps/api/.env`    | la API, que no arranca si falta una obligatoria    | `POSTGRES_URL`, `GOOGLE_GENERATIVE_AI_API_KEY`, `FRONTEND_URLS`, `PORT` opcional |
+| `packages/db/.env` | drizzle-kit, migraciones, `registry:sync`, ingesta | `POSTGRES_URL`                                                                   |
+| `packages/ai/.env` | la ingesta del RAG                                 | `GOOGLE_GENERATIVE_AI_API_KEY`, `FRONTEND_URL` (el sitio de docs corriendo)      |
+
+La CLI no necesita nada al compilarse. Para apuntarla a otra API, definí `NACHUI_API_URL` cuando la corrés.
+
+### El registry
+
+`packages/ui/scripts/generate-registry.mjs` recorre las carpetas de componentes, demos, ejemplos, bricks e íconos y escribe los archivos de registry que importan los docs. Después de agregar o renombrar alguno, corré `pnpm --filter @repo/ui generate:registry`; el build de la web falla si los archivos generados están desactualizados.
+
+## Tests y chequeos
+
+```bash
+pnpm test                              # todos los workspaces
+pnpm lint                              # ESLint, --max-warnings 0
+pnpm check-types                       # tsc en todos los workspaces
+pnpm checks                            # registry, comentarios, navegación, idiomas y demos
+pnpm --filter <nombre> test            # tests de un solo workspace
+```
+
+## Contribuir
+
+Mirá [CONTRIBUTING.md](./CONTRIBUTING.md) (en inglés). Para problemas de seguridad, [SECURITY.md](./SECURITY.md).
+
+## Licencia
+
+[MIT](./LICENSE). Hecho por amor al arte por [Ignacio Figueroa](https://github.com/figueroaignacio).
