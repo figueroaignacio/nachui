@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 NachUI is a copy-paste, dependency-free React component library plus its documentation site. The docs are deliberately AI-readable: every page is also served as markdown (`/llms.txt`, `.md` suffix on docs URLs, `/api/docs` JSON catalog).
 
-Note: `AGENTS.md` predates a rename and still refers to `apps/docs`; that app is now `apps/web`. Its conventions sections are still mostly valid, but trust this file and the code where they disagree.
+Note: `AGENTS.md` carries the same guidance for other agent tools (Codex, Cursor and friends). Keep the two files in sync: when you change one, change the other.
 
 ## Workspace layout
 
