@@ -11,7 +11,7 @@ Note: `AGENTS.md` carries the same guidance for other agent tools (Codex, Cursor
 pnpm 9 + Turborepo monorepo, Node >= 18. Scope commands with `pnpm --filter <name>` instead of `cd`.
 
 - `apps/web` (filter: `web`): Next.js 16 App Router docs site. next-intl (`en`/`es` locales), MDX via @content-collections, Tailwind CSS v4.
-- `apps/api` (filter: `api`): NestJS server (default port 3001). Modules: `chat`, `docs`, `rag`, `registry`, `themes`.
+- `apps/api` (filter: `api`): NestJS server (default port 3001). Modules: `chat`, `rag`, `registry`, `themes`. Env is validated with zod at boot (`apps/api/.env.example`).
 - `packages/ui` (filter: `@repo/ui`): the component catalog itself. Only workspace with frontend tests (Vitest + React Testing Library).
 - `packages/ai` (filter: `@repo/ai`): Vercel AI SDK + Google Gemini agent, tools, prompts, and the RAG ingest pipeline.
 - `packages/db` (filter: `@repo/db`): Drizzle ORM + Postgres.
@@ -31,7 +31,8 @@ pnpm --filter api dev              # nest start --watch
 Tests:
 
 ```bash
-pnpm --filter @repo/ui test:run                       # ui: vitest, CI style
+pnpm test                                             # every workspace, CI style
+pnpm --filter @repo/ui test                           # ui: vitest run
 pnpm --filter @repo/ui vitest run src/lib/cn.test.ts  # single file
 pnpm --filter @repo/ui vitest run src/components/button.test.tsx -t "name"  # single case
 pnpm --filter api test                                # api: jest
@@ -46,10 +47,10 @@ Lint is enforced at `--max-warnings 0` (also via husky + lint-staged on commit).
 
 The component catalog is described by generated files, and the web build fails if they are stale:
 
-1. `packages/ui/scripts/generate-registry.mjs` scans `packages/ui/src/{components,layout,demos,examples,bricks,icons}` and writes GENERATED files: `packages/ui/src/lib/registry.ts` (paths), `apps/web/src/shared/components/mdx/demo-registry.tsx` (React imports for live MDX demos), `apps/web/src/features/gallery/lib/example-registry.tsx` and `apps/web/src/features/icons/lib/icon-registry.tsx`. Never edit these by hand.
+1. `packages/ui/scripts/generate-registry.mjs` scans `packages/ui/src/{components,layout,ai,hybrids,demos,examples,bricks,icons}` (family list in `packages/ui/scripts/families.mjs`) and writes GENERATED files: `packages/ui/src/lib/registry.ts` (paths), `apps/web/src/shared/components/mdx/demo-registry.tsx` (React imports for live MDX demos), `apps/web/src/features/gallery/lib/example-registry.tsx` and `apps/web/src/features/icons/lib/icon-registry.tsx`. Never edit these by hand.
 2. After adding or renaming a component, demo, brick, or icon, run `pnpm --filter @repo/ui generate:registry`.
-3. `web`'s build runs `checks` first: registry freshness (`--check`), `scripts/check-navigation.mjs` (every nav href must resolve to a published doc or brick), and `scripts/check-demos.mjs`. A new docs page must have `published` frontmatter or the nav check fails.
-4. `pnpm registry:sync` (root) pushes component source + inferred npm dependencies into Postgres via `@repo/db`, which the API `registry` module and CLI serve. Requires `packages/db/.env`.
+3. `pnpm checks` (root) runs ui's `checks` (registry freshness and `check:comments`, which fails on any comment in catalog source) and web's `checks` (registry `--check`, `scripts/check-navigation.mjs`: every nav href must resolve to a published doc or brick and section ids must match across locales, `scripts/check-locales.mjs`: en/es message keys must match, `scripts/check-demos.mjs`). `web`'s build runs its `checks` first. A new docs page must have `published` frontmatter or the nav check fails.
+4. `pnpm registry:sync` (root) pushes component source, inferred npm dependencies and `registryDependencies` (every relative import, resolved to registry items; shared `lib/*` and `hooks/*` files become items too) into Postgres via `@repo/db`, which the API `registry` module and CLI serve. The CLI installs an item plus its registry dependencies recursively into `<baseDir>/<family dir>/`. Use `--dry-run` first; `--prune` deletes rows whose source is gone. Requires `packages/db/.env`.
 
 Icons are their own family: one self-contained file per icon in `packages/ui/src/icons/` (rules in `DESIGN.md`, section 6), metadata in `apps/web/src/features/icons/lib/icons.ts` (the `/icons` page fails the build if the two drift), served by the CLI as `icons/<name>`. The web catalog is `/icons`, not a docs page.
 
@@ -59,7 +60,7 @@ Nav items in `apps/web/src/locales/{en,es}/docs.json` accept an optional `"badge
 
 ## AI/RAG pipeline
 
-`pnpm --filter @repo/ai ingest` fetches the docs catalog from the running web app's `/api/docs`, chunks and embeds pages with Gemini (rate-limited in batches), and upserts into the `docChunks` table keyed by content hash. The API `chat`/`rag` modules answer over those embeddings. Env: `GOOGLE_GENERATIVE_AI_API_KEY` (apps/web/.env), `POSTGRES_URL` (packages/db/.env).
+`pnpm --filter @repo/ai ingest` fetches the docs catalog from the running web app's `/api/docs`, chunks and embeds pages with Gemini (rate-limited in batches), and upserts into the `docChunks` table keyed by content hash. The API `chat`/`rag` modules answer over those embeddings. It only reads published docs, embeds inside a transaction and purges docs that left the catalog. Env: `GOOGLE_GENERATIVE_AI_API_KEY` and `FRONTEND_URL` (packages/ai/.env), `POSTGRES_URL` (packages/db/.env). The agent's tools get their data access injected by the API; they never call the API over HTTP.
 
 DB workflow lives in `packages/db`: `db:generate`, `db:migrate`, `db:push`, `db:studio` (drizzle-kit).
 
@@ -69,6 +70,7 @@ DB workflow lives in `packages/db`: `db:generate`, `db:migrate`, `db:push`, `db:
 - Components must work in any React 19 setup (Next.js, Vite, TanStack Start, React Router), not just Next. No `next/*` or framework imports, type-only imports use `import type` / `type X` (Vite's Rolldown build fails with `MISSING_EXPORT` otherwise), and no unused imports (Vite's default tsconfig rejects them). Cross-file imports stay relative (`../lib/cn`, `../components/button`): the installation guide tells users to mirror `src/{components,ai,hybrids,lib}` so pasted files work unchanged.
 - The theme tokens in `apps/web/src/content/docs/{en,es}/installation.mdx` are a trimmed copy of `packages/ui/src/css/globals.css`. Update them when you add or rename a token that components use.
 - In MDX, use the flat names for client compound components (`TabsList`, `TabsTrigger`, `TabsContent`). `Tabs.Content` is undefined in the server render. Don't indent JSX closing tags that follow a markdown list, or MDX nests them in the list item.
+- Shared catalog logic lives in `packages/ui/src/lib`: `use-controllable-state.ts` for every controlled/uncontrolled prop pair and `overlay.ts` for scroll lock, focus trap and layer checks. Reuse them instead of reimplementing; components import them relatively.
 - Derive class strings with `cn(...)` (`packages/ui/src/lib`), never manual Tailwind string concatenation. Tailwind v4 has no config file; design tokens are CSS variables in `packages/ui/src/css/globals.css` (visual rules in `DESIGN.md`).
 - `'use client'` only when hooks or DOM APIs require it. MDX-rendered components must be deterministic (no random IDs, no `Date.now()` defaults).
 - Files: kebab-case components (`mobile-menu.tsx`), hooks in `packages/ui/src/hooks` prefixed `use`, tests colocated with `.test.ts(x)` suffix.
