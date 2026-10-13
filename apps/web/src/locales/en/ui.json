@@ -80,5 +80,6 @@
     "github": "GitHub",
     "theme": "Toggle theme",
     "language": "Switch language"
-  }
+  },
+  "loading": "Loading page"
 }
