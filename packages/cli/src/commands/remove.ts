@@ -1,58 +1,55 @@
 import * as p from '@clack/prompts';
-import fs from 'fs';
 import kleur from 'kleur';
-import path from 'path';
-import { componentFileName } from '../lib/slug.js';
+import fs from 'node:fs';
 
-export const removeCommand = async (slug: string) => {
-  const s = p.spinner();
-  const componentsDir = path.resolve(process.cwd(), 'src', 'components', 'ui');
+import { reportError } from '../lib/errors.js';
+import { candidatePaths, resolveInside } from '../lib/layout.js';
+import { confirmOrCancel, loadConfigOrExit } from '../lib/prompts.js';
 
-  // Accepts `button` and `ui/button`; only the last segment hits the disk.
-  const name = componentFileName(slug).replace(/\.tsx$/, '');
-  const filePath = path.join(componentsDir, `${name}.tsx`);
-  const folderPath = path.join(componentsDir, name);
+export interface RemoveOptions {
+  yes?: boolean;
+}
 
-  s.start(`Searching for ${kleur.cyan(slug)}...`);
+export async function removeCommand(slug: string, options: RemoveOptions = {}) {
+  const cwd = process.cwd();
+  const config = loadConfigOrExit(cwd);
+  if (!config) return;
 
   try {
-    let pathToRemove = '';
-    let isFolder = false;
+    const candidates = candidatePaths(slug, config.baseDir);
+    const found = candidates.filter((file) => fs.existsSync(resolveInside(cwd, file)));
 
-    if (fs.existsSync(filePath)) {
-      pathToRemove = filePath;
-    } else if (fs.existsSync(folderPath) && fs.lstatSync(folderPath).isDirectory()) {
-      pathToRemove = folderPath;
-      isFolder = true;
+    if (found.length === 0) {
+      p.log.error(kleur.red(`${slug} is not installed. Looked in:\n${candidates.join('\n')}`));
+      process.exitCode = 1;
+      return;
     }
 
-    if (pathToRemove) {
-      s.stop(kleur.yellow(`Found: ${pathToRemove}`));
-
-      const confirm = await p.confirm({
-        message: `Are you sure you want to delete ${kleur.red(slug)}?`,
-      });
-
-      if (p.isCancel(confirm) || !confirm) {
-        p.outro(kleur.gray('Operation cancelled.'));
-        return;
-      }
-
-      if (isFolder) {
-        fs.rmSync(pathToRemove, { recursive: true, force: true });
-      } else {
-        fs.rmSync(pathToRemove, { force: true });
-      }
-      await new Promise((res) => setTimeout(res, 100));
-
-      p.log.success(`${kleur.green('✓')} ${kleur.bold(slug)} deleted.`);
-      p.outro(kleur.bgRed().black(' NachUI ') + ' Clean up complete.');
-    } else {
-      s.stop(kleur.red('Error: Component not found.'));
-      p.outro('Check the name and try again.');
+    if (found.length > 1) {
+      p.log.error(
+        kleur.red(
+          `${slug} is installed in more than one place:\n${found.join('\n')}\nUse the full name, for example "ui/${slug}".`,
+        ),
+      );
+      process.exitCode = 1;
+      return;
     }
+
+    const [file] = found as [string];
+    const confirmed =
+      options.yes ||
+      (await confirmOrCancel(`Delete ${kleur.red(file)}? This cannot be undone.`, false));
+
+    if (!confirmed) {
+      p.outro(kleur.gray('Nothing was deleted.'));
+      return;
+    }
+
+    fs.rmSync(resolveInside(cwd, file));
+    p.log.success(`Deleted ${file}`);
+    p.log.info('Shared files it used (like lib/cn.ts) were kept, other components may need them.');
+    p.outro(`${kleur.bgRed().black(' NachUI ')} Clean up complete.`);
   } catch (error) {
-    s.stop(kleur.red('Failed to delete.'));
-    p.log.error(`Detail: ${error instanceof Error ? error.message : String(error)}`);
+    reportError(error);
   }
-};
+}
