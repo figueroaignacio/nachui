@@ -36,3 +36,69 @@ describe('Tabs', () => {
     expect(screen.getByText('Content 2')).toBeInTheDocument();
   });
 });
+
+function Example({ onValueChange }: { onValueChange?: (value: string) => void }) {
+  return (
+    <Tabs defaultValue="account" onValueChange={onValueChange}>
+      <Tabs.List>
+        <Tabs.Trigger value="account">Account</Tabs.Trigger>
+        <Tabs.Trigger value="billing" disabled>
+          Billing
+        </Tabs.Trigger>
+        <Tabs.Trigger value="team">Team</Tabs.Trigger>
+        <Tabs.Trigger value="security">Security</Tabs.Trigger>
+      </Tabs.List>
+      <Tabs.Content value="account">Account panel</Tabs.Content>
+      <Tabs.Content value="team">Team panel</Tabs.Content>
+      <Tabs.Content value="security">Security panel</Tabs.Content>
+    </Tabs>
+  );
+}
+
+describe('Tabs keyboard and focus', () => {
+  it('makes only the active tab reachable with Tab, then the panel', async () => {
+    const user = userEvent.setup();
+    render(<Example />);
+
+    await user.tab();
+    expect(screen.getByRole('tab', { name: 'Account' })).toHaveFocus();
+    expect(screen.getByRole('tab', { name: 'Team' })).toHaveAttribute('tabindex', '-1');
+
+    await user.tab();
+    expect(screen.getByRole('tabpanel', { name: 'Account' })).toHaveFocus();
+  });
+
+  it('selects with the arrow keys, wraps around and skips disabled tabs', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(<Example onValueChange={onValueChange} />);
+    await user.tab();
+
+    await user.keyboard('{ArrowRight}');
+    const team = screen.getByRole('tab', { name: 'Team' });
+    expect(team).toHaveFocus();
+    expect(team).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tabpanel')).toHaveTextContent('Team panel');
+    expect(onValueChange).toHaveBeenLastCalledWith('team');
+
+    await user.keyboard('{ArrowRight}{ArrowRight}');
+    expect(screen.getByRole('tab', { name: 'Account' })).toHaveFocus();
+
+    await user.keyboard('{ArrowLeft}');
+    expect(screen.getByRole('tab', { name: 'Security' })).toHaveFocus();
+    expect(screen.getByRole('tabpanel')).toHaveTextContent('Security panel');
+  });
+
+  it('jumps to the first and last tab with Home and End', async () => {
+    const user = userEvent.setup();
+    render(<Example />);
+    await user.tab();
+
+    await user.keyboard('{End}');
+    expect(screen.getByRole('tab', { name: 'Security' })).toHaveAttribute('aria-selected', 'true');
+
+    await user.keyboard('{Home}');
+    expect(screen.getByRole('tab', { name: 'Account' })).toHaveFocus();
+    expect(screen.getByRole('tab', { name: 'Account' })).toHaveAttribute('aria-selected', 'true');
+  });
+});
