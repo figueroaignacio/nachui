@@ -69,14 +69,16 @@ Banner
 
 ### Banner
 
-| Prop        | Type                                                                | Default     | Description                                         |
-| ----------- | ------------------------------------------------------------------- | ----------- | --------------------------------------------------- |
-| `variant`   | `"default"` \| `"info"` \| `"warning"` \| `"danger"` \| `"success"` | `"default"` | Controls the visual treatment and surface colors.   |
-| `icon`      | `React.ReactNode`                                                   | —           | Optional custom icon overriding the variant icon.   |
-| `onClose`   | `() => void`                                                        | —           | Callback fired when the banner is dismissed.        |
-| `sticky`    | `boolean`                                                           | `false`     | Sticks the banner to the top of the viewport.       |
-| `className` | `string`                                                            | —           | Additional CSS class names.                         |
-| `children`  | `React.ReactNode`                                                   | —           | Compose the banner with Content, Title, and Action. |
+| Prop           | Type                                                                | Default            | Description                                         |
+| -------------- | ------------------------------------------------------------------- | ------------------ | --------------------------------------------------- |
+| `variant`      | `"default"` \| `"info"` \| `"warning"` \| `"danger"` \| `"success"` | `"default"`        | Controls the visual treatment and surface colors.   |
+| `icon`         | `React.ReactNode`                                                   | —                  | Optional custom icon overriding the variant icon.   |
+| `onClose`      | `() => void`                                                        | —                  | Callback fired when the banner is dismissed.        |
+| `dismissible`  | `boolean`                                                           | `true`             | Shows the dismiss button.                           |
+| `dismissLabel` | `string`                                                            | `"Dismiss banner"` | Accessible name of the dismiss button.              |
+| `sticky`       | `boolean`                                                           | `false`            | Sticks the banner to the top of the viewport.       |
+| `className`    | `string`                                                            | —                  | Additional CSS class names.                         |
+| `children`     | `React.ReactNode`                                                   | —                  | Compose the banner with Content, Title, and Action. |
 
 ### Banner.Content
 

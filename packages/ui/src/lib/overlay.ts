@@ -69,6 +69,11 @@ export function lockPageScroll() {
   };
 }
 
+export function assignRef<T>(ref: React.Ref<T> | undefined, node: T) {
+  if (typeof ref === 'function') ref(node);
+  else if (ref) ref.current = node;
+}
+
 const subscribeToNothing = () => () => {};
 
 export function useIsClient() {

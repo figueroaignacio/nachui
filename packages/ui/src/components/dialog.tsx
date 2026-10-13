@@ -5,7 +5,14 @@ import * as React from 'react';
 import { cloneElement } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
-import { focusFirst, isTopmostLayer, lockPageScroll, trapFocus, useIsClient } from '../lib/overlay';
+import {
+  assignRef,
+  focusFirst,
+  isTopmostLayer,
+  lockPageScroll,
+  trapFocus,
+  useIsClient,
+} from '../lib/overlay';
 import { backdrop, reveal, surface } from '../lib/motion';
 import { useControllableState } from '../lib/use-controllable-state';
 
@@ -210,11 +217,15 @@ DialogOverlay.displayName = 'DialogOverlay';
 
 interface DialogContentProps extends HTMLMotionProps<'div'> {
   children?: React.ReactNode;
+  showClose?: boolean;
+  closeLabel?: string;
 }
 
 const DialogContent = ({
   className,
   children,
+  showClose = true,
+  closeLabel = 'Close',
   ref,
   ...props
 }: DialogContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
@@ -265,8 +276,7 @@ const DialogContent = ({
           <motion.div
             ref={(node) => {
               contentRef.current = node;
-              if (typeof ref === 'function') ref(node);
-              else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+              assignRef(ref, node);
             }}
             role="dialog"
             aria-modal="true"
@@ -286,10 +296,12 @@ const DialogContent = ({
             {...props}
           >
             {children}
-            <DialogClose className="ring-offset-background focus-visible:ring-ring absolute top-2 right-2 rounded-sm p-2 opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none">
-              <XIcon className="h-4 w-4" size={16} />
-              <span className="sr-only">Close</span>
-            </DialogClose>
+            {showClose && (
+              <DialogClose className="ring-offset-background focus-visible:ring-ring absolute top-2 right-2 rounded-sm p-2 opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none">
+                <XIcon className="h-4 w-4" size={16} />
+                <span className="sr-only">{closeLabel}</span>
+              </DialogClose>
+            )}
           </motion.div>
         </DialogPortal>
       )}

@@ -6,6 +6,7 @@ import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
 import { springs } from '../lib/motion';
+import { useIsClient } from '../lib/overlay';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -215,9 +216,10 @@ interface ToastItemProps {
   toast: ToastData;
   onDismiss: (id: string) => void;
   position: ToastPosition;
+  dismissLabel: string;
 }
 
-function ToastItem({ toast: t, onDismiss, position }: ToastItemProps) {
+function ToastItem({ toast: t, onDismiss, position, dismissLabel }: ToastItemProps) {
   const [hovered, setHovered] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
   const paused = hovered || focused;
@@ -277,7 +279,7 @@ function ToastItem({ toast: t, onDismiss, position }: ToastItemProps) {
         <p className="flex-1 text-sm font-semibold">{t.title}</p>
         <button
           type="button"
-          aria-label="Dismiss notification"
+          aria-label={dismissLabel}
           onClick={() => onDismiss(t.id)}
           className="focus-visible:ring-ring shrink-0 rounded-sm opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none"
         >
@@ -309,24 +311,33 @@ function ToastItem({ toast: t, onDismiss, position }: ToastItemProps) {
 
 const DEFAULT_MAX_TOASTS = 5;
 
+interface ToastLabels {
+  region: string;
+  dismiss: string;
+}
+
+const DEFAULT_LABELS: ToastLabels = {
+  region: 'Notifications',
+  dismiss: 'Dismiss notification',
+};
+
 interface ToastProviderProps {
   children: React.ReactNode;
   maxToasts?: number;
   position?: ToastPosition;
+  labels?: Partial<ToastLabels>;
 }
 
 function ToastProvider({
   children,
   maxToasts = DEFAULT_MAX_TOASTS,
   position = 'bottom-right',
-}: ToastProviderProps) {
+  labels: labelOverrides,
+  ref,
+}: ToastProviderProps & { ref?: React.Ref<HTMLDivElement> }) {
   const [toasts, setToasts] = React.useState<ToastData[]>([]);
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
+  const mounted = useIsClient();
+  const labels = { ...DEFAULT_LABELS, ...labelOverrides };
 
   const dismiss = React.useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -362,7 +373,8 @@ function ToastProvider({
         createPortal(
           <div
             role="region"
-            aria-label="Notifications"
+            ref={ref}
+            aria-label={labels.region}
             className={cn(
               'pointer-events-none fixed z-9999 flex max-h-dvh w-full max-w-sm gap-2 p-4',
               POSITION_CLASSES[position],
@@ -370,7 +382,13 @@ function ToastProvider({
           >
             <AnimatePresence mode="popLayout">
               {toasts.map((t) => (
-                <ToastItem key={t.id} toast={t} onDismiss={dismiss} position={position} />
+                <ToastItem
+                  key={t.id}
+                  toast={t}
+                  onDismiss={dismiss}
+                  position={position}
+                  dismissLabel={labels.dismiss}
+                />
               ))}
             </AnimatePresence>
           </div>,
@@ -387,4 +405,11 @@ const Toast = {
 };
 
 export { Toast, toastVariants, useToast };
-export type { ToastData, ToastOptions, ToastPosition, ToastVariant };
+export type {
+  ToastData,
+  ToastLabels,
+  ToastOptions,
+  ToastPosition,
+  ToastProviderProps,
+  ToastVariant,
+};

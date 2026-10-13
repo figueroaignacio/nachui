@@ -660,9 +660,12 @@ const FileUploadItemInfo = ({
 
 FileUploadItemInfo.displayName = 'FileUploadItemInfo';
 
-type FileUploadItemRemoveProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+interface FileUploadItemRemoveProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  label?: string;
+}
 
 const FileUploadItemRemove = ({
+  label = 'Remove file',
   className,
   onClick,
   children,
@@ -676,7 +679,7 @@ const FileUploadItemRemove = ({
     <button
       ref={ref}
       type="button"
-      aria-label="Remove file"
+      aria-label={label}
       data-slot="file-upload-item-remove"
       disabled={disabled}
       className={cn(

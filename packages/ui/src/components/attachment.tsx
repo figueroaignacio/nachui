@@ -426,19 +426,24 @@ AttachmentActions.displayName = 'AttachmentActions';
 const actionClassName =
   'text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring relative inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 pointer-coarse:before:absolute';
 
+interface AttachmentRemoveProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  label?: string;
+}
+
 const AttachmentRemove = ({
+  label = 'Remove attachment',
   className,
   children,
   ref,
   ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & { ref?: React.Ref<HTMLButtonElement> }) => {
+}: AttachmentRemoveProps & { ref?: React.Ref<HTMLButtonElement> }) => {
   const { variant } = useAttachmentContext();
 
   return (
     <button
       ref={ref}
       type="button"
-      aria-label="Remove attachment"
+      aria-label={label}
       data-slot="attachment-remove"
       className={cn(
         actionClassName,
@@ -456,19 +461,24 @@ const AttachmentRemove = ({
 };
 AttachmentRemove.displayName = 'AttachmentRemove';
 
+interface AttachmentDownloadProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  label?: string;
+}
+
 const AttachmentDownload = ({
+  label = 'Download attachment',
   className,
   children,
   ref,
   ...props
-}: React.AnchorHTMLAttributes<HTMLAnchorElement> & { ref?: React.Ref<HTMLAnchorElement> }) => {
+}: AttachmentDownloadProps & { ref?: React.Ref<HTMLAnchorElement> }) => {
   const { variant } = useAttachmentContext();
 
   return (
     <a
       ref={ref}
       download
-      aria-label="Download attachment"
+      aria-label={label}
       data-slot="attachment-download"
       className={cn(
         actionClassName,
@@ -576,4 +586,6 @@ export type {
   AttachmentSizeProps,
   AttachmentProgressProps,
   AttachmentListProps,
+  AttachmentRemoveProps,
+  AttachmentDownloadProps,
 };

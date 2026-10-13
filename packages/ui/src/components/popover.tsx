@@ -246,6 +246,7 @@ interface PopoverContentProps extends HTMLMotionProps<'div'> {
   sideOffset?: number;
   children?: React.ReactNode;
   showClose?: boolean;
+  closeLabel?: string;
 }
 
 const PopoverContent = ({
@@ -254,6 +255,7 @@ const PopoverContent = ({
   className,
   children,
   showClose = false,
+  closeLabel = 'Close',
   ...props
 }: PopoverContentProps) => {
   const { open, id, setOpen } = usePopoverContext();
@@ -314,7 +316,7 @@ const PopoverContent = ({
               className="ring-offset-background focus-visible:ring-ring absolute top-1 right-1 rounded-md p-2 opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
               <XIcon className="h-4 w-4" size={16} />
-              <span className="sr-only">Close</span>
+              <span className="sr-only">{closeLabel}</span>
             </button>
           )}
         </motion.div>

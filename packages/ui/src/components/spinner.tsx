@@ -50,12 +50,15 @@ const spinnerVariants = cva('animate-spin inline-flex items-center justify-cente
 });
 
 export interface SpinnerProps
-  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof spinnerVariants> {}
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof spinnerVariants> {
+  label?: string;
+}
 
 function Spinner({
   className,
   size,
   variant,
+  label = 'Loading',
   ref,
   ...props
 }: SpinnerProps & { ref?: React.Ref<HTMLDivElement> }) {
@@ -63,7 +66,7 @@ function Spinner({
     <div
       ref={ref}
       role="status"
-      aria-label="Loading"
+      aria-label={label}
       aria-live="polite"
       className={cn(spinnerVariants({ size, variant }), className)}
       {...props}

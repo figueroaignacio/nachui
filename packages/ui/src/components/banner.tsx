@@ -144,6 +144,7 @@ type BannerProps = VariantProps<typeof bannerVariants> & {
   onClose?: () => void;
   sticky?: boolean;
   dismissible?: boolean;
+  dismissLabel?: string;
   className?: string;
   children?: React.ReactNode;
 };
@@ -225,6 +226,7 @@ const BannerRoot = ({
   onClose,
   sticky = false,
   dismissible = true,
+  dismissLabel = 'Dismiss banner',
   children,
   ref,
 }: BannerProps) => {
@@ -272,7 +274,7 @@ const BannerRoot = ({
               type="button"
               onClick={handleClose}
               className="focus-visible:ring-ring -m-1.5 shrink-0 cursor-pointer rounded-md p-2.5 opacity-70 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none"
-              aria-label="Dismiss banner"
+              aria-label={dismissLabel}
             >
               <XIcon size={14} aria-hidden="true" />
             </button>

@@ -89,4 +89,9 @@ describe('Banner', () => {
     expect(action).toBeInTheDocument();
     expect(action).toHaveAttribute('href', '/changelog');
   });
+
+  it('names the dismiss button with dismissLabel', () => {
+    render(<Banner dismissLabel="Cerrar aviso">Maintenance tonight</Banner>);
+    expect(screen.getByRole('button', { name: 'Cerrar aviso' })).toBeInTheDocument();
+  });
 });

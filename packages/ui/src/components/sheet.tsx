@@ -4,7 +4,14 @@ import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
-import { focusFirst, isTopmostLayer, lockPageScroll, trapFocus, useIsClient } from '../lib/overlay';
+import {
+  assignRef,
+  focusFirst,
+  isTopmostLayer,
+  lockPageScroll,
+  trapFocus,
+  useIsClient,
+} from '../lib/overlay';
 import { backdrop, reveal, slideVariants, springs, tap } from '../lib/motion';
 import { useControllableState } from '../lib/use-controllable-state';
 
@@ -259,8 +266,7 @@ const SheetContent = ({
           <motion.div
             ref={(node) => {
               contentRef.current = node;
-              if (typeof ref === 'function') ref(node);
-              else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+              assignRef(ref, node);
             }}
             id={`${id}-content`}
             role="dialog"

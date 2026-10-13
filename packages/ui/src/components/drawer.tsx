@@ -12,7 +12,14 @@ import {
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
-import { focusFirst, isTopmostLayer, lockPageScroll, trapFocus, useIsClient } from '../lib/overlay';
+import {
+  assignRef,
+  focusFirst,
+  isTopmostLayer,
+  lockPageScroll,
+  trapFocus,
+  useIsClient,
+} from '../lib/overlay';
 import { backdrop, reveal, slideVariants } from '../lib/motion';
 import { useControllableState } from '../lib/use-controllable-state';
 import { Button, type ButtonProps } from './button';
@@ -159,6 +166,8 @@ interface DrawerContentProps
   extends Omit<HTMLMotionProps<'div'>, 'children'>, VariantProps<typeof drawerVariants> {
   children: React.ReactNode;
   showDragHandle?: boolean;
+  showClose?: boolean;
+  closeLabel?: string;
 }
 
 const DrawerContent = ({
@@ -166,8 +175,11 @@ const DrawerContent = ({
   className,
   side = 'bottom',
   showDragHandle = true,
+  showClose = true,
+  closeLabel = 'Close',
+  ref,
   ...props
-}: DrawerContentProps) => {
+}: DrawerContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const { open, setOpen, id, hasTitle, hasDescription } = useDrawerContext();
   const mounted = useIsClient();
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -249,7 +261,10 @@ const DrawerContent = ({
         <>
           <DrawerOverlay />
           <motion.div
-            ref={contentRef}
+            ref={(node: HTMLDivElement | null) => {
+              contentRef.current = node;
+              assignRef(ref, node);
+            }}
             role="dialog"
             aria-modal="true"
             aria-labelledby={hasTitle ? `${id}-title` : undefined}
@@ -284,22 +299,24 @@ const DrawerContent = ({
                   <div className="bg-muted-foreground/30 h-1 w-10 cursor-grab rounded-full active:cursor-grabbing" />
                 </div>
               )}
-              <div
-                className={cn(
-                  'flex justify-end px-4 pt-2 pb-0',
-                  isVertical && 'mx-auto w-full max-w-lg',
-                )}
-              >
-                <motion.button
-                  type="button"
-                  whileTap={shouldReduceMotion ? undefined : CLOSE_BUTTON_TAP}
-                  onClick={() => setOpen(false)}
-                  className="hover:bg-muted focus-visible:ring-ring rounded-full p-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
-                  aria-label="Close"
+              {showClose && (
+                <div
+                  className={cn(
+                    'flex justify-end px-4 pt-2 pb-0',
+                    isVertical && 'mx-auto w-full max-w-lg',
+                  )}
                 >
-                  <XIcon className="h-4 w-4" size={16} />
-                </motion.button>
-              </div>
+                  <motion.button
+                    type="button"
+                    whileTap={shouldReduceMotion ? undefined : CLOSE_BUTTON_TAP}
+                    onClick={() => setOpen(false)}
+                    className="hover:bg-muted focus-visible:ring-ring rounded-full p-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                    aria-label={closeLabel}
+                  >
+                    <XIcon className="h-4 w-4" size={16} />
+                  </motion.button>
+                </div>
+              )}
             </div>
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
               <div className={cn('px-5 pt-2 pb-5', isVertical && 'mx-auto w-full max-w-lg')}>

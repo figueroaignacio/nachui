@@ -53,4 +53,23 @@ describe('Toast', () => {
       render(<TestComponent />);
     }).toThrow('useToast must be used within a Toast.Provider');
   });
+
+  it('uses the labels passed to the provider and forwards its ref', async () => {
+    let region: HTMLDivElement | null = null;
+    render(
+      <Toast.Provider
+        ref={(node) => {
+          region = node;
+        }}
+        labels={{ region: 'Notificaciones', dismiss: 'Descartar' }}
+      >
+        <TestComponent />
+      </Toast.Provider>,
+    );
+
+    await userEvent.click(screen.getByText('Show Toast'));
+
+    expect(screen.getByRole('region', { name: 'Notificaciones' })).toBe(region);
+    expect(screen.getByRole('button', { name: 'Descartar' })).toBeInTheDocument();
+  });
 });

@@ -64,11 +64,24 @@ const REDUCED_MOTION_PROPS = {
   transition: { duration: 0.12 },
 } as const;
 
+export interface CommandLabels {
+  copy: string;
+  copyHint: string;
+  copied: string;
+}
+
+const DEFAULT_LABELS: CommandLabels = {
+  copy: 'Copy command',
+  copyHint: 'Copy to clipboard',
+  copied: 'Copied!',
+};
+
 export interface CommandProps extends React.HTMLAttributes<HTMLDivElement> {
   command: string;
   prefix?: string;
   resetDelay?: number;
   onCopied?: () => void;
+  labels?: Partial<CommandLabels>;
 }
 
 export const Command = ({
@@ -76,10 +89,12 @@ export const Command = ({
   prefix = '$',
   resetDelay = 2000,
   onCopied,
+  labels: labelOverrides,
   className,
   ref,
   ...props
 }: CommandProps & { ref?: React.Ref<HTMLDivElement> }) => {
+  const labels = { ...DEFAULT_LABELS, ...labelOverrides };
   const [copied, setCopied] = React.useState(false);
   const shouldReduceMotion = useReducedMotion();
   const resetTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -137,8 +152,8 @@ export const Command = ({
       <button
         type="button"
         onClick={handleCopy}
-        aria-label={copied ? 'Copied!' : 'Copy command'}
-        title={copied ? 'Copied!' : 'Copy to clipboard'}
+        aria-label={copied ? labels.copied : labels.copy}
+        title={copied ? labels.copied : labels.copyHint}
         className={cn(
           'text-muted-foreground hover:text-foreground -m-1.5 shrink-0 rounded p-2 transition-colors',
           'focus-visible:ring-ring ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:outline-none',
