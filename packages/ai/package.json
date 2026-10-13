@@ -39,9 +39,9 @@
     "ingest": "tsx --env-file=../../packages/db/.env --env-file=../../apps/web/.env src/scripts/ingest.ts"
   },
   "dependencies": {
-    "@ai-sdk/google": "^3.0.80",
+    "@ai-sdk/google": "^4.0.34",
     "@repo/db": "workspace:*",
-    "ai": "^6.0.199",
+    "ai": "^7.0.52",
     "zod": "^4.4.3"
   },
   "devDependencies": {
