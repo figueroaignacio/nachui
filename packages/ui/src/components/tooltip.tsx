@@ -5,8 +5,6 @@ import * as React from 'react';
 import { cn } from '../lib/cn';
 import { floatingOrigin, floatingVariants, reveal } from '../lib/motion';
 
-// --- Animation constants (module level) ---
-
 const TOOLTIP_POSITION_CLASSES = {
   top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
   bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
@@ -22,8 +20,6 @@ const TOOLTIP_ARROW_CLASSES = {
 } as const;
 
 const TOOLTIP_STYLE = { willChange: 'opacity, transform, filter' } as const;
-
-// --- Context ---
 
 interface TooltipContextType {
   open: boolean;
@@ -42,8 +38,6 @@ const useTooltip = () => {
   }
   return context;
 };
-
-// --- Components ---
 
 interface TooltipProps {
   children: React.ReactNode;
@@ -114,7 +108,6 @@ function TooltipTrigger({ children, asChild = false, className, ...props }: Tool
     };
   }, []);
 
-  // WCAG 1.4.13: the tooltip must be dismissible without moving the pointer.
   React.useEffect(() => {
     if (!open) return;
     const handleEscape = (e: KeyboardEvent) => {

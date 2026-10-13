@@ -40,8 +40,6 @@ function Label({
     </label>
   );
 
-  // Only wrap when a description is present, so the label keeps working as a
-  // direct sibling of its control (peer-* styles, inline layouts).
   if (!description) return label;
 
   return (

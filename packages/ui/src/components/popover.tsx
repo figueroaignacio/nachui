@@ -30,8 +30,6 @@ function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
   );
 }
 
-// --- Animation constants ---
-
 const POPOVER_POSITION_CLASSES = {
   top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
   bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
@@ -78,8 +76,6 @@ function shiftTranslate(shift: number, centeredX: boolean, centeredY: boolean) {
   return centeredY ? `${x} -50%` : x;
 }
 
-// --- Context ---
-
 interface PopoverContextType {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -96,8 +92,6 @@ const usePopoverContext = () => {
   }
   return context;
 };
-
-// --- Components ---
 
 interface PopoverProps {
   children: React.ReactNode;
@@ -275,7 +269,6 @@ const PopoverContent = ({
   const shouldReduceMotion = useReducedMotion();
   const shift = useViewportShift(contentRef, open);
 
-  // Move focus into the popover when it opens so keyboard users can reach its content.
   React.useEffect(() => {
     if (!open) return;
     const frame = requestAnimationFrame(() => {

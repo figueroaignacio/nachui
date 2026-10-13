@@ -78,8 +78,6 @@ function lockPageScroll() {
 const OVERLAY_STYLE = { willChange: 'opacity' } as const;
 const DIALOG_STYLE = { willChange: 'opacity, transform, filter' } as const;
 
-// --- Context ---
-
 type DialogContextType = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -99,8 +97,6 @@ const useDialogContext = () => {
   }
   return context;
 };
-
-// --- Components ---
 
 interface DialogProps {
   children: React.ReactNode;

@@ -29,8 +29,6 @@ function ChevronDownIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) 
   );
 }
 
-// --- Interfaces ---
-
 interface DropdownContextValue {
   isOpen: boolean;
   toggleMenu: () => void;
@@ -73,8 +71,6 @@ interface DropdownMenuItemProps {
   asChild?: boolean;
 }
 
-// --- Animation constants (module level) ---
-
 const DROPDOWN_ICON_VARIANTS = {
   open: { rotate: 180 },
   closed: { rotate: 0 },
@@ -91,8 +87,6 @@ const ALIGN_CLASSES = {
   end: 'right-0',
 } as const;
 
-// --- Context ---
-
 const DropdownContext = React.createContext<DropdownContextValue | null>(null);
 
 const useDropdownContext = (): DropdownContextValue => {
@@ -100,8 +94,6 @@ const useDropdownContext = (): DropdownContextValue => {
   if (!context) throw new Error('Dropdown components must be used within DropdownMenu');
   return context;
 };
-
-// --- Helpers ---
 
 function useClickOutside(
   ref: React.RefObject<HTMLElement | null>,
@@ -131,8 +123,6 @@ function getMenuItems(container: HTMLElement | null): HTMLElement[] {
     container.querySelectorAll<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])'),
   );
 }
-
-// --- Components ---
 
 const DropdownMenuRoot = ({
   children,
@@ -356,7 +346,6 @@ const DropdownMenuContent = ({
     };
   }, [isOpen, triggerRef, align, sideOffset]);
 
-  // Move focus to the first item when the menu opens.
   React.useEffect(() => {
     if (!isOpen) return;
     const frame = requestAnimationFrame(() => {

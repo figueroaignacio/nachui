@@ -30,8 +30,6 @@ function LoaderIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
   );
 }
 
-// --- CVA ---
-
 const buttonVariants = cva(
   'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium outline-none select-none relative overflow-hidden ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 aria-invalid:ring-1 aria-invalid:ring-destructive/50 aria-invalid:border-destructive transition-colors',
   {
@@ -51,18 +49,13 @@ const buttonVariants = cva(
         icon: 'size-9',
       },
     },
-    compoundVariants: [
-      // The link variant should hug its text regardless of the size prop.
-      { variant: 'link', className: 'h-auto p-0' },
-    ],
+    compoundVariants: [{ variant: 'link', className: 'h-auto p-0' }],
     defaultVariants: {
       variant: 'default',
       size: 'default',
     },
   },
 );
-
-// --- Animation variants (hoisted at module level) ---
 
 const LOADER_VARIANTS = {
   initial: { opacity: 0, scale: 0.8, filter: 'blur(4px)' },
@@ -78,8 +71,6 @@ const CONTENT_VARIANTS = {
 
 const SWAP_TRANSITION = { duration: 0.2 } as const;
 const BUTTON_STYLE = { willChange: 'transform' } as const;
-
-// --- Component ---
 
 interface ButtonProps extends HTMLMotionProps<'button'>, VariantProps<typeof buttonVariants> {
   loading?: boolean;
@@ -152,8 +143,6 @@ const ButtonRoot = ({
 };
 
 ButtonRoot.displayName = 'Button';
-
-// --- ButtonGroup ---
 
 interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;

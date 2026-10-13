@@ -6,8 +6,6 @@ import * as React from 'react';
 import { cn } from '../lib/cn';
 import { springs, still } from '../lib/motion';
 
-// --- CVA ---
-
 const tabsListVariants = cva(
   'inline-flex max-w-full rounded-md p-0.5 text-muted-foreground w-full sm:w-auto overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
   {
@@ -53,8 +51,6 @@ const tabsTriggerVariants = cva(
   },
 );
 
-// --- Context ---
-
 interface TabsContextValue {
   activeTab: string;
   setActiveTab: (value: string) => void;
@@ -70,8 +66,6 @@ function useTabsContext() {
   if (!context) throw new Error('Tabs components must be used within Tabs');
   return context;
 }
-
-// --- Components ---
 
 interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {
   defaultValue?: string;

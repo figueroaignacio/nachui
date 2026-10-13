@@ -5,7 +5,6 @@ import { Badge } from '../../components/badge';
 
 const invites = [
   {
-    // The photo URL is stale, so the image fails and the initials take over.
     src: 'https://github.com/figueroaignacio.pn',
     name: 'Camila Ortiz',
     email: 'camila@acmestudio.dev',
@@ -13,7 +12,6 @@ const invites = [
     initialsClassName: undefined,
   },
   {
-    // Invited by email, no photo on file yet.
     src: undefined,
     name: 'Tomas Iglesias',
     email: 'tomas@acmestudio.dev',

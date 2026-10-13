@@ -50,8 +50,6 @@ function CopyIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
   );
 }
 
-// --- Animation variants (hoisted for memoization) ---
-
 const ICON_VARIANTS = {
   initial: { opacity: 0, scale: 0.6, rotate: -10 },
   animate: { opacity: 1, scale: 1, rotate: 0 },
@@ -66,16 +64,12 @@ const REDUCED_MOTION_PROPS = {
   transition: { duration: 0.12 },
 } as const;
 
-// --- Types ---
-
 export interface CommandProps extends React.HTMLAttributes<HTMLDivElement> {
   command: string;
   prefix?: string;
   resetDelay?: number;
   onCopied?: () => void;
 }
-
-// --- Component ---
 
 export const Command = ({
   command,

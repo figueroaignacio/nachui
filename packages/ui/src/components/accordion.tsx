@@ -19,8 +19,6 @@ const REDUCED_COLLAPSE = {
   open: { height: 'auto', opacity: 1, transition: still },
 } as const;
 
-// --- Context ---
-
 type AccordionContextValue = {
   type: 'single' | 'multiple';
   openItems: string[];
@@ -39,8 +37,6 @@ const useAccordionContext = () => {
   }
   return context;
 };
-
-// --- Components ---
 
 interface AccordionProps {
   type?: 'single' | 'multiple';

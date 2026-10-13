@@ -3,7 +3,6 @@ import { Typography } from '../../components/typography';
 export function CustomTag() {
   return (
     <div className="border-border bg-card flex w-full max-w-md flex-col gap-2 rounded-xl border p-5">
-      {/* Looks like a heading, but stays a div so the page outline is untouched. */}
       <Typography as="div" variant="h4">
         Release 2.4.0
       </Typography>

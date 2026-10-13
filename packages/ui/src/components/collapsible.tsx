@@ -37,8 +37,6 @@ const REDUCED_COLLAPSE = {
   open: { height: 'auto', opacity: 1, transition: still },
 } as const;
 
-// --- CVA ---
-
 const collapsibleVariants = cva('', {
   variants: {
     variant: {
@@ -86,8 +84,6 @@ const collapsibleContentVariants = cva('overflow-hidden', {
   },
 });
 
-// --- Context ---
-
 interface CollapsibleContextValue {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
@@ -126,8 +122,6 @@ const useCollapsibleContext = (): CollapsibleContextValue => {
   }
   return context;
 };
-
-// --- Components ---
 
 const CollapsibleRoot = ({
   className,

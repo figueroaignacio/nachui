@@ -118,8 +118,6 @@ function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
   );
 }
 
-// --- CVA variants ---
-
 const bannerVariants = cva(
   'relative flex w-full items-center justify-center gap-3 border-b px-4 py-2 text-sm rounded-md',
   {
@@ -138,8 +136,6 @@ const bannerVariants = cva(
   },
 );
 
-// --- Types ---
-
 type BannerVariant = NonNullable<VariantProps<typeof bannerVariants>['variant']>;
 
 type BannerProps = VariantProps<typeof bannerVariants> & {
@@ -156,8 +152,6 @@ type DivWithRefProps = React.HTMLAttributes<HTMLDivElement> & {
   ref?: React.Ref<HTMLDivElement>;
 };
 
-// --- Variant icons ---
-
 const VARIANT_ICONS: Record<BannerVariant, React.ComponentType<IconProps> | undefined> = {
   default: undefined,
   info: InfoIcon,
@@ -165,8 +159,6 @@ const VARIANT_ICONS: Record<BannerVariant, React.ComponentType<IconProps> | unde
   danger: AlertCircleIcon,
   success: CheckCircleIcon,
 };
-
-// --- Animation constants ---
 
 const BANNER_INITIAL = { opacity: 0, y: -8 } as const;
 const BANNER_ANIMATE = { opacity: 1, y: 0 } as const;
@@ -188,8 +180,6 @@ const REDUCED_MOTION_PROPS = {
   exit: { opacity: 0 },
   transition: { duration: 0.12 },
 } as const;
-
-// --- Sub-components ---
 
 const BannerContent = ({ className, ref, ...props }: DivWithRefProps) => (
   <div ref={ref} className={cn('flex-1 space-y-2', className)} {...props} />
@@ -227,8 +217,6 @@ const BannerAction = ({ className, children, ref, ...props }: BannerActionProps)
   </a>
 );
 BannerAction.displayName = 'BannerAction';
-
-// --- Root ---
 
 const BannerRoot = ({
   className,
@@ -295,8 +283,6 @@ const BannerRoot = ({
   );
 };
 BannerRoot.displayName = 'Banner';
-
-// --- Compound export ---
 
 const Banner = Object.assign(BannerRoot, {
   Content: BannerContent,

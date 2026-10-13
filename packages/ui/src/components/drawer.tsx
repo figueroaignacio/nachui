@@ -88,8 +88,6 @@ function lockPageScroll() {
   };
 }
 
-// --- Context ---
-
 type DrawerContextProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -107,8 +105,6 @@ function useDrawerContext() {
   if (!ctx) throw new Error('Drawer components must be inside <Drawer>.');
   return ctx;
 }
-
-// --- Components ---
 
 interface DrawerProps {
   children: React.ReactNode;
@@ -200,8 +196,6 @@ const DrawerOverlay = ({ className }: { className?: string }) => {
     />
   );
 };
-
-// --- CVA ---
 
 const drawerVariants = cva(
   'fixed z-500 flex flex-col overflow-hidden bg-background border shadow-lg rounded-2xl',
