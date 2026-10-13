@@ -18,10 +18,6 @@ export function getDocEditUrl(sourceFilePath: string): string {
   return `${GITHUB_REPO_URL}/edit/main/${DOCS_CONTENT_ROOT}/${sourceFilePath}`;
 }
 
-export function getDomainForLocale(locale: string): string {
-  return `${SITE_URL}/${locale}`;
-}
-
 function normalizePath(path: string): string {
   const cleaned = path === '/' ? '/' : path.replace(/\/+$/, '');
   return cleaned.startsWith('/') ? cleaned : `/${cleaned}`;

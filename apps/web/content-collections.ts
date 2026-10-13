@@ -152,7 +152,7 @@ const docs = defineCollection({
     title: z.string(),
     description: z.string(),
     published: z.boolean().default(false),
-    date: z.coerce.date().default(new Date()),
+    date: z.coerce.date().optional(),
     locale: localeSchema,
     content: z.string(),
     toc: z

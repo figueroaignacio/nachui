@@ -9,7 +9,7 @@ import { PageFrame } from '@/components/layout/page-frame';
 import { Providers } from '@/components/providers';
 import { routing } from '@/i18n/routing';
 import { SITE_URL } from '@/lib/constants';
-import { getAbsoluteUrl } from '@/lib/domains';
+import { getAbsoluteUrl, getAssetUrl } from '@/lib/domains';
 import { SPRITE_CSS } from '@repo/ui/components/sprite';
 import { fontCode, fontHeading, fontSans, fontSerif } from '@/lib/font';
 import { Analytics } from '@vercel/analytics/next';
@@ -17,6 +17,8 @@ import type { Metadata } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+
+const DEFAULT_OG_IMAGE = getAssetUrl('/images/og/og-home.png');
 
 interface LocaleLayoutProps {
   children: React.ReactNode;
@@ -116,11 +118,13 @@ export async function generateMetadata({ params }: LocaleLayoutProps): Promise<M
       type: 'website',
       locale,
       url: getAbsoluteUrl(locale),
+      images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630, alt: t('title') }],
     },
     twitter: {
       card: 'summary_large_image',
       title: 'NachUI',
       description: t('description'),
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }
