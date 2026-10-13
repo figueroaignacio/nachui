@@ -56,7 +56,7 @@ const collapsibleTriggerVariants = cva(
     'flex w-full items-center justify-between',
     'transition-all duration-200',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-background focus-visible:ring-offset-2',
-    'disabled:pointer-events-none disabled:opacity-50',
+    'disabled:pointer-events-none disabled:opacity-40',
   ].join(' '),
   {
     variants: {

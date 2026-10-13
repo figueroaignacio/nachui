@@ -495,7 +495,7 @@ const SearchCommandItem = ({
       select(item);
     },
     className: cn(
-      'text-foreground data-[active]:bg-secondary flex w-full cursor-default items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors select-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50',
+      'text-foreground data-[active]:bg-secondary flex w-full cursor-default items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors select-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40',
       className,
     ),
   };

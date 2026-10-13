@@ -561,7 +561,7 @@ const PromptInputButton = ({
       aria-label={label}
       title={label}
       className={cn(
-        'text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-2 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0',
+        'text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-2 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&>svg]:size-4 [&>svg]:shrink-0',
         variant === 'ghost' && 'hover:bg-muted',
         variant === 'outline' && 'border-border hover:bg-muted border',
         className,

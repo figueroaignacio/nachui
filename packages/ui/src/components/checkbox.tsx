@@ -93,7 +93,7 @@ function Checkbox({
       <input
         type="checkbox"
         ref={mergedRef}
-        className="peer focus-visible:ring-ring border-primary checked:bg-primary checked:text-primary-foreground text-primary-foreground bg-background indeterminate:bg-primary ring-offset-background relative size-4 shrink-0 cursor-pointer appearance-none rounded-sm border transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        className="peer focus-visible:ring-ring border-primary checked:bg-primary checked:text-primary-foreground text-primary-foreground bg-background indeterminate:bg-primary ring-offset-background relative size-4 shrink-0 cursor-pointer appearance-none rounded-sm border transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40"
         onChange={(e) => {
           onChange?.(e);
           onCheckedChange?.(e.target.checked);

@@ -142,7 +142,7 @@ const linkClassName = (isActive: boolean, disabled: boolean, size: 'default' | '
     'hover:bg-muted ring-offset-background focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
     size === 'icon' ? 'w-9' : 'px-3',
     isActive && 'border-border border',
-    disabled && 'pointer-events-none opacity-50',
+    disabled && 'pointer-events-none opacity-40',
   );
 
 const PaginationLink = ({

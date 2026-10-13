@@ -22,7 +22,7 @@ export function Disabled() {
       {features.map((feature) => (
         <div key={feature.id} className="flex items-start justify-between gap-4">
           <div className="flex flex-col gap-1">
-            <Label htmlFor={feature.id} className="opacity-50">
+            <Label htmlFor={feature.id} className="opacity-40">
               {feature.label}
             </Label>
             <span className="text-muted-foreground text-xs">{feature.hint}</span>

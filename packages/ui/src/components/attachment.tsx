@@ -424,7 +424,7 @@ const AttachmentActions = ({
 AttachmentActions.displayName = 'AttachmentActions';
 
 const actionClassName =
-  'text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring relative inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 pointer-coarse:before:absolute';
+  'text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring relative inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-40 pointer-coarse:before:absolute';
 
 interface AttachmentRemoveProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label?: string;

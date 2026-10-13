@@ -174,7 +174,7 @@ const RatingRoot = ({
       }}
       className={cn(
         'inline-flex items-center gap-2',
-        disabled && 'cursor-not-allowed opacity-50',
+        disabled && 'cursor-not-allowed opacity-40',
         className,
       )}
       {...props}
