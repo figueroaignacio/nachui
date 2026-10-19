@@ -7,10 +7,10 @@ import { cn } from '../lib/cn';
 import {
   assignRef,
   focusFirst,
-  isTopmostLayer,
   lockPageScroll,
   trapFocus,
   useIsClient,
+  useLayer,
 } from '../lib/overlay';
 import { backdrop, reveal, slideVariants, springs, tap } from '../lib/motion';
 import { useControllableState } from '../lib/use-controllable-state';
@@ -220,6 +220,7 @@ const SheetContent = ({
   const { open, setOpen, id, hasTitle, hasDescription } = useSheetContext();
   const mounted = useIsClient();
   const contentRef = React.useRef<HTMLDivElement>(null);
+  const layer = useLayer(open, true);
   const restoreRef = React.useRef<HTMLElement | null>(null);
   const shouldReduceMotion = useReducedMotion();
 
@@ -231,14 +232,15 @@ const SheetContent = ({
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.defaultPrevented) return;
       const content = contentRef.current;
-      if (!content || !isTopmostLayer(content, event.target)) return;
+      if (!content) return;
 
       if (event.key === 'Escape') {
+        if (!layer.isTopmost()) return;
         event.preventDefault();
         setOpen(false);
         return;
       }
-      trapFocus(event, content);
+      if (layer.isTopmostModal()) trapFocus(event, content);
     };
 
     document.addEventListener('keydown', onKeyDown);
@@ -252,7 +254,7 @@ const SheetContent = ({
       document.removeEventListener('keydown', onKeyDown);
       restoreRef.current?.focus();
     };
-  }, [open, setOpen]);
+  }, [open, setOpen, layer]);
 
   if (!mounted) return null;
 

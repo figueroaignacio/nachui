@@ -8,10 +8,10 @@ import { cn } from '../lib/cn';
 import {
   assignRef,
   focusFirst,
-  isTopmostLayer,
   lockPageScroll,
   trapFocus,
   useIsClient,
+  useLayer,
 } from '../lib/overlay';
 import { backdrop, reveal, surface } from '../lib/motion';
 import { useControllableState } from '../lib/use-controllable-state';
@@ -231,6 +231,7 @@ const DialogContent = ({
 }: DialogContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const { id, open, setOpen, hasTitle, hasDescription } = useDialogContext();
   const contentRef = React.useRef<HTMLDivElement>(null);
+  const layer = useLayer(open, true);
   const triggerRef = React.useRef<HTMLElement | null>(null);
   const shouldReduceMotion = useReducedMotion();
 
@@ -242,14 +243,15 @@ const DialogContent = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.defaultPrevented) return;
       const content = contentRef.current;
-      if (!content || !isTopmostLayer(content, e.target)) return;
+      if (!content) return;
 
       if (e.key === 'Escape') {
+        if (!layer.isTopmost()) return;
         e.preventDefault();
         setOpen(false);
         return;
       }
-      trapFocus(e, content);
+      if (layer.isTopmostModal()) trapFocus(e, content);
     };
 
     document.addEventListener('keydown', handleKeyDown);
@@ -266,7 +268,7 @@ const DialogContent = ({
       releasePageScroll();
       triggerRef.current?.focus();
     };
-  }, [open, setOpen]);
+  }, [open, setOpen, layer]);
 
   return (
     <AnimatePresence mode="wait">

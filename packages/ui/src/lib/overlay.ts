@@ -2,40 +2,98 @@ import * as React from 'react';
 
 export const FOCUSABLE_SELECTOR = [
   'a[href]',
+  'area[href]',
   'button:not([disabled])',
-  'input:not([disabled])',
+  'input:not([disabled]):not([type="hidden"])',
   'select:not([disabled])',
   'textarea:not([disabled])',
+  'summary',
+  'iframe',
+  '[contenteditable]:not([contenteditable="false"])',
   '[tabindex]:not([tabindex="-1"])',
 ].join(', ');
 
+function isReachable(element: HTMLElement) {
+  if (element.closest('[inert], [hidden], [aria-hidden="true"]')) return false;
+  if (typeof element.checkVisibility === 'function') {
+    return element.checkVisibility({ visibilityProperty: true });
+  }
+  return true;
+}
+
+export function getFocusable(container: HTMLElement) {
+  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+    isReachable,
+  );
+}
+
 export function focusFirst(container: HTMLElement) {
-  (container.querySelector<HTMLElement>(FOCUSABLE_SELECTOR) ?? container).focus();
+  const autofocus = container.querySelector<HTMLElement>('[data-autofocus], [autofocus]');
+  const target = autofocus && isReachable(autofocus) ? autofocus : getFocusable(container)[0];
+  (target ?? container).focus();
 }
 
 export function trapFocus(event: KeyboardEvent, container: HTMLElement) {
   if (event.key !== 'Tab') return;
 
-  const focusable = Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+  const focusable = getFocusable(container);
   const first = focusable[0];
   const last = focusable[focusable.length - 1];
-  if (!first || !last) return;
 
-  if (event.shiftKey && document.activeElement === first) {
+  if (!first || !last) {
+    event.preventDefault();
+    container.focus();
+    return;
+  }
+
+  const active = document.activeElement;
+  const inside = active instanceof HTMLElement && focusable.includes(active);
+
+  if (!inside) {
+    event.preventDefault();
+    (event.shiftKey ? last : first).focus();
+  } else if (event.shiftKey && active === first) {
     event.preventDefault();
     last.focus();
-  } else if (!event.shiftKey && document.activeElement === last) {
+  } else if (!event.shiftKey && active === last) {
     event.preventDefault();
     first.focus();
   }
 }
 
-export function isTopmostLayer(node: HTMLElement | null, target: EventTarget | null) {
-  if (!node) return false;
-  const owner = target instanceof Element ? target.closest('[aria-modal="true"]') : null;
-  if (owner) return owner === node;
-  const layers = document.querySelectorAll('[aria-modal="true"]');
-  return layers[layers.length - 1] === node;
+type Layer = { modal: boolean };
+
+const layers: Layer[] = [];
+
+export function useLayer(active: boolean, modal = false) {
+  const entryRef = React.useRef<Layer | null>(null);
+
+  React.useEffect(() => {
+    if (!active) return;
+    const entry: Layer = { modal };
+    layers.push(entry);
+    entryRef.current = entry;
+    return () => {
+      const index = layers.indexOf(entry);
+      if (index !== -1) layers.splice(index, 1);
+      if (entryRef.current === entry) entryRef.current = null;
+    };
+  }, [active, modal]);
+
+  return React.useMemo(
+    () => ({
+      isTopmost: () => entryRef.current !== null && layers[layers.length - 1] === entryRef.current,
+      isTopmostModal: () => {
+        const entry = entryRef.current;
+        if (!entry) return false;
+        for (let index = layers.length - 1; index >= 0; index -= 1) {
+          if (layers[index]?.modal) return layers[index] === entry;
+        }
+        return false;
+      },
+    }),
+    [],
+  );
 }
 
 export function lockPageScroll() {
@@ -45,7 +103,14 @@ export function lockPageScroll() {
   if (depth === 0) {
     const gutter = window.innerWidth - root.clientWidth;
     root.dataset.scrollLockedOverflow = document.body.style.overflow;
-    if (gutter > 0) root.style.paddingRight = `${gutter}px`;
+    root.dataset.scrollLockedPadding = root.style.paddingRight;
+    root.dataset.scrollLockedOverscroll = root.style.overscrollBehavior;
+    if (gutter > 0) {
+      const padding = Number.parseFloat(getComputedStyle(root).paddingRight) || 0;
+      root.style.paddingRight = `${padding + gutter}px`;
+    }
+    root.style.setProperty('--scroll-lock-gutter', `${gutter}px`);
+    root.style.overscrollBehavior = 'none';
     document.body.style.overflow = 'hidden';
   }
   root.dataset.scrollLocked = String(depth + 1);
@@ -63,9 +128,13 @@ export function lockPageScroll() {
     }
 
     document.body.style.overflow = root.dataset.scrollLockedOverflow ?? '';
-    root.style.paddingRight = '';
+    root.style.paddingRight = root.dataset.scrollLockedPadding ?? '';
+    root.style.overscrollBehavior = root.dataset.scrollLockedOverscroll ?? '';
+    root.style.removeProperty('--scroll-lock-gutter');
     delete root.dataset.scrollLocked;
     delete root.dataset.scrollLockedOverflow;
+    delete root.dataset.scrollLockedPadding;
+    delete root.dataset.scrollLockedOverscroll;
   };
 }
 

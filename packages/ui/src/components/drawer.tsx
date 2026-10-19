@@ -15,10 +15,10 @@ import { cn } from '../lib/cn';
 import {
   assignRef,
   focusFirst,
-  isTopmostLayer,
   lockPageScroll,
   trapFocus,
   useIsClient,
+  useLayer,
 } from '../lib/overlay';
 import { backdrop, reveal, slideVariants } from '../lib/motion';
 import { useControllableState } from '../lib/use-controllable-state';
@@ -183,6 +183,7 @@ const DrawerContent = ({
   const { open, setOpen, id, hasTitle, hasDescription } = useDrawerContext();
   const mounted = useIsClient();
   const contentRef = React.useRef<HTMLDivElement>(null);
+  const layer = useLayer(open, true);
   const triggerRef = React.useRef<HTMLElement | null>(null);
 
   const dragY = useMotionValue(0);
@@ -198,14 +199,15 @@ const DrawerContent = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.defaultPrevented) return;
       const content = contentRef.current;
-      if (!content || !isTopmostLayer(content, e.target)) return;
+      if (!content) return;
 
       if (e.key === 'Escape') {
+        if (!layer.isTopmost()) return;
         e.preventDefault();
         setOpen(false);
         return;
       }
-      trapFocus(e, content);
+      if (layer.isTopmostModal()) trapFocus(e, content);
     };
 
     document.addEventListener('keydown', handleKeyDown);
@@ -219,7 +221,7 @@ const DrawerContent = ({
       document.removeEventListener('keydown', handleKeyDown);
       triggerRef.current?.focus();
     };
-  }, [open, setOpen]);
+  }, [open, setOpen, layer]);
 
   const isVertical = side === 'bottom' || side === 'top';
   const isHorizontal = side === 'left' || side === 'right';

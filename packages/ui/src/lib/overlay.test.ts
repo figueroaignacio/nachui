@@ -1,5 +1,6 @@
+import { act, renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { focusFirst, isTopmostLayer, lockPageScroll, trapFocus } from './overlay';
+import { focusFirst, getFocusable, lockPageScroll, trapFocus, useLayer } from './overlay';
 
 function modal(id: string) {
   const node = document.createElement('div');
@@ -50,6 +51,13 @@ describe('lockPageScroll', () => {
     expect(document.documentElement.dataset.scrollLocked).toBeUndefined();
   });
 
+  it('restores padding the page already had', () => {
+    document.documentElement.style.paddingRight = '12px';
+    const release = lockPageScroll();
+    release();
+    expect(document.documentElement.style.paddingRight).toBe('12px');
+  });
+
   it('ignores a second release from the same lock', () => {
     const releaseOuter = lockPageScroll();
     const releaseInner = lockPageScroll();
@@ -65,25 +73,28 @@ describe('lockPageScroll', () => {
   });
 });
 
-describe('isTopmostLayer', () => {
-  it('treats the last modal in the document as the top layer', () => {
-    const lower = modal('lower');
-    const upper = modal('upper');
+describe('useLayer', () => {
+  it('treats the most recently opened layer as the top one', () => {
+    const lower = renderHook(({ open }) => useLayer(open, true), { initialProps: { open: true } });
+    const upper = renderHook(({ open }) => useLayer(open), { initialProps: { open: true } });
 
-    expect(isTopmostLayer(upper, document.body)).toBe(true);
-    expect(isTopmostLayer(lower, document.body)).toBe(false);
+    expect(upper.result.current.isTopmost()).toBe(true);
+    expect(lower.result.current.isTopmost()).toBe(false);
+    expect(lower.result.current.isTopmostModal()).toBe(true);
+    expect(upper.result.current.isTopmostModal()).toBe(false);
+
+    act(() => upper.rerender({ open: false }));
+
+    expect(lower.result.current.isTopmost()).toBe(true);
+    lower.unmount();
+    upper.unmount();
   });
 
-  it('prefers the modal that owns the event target', () => {
-    const lower = modal('lower');
-    modal('upper');
-    const target = lower.querySelector('button');
-
-    expect(isTopmostLayer(lower, target)).toBe(true);
-  });
-
-  it('returns false without a node', () => {
-    expect(isTopmostLayer(null, document.body)).toBe(false);
+  it('is never topmost while closed', () => {
+    const closed = renderHook(() => useLayer(false, true));
+    expect(closed.result.current.isTopmost()).toBe(false);
+    expect(closed.result.current.isTopmostModal()).toBe(false);
+    closed.unmount();
   });
 });
 
@@ -115,6 +126,48 @@ describe('focus helpers', () => {
     trapFocus(backward, layer);
     expect(backward.defaultPrevented).toBe(true);
     expect(document.activeElement).toBe(last);
+  });
+
+  it('pulls focus back in when it sits on the container or outside it', () => {
+    const layer = modal('layer');
+    layer.tabIndex = -1;
+    layer.focus();
+
+    const backward = tab(true);
+    trapFocus(backward, layer);
+    expect(backward.defaultPrevented).toBe(true);
+    expect(document.activeElement?.id).toBe('layer-last');
+
+    document.body.focus();
+    const forward = tab();
+    trapFocus(forward, layer);
+    expect(document.activeElement?.id).toBe('layer-first');
+  });
+
+  it('keeps focus on an empty layer instead of letting Tab leave it', () => {
+    const empty = document.createElement('div');
+    empty.tabIndex = -1;
+    document.body.appendChild(empty);
+    empty.focus();
+
+    const forward = tab();
+    trapFocus(forward, empty);
+    expect(forward.defaultPrevented).toBe(true);
+    expect(document.activeElement).toBe(empty);
+  });
+
+  it('skips hidden inputs and content inside hidden or inert regions', () => {
+    const layer = document.createElement('div');
+    layer.innerHTML = `
+      <input type="hidden" />
+      <div hidden><button>Hidden</button></div>
+      <div inert><button>Inert</button></div>
+      <button id="visible">Visible</button>`;
+    document.body.appendChild(layer);
+
+    expect(getFocusable(layer).map((node) => node.id)).toEqual(['visible']);
+    focusFirst(layer);
+    expect(document.activeElement?.id).toBe('visible');
   });
 
   it('leaves Tab alone in the middle of the layer and for other keys', () => {
