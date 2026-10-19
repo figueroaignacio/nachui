@@ -14,8 +14,8 @@ const CARD_WIDTH = 340;
 const CARD_HEIGHT = 290;
 const GAP = 12;
 const EDGE = 16;
-/** Room kept at the bottom for the floating site dock. */
-const DOCK_CLEARANCE = 96;
+/** Room kept between the card and the bottom of the viewport. */
+const VIEWPORT_CLEARANCE = 24;
 const STAGE_WIDTH = 560;
 const FRAME_HEIGHT = 180;
 const FRAME_PADDING = 24;
@@ -149,7 +149,7 @@ export function SidebarPreview({
 
   const top = Math.min(
     Math.max(anchor.top + anchor.height / 2 - CARD_HEIGHT / 2, EDGE),
-    window.innerHeight - CARD_HEIGHT - DOCK_CLEARANCE,
+    window.innerHeight - CARD_HEIGHT - VIEWPORT_CLEARANCE,
   );
 
   return (

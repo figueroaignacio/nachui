@@ -4,8 +4,8 @@ import { ThemeInitScript } from '@/components/common/theme-init-script';
 import { AiChat } from '@/features/chat/containers/ai-chat';
 import { Backdrop } from '@/components/layout/backdrop';
 import { Footer } from '@/components/layout/footer';
-import { SiteDock } from '@/features/shell/components/site-dock';
 import { PageFrame } from '@/components/layout/page-frame';
+import { SiteHeader } from '@/features/shell/components/site-header';
 import { Providers } from '@/components/providers';
 import { routing } from '@/i18n/routing';
 import { SITE_URL } from '@/lib/constants';
@@ -83,6 +83,7 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
         <Backdrop />
         <NextIntlClientProvider>
           <Providers>
+            <SiteHeader />
             <PageFrame>
               <main id="main-content">{children}</main>
             </PageFrame>
@@ -91,7 +92,6 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
                 the same assistant. Only the launcher is eager; the engine and
                 window load on first use. */}
             <AiChat />
-            <SiteDock />
           </Providers>
         </NextIntlClientProvider>
       </body>

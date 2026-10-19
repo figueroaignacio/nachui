@@ -566,75 +566,24 @@ body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
   --silk-deep: oklch(26% 0.0081 72);
 }
 
-/* The dock wears the same silk as the dome: a folded gradient with two slow
-   waves drifting over it. Dark only, the light theme keeps the plain glass. */
-.site-dock-silk {
-  display: none;
+/* Two rows: brand, search and utilities on top, section tabs below. While the
+   user scrolls down the top row slides away and only the tabs stay, so sticky
+   rails read this variable to sit right under whatever is showing. */
+:root {
+  --site-header-height: 6.25rem;
 }
 
-.dark .site-dock {
-  background-color: transparent;
-  border-color: color-mix(in oklab, var(--silk-deep) 80%, transparent);
+:root:has([data-site-header][data-collapsed='true']) {
+  --site-header-height: 2.75rem;
 }
 
-.dark .site-dock-silk {
-  display: block;
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  border-radius: inherit;
-  pointer-events: none;
+.site-header {
+  background-color: color-mix(in oklab, var(--background) 85%, transparent);
 }
 
-.dark .site-dock-silk::before,
-.dark .site-dock-silk::after {
-  content: '';
-  position: absolute;
-}
-
-.dark .site-dock-silk::before {
-  inset: 0;
-  background: linear-gradient(
-    100deg,
-    color-mix(in oklab, var(--silk-base) 88%, transparent) 0%,
-    color-mix(in oklab, var(--silk-fold) 88%, transparent) 20%,
-    color-mix(in oklab, var(--silk-base) 88%, transparent) 36%,
-    color-mix(in oklab, var(--silk-deep) 88%, transparent) 58%,
-    color-mix(in oklab, var(--silk-fold) 88%, transparent) 76%,
-    color-mix(in oklab, var(--silk-base) 88%, transparent) 100%
-  );
-}
-
-.dark .site-dock-silk::after {
-  inset: -60% -35%;
-  opacity: 0.7;
-  background-image:
-    radial-gradient(
-      60% 40% at 18% 30%,
-      color-mix(in oklab, var(--silk-fold) 90%, transparent) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      70% 45% at 62% 70%,
-      color-mix(in oklab, var(--silk-deep) 90%, transparent) 0%,
-      transparent 72%
-    );
-}
-
-.dark .site-dock-silk::after {
-  background-image:
-    radial-gradient(
-      60% 40% at 18% 30%,
-      color-mix(in oklab, var(--silk-fold) 90%, transparent) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      70% 45% at 62% 70%,
-      color-mix(in oklab, var(--silk-deep) 90%, transparent) 0%,
-      transparent 72%
-    ),
-    radial-gradient(35% 30% at 65% 30%, var(--silk-glow), transparent 70%);
+/* Translucent enough for the silk dome to show through near the top. */
+.dark .site-header {
+  background-color: color-mix(in oklab, var(--background) 72%, transparent);
 }
 
 .page-backdrop {

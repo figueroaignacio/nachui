@@ -42,7 +42,7 @@ export function GallerySidebar() {
     <aside className="lg:border-r lg:pr-8">
       <nav
         aria-label={t('eyebrow')}
-        className="hide-scrollbar sticky top-10 hidden h-[calc(100vh-9rem)] shrink-0 overflow-y-scroll mask-[linear-gradient(180deg,black_90%,transparent)] pb-20 lg:block"
+        className="hide-scrollbar sticky top-[calc(var(--site-header-height)+2.5rem)] hidden h-[calc(100vh-var(--site-header-height)-4.5rem)] shrink-0 overflow-y-scroll mask-[linear-gradient(180deg,black_90%,transparent)] pb-20 transition-[top] duration-300 motion-reduce:transition-none lg:block"
       >
         <div className="mb-3">
           <Input

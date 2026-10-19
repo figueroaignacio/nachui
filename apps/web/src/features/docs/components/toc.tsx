@@ -34,7 +34,7 @@ function SkeletonItem({ width, subitems }: { width: number; subitems?: number[] 
 
 function TocSkeleton() {
   return (
-    <div className="sticky top-10 h-[calc(100vh-9rem)]">
+    <div className="sticky top-[calc(var(--site-header-height)+2.5rem)] h-[calc(100vh-var(--site-header-height)-4.5rem)] transition-[top] duration-300 motion-reduce:transition-none">
       <Skeleton className="bg-secondary mx-2 mb-3 h-2 w-14 rounded-full" />
       <ul className="m-0 list-none">
         <SkeletonItem width={88} />
@@ -73,7 +73,11 @@ export function Toc({ toc, footer }: TocPanelProps) {
   const t = useTranslations('components.toc');
 
   if (!toc || toc.length === 0) {
-    return footer ? <div className="sticky top-10">{footer}</div> : null;
+    return footer ? (
+      <div className="sticky top-[calc(var(--site-header-height)+2.5rem)] transition-[top] duration-300 motion-reduce:transition-none">
+        {footer}
+      </div>
+    ) : null;
   }
 
   if (!mounted) {
@@ -82,7 +86,7 @@ export function Toc({ toc, footer }: TocPanelProps) {
 
   return (
     <motion.div
-      className="hide-scrollbar sticky top-10 h-[calc(100vh-9rem)] overflow-y-auto"
+      className="hide-scrollbar sticky top-[calc(var(--site-header-height)+2.5rem)] h-[calc(100vh-var(--site-header-height)-4.5rem)] overflow-y-auto transition-[top] duration-300 motion-reduce:transition-none"
       initial={{ opacity: 0, x: 8 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}

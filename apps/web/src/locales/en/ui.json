@@ -68,7 +68,7 @@
       }
     ]
   },
-  "dock": {
+  "header": {
     "menu": "Menu",
     "label": "Site navigation",
     "home": "Home",
@@ -79,7 +79,43 @@
     "ask": "Ask AI",
     "github": "GitHub",
     "theme": "Toggle theme",
-    "language": "Switch language"
+    "language": "Switch language",
+    "sections": "Sections",
+    "searchPlaceholder": "Search components, docs and icons",
+    "tabs": [
+      {
+        "title": "Get started",
+        "href": "/docs"
+      },
+      {
+        "title": "UI",
+        "href": "/docs/elements/ui"
+      },
+      {
+        "title": "Layout",
+        "href": "/docs/elements/layout"
+      },
+      {
+        "title": "AI",
+        "href": "/docs/elements/ai"
+      },
+      {
+        "title": "Hybrids",
+        "href": "/docs/elements/hybrids"
+      },
+      {
+        "title": "Components",
+        "href": "/components"
+      },
+      {
+        "title": "Bricks",
+        "href": "/bricks/login"
+      },
+      {
+        "title": "Icons",
+        "href": "/icons"
+      }
+    ]
   },
   "loading": "Loading page"
 }

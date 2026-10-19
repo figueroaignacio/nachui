@@ -10,7 +10,7 @@ export function Footer() {
   const t = useTranslations('sections.footer');
 
   return (
-    <footer data-site-footer className="border-rule border-t pb-24">
+    <footer data-site-footer className="border-rule border-t">
       <div className="page-frame-outer">
         <div className="page-frame">
           <div className="flex w-full flex-col gap-4 py-6 md:flex-row md:items-center md:justify-between">

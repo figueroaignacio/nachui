@@ -126,7 +126,7 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
       <motion.nav
         ref={menuRef}
         id="mobile-menu"
-        aria-label={t('ui.dock.label')}
+        aria-label={t('ui.header.label')}
         tabIndex={-1}
         inert={!isMenuOpen}
         initial={false}
@@ -157,7 +157,7 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
           className="border-rule flex touch-none items-center justify-between border-b px-6 pt-2 pb-4"
         >
           <div className="flex items-center gap-x-3">
-            <Link href="/" onClick={toggleMenu} aria-label={t('ui.dock.homeLink')}>
+            <Link href="/" onClick={toggleMenu} aria-label={t('ui.header.homeLink')}>
               <Logo withText />
             </Link>
           </div>
@@ -169,8 +169,8 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
               size="icon"
               data-autofocus
               onClick={toggleMenu}
-              title={t('ui.dock.close')}
-              aria-label={t('ui.dock.close')}
+              title={t('ui.header.close')}
+              aria-label={t('ui.header.close')}
             >
               <XIcon size={20} aria-hidden="true" />
             </Button>
@@ -183,7 +183,7 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
           {menuLinks.length > 0 && (
             <div className="mb-8">
               <Typography className="text-muted-foreground mb-2 px-2.5 text-xs">
-                {t('ui.dock.menu')}
+                {t('ui.header.menu')}
               </Typography>
               <ul>
                 {menuLinks.map((item) => {

@@ -137,7 +137,7 @@ export function Sidebar({ previews = {} }: SidebarProps) {
 
   return (
     <aside className="hidden lg:block lg:pr-6">
-      <div className="sticky top-10 grid h-[calc(100vh-9rem)] grid-cols-[2.25rem_minmax(0,1fr)] gap-3">
+      <div className="sticky top-[calc(var(--site-header-height)+2.5rem)] grid h-[calc(100vh-var(--site-header-height)-4.5rem)] grid-cols-[2.25rem_minmax(0,1fr)] gap-3 transition-[top] duration-300 motion-reduce:transition-none">
         <div className="flex flex-col gap-1" role="group" aria-label={t('sidebar.filterLabel')}>
           {anchors.map(({ id, label, Icon }) => {
             const isActive = id === anchor;

@@ -2,24 +2,30 @@
 
 import { useSearch } from '@/features/docs/hooks/use-search';
 import { useDialogFocus } from '@/hooks/use-dialog-focus';
-import { useKbdShortcut, useModKeyLabel } from '@/hooks/use-kbd-shortcut';
+import { useKbdShortcut } from '@/hooks/use-kbd-shortcut';
 import { useRouter } from '@/i18n/navigation';
-import { Button } from '@repo/ui/components/button';
-import { Dock } from '@repo/ui/components/dock';
 import { Dialog } from '@repo/ui/components/dialog';
 import { Kbd } from '@repo/ui/components/kbd';
 import { ChevronDownIcon } from '@repo/ui/icons/chevron-down';
 import { ChevronUpIcon } from '@repo/ui/icons/chevron-up';
 import { CornerDownLeftIcon } from '@repo/ui/icons/corner-down-left';
-import { SearchIcon } from '@repo/ui/icons/search';
 import { useTranslations } from 'next-intl';
-import { useCallback, useId, useState } from 'react';
+import { useCallback, useEffect, useId } from 'react';
 import { SearchInput } from './search-input';
 import { SearchResults } from './search-results';
 
-export function Searcher({ variant = 'default' }: { variant?: 'default' | 'icon' | 'dock' }) {
+type SearcherProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+/**
+ * The search dialog. It renders no trigger of its own: the header owns the
+ * open state so several buttons can open the same dialog and the shortcut is
+ * bound once.
+ */
+export function Searcher({ open: isOpen, onOpenChange }: SearcherProps) {
   const t = useTranslations('components.searcher');
-  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const {
     query,
@@ -38,9 +44,11 @@ export function Searcher({ variant = 'default' }: { variant?: 'default' | 'icon'
   const optionId = useCallback((index: number) => `${listboxId}-option-${index}`, [listboxId]);
   const hasOptions = activeItems.length > 0;
 
-  const modKey = useModKeyLabel();
+  useKbdShortcut(['mod', 'k'], () => onOpenChange(!isOpen), { allowInEditable: true });
 
-  useKbdShortcut(['mod', 'k'], () => setIsOpen((prev) => !prev), { allowInEditable: true });
+  useEffect(() => {
+    handleOpenChange(isOpen, clearQuery);
+  }, [isOpen, handleOpenChange, clearQuery]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -55,57 +63,15 @@ export function Searcher({ variant = 'default' }: { variant?: 'default' | 'icon'
         const activeItem = activeItems[selectedIndex];
         if (activeItem) {
           router.push(activeItem.href);
-          setIsOpen(false);
-          clearQuery();
+          onOpenChange(false);
         }
       }
     },
-    [nextItem, previousItem, activeItems, selectedIndex, router, clearQuery],
+    [nextItem, previousItem, activeItems, selectedIndex, router, onOpenChange],
   );
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={(open) => {
-        setIsOpen(open);
-        handleOpenChange(open, clearQuery);
-      }}
-    >
-      <Dialog.Trigger asChild>
-        {variant === 'dock' ? (
-          <Dock.Item label={t('label')}>
-            <SearchIcon aria-hidden="true" />
-          </Dock.Item>
-        ) : variant === 'icon' ? (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground hover:text-foreground size-8"
-            title={t('label')}
-            aria-label={t('label')}
-          >
-            <SearchIcon size={15} aria-hidden="true" />
-          </Button>
-        ) : (
-          <button
-            className="group border-border/40 bg-secondary/30 text-muted-foreground hover:bg-secondary/60 hover:border-border/60 hover:text-foreground/80 flex h-8 w-full items-center gap-2.5 rounded-sm border px-3 text-xs transition-all duration-150 sm:w-48"
-            title={t('label')}
-            aria-label={t('label')}
-          >
-            <SearchIcon
-              size={13}
-              className="shrink-0 opacity-60 transition-opacity group-hover:opacity-80"
-              aria-hidden="true"
-            />
-            <span className="flex-1 text-left">{t('placeholder')}</span>
-            <div className="hidden items-center gap-0.5 sm:flex">
-              <Kbd size="sm">{modKey}</Kbd>
-              <span className="text-muted-foreground/50 text-[9px]">+</span>
-              <Kbd size="sm">K</Kbd>
-            </div>
-          </button>
-        )}
-      </Dialog.Trigger>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <Dialog.Content className="border-border/60 max-w-lg overflow-hidden border p-0 shadow-2xl">
         <SearchInput
           value={query}
