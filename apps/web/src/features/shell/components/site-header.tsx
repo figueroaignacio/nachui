@@ -173,6 +173,18 @@ export function SiteHeader() {
     }
   }, [activeTab]);
 
+  const askButton = (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="size-11 rounded-full lg:hidden"
+      aria-label={t('header.ask')}
+      onClick={openChat}
+    >
+      <SparklesIcon size={19} aria-hidden="true" />
+    </Button>
+  );
+
   const menuButton = (
     <Button
       variant="ghost"
@@ -194,7 +206,7 @@ export function SiteHeader() {
         data-site-header
         data-collapsed={collapsed}
         className={cn(
-          'site-header border-rule sticky top-0 z-40 border-b backdrop-blur-md transition-transform duration-300 ease-out motion-reduce:transition-none',
+          'site-header border-rule sticky top-0 z-40 border-b transition-transform duration-300 ease-out motion-reduce:transition-none',
           collapsed && '-translate-y-14',
         )}
       >
@@ -260,6 +272,7 @@ export function SiteHeader() {
                 >
                   <SearchIcon size={20} aria-hidden="true" />
                 </Button>
+                {askButton}
                 {menuButton}
               </div>
             </div>
@@ -340,6 +353,7 @@ export function SiteHeader() {
                   >
                     <SearchIcon size={18} aria-hidden="true" />
                   </Button>
+                  {askButton}
                   {menuButton}
                 </div>
               )}

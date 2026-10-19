@@ -577,13 +577,14 @@ body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
   --site-header-height: 2.75rem;
 }
 
+/* Opaque, but tinted with the same fold colour the dome puts behind it, so the
+   header reads as part of the backdrop without letting the page show through. */
 .site-header {
-  background-color: color-mix(in oklab, var(--background) 85%, transparent);
+  background-color: var(--background);
 }
 
-/* Translucent enough for the silk dome to show through near the top. */
 .dark .site-header {
-  background-color: color-mix(in oklab, var(--background) 72%, transparent);
+  background-color: color-mix(in oklab, var(--background) 78%, var(--silk-fold));
 }
 
 .page-backdrop {
