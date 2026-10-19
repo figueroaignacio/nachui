@@ -80,4 +80,46 @@ describe('useControllableState', () => {
     expect(first).not.toHaveBeenCalled();
     expect(second).toHaveBeenCalledWith(1);
   });
+
+  it('chains functional updates made in the same tick when controlled', () => {
+    const onChange = vi.fn();
+    const { result } = renderHook(() =>
+      useControllableState({ value: 0, defaultValue: 0, onChange }),
+    );
+
+    act(() => {
+      result.current[1]((previous) => previous + 1);
+      result.current[1]((previous) => previous + 1);
+    });
+
+    expect(onChange).toHaveBeenNthCalledWith(1, 1);
+    expect(onChange).toHaveBeenNthCalledWith(2, 2);
+  });
+
+  it('reports both halves of a double toggle when controlled', () => {
+    const onChange = vi.fn();
+    const { result } = renderHook(() =>
+      useControllableState({ value: false, defaultValue: false, onChange }),
+    );
+
+    act(() => {
+      result.current[1]((previous) => !previous);
+      result.current[1]((previous) => !previous);
+    });
+
+    expect(onChange.mock.calls).toEqual([[true], [false]]);
+  });
+
+  it('reports the same change again when the parent ignored the first one', async () => {
+    const onChange = vi.fn();
+    const { result } = renderHook(() =>
+      useControllableState({ value: false, defaultValue: false, onChange }),
+    );
+
+    act(() => result.current[1](true));
+    await Promise.resolve();
+    act(() => result.current[1](true));
+
+    expect(onChange).toHaveBeenCalledTimes(2);
+  });
 });

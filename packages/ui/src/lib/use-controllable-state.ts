@@ -16,22 +16,30 @@ export function useControllableState<T>({
   const current = isControlled ? value : uncontrolledValue;
 
   const currentRef = React.useRef(current);
+  const renderedRef = React.useRef(current);
   const isControlledRef = React.useRef(isControlled);
   const onChangeRef = React.useRef(onChange);
 
   React.useLayoutEffect(() => {
     currentRef.current = current;
+    renderedRef.current = current;
     isControlledRef.current = isControlled;
     onChangeRef.current = onChange;
   });
 
   const setValue = React.useCallback((next: React.SetStateAction<T>) => {
     const previous = currentRef.current;
-    const resolved = typeof next === 'function' ? (next as (previous: T) => T)(previous) : next;
-    if (Object.is(resolved, previous)) return;
+    const isUpdater = typeof next === 'function';
+    const resolved = isUpdater ? (next as (previous: T) => T)(previous) : next;
+    const settled = isControlledRef.current && !isUpdater ? renderedRef.current : previous;
+    if (Object.is(resolved, settled)) return;
 
-    if (!isControlledRef.current) {
-      currentRef.current = resolved;
+    currentRef.current = resolved;
+    if (isControlledRef.current) {
+      queueMicrotask(() => {
+        if (isControlledRef.current) currentRef.current = renderedRef.current;
+      });
+    } else {
       setUncontrolledValue(resolved);
     }
     onChangeRef.current?.(resolved);
