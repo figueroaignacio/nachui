@@ -81,19 +81,17 @@ export const backdrop: Variants = {
 };
 
 export const surface: Variants = {
-  hidden: { opacity: 0, scale: 0.85, y: 16, filter: 'blur(10px)' },
+  hidden: { opacity: 0, scale: 0.92, y: 16 },
   visible: {
     opacity: 1,
     scale: 1,
     y: 0,
-    filter: 'blur(0px)',
-    transition: { ...springs.gentle, opacity: { duration: 0.18 }, filter: { duration: 0.25 } },
+    transition: { ...springs.gentle, opacity: { duration: 0.18 } },
   },
   exit: {
     opacity: 0,
-    scale: 0.9,
+    scale: 0.95,
     y: 12,
-    filter: 'blur(8px)',
     transition: { duration: 0.16, ease: 'easeIn' },
   },
 };
@@ -138,8 +136,8 @@ export const collapse: Variants = {
 };
 
 export const collapseInner: Variants = {
-  closed: { y: -10, scale: 0.97, filter: 'blur(4px)', transition: { duration: 0.12 } },
-  open: { y: 0, scale: 1, filter: 'blur(0px)', transition: springs.smooth },
+  closed: { y: -10, scale: 0.97, transition: { duration: 0.12 } },
+  open: { y: 0, scale: 1, transition: springs.smooth },
 };
 
 export const pop: Variants = {
@@ -154,7 +152,7 @@ export const cascade = {
     visible: { transition: { staggerChildren: 0.035, delayChildren: 0.02 } },
   },
   item: {
-    hidden: { opacity: 0, y: 8, scale: 0.9, filter: 'blur(4px)' },
-    visible: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', transition: springs.snappy },
+    hidden: { opacity: 0, y: 8, scale: 0.9 },
+    visible: { opacity: 1, y: 0, scale: 1, transition: springs.snappy },
   },
 } satisfies Record<string, Variants>;
