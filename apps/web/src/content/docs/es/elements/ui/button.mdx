@@ -54,19 +54,19 @@ import { Button } from '@/components/ui/button';
 
 ### Button
 
-| Prop        | Tipo                                                                                    | Default       | Descripción                                                    |
-| ----------- | --------------------------------------------------------------------------------------- | ------------- | -------------------------------------------------------------- |
-| `variant`   | `"default"` \| `"destructive"` \| `"outline"` \| `"secondary"` \| `"ghost"` \| `"link"` | `"default"`   | Estilo del botón.                                              |
-| `size`      | `"default"` \| `"sm"` \| `"lg"` \| `"icon"`                                             | `"default"`   | Tamaño del botón.                                              |
-| `loading`   | `boolean`                                                                               | `false`       | Indica si el botón está en estado de carga.                    |
-| `loader`    | `React.ReactNode`                                                                       | `<Loader2 />` | Componente loader personalizado para mostrar durante la carga. |
-| `leftIcon`  | `React.ReactNode`                                                                       | —             | Ícono que aparece a la izquierda del contenido.                |
-| `rightIcon` | `React.ReactNode`                                                                       | —             | Ícono que aparece a la derecha del contenido.                  |
-| `fullWidth` | `boolean`                                                                               | `false`       | Hace que el botón ocupe todo el ancho disponible.              |
-| `disabled`  | `boolean`                                                                               | —             | Desactiva el botón.                                            |
-| `className` | `string`                                                                                | —             | Clases adicionales.                                            |
-| `type`      | `"button"` \| `"submit"` \| `"reset"`                                                   | `"button"`    | Tipo de botón.                                                 |
-| `children`  | `React.ReactNode`                                                                       | —             | Contenido del botón (texto, íconos, etc.).                     |
+| Prop        | Tipo                                                                                    | Default       | Descripción                                                                                                 |
+| ----------- | --------------------------------------------------------------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------- |
+| `variant`   | `"default"` \| `"destructive"` \| `"outline"` \| `"secondary"` \| `"ghost"` \| `"link"` | `"default"`   | Estilo del botón.                                                                                           |
+| `size`      | `"default"` \| `"sm"` \| `"lg"` \| `"icon"`                                             | `"default"`   | Tamaño del botón.                                                                                           |
+| `loading`   | `boolean`                                                                               | `false`       | Muestra el loader e ignora los clicks. El botón sigue siendo enfocable y queda marcado con `aria-disabled`. |
+| `loader`    | `React.ReactNode`                                                                       | `<Loader2 />` | Componente loader personalizado para mostrar durante la carga.                                              |
+| `leftIcon`  | `React.ReactNode`                                                                       | —             | Ícono que aparece a la izquierda del contenido.                                                             |
+| `rightIcon` | `React.ReactNode`                                                                       | —             | Ícono que aparece a la derecha del contenido.                                                               |
+| `fullWidth` | `boolean`                                                                               | `false`       | Hace que el botón ocupe todo el ancho disponible.                                                           |
+| `disabled`  | `boolean`                                                                               | —             | Desactiva el botón.                                                                                         |
+| `className` | `string`                                                                                | —             | Clases adicionales.                                                                                         |
+| `type`      | `"button"` \| `"submit"` \| `"reset"`                                                   | `"button"`    | Tipo de botón.                                                                                              |
+| `children`  | `React.ReactNode`                                                                       | —             | Contenido del botón (texto, íconos, etc.).                                                                  |
 
 ### ButtonGroup
 

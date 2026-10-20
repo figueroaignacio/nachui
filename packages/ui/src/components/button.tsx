@@ -31,7 +31,7 @@ function LoaderIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
 }
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium outline-none select-none relative overflow-hidden ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 aria-invalid:ring-1 aria-invalid:ring-destructive/50 aria-invalid:border-destructive transition-colors',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium outline-none select-none relative overflow-hidden ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 aria-disabled:pointer-events-none aria-disabled:opacity-40 aria-invalid:ring-1 aria-invalid:ring-destructive/50 aria-invalid:border-destructive transition-colors',
   {
     variants: {
       variant: {
@@ -69,6 +69,12 @@ const CONTENT_VARIANTS = {
   exit: { opacity: 0, y: -5, filter: 'blur(4px)' },
 } as const;
 
+const REDUCED_SWAP_VARIANTS = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+} as const;
+
 const SWAP_TRANSITION = { duration: 0.2 } as const;
 const BUTTON_STYLE = { willChange: 'transform' } as const;
 
@@ -93,6 +99,7 @@ const ButtonRoot = ({
   disabled,
   children,
   type = 'button',
+  onClick,
   ref,
   ...props
 }: ButtonProps) => {
@@ -103,8 +110,16 @@ const ButtonRoot = ({
     <motion.button
       ref={ref}
       type={type}
-      disabled={isDisabled}
+      disabled={disabled}
+      aria-disabled={loading && !disabled ? true : undefined}
       aria-busy={loading}
+      onClick={(event) => {
+        if (loading) {
+          event.preventDefault();
+          return;
+        }
+        onClick?.(event);
+      }}
       className={cn(buttonVariants({ variant, size }), fullWidth && 'w-full', className)}
       whileTap={!isDisabled && !shouldReduceMotion ? tap : undefined}
       transition={springs.snappy}
@@ -113,7 +128,7 @@ const ButtonRoot = ({
     >
       <motion.span
         className="flex items-center gap-2"
-        variants={CONTENT_VARIANTS}
+        variants={shouldReduceMotion ? REDUCED_SWAP_VARIANTS : CONTENT_VARIANTS}
         initial={false}
         animate={loading ? 'exit' : 'animate'}
         transition={SWAP_TRANSITION}
@@ -126,7 +141,7 @@ const ButtonRoot = ({
         {loading ? (
           <motion.span
             key="loader"
-            variants={LOADER_VARIANTS}
+            variants={shouldReduceMotion ? REDUCED_SWAP_VARIANTS : LOADER_VARIANTS}
             initial="initial"
             animate="animate"
             exit="exit"
@@ -134,7 +149,9 @@ const ButtonRoot = ({
             className="absolute inset-0 flex items-center justify-center"
             aria-hidden="true"
           >
-            {loader ?? <LoaderIcon className="size-4 animate-spin" size={16} />}
+            {loader ?? (
+              <LoaderIcon className="size-4 animate-spin motion-reduce:animate-none" size={16} />
+            )}
           </motion.span>
         ) : null}
       </AnimatePresence>
