@@ -116,19 +116,20 @@ const { files, errors, isDragging, openFileDialog, getInputProps, getDropzonePro
 
 ### FileUpload
 
-| Prop            | Type                                 | Default    | Description                                                   |
-| --------------- | ------------------------------------ | ---------- | ------------------------------------------------------------- |
-| `accept`        | `string`                             | -          | Tipos aceptados, como el atributo nativo `accept`             |
-| `multiple`      | `boolean`                            | `false`    | Sigue agregando archivos en vez de reemplazar                 |
-| `maxFiles`      | `number`                             | `Infinity` | Cantidad máxima de archivos cuando es `multiple`              |
-| `maxSize`       | `number`                             | `Infinity` | Tamaño máximo por archivo, en bytes                           |
-| `initialFiles`  | `FileMetadata[]`                     | `[]`       | Archivos ya subidos, con `id`, `name`, `size`, `type` y `url` |
-| `disabled`      | `boolean`                            | `false`    | Deshabilita el dropzone, el trigger y las acciones            |
-| `name`          | `string`                             | -          | Nombre del input oculto para envíos de formulario             |
-| `onFilesChange` | `(files: FileWithPreview[]) => void` | -          | Se llama con la lista completa después de cada cambio         |
-| `onFilesAdded`  | `(files: FileWithPreview[]) => void` | -          | Se llama con los archivos aceptados en un lote                |
-| `onError`       | `(errors: string[]) => void`         | -          | Se llama cuando un lote produce errores de validación         |
-| `className`     | `string`                             | -          | Clases CSS adicionales                                        |
+| Prop             | Type                                 | Default              | Description                                                                                           |
+| ---------------- | ------------------------------------ | -------------------- | ----------------------------------------------------------------------------------------------------- |
+| `accept`         | `string`                             | -                    | Tipos aceptados, como el atributo nativo `accept`                                                     |
+| `multiple`       | `boolean`                            | `false`              | Sigue agregando archivos en vez de reemplazar                                                         |
+| `maxFiles`       | `number`                             | `Infinity`           | Cantidad máxima de archivos cuando es `multiple`                                                      |
+| `maxSize`        | `number`                             | `Infinity`           | Tamaño máximo por archivo, en bytes                                                                   |
+| `initialFiles`   | `FileMetadata[]`                     | `[]`                 | Archivos ya subidos, con `id`, `name`, `size`, `type` y `url`                                         |
+| `disabled`       | `boolean`                            | `false`              | Deshabilita el dropzone, el trigger y las acciones                                                    |
+| `name`           | `string`                             | -                    | Nombre del input oculto para envíos de formulario                                                     |
+| `onFilesChange`  | `(files: FileWithPreview[]) => void` | -                    | Se llama con la lista completa después de cada cambio                                                 |
+| `onFilesAdded`   | `(files: FileWithPreview[]) => void` | -                    | Se llama con los archivos aceptados en un lote                                                        |
+| `onError`        | `(errors: string[]) => void`         | -                    | Se llama cuando un lote produce errores de validación                                                 |
+| `getStatusLabel` | `(count: number) => string`          | `'2 files selected'` | Texto que leen los lectores de pantalla al agregar o quitar archivos. Pasala para traducir el mensaje |
+| `className`      | `string`                             | -                    | Clases CSS adicionales                                                                                |
 
 ### FileUpload.List
 
@@ -148,3 +149,5 @@ const { files, errors, isDragging, openFileDialog, getInputProps, getDropzonePro
 ### FileUpload.Dropzone, FileUpload.Trigger, FileUpload.ItemPreview, FileUpload.ItemInfo, FileUpload.ItemRemove, FileUpload.Errors, FileUpload.Clear
 
 Partes conectadas al estado compartido. Cada una acepta `className` y los atributos estándar del elemento que renderiza. `ItemRemove` acepta una prop `label` para su nombre accesible, `"Remove file"` por defecto.
+
+Cuando un botón de quitar o `Clear` desaparece con el foco encima, el foco pasa al siguiente botón de quitar, o vuelve al dropzone o al trigger si la lista queda vacía, así quien usa teclado nunca termina en el body de la página.

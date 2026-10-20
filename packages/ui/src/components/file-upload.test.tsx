@@ -1,7 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { FileUpload, formatBytes, useFileUploadContext } from './file-upload';
+import { expectNoAxeViolations } from '../../test-utils/axe';
+import { FileUpload, formatBytes, useFileUpload, useFileUploadContext } from './file-upload';
 
 function makeFile(name: string, size: number, type = 'text/plain') {
   const file = new File(['x'.repeat(Math.min(size, 8))], name, { type });
@@ -196,5 +197,96 @@ describe('FileUpload', () => {
     const click = vi.spyOn(getInput(), 'click');
     await user.click(dropzone);
     expect(click).not.toHaveBeenCalled();
+  });
+});
+
+const SEED = [
+  { id: 'a', name: 'a.pdf', size: 10, type: 'application/pdf', url: '/a.pdf' },
+  { id: 'b', name: 'b.pdf', size: 10, type: 'application/pdf', url: '/b.pdf' },
+];
+
+describe('FileUpload focus and announcements', () => {
+  it('moves focus to the next remove button, then back to the dropzone', async () => {
+    const user = userEvent.setup();
+    render(
+      <FileUpload multiple initialFiles={SEED}>
+        <FileUpload.Dropzone>Drop</FileUpload.Dropzone>
+        <FileUpload.List />
+      </FileUpload>,
+    );
+
+    const [first, second] = screen.getAllByRole('button', { name: 'Remove file' });
+    first?.focus();
+    await user.keyboard('{Enter}');
+    expect(second).toHaveFocus();
+
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('button', { name: 'Drop' })).toHaveFocus();
+  });
+
+  it('moves focus to the trigger after clearing the list', async () => {
+    const user = userEvent.setup();
+    render(
+      <FileUpload multiple initialFiles={SEED}>
+        <FileUpload.Trigger>Browse</FileUpload.Trigger>
+        <FileUpload.List />
+        <FileUpload.Clear>Clear</FileUpload.Clear>
+      </FileUpload>,
+    );
+
+    screen.getByRole('button', { name: 'Clear' }).focus();
+    await user.keyboard('{Enter}');
+    expect(screen.getByRole('button', { name: 'Browse' })).toHaveFocus();
+  });
+
+  it('announces how many files are selected after a change', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <FileUpload
+        multiple
+        initialFiles={SEED}
+        getStatusLabel={(count) => `${count} archivos seleccionados`}
+      >
+        <FileUpload.Dropzone>Drop</FileUpload.Dropzone>
+        <FileUpload.List />
+      </FileUpload>,
+    );
+
+    const status = screen.getByRole('status');
+    expect(status).toBeEmptyDOMElement();
+
+    await user.upload(getInput(), makeFile('c.txt', 10));
+    expect(status).toHaveTextContent('3 archivos seleccionados');
+
+    await user.click(screen.getAllByRole('button', { name: 'Remove file' })[0]!);
+    expect(screen.getByRole('status')).toBe(status);
+    expect(status).toHaveTextContent('2 archivos seleccionados');
+    await expectNoAxeViolations(container);
+  });
+
+  it('uses an English count by default', async () => {
+    const user = userEvent.setup();
+    render(
+      <FileUpload>
+        <FileUpload.Dropzone>Drop</FileUpload.Dropzone>
+      </FileUpload>,
+    );
+    await user.upload(getInput(), makeFile('one.txt', 10));
+    expect(screen.getByRole('status')).toHaveTextContent('1 file selected');
+  });
+
+  it('returns a stable object from useFileUpload while nothing changes', () => {
+    const seen: unknown[] = [];
+
+    function Probe({ tick }: { tick: number }) {
+      const upload = useFileUpload({ multiple: true });
+      seen.push(upload);
+      return <span>{tick}</span>;
+    }
+
+    const { rerender } = render(<Probe tick={0} />);
+    rerender(<Probe tick={1} />);
+    rerender(<Probe tick={2} />);
+    expect(seen.at(-1)).toBe(seen.at(-2));
   });
 });

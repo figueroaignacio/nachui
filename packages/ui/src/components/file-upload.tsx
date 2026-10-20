@@ -364,24 +364,77 @@ function useFileUpload(options: UseFileUploadOptions = {}): UseFileUploadReturn 
     [handleDragEnter, handleDragLeave, handleDragOver, handleDrop],
   );
 
-  return {
-    files,
-    isDragging,
-    errors,
-    disabled,
-    inputRef,
-    addFiles,
-    removeFile,
-    clearFiles,
-    clearErrors,
-    openFileDialog,
-    getInputProps,
-    getDropzoneProps,
-    handleDragEnter,
-    handleDragLeave,
-    handleDragOver,
-    handleDrop,
-  };
+  return React.useMemo(
+    () => ({
+      files,
+      isDragging,
+      errors,
+      disabled,
+      inputRef,
+      addFiles,
+      removeFile,
+      clearFiles,
+      clearErrors,
+      openFileDialog,
+      getInputProps,
+      getDropzoneProps,
+      handleDragEnter,
+      handleDragLeave,
+      handleDragOver,
+      handleDrop,
+    }),
+    [
+      files,
+      isDragging,
+      errors,
+      disabled,
+      addFiles,
+      removeFile,
+      clearFiles,
+      clearErrors,
+      openFileDialog,
+      getInputProps,
+      getDropzoneProps,
+      handleDragEnter,
+      handleDragLeave,
+      handleDragOver,
+      handleDrop,
+    ],
+  );
+}
+
+function defaultStatusLabel(count: number) {
+  if (count === 0) return 'No files selected';
+  return count === 1 ? '1 file selected' : `${count} files selected`;
+}
+
+function focusFallback(root: HTMLElement) {
+  const target =
+    root.querySelector<HTMLElement>('[data-slot="file-upload-dropzone"]:not([aria-disabled])') ??
+    root.querySelector<HTMLElement>('[data-slot="file-upload-trigger"]:not(:disabled)');
+  target?.focus();
+}
+
+function holdsFocus(control: HTMLElement) {
+  const active = document.activeElement;
+  return active instanceof Node && control.contains(active);
+}
+
+function moveFocusFromRemove(control: HTMLElement) {
+  const root = control.closest<HTMLElement>('[data-slot="file-upload"]');
+  if (!root || !holdsFocus(control)) return;
+  const buttons = Array.from(
+    root.querySelectorAll<HTMLElement>('[data-slot="file-upload-item-remove"]:not(:disabled)'),
+  );
+  const index = buttons.indexOf(control);
+  const next = buttons[index + 1] ?? buttons[index - 1];
+  if (next) next.focus();
+  else focusFallback(root);
+}
+
+function moveFocusFromClear(control: HTMLElement) {
+  const root = control.closest<HTMLElement>('[data-slot="file-upload"]');
+  if (root && holdsFocus(control)) focusFallback(root);
 }
 
 const FileUploadContext = React.createContext<UseFileUploadReturn | null>(null);
@@ -402,6 +455,7 @@ function useFileUploadItemContext(): FileWithPreview {
 interface FileUploadProps
   extends UseFileUploadOptions, Omit<React.HTMLAttributes<HTMLDivElement>, 'onError'> {
   name?: string;
+  getStatusLabel?: (count: number) => string;
 }
 
 const FileUploadRoot = ({
@@ -415,6 +469,7 @@ const FileUploadRoot = ({
   onFilesAdded,
   onError,
   name,
+  getStatusLabel = defaultStatusLabel,
   className,
   children,
   ref,
@@ -431,6 +486,11 @@ const FileUploadRoot = ({
     onFilesAdded,
     onError,
   });
+  const [announced, setAnnounced] = React.useState({ files: upload.files, message: '' });
+
+  if (announced.files !== upload.files) {
+    setAnnounced({ files: upload.files, message: getStatusLabel(upload.files.length) });
+  }
 
   return (
     <FileUploadContext value={upload}>
@@ -441,7 +501,16 @@ const FileUploadRoot = ({
         className={cn('flex w-full flex-col gap-3', className)}
         {...props}
       >
-        <input {...upload.getInputProps()} name={name} tabIndex={-1} className="sr-only" />
+        <input
+          {...upload.getInputProps()}
+          name={name}
+          tabIndex={-1}
+          aria-hidden="true"
+          className="sr-only"
+        />
+        <span role="status" aria-live="polite" className="sr-only">
+          {announced.message}
+        </span>
         {children}
       </div>
     </FileUploadContext>
@@ -688,7 +757,9 @@ const FileUploadItemRemove = ({
       )}
       onClick={(event) => {
         onClick?.(event);
-        if (!event.defaultPrevented) removeFile(id);
+        if (event.defaultPrevented) return;
+        moveFocusFromRemove(event.currentTarget);
+        removeFile(id);
       }}
       {...props}
     >
@@ -754,7 +825,9 @@ const FileUploadClear = ({
       )}
       onClick={(event) => {
         onClick?.(event);
-        if (!event.defaultPrevented) clearFiles();
+        if (event.defaultPrevented) return;
+        moveFocusFromClear(event.currentTarget);
+        clearFiles();
       }}
       {...props}
     />
