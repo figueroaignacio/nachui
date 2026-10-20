@@ -41,6 +41,24 @@ describe('Select', () => {
     expect(trigger).toHaveAttribute('aria-expanded', 'false');
   });
 
+  it('moves focus to the selected option when a click opens it', async () => {
+    renderSelect({ defaultValue: 'two' });
+    fireEvent.click(screen.getByRole('combobox'));
+    await waitFor(() =>
+      expect(screen.getByRole('option', { name: 'Two', hidden: true })).toHaveFocus(),
+    );
+  });
+
+  it('makes a closed list inert so it never catches clicks', () => {
+    renderSelect();
+    const trigger = screen.getByRole('combobox');
+    fireEvent.click(trigger);
+    fireEvent.click(screen.getByText('One'));
+    const listbox = screen.getByRole('listbox', { hidden: true });
+    expect(listbox).toHaveClass('pointer-events-none');
+    expect(listbox).toHaveAttribute('inert');
+  });
+
   it('marks the selected option', () => {
     renderSelect({ defaultValue: 'one' });
     fireEvent.click(screen.getByRole('combobox'));

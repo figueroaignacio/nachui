@@ -428,9 +428,12 @@ const SelectTrigger = ({
   const handleClick = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       onClick?.(e);
-      if (!e.defaultPrevented) toggleMenu();
+      if (e.defaultPrevented) return;
+      const opening = !isOpen;
+      toggleMenu();
+      if (opening) requestAnimationFrame(() => focusOption(listRef.current, value));
     },
-    [onClick, toggleMenu],
+    [onClick, toggleMenu, isOpen, listRef, value],
   );
 
   const handleKeyDown = React.useCallback(
@@ -649,8 +652,10 @@ const SelectContent = ({
         className={cn(
           'bg-popover text-popover-foreground border-border z-500 max-h-[min(18rem,var(--available-height,18rem))] overflow-y-auto overscroll-contain rounded-md border p-1 shadow-md outline-none',
           floatingOrigin[position],
+          !isOpen && 'pointer-events-none',
           className,
         )}
+        inert={!isOpen}
       >
         {children}
       </motion.div>
