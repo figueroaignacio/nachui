@@ -52,7 +52,7 @@ Cinco variantes: `default`, `success`, `error`, `info` y `warning`.
 
 ### Con Acción
 
-Toast con un botón de acción.
+Toast con un botón de acción. Los toasts con acción quedan 10 segundos en vez de 5, así hay tiempo de llegar al botón.
 
 <ComponentPreview component="toast" demo="with-action" />
 
@@ -62,16 +62,25 @@ Elegí dónde aparecen los toasts en pantalla. Hacé click en una posición para
 
 <ComponentPreview component="toast" demo="positions" />
 
+## Accesibilidad
+
+- Los mensajes se leen con regiones live que siempre están montadas: los errores y advertencias interrumpen, el resto espera su turno.
+- Apretá `F8` para saltar al toast más reciente y después recorré sus botones con `Tab`. El atajo se cambia con `hotkey`.
+- El tiempo se pausa mientras el puntero está sobre un toast, mientras el foco está dentro de la pila y mientras un dedo lo toca.
+- En pantallas táctiles, deslizá un toast hacia un costado para cerrarlo.
+- Cuando se cierra un toast con foco, el foco pasa al siguiente o vuelve a donde estaba antes de entrar a la pila.
+
 ## Referencia de API
 
 ### Toast.Provider
 
-| Prop        | Tipo                                                                 | Por defecto      | Descripción                                                                              |
-| ----------- | -------------------------------------------------------------------- | ---------------- | ---------------------------------------------------------------------------------------- |
-| `children`  | `React.ReactNode`                                                    | —                | El contenido de la app.                                                                  |
-| `maxToasts` | `number`                                                             | `5`              | Número máximo de toasts visibles.                                                        |
-| `position`  | `"top-left"` \| `"top-right"` \| `"bottom-left"` \| `"bottom-right"` | `"bottom-right"` | Dónde aparecen los toasts en pantalla.                                                   |
-| `labels`    | `Partial<ToastLabels>`                                               | -                | Nombres accesibles: `region` (`"Notifications"`) y `dismiss` (`"Dismiss notification"`). |
+| Prop        | Tipo                                                                 | Por defecto      | Descripción                                                                                                                                                                                                               |
+| ----------- | -------------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `children`  | `React.ReactNode`                                                    | —                | El contenido de la app.                                                                                                                                                                                                   |
+| `maxToasts` | `number`                                                             | `5`              | Número máximo de toasts visibles.                                                                                                                                                                                         |
+| `position`  | `"top-left"` \| `"top-right"` \| `"bottom-left"` \| `"bottom-right"` | `"bottom-right"` | Dónde aparecen los toasts en pantalla.                                                                                                                                                                                    |
+| `labels`    | `Partial<ToastLabels>`                                               | -                | Nombres accesibles: `region` (`"Notifications"`) y `dismiss` (`"Dismiss notification"`).                                                                                                                                  |
+| `hotkey`    | `string[]`                                                           | `["F8"]`         | Teclas que llevan el foco al toast más reciente. Usá nombres de modificadores (`"altKey"`, `"ctrlKey"`, `"metaKey"`, `"shiftKey"`) más un código de tecla, por ejemplo `["altKey", "KeyT"]`. Pasá `[]` para desactivarlo. |
 
 ### useToast()
 
@@ -84,10 +93,10 @@ Devuelve un objeto con:
 
 ### ToastOptions
 
-| Prop          | Tipo                                                               | Por defecto | Descripción                                          |
-| ------------- | ------------------------------------------------------------------ | ----------- | ---------------------------------------------------- |
-| `title`       | `string`                                                           | —           | Título del toast (requerido).                        |
-| `description` | `string`                                                           | —           | Descripción opcional.                                |
-| `variant`     | `"default"` \| `"success"` \| `"error"` \| `"info"` \| `"warning"` | `"default"` | Variante visual.                                     |
-| `duration`    | `number`                                                           | `5000`      | Delay de auto-cierre en ms. Usá `0` para desactivar. |
-| `action`      | `{ label: string; onClick: () => void }`                           | —           | Botón de acción opcional.                            |
+| Prop          | Tipo                                                               | Por defecto | Descripción                                                                                                        |
+| ------------- | ------------------------------------------------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------ |
+| `title`       | `string`                                                           | —           | Título del toast (requerido).                                                                                      |
+| `description` | `string`                                                           | —           | Descripción opcional.                                                                                              |
+| `variant`     | `"default"` \| `"success"` \| `"error"` \| `"info"` \| `"warning"` | `"default"` | Variante visual.                                                                                                   |
+| `duration`    | `number`                                                           | `5000`      | Delay de auto-cierre en ms. `10000` cuando hay `action`. Usá `0` o `Infinity` para que quede hasta que lo cierren. |
+| `action`      | `{ label: string; onClick: () => void }`                           | —           | Botón de acción opcional.                                                                                          |

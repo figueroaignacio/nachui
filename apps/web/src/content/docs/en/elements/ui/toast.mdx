@@ -52,7 +52,7 @@ Five built-in variants: `default`, `success`, `error`, `info`, and `warning`.
 
 ### With Action
 
-Toast with an action button.
+Toast with an action button. Toasts with an action stay up for 10 seconds instead of 5, so there is time to reach the button.
 
 <ComponentPreview component="toast" demo="with-action" />
 
@@ -62,16 +62,25 @@ Choose where toasts appear on screen. Click a position to select it, then trigge
 
 <ComponentPreview component="toast" demo="positions" />
 
+## Accessibility
+
+- Messages are read out through live regions that stay mounted: errors and warnings interrupt, everything else waits its turn.
+- Press `F8` to jump to the newest toast, then `Tab` through its buttons. Change the shortcut with `hotkey`.
+- Timers pause while the pointer is over a toast, while focus is inside the stack and while a finger rests on it.
+- Swipe a toast sideways to dismiss it on touch screens.
+- When a focused toast closes, focus moves to the next one, or back to where it was before you entered the stack.
+
 ## API Reference
 
 ### Toast.Provider
 
-| Prop        | Type                                                                 | Default          | Description                                                                              |
-| ----------- | -------------------------------------------------------------------- | ---------------- | ---------------------------------------------------------------------------------------- |
-| `children`  | `React.ReactNode`                                                    | —                | The app content.                                                                         |
-| `maxToasts` | `number`                                                             | `5`              | Maximum number of visible toasts.                                                        |
-| `position`  | `"top-left"` \| `"top-right"` \| `"bottom-left"` \| `"bottom-right"` | `"bottom-right"` | Where toasts appear on screen.                                                           |
-| `labels`    | `Partial<ToastLabels>`                                               | -                | Accessible names: `region` (`"Notifications"`) and `dismiss` (`"Dismiss notification"`). |
+| Prop        | Type                                                                 | Default          | Description                                                                                                                                                                             |
+| ----------- | -------------------------------------------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `children`  | `React.ReactNode`                                                    | —                | The app content.                                                                                                                                                                        |
+| `maxToasts` | `number`                                                             | `5`              | Maximum number of visible toasts.                                                                                                                                                       |
+| `position`  | `"top-left"` \| `"top-right"` \| `"bottom-left"` \| `"bottom-right"` | `"bottom-right"` | Where toasts appear on screen.                                                                                                                                                          |
+| `labels`    | `Partial<ToastLabels>`                                               | -                | Accessible names: `region` (`"Notifications"`) and `dismiss` (`"Dismiss notification"`).                                                                                                |
+| `hotkey`    | `string[]`                                                           | `["F8"]`         | Keys that move focus to the newest toast. Use modifier names (`"altKey"`, `"ctrlKey"`, `"metaKey"`, `"shiftKey"`) plus a key code, like `["altKey", "KeyT"]`. Pass `[]` to turn it off. |
 
 ### useToast()
 
@@ -84,10 +93,10 @@ Returns an object with:
 
 ### ToastOptions
 
-| Prop          | Type                                                               | Default     | Description                                            |
-| ------------- | ------------------------------------------------------------------ | ----------- | ------------------------------------------------------ |
-| `title`       | `string`                                                           | —           | Toast title (required).                                |
-| `description` | `string`                                                           | —           | Optional description text.                             |
-| `variant`     | `"default"` \| `"success"` \| `"error"` \| `"info"` \| `"warning"` | `"default"` | Visual variant.                                        |
-| `duration`    | `number`                                                           | `5000`      | Auto-dismiss delay in ms. Set `0` for no auto-dismiss. |
-| `action`      | `{ label: string; onClick: () => void }`                           | —           | Optional action button.                                |
+| Prop          | Type                                                               | Default     | Description                                                                                                    |
+| ------------- | ------------------------------------------------------------------ | ----------- | -------------------------------------------------------------------------------------------------------------- |
+| `title`       | `string`                                                           | —           | Toast title (required).                                                                                        |
+| `description` | `string`                                                           | —           | Optional description text.                                                                                     |
+| `variant`     | `"default"` \| `"success"` \| `"error"` \| `"info"` \| `"warning"` | `"default"` | Visual variant.                                                                                                |
+| `duration`    | `number`                                                           | `5000`      | Auto-dismiss delay in ms. `10000` when there is an `action`. Set `0` or `Infinity` to keep it until dismissed. |
+| `action`      | `{ label: string; onClick: () => void }`                           | —           | Optional action button.                                                                                        |

@@ -134,15 +134,15 @@ const POSITION_CLASSES: Record<ToastPosition, string> = {
 } as const;
 
 const TOAST_ENTER = {
-  initial: { opacity: 0, y: 20, scale: 0.95, filter: 'blur(4px)' },
-  animate: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
+  initial: { opacity: 0, y: 20, scale: 0.95 },
+  animate: { opacity: 1, y: 0, scale: 1 },
 } as const;
 
 const TOAST_EXIT_BY_POSITION: Record<ToastPosition, Record<string, number | string>> = {
-  'top-left': { opacity: 0, x: -100, scale: 0.95, filter: 'blur(4px)' },
-  'top-right': { opacity: 0, x: 100, scale: 0.95, filter: 'blur(4px)' },
-  'bottom-left': { opacity: 0, x: -100, scale: 0.95, filter: 'blur(4px)' },
-  'bottom-right': { opacity: 0, x: 100, scale: 0.95, filter: 'blur(4px)' },
+  'top-left': { opacity: 0, x: -100, scale: 0.95 },
+  'top-right': { opacity: 0, x: 100, scale: 0.95 },
+  'bottom-left': { opacity: 0, x: -100, scale: 0.95 },
+  'bottom-right': { opacity: 0, x: 100, scale: 0.95 },
 } as const;
 
 const TOAST_TRANSITION = springs.smooth;
@@ -155,8 +155,13 @@ const REDUCED_MOTION_PROPS = {
   transition: { duration: 0.12 },
 } as const;
 
+const DEFAULT_DURATION = 5000;
+const DEFAULT_ACTION_DURATION = 10000;
+const SWIPE_DISTANCE = 80;
+const SWIPE_VELOCITY = 500;
+
 const toastVariants = cva(
-  'pointer-events-auto relative flex w-full items-center gap-3 overflow-hidden rounded-md border p-3.5 bg-popover shadow-md',
+  'pointer-events-auto relative flex w-full items-center gap-3 overflow-hidden rounded-md border p-3.5 bg-popover shadow-md touch-pan-y focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
   {
     variants: {
       variant: {
@@ -212,28 +217,35 @@ const useToast = () => {
   return context;
 };
 
+function isUrgent(toast: ToastData) {
+  return toast.variant === 'error' || toast.variant === 'warning';
+}
+
 interface ToastItemProps {
   toast: ToastData;
   onDismiss: (id: string) => void;
   position: ToastPosition;
   dismissLabel: string;
+  regionPaused: boolean;
 }
 
-function ToastItem({ toast: t, onDismiss, position, dismissLabel }: ToastItemProps) {
+function ToastItem({ toast: t, onDismiss, position, dismissLabel, regionPaused }: ToastItemProps) {
   const [hovered, setHovered] = React.useState(false);
-  const [focused, setFocused] = React.useState(false);
-  const paused = hovered || focused;
-  const isUrgent = t.variant === 'error' || t.variant === 'warning';
+  const [pressed, setPressed] = React.useState(false);
+  const [dragging, setDragging] = React.useState(false);
+  const paused = hovered || pressed || dragging || regionPaused;
   const shouldReduceMotion = useReducedMotion();
-  const duration = t.duration ?? 5000;
+  const duration = t.duration ?? (t.action ? DEFAULT_ACTION_DURATION : DEFAULT_DURATION);
+  const persistent = !Number.isFinite(duration) || duration <= 0;
   const remainingRef = React.useRef(duration);
+  const titleId = React.useId();
 
   React.useEffect(() => {
     remainingRef.current = duration;
   }, [duration]);
 
   React.useEffect(() => {
-    if (duration <= 0 || paused) return;
+    if (persistent || paused) return;
 
     const startedAt = Date.now();
     const timer = setTimeout(() => {
@@ -245,7 +257,7 @@ function ToastItem({ toast: t, onDismiss, position, dismissLabel }: ToastItemPro
       const elapsed = Date.now() - startedAt;
       remainingRef.current = Math.max(remainingRef.current - elapsed, 0);
     };
-  }, [t.id, duration, onDismiss, paused]);
+  }, [t.id, persistent, onDismiss, paused]);
 
   const VariantIcon = VARIANT_ICONS[t.variant ?? 'default'];
 
@@ -260,30 +272,49 @@ function ToastItem({ toast: t, onDismiss, position, dismissLabel }: ToastItemPro
           : { ...TOAST_EXIT_BY_POSITION[position], transition: TOAST_EXIT_TRANSITION }
       }
       transition={shouldReduceMotion ? REDUCED_MOTION_PROPS.transition : TOAST_TRANSITION}
-      role={isUrgent ? 'alert' : 'status'}
-      aria-live={isUrgent ? 'assertive' : 'polite'}
+      drag="x"
+      dragSnapToOrigin
+      dragElastic={0.6}
+      onDragStart={() => setDragging(true)}
+      onDragEnd={(_, info) => {
+        setDragging(false);
+        if (
+          Math.abs(info.offset.x) > SWIPE_DISTANCE ||
+          Math.abs(info.velocity.x) > SWIPE_VELOCITY
+        ) {
+          onDismiss(t.id);
+        }
+      }}
+      role="group"
+      aria-labelledby={titleId}
+      tabIndex={-1}
+      data-toast-id={t.id}
       onPointerEnter={(event) => {
         if (event.pointerType === 'mouse') setHovered(true);
       }}
       onPointerLeave={(event) => {
         if (event.pointerType === 'mouse') setHovered(false);
+        else setPressed(false);
       }}
-      onFocus={() => setFocused(true)}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocused(false);
+      onPointerDown={(event) => {
+        if (event.pointerType !== 'mouse') setPressed(true);
       }}
+      onPointerUp={() => setPressed(false)}
+      onPointerCancel={() => setPressed(false)}
       className={cn(toastVariants({ variant: t.variant }), 'flex-col')}
     >
       <div className="flex w-full items-center gap-2">
         {VariantIcon && <VariantIcon className="shrink-0" size={18} />}
-        <p className="flex-1 text-sm font-semibold">{t.title}</p>
+        <p id={titleId} className="flex-1 text-sm font-semibold">
+          {t.title}
+        </p>
         <button
           type="button"
           aria-label={dismissLabel}
           onClick={() => onDismiss(t.id)}
-          className="focus-visible:ring-ring shrink-0 rounded-sm opacity-50 transition-opacity hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none"
+          className="text-muted-foreground hover:text-foreground focus-visible:ring-ring -my-1 -me-1.5 inline-flex size-7 shrink-0 items-center justify-center rounded-sm transition-colors focus-visible:ring-2 focus-visible:outline-none pointer-coarse:-my-2.5 pointer-coarse:-me-3 pointer-coarse:size-10"
         >
-          <XIcon size={14} aria-hidden="true" />
+          <XIcon size={16} aria-hidden="true" />
         </button>
       </div>
       {(t.description || t.action) && (
@@ -309,7 +340,47 @@ function ToastItem({ toast: t, onDismiss, position, dismissLabel }: ToastItemPro
   );
 }
 
+function ToastAnnouncer({ toasts, urgent }: { toasts: ToastData[]; urgent: boolean }) {
+  return (
+    <div className="sr-only" aria-live={urgent ? 'assertive' : 'polite'} aria-atomic="false">
+      {toasts
+        .filter((t) => isUrgent(t) === urgent)
+        .map((t) => (
+          <p key={t.id}>
+            {t.title}
+            {t.description ? ` ${t.description}` : null}
+          </p>
+        ))}
+    </div>
+  );
+}
+
 const DEFAULT_MAX_TOASTS = 5;
+const DEFAULT_HOTKEY = ['F8'];
+
+const MODIFIER_KEYS = {
+  altKey: 'Alt',
+  ctrlKey: 'Control',
+  metaKey: 'Meta',
+  shiftKey: 'Shift',
+} as const;
+
+function isModifier(key: string): key is keyof typeof MODIFIER_KEYS {
+  return key in MODIFIER_KEYS;
+}
+
+function matchesHotkey(event: KeyboardEvent, hotkey: readonly string[]) {
+  if (hotkey.length === 0) return false;
+  return hotkey.every((key) =>
+    isModifier(key) ? event[key] : event.code === key || event.key === key,
+  );
+}
+
+function describeHotkey(hotkey: readonly string[]) {
+  return hotkey
+    .map((key) => (isModifier(key) ? MODIFIER_KEYS[key] : key.replace(/^(Key|Digit)/, '')))
+    .join('+');
+}
 
 interface ToastLabels {
   region: string;
@@ -326,6 +397,7 @@ interface ToastProviderProps {
   maxToasts?: number;
   position?: ToastPosition;
   labels?: Partial<ToastLabels>;
+  hotkey?: string[];
 }
 
 function ToastProvider({
@@ -333,15 +405,57 @@ function ToastProvider({
   maxToasts = DEFAULT_MAX_TOASTS,
   position = 'bottom-right',
   labels: labelOverrides,
+  hotkey = DEFAULT_HOTKEY,
   ref,
 }: ToastProviderProps & { ref?: React.Ref<HTMLDivElement> }) {
   const [toasts, setToasts] = React.useState<ToastData[]>([]);
+  const [regionFocused, setRegionFocused] = React.useState(false);
   const mounted = useIsClient();
   const labels = { ...DEFAULT_LABELS, ...labelOverrides };
+  const regionRef = React.useRef<HTMLDivElement | null>(null);
+  const toastsRef = React.useRef<ToastData[]>(toasts);
+  const returnFocusRef = React.useRef<HTMLElement | null>(null);
+  const hotkeyId = hotkey.join('+');
 
-  const dismiss = React.useCallback((id: string) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id));
+  const findToastElement = React.useCallback((id: string | undefined) => {
+    if (id === undefined) return null;
+    const items = regionRef.current?.querySelectorAll<HTMLElement>('[data-toast-id]') ?? [];
+    return Array.from(items).find((item) => item.dataset.toastId === id) ?? null;
   }, []);
+
+  React.useLayoutEffect(() => {
+    toastsRef.current = toasts;
+    const active = document.activeElement;
+    if (!(active instanceof HTMLElement)) return;
+    const host = active.closest<HTMLElement>('[data-toast-id]');
+    if (!host || !regionRef.current?.contains(host)) return;
+    if (toasts.some((t) => t.id === host.dataset.toastId)) return;
+    const newest = findToastElement(toasts[toasts.length - 1]?.id);
+    const returnTo = returnFocusRef.current;
+    if (newest) newest.focus();
+    else if (returnTo?.isConnected) returnTo.focus();
+    else active.blur();
+  }, [toasts, findToastElement]);
+
+  const dismiss = React.useCallback(
+    (id: string) => {
+      const current = toastsRef.current;
+      const index = current.findIndex((t) => t.id === id);
+      const element = findToastElement(id);
+      const active = document.activeElement;
+
+      if (index !== -1 && element && active && element.contains(active)) {
+        const neighbor = findToastElement(current[index + 1]?.id ?? current[index - 1]?.id);
+        const returnTo = returnFocusRef.current;
+        if (neighbor) neighbor.focus();
+        else if (returnTo?.isConnected) returnTo.focus();
+        else if (active instanceof HTMLElement) active.blur();
+      }
+
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    },
+    [findToastElement],
+  );
 
   const toast = React.useCallback(
     (options: ToastOptions): string => {
@@ -364,17 +478,58 @@ function ToastProvider({
     [maxToasts],
   );
 
+  React.useEffect(() => {
+    const keys = hotkeyId ? hotkeyId.split('+') : [];
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!matchesHotkey(event, keys)) return;
+      const newest = findToastElement(toastsRef.current[toastsRef.current.length - 1]?.id);
+      if (!newest) return;
+      event.preventDefault();
+      const active = document.activeElement;
+      if (active instanceof HTMLElement && !regionRef.current?.contains(active)) {
+        returnFocusRef.current = active;
+      }
+      newest.focus();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [hotkeyId, findToastElement]);
+
+  const setRegionRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      regionRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+
   const contextValue = React.useMemo(() => ({ toast, dismiss }), [toast, dismiss]);
 
   return (
     <ToastContext value={contextValue}>
       {children}
+      <ToastAnnouncer toasts={toasts} urgent={false} />
+      <ToastAnnouncer toasts={toasts} urgent />
       {mounted &&
         createPortal(
           <div
             role="region"
-            ref={ref}
+            ref={setRegionRef}
             aria-label={labels.region}
+            aria-keyshortcuts={hotkey.length > 0 ? describeHotkey(hotkey) : undefined}
+            onFocus={(event) => {
+              const from = event.relatedTarget;
+              if (from instanceof HTMLElement && !event.currentTarget.contains(from)) {
+                returnFocusRef.current = from;
+              }
+              setRegionFocused(true);
+            }}
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                setRegionFocused(false);
+              }
+            }}
             className={cn(
               'pointer-events-none fixed z-9999 flex max-h-dvh w-full max-w-sm gap-2 p-4',
               POSITION_CLASSES[position],
@@ -388,6 +543,7 @@ function ToastProvider({
                   onDismiss={dismiss}
                   position={position}
                   dismissLabel={labels.dismiss}
+                  regionPaused={regionFocused}
                 />
               ))}
             </AnimatePresence>
