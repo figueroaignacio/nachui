@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import { Sources, sourceHost } from './sources';
+import { expectNoAxeViolations } from '../../test-utils/axe';
+import { googleFavicon, Sources, sourceHost } from './sources';
 
 const list = (
   <Sources.Content>
@@ -47,14 +48,25 @@ describe('Sources', () => {
     expect(screen.getByRole('button', { name: '7 fuentes' })).toBeInTheDocument();
   });
 
-  it('renders the host without www and a default favicon', () => {
-    render(
+  it('renders the host without www and no remote favicon by default', async () => {
+    const { container } = render(
       <Sources defaultOpen>
         <Sources.Trigger />
         {list}
       </Sources>,
     );
     expect(screen.getByText('w3.org')).toBeInTheDocument();
+    expect(container.querySelector('img')).toBeNull();
+    await expectNoAxeViolations(container);
+  });
+
+  it('fetches favicons only when a service is opted into', () => {
+    render(
+      <Sources defaultOpen getFavicon={googleFavicon}>
+        <Sources.Trigger />
+        {list}
+      </Sources>,
+    );
     const link = screen.getByRole('link', { name: /ARIA Authoring/ });
     expect(link.querySelector('img')).toHaveAttribute(
       'src',
@@ -88,6 +100,16 @@ describe('Sources', () => {
     );
     const trigger = screen.getByRole('button');
     expect(screen.getByRole('region')).toHaveAttribute('id', trigger.getAttribute('aria-controls'));
+  });
+
+  it('drops aria-controls while closed', () => {
+    render(
+      <Sources>
+        <Sources.Trigger />
+        {list}
+      </Sources>,
+    );
+    expect(screen.getByRole('button')).not.toHaveAttribute('aria-controls');
   });
 
   it('derives a host from a url', () => {

@@ -1,11 +1,11 @@
 'use client';
 
-import { Sources } from '../../ai/sources';
+import { googleFavicon, Sources } from '../../ai/sources';
 
 export function Default() {
   return (
     <div className="w-full max-w-md">
-      <Sources>
+      <Sources getFavicon={googleFavicon}>
         <Sources.Trigger />
         <Sources.Content>
           <Sources.Item href="https://react.dev/reference/react/use" title="use – React" />

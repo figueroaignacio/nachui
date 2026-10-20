@@ -64,6 +64,10 @@ function sourceHost(href: string): string {
   }
 }
 
+function googleFavicon(host: string): string {
+  return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=32`;
+}
+
 function countItems(children: React.ReactNode): number {
   let count = 0;
   React.Children.forEach(children, (child) => {
@@ -83,6 +87,7 @@ interface SourcesContextValue {
   setOpen: (open: boolean) => void;
   id: string;
   count: number;
+  getFavicon: ((host: string) => string | null | undefined) | undefined;
 }
 
 const SourcesContext = React.createContext<SourcesContextValue | null>(null);
@@ -100,6 +105,7 @@ interface SourcesProps extends React.HTMLAttributes<HTMLDivElement> {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   count?: number;
+  getFavicon?: (host: string) => string | null | undefined;
 }
 
 interface SourcesTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -122,6 +128,7 @@ const SourcesRoot = ({
   open: controlledOpen,
   onOpenChange,
   count: explicitCount,
+  getFavicon,
   children,
   ref,
   ...props
@@ -135,8 +142,8 @@ const SourcesRoot = ({
   const count = explicitCount ?? countItems(children);
 
   const value = React.useMemo<SourcesContextValue>(
-    () => ({ open, setOpen, id, count }),
-    [open, setOpen, id, count],
+    () => ({ open, setOpen, id, count, getFavicon }),
+    [open, setOpen, id, count, getFavicon],
   );
 
   return (
@@ -172,13 +179,13 @@ const SourcesTrigger = ({
       type="button"
       id={`${id}-trigger`}
       aria-expanded={open}
-      aria-controls={`${id}-content`}
+      aria-controls={open ? `${id}-content` : undefined}
       onClick={(event) => {
         setOpen(!open);
         onClick?.(event);
       }}
       className={cn(
-        'text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex items-center gap-2 rounded-md text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
+        'text-muted-foreground hover:text-foreground focus-visible:ring-ring -my-0.5 inline-flex min-h-6 items-center gap-2 rounded-md text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none pointer-coarse:-my-2 pointer-coarse:min-h-9',
         className,
       )}
       {...props}
@@ -244,11 +251,9 @@ const SourcesItem = ({
   ref,
   ...props
 }: SourcesItemProps & { ref?: React.Ref<HTMLAnchorElement> }) => {
+  const context = React.use(SourcesContext);
   const host = sourceHost(href);
-  const faviconSrc =
-    favicon === undefined
-      ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=32`
-      : favicon;
+  const faviconSrc = favicon === undefined ? (context?.getFavicon?.(host) ?? null) : favicon;
 
   return (
     <a
@@ -290,5 +295,5 @@ const Sources = Object.assign(SourcesRoot, {
   Item: SourcesItem,
 });
 
-export { Sources, sourceHost };
+export { googleFavicon, Sources, sourceHost };
 export type { SourcesContentProps, SourcesItemProps, SourcesProps, SourcesTriggerProps };

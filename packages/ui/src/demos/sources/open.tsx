@@ -1,11 +1,11 @@
 'use client';
 
-import { Sources } from '../../ai/sources';
+import { googleFavicon, Sources } from '../../ai/sources';
 
 export function Open() {
   return (
     <div className="w-full max-w-md">
-      <Sources defaultOpen>
+      <Sources defaultOpen getFavicon={googleFavicon}>
         <Sources.Trigger />
         <Sources.Content>
           <Sources.Item href="https://nextjs.org/docs/app" title="App Router – Next.js" />
