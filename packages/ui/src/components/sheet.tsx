@@ -44,11 +44,69 @@ type SheetSide = 'top' | 'bottom' | 'left' | 'right';
 type SheetSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
 const SIDE_CLASSES: Record<SheetSide, string> = {
-  right: 'inset-y-0 right-0 h-full border-l',
-  left: 'inset-y-0 left-0 h-full border-r',
-  top: 'inset-x-0 top-0 w-full border-b pt-[env(safe-area-inset-top)]',
-  bottom: 'inset-x-0 bottom-0 w-full border-t pb-[env(safe-area-inset-bottom)]',
+  right:
+    'inset-y-0 right-0 h-full border-l pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)]',
+  left: 'inset-y-0 left-0 h-full border-r pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]',
+  top: 'inset-x-0 top-0 w-full border-b pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)]',
+  bottom:
+    'inset-x-0 bottom-0 w-full border-t pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]',
 };
+
+const CLOSE_TOP: Record<SheetSide, string> = {
+  right: 'top-[calc(1rem+env(safe-area-inset-top))]',
+  left: 'top-[calc(1rem+env(safe-area-inset-top))]',
+  top: 'top-[calc(1rem+env(safe-area-inset-top))]',
+  bottom: 'top-4',
+};
+
+const CLOSE_RIGHT: Record<SheetSide, string> = {
+  right: 'right-[calc(1rem+env(safe-area-inset-right))]',
+  left: 'right-4',
+  top: 'right-[calc(1rem+env(safe-area-inset-right))]',
+  bottom: 'right-[calc(1rem+env(safe-area-inset-right))]',
+};
+
+type SlotChildProps = Record<string, unknown> & { ref?: React.Ref<HTMLElement> };
+
+function mergeSlotProps(own: Record<string, unknown>, child: SlotChildProps) {
+  const merged: Record<string, unknown> = { ...own, ...child };
+  for (const [key, ownValue] of Object.entries(own)) {
+    const childValue = child[key];
+    if (
+      /^on[A-Z]/.test(key) &&
+      typeof ownValue === 'function' &&
+      typeof childValue === 'function'
+    ) {
+      merged[key] = (...args: unknown[]) => {
+        childValue(...args);
+        ownValue(...args);
+      };
+    }
+  }
+  if (own.className || child.className) {
+    merged.className = cn(
+      own.className as string | undefined,
+      child.className as string | undefined,
+    );
+  }
+  if (own.style || child.style) {
+    merged.style = { ...(own.style as object | undefined), ...(child.style as object | undefined) };
+  }
+  return merged;
+}
+
+function useComposedRef<T extends HTMLElement>(
+  first: React.Ref<T> | undefined,
+  second: React.Ref<T> | React.Ref<HTMLElement> | undefined,
+) {
+  return React.useCallback(
+    (node: T | null) => {
+      assignRef(first, node);
+      assignRef(second as React.Ref<T> | undefined, node);
+    },
+    [first, second],
+  );
+}
 
 const HORIZONTAL_SIZE: Record<SheetSize, string> = {
   sm: 'w-80',
@@ -153,6 +211,8 @@ const SheetTrigger = ({
   ...props
 }: SheetTriggerProps & { ref?: React.Ref<HTMLButtonElement> }) => {
   const { open, setOpen, id } = useSheetContext();
+  const slot = asChild && React.isValidElement<SlotChildProps>(children) ? children : null;
+  const composedRef = useComposedRef<HTMLButtonElement>(ref, slot?.props.ref);
 
   const a11y = {
     'aria-haspopup': 'dialog' as const,
@@ -160,29 +220,21 @@ const SheetTrigger = ({
     'aria-controls': `${id}-content`,
   };
 
-  if (asChild && React.isValidElement(children)) {
-    return React.cloneElement(children, {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.(event);
+    setOpen(true);
+  };
+
+  if (slot) {
+    return React.cloneElement(slot, {
+      ...mergeSlotProps({ ...props, onClick: handleClick }, slot.props),
       ...a11y,
-      onClick: (event: React.MouseEvent<HTMLElement>) => {
-        (children.props as { onClick?: (e: React.MouseEvent<HTMLElement>) => void }).onClick?.(
-          event,
-        );
-        setOpen(true);
-      },
-    } as React.HTMLAttributes<HTMLElement>);
+      ref: composedRef,
+    });
   }
 
   return (
-    <button
-      ref={ref}
-      type="button"
-      onClick={(event) => {
-        onClick?.(event);
-        setOpen(true);
-      }}
-      {...a11y}
-      {...props}
-    >
+    <button ref={ref} type="button" onClick={handleClick} {...a11y} {...props}>
       {children}
     </button>
   );
@@ -220,6 +272,7 @@ const SheetContent = ({
   const { open, setOpen, id, hasTitle, hasDescription } = useSheetContext();
   const mounted = useIsClient();
   const contentRef = React.useRef<HTMLDivElement>(null);
+  const composedRef = useComposedRef<HTMLDivElement>(contentRef, ref);
   const layer = useLayer(open, true);
   const restoreRef = React.useRef<HTMLElement | null>(null);
   const shouldReduceMotion = useReducedMotion();
@@ -267,10 +320,7 @@ const SheetContent = ({
         <>
           <SheetOverlay />
           <motion.div
-            ref={(node) => {
-              contentRef.current = node;
-              assignRef(ref, node);
-            }}
+            ref={composedRef}
             id={`${id}-content`}
             role="dialog"
             aria-modal="true"
@@ -299,7 +349,11 @@ const SheetContent = ({
                 onClick={() => setOpen(false)}
                 whileTap={shouldReduceMotion ? undefined : tap}
                 transition={springs.snappy}
-                className="text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring absolute top-4 right-4 z-10 rounded-full p-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                className={cn(
+                  'text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring absolute z-10 rounded-full p-2 transition-colors focus-visible:ring-2 focus-visible:outline-none',
+                  CLOSE_TOP[side],
+                  CLOSE_RIGHT[side],
+                )}
               >
                 <XIcon size={16} />
               </motion.button>
@@ -414,28 +468,23 @@ const SheetClose = ({
   ...props
 }: SheetCloseProps & { ref?: React.Ref<HTMLButtonElement> }) => {
   const { setOpen } = useSheetContext();
+  const slot = asChild && React.isValidElement<SlotChildProps>(children) ? children : null;
+  const composedRef = useComposedRef<HTMLButtonElement>(ref, slot?.props.ref);
 
-  if (asChild && React.isValidElement(children)) {
-    return React.cloneElement(children, {
-      onClick: (event: React.MouseEvent<HTMLElement>) => {
-        (children.props as { onClick?: (e: React.MouseEvent<HTMLElement>) => void }).onClick?.(
-          event,
-        );
-        setOpen(false);
-      },
-    } as React.HTMLAttributes<HTMLElement>);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.(event);
+    setOpen(false);
+  };
+
+  if (slot) {
+    return React.cloneElement(slot, {
+      ...mergeSlotProps({ ...props, onClick: handleClick }, slot.props),
+      ref: composedRef,
+    });
   }
 
   return (
-    <button
-      ref={ref}
-      type="button"
-      onClick={(event) => {
-        onClick?.(event);
-        setOpen(false);
-      }}
-      {...props}
-    >
+    <button ref={ref} type="button" onClick={handleClick} {...props}>
       {children}
     </button>
   );

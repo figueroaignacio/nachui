@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import type * as React from 'react';
+import * as React from 'react';
 import { Dialog } from './dialog';
 import { Sheet } from './sheet';
 
@@ -155,5 +155,59 @@ describe('Sheet keyboard and focus', () => {
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     expect(document.body.style.overflow).toBe('');
     expect(document.documentElement.dataset.scrollLocked).toBeUndefined();
+  });
+});
+
+describe('Sheet asChild and safe areas', () => {
+  it('forwards ref and extra props through an asChild trigger', async () => {
+    const user = userEvent.setup();
+    const triggerRef = React.createRef<HTMLButtonElement>();
+    const childRef = React.createRef<HTMLButtonElement>();
+    const onClick = vi.fn();
+
+    render(
+      <Sheet>
+        <Sheet.Trigger
+          asChild
+          ref={triggerRef}
+          className="trigger-class"
+          data-testid="trigger"
+          onClick={onClick}
+        >
+          <button type="button" ref={childRef} className="child-class">
+            Filters
+          </button>
+        </Sheet.Trigger>
+        <Sheet.Content>
+          <Sheet.Title>Filters</Sheet.Title>
+        </Sheet.Content>
+      </Sheet>,
+    );
+
+    const trigger = screen.getByRole('button', { name: 'Filters' });
+    expect(triggerRef.current).toBe(trigger);
+    expect(childRef.current).toBe(trigger);
+    expect(trigger).toHaveClass('trigger-class', 'child-class');
+    expect(trigger).toHaveAttribute('data-testid', 'trigger');
+
+    await user.click(trigger);
+    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(await screen.findByRole('dialog', { name: 'Filters' })).toBeInTheDocument();
+  });
+
+  it.each(['left', 'right'] as const)('pads the %s sheet for safe areas', async (side) => {
+    const user = userEvent.setup();
+    render(<Example side={side} />);
+    await user.click(screen.getByRole('button', { name: 'Open' }));
+
+    const dialog = await screen.findByRole('dialog');
+    expect(dialog).toHaveClass(
+      'pt-[env(safe-area-inset-top)]',
+      'pb-[env(safe-area-inset-bottom)]',
+      side === 'left' ? 'pl-[env(safe-area-inset-left)]' : 'pr-[env(safe-area-inset-right)]',
+    );
+    expect(screen.getByRole('button', { name: 'Close' })).toHaveClass(
+      'top-[calc(1rem+env(safe-area-inset-top))]',
+    );
   });
 });
