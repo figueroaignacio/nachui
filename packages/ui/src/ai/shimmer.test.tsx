@@ -22,8 +22,15 @@ describe('Shimmer', () => {
     expect(screen.getByTestId('shimmer').tagName).toBe('H2');
   });
 
-  it('clips the gradient to the text', () => {
+  it('clips the gradient to the text only when motion is allowed, in CSS', () => {
     render(<Shimmer data-testid="shimmer">Thinking</Shimmer>);
-    expect(screen.getByTestId('shimmer')).toHaveClass('bg-clip-text');
+    const node = screen.getByTestId('shimmer');
+    expect(node).toHaveClass(
+      'motion-safe:bg-clip-text',
+      'motion-safe:text-transparent',
+      'motion-reduce:text-muted-foreground',
+    );
+    expect(node.style.getPropertyValue('--shimmer-gradient')).toContain('linear-gradient');
+    expect(node.style.backgroundImage).toBe('');
   });
 });

@@ -56,26 +56,16 @@ const Shimmer = ({
   const length = typeof children === 'string' ? children.length : 12;
   const highlight = Math.max(length * spread, 16);
 
-  if (shouldReduceMotion) {
-    return (
-      <Tag
-        ref={mergedRef}
-        className={cn('text-muted-foreground', className)}
-        style={style}
-        {...props}
-      >
-        {children}
-      </Tag>
-    );
-  }
-
   return (
     <Tag
       ref={mergedRef}
-      className={cn('bg-clip-text text-transparent', className)}
+      className={cn(
+        'motion-reduce:text-muted-foreground motion-safe:bg-[image:var(--shimmer-gradient)] motion-safe:bg-clip-text motion-safe:text-transparent',
+        className,
+      )}
       style={{
         ...SHIMMER_STYLE,
-        backgroundImage: `linear-gradient(90deg, var(--muted-foreground) calc(50% - ${highlight}px), var(--foreground), var(--muted-foreground) calc(50% + ${highlight}px))`,
+        '--shimmer-gradient': `linear-gradient(90deg, var(--muted-foreground) calc(50% - ${highlight}px), var(--foreground), var(--muted-foreground) calc(50% + ${highlight}px))`,
         ...style,
       }}
       {...props}
