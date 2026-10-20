@@ -46,6 +46,7 @@ const PROGRAMMATIC_SCROLL_TIMEOUT = 1000;
 interface ConversationContextValue {
   stuck: boolean;
   scrollToBottom: (behavior?: ScrollBehavior) => void;
+  focusThread: () => void;
 }
 
 const ConversationContext = React.createContext<ConversationContextValue | null>(null);
@@ -63,6 +64,8 @@ const useConversation = (): ConversationContextValue => useConversationContext()
 interface ConversationProps extends React.HTMLAttributes<HTMLDivElement> {
   stickToBottom?: boolean;
   onStickChange?: (stuck: boolean) => void;
+  label?: string;
+  announcement?: string;
 }
 
 type ConversationContentProps = React.HTMLAttributes<HTMLDivElement>;
@@ -79,10 +82,18 @@ const useIsomorphicLayoutEffect =
 const isAtBottom = (element: HTMLElement) =>
   element.scrollHeight - element.scrollTop - element.clientHeight <= BOTTOM_THRESHOLD;
 
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' &&
+  typeof window.matchMedia === 'function' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 const ConversationRoot = ({
   className,
   stickToBottom = true,
   onStickChange,
+  label = 'Conversation',
+  announcement = '',
+  tabIndex,
   children,
   onScroll,
   ref,
@@ -118,9 +129,10 @@ const ConversationRoot = ({
   React.useEffect(() => endProgrammaticScroll, [endProgrammaticScroll]);
 
   const scrollToBottom = React.useCallback(
-    (behavior: ScrollBehavior = 'smooth') => {
+    (requested: ScrollBehavior = 'smooth') => {
       const element = scrollRef.current;
       if (!element) return;
+      const behavior = requested === 'smooth' && prefersReducedMotion() ? 'auto' : requested;
       if (typeof element.scrollTo === 'function') {
         if (behavior === 'smooth') {
           endProgrammaticScroll();
@@ -213,9 +225,13 @@ const ConversationRoot = ({
     [ref],
   );
 
+  const focusThread = React.useCallback(() => {
+    scrollRef.current?.focus({ preventScroll: true });
+  }, []);
+
   const value = React.useMemo<ConversationContextValue>(
-    () => ({ stuck, scrollToBottom }),
-    [stuck, scrollToBottom],
+    () => ({ stuck, scrollToBottom, focusThread }),
+    [stuck, scrollToBottom, focusThread],
   );
 
   return (
@@ -223,15 +239,23 @@ const ConversationRoot = ({
       <div
         ref={setRefs}
         role="log"
-        aria-live="polite"
+        aria-live="off"
+        aria-label={label}
+        tabIndex={tabIndex ?? 0}
         data-stuck={stuck ? 'true' : 'false'}
         onScroll={(event) => {
           if (!programmaticRef.current) setStuck(isAtBottom(event.currentTarget));
           onScroll?.(event);
         }}
-        className={cn('relative min-h-0 w-full overflow-y-auto overscroll-contain', className)}
+        className={cn(
+          'focus-visible:ring-ring relative min-h-0 w-full overflow-y-auto overscroll-contain focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
+          className,
+        )}
         {...props}
       >
+        <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+          {announcement}
+        </div>
         {children}
       </div>
     </ConversationContext>
@@ -258,8 +282,23 @@ const ConversationScrollButton = ({
   ref,
   ...props
 }: ConversationScrollButtonProps & { ref?: React.Ref<HTMLButtonElement> }) => {
-  const { stuck, scrollToBottom } = useConversationContext();
+  const { stuck, scrollToBottom, focusThread } = useConversationContext();
   const shouldReduceMotion = useReducedMotion();
+  const buttonRef = React.useRef<HTMLButtonElement | null>(null);
+
+  const setButtonRef = React.useCallback(
+    (node: HTMLButtonElement | null) => {
+      buttonRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+
+  React.useEffect(() => {
+    const button = buttonRef.current;
+    if (stuck && button && button === document.activeElement) focusThread();
+  }, [stuck, focusThread]);
 
   return (
     <AnimatePresence>
@@ -272,15 +311,16 @@ const ConversationScrollButton = ({
           exit="exit"
         >
           <button
-            ref={ref}
+            ref={setButtonRef}
             type="button"
             aria-label={label}
             onClick={(event) => {
+              if (event.currentTarget === document.activeElement) focusThread();
               scrollToBottom();
               onClick?.(event);
             }}
             className={cn(
-              'border-border bg-background text-muted-foreground hover:text-foreground focus-visible:ring-ring pointer-events-auto flex size-8 items-center justify-center rounded-full border shadow-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
+              'border-border bg-background text-muted-foreground hover:text-foreground focus-visible:ring-ring pointer-events-auto flex size-8 items-center justify-center rounded-full border shadow-sm transition-colors focus-visible:ring-2 focus-visible:outline-none pointer-coarse:size-11',
               className,
             )}
             {...props}

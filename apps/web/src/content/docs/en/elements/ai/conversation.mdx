@@ -31,7 +31,13 @@ import { Conversation } from '@/components/ui/conversation';
 </Conversation>
 ```
 
-The root is the scroll container, so give it a height. It renders as a polite live region, which is how a screen reader hears new messages arrive without being interrupted mid sentence.
+The root is the scroll container, so give it a height. It renders as a labelled `log` that keyboard users can focus and scroll, but it stays quiet while tokens stream in, so a screen reader is not flooded with every partial word.
+
+To tell screen reader users that a reply landed, pass a short `announcement` once the message is complete, something like "Assistant replied". It goes into a visually hidden status region that is always mounted, so the change is read once.
+
+```tsx
+<Conversation className="h-96" announcement={done ? 'Assistant replied' : ''}>
+```
 
 ## Composition
 
@@ -68,11 +74,13 @@ const { stuck, scrollToBottom } = useConversation();
 
 ### Conversation
 
-| Prop            | Type                       | Default | Description                                |
-| --------------- | -------------------------- | ------- | ------------------------------------------ |
-| `stickToBottom` | `boolean`                  | `true`  | Keep the thread pinned while content grows |
-| `onStickChange` | `(stuck: boolean) => void` | -       | Called when the thread sticks or lets go   |
-| `className`     | `string`                   | -       | Additional CSS classes, give it a height   |
+| Prop            | Type                       | Default          | Description                                                      |
+| --------------- | -------------------------- | ---------------- | ---------------------------------------------------------------- |
+| `stickToBottom` | `boolean`                  | `true`           | Keep the thread pinned while content grows                       |
+| `onStickChange` | `(stuck: boolean) => void` | -                | Called when the thread sticks or lets go                         |
+| `label`         | `string`                   | `'Conversation'` | Accessible name of the log                                       |
+| `announcement`  | `string`                   | `''`             | Text read once by screen readers, set it when a message finishes |
+| `className`     | `string`                   | -                | Additional CSS classes, give it a height                         |
 
 ### Conversation.Content
 

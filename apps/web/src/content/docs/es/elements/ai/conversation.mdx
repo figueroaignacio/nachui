@@ -31,7 +31,13 @@ import { Conversation } from '@/components/ui/conversation';
 </Conversation>
 ```
 
-La raíz es el contenedor con scroll, así que dale una altura. Se renderiza como una región en vivo de tipo polite, que es como un lector de pantalla se entera de los mensajes nuevos sin que lo interrumpan a mitad de una frase.
+La raíz es el contenedor con scroll, así que dale una altura. Se renderiza como un `log` con nombre que se puede enfocar y scrollear con el teclado, pero se queda callado mientras llegan los tokens, así un lector de pantalla no lee cada palabra a medias.
+
+Para avisarle a quien usa lector de pantalla que llegó una respuesta, pasá un `announcement` corto cuando el mensaje termina, algo como "El asistente respondió". Va a una región de estado oculta que siempre está montada, así que el cambio se lee una sola vez.
+
+```tsx
+<Conversation className="h-96" announcement={done ? 'El asistente respondió' : ''}>
+```
 
 ## Composición
 
@@ -68,11 +74,13 @@ const { stuck, scrollToBottom } = useConversation();
 
 ### Conversation
 
-| Prop            | Type                       | Default | Description                                         |
-| --------------- | -------------------------- | ------- | --------------------------------------------------- |
-| `stickToBottom` | `boolean`                  | `true`  | Mantiene el hilo pegado mientras crece el contenido |
-| `onStickChange` | `(stuck: boolean) => void` | -       | Se llama cuando el hilo se pega o se suelta         |
-| `className`     | `string`                   | -       | Clases CSS adicionales, dale una altura             |
+| Prop            | Type                       | Default          | Description                                                                   |
+| --------------- | -------------------------- | ---------------- | ----------------------------------------------------------------------------- |
+| `stickToBottom` | `boolean`                  | `true`           | Mantiene el hilo pegado mientras crece el contenido                           |
+| `onStickChange` | `(stuck: boolean) => void` | -                | Se llama cuando el hilo se pega o se suelta                                   |
+| `label`         | `string`                   | `'Conversation'` | Nombre accesible del log                                                      |
+| `announcement`  | `string`                   | `''`             | Texto que el lector de pantalla lee una vez, ponelo cuando termina un mensaje |
+| `className`     | `string`                   | -                | Clases CSS adicionales, dale una altura                                       |
 
 ### Conversation.Content
 
