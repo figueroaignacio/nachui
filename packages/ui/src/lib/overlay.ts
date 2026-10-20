@@ -61,16 +61,20 @@ export function trapFocus(event: KeyboardEvent, container: HTMLElement) {
   }
 }
 
-type Layer = { modal: boolean };
+type Layer = { modal: boolean; node: () => HTMLElement | null };
 
 const layers: Layer[] = [];
 
-export function useLayer(active: boolean, modal = false) {
+export function useLayer(
+  active: boolean,
+  modal = false,
+  nodeRef?: React.RefObject<HTMLElement | null>,
+) {
   const entryRef = React.useRef<Layer | null>(null);
 
   React.useEffect(() => {
     if (!active) return;
-    const entry: Layer = { modal };
+    const entry: Layer = { modal, node: () => nodeRef?.current ?? null };
     layers.push(entry);
     entryRef.current = entry;
     return () => {
@@ -78,7 +82,7 @@ export function useLayer(active: boolean, modal = false) {
       if (index !== -1) layers.splice(index, 1);
       if (entryRef.current === entry) entryRef.current = null;
     };
-  }, [active, modal]);
+  }, [active, modal, nodeRef]);
 
   return React.useMemo(
     () => ({
@@ -90,6 +94,12 @@ export function useLayer(active: boolean, modal = false) {
           if (layers[index]?.modal) return layers[index] === entry;
         }
         return false;
+      },
+      isInsideUpperLayer: (target: EventTarget | null) => {
+        const entry = entryRef.current;
+        if (!entry || !(target instanceof Node)) return false;
+        const start = layers.indexOf(entry) + 1;
+        return layers.slice(start).some((layer) => layer.node()?.contains(target) ?? false);
       },
     }),
     [],

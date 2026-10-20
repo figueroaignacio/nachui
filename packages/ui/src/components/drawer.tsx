@@ -207,7 +207,7 @@ const DrawerContent = ({
         setOpen(false);
         return;
       }
-      if (layer.isTopmostModal()) trapFocus(e, content);
+      if (layer.isTopmostModal() && !layer.isInsideUpperLayer(e.target)) trapFocus(e, content);
     };
 
     document.addEventListener('keydown', handleKeyDown);

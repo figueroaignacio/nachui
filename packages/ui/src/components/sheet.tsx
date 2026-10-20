@@ -240,7 +240,8 @@ const SheetContent = ({
         setOpen(false);
         return;
       }
-      if (layer.isTopmostModal()) trapFocus(event, content);
+      if (layer.isTopmostModal() && !layer.isInsideUpperLayer(event.target))
+        trapFocus(event, content);
     };
 
     document.addEventListener('keydown', onKeyDown);
