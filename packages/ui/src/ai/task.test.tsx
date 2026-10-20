@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { Task } from './task';
 
 describe('Task', () => {
@@ -69,5 +70,39 @@ describe('Task', () => {
       </Task>,
     );
     expect(screen.getByText('task.tsx')).toHaveClass('font-mono');
+  });
+
+  it('names the status in the trigger, not only with color', async () => {
+    const { container, rerender } = render(
+      <Task>
+        <Task.Trigger title="Run the tests" status="active" />
+        <Task.Content>
+          <Task.Item>Running</Task.Item>
+        </Task.Content>
+      </Task>,
+    );
+    expect(screen.getByRole('button', { name: 'Run the tests, In progress' })).toBeInTheDocument();
+    await expectNoAxeViolations(container);
+    rerender(
+      <Task>
+        <Task.Trigger title="Run the tests" status="error" statusLabels={{ error: 'Broke' }} />
+      </Task>,
+    );
+    expect(screen.getByRole('button', { name: 'Run the tests, Broke' })).toBeInTheDocument();
+  });
+
+  it('only points aria-controls at the content while it is open', async () => {
+    render(
+      <Task>
+        <Task.Trigger title="Run the tests" />
+        <Task.Content>
+          <Task.Item>Body</Task.Item>
+        </Task.Content>
+      </Task>,
+    );
+    const trigger = screen.getByRole('button');
+    expect(trigger).toHaveAttribute('aria-controls', screen.getByRole('region').id);
+    await userEvent.click(trigger);
+    expect(trigger).not.toHaveAttribute('aria-controls');
   });
 });

@@ -65,12 +65,13 @@ Task
 
 ### Task.Trigger
 
-| Prop        | Type                                             | Default      | Description                      |
-| ----------- | ------------------------------------------------ | ------------ | -------------------------------- |
-| `title`     | `string`                                         | -            | Label of the step                |
-| `status`    | `'pending' \| 'active' \| 'complete' \| 'error'` | `'complete'` | Icon and colour of the indicator |
-| `children`  | `ReactNode`                                      | -            | Replaces the title when given    |
-| `className` | `string`                                         | -            | Additional CSS classes           |
+| Prop           | Type                                             | Default                                         | Description                                   |
+| -------------- | ------------------------------------------------ | ----------------------------------------------- | --------------------------------------------- |
+| `title`        | `string`                                         | -                                               | Label of the step                             |
+| `status`       | `'pending' \| 'active' \| 'complete' \| 'error'` | `'complete'`                                    | Icon and colour of the indicator              |
+| `statusLabels` | `Partial<Record<status, string>>`                | `Pending`, `In progress`, `Completed`, `Failed` | Status read by screen readers after the title |
+| `children`     | `ReactNode`                                      | -                                               | Replaces the title when given                 |
+| `className`    | `string`                                         | -                                               | Additional CSS classes                        |
 
 ### Task.Content
 

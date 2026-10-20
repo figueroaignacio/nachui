@@ -97,10 +97,32 @@ function AlertIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
   );
 }
 
-const SPIN_ANIMATE = { rotate: 360 };
-const SPIN_TRANSITION = { repeat: Infinity, duration: 1, ease: 'linear' } as const;
+function DotIcon({ size = 24, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="4" />
+    </svg>
+  );
+}
 
 type TaskStatus = 'pending' | 'active' | 'complete' | 'error';
+
+type TaskStatusLabels = Record<TaskStatus, string>;
+
+const DEFAULT_STATUS_LABELS: TaskStatusLabels = {
+  pending: 'Pending',
+  active: 'In progress',
+  complete: 'Completed',
+  error: 'Failed',
+};
 
 interface TaskContextValue {
   open: boolean;
@@ -127,6 +149,7 @@ interface TaskProps extends React.HTMLAttributes<HTMLDivElement> {
 interface TaskTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   title: string;
   status?: TaskStatus;
+  statusLabels?: Partial<TaskStatusLabels>;
 }
 
 type TaskContentProps = React.HTMLAttributes<HTMLDivElement>;
@@ -134,7 +157,7 @@ type TaskItemProps = React.HTMLAttributes<HTMLDivElement>;
 type TaskFileProps = React.HTMLAttributes<HTMLSpanElement>;
 
 const STATUS_ICON: Record<TaskStatus, React.ComponentType<IconProps>> = {
-  pending: ChevronDownIcon,
+  pending: DotIcon,
   active: LoaderIcon,
   complete: CheckIcon,
   error: AlertIcon,
@@ -185,6 +208,7 @@ const TaskTrigger = ({
   className,
   title,
   status = 'complete',
+  statusLabels,
   children,
   onClick,
   ref,
@@ -193,6 +217,7 @@ const TaskTrigger = ({
   const { open, setOpen, id } = useTaskContext();
   const shouldReduceMotion = useReducedMotion();
   const StatusIcon = STATUS_ICON[status];
+  const statusLabel = statusLabels?.[status] ?? DEFAULT_STATUS_LABELS[status];
 
   return (
     <button
@@ -200,32 +225,31 @@ const TaskTrigger = ({
       type="button"
       id={`${id}-trigger`}
       aria-expanded={open}
-      aria-controls={`${id}-content`}
+      aria-controls={open ? `${id}-content` : undefined}
       onClick={(event) => {
         setOpen(!open);
         onClick?.(event);
       }}
       className={cn(
-        'text-muted-foreground hover:text-foreground focus-visible:ring-ring flex w-full items-center gap-2 rounded-md text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
+        'text-muted-foreground hover:text-foreground focus-visible:ring-ring -my-0.5 flex min-h-6 w-full items-center gap-2 rounded-md text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none pointer-coarse:-my-2 pointer-coarse:min-h-9',
         className,
       )}
       {...props}
     >
-      {status === 'active' && !shouldReduceMotion ? (
-        <motion.span
-          aria-hidden="true"
-          className={cn('flex shrink-0', STATUS_TONE[status])}
-          animate={SPIN_ANIMATE}
-          transition={SPIN_TRANSITION}
-        >
-          <StatusIcon size={14} />
-        </motion.span>
-      ) : (
-        <span aria-hidden="true" className={cn('flex shrink-0', STATUS_TONE[status])}>
-          <StatusIcon size={14} />
-        </span>
-      )}
-      <span className="min-w-0 flex-1 truncate text-left">{children ?? title}</span>
+      <span
+        aria-hidden="true"
+        className={cn(
+          'flex shrink-0',
+          STATUS_TONE[status],
+          status === 'active' && 'motion-safe:animate-spin',
+        )}
+      >
+        <StatusIcon size={14} />
+      </span>
+      <span className="min-w-0 flex-1 truncate text-left">
+        {children ?? title}
+        <span className="sr-only">{`, ${statusLabel}`}</span>
+      </span>
       <motion.span
         aria-hidden="true"
         className="flex shrink-0"
@@ -329,5 +353,6 @@ export type {
   TaskItemProps,
   TaskProps,
   TaskStatus,
+  TaskStatusLabels,
   TaskTriggerProps,
 };

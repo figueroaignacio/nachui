@@ -65,12 +65,13 @@ Task
 
 ### Task.Trigger
 
-| Prop        | Type                                             | Default      | Description                    |
-| ----------- | ------------------------------------------------ | ------------ | ------------------------------ |
-| `title`     | `string`                                         | -            | Etiqueta del paso              |
-| `status`    | `'pending' \| 'active' \| 'complete' \| 'error'` | `'complete'` | Icono y color del indicador    |
-| `children`  | `ReactNode`                                      | -            | Reemplaza el título si se pasa |
-| `className` | `string`                                         | -            | Clases CSS adicionales         |
+| Prop           | Type                                             | Default                                         | Description                                                 |
+| -------------- | ------------------------------------------------ | ----------------------------------------------- | ----------------------------------------------------------- |
+| `title`        | `string`                                         | -                                               | Etiqueta del paso                                           |
+| `status`       | `'pending' \| 'active' \| 'complete' \| 'error'` | `'complete'`                                    | Icono y color del indicador                                 |
+| `statusLabels` | `Partial<Record<status, string>>`                | `Pending`, `In progress`, `Completed`, `Failed` | Estado que leen los lectores de pantalla después del título |
+| `children`     | `ReactNode`                                      | -                                               | Reemplaza el título si se pasa                              |
+| `className`    | `string`                                         | -                                               | Clases CSS adicionales                                      |
 
 ### Task.Content
 
