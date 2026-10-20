@@ -342,14 +342,15 @@ export const cascade = {
 
 Tres springs cubren todo. `snappy` es para hover, press y toggles, `smooth` para paneles, menús y collapsibles, y `gentle` para las superficies grandes como los diálogos. Los elementos flotantes abren desde el lado de su trigger y se van más rápido de lo que llegaron.
 
-#### Agrega los helpers de estado y overlays
+#### Agrega los helpers de estado, overlays y posicionamiento
 
-En `lib/` viven dos archivos más, y solo los necesitas cuando agregas un componente que los importa:
+En `lib/` viven tres archivos más, y solo los necesitas cuando agregas un componente que los importa:
 
 - [`use-controllable-state.ts`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/lib/use-controllable-state.ts) permite que un componente funcione de las dos maneras: le pasas `value` u `open` y lo controlas tú, o no los pasas y él maneja su propio estado. La mayoría de los componentes con estado lo usan.
-- [`overlay.ts`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/lib/overlay.ts) tiene lo que comparten los diálogos, sheets, drawers y toasts: el bloqueo del scroll, el focus trap y el chequeo de qué capa está arriba.
+- [`overlay.ts`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/lib/overlay.ts) tiene lo que comparten los diálogos, sheets, drawers, menús y toasts: el bloqueo del scroll, el focus trap y la pila de capas abiertas, para que Escape cierre solo la que está arriba.
+- [`floating.ts`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/lib/floating.ts) ubica popovers, tooltips, menús y selects junto a su trigger. Los pasa al otro lado cuando no hay lugar, los mantiene dentro de la pantalla y los renderiza al final de la página para que un padre con `overflow: hidden` no los corte.
 
-Si un archivo que pegas importa `../lib/use-controllable-state` o `../lib/overlay`, copia ese helper en `src/lib/`, junto a `cn.ts`. La CLI lo hace por ti.
+Si un archivo que pegas importa `../lib/use-controllable-state`, `../lib/overlay` o `../lib/floating`, copia ese helper en `src/lib/`, junto a `cn.ts`. La CLI lo hace por ti.
 
 #### Agrega los tokens del tema
 
@@ -601,6 +602,7 @@ Los componentes se importan entre sí y a los helpers con rutas relativas, como 
       <TreeItem value="src/lib" label="lib">
         <TreeItem value="src/lib/cn.ts" label="cn.ts" />
         <TreeItem value="src/lib/motion.ts" label="motion.ts" />
+        <TreeItem value="src/lib/floating.ts" label="floating.ts" />
         <TreeItem value="src/lib/overlay.ts" label="overlay.ts" />
         <TreeItem value="src/lib/use-controllable-state.ts" label="use-controllable-state.ts" />
       </TreeItem>

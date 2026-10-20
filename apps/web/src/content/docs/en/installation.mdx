@@ -342,14 +342,15 @@ export const cascade = {
 
 Three springs cover everything. `snappy` is for hover, press and toggles, `smooth` for panels, menus and collapsibles, and `gentle` for the big surfaces like dialogs. Floating elements open from the side of their trigger and leave faster than they arrived.
 
-#### Add the state and overlay helpers
+#### Add the state, overlay and floating helpers
 
-Two more files live in `lib/`, and you only need them once you add a component that imports them:
+Three more files live in `lib/`, and you only need them once you add a component that imports them:
 
 - [`use-controllable-state.ts`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/lib/use-controllable-state.ts) lets a component work both ways: you pass `value` or `open` and control it, or you leave them out and it keeps its own state. Most stateful components use it.
-- [`overlay.ts`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/lib/overlay.ts) holds what dialogs, sheets, drawers and toasts share: the scroll lock, the focus trap and the check for which layer is on top.
+- [`overlay.ts`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/lib/overlay.ts) holds what dialogs, sheets, drawers, menus and toasts share: the scroll lock, the focus trap and the stack of open layers, so Escape only closes the one on top.
+- [`floating.ts`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/lib/floating.ts) places popovers, tooltips, menus and selects next to their trigger. It flips them to the other side when there is no room, keeps them inside the screen and renders them at the end of the page so a parent with `overflow: hidden` can't cut them off.
 
-If a file you paste imports `../lib/use-controllable-state` or `../lib/overlay`, copy that helper into `src/lib/` next to `cn.ts`. The CLI does this for you.
+If a file you paste imports `../lib/use-controllable-state`, `../lib/overlay` or `../lib/floating`, copy that helper into `src/lib/` next to `cn.ts`. The CLI does this for you.
 
 #### Add the theme tokens
 
@@ -601,6 +602,7 @@ Components import each other and the helpers through relative paths, like `../li
       <TreeItem value="src/lib" label="lib">
         <TreeItem value="src/lib/cn.ts" label="cn.ts" />
         <TreeItem value="src/lib/motion.ts" label="motion.ts" />
+        <TreeItem value="src/lib/floating.ts" label="floating.ts" />
         <TreeItem value="src/lib/overlay.ts" label="overlay.ts" />
         <TreeItem value="src/lib/use-controllable-state.ts" label="use-controllable-state.ts" />
       </TreeItem>
