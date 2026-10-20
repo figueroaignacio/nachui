@@ -1,6 +1,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { Confirm, ConfirmProvider, useConfirm } from './confirm';
 
 vi.mock('motion/react');
@@ -74,6 +75,48 @@ describe('Confirm', () => {
     expect(screen.getByRole('alertdialog')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Confirm' })).toBeEnabled();
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeEnabled();
+    expect(screen.getByRole('alert')).toHaveTextContent('Something went wrong. Try again.');
+  });
+
+  it('keeps the alert region mounted and clears the error on retry', async () => {
+    let attempt = 0;
+    const onConfirm = () => {
+      attempt += 1;
+      return attempt === 1 ? Promise.reject(new Error('nope')) : new Promise<void>(() => {});
+    };
+    render(
+      <Confirm
+        title="Sure?"
+        defaultOpen
+        onConfirm={onConfirm}
+        labels={{ error: 'Could not delete' }}
+      />,
+    );
+    const alert = screen.getByRole('alert');
+    expect(alert).toBeEmptyDOMElement();
+    await userEvent.click(screen.getByRole('button', { name: 'Confirm' }));
+    await waitFor(() => expect(alert).toHaveTextContent('Could not delete'));
+    await userEvent.click(screen.getByRole('button', { name: 'Confirm' }));
+    expect(screen.getByRole('alert')).toBe(alert);
+    expect(alert).toBeEmptyDOMElement();
+  });
+
+  it('focuses the confirmation input when requireText is set', async () => {
+    render(<Confirm title="Delete acme" defaultOpen variant="destructive" requireText="acme" />);
+    const input = screen.getByLabelText('Type "acme" to confirm');
+    await waitFor(() => expect(input).toHaveFocus());
+  });
+
+  it('has no axe violations', async () => {
+    render(
+      <Confirm
+        title="Delete acme"
+        description="This is permanent."
+        defaultOpen
+        requireText="acme"
+      />,
+    );
+    await expectNoAxeViolations(document.body);
   });
 
   it('gates the confirm button behind requireText', async () => {

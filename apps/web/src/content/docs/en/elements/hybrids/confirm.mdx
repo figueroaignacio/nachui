@@ -115,23 +115,23 @@ async function remove(id: string) {
 
 ### Confirm
 
-| Prop           | Type                                          | Default     | Description                                              |
-| -------------- | --------------------------------------------- | ----------- | -------------------------------------------------------- |
-| `title`        | `ReactNode`                                   | -           | The question, also the accessible name                   |
-| `description`  | `ReactNode`                                   | -           | What happens if they say yes                             |
-| `icon`         | `ReactNode`                                   | -           | Rendered in a circle above the title                     |
-| `variant`      | `'default' \| 'destructive'`                  | `'default'` | Tone of the action and where the focus lands             |
-| `confirmText`  | `string`                                      | `'Confirm'` | Label of the action button                               |
-| `cancelText`   | `string`                                      | `'Cancel'`  | Label of the cancel button                               |
-| `requireText`  | `string`                                      | -           | Text the reader must type before confirming              |
-| `labels`       | `Partial<{ confirm; cancel; typeToConfirm }>` | English     | Every visible string, `typeToConfirm` is a function      |
-| `open`         | `boolean`                                     | -           | Controlled open state                                    |
-| `defaultOpen`  | `boolean`                                     | `false`     | Open state when uncontrolled                             |
-| `onOpenChange` | `(open: boolean) => void`                     | -           | Called when the open state changes                       |
-| `onConfirm`    | `() => void \| Promise<void>`                 | -           | Called by the action; a promise keeps it pending         |
-| `onCancel`     | `() => void`                                  | -           | Called by cancel, Escape and the overlay                 |
-| `className`    | `string`                                      | -           | Classes for the default panel                            |
-| `children`     | `ReactNode`                                   | -           | A `Confirm.Trigger` and, optionally, a `Confirm.Content` |
+| Prop           | Type                                                 | Default     | Description                                              |
+| -------------- | ---------------------------------------------------- | ----------- | -------------------------------------------------------- |
+| `title`        | `ReactNode`                                          | -           | The question, also the accessible name                   |
+| `description`  | `ReactNode`                                          | -           | What happens if they say yes                             |
+| `icon`         | `ReactNode`                                          | -           | Rendered in a circle above the title                     |
+| `variant`      | `'default' \| 'destructive'`                         | `'default'` | Tone of the action and where the focus lands             |
+| `confirmText`  | `string`                                             | `'Confirm'` | Label of the action button                               |
+| `cancelText`   | `string`                                             | `'Cancel'`  | Label of the cancel button                               |
+| `requireText`  | `string`                                             | -           | Text the reader must type before confirming              |
+| `labels`       | `Partial<{ confirm; cancel; typeToConfirm; error }>` | English     | Every visible string, `typeToConfirm` is a function      |
+| `open`         | `boolean`                                            | -           | Controlled open state                                    |
+| `defaultOpen`  | `boolean`                                            | `false`     | Open state when uncontrolled                             |
+| `onOpenChange` | `(open: boolean) => void`                            | -           | Called when the open state changes                       |
+| `onConfirm`    | `() => void \| Promise<void>`                        | -           | Called by the action; a promise keeps it pending         |
+| `onCancel`     | `() => void`                                         | -           | Called by cancel, Escape and the overlay                 |
+| `className`    | `string`                                             | -           | Classes for the default panel                            |
+| `children`     | `ReactNode`                                          | -           | A `Confirm.Trigger` and, optionally, a `Confirm.Content` |
 
 ### Confirm.Trigger
 

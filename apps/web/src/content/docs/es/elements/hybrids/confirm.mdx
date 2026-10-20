@@ -115,23 +115,23 @@ async function remove(id: string) {
 
 ### Confirm
 
-| Prop           | Type                                          | Default     | Description                                                 |
-| -------------- | --------------------------------------------- | ----------- | ----------------------------------------------------------- |
-| `title`        | `ReactNode`                                   | -           | La pregunta, también el nombre accesible                    |
-| `description`  | `ReactNode`                                   | -           | Qué pasa si dicen que sí                                    |
-| `icon`         | `ReactNode`                                   | -           | Se muestra en un círculo arriba del título                  |
-| `variant`      | `'default' \| 'destructive'`                  | `'default'` | Tono de la acción y dónde cae el foco                       |
-| `confirmText`  | `string`                                      | `'Confirm'` | Etiqueta del botón de acción                                |
-| `cancelText`   | `string`                                      | `'Cancel'`  | Etiqueta del botón de cancelar                              |
-| `requireText`  | `string`                                      | -           | Texto que hay que escribir antes de confirmar               |
-| `labels`       | `Partial<{ confirm; cancel; typeToConfirm }>` | Inglés      | Todos los textos visibles, `typeToConfirm` es una función   |
-| `open`         | `boolean`                                     | -           | Estado abierto controlado                                   |
-| `defaultOpen`  | `boolean`                                     | `false`     | Estado abierto cuando no es controlado                      |
-| `onOpenChange` | `(open: boolean) => void`                     | -           | Se llama cuando cambia el estado abierto                    |
-| `onConfirm`    | `() => void \| Promise<void>`                 | -           | Lo llama la acción; una promesa lo deja pendiente           |
-| `onCancel`     | `() => void`                                  | -           | Lo llaman cancelar, Escape y el overlay                     |
-| `className`    | `string`                                      | -           | Clases para el panel por defecto                            |
-| `children`     | `ReactNode`                                   | -           | Un `Confirm.Trigger` y, opcionalmente, un `Confirm.Content` |
+| Prop           | Type                                                 | Default     | Description                                                 |
+| -------------- | ---------------------------------------------------- | ----------- | ----------------------------------------------------------- |
+| `title`        | `ReactNode`                                          | -           | La pregunta, también el nombre accesible                    |
+| `description`  | `ReactNode`                                          | -           | Qué pasa si dicen que sí                                    |
+| `icon`         | `ReactNode`                                          | -           | Se muestra en un círculo arriba del título                  |
+| `variant`      | `'default' \| 'destructive'`                         | `'default'` | Tono de la acción y dónde cae el foco                       |
+| `confirmText`  | `string`                                             | `'Confirm'` | Etiqueta del botón de acción                                |
+| `cancelText`   | `string`                                             | `'Cancel'`  | Etiqueta del botón de cancelar                              |
+| `requireText`  | `string`                                             | -           | Texto que hay que escribir antes de confirmar               |
+| `labels`       | `Partial<{ confirm; cancel; typeToConfirm; error }>` | Inglés      | Todos los textos visibles, `typeToConfirm` es una función   |
+| `open`         | `boolean`                                            | -           | Estado abierto controlado                                   |
+| `defaultOpen`  | `boolean`                                            | `false`     | Estado abierto cuando no es controlado                      |
+| `onOpenChange` | `(open: boolean) => void`                            | -           | Se llama cuando cambia el estado abierto                    |
+| `onConfirm`    | `() => void \| Promise<void>`                        | -           | Lo llama la acción; una promesa lo deja pendiente           |
+| `onCancel`     | `() => void`                                         | -           | Lo llaman cancelar, Escape y el overlay                     |
+| `className`    | `string`                                             | -           | Clases para el panel por defecto                            |
+| `children`     | `ReactNode`                                          | -           | Un `Confirm.Trigger` y, opcionalmente, un `Confirm.Content` |
 
 ### Confirm.Trigger
 

@@ -13,12 +13,14 @@ interface ConfirmLabels {
   confirm: string;
   cancel: string;
   typeToConfirm: (text: string) => string;
+  error: string;
 }
 
 const DEFAULT_LABELS: ConfirmLabels = {
   confirm: 'Confirm',
   cancel: 'Cancel',
   typeToConfirm: (text) => `Type "${text}" to confirm`,
+  error: 'Something went wrong. Try again.',
 };
 
 interface ConfirmContextValue {
@@ -30,6 +32,7 @@ interface ConfirmContextValue {
   variant: ConfirmVariant;
   labels: ConfirmLabels;
   pending: boolean;
+  failed: boolean;
   requireText?: string;
   typed: string;
   setTyped: (value: string) => void;
@@ -89,6 +92,7 @@ const ConfirmRoot = ({
     onChange: onOpenChange,
   });
   const [pending, setPending] = React.useState(false);
+  const [failed, setFailed] = React.useState(false);
   const [typed, setTyped] = React.useState('');
   const mounted = React.useRef(true);
 
@@ -102,7 +106,10 @@ const ConfirmRoot = ({
   const setOpen = React.useCallback(
     (next: boolean) => {
       setStoredOpen(next);
-      if (!next) setTyped('');
+      if (!next) {
+        setTyped('');
+        setFailed(false);
+      }
     },
     [setStoredOpen],
   );
@@ -121,6 +128,7 @@ const ConfirmRoot = ({
 
   const confirm = React.useCallback(() => {
     if (!canConfirm) return;
+    setFailed(false);
     const result = onConfirm?.();
     if (result && typeof (result as Promise<void>).then === 'function') {
       setPending(true);
@@ -131,7 +139,9 @@ const ConfirmRoot = ({
           setOpen(false);
         },
         () => {
-          if (mounted.current) setPending(false);
+          if (!mounted.current) return;
+          setPending(false);
+          setFailed(true);
         },
       );
       return;
@@ -155,6 +165,7 @@ const ConfirmRoot = ({
       variant,
       labels,
       pending,
+      failed,
       requireText,
       typed,
       setTyped,
@@ -171,6 +182,7 @@ const ConfirmRoot = ({
       variant,
       labels,
       pending,
+      failed,
       requireText,
       typed,
       canConfirm,
@@ -223,7 +235,7 @@ const ConfirmContent = ({
   children,
   ref,
 }: ConfirmContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { open, title, description, icon, variant, labels, requireText, typed, setTyped } =
+  const { open, title, description, icon, variant, labels, failed, requireText, typed, setTyped } =
     useConfirmContext();
   const inputId = React.useId();
 
@@ -254,6 +266,7 @@ const ConfirmContent = ({
       {requireText !== undefined ? (
         <Input
           id={inputId}
+          data-confirm-input=""
           label={labels.typeToConfirm(requireText)}
           value={typed}
           onChange={(event) => setTyped(event.target.value)}
@@ -271,20 +284,31 @@ const ConfirmContent = ({
           }}
         />
       ) : null}
+      <p role="alert" className="text-destructive-text text-sm empty:hidden">
+        {failed ? labels.error : null}
+      </p>
       {children ?? (
         <Dialog.Footer className="gap-2 sm:space-x-0">
           <ConfirmCancel />
           <ConfirmAction />
         </Dialog.Footer>
       )}
-      <ConfirmFocus open={open} variant={variant} />
+      <ConfirmFocus open={open} variant={variant} requireText={requireText !== undefined} />
     </Dialog.Content>
   );
 };
 
 ConfirmContent.displayName = 'ConfirmContent';
 
-const ConfirmFocus = ({ open, variant }: { open: boolean; variant: ConfirmVariant }) => {
+const ConfirmFocus = ({
+  open,
+  variant,
+  requireText,
+}: {
+  open: boolean;
+  variant: ConfirmVariant;
+  requireText: boolean;
+}) => {
   const ref = React.useRef<HTMLSpanElement>(null);
 
   React.useEffect(() => {
@@ -294,8 +318,11 @@ const ConfirmFocus = ({ open, variant }: { open: boolean; variant: ConfirmVarian
       inner = requestAnimationFrame(() => {
         const panel = ref.current?.closest<HTMLElement>('[role="alertdialog"]');
         if (!panel) return;
-        const selector =
-          variant === 'destructive' ? '[data-confirm-cancel]' : '[data-confirm-action]';
+        const selector = requireText
+          ? '[data-confirm-input]'
+          : variant === 'destructive'
+            ? '[data-confirm-cancel]'
+            : '[data-confirm-action]';
         panel.querySelector<HTMLElement>(selector)?.focus();
       });
     });
@@ -303,7 +330,7 @@ const ConfirmFocus = ({ open, variant }: { open: boolean; variant: ConfirmVarian
       cancelAnimationFrame(outer);
       cancelAnimationFrame(inner);
     };
-  }, [open, variant]);
+  }, [open, variant, requireText]);
 
   return <span ref={ref} hidden />;
 };
