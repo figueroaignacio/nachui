@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
@@ -223,5 +224,93 @@ describe('DropdownMenu reworked behavior', () => {
     render(<Menu />);
     await user.click(screen.getByRole('button', { name: 'Actions' }));
     await expectNoAxeViolations(document.body);
+  });
+});
+
+function Columns() {
+  const [visible, setVisible] = React.useState({ name: true, email: false });
+  const [density, setDensity] = React.useState('comfortable');
+  return (
+    <DropdownMenu>
+      <DropdownMenu.Trigger>View</DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        <DropdownMenu.CheckboxItem
+          checked={visible.name}
+          onCheckedChange={(checked) => setVisible((previous) => ({ ...previous, name: checked }))}
+        >
+          Name
+        </DropdownMenu.CheckboxItem>
+        <DropdownMenu.CheckboxItem
+          checked={visible.email}
+          onCheckedChange={(checked) => setVisible((previous) => ({ ...previous, email: checked }))}
+        >
+          Email
+        </DropdownMenu.CheckboxItem>
+        <DropdownMenu.Separator />
+        {['comfortable', 'compact'].map((option) => (
+          <DropdownMenu.RadioItem
+            key={option}
+            checked={density === option}
+            onCheckedChange={() => setDensity(option)}
+          >
+            {option}
+          </DropdownMenu.RadioItem>
+        ))}
+      </DropdownMenu.Content>
+    </DropdownMenu>
+  );
+}
+
+describe('DropdownMenu checkable items', () => {
+  it('toggles checkbox items and keeps the menu open', async () => {
+    const user = userEvent.setup();
+    render(<Columns />);
+
+    await user.click(screen.getByRole('button', { name: 'View' }));
+    const email = await screen.findByRole('menuitemcheckbox', { name: 'Email' });
+    expect(email).toHaveAttribute('aria-checked', 'false');
+
+    await user.click(email);
+
+    expect(screen.getByRole('menuitemcheckbox', { name: 'Email' })).toHaveAttribute(
+      'aria-checked',
+      'true',
+    );
+    expect(screen.getByRole('menu')).toBeInTheDocument();
+  });
+
+  it('selects a radio item with the keyboard and closes the menu', async () => {
+    const user = userEvent.setup();
+    render(<Columns />);
+
+    await user.click(screen.getByRole('button', { name: 'View' }));
+    const compact = await screen.findByRole('menuitemradio', { name: 'compact' });
+    compact.focus();
+    await user.keyboard('{Enter}');
+
+    await waitFor(() => expect(screen.queryByRole('menu')).not.toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: 'View' }));
+    expect(await screen.findByRole('menuitemradio', { name: 'compact' })).toHaveAttribute(
+      'aria-checked',
+      'true',
+    );
+  });
+
+  it('includes checkable items in arrow navigation', async () => {
+    const user = userEvent.setup();
+    render(<Columns />);
+
+    await user.click(screen.getByRole('button', { name: 'View' }));
+    (await screen.findByRole('menuitemcheckbox', { name: 'Name' })).focus();
+    await user.keyboard('{End}');
+
+    expect(screen.getByRole('menuitemradio', { name: 'compact' })).toHaveFocus();
+  });
+
+  it('has no axe violations with checkable items', async () => {
+    const user = userEvent.setup();
+    render(<Columns />);
+    await user.click(screen.getByRole('button', { name: 'View' }));
+    await expectNoAxeViolations(await screen.findByRole('menu'));
   });
 });

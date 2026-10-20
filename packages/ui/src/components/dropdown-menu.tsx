@@ -32,6 +32,42 @@ function ChevronDownIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) 
   );
 }
 
+function CheckIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
+
+function DotIcon({ size = 24, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="4" />
+    </svg>
+  );
+}
+
 type FocusEdge = 'first' | 'last';
 
 interface DropdownContextValue {
@@ -68,6 +104,8 @@ interface DropdownMenuContentProps {
   sideOffset?: number;
 }
 
+type DropdownMenuItemRole = 'menuitem' | 'menuitemcheckbox' | 'menuitemradio';
+
 interface DropdownMenuItemProps {
   children: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -76,6 +114,17 @@ interface DropdownMenuItemProps {
   onSelect?: () => void;
   variant?: 'default' | 'destructive';
   asChild?: boolean;
+  role?: DropdownMenuItemRole;
+  checked?: boolean;
+  closeOnSelect?: boolean;
+}
+
+interface DropdownMenuCheckableItemProps extends Omit<
+  DropdownMenuItemProps,
+  'role' | 'checked' | 'asChild'
+> {
+  checked?: boolean;
+  onCheckedChange?: (checked: boolean) => void;
 }
 
 const DROPDOWN_ICON_VARIANTS = {
@@ -128,7 +177,9 @@ function useClickOutside(
 function getMenuItems(container: HTMLElement | null): HTMLElement[] {
   if (!container) return [];
   return Array.from(
-    container.querySelectorAll<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])'),
+    container.querySelectorAll<HTMLElement>(
+      '[role="menuitem"]:not([aria-disabled="true"]), [role="menuitemcheckbox"]:not([aria-disabled="true"]), [role="menuitemradio"]:not([aria-disabled="true"])',
+    ),
   );
 }
 
@@ -456,8 +507,13 @@ const DropdownMenuItem = ({
   variant = 'default',
   onSelect,
   asChild = false,
+  role = 'menuitem',
+  checked,
+  closeOnSelect = role === 'menuitem',
 }: DropdownMenuItemProps): React.JSX.Element => {
   const { closeMenu } = useDropdownContext();
+  const checkable = role !== 'menuitem';
+  const ariaChecked = checkable ? Boolean(checked) : undefined;
 
   const handleClick = React.useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -465,9 +521,9 @@ const DropdownMenuItem = ({
       e.stopPropagation();
       onClick?.(e);
       onSelect?.();
-      closeMenu();
+      if (closeOnSelect) closeMenu();
     },
-    [disabled, onClick, onSelect, closeMenu],
+    [disabled, onClick, onSelect, closeMenu, closeOnSelect],
   );
 
   const handleKeyDown = React.useCallback(
@@ -486,9 +542,9 @@ const DropdownMenuItem = ({
       e.preventDefault();
       onClick?.(e as unknown as React.MouseEvent<HTMLDivElement>);
       onSelect?.();
-      closeMenu();
+      if (closeOnSelect) closeMenu();
     },
-    [disabled, onClick, onSelect, closeMenu],
+    [disabled, onClick, onSelect, closeMenu, closeOnSelect],
   );
 
   const handlePointerMove = React.useCallback(
@@ -536,9 +592,10 @@ const DropdownMenuItem = ({
         childOnPointerLeave?.(e);
         handlePointerLeave(e);
       },
-      role: 'menuitem',
+      role,
       tabIndex: -1,
       'aria-disabled': disabled || undefined,
+      'aria-checked': ariaChecked,
       className: cn(
         itemClassName(disabled, variant),
         className,
@@ -550,9 +607,10 @@ const DropdownMenuItem = ({
 
   return (
     <div
-      role="menuitem"
+      role={role}
       tabIndex={-1}
       aria-disabled={disabled || undefined}
+      aria-checked={ariaChecked}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       onPointerMove={handlePointerMove}
@@ -563,6 +621,58 @@ const DropdownMenuItem = ({
     </div>
   );
 };
+
+const DropdownMenuCheckboxItem = ({
+  checked = false,
+  onCheckedChange,
+  onSelect,
+  children,
+  className,
+  ...props
+}: DropdownMenuCheckableItemProps) => (
+  <DropdownMenuItem
+    {...props}
+    role="menuitemcheckbox"
+    checked={checked}
+    className={cn('pl-8', className)}
+    onSelect={() => {
+      onCheckedChange?.(!checked);
+      onSelect?.();
+    }}
+  >
+    <span className="absolute left-2 flex size-4 items-center justify-center">
+      {checked && <CheckIcon size={14} />}
+    </span>
+    {children}
+  </DropdownMenuItem>
+);
+
+const DropdownMenuRadioItem = ({
+  checked = false,
+  onCheckedChange,
+  onSelect,
+  children,
+  className,
+  closeOnSelect = true,
+  ...props
+}: DropdownMenuCheckableItemProps) => (
+  <DropdownMenuItem
+    {...props}
+    role="menuitemradio"
+    checked={checked}
+    closeOnSelect={closeOnSelect}
+    className={cn('pl-8', className)}
+    onSelect={() => {
+      if (!checked) onCheckedChange?.(true);
+      onSelect?.();
+    }}
+  >
+    <span className="absolute left-2 flex size-4 items-center justify-center">
+      {checked && <DotIcon size={14} />}
+    </span>
+    {children}
+  </DropdownMenuItem>
+);
 
 const DropdownLabel = ({
   children,
@@ -598,12 +708,15 @@ const DropdownMenu = Object.assign(DropdownMenuRoot, {
   Trigger: DropdownMenuTrigger,
   Content: DropdownMenuContent,
   Item: DropdownMenuItem,
+  CheckboxItem: DropdownMenuCheckboxItem,
+  RadioItem: DropdownMenuRadioItem,
   Label: DropdownLabel,
   Separator: DropdownSeparator,
 });
 
 export { DropdownMenu };
 export type {
+  DropdownMenuCheckableItemProps,
   DropdownMenuContentProps,
   DropdownMenuItemProps,
   DropdownMenuProps,

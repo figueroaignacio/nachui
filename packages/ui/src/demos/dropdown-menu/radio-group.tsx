@@ -24,12 +24,13 @@ export function RadioGroup() {
         <DropdownMenu.Label>Sort 240 orders by</DropdownMenu.Label>
         <DropdownMenu.Separator />
         {SORT_OPTIONS.map((option) => (
-          <DropdownMenu.Item key={option.value} onClick={() => setSort(option.value)}>
-            <span className="flex w-6 items-center justify-center">
-              {sort === option.value && <div className="bg-foreground size-2 rounded-full" />}
-            </span>
+          <DropdownMenu.RadioItem
+            key={option.value}
+            checked={sort === option.value}
+            onCheckedChange={() => setSort(option.value)}
+          >
             {option.label}
-          </DropdownMenu.Item>
+          </DropdownMenu.RadioItem>
         ))}
       </DropdownMenu.Content>
     </DropdownMenu>

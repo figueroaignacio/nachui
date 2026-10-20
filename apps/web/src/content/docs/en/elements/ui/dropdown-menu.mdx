@@ -85,12 +85,37 @@ DropdownMenu
 
 ### DropdownMenu.Item
 
-| Prop        | Type                         | Default     | Description            |
-| ----------- | ---------------------------- | ----------- | ---------------------- |
-| `disabled`  | `boolean`                    | `false`     | Disable the item       |
-| `variant`   | `'default' \| 'destructive'` | `'default'` | Visual style           |
-| `onSelect`  | `() => void`                 | -           | Callback when selected |
-| `className` | `string`                     | -           | Additional CSS classes |
+| Prop            | Type                         | Default     | Description                    |
+| --------------- | ---------------------------- | ----------- | ------------------------------ |
+| `disabled`      | `boolean`                    | `false`     | Disable the item               |
+| `variant`       | `'default' \| 'destructive'` | `'default'` | Visual style                   |
+| `onSelect`      | `() => void`                 | -           | Callback when selected         |
+| `closeOnSelect` | `boolean`                    | `true`      | Close the menu after selecting |
+| `className`     | `string`                     | -           | Additional CSS classes         |
+
+### DropdownMenu.CheckboxItem
+
+An item with `role="menuitemcheckbox"` that shows a check when it's on. It keeps the menu open after a toggle, so people can switch several options in one go.
+
+| Prop              | Type                         | Default | Description                   |
+| ----------------- | ---------------------------- | ------- | ----------------------------- |
+| `checked`         | `boolean`                    | `false` | Whether the option is on      |
+| `onCheckedChange` | `(checked: boolean) => void` | -       | Called with the new value     |
+| `closeOnSelect`   | `boolean`                    | `false` | Close the menu after toggling |
+| `disabled`        | `boolean`                    | `false` | Disable the item              |
+| `className`       | `string`                     | -       | Additional CSS classes        |
+
+### DropdownMenu.RadioItem
+
+An item with `role="menuitemradio"` for picking one option out of a set. Render one per option and mark the current one with `checked`. It closes the menu by default.
+
+| Prop              | Type                         | Default | Description                                  |
+| ----------------- | ---------------------------- | ------- | -------------------------------------------- |
+| `checked`         | `boolean`                    | `false` | Whether this is the selected option          |
+| `onCheckedChange` | `(checked: boolean) => void` | -       | Called with `true` when the option is picked |
+| `closeOnSelect`   | `boolean`                    | `true`  | Close the menu after picking                 |
+| `disabled`        | `boolean`                    | `false` | Disable the item                             |
+| `className`       | `string`                     | -       | Additional CSS classes                       |
 
 ### DropdownMenu.Label
 

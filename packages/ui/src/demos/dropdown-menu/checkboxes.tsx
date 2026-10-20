@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { Button } from '../../components/button';
 import { DropdownMenu } from '../../components/dropdown-menu';
-import { CheckIcon } from '../../icons/check';
 
 const COLUMNS = [
   { id: 'customer', label: 'Customer' },
@@ -38,12 +37,13 @@ export function Checkboxes() {
         <DropdownMenu.Label>Show in orders table</DropdownMenu.Label>
         <DropdownMenu.Separator />
         {COLUMNS.map(({ id, label }) => (
-          <DropdownMenu.Item key={id} onClick={() => toggle(id)}>
-            <span className="flex w-6 items-center justify-center">
-              {visible[id] && <CheckIcon size={16} />}
-            </span>
+          <DropdownMenu.CheckboxItem
+            key={id}
+            checked={Boolean(visible[id])}
+            onCheckedChange={() => toggle(id)}
+          >
             {label}
-          </DropdownMenu.Item>
+          </DropdownMenu.CheckboxItem>
         ))}
       </DropdownMenu.Content>
     </DropdownMenu>
