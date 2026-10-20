@@ -72,18 +72,22 @@ There is none built in, on purpose: a highlighter is the one dependency that wou
 
 ### CodeBlock.CopyButton
 
-| Prop          | Type                     | Default       | Description                            |
-| ------------- | ------------------------ | ------------- | -------------------------------------- |
-| `copyLabel`   | `string`                 | `'Copy code'` | Accessible name at rest                |
-| `copiedLabel` | `string`                 | `'Copied'`    | Accessible name for 1.5s after copying |
-| `onCopied`    | `(code: string) => void` | -             | Called after the clipboard write       |
-| `className`   | `string`                 | -             | Additional CSS classes                 |
+| Prop          | Type                     | Default         | Description                              |
+| ------------- | ------------------------ | --------------- | ---------------------------------------- |
+| `copyLabel`   | `string`                 | `'Copy code'`   | Accessible name at rest                  |
+| `copiedLabel` | `string`                 | `'Copied'`      | Accessible name for 1.5s after copying   |
+| `failedLabel` | `string`                 | `'Copy failed'` | Announced when the clipboard write fails |
+| `onCopied`    | `(code: string) => void` | -               | Called after the clipboard write         |
+| `className`   | `string`                 | -               | Additional CSS classes                   |
 
 ### CodeBlock.Content
 
-| Prop        | Type     | Default | Description            |
-| ----------- | -------- | ------- | ---------------------- |
-| `className` | `string` | -       | Additional CSS classes |
+The code is a focusable region, so keyboard users can scroll long lines sideways.
+
+| Prop        | Type     | Default             | Description                             |
+| ----------- | -------- | ------------------- | --------------------------------------- |
+| `label`     | `string` | `'{language} code'` | Accessible name of the scrolling region |
+| `className` | `string` | -                   | Additional CSS classes                  |
 
 ### CodeBlock.Expand
 

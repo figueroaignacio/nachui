@@ -104,10 +104,13 @@ interface CodeBlockProps extends React.HTMLAttributes<HTMLDivElement> {
 interface CodeBlockCopyButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   copyLabel?: string;
   copiedLabel?: string;
+  failedLabel?: string;
   onCopied?: (code: string) => void;
 }
 
-type CodeBlockContentProps = React.HTMLAttributes<HTMLPreElement>;
+interface CodeBlockContentProps extends React.HTMLAttributes<HTMLPreElement> {
+  label?: string;
+}
 
 interface CodeBlockExpandProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   expandLabel?: (hidden: number) => string;
@@ -174,14 +177,16 @@ const CodeBlockCopyButton = ({
   className,
   copyLabel = 'Copy code',
   copiedLabel = 'Copied',
+  failedLabel = 'Copy failed',
   onCopied,
   onClick,
   ref,
   ...props
 }: CodeBlockCopyButtonProps & { ref?: React.Ref<HTMLButtonElement> }) => {
   const { code } = useCodeBlockContext();
-  const [copied, setCopied] = React.useState(false);
+  const [state, setState] = React.useState<'idle' | 'copied' | 'failed'>('idle');
   const timeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const copied = state === 'copied';
 
   React.useEffect(() => {
     return () => {
@@ -189,44 +194,91 @@ const CodeBlockCopyButton = ({
     };
   }, []);
 
+  const settle = (next: 'copied' | 'failed') => {
+    setState(next);
+    if (timeout.current) clearTimeout(timeout.current);
+    timeout.current = setTimeout(() => setState('idle'), COPIED_TIMEOUT);
+  };
+
   const label = copied ? copiedLabel : copyLabel;
 
   return (
-    <button
-      ref={ref}
-      type="button"
-      aria-label={label}
-      title={label}
-      data-copied={copied ? '' : undefined}
-      onClick={(event) => {
-        onClick?.(event);
-        if (event.defaultPrevented) return;
-        if (!navigator.clipboard?.writeText) return;
-        navigator.clipboard.writeText(code).then(
-          () => {
-            onCopied?.(code);
-            setCopied(true);
-            if (timeout.current) clearTimeout(timeout.current);
-            timeout.current = setTimeout(() => setCopied(false), COPIED_TIMEOUT);
-          },
-          () => undefined,
-        );
-      }}
-      className={cn(
-        'bg-code/80 text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:ring-ring data-[copied]:text-success-text absolute top-2 right-2 inline-flex size-7 items-center justify-center rounded-md backdrop-blur-sm transition-opacity group-hover/code:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none data-[copied]:opacity-100 pointer-coarse:size-9 [@media(hover:hover)]:opacity-0',
-        className,
-      )}
-      {...props}
-    >
-      {copied ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
-    </button>
+    <>
+      <button
+        ref={ref}
+        type="button"
+        aria-label={label}
+        title={label}
+        data-copied={copied ? '' : undefined}
+        onClick={(event) => {
+          onClick?.(event);
+          if (event.defaultPrevented) return;
+          if (!navigator.clipboard?.writeText) {
+            settle('failed');
+            return;
+          }
+          navigator.clipboard.writeText(code).then(
+            () => {
+              onCopied?.(code);
+              settle('copied');
+            },
+            () => settle('failed'),
+          );
+        }}
+        className={cn(
+          'bg-code/80 text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:ring-ring data-[copied]:text-success-text absolute top-2 right-2 inline-flex size-7 items-center justify-center rounded-md backdrop-blur-sm transition-opacity group-hover/code:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none data-[copied]:opacity-100 pointer-coarse:size-9 [@media(hover:hover)_and_(pointer:fine)]:opacity-0',
+          className,
+        )}
+        {...props}
+      >
+        {copied ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
+      </button>
+      <span role="status" className="sr-only">
+        {copied ? copiedLabel : state === 'failed' ? failedLabel : ''}
+      </span>
+    </>
   );
 };
 
 CodeBlockCopyButton.displayName = 'CodeBlockCopyButton';
 
+interface CodeBlockLineProps {
+  line: string;
+  index: number;
+  gutter: number;
+  showLineNumbers: boolean;
+  renderLine?: (line: string, index: number) => React.ReactNode;
+}
+
+const CodeBlockLine = React.memo(function CodeBlockLine({
+  line,
+  index,
+  gutter,
+  showLineNumbers,
+  renderLine,
+}: CodeBlockLineProps) {
+  return (
+    <span data-line className="flex">
+      {showLineNumbers ? (
+        <span
+          aria-hidden="true"
+          data-line-number
+          className="text-muted-foreground mr-4 inline-block shrink-0 text-right select-none"
+          style={{ width: `${gutter}ch` }}
+        >
+          {index + 1}
+        </span>
+      ) : null}
+      <span className="whitespace-pre">{renderLine ? renderLine(line, index) : line}</span>
+      {'\n'}
+    </span>
+  );
+});
+
 const CodeBlockContent = ({
   className,
+  label,
+  tabIndex,
   ref,
   ...props
 }: CodeBlockContentProps & { ref?: React.Ref<HTMLPreElement> }) => {
@@ -239,26 +291,26 @@ const CodeBlockContent = ({
   return (
     <pre
       ref={ref}
+      role="region"
+      tabIndex={tabIndex ?? 0}
+      aria-label={label ?? (language ? `${language} code` : 'Code')}
       data-line-numbers={showLineNumbers ? '' : undefined}
-      className={cn('m-0 overflow-x-auto px-3 py-3 font-mono text-[13px] leading-6', className)}
+      className={cn(
+        'focus-visible:ring-ring m-0 overflow-x-auto px-3 py-3 font-mono text-[13px] leading-6 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
+        className,
+      )}
       {...props}
     >
       <code className={cn('block min-w-max', language && `language-${language}`)}>
         {visible.map((line, index) => (
-          <span key={index} data-line className="flex">
-            {showLineNumbers ? (
-              <span
-                aria-hidden="true"
-                data-line-number
-                className="text-muted-foreground mr-4 inline-block shrink-0 text-right select-none"
-                style={{ width: `${gutter}ch` }}
-              >
-                {index + 1}
-              </span>
-            ) : null}
-            <span className="whitespace-pre">{renderLine ? renderLine(line, index) : line}</span>
-            {'\n'}
-          </span>
+          <CodeBlockLine
+            key={index}
+            line={line}
+            index={index}
+            gutter={gutter}
+            showLineNumbers={showLineNumbers}
+            renderLine={renderLine}
+          />
         ))}
       </code>
     </pre>

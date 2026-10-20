@@ -72,18 +72,22 @@ No trae ninguno, a propósito: un highlighter es la única dependencia que dupli
 
 ### CodeBlock.CopyButton
 
-| Prop          | Type                     | Default       | Description                                      |
-| ------------- | ------------------------ | ------------- | ------------------------------------------------ |
-| `copyLabel`   | `string`                 | `'Copy code'` | Nombre accesible en reposo                       |
-| `copiedLabel` | `string`                 | `'Copied'`    | Nombre accesible durante 1,5 s después de copiar |
-| `onCopied`    | `(code: string) => void` | -             | Se llama después de escribir al portapapeles     |
-| `className`   | `string`                 | -             | Clases CSS adicionales                           |
+| Prop          | Type                     | Default         | Description                                          |
+| ------------- | ------------------------ | --------------- | ---------------------------------------------------- |
+| `copyLabel`   | `string`                 | `'Copy code'`   | Nombre accesible en reposo                           |
+| `copiedLabel` | `string`                 | `'Copied'`      | Nombre accesible durante 1,5 s después de copiar     |
+| `failedLabel` | `string`                 | `'Copy failed'` | Se anuncia cuando falla la escritura al portapapeles |
+| `onCopied`    | `(code: string) => void` | -               | Se llama después de escribir al portapapeles         |
+| `className`   | `string`                 | -               | Clases CSS adicionales                               |
 
 ### CodeBlock.Content
 
-| Prop        | Type     | Default | Description            |
-| ----------- | -------- | ------- | ---------------------- |
-| `className` | `string` | -       | Clases CSS adicionales |
+El código es una región enfocable, así quien usa teclado puede scrollear las líneas largas de costado.
+
+| Prop        | Type     | Default             | Description                              |
+| ----------- | -------- | ------------------- | ---------------------------------------- |
+| `label`     | `string` | `'{language} code'` | Nombre accesible de la región con scroll |
+| `className` | `string` | -                   | Clases CSS adicionales                   |
 
 ### CodeBlock.Expand
 

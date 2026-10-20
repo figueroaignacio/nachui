@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { CodeBlock } from './code-block';
 
 const SAMPLE = ['const a = 1;', 'const b = 2;', 'const c = a + b;'].join('\n');
@@ -40,6 +41,7 @@ describe('CodeBlock', () => {
     await userEvent.click(button);
     expect(writeText).toHaveBeenCalledWith(SAMPLE);
     expect(await screen.findByRole('button', { name: 'Copied' })).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('Copied');
     vi.advanceTimersByTime(1600);
     expect(await screen.findByRole('button', { name: 'Copy code' })).toBeInTheDocument();
   });
@@ -75,5 +77,38 @@ describe('CodeBlock', () => {
       </CodeBlock>,
     );
     expect(screen.getByText('const a = 1;').tagName).toBe('MARK');
+  });
+
+  it('announces a failed copy', async () => {
+    writeText.mockImplementationOnce(() => Promise.reject(new Error('denied')));
+    render(<Block />);
+    await userEvent.click(screen.getByRole('button', { name: 'Copy code' }));
+    expect(await screen.findByText('Copy failed')).toBeInTheDocument();
+  });
+
+  it('makes the scrolling code reachable from the keyboard', async () => {
+    const { container } = render(<Block />);
+    const region = screen.getByRole('region', { name: 'ts code' });
+    expect(region.tagName).toBe('PRE');
+    expect(region).toHaveAttribute('tabindex', '0');
+    await expectNoAxeViolations(container);
+  });
+
+  it('only re-renders the lines that changed while streaming', () => {
+    const renderLine = vi.fn((line: string) => line);
+    const { rerender } = render(
+      <CodeBlock code={'one\ntwo'} renderLine={renderLine}>
+        <CodeBlock.Content />
+      </CodeBlock>,
+    );
+    expect(renderLine).toHaveBeenCalledTimes(2);
+    renderLine.mockClear();
+    rerender(
+      <CodeBlock code={'one\ntwo\nthr'} renderLine={renderLine}>
+        <CodeBlock.Content />
+      </CodeBlock>,
+    );
+    expect(renderLine).toHaveBeenCalledTimes(1);
+    expect(renderLine).toHaveBeenCalledWith('thr', 2);
   });
 });
