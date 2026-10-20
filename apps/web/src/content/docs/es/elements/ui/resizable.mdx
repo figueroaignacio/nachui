@@ -30,7 +30,7 @@ import { Resizable } from '@/components/ui/resizable';
 </Resizable>
 ```
 
-Los tamaños son porcentajes del grupo. Los paneles sin `defaultSize` se reparten lo que queda. Arrastrar una manija mueve el límite entre los dos paneles vecinos y nunca deja que alguno pase su `minSize` o `maxSize`. La manija es un `separator` con `aria-valuenow`, recibe foco y se mueve con las flechas, `Home` y `End`. Con `Shift` los pasos son más grandes.
+Los tamaños son porcentajes del grupo. Los paneles sin `defaultSize` se reparten lo que queda. Arrastrar una manija mueve el límite entre los dos paneles vecinos y nunca deja que alguno pase su `minSize` o `maxSize`. La manija es un `separator` que se llama `Resize panels` por defecto, con `aria-valuenow` y `aria-controls` apuntando al panel anterior. Recibe foco y se mueve con las flechas, `Home` y `End`. Con `Shift` los pasos son más grandes.
 
 ## Composición
 
@@ -84,9 +84,10 @@ Un grupo vertical dentro de un panel de un grupo horizontal.
 
 ### Resizable.Handle
 
-| Prop         | Tipo      | Por defecto | Descripción                                                               |
-| ------------ | --------- | ----------- | ------------------------------------------------------------------------- |
-| `withHandle` | `boolean` | `false`     | Muestra una pequeña píldora en el medio que indica que se puede arrastrar |
-| `disabled`   | `boolean` | `false`     | Ignora puntero y teclado                                                  |
-| `step`       | `number`  | `2`         | Porcentaje que mueve cada pulsación de flecha                             |
-| `className`  | `string`  | -           | Clases CSS adicionales                                                    |
+| Prop         | Tipo      | Por defecto       | Descripción                                                               |
+| ------------ | --------- | ----------------- | ------------------------------------------------------------------------- |
+| `withHandle` | `boolean` | `false`           | Muestra una pequeña píldora en el medio que indica que se puede arrastrar |
+| `disabled`   | `boolean` | `false`           | Ignora puntero y teclado                                                  |
+| `step`       | `number`  | `2`               | Porcentaje que mueve cada pulsación de flecha                             |
+| `label`      | `string`  | `"Resize panels"` | Nombre accesible de la manija                                             |
+| `className`  | `string`  | -                 | Clases CSS adicionales                                                    |

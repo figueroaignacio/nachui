@@ -30,7 +30,7 @@ import { Resizable } from '@/components/ui/resizable';
 </Resizable>
 ```
 
-Sizes are percentages of the group. Panels without `defaultSize` share whatever is left. Dragging a handle moves the boundary between the two panels next to it and never lets either one go past its `minSize` or `maxSize`. The handle is a `separator` with `aria-valuenow`, focusable, and moves with the arrow keys, `Home` and `End`. Hold `Shift` for bigger steps.
+Sizes are percentages of the group. Panels without `defaultSize` share whatever is left. Dragging a handle moves the boundary between the two panels next to it and never lets either one go past its `minSize` or `maxSize`. The handle is a `separator` named `Resize panels` by default, with `aria-valuenow` and `aria-controls` pointing at the panel before it. It is focusable, and moves with the arrow keys, `Home` and `End`. Hold `Shift` for bigger steps.
 
 ## Composition
 
@@ -84,9 +84,10 @@ A vertical group inside a panel of a horizontal group.
 
 ### Resizable.Handle
 
-| Prop         | Type      | Default | Description                                                        |
-| ------------ | --------- | ------- | ------------------------------------------------------------------ |
-| `withHandle` | `boolean` | `false` | Show a small pill in the middle that hints the edge can be dragged |
-| `disabled`   | `boolean` | `false` | Ignore pointer and keyboard                                        |
-| `step`       | `number`  | `2`     | Percent moved per arrow key press                                  |
-| `className`  | `string`  | -       | Additional CSS classes                                             |
+| Prop         | Type      | Default           | Description                                                        |
+| ------------ | --------- | ----------------- | ------------------------------------------------------------------ |
+| `withHandle` | `boolean` | `false`           | Show a small pill in the middle that hints the edge can be dragged |
+| `disabled`   | `boolean` | `false`           | Ignore pointer and keyboard                                        |
+| `step`       | `number`  | `2`               | Percent moved per arrow key press                                  |
+| `label`      | `string`  | `"Resize panels"` | Accessible name of the handle                                      |
+| `className`  | `string`  | -                 | Additional CSS classes                                             |

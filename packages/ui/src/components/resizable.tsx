@@ -15,6 +15,7 @@ interface ResizableContextValue {
   direction: ResizableDirection;
   sizes: number[];
   constraints: PanelConstraints[];
+  panelIds: string[];
   containerRef: React.RefObject<HTMLDivElement | null>;
   resizeAt: (handleIndex: number, delta: number) => void;
   resizeTo: (handleIndex: number, target: number) => void;
@@ -52,6 +53,20 @@ function initialSizes(constraints: PanelConstraints[]): number[] {
   return total > 0 ? sizes.map((size) => (size / total) * 100) : sizes;
 }
 
+const ID_SEPARATOR = '\u001f';
+
+function parseConstraints(key: string): PanelConstraints[] {
+  if (!key) return [];
+  return key.split('|').map((entry) => {
+    const [defaultSize = '', minSize = '10', maxSize = '100'] = entry.split(':');
+    return {
+      defaultSize: defaultSize === '' ? undefined : Number(defaultSize),
+      minSize: Number(minSize),
+      maxSize: Number(maxSize),
+    };
+  });
+}
+
 interface ResizableProps extends React.HTMLAttributes<HTMLDivElement> {
   direction?: ResizableDirection;
   onLayout?: (sizes: number[]) => void;
@@ -73,6 +88,7 @@ const ResizableRoot = ({
 }: ResizableProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = React.useState(false);
+  const baseId = React.useId();
 
   const childArray = React.Children.toArray(children);
   const isPanel = (child: React.ReactNode): child is React.ReactElement<ResizablePanelProps> =>
@@ -80,12 +96,7 @@ const ResizableRoot = ({
   const panelPositions = childArray.flatMap((child, position) =>
     isPanel(child) ? [position] : [],
   );
-  const constraints: PanelConstraints[] = childArray.filter(isPanel).map((panel) => ({
-    defaultSize: panel.props.defaultSize,
-    minSize: panel.props.minSize ?? 10,
-    maxSize: panel.props.maxSize ?? 100,
-  }));
-
+  const panels = childArray.filter(isPanel);
   const items = childArray.map((child, position) => {
     if (!React.isValidElement(child)) return child;
 
@@ -109,8 +120,28 @@ const ResizableRoot = ({
     return child;
   });
 
-  const [sizes, setSizes] = React.useState<number[]>(() => initialSizes(constraints));
-  const layout = sizes.length === constraints.length ? sizes : initialSizes(constraints);
+  const constraintsKey = panels
+    .map((panel) =>
+      [panel.props.defaultSize ?? '', panel.props.minSize ?? 10, panel.props.maxSize ?? 100].join(
+        ':',
+      ),
+    )
+    .join('|');
+  const panelIdsKey = panels
+    .map((panel, index) => panel.props.id ?? `${baseId}-panel-${index}`)
+    .join(ID_SEPARATOR);
+  const constraints = React.useMemo(() => parseConstraints(constraintsKey), [constraintsKey]);
+  const panelIds = React.useMemo(
+    () => (panelIdsKey ? panelIdsKey.split(ID_SEPARATOR) : []),
+    [panelIdsKey],
+  );
+
+  const fallbackSizes = React.useMemo(
+    () => initialSizes(parseConstraints(constraintsKey)),
+    [constraintsKey],
+  );
+  const [sizes, setSizes] = React.useState<number[]>(fallbackSizes);
+  const layout = sizes.length === fallbackSizes.length ? sizes : fallbackSizes;
 
   const onLayoutRef = React.useRef(onLayout);
   const constraintsRef = React.useRef(constraints);
@@ -165,15 +196,19 @@ const ResizableRoot = ({
     onLayoutRef.current?.(sizes);
   }, [sizes]);
 
-  const context = {
-    direction,
-    sizes: layout,
-    constraints,
-    containerRef,
-    resizeAt,
-    resizeTo,
-    setDragging,
-  };
+  const context = React.useMemo(
+    () => ({
+      direction,
+      sizes: layout,
+      constraints,
+      panelIds,
+      containerRef,
+      resizeAt,
+      resizeTo,
+      setDragging,
+    }),
+    [direction, layout, constraints, panelIds, resizeAt, resizeTo],
+  );
 
   return (
     <ResizableContext value={context}>
@@ -205,16 +240,18 @@ const ResizablePanel = ({
   maxSize: _maxSize,
   className,
   style,
+  id,
   ref,
   ...props
 }: ResizablePanelProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { sizes, direction } = useResizableContext();
+  const { sizes, direction, panelIds } = useResizableContext();
   const index = React.use(PanelIndexContext);
   const size = sizes[index] ?? 0;
 
   return (
     <div
       ref={ref}
+      id={id ?? panelIds[index]}
       data-slot="resizable-panel"
       data-direction={direction}
       style={{ flex: `${size} 1 0px`, ...style }}
@@ -229,12 +266,14 @@ interface ResizableHandleProps extends React.HTMLAttributes<HTMLDivElement> {
   withHandle?: boolean;
   disabled?: boolean;
   step?: number;
+  label?: string;
 }
 
 const ResizableHandle = ({
   withHandle = false,
   disabled = false,
   step = 2,
+  label = 'Resize panels',
   className,
   onPointerDown,
   onPointerMove,
@@ -243,10 +282,16 @@ const ResizableHandle = ({
   ref,
   ...props
 }: ResizableHandleProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { direction, sizes, constraints, containerRef, resizeAt, resizeTo, setDragging } =
+  const { direction, sizes, constraints, panelIds, containerRef, resizeAt, resizeTo, setDragging } =
     useResizableContext();
   const index = React.use(HandleIndexContext);
-  const dragRef = React.useRef<{ start: number; before: number; after: number } | null>(null);
+  const dragRef = React.useRef<{
+    start: number;
+    before: number;
+    total: number;
+    pointer: number;
+  } | null>(null);
+  const frameRef = React.useRef(0);
   const [active, setActive] = React.useState(false);
   const isHorizontal = direction === 'horizontal';
 
@@ -259,16 +304,28 @@ const ResizableHandle = ({
     return isHorizontal ? container.clientWidth : container.clientHeight;
   };
 
+  React.useEffect(
+    () => () => {
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+    },
+    [],
+  );
+
+  const applyDrag = () => {
+    frameRef.current = 0;
+    const drag = dragRef.current;
+    if (!drag || drag.total === 0) return;
+    const deltaPercent = ((drag.pointer - drag.start) / drag.total) * 100;
+    resizeTo(index, drag.before + deltaPercent);
+  };
+
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     onPointerDown?.(event);
     if (disabled || event.defaultPrevented || event.button !== 0) return;
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
-    dragRef.current = {
-      start: isHorizontal ? event.clientX : event.clientY,
-      before,
-      after: sizes[index + 1] ?? 0,
-    };
+    const start = isHorizontal ? event.clientX : event.clientY;
+    dragRef.current = { start, before, total: containerSize(), pointer: start };
     setDragging(true);
     setActive(true);
   };
@@ -277,16 +334,17 @@ const ResizableHandle = ({
     onPointerMove?.(event);
     const drag = dragRef.current;
     if (!drag) return;
-    const total = containerSize();
-    if (total === 0) return;
-    const current = isHorizontal ? event.clientX : event.clientY;
-    const deltaPercent = ((current - drag.start) / total) * 100;
-    resizeTo(index, drag.before + deltaPercent);
+    drag.pointer = isHorizontal ? event.clientX : event.clientY;
+    if (!frameRef.current) frameRef.current = requestAnimationFrame(applyDrag);
   };
 
   const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
     onPointerUp?.(event);
     if (!dragRef.current) return;
+    if (frameRef.current) {
+      cancelAnimationFrame(frameRef.current);
+      applyDrag();
+    }
     dragRef.current = null;
     setDragging(false);
     setActive(false);
@@ -322,6 +380,8 @@ const ResizableHandle = ({
       ref={ref}
       role="separator"
       tabIndex={disabled ? -1 : 0}
+      aria-label={label}
+      aria-controls={panelIds[index]}
       aria-orientation={isHorizontal ? 'vertical' : 'horizontal'}
       aria-valuenow={Math.round(before)}
       aria-valuemin={rule ? Math.round(rule.minSize) : 0}
@@ -337,7 +397,7 @@ const ResizableHandle = ({
       onPointerCancel={handlePointerUp}
       onKeyDown={handleKeyDown}
       className={cn(
-        'group/handle bg-border focus-visible:ring-ring ring-offset-background relative flex shrink-0 touch-none items-center justify-center outline-none focus-visible:ring-1 focus-visible:ring-offset-1 data-[disabled]:pointer-events-none',
+        'group/handle bg-border focus-visible:ring-ring ring-offset-background relative flex shrink-0 touch-none items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-offset-1 data-[disabled]:pointer-events-none',
         isHorizontal
           ? 'w-px cursor-col-resize after:absolute after:inset-y-0 after:left-1/2 after:w-2 after:-translate-x-1/2 pointer-coarse:after:w-6'
           : 'h-px w-full cursor-row-resize after:absolute after:inset-x-0 after:top-1/2 after:h-2 after:-translate-y-1/2 pointer-coarse:after:h-6',
