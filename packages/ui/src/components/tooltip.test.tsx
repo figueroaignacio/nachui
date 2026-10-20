@@ -1,6 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
+import { Dialog } from './dialog';
 import { Tooltip, TooltipProvider } from './tooltip';
 
 vi.mock('motion/react');
@@ -19,7 +21,6 @@ describe('Tooltip', () => {
 
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
 
-    // Simulate hover
     await user.hover(trigger);
 
     await waitFor(() => {
@@ -27,7 +28,6 @@ describe('Tooltip', () => {
       expect(screen.getByText('Tooltip Content')).toBeInTheDocument();
     });
 
-    // Simulate unhover
     await user.unhover(trigger);
 
     await waitFor(() => {
@@ -121,5 +121,179 @@ describe('Tooltip', () => {
 
     expect(screen.getByText('Info')).toHaveFocus();
     expect(screen.getByRole('tooltip')).toBeInTheDocument();
+  });
+
+  it('portals the content out of clipping ancestors', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <div style={{ overflow: 'hidden' }}>
+        <Tooltip>
+          <Tooltip.Trigger asChild>
+            <button type="button">Save</button>
+          </Tooltip.Trigger>
+          <Tooltip.Content side="bottom">Saves the draft</Tooltip.Content>
+        </Tooltip>
+      </div>,
+    );
+
+    await user.tab();
+    const tooltip = screen.getByRole('tooltip');
+    expect(container.contains(tooltip)).toBe(false);
+    expect(tooltip).toHaveStyle({ position: 'fixed' });
+    expect(tooltip).toHaveAttribute('data-side', 'bottom');
+  });
+
+  it('renders an inline root that is valid inside a paragraph', () => {
+    const { container } = render(
+      <p>
+        Uses{' '}
+        <Tooltip>
+          <Tooltip.Trigger>MRR</Tooltip.Trigger>
+          <Tooltip.Content>Monthly recurring revenue</Tooltip.Content>
+        </Tooltip>
+      </p>,
+    );
+
+    expect(container.querySelector('p div')).toBeNull();
+    expect(screen.getByText('MRR').tagName).toBe('SPAN');
+  });
+
+  it('closes on Escape without closing the dialog around it', async () => {
+    const user = userEvent.setup();
+    render(
+      <Dialog defaultOpen>
+        <Dialog.Content>
+          <Dialog.Title>Settings</Dialog.Title>
+          <Tooltip>
+            <Tooltip.Trigger asChild>
+              <button type="button">Help</button>
+            </Tooltip.Trigger>
+            <Tooltip.Content>Opens the help center</Tooltip.Content>
+          </Tooltip>
+        </Dialog.Content>
+      </Dialog>,
+    );
+
+    act(() => screen.getByRole('button', { name: 'Help' }).focus());
+    expect(screen.getByRole('tooltip')).toBeInTheDocument();
+
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+    expect(screen.getByRole('dialog', { name: 'Settings' })).toBeInTheDocument();
+  });
+
+  it('stays open while the pointer moves onto the content', async () => {
+    const user = userEvent.setup();
+    render(
+      <Tooltip delayDuration={0}>
+        <Tooltip.Trigger asChild>
+          <button type="button">Save</button>
+        </Tooltip.Trigger>
+        <Tooltip.Content>Saves the draft</Tooltip.Content>
+      </Tooltip>,
+    );
+
+    await user.hover(screen.getByRole('button', { name: 'Save' }));
+    const tooltip = await screen.findByRole('tooltip');
+
+    await user.hover(tooltip);
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    expect(screen.getByRole('tooltip')).toBeInTheDocument();
+
+    await user.unhover(tooltip);
+    await waitFor(() => expect(screen.queryByRole('tooltip')).not.toBeInTheDocument());
+  });
+
+  it('opens on a touch long press and closes on the next outside tap', async () => {
+    vi.useFakeTimers();
+    render(
+      <div>
+        <Tooltip>
+          <Tooltip.Trigger asChild>
+            <button type="button">Save</button>
+          </Tooltip.Trigger>
+          <Tooltip.Content>Saves the draft</Tooltip.Content>
+        </Tooltip>
+        <button type="button">Elsewhere</button>
+      </div>,
+    );
+
+    const trigger = screen.getByRole('button', { name: 'Save' });
+    fireEvent.pointerDown(trigger, { pointerType: 'touch' });
+    fireEvent.pointerUp(trigger, { pointerType: 'touch' });
+    act(() => vi.advanceTimersByTime(600));
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+
+    fireEvent.pointerDown(trigger, { pointerType: 'touch' });
+    act(() => vi.advanceTimersByTime(500));
+    fireEvent.pointerUp(trigger, { pointerType: 'touch' });
+    expect(screen.getByRole('tooltip')).toBeInTheDocument();
+
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Elsewhere' }), {
+      pointerType: 'touch',
+    });
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+    vi.useRealTimers();
+  });
+
+  it('does not add a second tab stop around a focusable child', async () => {
+    const user = userEvent.setup();
+    render(
+      <Tooltip>
+        <Tooltip.Trigger>
+          <button type="button">Save</button>
+        </Tooltip.Trigger>
+        <Tooltip.Content>Saves the draft</Tooltip.Content>
+      </Tooltip>,
+    );
+
+    const button = screen.getByRole('button', { name: 'Save' });
+    expect(button.parentElement).not.toHaveAttribute('tabindex');
+
+    await user.tab();
+    expect(button).toHaveFocus();
+    expect(button).toHaveAttribute('aria-describedby', screen.getByRole('tooltip').id);
+
+    await user.tab();
+    expect(document.body).toHaveFocus();
+    expect(button).not.toHaveAttribute('aria-describedby');
+  });
+
+  it('describes the trigger only while open and keeps its own description', async () => {
+    const user = userEvent.setup();
+    render(
+      <Tooltip>
+        <Tooltip.Trigger asChild>
+          <button type="button" aria-describedby="hint">
+            Save
+          </button>
+        </Tooltip.Trigger>
+        <Tooltip.Content>Saves the draft</Tooltip.Content>
+      </Tooltip>,
+    );
+
+    const trigger = screen.getByRole('button', { name: 'Save' });
+    expect(trigger).toHaveAttribute('aria-describedby', 'hint');
+
+    await user.tab();
+    expect(trigger).toHaveAttribute('aria-describedby', `hint ${screen.getByRole('tooltip').id}`);
+
+    await user.tab();
+    expect(trigger).toHaveAttribute('aria-describedby', 'hint');
+  });
+
+  it('has no axe violations when open', async () => {
+    const user = userEvent.setup();
+    render(
+      <Tooltip>
+        <Tooltip.Trigger asChild>
+          <button type="button">Save</button>
+        </Tooltip.Trigger>
+        <Tooltip.Content>Saves the draft</Tooltip.Content>
+      </Tooltip>,
+    );
+
+    await user.tab();
+    await expectNoAxeViolations(document.body);
   });
 });

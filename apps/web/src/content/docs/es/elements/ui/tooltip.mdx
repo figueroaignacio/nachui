@@ -31,6 +31,12 @@ import { Tooltip } from '@/components/ui/tooltip';
 </Tooltip>
 ```
 
+El tooltip se abre después de `delayDuration` con hover y al instante con el foco del teclado. Podés mover el puntero encima sin que se cierre, y `Escape` lo cierra sin cerrar el dialog o sheet que lo contiene. Se renderiza en un portal, así que un padre con `overflow: hidden` nunca lo recorta, y se da vuelta o se corre para quedar en pantalla.
+
+En pantallas táctiles se abre con una pulsación larga y se cierra con el siguiente toque afuera. Como casi nadie hace pulsación larga, el tooltip tiene que sumar detalle y no ser la única etiqueta: los botones de ícono también necesitan un `aria-label`.
+
+Usá `asChild` para engancharlo a tu propio botón. Sin `asChild` el trigger envuelve a sus hijos en un `span`, que es enfocable cuando el contenido es texto y se corre cuando el hijo ya es enfocable, así nunca quedan dos paradas de tabulación.
+
 ## Composición
 
 Usa la siguiente composición para construir un `Tooltip`:

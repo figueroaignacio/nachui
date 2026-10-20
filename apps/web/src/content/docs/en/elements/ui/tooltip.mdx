@@ -31,6 +31,12 @@ import { Tooltip } from '@/components/ui/tooltip';
 </Tooltip>
 ```
 
+The tooltip opens after `delayDuration` on hover and right away on keyboard focus. You can move the pointer onto it without it closing, and `Escape` closes it without closing a dialog or sheet around it. It renders in a portal, so a parent with `overflow: hidden` never clips it, and it flips and shifts to stay on screen.
+
+On touch screens a long press opens it and the next tap outside closes it. Since most people will never long press, a tooltip should add detail, not be the only label: give icon buttons an `aria-label` too.
+
+Use `asChild` to attach the tooltip to your own button. Without it the trigger wraps its children in a `span`, which is focusable for plain text and steps aside when the child is already focusable, so you never get two tab stops.
+
 ## Composition
 
 Use the following composition to build a `Tooltip`:
