@@ -61,30 +61,44 @@ Pass `icon` for every node and `iconOpen` for branches that change while expande
 
 <ComponentPreview component="tree" demo="plus-minus" />
 
+## Keyboard
+
+| Key                     | Action                                                       |
+| ----------------------- | ------------------------------------------------------------ |
+| `ArrowDown` / `ArrowUp` | Move to the next or previous visible item                    |
+| `ArrowRight`            | Open a closed branch, or move into an open one               |
+| `ArrowLeft`             | Close an open branch, or move to the parent                  |
+| `Home` / `End`          | Move to the first or last visible item                       |
+| `Enter` / `Space`       | Select a leaf or toggle a branch                             |
+| `*`                     | Open every branch at the same level                          |
+| Letters                 | Move to the next item whose label starts with what you typed |
+
 ## API Reference
 
 ### Tree
 
-| Prop               | Type                        | Default     | Description                      |
-| ------------------ | --------------------------- | ----------- | -------------------------------- |
-| `defaultExpanded`  | `string[]`                  | `[]`        | Branch values expanded on mount  |
-| `defaultSelected`  | `string`                    | -           | Initially selected leaf          |
-| `selected`         | `string`                    | -           | Controlled selected leaf         |
-| `onSelectedChange` | `(value: string) => void`   | -           | Callback when a leaf is selected |
-| `indent`           | `number`                    | `16`        | Pixels of indentation per level  |
-| `toggleIcon`       | `'chevron' \| 'plus-minus'` | `'chevron'` | Expand and collapse icon style   |
-| `showLines`        | `boolean`                   | `false`     | Draw guide lines between levels  |
-| `label`            | `string`                    | `'Tree'`    | Accessible name for the tree     |
-| `className`        | `string`                    | -           | Additional CSS classes           |
+| Prop               | Type                           | Default     | Description                               |
+| ------------------ | ------------------------------ | ----------- | ----------------------------------------- |
+| `expanded`         | `string[]`                     | -           | Controlled list of expanded branch values |
+| `defaultExpanded`  | `string[]`                     | `[]`        | Branch values expanded on mount           |
+| `onExpandedChange` | `(expanded: string[]) => void` | -           | Callback when a branch opens or closes    |
+| `defaultSelected`  | `string`                       | -           | Initially selected leaf                   |
+| `selected`         | `string`                       | -           | Controlled selected leaf                  |
+| `onSelectedChange` | `(value: string) => void`      | -           | Callback when a leaf is selected          |
+| `indent`           | `number`                       | `16`        | Pixels of indentation per level           |
+| `toggleIcon`       | `'chevron' \| 'plus-minus'`    | `'chevron'` | Expand and collapse icon style            |
+| `showLines`        | `boolean`                      | `false`     | Draw guide lines between levels           |
+| `label`            | `string`                       | `'Tree'`    | Accessible name for the tree              |
+| `className`        | `string`                       | -           | Additional CSS classes                    |
 
 ### Tree.Item
 
-| Prop        | Type         | Default | Description                                    |
-| ----------- | ------------ | ------- | ---------------------------------------------- |
-| `value`     | `string`     | -       | Unique value, used for expansion and selection |
-| `label`     | `ReactNode`  | -       | Row content                                    |
-| `icon`      | `ReactNode`  | -       | Leading icon                                   |
-| `iconOpen`  | `ReactNode`  | -       | Icon while the branch is expanded              |
-| `disabled`  | `boolean`    | `false` | Disable the row                                |
-| `onSelect`  | `() => void` | -       | Callback when this leaf is selected            |
-| `className` | `string`     | -       | Additional CSS classes                         |
+| Prop        | Type         | Default | Description                                                                              |
+| ----------- | ------------ | ------- | ---------------------------------------------------------------------------------------- |
+| `value`     | `string`     | -       | Unique value, used for expansion and selection                                           |
+| `label`     | `ReactNode`  | -       | Row content                                                                              |
+| `icon`      | `ReactNode`  | -       | Leading icon                                                                             |
+| `iconOpen`  | `ReactNode`  | -       | Icon while the branch is expanded                                                        |
+| `disabled`  | `boolean`    | `false` | Disable the row. It stays focusable with the arrow keys but can't be selected or toggled |
+| `onSelect`  | `() => void` | -       | Callback when this leaf is selected                                                      |
+| `className` | `string`     | -       | Additional CSS classes                                                                   |

@@ -61,30 +61,44 @@ Pasa `icon` en cada nodo y `iconOpen` en las ramas que cambian al expandirse, co
 
 <ComponentPreview component="tree" demo="plus-minus" />
 
+## Teclado
+
+| Tecla                   | Acción                                                           |
+| ----------------------- | ---------------------------------------------------------------- |
+| `ArrowDown` / `ArrowUp` | Va al ítem visible siguiente o anterior                          |
+| `ArrowRight`            | Abre una rama cerrada o entra en una abierta                     |
+| `ArrowLeft`             | Cierra una rama abierta o vuelve al padre                        |
+| `Home` / `End`          | Va al primer o al último ítem visible                            |
+| `Enter` / `Space`       | Selecciona una hoja o abre y cierra una rama                     |
+| `*`                     | Abre todas las ramas del mismo nivel                             |
+| Letras                  | Va al siguiente ítem cuya etiqueta empieza con lo que escribiste |
+
 ## Referencia de API
 
 ### Tree
 
-| Prop               | Type                        | Default     | Description                             |
-| ------------------ | --------------------------- | ----------- | --------------------------------------- |
-| `defaultExpanded`  | `string[]`                  | `[]`        | Ramas expandidas al montar              |
-| `defaultSelected`  | `string`                    | -           | Hoja seleccionada inicialmente          |
-| `selected`         | `string`                    | -           | Hoja seleccionada en modo controlado    |
-| `onSelectedChange` | `(value: string) => void`   | -           | Callback al seleccionar una hoja        |
-| `indent`           | `number`                    | `16`        | Píxeles de sangría por nivel            |
-| `toggleIcon`       | `'chevron' \| 'plus-minus'` | `'chevron'` | Estilo del icono de expandir y colapsar |
-| `showLines`        | `boolean`                   | `false`     | Dibuja guías entre niveles              |
-| `label`            | `string`                    | `'Tree'`    | Nombre accesible del árbol              |
-| `className`        | `string`                    | -           | Clases CSS adicionales                  |
+| Prop               | Type                           | Default     | Description                                  |
+| ------------------ | ------------------------------ | ----------- | -------------------------------------------- |
+| `expanded`         | `string[]`                     | -           | Ramas expandidas en modo controlado          |
+| `defaultExpanded`  | `string[]`                     | `[]`        | Ramas expandidas al montar                   |
+| `onExpandedChange` | `(expanded: string[]) => void` | -           | Callback cuando una rama se abre o se cierra |
+| `defaultSelected`  | `string`                       | -           | Hoja seleccionada inicialmente               |
+| `selected`         | `string`                       | -           | Hoja seleccionada en modo controlado         |
+| `onSelectedChange` | `(value: string) => void`      | -           | Callback al seleccionar una hoja             |
+| `indent`           | `number`                       | `16`        | Píxeles de sangría por nivel                 |
+| `toggleIcon`       | `'chevron' \| 'plus-minus'`    | `'chevron'` | Estilo del icono de expandir y colapsar      |
+| `showLines`        | `boolean`                      | `false`     | Dibuja guías entre niveles                   |
+| `label`            | `string`                       | `'Tree'`    | Nombre accesible del árbol                   |
+| `className`        | `string`                       | -           | Clases CSS adicionales                       |
 
 ### Tree.Item
 
-| Prop        | Type         | Default | Description                                   |
-| ----------- | ------------ | ------- | --------------------------------------------- |
-| `value`     | `string`     | -       | Valor único, usado para expansión y selección |
-| `label`     | `ReactNode`  | -       | Contenido de la fila                          |
-| `icon`      | `ReactNode`  | -       | Icono inicial                                 |
-| `iconOpen`  | `ReactNode`  | -       | Icono mientras la rama está expandida         |
-| `disabled`  | `boolean`    | `false` | Deshabilita la fila                           |
-| `onSelect`  | `() => void` | -       | Callback al seleccionar esta hoja             |
-| `className` | `string`     | -       | Clases CSS adicionales                        |
+| Prop        | Type         | Default | Description                                                                             |
+| ----------- | ------------ | ------- | --------------------------------------------------------------------------------------- |
+| `value`     | `string`     | -       | Valor único, usado para expansión y selección                                           |
+| `label`     | `ReactNode`  | -       | Contenido de la fila                                                                    |
+| `icon`      | `ReactNode`  | -       | Icono inicial                                                                           |
+| `iconOpen`  | `ReactNode`  | -       | Icono mientras la rama está expandida                                                   |
+| `disabled`  | `boolean`    | `false` | Deshabilita la fila. Se puede enfocar con las flechas, pero no se selecciona ni se abre |
+| `onSelect`  | `() => void` | -       | Callback al seleccionar esta hoja                                                       |
+| `className` | `string`     | -       | Clases CSS adicionales                                                                  |
