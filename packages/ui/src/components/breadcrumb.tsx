@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { assignRef } from '../lib/overlay';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -45,6 +46,34 @@ function MoreHorizontalIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProp
       <circle cx="19" cy="12" r="1" />
     </svg>
   );
+}
+
+type SlotProps = Record<string, unknown> & {
+  className?: string;
+  style?: React.CSSProperties;
+};
+
+function mergeSlotProps(slotProps: SlotProps, childProps: SlotProps): SlotProps {
+  const merged: SlotProps = { ...slotProps, ...childProps };
+  for (const key of Object.keys(slotProps)) {
+    const slotValue = slotProps[key];
+    const childValue = childProps[key];
+    if (
+      /^on[A-Z]/.test(key) &&
+      typeof slotValue === 'function' &&
+      typeof childValue === 'function'
+    ) {
+      merged[key] = (...args: unknown[]) => {
+        childValue(...args);
+        slotValue(...args);
+      };
+    }
+  }
+  if (slotProps.style || childProps.style) {
+    merged.style = { ...slotProps.style, ...childProps.style };
+  }
+  merged.className = cn(slotProps.className, childProps.className);
+  return merged;
 }
 
 const BreadcrumbRoot = ({
@@ -95,7 +124,21 @@ const BreadcrumbLink = ({
     (typeof children.type === 'function' || typeof children.type === 'object');
 
   if (isLinkComponent) {
-    return <span className={cn('hover:text-foreground', className)}>{children}</span>;
+    const childProps = children.props as SlotProps & { ref?: React.Ref<HTMLAnchorElement> };
+    const childRef = childProps.ref;
+    return React.cloneElement(children as React.ReactElement<SlotProps>, {
+      ...mergeSlotProps(
+        { ...props, className: cn('hover:text-foreground', className) },
+        childProps,
+      ),
+      ref:
+        ref || childRef
+          ? (node: HTMLAnchorElement | null) => {
+              assignRef(ref, node);
+              assignRef(childRef, node);
+            }
+          : undefined,
+    });
   }
 
   return (
@@ -139,20 +182,20 @@ const BreadcrumbSeparator = ({
   );
 };
 
+type BreadcrumbEllipsisProps = React.HTMLAttributes<HTMLSpanElement> & {
+  label?: string;
+};
+
 const BreadcrumbEllipsis = ({
   className,
+  label = 'More',
   ref,
   ...props
-}: React.HTMLAttributes<HTMLSpanElement> & { ref?: React.Ref<HTMLSpanElement> }) => {
+}: BreadcrumbEllipsisProps & { ref?: React.Ref<HTMLSpanElement> }) => {
   return (
-    <span
-      ref={ref}
-      role="presentation"
-      aria-hidden="true"
-      className={cn('flex size-9 items-center justify-center', className)}
-      {...props}
-    >
+    <span ref={ref} className={cn('flex size-9 items-center justify-center', className)} {...props}>
       <MoreHorizontalIcon className="size-4" size={16} />
+      <span className="sr-only">{label}</span>
     </span>
   );
 };
@@ -167,3 +210,4 @@ const Breadcrumb = Object.assign(BreadcrumbRoot, {
 });
 
 export { Breadcrumb };
+export type { BreadcrumbEllipsisProps, BreadcrumbLinkProps };
