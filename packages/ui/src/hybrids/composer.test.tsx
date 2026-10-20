@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoAxeViolations } from '../../test-utils/axe';
@@ -72,8 +72,13 @@ describe('Composer', () => {
     const trigger = screen.getByRole('button', { name: 'Model: Gemini 2.5 Flash' });
     expect(trigger).toHaveTextContent('Gemini 2.5 Flash');
     await userEvent.click(trigger);
-    await userEvent.click(await screen.findByText('Gemini 2.5 Pro'));
+    expect(await screen.findByRole('menuitemradio', { name: /Gemini 2.5 Flash/ })).toHaveAttribute(
+      'aria-checked',
+      'true',
+    );
+    await userEvent.click(screen.getByRole('menuitemradio', { name: /Gemini 2.5 Pro/ }));
     expect(onModelChange).toHaveBeenCalledWith('pro');
+    await waitFor(() => expect(screen.queryByRole('menu')).not.toBeInTheDocument());
   });
 
   it('renders the context meter when given', () => {

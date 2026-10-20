@@ -415,7 +415,13 @@ const ComposerModelPicker = () => {
       </DropdownMenu.Trigger>
       <DropdownMenu.Content align="start" className="w-56">
         {models.map((entry) => (
-          <DropdownMenu.Item key={entry.id} onSelect={() => onModelChange(entry.id)}>
+          <DropdownMenu.Item
+            key={entry.id}
+            role="menuitemradio"
+            checked={entry.id === current?.id}
+            closeOnSelect
+            onSelect={() => onModelChange(entry.id)}
+          >
             <span className="flex min-w-0 flex-1 flex-col">
               <span className="truncate font-mono text-xs">{entry.label}</span>
               {entry.description ? (
