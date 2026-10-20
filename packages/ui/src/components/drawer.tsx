@@ -150,10 +150,12 @@ const drawerVariants = cva(
   {
     variants: {
       side: {
-        bottom: 'bottom-3 left-3 right-3 max-h-[calc(100dvh-1.5rem)]',
-        top: 'top-3 left-3 right-3 max-h-[calc(100dvh-1.5rem)]',
-        left: 'left-3 top-3 bottom-3 w-[85vw] sm:w-96',
-        right: 'right-3 top-3 bottom-3 w-[85vw] sm:w-96',
+        bottom:
+          'bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-[max(0.75rem,env(safe-area-inset-left))] right-[max(0.75rem,env(safe-area-inset-right))] max-h-[calc(100dvh-max(0.75rem,env(safe-area-inset-top))-max(0.75rem,env(safe-area-inset-bottom)))]',
+        top: 'top-[max(0.75rem,env(safe-area-inset-top))] left-[max(0.75rem,env(safe-area-inset-left))] right-[max(0.75rem,env(safe-area-inset-right))] max-h-[calc(100dvh-max(0.75rem,env(safe-area-inset-top))-max(0.75rem,env(safe-area-inset-bottom)))]',
+        left: 'left-[max(0.75rem,env(safe-area-inset-left))] top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] w-[85vw] sm:w-96',
+        right:
+          'right-[max(0.75rem,env(safe-area-inset-right))] top-[max(0.75rem,env(safe-area-inset-top))] bottom-[max(0.75rem,env(safe-area-inset-bottom))] w-[85vw] sm:w-96',
       },
     },
     defaultVariants: {

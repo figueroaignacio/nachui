@@ -24,10 +24,8 @@ describe('Drawer', () => {
 
     const trigger = screen.getByRole('button', { name: 'Open Drawer' });
 
-    // initially hidden
     expect(screen.queryByText('Drawer Title')).not.toBeInTheDocument();
 
-    // click trigger
     await userEvent.click(trigger);
 
     await waitFor(() => {
@@ -36,7 +34,6 @@ describe('Drawer', () => {
       expect(screen.getByText('Drawer Content Body')).toBeInTheDocument();
     });
 
-    // click close button (default one with X icon, or our custom one)
     const closeBtn = screen.getByRole('button', { name: 'Close Custom' });
     await userEvent.click(closeBtn);
 
@@ -105,5 +102,23 @@ describe('Drawer keyboard and focus', () => {
     await screen.findByRole('dialog');
     await waitFor(() => expect(screen.getByRole('textbox', { name: 'Email' })).toHaveFocus());
     expect(screen.queryByRole('button', { name: 'Close' })).not.toBeInTheDocument();
+  });
+});
+
+describe('Drawer safe areas', () => {
+  it.each([
+    ['bottom', 'bottom-[max(0.75rem,env(safe-area-inset-bottom))]'],
+    ['top', 'top-[max(0.75rem,env(safe-area-inset-top))]'],
+    ['left', 'top-[max(0.75rem,env(safe-area-inset-top))]'],
+    ['right', 'bottom-[max(0.75rem,env(safe-area-inset-bottom))]'],
+  ] as const)('keeps the %s drawer clear of the device insets', async (side, inset) => {
+    const user = userEvent.setup();
+    render(<Example side={side} />);
+    await user.click(screen.getByRole('button', { name: 'Share' }));
+
+    const dialog = await screen.findByRole('dialog', { name: 'Share link' });
+    expect(dialog).toHaveClass(inset);
+    expect(dialog).not.toHaveClass('top-3');
+    expect(dialog).not.toHaveClass('bottom-3');
   });
 });
