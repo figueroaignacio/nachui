@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { Timeline } from './timeline';
 
 function renderTimeline(props: React.ComponentProps<typeof Timeline> = {}) {
@@ -83,5 +84,45 @@ describe('Timeline', () => {
       'Timeline components must be used within Timeline',
     );
     console.error = error;
+  });
+});
+
+describe('Timeline accessibility', () => {
+  it('marks the active item as the current step', () => {
+    renderTimeline({ value: 2 });
+    expect(screen.getByTestId('item-2')).toHaveAttribute('aria-current', 'step');
+    expect(screen.getByTestId('item-1')).not.toHaveAttribute('aria-current');
+    expect(screen.getByTestId('item-3')).not.toHaveAttribute('aria-current');
+  });
+
+  it('announces completed steps with translatable text', () => {
+    renderTimeline({ value: 3, labels: { completed: 'Completado' } });
+    expect(screen.getByTestId('item-1')).toHaveTextContent('Completado');
+    expect(screen.getByTestId('item-2')).toHaveTextContent('Completado');
+    expect(screen.getByTestId('item-3')).not.toHaveTextContent('Completado');
+    expect(screen.getAllByText('Completado')[0]).toHaveClass('sr-only');
+  });
+
+  it('only alternates sides from the sm breakpoint up', () => {
+    renderTimeline({ alternate: true });
+    const timeline = screen.getByTestId('timeline');
+    expect(timeline.className).toContain('sm:[&>[data-slot=timeline-item]]:w-[calc(50%+0.5rem)]');
+    expect(timeline.className).not.toMatch(/(^|\s)\[&>\[data-slot=timeline-item\]\]:w-/);
+  });
+
+  it('makes the horizontal scroller reachable by keyboard', () => {
+    renderTimeline({ orientation: 'horizontal', labels: { list: 'Release plan' } });
+    const timeline = screen.getByRole('list', { name: 'Release plan' });
+    expect(timeline).toHaveAttribute('tabindex', '0');
+  });
+
+  it('leaves the vertical list out of the tab order', () => {
+    renderTimeline();
+    expect(screen.getByTestId('timeline')).not.toHaveAttribute('tabindex');
+  });
+
+  it('has no axe violations', async () => {
+    const { container } = renderTimeline({ orientation: 'horizontal', value: 2 });
+    await expectNoAxeViolations(container);
   });
 });

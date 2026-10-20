@@ -81,12 +81,13 @@ Desplaza el item con un margen y posiciona la fecha en el canal libre. Las pieza
 
 ### Timeline
 
-| Prop          | Type                         | Default      | Description                                                 |
-| ------------- | ---------------------------- | ------------ | ----------------------------------------------------------- |
-| `value`       | `number`                     | `1`          | Los pasos menores o iguales a este valor están completados  |
-| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Dirección del layout                                        |
-| `alternate`   | `boolean`                    | `false`      | Refleja un item de cada dos a través de la línea (vertical) |
-| `className`   | `string`                     | -            | Clases CSS adicionales                                      |
+| Prop          | Type                         | Default      | Description                                                                                                                                      |
+| ------------- | ---------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `value`       | `number`                     | `1`          | Los pasos menores o iguales a este valor están completados                                                                                       |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Dirección del layout                                                                                                                             |
+| `alternate`   | `boolean`                    | `false`      | Refleja un item de cada dos a través de la línea (vertical, desde el breakpoint `sm`)                                                            |
+| `labels`      | `Partial<TimelineLabels>`    | -            | Texto para lectores de pantalla: `completed` (`"Completed"`) se lee en los pasos terminados y `list` (`"Timeline"`) nombra el scroll horizontal. |
+| `className`   | `string`                     | -            | Clases CSS adicionales                                                                                                                           |
 
 ### Timeline.Item
 
@@ -95,7 +96,7 @@ Desplaza el item con un margen y posiciona la fecha en el canal libre. Las pieza
 | `step`      | `number` | -       | Posición del item, se compara contra `value` |
 | `className` | `string` | -       | Clases CSS adicionales                       |
 
-Expone `data-completed` y `data-active` para estilos.
+Expone `data-completed` y `data-active` para estilos. El item activo también recibe `aria-current="step"` y los items terminados llevan el texto de `completed` oculto visualmente.
 
 ### Timeline.Title
 

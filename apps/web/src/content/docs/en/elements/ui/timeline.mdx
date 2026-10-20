@@ -81,12 +81,13 @@ Push the item in with a margin and position the date in the gutter. The pieces a
 
 ### Timeline
 
-| Prop          | Type                         | Default      | Description                                        |
-| ------------- | ---------------------------- | ------------ | -------------------------------------------------- |
-| `value`       | `number`                     | `1`          | Steps at or below this value are completed         |
-| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Layout direction                                   |
-| `alternate`   | `boolean`                    | `false`      | Mirror every other item across the line (vertical) |
-| `className`   | `string`                     | -            | Additional CSS classes                             |
+| Prop          | Type                         | Default      | Description                                                                                                                        |
+| ------------- | ---------------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `value`       | `number`                     | `1`          | Steps at or below this value are completed                                                                                         |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Layout direction                                                                                                                   |
+| `alternate`   | `boolean`                    | `false`      | Mirror every other item across the line (vertical, from the `sm` breakpoint up)                                                    |
+| `labels`      | `Partial<TimelineLabels>`    | -            | Screen reader text: `completed` (`"Completed"`) is read on finished steps and `list` (`"Timeline"`) names the horizontal scroller. |
+| `className`   | `string`                     | -            | Additional CSS classes                                                                                                             |
 
 ### Timeline.Item
 
@@ -95,7 +96,7 @@ Push the item in with a margin and position the date in the gutter. The pieces a
 | `step`      | `number` | -       | Position of the item, compared against `value` |
 | `className` | `string` | -       | Additional CSS classes                         |
 
-Exposes `data-completed` and `data-active` for styling.
+Exposes `data-completed` and `data-active` for styling. The active item also gets `aria-current="step"`, and finished items carry the `completed` label as visually hidden text.
 
 ### Timeline.Title
 
