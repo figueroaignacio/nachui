@@ -1,10 +1,12 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { springs } from '../lib/motion';
+import { assignRef, getFocusable } from '../lib/overlay';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -138,16 +140,24 @@ const bannerVariants = cva(
 
 type BannerVariant = NonNullable<VariantProps<typeof bannerVariants>['variant']>;
 
-type BannerProps = VariantProps<typeof bannerVariants> & {
-  ref?: React.Ref<HTMLDivElement>;
-  icon?: React.ReactNode;
-  onClose?: () => void;
-  sticky?: boolean;
-  dismissible?: boolean;
-  dismissLabel?: string;
-  className?: string;
-  children?: React.ReactNode;
-};
+type BannerRole = 'region' | 'status' | 'alert';
+
+type BannerProps = Omit<HTMLMotionProps<'div'>, 'children' | 'role' | 'ref'> &
+  VariantProps<typeof bannerVariants> & {
+    ref?: React.Ref<HTMLDivElement>;
+    icon?: React.ReactNode;
+    open?: boolean;
+    defaultOpen?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    onClose?: () => void;
+    sticky?: boolean;
+    dismissible?: boolean;
+    dismissLabel?: string;
+    role?: BannerRole;
+    label?: string;
+    className?: string;
+    children?: React.ReactNode;
+  };
 
 type DivWithRefProps = React.HTMLAttributes<HTMLDivElement> & {
   ref?: React.Ref<HTMLDivElement>;
@@ -219,34 +229,78 @@ const BannerAction = ({ className, children, ref, ...props }: BannerActionProps)
 );
 BannerAction.displayName = 'BannerAction';
 
+function findFocusAfter(node: HTMLElement) {
+  const candidates = getFocusable(document.body).filter((element) => !node.contains(element));
+  const next = candidates.find(
+    (element) => node.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING,
+  );
+  return next ?? candidates.at(-1) ?? null;
+}
+
 const BannerRoot = ({
   className,
   variant = 'default',
   icon,
+  open: openProp,
+  defaultOpen = true,
+  onOpenChange,
   onClose,
   sticky = false,
   dismissible = true,
   dismissLabel = 'Dismiss banner',
+  role = 'region',
+  label = 'Announcement',
   children,
   ref,
+  ...props
 }: BannerProps) => {
-  const [visible, setVisible] = React.useState(true);
+  const [open, setOpen] = useControllableState({
+    value: openProp,
+    defaultValue: defaultOpen,
+    onChange: onOpenChange,
+  });
   const shouldReduceMotion = useReducedMotion();
   const resolvedVariant: BannerVariant = variant ?? 'default';
-  const role = resolvedVariant === 'danger' || resolvedVariant === 'warning' ? 'alert' : 'status';
   const VariantIcon = icon === undefined ? VARIANT_ICONS[resolvedVariant] : null;
+  const nodeRef = React.useRef<HTMLDivElement | null>(null);
+  const focusTargetRef = React.useRef<HTMLElement | null>(null);
+  const ariaLabel =
+    props['aria-label'] ?? (role === 'region' && !props['aria-labelledby'] ? label : undefined);
+
+  const setRefs = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      nodeRef.current = node;
+      assignRef(ref, node);
+    },
+    [ref],
+  );
 
   const handleClose = React.useCallback(() => {
-    setVisible(false);
+    const node = nodeRef.current;
+    focusTargetRef.current =
+      node && node.contains(document.activeElement) ? findFocusAfter(node) : null;
+    setOpen(false);
     onClose?.();
-  }, [onClose]);
+  }, [onClose, setOpen]);
+
+  React.useEffect(() => {
+    const target = focusTargetRef.current;
+    focusTargetRef.current = null;
+    if (open || !target?.isConnected) return;
+    const active = document.activeElement;
+    const focusIsLost =
+      !active || active === document.body || (nodeRef.current?.contains(active) ?? false);
+    if (focusIsLost) target.focus();
+  }, [open]);
 
   return (
     <AnimatePresence>
-      {visible && (
+      {open && (
         <motion.div
-          ref={ref}
+          {...props}
+          ref={setRefs}
           role={role}
+          aria-label={ariaLabel}
           initial={shouldReduceMotion ? REDUCED_MOTION_PROPS.initial : BANNER_INITIAL}
           animate={shouldReduceMotion ? REDUCED_MOTION_PROPS.animate : BANNER_ANIMATE}
           exit={
