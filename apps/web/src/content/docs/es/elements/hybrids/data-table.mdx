@@ -98,7 +98,11 @@ Hacé clic en una cabecera ordenable para ordenar ascendente, otra vez para desc
 
 ## Selección
 
-Con `selectable` aparece la columna de checkboxes. El de la cabecera selecciona la página actual, y queda indeterminado cuando solo hay parte seleccionada. La selección es un set de ids de `getRowId`, así que sobrevive al orden, al filtro y al paginado. Leela con `onSelectedChange` o controlala con `selected`.
+Con `selectable` aparece la columna de checkboxes. El de la cabecera selecciona la página actual, y queda indeterminado cuando solo hay parte seleccionada. La selección es un set de ids de `getRowId`, así que sobrevive al orden, al filtro y al paginado. Leela con `onSelectedChange` o controlala con `selected`. El footer cuenta solo las filas seleccionadas que pasan el filtro actual.
+
+Cada checkbox de fila toma su nombre de la primera celda, así un lector de pantalla escucha "Select row Ada Lovelace" en vez del mismo texto en cada línea. Pasá `labels.selectRow` como función, por ejemplo `` (row) => `Seleccionar ${row.name}` ``, cuando la primera celda no sirve como nombre.
+
+Los cambios de filtro y de página se anuncian en una región viva educada con la cantidad de resultados. Mientras `loading` es true, el cuerpo muestra filas skeleton y la tabla recibe `aria-busy`.
 
 ## Estado controlado
 
@@ -124,25 +128,26 @@ Quedate solo con la tabla cuando la barra y el pie serían ruido.
 
 ### DataTable
 
-| Prop                | Tipo                           | Por defecto    | Descripción                                       |
-| ------------------- | ------------------------------ | -------------- | ------------------------------------------------- |
-| `data`              | `T[]`                          | -              | Todas las filas, antes de filtrar y paginar       |
-| `columns`           | `DataTableColumn<T>[]`         | -              | Definición de columnas                            |
-| `getRowId`          | `(row: T) => string`           | -              | Id estable por fila, para keys y selección        |
-| `pageSize`          | `number`                       | `10`           | Filas por página                                  |
-| `selectable`        | `boolean`                      | `false`        | Agrega la columna de checkboxes                   |
-| `selected`          | `Set<string> \| string[]`      | -              | Selección controlada                              |
-| `onSelectedChange`  | `(selected: string[]) => void` | -              | Se llama cuando cambia la selección               |
-| `sort`              | `{ id, direction } \| null`    | -              | Orden controlado                                  |
-| `onSortChange`      | `(sort) => void`               | -              | Se llama cuando cambia el orden                   |
-| `filter`            | `string`                       | -              | Texto del filtro controlado                       |
-| `onFilterChange`    | `(filter: string) => void`     | -              | Se llama cuando cambia el filtro                  |
-| `filterPlaceholder` | `string`                       | `'Filter…'`    | Placeholder del input de filtro                   |
-| `emptyTitle`        | `string`                       | `'No results'` | Título del estado vacío                           |
-| `emptyDescription`  | `string`                       | -              | Descripción del estado vacío                      |
-| `labels`            | `Partial<DataTableLabels>`     | -              | Todos los textos visibles, con defaults en inglés |
-| `children`          | `ReactNode`                    | -              | Layout propio, reemplaza las partes por defecto   |
-| `className`         | `string`                       | -              | Clases CSS adicionales                            |
+| Prop                | Tipo                           | Por defecto    | Descripción                                                                                             |
+| ------------------- | ------------------------------ | -------------- | ------------------------------------------------------------------------------------------------------- |
+| `data`              | `T[]`                          | -              | Todas las filas, antes de filtrar y paginar                                                             |
+| `columns`           | `DataTableColumn<T>[]`         | -              | Definición de columnas                                                                                  |
+| `getRowId`          | `(row: T) => string`           | -              | Id estable por fila, para keys y selección                                                              |
+| `pageSize`          | `number`                       | `10`           | Filas por página                                                                                        |
+| `selectable`        | `boolean`                      | `false`        | Agrega la columna de checkboxes                                                                         |
+| `selected`          | `Set<string> \| string[]`      | -              | Selección controlada                                                                                    |
+| `onSelectedChange`  | `(selected: string[]) => void` | -              | Se llama cuando cambia la selección                                                                     |
+| `sort`              | `{ id, direction } \| null`    | -              | Orden controlado                                                                                        |
+| `onSortChange`      | `(sort) => void`               | -              | Se llama cuando cambia el orden                                                                         |
+| `filter`            | `string`                       | -              | Texto del filtro controlado                                                                             |
+| `onFilterChange`    | `(filter: string) => void`     | -              | Se llama cuando cambia el filtro                                                                        |
+| `filterPlaceholder` | `string`                       | `'Filter…'`    | Placeholder del input de filtro                                                                         |
+| `emptyTitle`        | `string`                       | `'No results'` | Título del estado vacío                                                                                 |
+| `emptyDescription`  | `string`                       | -              | Descripción del estado vacío                                                                            |
+| `loading`           | `boolean`                      | `false`        | Muestra filas skeleton y marca la tabla como ocupada                                                    |
+| `labels`            | `Partial<DataTableLabels<T>>`  | -              | Todos los textos visibles y anunciados, con defaults en inglés; `selectRow` puede ser `(row) => string` |
+| `children`          | `ReactNode`                    | -              | Layout propio, reemplaza las partes por defecto                                                         |
+| `className`         | `string`                       | -              | Clases CSS adicionales                                                                                  |
 
 ### DataTable.Toolbar
 

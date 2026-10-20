@@ -98,7 +98,11 @@ Click a sortable header to sort ascending, again for descending, a third time to
 
 ## Selection
 
-Set `selectable` for a checkbox column. The header box selects the current page, and turns indeterminate when only some of it is selected. Selection is a set of row ids from `getRowId`, so it survives sorting, filtering and paging. Read it from `onSelectedChange` or control it with `selected`.
+Set `selectable` for a checkbox column. The header box selects the current page, and turns indeterminate when only some of it is selected. Selection is a set of row ids from `getRowId`, so it survives sorting, filtering and paging. Read it from `onSelectedChange` or control it with `selected`. The footer counts only the selected rows that match the current filter.
+
+Each row checkbox is named after the row's first cell, so a screen reader hears "Select row Ada Lovelace" instead of the same label on every line. Pass `labels.selectRow` as a function, like `` (row) => `Select ${row.name}` ``, when the first cell is not a good name.
+
+Filter and page changes are announced in a polite live region with the result count. While `loading` is true the body shows skeleton rows and the table gets `aria-busy`.
 
 ## Controlled state
 
@@ -124,25 +128,26 @@ Keep only the table when the toolbar and footer would be noise.
 
 ### DataTable
 
-| Prop                | Type                           | Default        | Description                                    |
-| ------------------- | ------------------------------ | -------------- | ---------------------------------------------- |
-| `data`              | `T[]`                          | -              | Every row, before filtering and paging         |
-| `columns`           | `DataTableColumn<T>[]`         | -              | Column definitions                             |
-| `getRowId`          | `(row: T) => string`           | -              | Stable id per row, used for keys and selection |
-| `pageSize`          | `number`                       | `10`           | Rows per page                                  |
-| `selectable`        | `boolean`                      | `false`        | Adds the checkbox column                       |
-| `selected`          | `Set<string> \| string[]`      | -              | Controlled selection                           |
-| `onSelectedChange`  | `(selected: string[]) => void` | -              | Called when selection changes                  |
-| `sort`              | `{ id, direction } \| null`    | -              | Controlled sort                                |
-| `onSortChange`      | `(sort) => void`               | -              | Called when sort changes                       |
-| `filter`            | `string`                       | -              | Controlled filter text                         |
-| `onFilterChange`    | `(filter: string) => void`     | -              | Called when the filter changes                 |
-| `filterPlaceholder` | `string`                       | `'Filter…'`    | Placeholder of the filter input                |
-| `emptyTitle`        | `string`                       | `'No results'` | Title of the empty state                       |
-| `emptyDescription`  | `string`                       | -              | Description of the empty state                 |
-| `labels`            | `Partial<DataTableLabels>`     | -              | Every visible string, with English defaults    |
-| `children`          | `ReactNode`                    | -              | Custom layout, replaces the default parts      |
-| `className`         | `string`                       | -              | Additional CSS classes                         |
+| Prop                | Type                           | Default        | Description                                                                                     |
+| ------------------- | ------------------------------ | -------------- | ----------------------------------------------------------------------------------------------- |
+| `data`              | `T[]`                          | -              | Every row, before filtering and paging                                                          |
+| `columns`           | `DataTableColumn<T>[]`         | -              | Column definitions                                                                              |
+| `getRowId`          | `(row: T) => string`           | -              | Stable id per row, used for keys and selection                                                  |
+| `pageSize`          | `number`                       | `10`           | Rows per page                                                                                   |
+| `selectable`        | `boolean`                      | `false`        | Adds the checkbox column                                                                        |
+| `selected`          | `Set<string> \| string[]`      | -              | Controlled selection                                                                            |
+| `onSelectedChange`  | `(selected: string[]) => void` | -              | Called when selection changes                                                                   |
+| `sort`              | `{ id, direction } \| null`    | -              | Controlled sort                                                                                 |
+| `onSortChange`      | `(sort) => void`               | -              | Called when sort changes                                                                        |
+| `filter`            | `string`                       | -              | Controlled filter text                                                                          |
+| `onFilterChange`    | `(filter: string) => void`     | -              | Called when the filter changes                                                                  |
+| `filterPlaceholder` | `string`                       | `'Filter…'`    | Placeholder of the filter input                                                                 |
+| `emptyTitle`        | `string`                       | `'No results'` | Title of the empty state                                                                        |
+| `emptyDescription`  | `string`                       | -              | Description of the empty state                                                                  |
+| `loading`           | `boolean`                      | `false`        | Shows skeleton rows and marks the table busy                                                    |
+| `labels`            | `Partial<DataTableLabels<T>>`  | -              | Every visible and announced string, with English defaults; `selectRow` can be `(row) => string` |
+| `children`          | `ReactNode`                    | -              | Custom layout, replaces the default parts                                                       |
+| `className`         | `string`                       | -              | Additional CSS classes                                                                          |
 
 ### DataTable.Toolbar
 

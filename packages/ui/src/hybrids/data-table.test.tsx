@@ -1,6 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { applyDataTable, DataTable, type DataTableColumn } from './data-table';
 
 type Row = { id: string; name: string; amount: number; status: string };
@@ -84,12 +85,12 @@ describe('DataTable', () => {
         onSelectedChange={onSelectedChange}
       />,
     );
-    await userEvent.click(screen.getByRole('checkbox', { name: 'Select all rows' }));
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Select all rows on this page' }));
     expect(onSelectedChange).toHaveBeenLastCalledWith(['r1', 'r2', 'r3']);
     expect(screen.getByText('3 of 12 selected')).toBeInTheDocument();
-    await userEvent.click(screen.getAllByRole('checkbox', { name: 'Select row' })[0]!);
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Select row Row 01' }));
     expect(onSelectedChange).toHaveBeenLastCalledWith(['r2', 'r3']);
-    expect(screen.getByRole('checkbox', { name: 'Select all rows' })).toHaveProperty(
+    expect(screen.getByRole('checkbox', { name: 'Select all rows on this page' })).toHaveProperty(
       'indeterminate',
       true,
     );
@@ -128,5 +129,95 @@ describe('DataTable', () => {
     expect(result.pageCount).toBe(3);
     expect(result.rows).toHaveLength(3);
     expect(result.rows.map((row) => row.amount)).toEqual([70, 59, 48]);
+  });
+
+  it('names each row checkbox with a label function', () => {
+    render(
+      <DataTable
+        data={ROWS.slice(0, 2)}
+        columns={COLUMNS}
+        getRowId={(row) => row.id}
+        selectable
+        labels={{ selectRow: (row) => `Select ${row.name}` }}
+      />,
+    );
+    expect(screen.getByRole('checkbox', { name: 'Select Row 02' })).toBeInTheDocument();
+  });
+
+  it('keeps focus on Next when it reaches the last page', async () => {
+    render(<DataTable data={ROWS} columns={COLUMNS} getRowId={(row) => row.id} pageSize={5} />);
+    const next = screen.getByRole('button', { name: 'Next' });
+    await userEvent.click(next);
+    await userEvent.click(next);
+    expect(screen.getByText('Page 3 of 3')).toBeInTheDocument();
+    expect(next).toHaveAttribute('aria-disabled', 'true');
+    expect(next).not.toBeDisabled();
+    expect(next).toHaveFocus();
+    await userEvent.click(next);
+    expect(screen.getByText('Page 3 of 3')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Previous' })).not.toHaveAttribute('aria-disabled');
+  });
+
+  it('counts only selected rows that match the filter', async () => {
+    render(
+      <DataTable
+        data={ROWS}
+        columns={COLUMNS}
+        getRowId={(row) => row.id}
+        selectable
+        selected={['r1', 'r2']}
+      />,
+    );
+    expect(screen.getByText('2 of 12 selected')).toBeInTheDocument();
+    await userEvent.type(screen.getByPlaceholderText('Filter…'), 'Row 01');
+    expect(screen.getByText('1 of 1 selected')).toBeInTheDocument();
+  });
+
+  it('announces the result count in a polite live region', async () => {
+    render(<DataTable data={ROWS} columns={COLUMNS} getRowId={(row) => row.id} pageSize={5} />);
+    const status = screen.getByRole('status');
+    expect(status).toHaveTextContent('12 results, page 1 of 3');
+    await userEvent.type(screen.getByPlaceholderText('Filter…'), 'Row 11');
+    expect(screen.getByRole('status')).toBe(status);
+    expect(status).toHaveTextContent('1 result, page 1 of 1');
+  });
+
+  it('renders skeleton rows and marks the table busy while loading', () => {
+    render(
+      <DataTable data={ROWS} columns={COLUMNS} getRowId={(row) => row.id} pageSize={5} loading />,
+    );
+    expect(screen.getByRole('table')).toHaveAttribute('aria-busy', 'true');
+    expect(screen.queryByText('Row 01')).not.toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('Loading…');
+  });
+
+  it('never hides the last visible column', async () => {
+    const columns = COLUMNS.map((column) =>
+      column.id === 'name' ? column : { ...column, hidden: true },
+    );
+    render(<DataTable data={ROWS} columns={columns} getRowId={(row) => row.id} />);
+    await userEvent.click(screen.getByRole('button', { name: /Columns/ }));
+    const item = screen.getByRole('menuitem', { name: /Name/ });
+    expect(item).toHaveAttribute('aria-disabled', 'true');
+    await userEvent.click(item);
+    expect(screen.getByRole('columnheader', { name: /Name/ })).toBeInTheDocument();
+  });
+
+  it('aligns end columns with logical properties', () => {
+    render(<DataTable data={ROWS} columns={COLUMNS} getRowId={(row) => row.id} />);
+    expect(screen.getByRole('columnheader', { name: /Amount/ })).toHaveClass('text-end');
+  });
+
+  it('has no axe violations', async () => {
+    const { container } = render(
+      <DataTable
+        data={ROWS}
+        columns={COLUMNS}
+        getRowId={(row) => row.id}
+        pageSize={5}
+        selectable
+      />,
+    );
+    await expectNoAxeViolations(container);
   });
 });

@@ -6,6 +6,7 @@ import { DropdownMenu } from '../components/dropdown-menu';
 import { Empty } from '../components/empty';
 import { Input } from '../components/input';
 import { Pagination } from '../components/pagination';
+import { Skeleton } from '../components/skeleton';
 import { Table } from '../components/table';
 import { cn } from '../lib/cn';
 import { useControllableState } from '../lib/use-controllable-state';
@@ -138,7 +139,7 @@ interface DataTableColumn<T> {
   width?: string;
 }
 
-interface DataTableLabels {
+interface DataTableLabels<T = unknown> {
   filter: string;
   columns: string;
   selected: (count: number, total: number) => string;
@@ -146,8 +147,10 @@ interface DataTableLabels {
   previous: string;
   next: string;
   selectAll: string;
-  selectRow: string;
+  selectRow: string | ((row: T) => string);
   sortBy: (header: string) => string;
+  results: (total: number, page: number, pageCount: number) => string;
+  loading: string;
 }
 
 const DEFAULT_LABELS: DataTableLabels = {
@@ -157,9 +160,12 @@ const DEFAULT_LABELS: DataTableLabels = {
   page: (page, pageCount) => `Page ${page} of ${pageCount}`,
   previous: 'Previous',
   next: 'Next',
-  selectAll: 'Select all rows',
+  selectAll: 'Select all rows on this page',
   selectRow: 'Select row',
   sortBy: (header) => `Sort by ${header}`,
+  results: (total, page, pageCount) =>
+    `${total} ${total === 1 ? 'result' : 'results'}, page ${page} of ${pageCount}`,
+  loading: 'Loading…',
 };
 
 interface DataTableQuery<T> {
@@ -254,12 +260,15 @@ interface DataTableContextValue<T> {
   toggleSort: (id: string) => void;
   selectable: boolean;
   selected: Set<string>;
+  selectedCount: number;
+  loading: boolean;
+  id: string;
   toggleRow: (id: string) => void;
   toggleAll: () => void;
   getRowId: (row: T) => string;
   emptyTitle: string;
   emptyDescription?: string;
-  labels: DataTableLabels;
+  labels: DataTableLabels<T>;
 }
 
 const DataTableContext = React.createContext<DataTableContextValue<unknown> | null>(null);
@@ -287,7 +296,8 @@ interface DataTableProps<T> extends Omit<React.HTMLAttributes<HTMLDivElement>, '
   filterPlaceholder?: string;
   emptyTitle?: string;
   emptyDescription?: string;
-  labels?: Partial<DataTableLabels>;
+  loading?: boolean;
+  labels?: Partial<DataTableLabels<T>>;
   children?: React.ReactNode;
 }
 
@@ -311,13 +321,18 @@ function DataTableRoot<T>({
   filterPlaceholder,
   emptyTitle = 'No results',
   emptyDescription,
+  loading = false,
   labels: labelOverrides,
   className,
   children,
   ref,
   ...props
 }: DataTableProps<T> & { ref?: React.Ref<HTMLDivElement> }) {
-  const labels = React.useMemo(() => ({ ...DEFAULT_LABELS, ...labelOverrides }), [labelOverrides]);
+  const labels = React.useMemo<DataTableLabels<T>>(
+    () => ({ ...DEFAULT_LABELS, ...labelOverrides }),
+    [labelOverrides],
+  );
+  const id = React.useId();
 
   const [filter, setStoredFilter] = useControllableState({
     value: controlledFilter,
@@ -378,6 +393,17 @@ function DataTableRoot<T>({
     [data, columns, filter, sort, page, pageSize, rowText],
   );
 
+  const selectedCount = React.useMemo(() => {
+    if (selected.size === 0) return 0;
+    const needle = filter.trim().toLowerCase();
+    let count = 0;
+    data.forEach((row, index) => {
+      if (needle && !rowText(index).includes(needle)) return;
+      if (selected.has(getRowId(row))) count += 1;
+    });
+    return count;
+  }, [data, filter, rowText, selected, getRowId]);
+
   const setPage = React.useCallback(
     (next: number) => setPageState(Math.min(Math.max(1, next), result.pageCount)),
     [result.pageCount],
@@ -404,14 +430,22 @@ function DataTableRoot<T>({
     commitSelected(next);
   }, [result.rows, getRowId, selected, commitSelected]);
 
-  const toggleColumn = React.useCallback((id: string) => {
-    setHiddenIds((previous) => {
-      const next = new Set(previous);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }, []);
+  const toggleColumn = React.useCallback(
+    (columnId: string) => {
+      setHiddenIds((previous) => {
+        const next = new Set(previous);
+        if (next.has(columnId)) {
+          next.delete(columnId);
+          return next;
+        }
+        const visible = columns.filter((column) => !previous.has(column.id)).length;
+        if (visible <= 1) return previous;
+        next.add(columnId);
+        return next;
+      });
+    },
+    [columns],
+  );
 
   const value = React.useMemo<DataTableContextValue<T>>(
     () => ({
@@ -431,6 +465,9 @@ function DataTableRoot<T>({
       toggleSort,
       selectable,
       selected,
+      selectedCount,
+      loading,
+      id,
       toggleRow,
       toggleAll,
       getRowId,
@@ -453,6 +490,9 @@ function DataTableRoot<T>({
       toggleSort,
       selectable,
       selected,
+      selectedCount,
+      loading,
+      id,
       toggleRow,
       toggleAll,
       getRowId,
@@ -472,6 +512,11 @@ function DataTableRoot<T>({
             <DataTableFooter />
           </>
         )}
+        <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+          {loading
+            ? labels.loading
+            : labels.results(result.total, Math.min(page, result.pageCount), result.pageCount)}
+        </div>
       </div>
     </DataTableContext>
   );
@@ -487,8 +532,16 @@ const DataTableToolbar = ({
   ref,
   ...props
 }: DataTableToolbarProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { filter, setFilter, filterPlaceholder, columns, hiddenIds, toggleColumn, labels } =
-    useDataTable();
+  const {
+    filter,
+    setFilter,
+    filterPlaceholder,
+    columns,
+    visibleColumns,
+    hiddenIds,
+    toggleColumn,
+    labels,
+  } = useDataTable();
 
   return (
     <div
@@ -516,9 +569,11 @@ const DataTableToolbar = ({
         <DropdownMenu.Content align="end">
           {columns.map((column) => {
             const visible = !hiddenIds.has(column.id);
+            const lastVisible = visible && visibleColumns.length <= 1;
             return (
               <DropdownMenu.Item
                 key={column.id}
+                disabled={lastVisible}
                 onSelect={() => toggleColumn(column.id)}
                 className="gap-2 text-xs"
               >
@@ -560,6 +615,8 @@ const DataTableContent = ({
     emptyTitle,
     emptyDescription,
     labels,
+    loading,
+    id: tableId,
   } = useDataTable();
 
   const pageIds = rows.map(getRowId);
@@ -569,7 +626,7 @@ const DataTableContent = ({
   const columnCount = visibleColumns.length + (selectable ? 1 : 0);
 
   return (
-    <Table ref={ref} className={className} {...props}>
+    <Table ref={ref} aria-busy={loading || undefined} className={className} {...props}>
       <Table.Header>
         <Table.Row>
           {selectable ? (
@@ -596,7 +653,7 @@ const DataTableContent = ({
                 key={column.id}
                 aria-sort={ariaSort}
                 style={column.width ? { width: column.width } : undefined}
-                className={cn(column.align === 'end' && 'text-right')}
+                className={cn(column.align === 'end' && 'text-end')}
               >
                 {column.sortable ? (
                   <button
@@ -633,7 +690,22 @@ const DataTableContent = ({
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {rows.length === 0 ? (
+        {loading ? (
+          Array.from({ length: Math.max(1, Math.min(rows.length || 5, 10)) }, (_, index) => (
+            <Table.Row key={`loading-${index}`} aria-hidden="true">
+              {selectable ? (
+                <Table.Cell className="w-10">
+                  <Skeleton className="size-4 rounded-sm" />
+                </Table.Cell>
+              ) : null}
+              {visibleColumns.map((column) => (
+                <Table.Cell key={column.id}>
+                  <Skeleton className={cn('h-4 w-3/4', column.align === 'end' && 'ms-auto')} />
+                </Table.Cell>
+              ))}
+            </Table.Row>
+          ))
+        ) : rows.length === 0 ? (
           <Table.Row>
             <Table.Cell colSpan={columnCount} className="p-0">
               <Empty className="py-8">
@@ -647,24 +719,35 @@ const DataTableContent = ({
             </Table.Cell>
           </Table.Row>
         ) : (
-          rows.map((row) => {
+          rows.map((row, rowIndex) => {
             const id = getRowId(row);
             const isSelected = selected.has(id);
+            const checkboxId = `${tableId}-select-${rowIndex}`;
+            const firstCellId = `${tableId}-cell-${rowIndex}`;
+            const rowLabel =
+              typeof labels.selectRow === 'function' ? labels.selectRow(row) : labels.selectRow;
             return (
               <Table.Row key={id} data-state={isSelected ? 'selected' : undefined}>
                 {selectable ? (
                   <Table.Cell className="w-10">
                     <Checkbox
-                      aria-label={labels.selectRow}
+                      id={checkboxId}
+                      aria-label={rowLabel}
+                      aria-labelledby={
+                        typeof labels.selectRow === 'function' || visibleColumns.length === 0
+                          ? undefined
+                          : `${checkboxId} ${firstCellId}`
+                      }
                       checked={isSelected}
                       onCheckedChange={() => toggleRow(id)}
                     />
                   </Table.Cell>
                 ) : null}
-                {visibleColumns.map((column) => (
+                {visibleColumns.map((column, columnIndex) => (
                   <Table.Cell
                     key={column.id}
-                    className={cn(column.align === 'end' && 'text-right tabular-nums')}
+                    id={columnIndex === 0 ? firstCellId : undefined}
+                    className={cn(column.align === 'end' && 'text-end tabular-nums')}
                   >
                     {column.cell(row)}
                   </Table.Cell>
@@ -688,7 +771,10 @@ const DataTableFooter = ({
   ref,
   ...props
 }: DataTableFooterProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { selectable, selected, total, page, pageCount, setPage, labels } = useDataTable();
+  const { selectable, selectedCount, total, page, pageCount, setPage, labels } = useDataTable();
+  const atStart = page <= 1;
+  const atEnd = page >= pageCount;
+  const edgeClassName = 'aria-disabled:cursor-not-allowed aria-disabled:opacity-40';
 
   return (
     <div
@@ -700,7 +786,7 @@ const DataTableFooter = ({
       {...props}
     >
       <div className="flex items-center gap-3">
-        {selectable ? <span>{labels.selected(selected.size, total)}</span> : null}
+        {selectable ? <span>{labels.selected(selectedCount, total)}</span> : null}
         {children}
       </div>
       <div className="flex items-center gap-3">
@@ -708,15 +794,27 @@ const DataTableFooter = ({
         <Pagination className="mx-0 w-auto">
           <Pagination.Content>
             <Pagination.Item>
-              <Pagination.Previous iconOnly disabled={page <= 1} onClick={() => setPage(page - 1)}>
+              <Pagination.Previous
+                iconOnly
+                aria-disabled={atStart || undefined}
+                className={edgeClassName}
+                onClick={(event) => {
+                  event.preventDefault();
+                  if (!atStart) setPage(page - 1);
+                }}
+              >
                 {labels.previous}
               </Pagination.Previous>
             </Pagination.Item>
             <Pagination.Item>
               <Pagination.Next
                 iconOnly
-                disabled={page >= pageCount}
-                onClick={() => setPage(page + 1)}
+                aria-disabled={atEnd || undefined}
+                className={edgeClassName}
+                onClick={(event) => {
+                  event.preventDefault();
+                  if (!atEnd) setPage(page + 1);
+                }}
               >
                 {labels.next}
               </Pagination.Next>
