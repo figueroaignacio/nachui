@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { DropdownMenu } from './dropdown-menu';
 
 vi.mock('motion/react');
@@ -26,7 +27,6 @@ describe('DropdownMenu', () => {
 
     expect(screen.queryByText('My Account')).not.toBeInTheDocument();
 
-    // Open menu
     await userEvent.click(trigger);
 
     await waitFor(() => {
@@ -35,13 +35,11 @@ describe('DropdownMenu', () => {
       expect(screen.getByText('Profile')).toBeInTheDocument();
     });
 
-    // Click item
     const profileItem = screen.getByText('Profile');
     await userEvent.click(profileItem);
 
     await waitFor(() => {
       expect(handleAction).toHaveBeenCalledTimes(1);
-      // Menu should auto close after action
       expect(screen.queryByText('My Account')).not.toBeInTheDocument();
     });
   });
@@ -119,5 +117,111 @@ describe('DropdownMenu keyboard and focus', () => {
     await waitFor(() => expect(screen.queryByRole('menu')).not.toBeInTheDocument());
     expect(trigger).toHaveFocus();
     expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  });
+});
+
+describe('DropdownMenu reworked behavior', () => {
+  it('opens from the trigger with ArrowUp and focuses the last item', async () => {
+    const user = userEvent.setup();
+    render(<Menu />);
+    const trigger = screen.getByRole('button', { name: 'Actions' });
+
+    trigger.focus();
+    await user.keyboard('{ArrowUp}');
+
+    await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Delete' })).toHaveFocus());
+  });
+
+  it('lets Enter follow a link rendered with asChild', async () => {
+    const user = userEvent.setup();
+    const onLinkClick = vi.fn();
+
+    render(
+      <DropdownMenu>
+        <DropdownMenu.Trigger>Links</DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.Item asChild>
+            <a href="#docs" onClick={onLinkClick}>
+              Docs
+            </a>
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Links' }));
+    await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Docs' })).toHaveFocus());
+    await user.keyboard('{Enter}');
+
+    expect(onLinkClick).toHaveBeenCalledTimes(1);
+    expect(window.location.hash).toBe('#docs');
+    await waitFor(() => expect(screen.queryByRole('menu')).not.toBeInTheDocument());
+  });
+
+  it('focuses items by typing the start of their label', async () => {
+    const user = userEvent.setup();
+    render(<Menu />);
+    await user.click(screen.getByRole('button', { name: 'Actions' }));
+    await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Edit' })).toHaveFocus());
+
+    await user.keyboard('de');
+    expect(screen.getByRole('menuitem', { name: 'Delete' })).toHaveFocus();
+  });
+
+  it('cycles through items that share a first letter', async () => {
+    const user = userEvent.setup();
+    render(<Menu />);
+    await user.click(screen.getByRole('button', { name: 'Actions' }));
+    await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Edit' })).toHaveFocus());
+
+    await user.keyboard('d');
+    expect(screen.getByRole('menuitem', { name: 'Duplicate' })).toHaveFocus();
+    await user.keyboard('d');
+    expect(screen.getByRole('menuitem', { name: 'Delete' })).toHaveFocus();
+  });
+
+  it('portals the menu to the body and caps its height to the viewport', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<Menu />);
+    await user.click(screen.getByRole('button', { name: 'Actions' }));
+
+    const menu = screen.getByRole('menu');
+    expect(container).not.toContainElement(menu);
+    expect(menu).toHaveClass('max-h-(--available-height)', 'overflow-y-auto', 'z-500');
+    expect(menu.style.position).toBe('fixed');
+  });
+
+  it('marks Escape as handled so outer layers stay open', async () => {
+    const user = userEvent.setup();
+    const prevented: boolean[] = [];
+    const recordKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') prevented.push(event.defaultPrevented);
+    };
+    document.addEventListener('keydown', recordKey);
+    render(<Menu />);
+    await user.click(screen.getByRole('button', { name: 'Actions' }));
+    await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Edit' })).toHaveFocus());
+
+    await user.keyboard('{Escape}');
+    document.removeEventListener('keydown', recordKey);
+
+    expect(prevented).toEqual([true]);
+  });
+
+  it('focuses the item under the pointer', async () => {
+    const user = userEvent.setup();
+    render(<Menu />);
+    await user.click(screen.getByRole('button', { name: 'Actions' }));
+    await waitFor(() => expect(screen.getByRole('menuitem', { name: 'Edit' })).toHaveFocus());
+
+    await user.hover(screen.getByRole('menuitem', { name: 'Duplicate' }));
+    expect(screen.getByRole('menuitem', { name: 'Duplicate' })).toHaveFocus();
+  });
+
+  it('has no axe violations while open', async () => {
+    const user = userEvent.setup();
+    render(<Menu />);
+    await user.click(screen.getByRole('button', { name: 'Actions' }));
+    await expectNoAxeViolations(document.body);
   });
 });

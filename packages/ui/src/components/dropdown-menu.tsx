@@ -3,7 +3,9 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { FloatingPortal, useFloating } from '../lib/floating';
 import { floatingVariants, reveal, springs, tap } from '../lib/motion';
+import { useLayer } from '../lib/overlay';
 import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
@@ -30,12 +32,16 @@ function ChevronDownIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) 
   );
 }
 
+type FocusEdge = 'first' | 'last';
+
 interface DropdownContextValue {
   isOpen: boolean;
   toggleMenu: () => void;
   closeMenu: (options?: { restoreFocus?: boolean }) => void;
-  openMenu: () => void;
+  openMenu: (focus?: FocusEdge) => void;
+  initialFocusRef: React.RefObject<FocusEdge>;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
+  contentRef: React.RefObject<HTMLDivElement | null>;
   triggerId: string;
   contentId: string;
 }
@@ -80,12 +86,11 @@ const DROPDOWN_ICON_VARIANTS = {
 const DROPDOWN_ICON_STYLE = { willChange: 'transform' } as const;
 const DROPDOWN_CONTENT_STYLE = { willChange: 'opacity, transform, filter' } as const;
 
-const VIEWPORT_PADDING = 8;
+const TYPEAHEAD_RESET_MS = 500;
 
-const ALIGN_CLASSES = {
-  start: 'left-0',
-  center: 'left-1/2 -translate-x-1/2',
-  end: 'right-0',
+const ORIGIN_CLASSES = {
+  bottom: { start: 'origin-top-left', center: 'origin-top', end: 'origin-top-right' },
+  top: { start: 'origin-bottom-left', center: 'origin-bottom', end: 'origin-bottom-right' },
 } as const;
 
 const DropdownContext = React.createContext<DropdownContextValue | null>(null);
@@ -101,13 +106,15 @@ function useClickOutside(
   triggerRef: React.RefObject<HTMLElement | null>,
   handler: () => void,
   enabled: boolean,
+  isInsideUpperLayer: (target: EventTarget | null) => boolean,
 ) {
   React.useEffect(() => {
     if (!enabled) return;
     const handlePointerDownOutside = (event: PointerEvent) => {
       if (
         ref.current?.contains(event.target as Node) ||
-        triggerRef.current?.contains(event.target as Node)
+        triggerRef.current?.contains(event.target as Node) ||
+        isInsideUpperLayer(event.target)
       ) {
         return;
       }
@@ -115,7 +122,7 @@ function useClickOutside(
     };
     document.addEventListener('pointerdown', handlePointerDownOutside);
     return () => document.removeEventListener('pointerdown', handlePointerDownOutside);
-  }, [ref, triggerRef, handler, enabled]);
+  }, [ref, triggerRef, handler, enabled, isInsideUpperLayer]);
 }
 
 function getMenuItems(container: HTMLElement | null): HTMLElement[] {
@@ -123,6 +130,36 @@ function getMenuItems(container: HTMLElement | null): HTMLElement[] {
   return Array.from(
     container.querySelectorAll<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])'),
   );
+}
+
+function focusEdge(container: HTMLElement | null, edge: FocusEdge) {
+  const items = getMenuItems(container);
+  (edge === 'last' ? items[items.length - 1] : items[0])?.focus();
+}
+
+function useTypeahead() {
+  const bufferRef = React.useRef('');
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  React.useEffect(() => () => clearTimeout(timerRef.current), []);
+
+  const isTyping = React.useCallback(() => bufferRef.current !== '', []);
+
+  const search = React.useCallback((key: string, items: HTMLElement[], current: number) => {
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      bufferRef.current = '';
+    }, TYPEAHEAD_RESET_MS);
+    const buffer = bufferRef.current + key.toLowerCase();
+    bufferRef.current = buffer;
+    const repeated = Array.from(buffer).every((char) => char === buffer[0]);
+    const query = repeated ? buffer.charAt(0) : buffer;
+    const start = repeated ? current + 1 : Math.max(current, 0);
+    const ordered = [...items.slice(start), ...items.slice(0, start)];
+    return ordered.find((item) => item.textContent?.trim().toLowerCase().startsWith(query));
+  }, []);
+
+  return React.useMemo(() => ({ search, isTyping }), [search, isTyping]);
 }
 
 const DropdownMenuRoot = ({
@@ -138,8 +175,16 @@ const DropdownMenuRoot = ({
     onChange: onOpenChange,
   });
   const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  const initialFocusRef = React.useRef<FocusEdge>('first');
 
-  const openMenu = React.useCallback(() => setOpen(true), [setOpen]);
+  const openMenu = React.useCallback(
+    (focus: FocusEdge = 'first') => {
+      initialFocusRef.current = focus;
+      setOpen(true);
+    },
+    [setOpen],
+  );
 
   const closeMenu = React.useCallback(
     (options?: { restoreFocus?: boolean }) => {
@@ -151,7 +196,10 @@ const DropdownMenuRoot = ({
     [setOpen],
   );
 
-  const toggleMenu = React.useCallback(() => setOpen(!isOpen), [setOpen, isOpen]);
+  const toggleMenu = React.useCallback(() => {
+    initialFocusRef.current = 'first';
+    setOpen(!isOpen);
+  }, [setOpen, isOpen]);
 
   const id = React.useId();
   const triggerId = `dropdown-trigger-${id}`;
@@ -163,7 +211,9 @@ const DropdownMenuRoot = ({
       openMenu,
       closeMenu,
       toggleMenu,
+      initialFocusRef,
       triggerRef,
+      contentRef,
       triggerId,
       contentId,
     }),
@@ -183,7 +233,8 @@ const DropdownMenuTrigger = ({
   className,
   asChild = false,
 }: DropdownMenuTriggerProps): React.JSX.Element => {
-  const { isOpen, toggleMenu, openMenu, triggerRef, triggerId, contentId } = useDropdownContext();
+  const { isOpen, toggleMenu, openMenu, triggerRef, contentRef, triggerId, contentId } =
+    useDropdownContext();
   const shouldReduceMotion = useReducedMotion();
 
   const handleClick = React.useCallback(
@@ -198,10 +249,12 @@ const DropdownMenuTrigger = ({
     (e: React.KeyboardEvent<HTMLButtonElement>) => {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         e.preventDefault();
-        openMenu();
+        const edge = e.key === 'ArrowUp' ? 'last' : 'first';
+        if (isOpen) focusEdge(contentRef.current, edge);
+        else openMenu(edge);
       }
     },
-    [openMenu],
+    [isOpen, openMenu, contentRef],
   );
 
   const triggerA11yProps = {
@@ -268,89 +321,40 @@ const DropdownMenuContent = ({
   align = 'start',
   sideOffset = 6,
 }: DropdownMenuContentProps): React.JSX.Element | null => {
-  const { isOpen, closeMenu, contentId, triggerId, triggerRef } = useDropdownContext();
-  const contentRef = React.useRef<HTMLDivElement>(null);
-  const [position, setPosition] = React.useState<'bottom' | 'top'>('bottom');
-  const [resolvedAlign, setResolvedAlign] = React.useState(align);
+  const { isOpen, closeMenu, contentId, triggerId, triggerRef, contentRef, initialFocusRef } =
+    useDropdownContext();
+  const layer = useLayer(isOpen, false, contentRef);
+  const typeahead = useTypeahead();
+  const shouldReduceMotion = useReducedMotion();
+  const { style: floatingStyle, side } = useFloating({
+    open: isOpen,
+    anchorRef: triggerRef,
+    floatingRef: contentRef,
+    side: 'bottom',
+    align,
+    sideOffset,
+  });
+  const verticalSide = side === 'top' ? 'top' : 'bottom';
 
   const closeWithoutFocus = React.useCallback(
     () => closeMenu({ restoreFocus: false }),
     [closeMenu],
   );
 
-  useClickOutside(contentRef, triggerRef, closeWithoutFocus, isOpen);
-
-  React.useLayoutEffect(() => {
-    if (!isOpen || !triggerRef.current) return;
-
-    const measure = () => {
-      if (!triggerRef.current) return;
-      const triggerRect = triggerRef.current.getBoundingClientRect();
-      const contentHeight = contentRef.current?.offsetHeight || 200;
-      const contentWidth = contentRef.current?.offsetWidth || 0;
-      const windowHeight = window.innerHeight;
-      const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
-      const spaceBelow = windowHeight - triggerRect.bottom;
-      const spaceAbove = triggerRect.top;
-
-      setPosition(
-        spaceBelow < contentHeight + sideOffset + VIEWPORT_PADDING && spaceAbove > spaceBelow
-          ? 'top'
-          : 'bottom',
-      );
-
-      if (!contentWidth || !viewportWidth) {
-        setResolvedAlign(align);
-        return;
-      }
-      const maxRight = viewportWidth - VIEWPORT_PADDING;
-      const fitsStart = triggerRect.left + contentWidth <= maxRight;
-      const fitsEnd = triggerRect.right - contentWidth >= VIEWPORT_PADDING;
-      const centerLeft = triggerRect.left + triggerRect.width / 2 - contentWidth / 2;
-      const fitsCenter = centerLeft >= VIEWPORT_PADDING && centerLeft + contentWidth <= maxRight;
-
-      let next = align;
-      if (align === 'start' && !fitsStart && fitsEnd) next = 'end';
-      else if (align === 'end' && !fitsEnd && fitsStart) next = 'start';
-      else if (align === 'center' && !fitsCenter) {
-        if (fitsStart) next = 'start';
-        else if (fitsEnd) next = 'end';
-      }
-      setResolvedAlign(next);
-    };
-
-    measure();
-
-    let frame: number | null = null;
-    const scheduleMeasure = () => {
-      if (frame !== null) return;
-      frame = requestAnimationFrame(() => {
-        frame = null;
-        measure();
-      });
-    };
-
-    window.addEventListener('resize', scheduleMeasure);
-    window.addEventListener('scroll', scheduleMeasure, true);
-
-    return () => {
-      if (frame !== null) cancelAnimationFrame(frame);
-      window.removeEventListener('resize', scheduleMeasure);
-      window.removeEventListener('scroll', scheduleMeasure, true);
-    };
-  }, [isOpen, triggerRef, align, sideOffset]);
+  useClickOutside(contentRef, triggerRef, closeWithoutFocus, isOpen, layer.isInsideUpperLayer);
 
   React.useEffect(() => {
     if (!isOpen) return;
     const frame = requestAnimationFrame(() => {
-      getMenuItems(contentRef.current)[0]?.focus();
+      focusEdge(contentRef.current, initialFocusRef.current);
     });
     return () => cancelAnimationFrame(frame);
-  }, [isOpen]);
+  }, [isOpen, contentRef, initialFocusRef]);
 
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (e.key === 'Escape') {
+        if (!layer.isTopmost()) return;
         e.preventDefault();
         closeMenu();
         return;
@@ -375,6 +379,17 @@ const DropdownMenuContent = ({
         nextIndex = 0;
       } else if (e.key === 'End') {
         nextIndex = items.length - 1;
+      } else if (
+        e.key.length === 1 &&
+        !e.altKey &&
+        !e.ctrlKey &&
+        !e.metaKey &&
+        (e.key !== ' ' || typeahead.isTyping())
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        typeahead.search(e.key, items, currentIndex)?.focus();
+        return;
       }
 
       if (nextIndex !== null) {
@@ -382,54 +397,45 @@ const DropdownMenuContent = ({
         items[nextIndex]?.focus();
       }
     },
-    [closeMenu],
+    [closeMenu, contentRef, layer, typeahead],
   );
 
-  const shouldReduceMotion = useReducedMotion();
-
-  const transformOriginClass =
-    position === 'bottom'
-      ? resolvedAlign === 'start'
-        ? 'origin-top-left'
-        : resolvedAlign === 'end'
-          ? 'origin-top-right'
-          : 'origin-top'
-      : resolvedAlign === 'start'
-        ? 'origin-bottom-left'
-        : resolvedAlign === 'end'
-          ? 'origin-bottom-right'
-          : 'origin-bottom';
-
-  const verticalStyle =
-    position === 'bottom'
-      ? { top: `calc(100% + ${sideOffset}px)` }
-      : { bottom: `calc(100% + ${sideOffset}px)` };
+  const style = React.useMemo(
+    () => ({
+      ...floatingStyle,
+      ...(isOpen ? null : { visibility: undefined }),
+      ...DROPDOWN_CONTENT_STYLE,
+    }),
+    [floatingStyle, isOpen],
+  );
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          ref={contentRef}
-          id={contentId}
-          role="menu"
-          aria-labelledby={triggerId}
-          onKeyDown={handleKeyDown}
-          variants={shouldReduceMotion ? reveal : floatingVariants[position]}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          style={{ ...verticalStyle, ...DROPDOWN_CONTENT_STYLE }}
-          className={cn(
-            'bg-popover text-popover-foreground border-border absolute z-50 min-w-48 overflow-hidden rounded-md border shadow-md',
-            ALIGN_CLASSES[resolvedAlign],
-            transformOriginClass,
-            className,
-          )}
-        >
-          <div className="flex flex-col gap-0.5 p-1">{children}</div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <FloatingPortal>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            ref={contentRef}
+            id={contentId}
+            role="menu"
+            tabIndex={-1}
+            aria-labelledby={triggerId}
+            onKeyDownCapture={handleKeyDown}
+            variants={shouldReduceMotion ? reveal : floatingVariants[verticalSide]}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            style={style}
+            className={cn(
+              'bg-popover text-popover-foreground border-border z-500 max-h-(--available-height) min-w-48 overflow-y-auto overscroll-contain rounded-md border shadow-md outline-none',
+              ORIGIN_CLASSES[verticalSide][align],
+              className,
+            )}
+          >
+            <div className="flex flex-col gap-0.5 p-1">{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </FloatingPortal>
   );
 };
 
@@ -437,7 +443,7 @@ const itemClassName = (disabled: boolean, variant: 'default' | 'destructive') =>
   cn(
     'relative flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none select-none',
     'transition-colors duration-150',
-    'hover:bg-muted focus-visible:bg-muted focus:bg-muted',
+    'focus-visible:bg-muted focus:bg-muted pointer-coarse:py-2.5',
     disabled && 'pointer-events-none opacity-40',
     variant === 'destructive' && 'text-destructive focus:text-destructive',
   );
@@ -467,16 +473,36 @@ const DropdownMenuItem = ({
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (disabled) return;
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        e.stopPropagation();
-        onClick?.(e as unknown as React.MouseEvent<HTMLDivElement>);
-        onSelect?.();
-        closeMenu();
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.stopPropagation();
+      const target = e.currentTarget as HTMLElement;
+      if (target instanceof HTMLAnchorElement && target.hasAttribute('href')) {
+        if (e.key === ' ') {
+          e.preventDefault();
+          target.click();
+        }
+        return;
       }
+      e.preventDefault();
+      onClick?.(e as unknown as React.MouseEvent<HTMLDivElement>);
+      onSelect?.();
+      closeMenu();
     },
     [disabled, onClick, onSelect, closeMenu],
   );
+
+  const handlePointerMove = React.useCallback(
+    (e: React.PointerEvent<HTMLElement>) => {
+      if (disabled || e.pointerType === 'touch') return;
+      if (document.activeElement !== e.currentTarget) e.currentTarget.focus();
+    },
+    [disabled],
+  );
+
+  const handlePointerLeave = React.useCallback((e: React.PointerEvent<HTMLElement>) => {
+    if (document.activeElement !== e.currentTarget) return;
+    e.currentTarget.closest<HTMLElement>('[role="menu"]')?.focus();
+  }, []);
 
   if (asChild && React.isValidElement(children)) {
     const childProps = children.props as Record<string, unknown>;
@@ -485,6 +511,12 @@ const DropdownMenuItem = ({
       | undefined;
     const childOnKeyDown = childProps.onKeyDown as
       | ((e: React.KeyboardEvent<HTMLDivElement>) => void)
+      | undefined;
+    const childOnPointerMove = childProps.onPointerMove as
+      | ((e: React.PointerEvent<HTMLElement>) => void)
+      | undefined;
+    const childOnPointerLeave = childProps.onPointerLeave as
+      | ((e: React.PointerEvent<HTMLElement>) => void)
       | undefined;
 
     return React.cloneElement(children, {
@@ -495,6 +527,14 @@ const DropdownMenuItem = ({
       onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => {
         childOnKeyDown?.(e);
         handleKeyDown(e);
+      },
+      onPointerMove: (e: React.PointerEvent<HTMLElement>) => {
+        childOnPointerMove?.(e);
+        handlePointerMove(e);
+      },
+      onPointerLeave: (e: React.PointerEvent<HTMLElement>) => {
+        childOnPointerLeave?.(e);
+        handlePointerLeave(e);
       },
       role: 'menuitem',
       tabIndex: -1,
@@ -515,6 +555,8 @@ const DropdownMenuItem = ({
       aria-disabled={disabled || undefined}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
       className={cn(itemClassName(disabled, variant), className)}
     >
       {children}
