@@ -70,11 +70,12 @@ Tabs
 
 ### Tabs.List
 
-| Prop        | Tipo                                               | Por defecto | Descripción            |
-| ----------- | -------------------------------------------------- | ----------- | ---------------------- |
-| `variant`   | `'default' \| 'outline' \| 'underline' \| 'ghost'` | Hereda      | Sobrescribir variante  |
-| `size`      | `'default' \| 'sm' \| 'lg'`                        | Hereda      | Sobrescribir tamaño    |
-| `className` | `string`                                           | -           | Clases CSS adicionales |
+| Prop          | Tipo                                               | Por defecto    | Descripción                                                              |
+| ------------- | -------------------------------------------------- | -------------- | ------------------------------------------------------------------------ |
+| `variant`     | `'default' \| 'outline' \| 'underline' \| 'ghost'` | Hereda         | Sobrescribir variante                                                    |
+| `size`        | `'default' \| 'sm' \| 'lg'`                        | Hereda         | Sobrescribir tamaño                                                      |
+| `orientation` | `'horizontal' \| 'vertical'`                       | `'horizontal'` | Qué flechas mueven entre pestañas: izquierda y derecha, o arriba y abajo |
+| `className`   | `string`                                           | -              | Clases CSS adicionales                                                   |
 
 ### Tabs.Trigger
 
@@ -87,7 +88,8 @@ Tabs
 
 ### Tabs.Content
 
-| Prop        | Tipo     | Por defecto | Descripción                          |
-| ----------- | -------- | ----------- | ------------------------------------ |
-| `value`     | `string` | -           | Identificador de pestaña coincidente |
-| `className` | `string` | -           | Clases CSS adicionales               |
+| Prop         | Tipo      | Por defecto | Descripción                                                                                    |
+| ------------ | --------- | ----------- | ---------------------------------------------------------------------------------------------- |
+| `value`      | `string`  | -           | Identificador de pestaña coincidente                                                           |
+| `forceMount` | `boolean` | `false`     | Mantiene el panel en el DOM mientras está oculto, así conserva su estado al cambiar de pestaña |
+| `className`  | `string`  | -           | Clases CSS adicionales                                                                         |

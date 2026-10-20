@@ -70,11 +70,12 @@ Tabs
 
 ### Tabs.List
 
-| Prop        | Type                                               | Default  | Description            |
-| ----------- | -------------------------------------------------- | -------- | ---------------------- |
-| `variant`   | `'default' \| 'outline' \| 'underline' \| 'ghost'` | Inherits | Override variant       |
-| `size`      | `'default' \| 'sm' \| 'lg'`                        | Inherits | Override size          |
-| `className` | `string`                                           | -        | Additional CSS classes |
+| Prop          | Type                                               | Default        | Description                                                        |
+| ------------- | -------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
+| `variant`     | `'default' \| 'outline' \| 'underline' \| 'ghost'` | Inherits       | Override variant                                                   |
+| `size`        | `'default' \| 'sm' \| 'lg'`                        | Inherits       | Override size                                                      |
+| `orientation` | `'horizontal' \| 'vertical'`                       | `'horizontal'` | Which arrow keys move between tabs: left and right, or up and down |
+| `className`   | `string`                                           | -              | Additional CSS classes                                             |
 
 ### Tabs.Trigger
 
@@ -87,7 +88,8 @@ Tabs
 
 ### Tabs.Content
 
-| Prop        | Type     | Default | Description             |
-| ----------- | -------- | ------- | ----------------------- |
-| `value`     | `string` | -       | Matching tab identifier |
-| `className` | `string` | -       | Additional CSS classes  |
+| Prop         | Type      | Default | Description                                                                |
+| ------------ | --------- | ------- | -------------------------------------------------------------------------- |
+| `value`      | `string`  | -       | Matching tab identifier                                                    |
+| `forceMount` | `boolean` | `false` | Keep the panel in the DOM while hidden, so its state survives tab switches |
+| `className`  | `string`  | -       | Additional CSS classes                                                     |
