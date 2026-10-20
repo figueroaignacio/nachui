@@ -1,6 +1,5 @@
 'use client';
 
-import { useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { Shimmer } from './shimmer';
@@ -22,9 +21,13 @@ interface ResponseSkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   lines?: string[];
 }
 
+const PROSE_CHILDREN =
+  '[&>p]:mb-3 [&>p:last-child]:mb-0 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0';
+
 const PROSE =
   'text-foreground text-sm leading-relaxed ' +
-  '[&>p]:mb-3 [&>p:last-child]:mb-0 ' +
+  PROSE_CHILDREN +
+  ' ' +
   '[&_h1]:mt-5 [&_h1]:mb-2 [&_h1]:text-base [&_h1]:font-semibold [&_h1]:tracking-tight ' +
   '[&_h2]:mt-5 [&_h2]:mb-2 [&_h2]:text-[15px] [&_h2]:font-semibold [&_h2]:tracking-tight ' +
   '[&_h3]:mt-4 [&_h3]:mb-1.5 [&_h3]:text-sm [&_h3]:font-medium ' +
@@ -33,8 +36,7 @@ const PROSE =
   '[&_a]:underline [&_a]:underline-offset-4 ' +
   '[&_strong]:font-semibold ' +
   '[&_blockquote]:border-border [&_blockquote]:text-muted-foreground [&_blockquote]:mb-3 [&_blockquote]:border-l-2 [&_blockquote]:pl-3 ' +
-  '[&_:not(pre)>code]:bg-secondary [&_:not(pre)>code]:rounded-sm [&_:not(pre)>code]:px-1 [&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-[0.85em] ' +
-  '[&>*:first-child]:mt-0 [&>*:last-child]:mb-0';
+  '[&_:not(pre)>code]:bg-secondary [&_:not(pre)>code]:rounded-sm [&_:not(pre)>code]:px-1 [&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-[0.85em]';
 
 const ResponseRoot = ({
   className,
@@ -68,7 +70,7 @@ const ResponseContent = ({
   ref,
   ...props
 }: ResponseContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  return <div ref={ref} className={cn('contents', className)} {...props} />;
+  return <div ref={ref} className={cn('contents', PROSE_CHILDREN, className)} {...props} />;
 };
 
 ResponseContent.displayName = 'ResponseContent';
@@ -78,16 +80,13 @@ const ResponseCaret = ({
   ref,
   ...props
 }: ResponseCaretProps & { ref?: React.Ref<HTMLSpanElement> }) => {
-  const shouldReduceMotion = useReducedMotion();
-
   return (
     <span
       ref={ref}
       aria-hidden="true"
       data-response-caret
       className={cn(
-        'bg-foreground ml-0.5 inline-block h-[1em] w-[2px] translate-y-[0.15em] rounded-full align-baseline',
-        !shouldReduceMotion && 'animate-pulse',
+        'bg-foreground ml-0.5 inline-block h-[1em] w-[2px] translate-y-[0.15em] rounded-full align-baseline motion-safe:animate-pulse',
         className,
       )}
       {...props}

@@ -39,4 +39,27 @@ describe('Response', () => {
     const { container } = render(<Response.Caret />);
     expect(container.querySelector('[data-response-caret]')).toBeInTheDocument();
   });
+
+  it('pulses the caret through CSS so server and client markup match', () => {
+    const { container } = render(<Response.Caret />);
+    expect(container.querySelector('[data-response-caret]')).toHaveClass(
+      'motion-safe:animate-pulse',
+    );
+  });
+
+  it('keeps paragraph spacing working through Response.Content', () => {
+    render(
+      <Response>
+        <Response.Content data-testid="content">
+          <p>One</p>
+          <p>Two</p>
+        </Response.Content>
+      </Response>,
+    );
+    expect(screen.getByTestId('content')).toHaveClass(
+      'contents',
+      '[&>p]:mb-3',
+      '[&>*:last-child]:mb-0',
+    );
+  });
 });
