@@ -4,6 +4,7 @@ import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { floatingOrigin, floatingVariants, reveal } from '../lib/motion';
+import { assignRef, useLayer } from '../lib/overlay';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -69,6 +70,13 @@ interface NavigationMenuItemContextType {
   triggerRef: React.RefObject<HTMLButtonElement | null>;
 }
 
+interface NavigationMenuRootContextType {
+  openItem: string | null;
+  setOpenItem: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+const NavigationMenuRootContext = React.createContext<NavigationMenuRootContextType | null>(null);
+
 const NavigationMenuItemContext = React.createContext<NavigationMenuItemContextType | undefined>(
   undefined,
 );
@@ -85,36 +93,63 @@ const NavigationMenuRoot = ({
   className,
   ref,
   ...props
-}: React.HTMLAttributes<HTMLElement> & { ref?: React.Ref<HTMLElement> }) => (
-  <nav ref={ref} className={cn('flex items-center gap-6', className)} {...props} />
-);
+}: React.HTMLAttributes<HTMLElement> & { ref?: React.Ref<HTMLElement> }) => {
+  const [openItem, setOpenItem] = React.useState<string | null>(null);
+  const contextValue = React.useMemo(() => ({ openItem, setOpenItem }), [openItem]);
+
+  return (
+    <NavigationMenuRootContext value={contextValue}>
+      <nav ref={ref} className={cn('flex items-center gap-6', className)} {...props} />
+    </NavigationMenuRootContext>
+  );
+};
 NavigationMenuRoot.displayName = 'NavigationMenu';
 
 const NavigationMenuItem = ({
   className,
   children,
+  onBlur,
   ref,
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & { ref?: React.Ref<HTMLDivElement> }) => {
-  const [open, setOpen] = React.useState(false);
+  const root = React.use(NavigationMenuRootContext);
+  const [localOpen, setLocalOpen] = React.useState(false);
   const id = React.useId();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const open = root ? root.openItem === id : localOpen;
+  const layer = useLayer(open, false, containerRef);
+  const setRootItem = root?.setOpenItem;
+
+  const setOpen = React.useCallback(
+    (next: boolean) => {
+      if (!setRootItem) {
+        setLocalOpen(next);
+        return;
+      }
+      setRootItem((current) => (next ? id : current === id ? null : current));
+    },
+    [setRootItem, id],
+  );
 
   React.useEffect(() => {
     if (!open) return;
 
     const handlePointerDownOutside = (e: PointerEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
+      const container = containerRef.current;
+      if (!container || container.contains(e.target as Node)) return;
+      if (layer.isInsideUpperLayer(e.target)) return;
+      setOpen(false);
     };
 
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setOpen(false);
-        triggerRef.current?.focus();
-      }
+      if (e.key !== 'Escape' || e.defaultPrevented || !layer.isTopmost()) return;
+      const active = document.activeElement;
+      const focusInside = !!active && !!containerRef.current?.contains(active);
+      if (!focusInside && active && active !== document.body) return;
+      e.preventDefault();
+      setOpen(false);
+      if (focusInside) triggerRef.current?.focus();
     };
 
     document.addEventListener('pointerdown', handlePointerDownOutside);
@@ -123,22 +158,35 @@ const NavigationMenuItem = ({
       document.removeEventListener('pointerdown', handlePointerDownOutside);
       document.removeEventListener('keydown', handleEscape);
     };
-  }, [open]);
+  }, [open, setOpen, layer]);
 
-  const contextValue = React.useMemo(() => ({ open, setOpen, id, triggerRef }), [open, id]);
+  const handleBlur = React.useCallback(
+    (e: React.FocusEvent<HTMLDivElement>) => {
+      onBlur?.(e);
+      const next = e.relatedTarget;
+      if (!open || !(next instanceof Node)) return;
+      if (e.currentTarget.contains(next) || layer.isInsideUpperLayer(next)) return;
+      setOpen(false);
+    },
+    [onBlur, open, setOpen, layer],
+  );
+
+  const contextValue = React.useMemo(
+    () => ({ open, setOpen, id, triggerRef }),
+    [open, setOpen, id],
+  );
 
   const mergedRef = React.useCallback(
     (node: HTMLDivElement | null) => {
       containerRef.current = node;
-      if (typeof ref === 'function') ref(node);
-      else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      assignRef(ref, node);
     },
     [ref],
   );
 
   return (
     <NavigationMenuItemContext value={contextValue}>
-      <div ref={mergedRef} className={cn('relative', className)} {...props}>
+      <div ref={mergedRef} onBlur={handleBlur} className={cn('relative', className)} {...props}>
         {children}
       </div>
     </NavigationMenuItemContext>

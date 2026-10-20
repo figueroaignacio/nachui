@@ -51,16 +51,17 @@ NavigationMenu
 
 La raíz renderiza un `<nav>` y distribuye sus hijos en fila, así que los
 anchors comunes y los links del router conviven con los items desplegables.
-Cada `Item` maneja su propio estado: se abre con clic, nunca con hover, así los
-paneles solo aparecen cuando el lector los pide, y se cierra con `Escape`, con
-un clic afuera, o al navegar por un link. El panel lleva una pequeña flecha que
+Solo un `Item` queda abierto a la vez: abrir otro cierra el anterior. Se abren
+con clic, nunca con hover, así los paneles solo aparecen cuando el lector los
+pide, y se cierran con `Escape`, con un clic afuera, cuando el foco sale del
+item con Tab, o al navegar por un link. El panel lleva una pequeña flecha que
 apunta al trigger que lo abrió.
 
 ## Links del router
 
 `NavigationMenu.Link` renderiza un `<a>` por defecto. Para mantener la
 navegación client-side (o el routing con locale), pasá `asChild` con el `Link`
-de tu framework como único hijo — el contenido de la fila se inyecta adentro y
+de tu framework como único hijo: el contenido de la fila se inyecta adentro y
 el menú igual se cierra al navegar:
 
 ```tsx
@@ -78,7 +79,7 @@ el menú igual se cierra al navegar:
 
 ### Con badges
 
-Las filas aceptan un slot `badge` al lado del título — y cualquier otra cosa
+Las filas aceptan un slot `badge` al lado del título, y cualquier otra cosa
 que pongas dentro de `Content` se renderiza tal cual, como esta fila
 "próximamente" no interactiva:
 

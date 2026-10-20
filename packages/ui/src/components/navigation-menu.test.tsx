@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { NavigationMenu } from './navigation-menu';
 
 vi.mock('motion/react');
@@ -129,5 +130,94 @@ describe('NavigationMenu', () => {
 
     await user.click(link);
     expect(screen.queryByRole('link', { name: /Analytics/ })).not.toBeInTheDocument();
+  });
+});
+
+function renderTwoItems() {
+  return render(
+    <>
+      <input aria-label="Search" />
+      <NavigationMenu aria-label="Main">
+        <NavigationMenu.Item>
+          <NavigationMenu.Trigger>Products</NavigationMenu.Trigger>
+          <NavigationMenu.Content>
+            <NavigationMenu.Link href="/analytics" title="Analytics" />
+          </NavigationMenu.Content>
+        </NavigationMenu.Item>
+        <NavigationMenu.Item>
+          <NavigationMenu.Trigger>Resources</NavigationMenu.Trigger>
+          <NavigationMenu.Content>
+            <NavigationMenu.Link href="/guides" title="Guides" />
+          </NavigationMenu.Content>
+        </NavigationMenu.Item>
+        <a href="/docs">Docs</a>
+      </NavigationMenu>
+    </>,
+  );
+}
+
+describe('NavigationMenu shared open state', () => {
+  it('keeps only one panel open at a time', async () => {
+    const user = userEvent.setup();
+    renderTwoItems();
+    const products = screen.getByRole('button', { name: 'Products' });
+    const resources = screen.getByRole('button', { name: 'Resources' });
+
+    await user.click(products);
+    products.focus();
+    fireEvent.click(resources);
+
+    expect(resources).toHaveAttribute('aria-expanded', 'true');
+    expect(products).toHaveAttribute('aria-expanded', 'false');
+    await waitFor(() =>
+      expect(screen.queryByRole('link', { name: 'Analytics' })).not.toBeInTheDocument(),
+    );
+  });
+
+  it('closes when focus tabs out of the item', async () => {
+    const user = userEvent.setup();
+    renderTwoItems();
+    const products = screen.getByRole('button', { name: 'Products' });
+
+    await user.click(products);
+    await user.tab();
+    expect(screen.getByRole('link', { name: 'Analytics' })).toHaveFocus();
+    await user.tab();
+
+    expect(screen.getByRole('button', { name: 'Resources' })).toHaveFocus();
+    expect(products).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('leaves focus alone when Escape is pressed elsewhere', async () => {
+    const user = userEvent.setup();
+    renderTwoItems();
+    const products = screen.getByRole('button', { name: 'Products' });
+    const search = screen.getByRole('textbox', { name: 'Search' });
+
+    await user.click(products);
+    search.focus();
+    await user.keyboard('{Escape}');
+
+    expect(search).toHaveFocus();
+  });
+
+  it('ignores Escape already handled by a layer above', async () => {
+    const user = userEvent.setup();
+    renderTwoItems();
+    const products = screen.getByRole('button', { name: 'Products' });
+    await user.click(products);
+
+    const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+    event.preventDefault();
+    fireEvent(products, event);
+
+    expect(products).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('has no axe violations while open', async () => {
+    const user = userEvent.setup();
+    const { container } = renderTwoItems();
+    await user.click(screen.getByRole('button', { name: 'Products' }));
+    await expectNoAxeViolations(container);
   });
 });

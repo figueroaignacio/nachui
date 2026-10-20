@@ -50,9 +50,10 @@ NavigationMenu
 ```
 
 The root renders a `<nav>` and lays its children out in a row, so plain anchors
-and router links live side by side with dropdown items. Each `Item` owns its
-open state: it opens on click, never on hover, so panels only show up when
-the reader asks for them, and it closes on `Escape`, on an outside click, or
+and router links live side by side with dropdown items. Only one `Item` is
+open at a time: opening another one closes the first. Items open on click,
+never on hover, so panels only show up when the reader asks for them, and they
+close on `Escape`, on an outside click, when focus tabs out of the item, or
 after following a link. The panel carries a small caret pointing back at the
 trigger that opened it.
 
@@ -60,7 +61,7 @@ trigger that opened it.
 
 `NavigationMenu.Link` renders an `<a>` by default. To keep client-side
 navigation (or locale-aware routing), pass `asChild` with your framework's
-`Link` as the only child — the row content is injected into it and the menu
+`Link` as the only child: the row content is injected into it and the menu
 still closes after navigating:
 
 ```tsx
@@ -78,7 +79,7 @@ still closes after navigating:
 
 ### With badges
 
-Rows accept a `badge` slot next to the title — and anything else you drop into
+Rows accept a `badge` slot next to the title, and anything else you drop into
 `Content` renders as-is, like this non-interactive "coming soon" row:
 
 <ComponentPreview component="navigation-menu" demo="badges" />
