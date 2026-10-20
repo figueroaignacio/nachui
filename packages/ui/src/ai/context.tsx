@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { springs } from '../lib/motion';
+import { useLayer } from '../lib/overlay';
 import { useControllableState } from '../lib/use-controllable-state';
 
 const PANEL_INITIAL = { opacity: 0, y: 6, scale: 0.98 } as const;
@@ -30,6 +31,7 @@ interface ContextContextValue {
   setOpen: (open: boolean) => void;
   toggle: () => void;
   id: string;
+  contentRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const ContextContext = React.createContext<ContextContextValue | null>(null);
@@ -104,6 +106,8 @@ const ContextRoot = ({
     onChange: onOpenChange,
   });
   const id = React.useId();
+  const contentRef = React.useRef<HTMLDivElement | null>(null);
+  const layer = useLayer(open, false, contentRef);
 
   const transientRef = React.useRef(false);
 
@@ -124,11 +128,23 @@ const ContextRoot = ({
     setOpen(!pinned);
   }, [open, setOpen]);
 
+  React.useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || event.defaultPrevented || !layer.isTopmost()) return;
+      event.preventDefault();
+      transientRef.current = false;
+      setOpen(false);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [open, setOpen, layer]);
+
   const safeMax = maxTokens > 0 ? maxTokens : 1;
   const percent = Math.min(Math.max(usedTokens / safeMax, 0), 1);
 
   const value = React.useMemo<ContextContextValue>(
-    () => ({ maxTokens, usedTokens, percent, open, setOpen, toggle, id }),
+    () => ({ maxTokens, usedTokens, percent, open, setOpen, toggle, id, contentRef }),
     [maxTokens, usedTokens, percent, open, setOpen, toggle, id],
   );
 
@@ -180,8 +196,9 @@ const ContextTrigger = ({
       type="button"
       id={`${id}-trigger`}
       aria-expanded={open}
-      aria-controls={`${id}-content`}
-      aria-label={`${formatTokens(usedTokens)} of ${formatTokens(maxTokens)} tokens used`}
+      aria-controls={open ? `${id}-content` : undefined}
+      aria-describedby={open ? `${id}-content` : undefined}
+      aria-label={`${rounded}%, ${formatTokens(usedTokens)} of ${formatTokens(maxTokens)} tokens used`}
       onClick={(event) => {
         onClick?.(event);
         if (!event.defaultPrevented) toggle();
@@ -226,24 +243,34 @@ const ContextContent = ({
   ref,
   ...props
 }: ContextContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { open, id } = useContextMeter();
+  const { open, id, contentRef } = useContextMeter();
   const shouldReduceMotion = useReducedMotion();
+
+  const setRefs = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      contentRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [contentRef, ref],
+  );
 
   return (
     <AnimatePresence>
       {open && (
         <motion.div
-          ref={ref}
+          ref={setRefs}
           id={`${id}-content`}
-          role="dialog"
-          aria-labelledby={`${id}-trigger`}
           initial={shouldReduceMotion ? REDUCED_INITIAL : PANEL_INITIAL}
           animate={shouldReduceMotion ? REDUCED_ANIMATE : PANEL_ANIMATE}
           exit={shouldReduceMotion ? REDUCED_INITIAL : PANEL_EXIT}
           transition={shouldReduceMotion ? REDUCED_TRANSITION : springs.smooth}
           className={cn(
             'border-border bg-popover text-popover-foreground absolute z-50 w-64 rounded-md border p-3 shadow-md',
-            side === 'bottom' ? 'top-full mt-2' : 'bottom-full mb-2',
+            'before:absolute before:inset-x-0 before:h-2 before:content-[""]',
+            side === 'bottom'
+              ? 'top-full mt-2 before:bottom-full'
+              : 'bottom-full mb-2 before:top-full',
             align === 'start' && 'left-0',
             align === 'center' && 'left-1/2 -translate-x-1/2',
             align === 'end' && 'right-0',
