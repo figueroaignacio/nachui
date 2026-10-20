@@ -40,10 +40,10 @@
     "ingest": "tsx --env-file-if-exists=../../packages/db/.env --env-file-if-exists=../../apps/web/.env --env-file-if-exists=.env src/scripts/ingest.ts"
   },
   "dependencies": {
-    "@ai-sdk/google": "^4.0.34",
+    "@ai-sdk/google": "^4.0.99",
     "@repo/db": "workspace:*",
-    "ai": "^7.0.52",
-    "zod": "^4.4.3"
+    "ai": "^7.0.143",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
@@ -51,7 +51,7 @@
     "@vitest/coverage-v8": "^4.1.8",
     "dotenv": "^17.4.2",
     "tsup": "^8.5.1",
-    "tsx": "^4.22.4",
+    "tsx": "^4.23.15",
     "typescript": "^6.0.3",
     "vitest": "^4.1.8"
   }
