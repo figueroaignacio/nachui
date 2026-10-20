@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { Callout } from './callout';
 
 describe('Callout', () => {
@@ -37,5 +39,41 @@ describe('Callout', () => {
     );
 
     expect(screen.getByTestId('custom-icon')).toBeInTheDocument();
+  });
+
+  it('lets content inherit the tinted variant color at full opacity', () => {
+    render(
+      <Callout variant="warning">
+        <Callout.Content>Heads up.</Callout.Content>
+      </Callout>,
+    );
+    const root = screen.getByRole('note');
+    const content = screen.getByText('Heads up.');
+    expect(root).toHaveAttribute('data-variant', 'warning');
+    expect(root).toHaveClass('text-warning-text');
+    expect(content.className).not.toMatch(/\/90/);
+    expect(content.className).not.toMatch(/(^|\s)text-muted-foreground/);
+  });
+
+  it('only mutes content on the neutral default surface', () => {
+    render(
+      <Callout>
+        <Callout.Content>Neutral.</Callout.Content>
+      </Callout>,
+    );
+    expect(screen.getByRole('note')).toHaveAttribute('data-variant', 'default');
+    expect(screen.getByText('Neutral.')).toHaveClass(
+      'group-data-[variant=default]/callout:text-muted-foreground',
+    );
+  });
+
+  it('has no axe violations', async () => {
+    const { container } = render(
+      <Callout variant="info">
+        <Callout.Title>Tip</Callout.Title>
+        <Callout.Content>Use the CLI to install.</Callout.Content>
+      </Callout>,
+    );
+    await expectNoAxeViolations(container);
   });
 });

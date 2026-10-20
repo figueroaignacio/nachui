@@ -93,20 +93,23 @@ function InfoIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
   );
 }
 
-const calloutVariants = cva('flex w-full items-start gap-3 rounded-md border p-3.5 text-sm', {
-  variants: {
-    variant: {
-      default: 'bg-surface-muted text-card-foreground border-border',
-      info: 'bg-info-surface text-info-text border-info-border',
-      warning: 'bg-warning-surface text-warning-text border-warning-border',
-      danger: 'bg-destructive-surface text-destructive-text border-destructive-border',
-      success: 'bg-success-surface text-success-text border-success-border',
+const calloutVariants = cva(
+  'group/callout flex w-full items-start gap-3 rounded-md border p-3.5 text-sm',
+  {
+    variants: {
+      variant: {
+        default: 'bg-surface-muted text-card-foreground border-border',
+        info: 'bg-info-surface text-info-text border-info-border',
+        warning: 'bg-warning-surface text-warning-text border-warning-border',
+        danger: 'bg-destructive-surface text-destructive-text border-destructive-border',
+        success: 'bg-success-surface text-success-text border-success-border',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
     },
   },
-  defaultVariants: {
-    variant: 'default',
-  },
-});
+);
 
 type CalloutProps = React.HTMLAttributes<HTMLDivElement> &
   VariantProps<typeof calloutVariants> & {
@@ -151,6 +154,7 @@ const CalloutRoot = ({
     <div
       ref={ref}
       role={role}
+      data-variant={resolvedVariant}
       className={cn(calloutVariants({ variant: resolvedVariant }), className)}
       {...props}
     >
@@ -177,7 +181,10 @@ CalloutTitle.displayName = 'CalloutTitle';
 const CalloutContent = ({ className, ref, ...props }: DivWithRefProps) => (
   <div
     ref={ref}
-    className={cn('text-muted-foreground/90 [&_p]:leading-relaxed', className)}
+    className={cn(
+      'group-data-[variant=default]/callout:text-muted-foreground [&_p]:leading-relaxed',
+      className,
+    )}
     {...props}
   />
 );
