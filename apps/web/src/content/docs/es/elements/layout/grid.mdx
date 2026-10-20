@@ -32,15 +32,16 @@ import { Grid } from '@/components/ui/grid';
 
 ### Grid
 
-| Prop        | Tipo                                                      | Por defecto | Descripción                                            |
-| ----------- | --------------------------------------------------------- | ----------- | ------------------------------------------------------ |
-| `as`        | `React.ElementType`                                       | `'div'`     | El tipo de elemento HTML para renderizar el componente |
-| `columns`   | `'1' \| '2' \| ... \| '12' \| 'none' \| 'subgrid'`        | `'1'`       | Número de columnas en la cuadrícula                    |
-| `rows`      | `'1' \| '2' \| ... \| '6' \| 'none' \| 'subgrid'`         | -           | Número de filas en la cuadrícula                       |
-| `flow`      | `'row' \| 'col' \| 'dense' \| 'row-dense' \| 'col-dense'` | -           | Flujos de cuadrícula (grid-flow)                       |
-| `align`     | `'start' \| 'center' \| 'end' \| 'baseline' \| 'stretch'` | -           | Alinea los hijos a lo largo del eje del bloque         |
-| `justify`   | `'start' \| 'center' \| 'end' \| 'stretch'`               | -           | Justifica los hijos a lo largo del eje en línea        |
-| `gap`       | `'0' \| '1' \| ... \| '32'`                               | -           | Espaciado entre elementos en ambos ejes                |
-| `gapX`      | `'0' \| '1' \| ... \| '32'`                               | -           | Espaciado horizontal entre columnas                    |
-| `gapY`      | `'0' \| '1' \| ... \| '32'`                               | -           | Espaciado vertical entre filas                         |
-| `className` | `string`                                                  | -           | Clases CSS personalizadas                              |
+| Prop            | Tipo                                                                         | Por defecto | Descripción                                                          |
+| --------------- | ---------------------------------------------------------------------------- | ----------- | -------------------------------------------------------------------- |
+| `as`            | `React.ElementType`                                                          | `'div'`     | El tipo de elemento HTML para renderizar el componente               |
+| `columns`       | `'1' \| ... \| '12' \| 'none' \| 'subgrid' \| { base?, sm?, md?, lg?, xl? }` | `'1'`       | Número de columnas, o un valor por breakpoint                        |
+| `minChildWidth` | `string`                                                                     | -           | Entran tantas columnas como quepan, cada una con al menos este ancho |
+| `rows`          | `'1' \| '2' \| ... \| '6' \| 'none' \| 'subgrid'`                            | -           | Número de filas en la cuadrícula                                     |
+| `flow`          | `'row' \| 'col' \| 'dense' \| 'row-dense' \| 'col-dense'`                    | -           | Flujos de cuadrícula (grid-flow)                                     |
+| `align`         | `'start' \| 'center' \| 'end' \| 'baseline' \| 'stretch'`                    | -           | Alinea los hijos a lo largo del eje del bloque                       |
+| `justify`       | `'start' \| 'center' \| 'end' \| 'stretch'`                                  | -           | Justifica los hijos a lo largo del eje en línea                      |
+| `gap`           | `'0' \| '1' \| ... \| '32'`                                                  | -           | Espaciado entre elementos en ambos ejes                              |
+| `gapX`          | `'0' \| '1' \| ... \| '32'`                                                  | -           | Espaciado horizontal entre columnas                                  |
+| `gapY`          | `'0' \| '1' \| ... \| '32'`                                                  | -           | Espaciado vertical entre filas                                       |
+| `className`     | `string`                                                                     | -           | Clases CSS personalizadas                                            |

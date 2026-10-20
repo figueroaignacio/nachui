@@ -104,14 +104,97 @@ const gridVariants = cva('grid', {
   },
 });
 
-interface GridProps
-  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof gridVariants> {
-  as?: React.ElementType;
-}
+const GRID_RESPONSIVE_COLUMNS = {
+  sm: {
+    '1': 'sm:grid-cols-1',
+    '2': 'sm:grid-cols-2',
+    '3': 'sm:grid-cols-3',
+    '4': 'sm:grid-cols-4',
+    '5': 'sm:grid-cols-5',
+    '6': 'sm:grid-cols-6',
+    '7': 'sm:grid-cols-7',
+    '8': 'sm:grid-cols-8',
+    '9': 'sm:grid-cols-9',
+    '10': 'sm:grid-cols-10',
+    '11': 'sm:grid-cols-11',
+    '12': 'sm:grid-cols-12',
+    none: 'sm:grid-cols-none',
+    subgrid: 'sm:grid-cols-subgrid',
+  },
+  md: {
+    '1': 'md:grid-cols-1',
+    '2': 'md:grid-cols-2',
+    '3': 'md:grid-cols-3',
+    '4': 'md:grid-cols-4',
+    '5': 'md:grid-cols-5',
+    '6': 'md:grid-cols-6',
+    '7': 'md:grid-cols-7',
+    '8': 'md:grid-cols-8',
+    '9': 'md:grid-cols-9',
+    '10': 'md:grid-cols-10',
+    '11': 'md:grid-cols-11',
+    '12': 'md:grid-cols-12',
+    none: 'md:grid-cols-none',
+    subgrid: 'md:grid-cols-subgrid',
+  },
+  lg: {
+    '1': 'lg:grid-cols-1',
+    '2': 'lg:grid-cols-2',
+    '3': 'lg:grid-cols-3',
+    '4': 'lg:grid-cols-4',
+    '5': 'lg:grid-cols-5',
+    '6': 'lg:grid-cols-6',
+    '7': 'lg:grid-cols-7',
+    '8': 'lg:grid-cols-8',
+    '9': 'lg:grid-cols-9',
+    '10': 'lg:grid-cols-10',
+    '11': 'lg:grid-cols-11',
+    '12': 'lg:grid-cols-12',
+    none: 'lg:grid-cols-none',
+    subgrid: 'lg:grid-cols-subgrid',
+  },
+  xl: {
+    '1': 'xl:grid-cols-1',
+    '2': 'xl:grid-cols-2',
+    '3': 'xl:grid-cols-3',
+    '4': 'xl:grid-cols-4',
+    '5': 'xl:grid-cols-5',
+    '6': 'xl:grid-cols-6',
+    '7': 'xl:grid-cols-7',
+    '8': 'xl:grid-cols-8',
+    '9': 'xl:grid-cols-9',
+    '10': 'xl:grid-cols-10',
+    '11': 'xl:grid-cols-11',
+    '12': 'xl:grid-cols-12',
+    none: 'xl:grid-cols-none',
+    subgrid: 'xl:grid-cols-subgrid',
+  },
+} as const;
 
-const Grid = ({
-  as: Component = 'div',
+type GridColumns = keyof typeof GRID_RESPONSIVE_COLUMNS.sm;
+type GridBreakpoint = keyof typeof GRID_RESPONSIVE_COLUMNS;
+type GridResponsiveColumns = { base?: GridColumns } & Partial<Record<GridBreakpoint, GridColumns>>;
+
+type GridOwnProps<E extends React.ElementType> = Omit<
+  VariantProps<typeof gridVariants>,
+  'columns'
+> & {
+  as?: E;
+  columns?: GridColumns | GridResponsiveColumns | null;
+  minChildWidth?: string;
+  className?: string;
+  style?: React.CSSProperties;
+};
+
+type GridProps<E extends React.ElementType = 'div'> = GridOwnProps<E> &
+  Omit<React.ComponentPropsWithRef<E>, keyof GridOwnProps<E>>;
+
+const BREAKPOINTS: GridBreakpoint[] = ['sm', 'md', 'lg', 'xl'];
+
+const Grid = <E extends React.ElementType = 'div'>({
+  as,
   columns,
+  minChildWidth,
   rows,
   flow,
   align,
@@ -120,25 +203,38 @@ const Grid = ({
   gapX,
   gapY,
   className,
-  children,
-  ref,
+  style,
   ...props
-}: GridProps & { ref?: React.Ref<HTMLDivElement> }) => {
+}: GridProps<E>) => {
+  const Component: React.ElementType = as ?? 'div';
+  const responsive = typeof columns === 'object' && columns !== null ? columns : null;
+  const base = typeof columns === 'object' && columns !== null ? columns.base : columns;
+
   return (
     <Component
-      ref={ref}
+      style={
+        minChildWidth
+          ? {
+              gridTemplateColumns: `repeat(auto-fit, minmax(min(${minChildWidth}, 100%), 1fr))`,
+              ...style,
+            }
+          : style
+      }
       className={cn(
-        gridVariants({ columns, rows, flow, align, justify, gap, gapX, gapY }),
+        gridVariants({ columns: base, rows, flow, align, justify, gap, gapX, gapY }),
+        responsive &&
+          BREAKPOINTS.map((breakpoint) => {
+            const value = responsive[breakpoint];
+            return value ? GRID_RESPONSIVE_COLUMNS[breakpoint][value] : null;
+          }),
         className,
       )}
       {...props}
-    >
-      {children}
-    </Component>
+    />
   );
 };
 
 Grid.displayName = 'Grid';
 
 export { Grid, gridVariants };
-export type { GridProps };
+export type { GridBreakpoint, GridColumns, GridProps, GridResponsiveColumns };

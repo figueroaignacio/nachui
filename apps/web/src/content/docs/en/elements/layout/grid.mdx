@@ -32,15 +32,16 @@ import { Grid } from '@/components/ui/grid';
 
 ### Grid
 
-| Prop        | Type                                                      | Default | Description                                 |
-| ----------- | --------------------------------------------------------- | ------- | ------------------------------------------- |
-| `as`        | `React.ElementType`                                       | `'div'` | The element type to render the component as |
-| `columns`   | `'1' \| '2' \| ... \| '12' \| 'none' \| 'subgrid'`        | `'1'`   | Number of columns in the grid               |
-| `rows`      | `'1' \| '2' \| ... \| '6' \| 'none' \| 'subgrid'`         | -       | Number of rows in the grid                  |
-| `flow`      | `'row' \| 'col' \| 'dense' \| 'row-dense' \| 'col-dense'` | -       | Grid layout flows                           |
-| `align`     | `'start' \| 'center' \| 'end' \| 'baseline' \| 'stretch'` | -       | Align children along block axis             |
-| `justify`   | `'start' \| 'center' \| 'end' \| 'stretch'`               | -       | Justify children along inline axis          |
-| `gap`       | `'0' \| '1' \| ... \| '32'`                               | -       | Spacing between items on both axes          |
-| `gapX`      | `'0' \| '1' \| ... \| '32'`                               | -       | Spacing between columns                     |
-| `gapY`      | `'0' \| '1' \| ... \| '32'`                               | -       | Spacing between rows                        |
-| `className` | `string`                                                  | -       | Custom CSS classes                          |
+| Prop            | Type                                                                         | Default | Description                                                        |
+| --------------- | ---------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------ |
+| `as`            | `React.ElementType`                                                          | `'div'` | The element type to render the component as                        |
+| `columns`       | `'1' \| ... \| '12' \| 'none' \| 'subgrid' \| { base?, sm?, md?, lg?, xl? }` | `'1'`   | Number of columns, or one value per breakpoint                     |
+| `minChildWidth` | `string`                                                                     | -       | Fits as many columns as there is room for, each at least this wide |
+| `rows`          | `'1' \| '2' \| ... \| '6' \| 'none' \| 'subgrid'`                            | -       | Number of rows in the grid                                         |
+| `flow`          | `'row' \| 'col' \| 'dense' \| 'row-dense' \| 'col-dense'`                    | -       | Grid layout flows                                                  |
+| `align`         | `'start' \| 'center' \| 'end' \| 'baseline' \| 'stretch'`                    | -       | Align children along block axis                                    |
+| `justify`       | `'start' \| 'center' \| 'end' \| 'stretch'`                                  | -       | Justify children along inline axis                                 |
+| `gap`           | `'0' \| '1' \| ... \| '32'`                                                  | -       | Spacing between items on both axes                                 |
+| `gapX`          | `'0' \| '1' \| ... \| '32'`                                                  | -       | Spacing between columns                                            |
+| `gapY`          | `'0' \| '1' \| ... \| '32'`                                                  | -       | Spacing between rows                                               |
+| `className`     | `string`                                                                     | -       | Custom CSS classes                                                 |
