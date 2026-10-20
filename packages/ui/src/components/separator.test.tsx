@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { Separator } from './separator';
 
 describe('Separator', () => {
@@ -31,5 +32,16 @@ describe('Separator', () => {
     const { container } = render(<Separator className="my-4" />);
     const separator = container.firstChild as HTMLElement;
     expect(separator).toHaveClass('my-4');
+  });
+
+  it('names a semantic separator with its label', async () => {
+    const { container } = render(<Separator decorative={false} label="Archived" />);
+    expect(screen.getByRole('separator', { name: 'Archived' })).toBeInTheDocument();
+    await expectNoAxeViolations(container);
+  });
+
+  it('leaves a decorative label as plain text', () => {
+    const { container } = render(<Separator label="OR" />);
+    expect(container.firstChild).not.toHaveAttribute('aria-label');
   });
 });

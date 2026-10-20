@@ -26,6 +26,7 @@ function Separator({
     return (
       <div
         ref={ref}
+        aria-label={decorative ? undefined : label}
         className={cn(
           'flex items-center gap-3',
           orientation === 'vertical' && 'flex-col',
