@@ -22,3 +22,16 @@ describe('Steps', () => {
     expect(screen.getByText('Step 1').parentElement).toHaveClass('steps');
   });
 });
+
+describe('Steps classes', () => {
+  it('only carries utilities that generate CSS', () => {
+    const { container } = render(
+      <Steps>
+        <h4>Install</h4>
+      </Steps>,
+    );
+    const classes = (container.firstElementChild as HTMLElement).className.split(/\s+/);
+    expect(classes).not.toContain('[&>h4]:step');
+    expect(classes).toContain('[&>h4]:before:content-[counter(step)]');
+  });
+});
