@@ -76,14 +76,21 @@ cachea como inmutable.
 
 ## Props
 
-| Prop    | Tipo                                   | Default  | Descripción                                           |
-| ------- | -------------------------------------- | -------- | ----------------------------------------------------- |
-| `seed`  | `string`                               | `nachui` | Cualquier string. El mismo string da el mismo sprite. |
-| `parts` | `Partial<SpriteParts>`                 | —        | Pisa la semilla, ranura por ranura.                   |
-| `state` | `bust \| idle \| walk \| work \| loop` | `idle`   | Qué está haciendo.                                    |
-| `size`  | `number`                               | `48`     | Ancho en píxeles; el alto sale de la grilla.          |
+| Prop         | Tipo                                   | Default  | Descripción                                                                                             |
+| ------------ | -------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------- |
+| `seed`       | `string`                               | `nachui` | Cualquier string. El mismo string da el mismo sprite.                                                   |
+| `parts`      | `Partial<SpriteParts>`                 | —        | Pisa la semilla, ranura por ranura.                                                                     |
+| `state`      | `bust \| idle \| walk \| work \| loop` | `idle`   | Qué está haciendo.                                                                                      |
+| `size`       | `number`                               | `48`     | Ancho en píxeles; el alto sale de la grilla.                                                            |
+| `label`      | `string`                               | -        | Convierte al sprite en una imagen con nombre. Sin esto el SVG queda oculto para la tecnología asistiva. |
+| `withStyles` | `boolean`                              | `false`  | Agrega `SPRITE_CSS` a la página. Se agrega una sola vez, sin importar cuántos sprites lo pidan.         |
 
 ## Accesibilidad
 
-El sprite es decorativo y no lleva etiqueta propia. Cuando represente a una
-persona, poné el nombre al lado en texto y no adentro del dibujo.
+Por defecto el sprite es decorativo y queda oculto para la tecnología asistiva.
+Cuando represente a una persona, poné el nombre al lado en texto, o pasá `label`
+si el dibujo es lo único que hay y tiene que leerse como imagen.
+
+Con movimiento reducido activado, todas las animaciones se detienen y cada estado
+queda en una pose quieta. La regla viaja adentro de `SPRITE_CSS`, así que los
+SVG sueltos también la respetan.

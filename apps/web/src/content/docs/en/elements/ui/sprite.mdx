@@ -74,14 +74,20 @@ immutable.
 
 ## Props
 
-| Prop    | Type                                   | Default  | Description                                         |
-| ------- | -------------------------------------- | -------- | --------------------------------------------------- |
-| `seed`  | `string`                               | `nachui` | Any string. The same string builds the same sprite. |
-| `parts` | `Partial<SpriteParts>`                 | —        | Overrides the seed, slot by slot.                   |
-| `state` | `bust \| idle \| walk \| work \| loop` | `idle`   | What it is doing.                                   |
-| `size`  | `number`                               | `48`     | Width in pixels; height follows the grid.           |
+| Prop         | Type                                   | Default  | Description                                                                            |
+| ------------ | -------------------------------------- | -------- | -------------------------------------------------------------------------------------- |
+| `seed`       | `string`                               | `nachui` | Any string. The same string builds the same sprite.                                    |
+| `parts`      | `Partial<SpriteParts>`                 | —        | Overrides the seed, slot by slot.                                                      |
+| `state`      | `bust \| idle \| walk \| work \| loop` | `idle`   | What it is doing.                                                                      |
+| `size`       | `number`                               | `48`     | Width in pixels; height follows the grid.                                              |
+| `label`      | `string`                               | -        | Turns the sprite into a named image. Without it the SVG is hidden from assistive tech. |
+| `withStyles` | `boolean`                              | `false`  | Adds `SPRITE_CSS` to the page. It is added once, however many sprites ask for it.      |
 
 ## Accessibility
 
-The sprite is decorative and carries no label of its own. When it stands for a
-person, put the name next to it in text rather than inside the drawing.
+By default the sprite is decorative and hidden from assistive tech. When it
+stands for a person, put the name next to it in text, or pass `label` when the
+drawing is the only thing there and it should be read as an image.
+
+With reduced motion turned on, every animation stops and each state holds a
+still pose. The rule ships inside `SPRITE_CSS`, so standalone SVGs follow it too.

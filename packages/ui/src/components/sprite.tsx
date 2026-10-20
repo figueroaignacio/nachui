@@ -155,6 +155,36 @@ export function partsFromSeed(seed: string): SpriteParts {
 
 const VISOR_GLOW = '#A8E6D7';
 
+const SAFE_COLOR =
+  /^(?:#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})|[a-z]+|(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\([\w\s.,%/+-]*\)|var\(--[\w-]+\))$/i;
+
+function has<T extends object>(table: T, key: unknown): key is keyof T {
+  return typeof key === 'string' && Object.prototype.hasOwnProperty.call(table, key);
+}
+
+function safeColor(value: unknown): string | undefined {
+  return typeof value === 'string' && SAFE_COLOR.test(value.trim()) ? value.trim() : undefined;
+}
+
+function escapeXml(text: string): string {
+  return text.replace(/[&<>"']/g, (char) => `&#${char.charCodeAt(0)};`);
+}
+
+function resolveParts(seed: string, override: Partial<SpriteParts> = {}): SpriteParts {
+  const seeded = partsFromSeed(String(seed));
+  return normalize({
+    skin: has(SPRITE_SKINS, override.skin) ? override.skin : seeded.skin,
+    hair: has(SPRITE_HAIR, override.hair) ? override.hair : seeded.hair,
+    hairColor: has(SPRITE_HAIR_COLORS, override.hairColor) ? override.hairColor : seeded.hairColor,
+    eyes: has(SPRITE_EYES, override.eyes) ? override.eyes : seeded.eyes,
+    outfit: has(SPRITE_OUTFITS, override.outfit) ? override.outfit : seeded.outfit,
+    outfitMain: safeColor(override.outfitMain) ?? seeded.outfitMain,
+    outfitTrim: safeColor(override.outfitTrim) ?? seeded.outfitTrim,
+    accessory: has(SPRITE_ACCESSORIES, override.accessory) ? override.accessory : seeded.accessory,
+    eyeFill: safeColor(override.eyeFill),
+  });
+}
+
 function normalize(parts: SpriteParts): SpriteParts {
   if (parts.eyes !== 'visor') return parts;
   return {
@@ -721,6 +751,15 @@ export const SPRITE_CSS = `.sprite {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .sprite,
+  .sprite * {
+    animation: none !important;
+  }
+
+  .sprite-leg-frame + .sprite-leg-frame {
+    opacity: 0;
+  }
+
   .sprite-loop .sprite-legs-walk {
     opacity: 0;
   }
@@ -729,14 +768,31 @@ export const SPRITE_CSS = `.sprite {
     translate: 0 4px;
   }
 
+  .sprite-work .sprite-eyes {
+    translate: 0 1.2px;
+  }
+
+  .sprite-work .sprite-lean,
+  .sprite-loop .sprite-lean {
+    translate: 0 0.55px;
+  }
+
+  .sprite-work .sprite-mark,
   .sprite-loop .sprite-mark {
     fill: #a8e6d7;
   }
 
+  .sprite-work .sprite-glow,
   .sprite-loop .sprite-glow {
     opacity: 0.16;
   }
 
+  .sprite-work .sprite-spill {
+    opacity: 0.45;
+  }
+
+  .sprite-work .sprite-glint,
+  .sprite-work .sprite-hands,
   .sprite-loop .sprite-spill,
   .sprite-loop .sprite-glint,
   .sprite-loop .sprite-hands {
@@ -744,6 +800,8 @@ export const SPRITE_CSS = `.sprite {
   }
 }
 `;
+
+const SPRITE_STYLE_HREF = 'nachui-sprite';
 
 const VIEW_BOX: Record<SpriteState, string> = {
   bust: '0 0 24 24',
@@ -862,17 +920,19 @@ export function spriteToSvg({
   withStyles = true,
   label,
 }: SpriteToSvgOptions = {}): string {
-  const parts = normalize({ ...partsFromSeed(seed), ...override });
-  const height = Math.round(size * RATIO[state]);
+  const parts = resolveParts(seed, override);
+  const safeState = has(VIEW_BOX, state) ? state : 'idle';
+  const width = typeof size === 'number' && Number.isFinite(size) && size > 0 ? size : 48;
+  const height = Math.round(width * RATIO[safeState]);
   const style = withStyles ? `<style>${SPRITE_CSS}</style>` : '';
-  const title = label ? `<title>${label}</title>` : '';
+  const title = label ? `<title>${escapeXml(String(label))}</title>` : '';
 
   return (
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${VIEW_BOX[state]}" width="${size}" height="${height}" ` +
-    `shape-rendering="crispEdges" class="sprite sprite-${state}"${label ? ' role="img"' : ''}>` +
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${VIEW_BOX[safeState]}" width="${width}" height="${height}" ` +
+    `shape-rendering="crispEdges" class="sprite sprite-${safeState}"${label ? ' role="img"' : ' aria-hidden="true"'}>` +
     title +
     style +
-    drawing(parts, state) +
+    drawing(parts, safeState) +
     `</svg>`
   );
 }
@@ -883,6 +943,7 @@ interface SpriteProps extends Omit<React.SVGAttributes<SVGSVGElement>, 'children
   state?: SpriteState;
   size?: number;
   withStyles?: boolean;
+  label?: string;
   ref?: React.Ref<SVGSVGElement>;
 }
 
@@ -892,25 +953,38 @@ function Sprite({
   state = 'idle',
   size = 48,
   withStyles = false,
+  label,
   className,
   ref,
   ...props
 }: SpriteProps) {
-  const parts = normalize({ ...partsFromSeed(seed), ...override });
-  const style = withStyles ? `<style>${SPRITE_CSS}</style>` : '';
+  const parts = resolveParts(seed, override);
+  const safeState = has(VIEW_BOX, state) ? state : 'idle';
+  const title = label ? `<title>${escapeXml(label)}</title>` : '';
+  const named = Boolean(label || props['aria-label'] || props['aria-labelledby']);
 
   return (
-    <svg
-      ref={ref}
-      viewBox={VIEW_BOX[state]}
-      width={size}
-      height={Math.round(size * RATIO[state])}
-      xmlns="http://www.w3.org/2000/svg"
-      shapeRendering="crispEdges"
-      className={cn('sprite', `sprite-${state}`, className)}
-      dangerouslySetInnerHTML={{ __html: style + drawing(parts, state) }}
-      {...props}
-    />
+    <>
+      {withStyles && (
+        <style href={SPRITE_STYLE_HREF} precedence="default">
+          {SPRITE_CSS}
+        </style>
+      )}
+      <svg
+        ref={ref}
+        viewBox={VIEW_BOX[safeState]}
+        width={size}
+        height={Math.round(size * RATIO[safeState])}
+        xmlns="http://www.w3.org/2000/svg"
+        shapeRendering="crispEdges"
+        role={named ? 'img' : undefined}
+        aria-label={label || undefined}
+        aria-hidden={named ? undefined : true}
+        className={cn('sprite', `sprite-${safeState}`, className)}
+        dangerouslySetInnerHTML={{ __html: title + drawing(parts, safeState) }}
+        {...props}
+      />
+    </>
   );
 }
 
