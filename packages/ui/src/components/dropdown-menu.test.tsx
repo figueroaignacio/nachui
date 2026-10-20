@@ -283,10 +283,12 @@ describe('DropdownMenu checkable items', () => {
     const user = userEvent.setup();
     render(<Columns />);
 
-    await user.click(screen.getByRole('button', { name: 'View' }));
-    const compact = await screen.findByRole('menuitemradio', { name: 'compact' });
-    compact.focus();
-    await user.keyboard('{Enter}');
+    screen.getByRole('button', { name: 'View' }).focus();
+    await user.keyboard('{ArrowDown}');
+    await waitFor(() =>
+      expect(screen.getByRole('menuitemcheckbox', { name: 'Name' })).toHaveFocus(),
+    );
+    await user.keyboard('{End}{Enter}');
 
     await waitFor(() => expect(screen.queryByRole('menu')).not.toBeInTheDocument());
     await user.click(screen.getByRole('button', { name: 'View' }));
@@ -300,8 +302,11 @@ describe('DropdownMenu checkable items', () => {
     const user = userEvent.setup();
     render(<Columns />);
 
-    await user.click(screen.getByRole('button', { name: 'View' }));
-    (await screen.findByRole('menuitemcheckbox', { name: 'Name' })).focus();
+    screen.getByRole('button', { name: 'View' }).focus();
+    await user.keyboard('{ArrowDown}');
+    await waitFor(() =>
+      expect(screen.getByRole('menuitemcheckbox', { name: 'Name' })).toHaveFocus(),
+    );
     await user.keyboard('{End}');
 
     expect(screen.getByRole('menuitemradio', { name: 'compact' })).toHaveFocus();
