@@ -17,6 +17,7 @@ const MOTION_PROPS = new Set([
   'layout',
   'layoutDependency',
   'layoutId',
+  'layoutScroll',
   'onAnimationComplete',
   'onAnimationStart',
   'onDrag',
