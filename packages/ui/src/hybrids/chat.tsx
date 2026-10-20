@@ -69,6 +69,8 @@ interface ChatLabels {
   thumbsUp: string;
   thumbsDown: string;
   send: string;
+  stop: string;
+  input: string;
   addFiles: string;
   scrollToBottom: string;
   sources: (count: number) => string;
@@ -86,6 +88,8 @@ const DEFAULT_LABELS: ChatLabels = {
   thumbsUp: 'Good answer',
   thumbsDown: 'Bad answer',
   send: 'Send message',
+  stop: 'Stop generating',
+  input: 'Message',
   addFiles: 'Add files',
   scrollToBottom: 'Scroll to bottom',
   sources: (count) => `Used ${count} ${count === 1 ? 'source' : 'sources'}`,
@@ -551,7 +555,7 @@ const ChatComposer = ({
   };
 
   return (
-    <div className="border-border shrink-0 border-t p-3">
+    <div className="border-border shrink-0 border-t p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
       <PromptInput ref={ref} multiple onSubmit={handleSubmit} className={className} {...props}>
         {children ?? (
           <>
@@ -559,7 +563,7 @@ const ChatComposer = ({
               <PromptInput.Attachments />
             </PromptInput.Header>
             <PromptInput.Body>
-              <PromptInput.Textarea placeholder={labels.placeholder} />
+              <PromptInput.Textarea placeholder={labels.placeholder} label={labels.input} />
             </PromptInput.Body>
             <PromptInput.Footer>
               <PromptInput.Tools>
@@ -568,12 +572,8 @@ const ChatComposer = ({
               <PromptInput.Submit
                 status={status}
                 label={labels.send}
-                disabled={busy ? false : undefined}
-                onClick={(event) => {
-                  if (!busy) return;
-                  event.preventDefault();
-                  onStop?.();
-                }}
+                stopLabel={labels.stop}
+                onStop={onStop}
               />
             </PromptInput.Footer>
           </>

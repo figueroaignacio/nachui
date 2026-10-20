@@ -52,8 +52,10 @@ describe('Chat', () => {
   });
 
   it('shows the skeleton while a reply is pending', () => {
-    render(<Chat messages={[THREAD[0] as ChatMessage]} status="submitted" onSend={vi.fn()} />);
-    expect(screen.getByRole('status')).toBeInTheDocument();
+    const { container } = render(
+      <Chat messages={[THREAD[0] as ChatMessage]} status="submitted" onSend={vi.fn()} />,
+    );
+    expect(container.querySelector('[data-response-skeleton]')).toHaveAttribute('role', 'status');
   });
 
   it('calls retry and feedback with the message id', async () => {
@@ -96,5 +98,22 @@ describe('Chat', () => {
         ],
       },
     ]);
+  });
+
+  it('labels the composer and turns send into a named stop while streaming', async () => {
+    const onStop = vi.fn();
+    const onSend = vi.fn();
+    render(<Chat messages={THREAD} status="streaming" onSend={onSend} onStop={onStop} />);
+    expect(screen.getByRole('textbox', { name: 'Message' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Send message' })).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Stop generating' }));
+    expect(onStop).toHaveBeenCalledTimes(1);
+    expect(onSend).not.toHaveBeenCalled();
+  });
+
+  it('pads the composer for the bottom safe area', () => {
+    render(<Chat messages={[]} onSend={vi.fn()} />);
+    const form = screen.getByRole('textbox', { name: 'Message' }).closest('form');
+    expect(form?.parentElement).toHaveClass('pb-[max(0.75rem,env(safe-area-inset-bottom))]');
   });
 });
