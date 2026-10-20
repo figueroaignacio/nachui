@@ -6,7 +6,7 @@ import { cn } from '../lib/cn';
 import { Label } from './label';
 
 const textareaVariants = cva(
-  'placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input focus-visible:border-foreground/40 focus-visible:ring-foreground/10 aria-invalid:ring-destructive/15 dark:aria-invalid:ring-destructive/30 aria-invalid:border-destructive flex w-full min-w-0 rounded-md border bg-transparent transition-[color,box-shadow] outline-none focus-visible:ring-[1px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40',
+  'placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring aria-invalid:border-destructive aria-invalid:focus-visible:ring-destructive flex w-full min-w-0 rounded-md border bg-transparent transition-[color,box-shadow] outline-none focus-visible:ring-[1px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40',
   {
     variants: {
       size: {
@@ -67,7 +67,7 @@ const TextareaError = ({
   <span
     ref={ref}
     aria-live="polite"
-    className={cn('text-destructive text-xs', className)}
+    className={cn('text-destructive-text text-xs', !props.children && 'sr-only', className)}
     {...props}
   />
 );
@@ -80,7 +80,6 @@ const TextareaCount = ({
 }: React.HTMLAttributes<HTMLSpanElement> & { ref?: React.Ref<HTMLSpanElement> }) => (
   <span
     ref={ref}
-    aria-live="polite"
     className={cn('text-muted-foreground ml-auto text-xs tabular-nums', className)}
     {...props}
   />
@@ -210,16 +209,14 @@ const TextareaRoot = ({
         }}
         {...props}
       />
-      {(error || showCount) && (
-        <div className="flex items-start gap-3">
-          {error && <TextareaError id={errorId}>{error}</TextareaError>}
-          {showCount && (
-            <TextareaCount id={countId}>
-              {maxLength ? `${length} / ${maxLength}` : length}
-            </TextareaCount>
-          )}
-        </div>
-      )}
+      <div className={cn('flex items-start gap-3', !error && !showCount && 'sr-only')}>
+        <TextareaError id={errorId}>{error}</TextareaError>
+        {showCount && (
+          <TextareaCount id={countId}>
+            {maxLength ? `${length} / ${maxLength}` : length}
+          </TextareaCount>
+        )}
+      </div>
     </TextareaWrapper>
   );
 };
