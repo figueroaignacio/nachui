@@ -57,9 +57,6 @@ const INSTANT_COLLAPSE: Variants = {
   open: { height: 'auto', opacity: 1, transition: still },
 };
 
-const PULSE_ANIMATE = { opacity: [0.4, 1, 0.4] };
-const PULSE_TRANSITION = { repeat: Infinity, duration: 1.6, ease: 'easeInOut' } as const;
-
 interface ReasoningContextValue {
   isStreaming: boolean;
   isOpen: boolean;
@@ -106,6 +103,8 @@ const ReasoningRoot = ({
   onOpenChange,
   duration: controlledDuration,
   children,
+  onPointerEnter,
+  onPointerLeave,
   ref,
   ...props
 }: ReasoningProps & { ref?: React.Ref<HTMLDivElement> }) => {
@@ -116,7 +115,18 @@ const ReasoningRoot = ({
   });
   const [trackedDuration, setTrackedDuration] = React.useState<number | undefined>(undefined);
   const startedAt = React.useRef<number | null>(null);
+  const rootRef = React.useRef<HTMLDivElement | null>(null);
+  const hoveredRef = React.useRef(false);
   const id = React.useId();
+
+  const setRefs = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      rootRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
 
   React.useEffect(() => {
     if (isStreaming) {
@@ -128,7 +138,10 @@ const ReasoningRoot = ({
     if (startedAt.current !== null) {
       setTrackedDuration(Math.max(1, Math.round((Date.now() - startedAt.current) / 1000)));
       startedAt.current = null;
-      setIsOpen(false);
+      const root = rootRef.current;
+      const engaged =
+        hoveredRef.current || (root !== null && root.contains(document.activeElement));
+      if (!engaged) setIsOpen(false);
     }
   }, [isStreaming, setIsOpen]);
 
@@ -142,9 +155,17 @@ const ReasoningRoot = ({
   return (
     <ReasoningContext value={value}>
       <div
-        ref={ref}
+        ref={setRefs}
         data-state={isOpen ? 'open' : 'closed'}
         data-streaming={isStreaming ? '' : undefined}
+        onPointerEnter={(event) => {
+          hoveredRef.current = true;
+          onPointerEnter?.(event);
+        }}
+        onPointerLeave={(event) => {
+          hoveredRef.current = false;
+          onPointerLeave?.(event);
+        }}
         className={cn('flex w-full flex-col gap-1', className)}
         {...props}
       >
@@ -175,25 +196,19 @@ const ReasoningTrigger = ({
       type="button"
       id={`${id}-trigger`}
       aria-expanded={isOpen}
-      aria-controls={`${id}-content`}
+      aria-controls={isOpen ? `${id}-content` : undefined}
       onClick={(event) => {
         setIsOpen(!isOpen);
         onClick?.(event);
       }}
       className={cn(
-        'text-muted-foreground hover:text-foreground focus-visible:ring-ring flex w-fit items-center gap-1.5 rounded-md text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
+        'text-muted-foreground hover:text-foreground focus-visible:ring-ring -my-0.5 flex min-h-6 w-fit items-center gap-1.5 rounded-md text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none pointer-coarse:-my-2 pointer-coarse:min-h-9',
         className,
       )}
       {...props}
     >
       <BrainIcon size={15} className="shrink-0" />
-      {isStreaming && !shouldReduceMotion ? (
-        <motion.span animate={PULSE_ANIMATE} transition={PULSE_TRANSITION}>
-          {label}
-        </motion.span>
-      ) : (
-        <span>{label}</span>
-      )}
+      <span className={cn(isStreaming && 'motion-safe:animate-pulse')}>{label}</span>
       <motion.span
         aria-hidden="true"
         className="flex shrink-0"

@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { Reasoning } from './reasoning';
 
 describe('Reasoning', () => {
@@ -61,5 +62,63 @@ describe('Reasoning', () => {
     );
     await userEvent.click(screen.getByRole('button'));
     expect(screen.getByRole('button')).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('points aria-controls at the content only while it is open', async () => {
+    const { container } = render(
+      <Reasoning>
+        <Reasoning.Trigger />
+        <Reasoning.Content>Shown</Reasoning.Content>
+      </Reasoning>,
+    );
+    const trigger = screen.getByRole('button');
+    expect(trigger).toHaveAttribute('aria-controls', screen.getByRole('region').id);
+    await expectNoAxeViolations(container);
+    await userEvent.click(trigger);
+    expect(trigger).not.toHaveAttribute('aria-controls');
+  });
+
+  it('collapses when streaming ends', () => {
+    const { rerender } = render(
+      <Reasoning isStreaming>
+        <Reasoning.Trigger />
+      </Reasoning>,
+    );
+    rerender(
+      <Reasoning isStreaming={false}>
+        <Reasoning.Trigger />
+      </Reasoning>,
+    );
+    expect(screen.getByRole('button')).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('stays open when streaming ends while focus is inside', () => {
+    const { rerender } = render(
+      <Reasoning isStreaming>
+        <Reasoning.Trigger />
+      </Reasoning>,
+    );
+    screen.getByRole('button').focus();
+    rerender(
+      <Reasoning isStreaming={false}>
+        <Reasoning.Trigger />
+      </Reasoning>,
+    );
+    expect(screen.getByRole('button')).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('stays open when streaming ends while the pointer is over it', () => {
+    const { rerender, container } = render(
+      <Reasoning isStreaming>
+        <Reasoning.Trigger />
+      </Reasoning>,
+    );
+    fireEvent.pointerEnter(container.firstElementChild as HTMLElement);
+    rerender(
+      <Reasoning isStreaming={false}>
+        <Reasoning.Trigger />
+      </Reasoning>,
+    );
+    expect(screen.getByRole('button')).toHaveAttribute('aria-expanded', 'true');
   });
 });
