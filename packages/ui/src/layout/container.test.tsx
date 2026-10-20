@@ -24,7 +24,17 @@ describe('Container', () => {
     );
     const container = screen.getByTestId('container');
     expect(container).toHaveClass('max-w-screen-md');
-    expect(container).toHaveClass('mr-auto');
-    expect(container).toHaveClass('ml-0');
+    expect(container).toHaveClass('me-auto');
+    expect(container).toHaveClass('ms-0');
+    expect(container).not.toHaveClass('mr-auto');
+  });
+
+  it('aligns to the logical end', () => {
+    render(
+      <Container align="end" data-testid="container">
+        Content
+      </Container>,
+    );
+    expect(screen.getByTestId('container')).toHaveClass('ms-auto', 'me-0');
   });
 });
