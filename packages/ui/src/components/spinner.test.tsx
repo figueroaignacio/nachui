@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { Spinner } from './spinner';
 
 describe('Spinner', () => {
@@ -48,5 +49,23 @@ describe('Spinner', () => {
 
     rerender(<Spinner label="Cargando" />);
     expect(screen.getByRole('status', { name: 'Cargando' })).toBeInTheDocument();
+  });
+
+  it('keeps the label as text inside the live region so it gets announced', () => {
+    render(<Spinner label="Saving" />);
+    expect(screen.getByRole('status')).toHaveTextContent('Saving');
+  });
+
+  it('slows down instead of stopping when motion is reduced', () => {
+    render(<Spinner />);
+    expect(screen.getByRole('status')).toHaveClass(
+      'animate-spin',
+      'motion-reduce:[animation-duration:2.5s]',
+    );
+  });
+
+  it('has no axe violations', async () => {
+    const { container } = render(<Spinner />);
+    await expectNoAxeViolations(container);
   });
 });

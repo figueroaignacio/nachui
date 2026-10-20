@@ -26,28 +26,31 @@ function LoaderIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
   );
 }
 
-const spinnerVariants = cva('animate-spin inline-flex items-center justify-center', {
-  variants: {
-    size: {
-      sm: 'w-4 h-4',
-      md: 'w-6 h-6',
-      lg: 'w-8 h-8',
-      xl: 'w-12 h-12',
+const spinnerVariants = cva(
+  'animate-spin motion-reduce:[animation-duration:2.5s] inline-flex items-center justify-center',
+  {
+    variants: {
+      size: {
+        sm: 'w-4 h-4',
+        md: 'w-6 h-6',
+        lg: 'w-8 h-8',
+        xl: 'w-12 h-12',
+      },
+      variant: {
+        default: 'text-foreground',
+        muted: 'text-muted-foreground',
+        success: 'text-success-text',
+        destructive: 'text-destructive-text',
+        warning: 'text-warning-text',
+        info: 'text-info-text',
+      },
     },
-    variant: {
-      default: 'text-foreground',
-      muted: 'text-muted-foreground',
-      success: 'text-success-text',
-      destructive: 'text-destructive-text',
-      warning: 'text-warning-text',
-      info: 'text-info-text',
+    defaultVariants: {
+      size: 'md',
+      variant: 'default',
     },
   },
-  defaultVariants: {
-    size: 'md',
-    variant: 'default',
-  },
-});
+);
 
 export interface SpinnerProps
   extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof spinnerVariants> {
@@ -72,6 +75,7 @@ function Spinner({
       {...props}
     >
       <LoaderIcon className="h-full w-full" />
+      <span className="sr-only">{label}</span>
     </div>
   );
 }
