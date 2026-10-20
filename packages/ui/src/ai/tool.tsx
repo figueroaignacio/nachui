@@ -133,9 +133,6 @@ const INSTANT_COLLAPSE: Variants = {
   open: { height: 'auto', opacity: 1, transition: still },
 };
 
-const SPIN_ANIMATE = { rotate: 360 };
-const SPIN_TRANSITION = { repeat: Infinity, duration: 1, ease: 'linear' } as const;
-
 type ToolStatus = 'pending' | 'running' | 'complete' | 'error';
 
 type ToolStatusLabels = Record<ToolStatus, string>;
@@ -275,7 +272,7 @@ const ToolHeader = ({
       type="button"
       id={`${id}-trigger`}
       aria-expanded={open}
-      aria-controls={`${id}-content`}
+      aria-controls={open ? `${id}-content` : undefined}
       onClick={(event) => {
         setOpen(!open);
         onClick?.(event);
@@ -296,20 +293,12 @@ const ToolHeader = ({
         ) : null}
       </span>
       <span className={cn('flex shrink-0 items-center gap-1.5 text-xs', STATUS_TONE[status])}>
-        {status === 'running' && !shouldReduceMotion ? (
-          <motion.span
-            aria-hidden="true"
-            className="flex shrink-0"
-            animate={SPIN_ANIMATE}
-            transition={SPIN_TRANSITION}
-          >
-            <StatusIcon size={14} />
-          </motion.span>
-        ) : (
-          <span aria-hidden="true" className="flex shrink-0">
-            <StatusIcon size={14} />
-          </span>
-        )}
+        <span
+          aria-hidden="true"
+          className={cn('flex shrink-0', status === 'running' && 'motion-safe:animate-spin')}
+        >
+          <StatusIcon size={14} />
+        </span>
         <span className="sr-only">{statusLabel}</span>
       </span>
       <motion.span
@@ -392,7 +381,7 @@ const ToolBlock = ({
       {typeof body === 'string' ? (
         <pre
           className={cn(
-            'overflow-x-auto rounded-md px-3 py-2 font-mono text-xs leading-relaxed whitespace-pre-wrap',
+            'overflow-x-auto rounded-md px-3 py-2 font-mono text-xs leading-relaxed break-words whitespace-pre-wrap',
             error
               ? 'bg-destructive-surface text-destructive-text border-destructive-border border'
               : 'bg-secondary text-foreground',

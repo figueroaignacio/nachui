@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { Tool } from './tool';
 
 describe('Tool', () => {
@@ -15,8 +16,22 @@ describe('Tool', () => {
     );
     const trigger = screen.getByRole('button', { name: /get_projects/ });
     expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    expect(trigger).not.toHaveAttribute('aria-controls');
     expect(screen.getByText('Lists the public projects')).toBeInTheDocument();
     expect(screen.queryByRole('region')).not.toBeInTheDocument();
+  });
+
+  it('wraps long output and passes axe', async () => {
+    const { container } = render(
+      <Tool defaultOpen>
+        <Tool.Header name="fetch" />
+        <Tool.Content>
+          <Tool.Output value={{ token: 'x'.repeat(200) }} />
+        </Tool.Content>
+      </Tool>,
+    );
+    expect(container.querySelector('pre')).toHaveClass('break-words', 'whitespace-pre-wrap');
+    await expectNoAxeViolations(container);
   });
 
   it('opens on click and links the trigger to its region', async () => {
