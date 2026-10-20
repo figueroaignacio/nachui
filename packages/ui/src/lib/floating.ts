@@ -182,14 +182,14 @@ export function useFloating({
         position: 'fixed',
         top: position?.top ?? 0,
         left: position?.left ?? 0,
-        visibility: open && position ? undefined : 'hidden',
+        visibility: position ? undefined : 'hidden',
         '--available-width': position ? `${position.availableWidth}px` : undefined,
         '--available-height': position ? `${position.availableHeight}px` : undefined,
       }) as React.CSSProperties,
-    [open, position],
+    [position],
   );
 
-  return { style, side: open && position ? position.side : side };
+  return { style, side: position?.side ?? side };
 }
 
 export function FloatingPortal({ children }: { children: React.ReactNode }) {
