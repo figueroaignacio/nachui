@@ -100,19 +100,16 @@ function Checkbox({
         }}
         {...props}
       />
-      {indeterminate ? (
-        <MinusIcon
-          aria-hidden="true"
-          className="text-primary-foreground pointer-events-none absolute size-3"
-          size={12}
-        />
-      ) : (
-        <CheckIcon
-          aria-hidden="true"
-          className="text-primary-foreground pointer-events-none absolute size-3 opacity-0 transition-opacity peer-checked:opacity-100"
-          size={12}
-        />
-      )}
+      <MinusIcon
+        aria-hidden="true"
+        className="text-primary-foreground pointer-events-none absolute size-3 opacity-0 peer-indeterminate:opacity-100"
+        size={12}
+      />
+      <CheckIcon
+        aria-hidden="true"
+        className="text-primary-foreground pointer-events-none absolute size-3 opacity-0 transition-opacity peer-checked:opacity-100 peer-indeterminate:opacity-0"
+        size={12}
+      />
     </div>
   );
 }
