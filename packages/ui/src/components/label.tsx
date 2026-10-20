@@ -6,6 +6,7 @@ type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement> & {
   required?: boolean;
   optional?: boolean;
   description?: string;
+  descriptionId?: string;
 };
 
 function Label({
@@ -13,6 +14,7 @@ function Label({
   required,
   optional,
   description,
+  descriptionId,
   children,
   ref,
   ...props
@@ -29,12 +31,9 @@ function Label({
     >
       {children}
       {required && (
-        <>
-          <span aria-hidden="true" className="text-destructive text-sm">
-            *
-          </span>
-          <span className="sr-only">(required)</span>
-        </>
+        <span aria-hidden="true" className="text-destructive-text text-sm">
+          *
+        </span>
       )}
       {optional && <span className="text-muted-foreground text-xs font-normal">(optional)</span>}
     </label>
@@ -42,10 +41,15 @@ function Label({
 
   if (!description) return label;
 
+  const hintId =
+    descriptionId ?? (props.htmlFor ? `${props.htmlFor}-label-description` : undefined);
+
   return (
     <div className="flex flex-col gap-1">
       {label}
-      <span className="text-muted-foreground text-xs">{description}</span>
+      <span id={hintId} data-slot="label-description" className="text-muted-foreground text-xs">
+        {description}
+      </span>
     </div>
   );
 }

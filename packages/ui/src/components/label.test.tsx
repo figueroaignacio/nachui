@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { Label } from './label';
 
 describe('Label', () => {
@@ -45,5 +46,44 @@ describe('Label', () => {
     expect(screen.getByText('*')).toBeInTheDocument();
     expect(screen.getByText('This field is required')).toBeInTheDocument();
     expect(screen.getByText('Email')).toBeInTheDocument();
+  });
+
+  it('keeps the required asterisk visual only', () => {
+    render(
+      <>
+        <Label htmlFor="name" required>
+          Name
+        </Label>
+        <input id="name" required />
+      </>,
+    );
+    expect(screen.getByText('*')).toHaveAttribute('aria-hidden', 'true');
+    expect(screen.queryByText('(required)')).not.toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Name' })).toBeRequired();
+  });
+
+  it('gives the description an id the input can point at', async () => {
+    const { container } = render(
+      <>
+        <Label htmlFor="vat" description="Printed on invoices.">
+          VAT
+        </Label>
+        <input id="vat" aria-describedby="vat-label-description" />
+      </>,
+    );
+    expect(screen.getByText('Printed on invoices.')).toHaveAttribute('id', 'vat-label-description');
+    expect(screen.getByRole('textbox', { name: 'VAT' })).toHaveAccessibleDescription(
+      'Printed on invoices.',
+    );
+    await expectNoAxeViolations(container);
+  });
+
+  it('accepts a custom description id', () => {
+    render(
+      <Label descriptionId="hint" description="Helper">
+        Field
+      </Label>,
+    );
+    expect(screen.getByText('Helper')).toHaveAttribute('id', 'hint');
   });
 });

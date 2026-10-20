@@ -36,17 +36,22 @@ A label paired with an input.
 
 Use `required` to show a red asterisk, `optional` to show "(optional)" text, and `description` for helper text.
 
+The asterisk is only visual. Put `required` on the input as well, so screen readers announce it from the control itself.
+
+The description gets the id `{htmlFor}-label-description`, or the one you pass in `descriptionId`. Point the input's `aria-describedby` at it so the hint is read along with the field.
+
 <ComponentPreview component="label" demo="required" />
 
 ## API Reference
 
 ### Label
 
-| Prop          | Type              | Default | Description                                       |
-| ------------- | ----------------- | ------- | ------------------------------------------------- |
-| `required`    | `boolean`         | —       | Shows a red `*` indicator next to the label text. |
-| `optional`    | `boolean`         | —       | Shows "(optional)" text next to the label.        |
-| `description` | `string`          | —       | Helper text displayed below the label.            |
-| `htmlFor`     | `string`          | —       | Associates the label with a form element.         |
-| `className`   | `string`          | —       | Additional CSS class names.                       |
-| `children`    | `React.ReactNode` | —       | The label content.                                |
+| Prop            | Type              | Default                       | Description                                                |
+| --------------- | ----------------- | ----------------------------- | ---------------------------------------------------------- |
+| `required`      | `boolean`         | —                             | Shows a red `*` indicator next to the label text.          |
+| `optional`      | `boolean`         | —                             | Shows "(optional)" text next to the label.                 |
+| `description`   | `string`          | —                             | Helper text displayed below the label.                     |
+| `descriptionId` | `string`          | `{htmlFor}-label-description` | Id of the description, for the input's `aria-describedby`. |
+| `htmlFor`       | `string`          | —                             | Associates the label with a form element.                  |
+| `className`     | `string`          | —                             | Additional CSS class names.                                |
+| `children`      | `React.ReactNode` | —                             | The label content.                                         |

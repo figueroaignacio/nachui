@@ -8,13 +8,17 @@ export function Required() {
         <Label htmlFor="company-name" required>
           Company name
         </Label>
-        <Input id="company-name" placeholder="Northwind Labs SL" />
+        <Input id="company-name" required placeholder="Northwind Labs SL" />
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="vat-number" optional description="Printed on every invoice we send you.">
           VAT number
         </Label>
-        <Input id="vat-number" placeholder="ESB12345678" />
+        <Input
+          id="vat-number"
+          aria-describedby="vat-number-label-description"
+          placeholder="ESB12345678"
+        />
       </div>
     </div>
   );

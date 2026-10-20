@@ -36,17 +36,22 @@ Un label asociado a un input.
 
 Usá `required` para mostrar un asterisco rojo, `optional` para mostrar texto "(optional)", y `description` para texto de ayuda.
 
+El asterisco es solo visual. Poné `required` también en el input, así los lectores de pantalla lo anuncian desde el propio control.
+
+La descripción recibe el id `{htmlFor}-label-description`, o el que pases en `descriptionId`. Apuntá el `aria-describedby` del input a ese id para que la ayuda se lea junto con el campo.
+
 <ComponentPreview component="label" demo="required" />
 
 ## Referencia de API
 
 ### Label
 
-| Prop          | Tipo              | Por defecto | Descripción                                             |
-| ------------- | ----------------- | ----------- | ------------------------------------------------------- |
-| `required`    | `boolean`         | —           | Muestra un indicador rojo `*` junto al texto del label. |
-| `optional`    | `boolean`         | —           | Muestra el texto "(optional)" junto al label.           |
-| `description` | `string`          | —           | Texto de ayuda mostrado debajo del label.               |
-| `htmlFor`     | `string`          | —           | Asocia el label con un elemento del formulario.         |
-| `className`   | `string`          | —           | Clases CSS adicionales.                                 |
-| `children`    | `React.ReactNode` | —           | El contenido del label.                                 |
+| Prop            | Tipo              | Por defecto                   | Descripción                                                 |
+| --------------- | ----------------- | ----------------------------- | ----------------------------------------------------------- |
+| `required`      | `boolean`         | —                             | Muestra un indicador rojo `*` junto al texto del label.     |
+| `optional`      | `boolean`         | —                             | Muestra el texto "(optional)" junto al label.               |
+| `description`   | `string`          | —                             | Texto de ayuda mostrado debajo del label.                   |
+| `descriptionId` | `string`          | `{htmlFor}-label-description` | Id de la descripción, para el `aria-describedby` del input. |
+| `htmlFor`       | `string`          | —                             | Asocia el label con un elemento del formulario.             |
+| `className`     | `string`          | —                             | Clases CSS adicionales.                                     |
+| `children`      | `React.ReactNode` | —                             | El contenido del label.                                     |
