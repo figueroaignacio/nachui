@@ -97,7 +97,11 @@ const DockRoot = ({
 
   if (!floating) return bar;
 
-  return <div className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2">{bar}</div>;
+  return (
+    <div className="fixed bottom-[max(1.25rem,calc(env(safe-area-inset-bottom)+0.5rem))] left-1/2 z-50 flex max-w-[calc(100vw-2rem)] -translate-x-1/2 [&>nav]:max-w-full">
+      {bar}
+    </div>
+  );
 };
 DockRoot.displayName = 'Dock';
 
@@ -122,12 +126,32 @@ const DockItem = ({
   const { mouseX, magnify, itemSize, magnifiedSize, range } = useDockContext();
   const reduceMotion = useReducedMotion();
   const containerRef = React.useRef<HTMLSpanElement>(null);
+  const centerRef = React.useRef<number | null>(null);
+
+  React.useEffect(() => {
+    const forget = () => {
+      centerRef.current = null;
+    };
+    const stopWatching = mouseX.on('change', (x) => {
+      if (!Number.isFinite(x)) forget();
+    });
+    window.addEventListener('resize', forget);
+    window.addEventListener('scroll', forget, { passive: true });
+    return () => {
+      stopWatching();
+      window.removeEventListener('resize', forget);
+      window.removeEventListener('scroll', forget);
+    };
+  }, [mouseX]);
 
   const distance = useTransform(mouseX, (x) => {
     if (!magnify || !Number.isFinite(x)) return Infinity;
-    const bounds = containerRef.current?.getBoundingClientRect();
-    if (!bounds) return Infinity;
-    return x - (bounds.left + bounds.width / 2);
+    if (centerRef.current === null) {
+      const bounds = containerRef.current?.getBoundingClientRect();
+      if (!bounds) return Infinity;
+      centerRef.current = bounds.left + bounds.width / 2;
+    }
+    return x - centerRef.current;
   });
   const targetSize = useTransform(
     distance,
@@ -161,7 +185,7 @@ const DockItem = ({
         type="button"
         ref={ref}
         aria-label={label}
-        aria-pressed={active}
+        aria-current={active ? 'page' : undefined}
         data-active={active ? 'true' : undefined}
         className={classes}
         {...props}
@@ -180,7 +204,7 @@ const DockItem = ({
           whileTap={reduceMotion ? undefined : tap}
           transition={springs.snappy}
           className={cn(
-            'hover:bg-muted data-[active=true]:bg-muted/70 relative flex shrink-0 items-center justify-center rounded-full transition-colors',
+            'hover:bg-muted data-[active=true]:bg-muted/70 relative flex min-w-0 shrink items-center justify-center rounded-full transition-colors',
             containerClassName,
           )}
           data-active={active ? 'true' : undefined}
