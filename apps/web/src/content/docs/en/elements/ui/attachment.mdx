@@ -89,11 +89,12 @@ The default `row` variant, a stacked list with a type icon, name, size and actio
 
 ### Attachment
 
-| Prop        | Type                                               | Default  | Description                         |
-| ----------- | -------------------------------------------------- | -------- | ----------------------------------- |
-| `variant`   | `"row"` \| `"card"` \| `"chip"`                    | `"row"`  | Layout of the parts                 |
-| `status`    | `"idle"` \| `"uploading"` \| `"done"` \| `"error"` | `"idle"` | Exposed as `data-status`, styles it |
-| `className` | `string`                                           | -        | Additional CSS classes              |
+| Prop           | Type                                               | Default                                              | Description                                                     |
+| -------------- | -------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------- |
+| `variant`      | `"row"` \| `"card"` \| `"chip"`                    | `"row"`                                              | Layout of the parts                                             |
+| `status`       | `"idle"` \| `"uploading"` \| `"done"` \| `"error"` | `"idle"`                                             | Exposed as `data-status`, styles it                             |
+| `statusLabels` | `{ uploading?: string; error?: string }`           | `{ uploading: "Uploading", error: "Upload failed" }` | Text screen readers hear for the `uploading` and `error` states |
+| `className`    | `string`                                           | -                                                    | Additional CSS classes                                          |
 
 ### Attachment.Preview
 
@@ -118,6 +119,8 @@ The default `row` variant, a stacked list with a type icon, name, size and actio
 | ------- | -------- | ------- | -------------------------- |
 | `value` | `number` | -       | Percent complete, 0 to 100 |
 
+The bar takes its accessible name from `Attachment.Name` when there is one, and falls back to `"Upload progress"`. Pass `aria-label` or `aria-labelledby` to name it yourself.
+
 ### Attachment.List
 
 | Prop     | Type                                | Default   | Description        |
@@ -126,4 +129,4 @@ The default `row` variant, a stacked list with a type icon, name, size and actio
 
 ### Attachment.Item, Attachment.Content, Attachment.Name, Attachment.Meta, Attachment.Actions, Attachment.Remove, Attachment.Download
 
-Presentational parts. Each accepts `className` and the attributes of the element it renders. `Remove` is a button and `Download` an anchor with the `download` attribute. Both take a `label` prop for their accessible name, `"Remove attachment"` and `"Download attachment"` by default.
+Presentational parts. Each accepts `className` and the attributes of the element it renders. `Remove` is a button and `Download` an anchor with the `download` attribute. Both take a `label` prop for their accessible name, `"Remove attachment"` and `"Download attachment"` by default, and point `aria-describedby` at `Attachment.Name`, so a list full of Remove buttons still tells screen reader users which file each one belongs to.

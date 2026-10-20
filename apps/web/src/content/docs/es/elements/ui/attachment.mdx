@@ -89,11 +89,12 @@ La variante `row` por defecto, una lista apilada con ícono por tipo, nombre, ta
 
 ### Attachment
 
-| Prop        | Tipo                                               | Por defecto | Descripción                              |
-| ----------- | -------------------------------------------------- | ----------- | ---------------------------------------- |
-| `variant`   | `"row"` \| `"card"` \| `"chip"`                    | `"row"`     | Layout de las partes                     |
-| `status`    | `"idle"` \| `"uploading"` \| `"done"` \| `"error"` | `"idle"`    | Se expone como `data-status` y da estilo |
-| `className` | `string`                                           | -           | Clases CSS adicionales                   |
+| Prop           | Tipo                                               | Por defecto                                          | Descripción                                                                      |
+| -------------- | -------------------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `variant`      | `"row"` \| `"card"` \| `"chip"`                    | `"row"`                                              | Layout de las partes                                                             |
+| `status`       | `"idle"` \| `"uploading"` \| `"done"` \| `"error"` | `"idle"`                                             | Se expone como `data-status` y da estilo                                         |
+| `statusLabels` | `{ uploading?: string; error?: string }`           | `{ uploading: "Uploading", error: "Upload failed" }` | Texto que escuchan los lectores de pantalla en los estados `uploading` y `error` |
+| `className`    | `string`                                           | -                                                    | Clases CSS adicionales                                                           |
 
 ### Attachment.Preview
 
@@ -118,6 +119,8 @@ La variante `row` por defecto, una lista apilada con ícono por tipo, nombre, ta
 | ------- | -------- | ----------- | ------------------------------ |
 | `value` | `number` | -           | Porcentaje completado, 0 a 100 |
 
+La barra toma su nombre accesible de `Attachment.Name` cuando existe, y si no usa `"Upload progress"`. Pasá `aria-label` o `aria-labelledby` para nombrarla vos.
+
 ### Attachment.List
 
 | Prop     | Tipo                                | Por defecto | Descripción               |
@@ -126,4 +129,4 @@ La variante `row` por defecto, una lista apilada con ícono por tipo, nombre, ta
 
 ### Attachment.Item, Attachment.Content, Attachment.Name, Attachment.Meta, Attachment.Actions, Attachment.Remove, Attachment.Download
 
-Partes de presentación. Cada una acepta `className` y los atributos del elemento que renderiza. `Remove` es un botón y `Download` un ancla con el atributo `download`. Ambos aceptan una prop `label` para su nombre accesible, `"Remove attachment"` y `"Download attachment"` por defecto.
+Partes de presentación. Cada una acepta `className` y los atributos del elemento que renderiza. `Remove` es un botón y `Download` un ancla con el atributo `download`. Ambos aceptan una prop `label` para su nombre accesible, `"Remove attachment"` y `"Download attachment"` por defecto, y apuntan `aria-describedby` a `Attachment.Name`, así una lista llena de botones Remove sigue diciendo a qué archivo pertenece cada uno.

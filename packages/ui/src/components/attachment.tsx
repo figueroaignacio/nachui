@@ -187,6 +187,8 @@ type AttachmentStatus = 'idle' | 'uploading' | 'done' | 'error';
 interface AttachmentContextValue {
   variant: AttachmentVariant;
   status: AttachmentStatus;
+  nameId: string | undefined;
+  registerName: (id: string) => () => void;
 }
 
 const AttachmentContext = React.createContext<AttachmentContextValue | null>(null);
@@ -201,7 +203,10 @@ const SIZE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB'] as const;
 
 function formatFileSize(bytes: number, decimals = 1): string {
   if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
-  const exponent = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), SIZE_UNITS.length - 1);
+  const exponent = Math.min(
+    Math.max(0, Math.floor(Math.log(bytes) / Math.log(1024))),
+    SIZE_UNITS.length - 1,
+  );
   const value = bytes / 1024 ** exponent;
   const rounded = exponent === 0 ? value : Number(value.toFixed(decimals));
   return `${rounded} ${SIZE_UNITS[exponent]}`;
@@ -239,19 +244,46 @@ function AttachmentTypeIcon({ type, name }: { type?: string; name?: string }) {
   return <Icon aria-hidden="true" />;
 }
 
+interface AttachmentStatusLabels {
+  uploading: string;
+  error: string;
+}
+
+const DEFAULT_STATUS_LABELS: AttachmentStatusLabels = {
+  uploading: 'Uploading',
+  error: 'Upload failed',
+};
+
 interface AttachmentProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: AttachmentVariant;
   status?: AttachmentStatus;
+  statusLabels?: Partial<AttachmentStatusLabels>;
 }
 
 const AttachmentRoot = ({
   variant = 'row',
   status = 'idle',
+  statusLabels,
   className,
+  children,
   ref,
   ...props
 }: AttachmentProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const context = React.useMemo(() => ({ variant, status }), [variant, status]);
+  const [nameId, setNameId] = React.useState<string | undefined>(undefined);
+
+  const registerName = React.useCallback((id: string) => {
+    setNameId(id);
+    return () => setNameId((current) => (current === id ? undefined : current));
+  }, []);
+
+  const context = React.useMemo(
+    () => ({ variant, status, nameId, registerName }),
+    [variant, status, nameId, registerName],
+  );
+
+  const labels = { ...DEFAULT_STATUS_LABELS, ...statusLabels };
+  const statusText =
+    status === 'uploading' ? labels.uploading : status === 'error' ? labels.error : '';
 
   return (
     <AttachmentContext value={context}>
@@ -260,6 +292,7 @@ const AttachmentRoot = ({
         data-slot="attachment"
         data-variant={variant}
         data-status={status}
+        aria-busy={status === 'uploading' || undefined}
         className={cn(
           'group/attachment border-border bg-card text-card-foreground relative overflow-hidden border transition-colors',
           'data-[status=error]:border-destructive/60 data-[status=uploading]:text-muted-foreground',
@@ -270,7 +303,12 @@ const AttachmentRoot = ({
           className,
         )}
         {...props}
-      />
+      >
+        {children}
+        <span role="status" className="sr-only">
+          {statusText}
+        </span>
+      </div>
     </AttachmentContext>
   );
 };
@@ -347,14 +385,20 @@ AttachmentContent.displayName = 'AttachmentContent';
 
 const AttachmentName = ({
   className,
+  id,
   ref,
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement> & { ref?: React.Ref<HTMLParagraphElement> }) => {
-  const { variant } = useAttachmentContext();
+  const { variant, registerName } = useAttachmentContext();
+  const generatedId = React.useId();
+  const nameId = id ?? generatedId;
+
+  React.useEffect(() => registerName(nameId), [nameId, registerName]);
 
   return (
     <p
       ref={ref}
+      id={nameId}
       data-slot="attachment-name"
       className={cn('truncate font-medium', variant === 'chip' ? 'text-xs' : 'text-sm', className)}
       {...props}
@@ -423,6 +467,10 @@ const AttachmentActions = ({
 };
 AttachmentActions.displayName = 'AttachmentActions';
 
+function joinIds(...ids: (string | undefined)[]) {
+  return ids.filter(Boolean).join(' ') || undefined;
+}
+
 const actionClassName =
   'text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring relative inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-40 pointer-coarse:before:absolute';
 
@@ -434,21 +482,23 @@ const AttachmentRemove = ({
   label = 'Remove attachment',
   className,
   children,
+  'aria-describedby': describedBy,
   ref,
   ...props
 }: AttachmentRemoveProps & { ref?: React.Ref<HTMLButtonElement> }) => {
-  const { variant } = useAttachmentContext();
+  const { variant, nameId } = useAttachmentContext();
 
   return (
     <button
       ref={ref}
       type="button"
       aria-label={label}
+      aria-describedby={joinIds(nameId, describedBy)}
       data-slot="attachment-remove"
       className={cn(
         actionClassName,
         variant === 'chip'
-          ? 'size-5 pointer-coarse:before:-inset-1.5 [&_svg]:size-3'
+          ? 'size-6 pointer-coarse:before:-inset-1.5 [&_svg]:size-3'
           : 'size-7 pointer-coarse:before:-inset-0.5 [&_svg]:size-3.5',
         variant === 'card' && 'bg-background/80 backdrop-blur-sm',
         className,
@@ -469,21 +519,23 @@ const AttachmentDownload = ({
   label = 'Download attachment',
   className,
   children,
+  'aria-describedby': describedBy,
   ref,
   ...props
 }: AttachmentDownloadProps & { ref?: React.Ref<HTMLAnchorElement> }) => {
-  const { variant } = useAttachmentContext();
+  const { variant, nameId } = useAttachmentContext();
 
   return (
     <a
       ref={ref}
       download
       aria-label={label}
+      aria-describedby={joinIds(nameId, describedBy)}
       data-slot="attachment-download"
       className={cn(
         actionClassName,
         variant === 'chip'
-          ? 'size-5 pointer-coarse:before:-inset-1.5 [&_svg]:size-3'
+          ? 'size-6 pointer-coarse:before:-inset-1.5 [&_svg]:size-3'
           : 'size-7 pointer-coarse:before:-inset-0.5 [&_svg]:size-3.5',
         variant === 'card' && 'bg-background/80 backdrop-blur-sm',
         className,
@@ -503,15 +555,21 @@ interface AttachmentProgressProps extends React.HTMLAttributes<HTMLDivElement> {
 const AttachmentProgress = ({
   value,
   className,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
   ref,
   ...props
 }: AttachmentProgressProps & { ref?: React.Ref<HTMLDivElement> }) => {
+  const nameId = React.use(AttachmentContext)?.nameId;
   const clamped = Math.min(Math.max(value, 0), 100);
+  const labelledBy = ariaLabelledBy ?? (ariaLabel ? undefined : nameId);
 
   return (
     <div
       ref={ref}
       role="progressbar"
+      aria-label={labelledBy ? ariaLabel : (ariaLabel ?? 'Upload progress')}
+      aria-labelledby={labelledBy}
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={Math.round(clamped)}
@@ -580,6 +638,7 @@ const Attachment = Object.assign(AttachmentRoot, {
 export { Attachment, formatFileSize, useAttachmentContext };
 export type {
   AttachmentProps,
+  AttachmentStatusLabels,
   AttachmentVariant,
   AttachmentStatus,
   AttachmentPreviewProps,
