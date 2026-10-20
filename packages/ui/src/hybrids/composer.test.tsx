@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { Composer } from './composer';
 
 const MODELS = [
@@ -68,7 +69,7 @@ describe('Composer', () => {
     render(
       <Composer onSend={vi.fn()} models={MODELS} model="flash" onModelChange={onModelChange} />,
     );
-    const trigger = screen.getByRole('button', { name: 'Model' });
+    const trigger = screen.getByRole('button', { name: 'Model: Gemini 2.5 Flash' });
     expect(trigger).toHaveTextContent('Gemini 2.5 Flash');
     await userEvent.click(trigger);
     await userEvent.click(await screen.findByText('Gemini 2.5 Pro'));
@@ -112,5 +113,43 @@ describe('Composer', () => {
     await userEvent.type(input, 'next question{Enter}');
     expect(onSend).not.toHaveBeenCalled();
     expect(input).toHaveValue('next question');
+  });
+
+  it('switches models without a controlled value', async () => {
+    const onModelChange = vi.fn();
+    render(
+      <Composer
+        onSend={vi.fn()}
+        models={MODELS}
+        defaultModel="flash"
+        onModelChange={onModelChange}
+      />,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Model: Gemini 2.5 Flash' }));
+    await userEvent.click(await screen.findByText('Gemini 2.5 Pro'));
+    expect(onModelChange).toHaveBeenCalledWith('pro');
+    expect(screen.getByRole('button', { name: 'Model: Gemini 2.5 Pro' })).toBeInTheDocument();
+  });
+
+  it('lets Escape through when the input is empty or composing', () => {
+    const prevented: boolean[] = [];
+    const listener = (event: KeyboardEvent) => prevented.push(event.defaultPrevented);
+    document.addEventListener('keydown', listener);
+    try {
+      render(<Composer onSend={vi.fn()} />);
+      const input = screen.getByRole('textbox', { name: 'Message' });
+      fireEvent.keyDown(input, { key: 'Escape' });
+      fireEvent.change(input, { target: { value: 'こん' } });
+      fireEvent.keyDown(input, { key: 'Escape', isComposing: true });
+      expect(input).toHaveValue('こん');
+      expect(prevented).toEqual([false, false]);
+    } finally {
+      document.removeEventListener('keydown', listener);
+    }
+  });
+
+  it('has no axe violations', async () => {
+    const { container } = render(<Composer onSend={vi.fn()} models={MODELS} />);
+    await expectNoAxeViolations(container);
   });
 });

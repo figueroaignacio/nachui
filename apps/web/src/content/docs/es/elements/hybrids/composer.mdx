@@ -70,7 +70,7 @@ Composer
 
 ## Modelos
 
-`models` agrega un selector al footer. Es un `DropdownMenu` común que muestra el label actual; elegir otra entrada llama a `onModelChange` con su id. El composer nunca guarda el modelo, lo guardás vos.
+`models` agrega un selector al footer. Es un `DropdownMenu` común que muestra el label actual; elegir otra entrada llama a `onModelChange` con su id. Controlalo con `model`, o pasá `defaultModel` y dejá que el composer guarde la elección. El trigger también lleva el nombre del modelo, por ejemplo "Model: Gemini 2.5 Flash".
 
 ## Contexto
 
@@ -103,9 +103,10 @@ El botón de adjuntar abre el diálogo de archivos y soltar archivos sobre el co
 | `sendOnSuggestion` | `boolean`                                               | `true`            | Enviar al click, o rellenar el input                    |
 | `models`           | `{ id: string; label: string; description?: string }[]` | `[]`              | Entradas del selector de modelo                         |
 | `model`            | `string`                                                | -                 | Id del modelo actual                                    |
+| `defaultModel`     | `string`                                                | -                 | Modelo inicial cuando no está controlado                |
 | `onModelChange`    | `(model: string) => void`                               | -                 | Se llama con el id elegido                              |
 | `context`          | `{ used: number; max: number }`                         | -                 | Renderiza el medidor de tokens                          |
-| `labels`           | `Partial<{ send; stop; attach; model }>`                | Inglés            | Nombres accesibles de los botones                       |
+| `labels`           | `Partial<{ send; stop; attach; model; input }>`         | Inglés            | Nombres accesibles de los botones y del textarea        |
 | `value`            | `string`                                                | -                 | Texto controlado                                        |
 | `defaultValue`     | `string`                                                | -                 | Texto inicial cuando no es controlado                   |
 | `onValueChange`    | `(value: string) => void`                               | -                 | Se llama cuando cambia el texto                         |

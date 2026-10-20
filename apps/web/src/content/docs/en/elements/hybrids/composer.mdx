@@ -70,7 +70,7 @@ Composer
 
 ## Models
 
-`models` adds a picker to the footer. It is a plain `DropdownMenu` showing the current label; picking another entry calls `onModelChange` with its id. The composer never stores the model, you do.
+`models` adds a picker to the footer. It is a plain `DropdownMenu` showing the current label; picking another entry calls `onModelChange` with its id. Control it with `model`, or pass `defaultModel` and let the composer keep the choice. The trigger is named after the model too, like "Model: Gemini 2.5 Flash".
 
 ## Context
 
@@ -103,9 +103,10 @@ The attach button opens the file dialog and dropping files on the composer works
 | `sendOnSuggestion` | `boolean`                                               | `true`            | Send on click, or fill the input                 |
 | `models`           | `{ id: string; label: string; description?: string }[]` | `[]`              | Entries of the model picker                      |
 | `model`            | `string`                                                | -                 | Id of the current model                          |
+| `defaultModel`     | `string`                                                | -                 | Initial model when uncontrolled                  |
 | `onModelChange`    | `(model: string) => void`                               | -                 | Called with the picked id                        |
 | `context`          | `{ used: number; max: number }`                         | -                 | Renders the token meter                          |
-| `labels`           | `Partial<{ send; stop; attach; model }>`                | English           | Accessible names of the buttons                  |
+| `labels`           | `Partial<{ send; stop; attach; model; input }>`         | English           | Accessible names of the buttons and the textarea |
 | `value`            | `string`                                                | -                 | Controlled text                                  |
 | `defaultValue`     | `string`                                                | -                 | Initial text when uncontrolled                   |
 | `onValueChange`    | `(value: string) => void`                               | -                 | Called as the text changes                       |

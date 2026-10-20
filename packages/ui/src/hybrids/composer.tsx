@@ -13,6 +13,7 @@ import {
 import { Suggestion } from '../ai/suggestion';
 import { DropdownMenu } from '../components/dropdown-menu';
 import { cn } from '../lib/cn';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -101,6 +102,7 @@ interface ComposerLabels {
   stop: string;
   attach: string;
   model: string;
+  input: string;
 }
 
 const DEFAULT_LABELS: ComposerLabels = {
@@ -108,6 +110,7 @@ const DEFAULT_LABELS: ComposerLabels = {
   stop: 'Stop generating',
   attach: 'Add files',
   model: 'Model',
+  input: 'Message',
 };
 
 interface ComposerContextValue {
@@ -119,7 +122,7 @@ interface ComposerContextValue {
   sendOnSuggestion: boolean;
   models: ComposerModel[];
   model: string | undefined;
-  onModelChange: ((model: string) => void) | undefined;
+  onModelChange: (model: string) => void;
   context: ComposerContextUsage | undefined;
   onStop: (() => void) | undefined;
   send: (message: ComposerMessage) => void;
@@ -150,6 +153,7 @@ interface ComposerProps extends Omit<
   sendOnSuggestion?: boolean;
   models?: ComposerModel[];
   model?: string;
+  defaultModel?: string;
   onModelChange?: (model: string) => void;
   context?: ComposerContextUsage;
   labels?: Partial<ComposerLabels>;
@@ -182,7 +186,8 @@ const ComposerRoot = ({
   suggestions = EMPTY_SUGGESTIONS,
   sendOnSuggestion = true,
   models = EMPTY_MODELS,
-  model,
+  model: modelProp,
+  defaultModel,
   onModelChange,
   context,
   labels,
@@ -197,6 +202,14 @@ const ComposerRoot = ({
     () => ({ ...DEFAULT_LABELS, ...labels }),
     [labels],
   );
+
+  const [model, setModel] = useControllableState<string | undefined>({
+    value: modelProp,
+    defaultValue: defaultModel,
+    onChange: (next) => {
+      if (next !== undefined) onModelChange?.(next);
+    },
+  });
 
   const blocked = disabled || status === 'streaming' || status === 'submitted';
 
@@ -227,7 +240,7 @@ const ComposerRoot = ({
       sendOnSuggestion,
       models,
       model,
-      onModelChange,
+      onModelChange: setModel,
       context,
       onStop,
       send,
@@ -241,7 +254,7 @@ const ComposerRoot = ({
       sendOnSuggestion,
       models,
       model,
-      onModelChange,
+      setModel,
       context,
       onStop,
       send,
@@ -354,22 +367,23 @@ const ComposerInput = ({
   ref,
   ...props
 }: ComposerInputProps & { ref?: React.Ref<HTMLTextAreaElement> }) => {
-  const { placeholder, disabled } = useComposer();
-  const { setText } = usePromptInput();
+  const { placeholder, disabled, labels } = useComposer();
+  const { text, setText } = usePromptInput();
 
   return (
     <PromptInput.Body>
       <PromptInput.Textarea
         ref={ref}
         placeholder={placeholder}
+        label={labels.input}
         disabled={disabled}
         onKeyDown={(event) => {
           onKeyDown?.(event);
           if (event.defaultPrevented) return;
-          if (event.key === 'Escape') {
-            event.preventDefault();
-            setText('');
-          }
+          if (event.key !== 'Escape' || text.length === 0) return;
+          if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
+          event.preventDefault();
+          setText('');
         }}
         className={className}
         {...props}
@@ -390,14 +404,18 @@ const ComposerModelPicker = () => {
   return (
     <DropdownMenu>
       <DropdownMenu.Trigger asChild>
-        <PromptInput.Button label={labels.model} variant="ghost" disabled={disabled}>
+        <PromptInput.Button
+          label={current ? `${labels.model}: ${current.label}` : labels.model}
+          variant="ghost"
+          disabled={disabled}
+        >
           <span className="font-mono">{current?.label}</span>
           <ChevronDownIcon size={14} className="text-muted-foreground" />
         </PromptInput.Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content align="start" className="w-56">
         {models.map((entry) => (
-          <DropdownMenu.Item key={entry.id} onSelect={() => onModelChange?.(entry.id)}>
+          <DropdownMenu.Item key={entry.id} onSelect={() => onModelChange(entry.id)}>
             <span className="flex min-w-0 flex-1 flex-col">
               <span className="truncate font-mono text-xs">{entry.label}</span>
               {entry.description ? (
