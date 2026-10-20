@@ -29,4 +29,15 @@ describe('Suggestion', () => {
     );
     expect(screen.getByTestId('group')).toHaveClass('overflow-x-auto');
   });
+
+  it('wraps its chips instead of hiding them off screen when asked', () => {
+    render(
+      <Suggestion.Group data-testid="group" wrap>
+        <Suggestion suggestion="One" />
+      </Suggestion.Group>,
+    );
+    const group = screen.getByTestId('group');
+    expect(group).toHaveClass('flex-wrap');
+    expect(group).not.toHaveClass('overflow-x-auto', 'hide-scrollbar');
+  });
 });

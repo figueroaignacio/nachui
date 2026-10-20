@@ -37,7 +37,9 @@ interface SuggestionProps
   onClick?: (suggestion: string) => void;
 }
 
-type SuggestionGroupProps = React.HTMLAttributes<HTMLDivElement>;
+interface SuggestionGroupProps extends React.HTMLAttributes<HTMLDivElement> {
+  wrap?: boolean;
+}
 
 const SuggestionRoot = ({
   className,
@@ -66,13 +68,19 @@ SuggestionRoot.displayName = 'Suggestion';
 
 const SuggestionGroup = ({
   className,
+  wrap = false,
   ref,
   ...props
 }: SuggestionGroupProps & { ref?: React.Ref<HTMLDivElement> }) => {
   return (
     <div
       ref={ref}
-      className={cn('hide-scrollbar flex w-full items-center gap-2 overflow-x-auto', className)}
+      data-wrap={wrap ? '' : undefined}
+      className={cn(
+        'flex w-full items-center gap-2',
+        wrap ? 'flex-wrap' : 'hide-scrollbar overflow-x-auto',
+        className,
+      )}
       {...props}
     />
   );
