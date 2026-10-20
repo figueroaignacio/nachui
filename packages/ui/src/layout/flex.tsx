@@ -55,31 +55,30 @@ const flexVariants = cva('flex', {
   },
 });
 
-interface FlexProps
-  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof flexVariants> {
-  as?: React.ElementType;
-}
+type FlexOwnProps<E extends React.ElementType> = VariantProps<typeof flexVariants> & {
+  as?: E;
+  className?: string;
+};
 
-const Flex = ({
-  as: Component = 'div',
+type FlexProps<E extends React.ElementType = 'div'> = FlexOwnProps<E> &
+  Omit<React.ComponentPropsWithRef<E>, keyof FlexOwnProps<E>>;
+
+const Flex = <E extends React.ElementType = 'div'>({
+  as,
   direction,
   align,
   justify,
   wrap,
   gap,
   className,
-  children,
-  ref,
   ...props
-}: FlexProps & { ref?: React.Ref<HTMLDivElement> }) => {
+}: FlexProps<E>) => {
+  const Component: React.ElementType = as ?? 'div';
   return (
     <Component
-      ref={ref}
       className={cn(flexVariants({ direction, align, justify, wrap, gap }), className)}
       {...props}
-    >
-      {children}
-    </Component>
+    />
   );
 };
 

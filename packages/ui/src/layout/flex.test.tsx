@@ -48,4 +48,15 @@ describe('Flex', () => {
     const flex = screen.getByTestId('flex');
     expect(flex.tagName).toBe('SECTION');
   });
+
+  it('accepts the props of the element it renders as', () => {
+    render(
+      <Flex as="a" href="/docs" data-testid="flex">
+        Docs
+      </Flex>,
+    );
+    const flex = screen.getByTestId('flex');
+    expect(flex.tagName).toBe('A');
+    expect(flex).toHaveAttribute('href', '/docs');
+  });
 });

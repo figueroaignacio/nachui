@@ -25,30 +25,29 @@ const centerVariants = cva('', {
   },
 });
 
-interface CenterProps
-  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof centerVariants> {
-  as?: React.ElementType;
-}
+type CenterOwnProps<E extends React.ElementType> = VariantProps<typeof centerVariants> & {
+  as?: E;
+  className?: string;
+};
 
-const Center = ({
-  as: Component = 'div',
+type CenterProps<E extends React.ElementType = 'div'> = CenterOwnProps<E> &
+  Omit<React.ComponentPropsWithRef<E>, keyof CenterOwnProps<E>>;
+
+const Center = <E extends React.ElementType = 'div'>({
+  as,
   axis,
   inline,
   text,
   className,
-  children,
-  ref,
   ...props
-}: CenterProps & { ref?: React.Ref<HTMLDivElement> }) => {
+}: CenterProps<E>) => {
+  const Component: React.ElementType = as ?? 'div';
   return (
     <Component
-      ref={ref}
       data-slot="center"
       className={cn(centerVariants({ axis, inline, text }), className)}
       {...props}
-    >
-      {children}
-    </Component>
+    />
   );
 };
 

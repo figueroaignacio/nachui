@@ -24,4 +24,13 @@ describe('Stack', () => {
     const stack = screen.getByTestId('stack');
     expect(stack).toHaveClass('flex-row');
   });
+
+  it('forwards the element type to Flex', () => {
+    render(
+      <Stack as="a" href="/docs" data-testid="stack">
+        Docs
+      </Stack>,
+    );
+    expect(screen.getByTestId('stack')).toHaveAttribute('href', '/docs');
+  });
 });

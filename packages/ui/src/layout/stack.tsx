@@ -1,18 +1,26 @@
+import type { VariantProps } from 'class-variance-authority';
 import React from 'react';
-import { Flex, type FlexProps } from './flex';
+import { Flex, type flexVariants } from './flex';
 
-interface StackProps extends Omit<FlexProps, 'direction'> {
+type StackOwnProps<E extends React.ElementType> = Omit<
+  VariantProps<typeof flexVariants>,
+  'direction'
+> & {
+  as?: E;
+  className?: string;
   direction?: 'column' | 'row';
-}
+};
 
-const Stack = ({
-  as: Component = 'div',
+type StackProps<E extends React.ElementType = 'div'> = StackOwnProps<E> &
+  Omit<React.ComponentPropsWithRef<E>, keyof StackOwnProps<E>>;
+
+const Stack = <E extends React.ElementType = 'div'>({
+  as,
   direction = 'column',
-  className,
-  ref,
   ...props
-}: StackProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  return <Flex as={Component} ref={ref} direction={direction} className={className} {...props} />;
+}: StackProps<E>) => {
+  const Component: React.ElementType = as ?? 'div';
+  return <Flex as={Component} direction={direction} {...props} />;
 };
 
 Stack.displayName = 'Stack';

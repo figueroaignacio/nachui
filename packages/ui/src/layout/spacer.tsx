@@ -37,23 +37,26 @@ const SPACER_SIZES = {
 type SpacerSize = keyof typeof SPACER_SIZES.vertical;
 type SpacerAxis = keyof typeof SPACER_SIZES;
 
-interface SpacerProps extends React.HTMLAttributes<HTMLDivElement> {
-  as?: React.ElementType;
+type SpacerOwnProps<E extends React.ElementType> = {
+  as?: E;
   size?: SpacerSize;
   axis?: SpacerAxis;
-}
+  className?: string;
+};
 
-const Spacer = ({
-  as: Component = 'div',
+type SpacerProps<E extends React.ElementType = 'div'> = SpacerOwnProps<E> &
+  Omit<React.ComponentPropsWithRef<E>, keyof SpacerOwnProps<E>>;
+
+const Spacer = <E extends React.ElementType = 'div'>({
+  as,
   size,
   axis = 'vertical',
   className,
-  ref,
   ...props
-}: SpacerProps & { ref?: React.Ref<HTMLDivElement> }) => {
+}: SpacerProps<E>) => {
+  const Component: React.ElementType = as ?? 'div';
   return (
     <Component
-      ref={ref}
       aria-hidden="true"
       data-slot="spacer"
       data-axis={axis}

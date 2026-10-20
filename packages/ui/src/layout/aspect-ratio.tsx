@@ -1,23 +1,26 @@
 import React from 'react';
 import { cn } from '../lib/cn';
 
-interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
-  as?: React.ElementType;
+type AspectRatioOwnProps<E extends React.ElementType> = {
+  as?: E;
   ratio?: number;
-}
+  className?: string;
+  style?: React.CSSProperties;
+};
 
-const AspectRatio = ({
-  as: Component = 'div',
+type AspectRatioProps<E extends React.ElementType = 'div'> = AspectRatioOwnProps<E> &
+  Omit<React.ComponentPropsWithRef<E>, keyof AspectRatioOwnProps<E>>;
+
+const AspectRatio = <E extends React.ElementType = 'div'>({
+  as,
   ratio = 16 / 9,
   className,
   style,
-  children,
-  ref,
   ...props
-}: AspectRatioProps & { ref?: React.Ref<HTMLDivElement> }) => {
+}: AspectRatioProps<E>) => {
+  const Component: React.ElementType = as ?? 'div';
   return (
     <Component
-      ref={ref}
       data-slot="aspect-ratio"
       style={{ aspectRatio: String(ratio), ...style }}
       className={cn(
@@ -25,9 +28,7 @@ const AspectRatio = ({
         className,
       )}
       {...props}
-    >
-      {children}
-    </Component>
+    />
   );
 };
 
