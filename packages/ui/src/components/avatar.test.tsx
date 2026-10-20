@@ -57,4 +57,21 @@ describe('Avatar', () => {
     const group = screen.getByTestId('group');
     expect(group).toHaveClass('flex', '-space-x-2');
   });
+
+  it('layers the loading image over the fallback so initials stay centered', () => {
+    render(
+      <Avatar>
+        <Avatar.Image src="/slow.jpg" alt="" />
+        <Avatar.Fallback data-testid="fallback">EF</Avatar.Fallback>
+      </Avatar>,
+    );
+    const img = screen.getByRole('presentation', { hidden: true });
+    expect(img).toHaveAttribute('data-status', 'loading');
+    expect(img).toHaveClass('absolute', 'inset-0');
+    expect(screen.getByTestId('fallback')).toHaveClass('h-full', 'w-full');
+
+    fireEvent.load(img);
+    expect(img).toHaveAttribute('data-status', 'loaded');
+    expect(screen.queryByTestId('fallback')).not.toBeInTheDocument();
+  });
 });

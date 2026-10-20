@@ -87,7 +87,8 @@ const AvatarImage = ({
       ref={imgRef}
       src={src}
       alt=""
-      className={cn('aspect-square h-full w-full object-cover', className)}
+      data-status={status}
+      className={cn('absolute inset-0 size-full object-cover', className)}
       onLoad={(e) => {
         setStatus('loaded');
         onLoadingStatusChange?.('loaded');
