@@ -53,7 +53,7 @@ Actions sit naturally in a `Message.Footer`. Keep them at the start of the row f
 
 ## Copy
 
-`Actions.Copy` writes `text` to the clipboard and swaps to a check for a moment, with the label changing to "Copied" so screen readers get the confirmation too. `label`, `copiedLabel` and `timeout` tune it.
+`Actions.Copy` writes `text` to the clipboard and swaps to a check for a moment, with the label changing to "Copied". A hidden status region says "Copied" out loud as well, or "Copy failed" when the clipboard refuses. `label`, `copiedLabel`, `failedLabel` and `timeout` tune it.
 
 ## Icons
 
@@ -70,19 +70,20 @@ Actions sit naturally in a `Message.Footer`. Keep them at the start of the row f
 
 ### Actions.Button
 
-| Prop        | Type        | Default | Description                           |
-| ----------- | ----------- | ------- | ------------------------------------- |
-| `label`     | `string`    | -       | Accessible name and tooltip, required |
-| `active`    | `boolean`   | `false` | Pressed state, sets `data-active`     |
-| `children`  | `ReactNode` | -       | The icon                              |
-| `className` | `string`    | -       | Additional CSS classes                |
+| Prop        | Type        | Default | Description                                                                          |
+| ----------- | ----------- | ------- | ------------------------------------------------------------------------------------ |
+| `label`     | `string`    | -       | Accessible name and tooltip, required                                                |
+| `active`    | `boolean`   | -       | Pressed state, sets `aria-pressed` and `data-active`. Leave it out for plain buttons |
+| `children`  | `ReactNode` | -       | The icon                                                                             |
+| `className` | `string`    | -       | Additional CSS classes                                                               |
 
 ### Actions.Copy
 
-| Prop          | Type     | Default    | Description                           |
-| ------------- | -------- | ---------- | ------------------------------------- |
-| `text`        | `string` | -          | What gets copied                      |
-| `label`       | `string` | `'Copy'`   | Label at rest                         |
-| `copiedLabel` | `string` | `'Copied'` | Label after copying                   |
-| `timeout`     | `number` | `1500`     | Milliseconds before the label returns |
-| `className`   | `string` | -          | Additional CSS classes                |
+| Prop          | Type     | Default         | Description                              |
+| ------------- | -------- | --------------- | ---------------------------------------- |
+| `text`        | `string` | -               | What gets copied                         |
+| `label`       | `string` | `'Copy'`        | Label at rest                            |
+| `copiedLabel` | `string` | `'Copied'`      | Label after copying                      |
+| `failedLabel` | `string` | `'Copy failed'` | Announced when the clipboard write fails |
+| `timeout`     | `number` | `1500`          | Milliseconds before the label returns    |
+| `className`   | `string` | -               | Additional CSS classes                   |

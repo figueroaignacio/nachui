@@ -53,7 +53,7 @@ Las acciones van naturales en un `Message.Footer`. Dejalas al principio de la fi
 
 ## Copiar
 
-`Actions.Copy` escribe `text` en el portapapeles y cambia a un tilde por un momento, con la etiqueta pasando a "Copied" para que los lectores de pantalla también reciban la confirmación. `label`, `copiedLabel` y `timeout` lo ajustan.
+`Actions.Copy` escribe `text` en el portapapeles y cambia a un tilde por un momento, con la etiqueta pasando a "Copied". Una región de estado oculta también lo dice en voz alta, o dice "Copy failed" cuando el portapapeles no deja. `label`, `copiedLabel`, `failedLabel` y `timeout` lo ajustan.
 
 ## Íconos
 
@@ -70,19 +70,20 @@ Las acciones van naturales en un `Message.Footer`. Dejalas al principio de la fi
 
 ### Actions.Button
 
-| Prop        | Type        | Default | Description                             |
-| ----------- | ----------- | ------- | --------------------------------------- |
-| `label`     | `string`    | -       | Nombre accesible y tooltip, obligatorio |
-| `active`    | `boolean`   | `false` | Estado presionado, setea `data-active`  |
-| `children`  | `ReactNode` | -       | El ícono                                |
-| `className` | `string`    | -       | Clases CSS adicionales                  |
+| Prop        | Type        | Default | Description                                                                             |
+| ----------- | ----------- | ------- | --------------------------------------------------------------------------------------- |
+| `label`     | `string`    | -       | Nombre accesible y tooltip, obligatorio                                                 |
+| `active`    | `boolean`   | -       | Estado presionado, setea `aria-pressed` y `data-active`. No lo pases en botones comunes |
+| `children`  | `ReactNode` | -       | El ícono                                                                                |
+| `className` | `string`    | -       | Clases CSS adicionales                                                                  |
 
 ### Actions.Copy
 
-| Prop          | Type     | Default    | Description                               |
-| ------------- | -------- | ---------- | ----------------------------------------- |
-| `text`        | `string` | -          | Lo que se copia                           |
-| `label`       | `string` | `'Copy'`   | Etiqueta en reposo                        |
-| `copiedLabel` | `string` | `'Copied'` | Etiqueta después de copiar                |
-| `timeout`     | `number` | `1500`     | Milisegundos hasta que vuelve la etiqueta |
-| `className`   | `string` | -          | Clases CSS adicionales                    |
+| Prop          | Type     | Default         | Description                                          |
+| ------------- | -------- | --------------- | ---------------------------------------------------- |
+| `text`        | `string` | -               | Lo que se copia                                      |
+| `label`       | `string` | `'Copy'`        | Etiqueta en reposo                                   |
+| `copiedLabel` | `string` | `'Copied'`      | Etiqueta después de copiar                           |
+| `failedLabel` | `string` | `'Copy failed'` | Se anuncia cuando falla la escritura al portapapeles |
+| `timeout`     | `number` | `1500`          | Milisegundos hasta que vuelve la etiqueta            |
+| `className`   | `string` | -               | Clases CSS adicionales                               |

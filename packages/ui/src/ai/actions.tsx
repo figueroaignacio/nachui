@@ -103,6 +103,7 @@ interface ActionsCopyProps extends Omit<ActionsButtonProps, 'label' | 'children'
   text: string;
   label?: string;
   copiedLabel?: string;
+  failedLabel?: string;
   timeout?: number;
 }
 
@@ -127,7 +128,7 @@ ActionsRoot.displayName = 'Actions';
 const ActionsButton = ({
   className,
   label,
-  active = false,
+  active,
   type = 'button',
   ref,
   ...props
@@ -137,6 +138,7 @@ const ActionsButton = ({
       ref={ref}
       type={type}
       aria-label={label}
+      aria-pressed={active}
       title={label}
       data-active={active ? 'true' : undefined}
       className={cn(
@@ -155,36 +157,47 @@ const ActionsCopy = ({
   text,
   label = 'Copy',
   copiedLabel = 'Copied',
+  failedLabel = 'Copy failed',
   timeout = 1500,
   onClick,
   ref,
   ...props
 }: ActionsCopyProps & { ref?: React.Ref<HTMLButtonElement> }) => {
-  const [copied, setCopied] = React.useState(false);
+  const [state, setState] = React.useState<'idle' | 'copied' | 'failed'>('idle');
+  const copied = state === 'copied';
 
   React.useEffect(() => {
-    if (!copied) return;
-    const timer = window.setTimeout(() => setCopied(false), timeout);
+    if (state === 'idle') return;
+    const timer = window.setTimeout(() => setState('idle'), timeout);
     return () => window.clearTimeout(timer);
-  }, [copied, timeout]);
+  }, [state, timeout]);
 
   return (
-    <ActionsButton
-      ref={ref}
-      label={copied ? copiedLabel : label}
-      active={copied}
-      onClick={(event) => {
-        onClick?.(event);
-        if (event.defaultPrevented || !navigator.clipboard?.writeText) return;
-        navigator.clipboard.writeText(text).then(
-          () => setCopied(true),
-          () => undefined,
-        );
-      }}
-      {...props}
-    >
-      {copied ? <CheckIcon /> : <CopyIcon />}
-    </ActionsButton>
+    <>
+      <ActionsButton
+        ref={ref}
+        label={copied ? copiedLabel : label}
+        data-active={copied ? 'true' : undefined}
+        onClick={(event) => {
+          onClick?.(event);
+          if (event.defaultPrevented) return;
+          if (!navigator.clipboard?.writeText) {
+            setState('failed');
+            return;
+          }
+          navigator.clipboard.writeText(text).then(
+            () => setState('copied'),
+            () => setState('failed'),
+          );
+        }}
+        {...props}
+      >
+        {copied ? <CheckIcon /> : <CopyIcon />}
+      </ActionsButton>
+      <span role="status" className="sr-only">
+        {copied ? copiedLabel : state === 'failed' ? failedLabel : ''}
+      </span>
+    </>
   );
 };
 
