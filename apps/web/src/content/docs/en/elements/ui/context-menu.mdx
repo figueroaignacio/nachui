@@ -35,7 +35,7 @@ import { ContextMenu } from '@/components/ui/context-menu';
 </ContextMenu>
 ```
 
-The menu opens at the pointer on right click, on long press on touch devices, and from the keyboard with Shift F10 or the context menu key. It clamps itself to the viewport, and arrow keys, Home, End and Escape work as in any menu.
+The menu opens at the pointer on right click, on long press on touch devices, and from the keyboard with Shift F10 or the context menu key. It renders in a portal, so a parent with `overflow: hidden` never clips it, it stays inside the viewport, and it closes when the page scrolls or the window loses focus. Arrow keys, Home, End and Escape work as in any menu, and typing the first letters of an item jumps to it.
 
 ## Composition
 

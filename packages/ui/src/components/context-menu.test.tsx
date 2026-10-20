@@ -1,6 +1,7 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { ContextMenu } from './context-menu';
 
 vi.mock('motion/react');
@@ -29,13 +30,13 @@ describe('ContextMenu', () => {
     const { handleAction } = renderMenu();
 
     const trigger = screen.getByText('Right click here');
-    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    expect(trigger).toHaveAttribute('data-state', 'closed');
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
 
     fireEvent.contextMenu(trigger, { clientX: 40, clientY: 40 });
 
     await waitFor(() => {
-      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      expect(trigger).toHaveAttribute('data-state', 'open');
       expect(screen.getByRole('menu')).toBeInTheDocument();
       expect(screen.getByText('Actions')).toBeInTheDocument();
     });
@@ -151,6 +152,131 @@ describe('ContextMenu', () => {
     );
 
     expect(screen.getByRole('menu')).toBeInTheDocument();
-    expect(screen.getByText('Area')).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByText('Area')).toHaveAttribute('data-state', 'open');
+  });
+});
+
+describe('ContextMenu layering, touch and keyboard', () => {
+  it('describes its keyboard shortcut without claiming popup semantics', () => {
+    renderMenu();
+    const trigger = screen.getByText('Right click here');
+
+    expect(trigger).not.toHaveAttribute('aria-haspopup');
+    expect(trigger).not.toHaveAttribute('aria-expanded');
+    expect(trigger).toHaveAttribute('aria-keyshortcuts', 'Shift+F10 ContextMenu');
+    expect(trigger).toHaveClass('[-webkit-touch-callout:none]');
+  });
+
+  it('opens from the ContextMenu key', async () => {
+    renderMenu();
+    const trigger = screen.getByText('Right click here');
+    trigger.focus();
+
+    fireEvent.keyDown(trigger, { key: 'ContextMenu' });
+
+    expect(await screen.findByRole('menu')).toBeInTheDocument();
+  });
+
+  it('portals the menu to the body at a fixed viewport position', async () => {
+    const { container } = render(
+      <ContextMenu>
+        <ContextMenu.Trigger>Area</ContextMenu.Trigger>
+        <ContextMenu.Content>
+          <ContextMenu.Item>Copy</ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu>,
+    );
+
+    fireEvent.contextMenu(screen.getByText('Area'), { clientX: 30, clientY: 50 });
+    const menu = await screen.findByRole('menu');
+
+    expect(container).not.toContainElement(menu);
+    expect(menu.style.position).toBe('fixed');
+    expect(menu).toHaveClass('z-500', 'max-h-(--available-height)');
+  });
+
+  it('focuses items by typing the start of their label', async () => {
+    renderMenu();
+    fireEvent.contextMenu(screen.getByText('Right click here'), { clientX: 10, clientY: 10 });
+    const menu = await screen.findByRole('menu');
+    await waitFor(() => expect(screen.getByText('Copy')).toHaveFocus());
+
+    fireEvent.keyDown(menu, { key: 'd' });
+
+    expect(screen.getByText('Delete')).toHaveFocus();
+  });
+
+  it('marks Escape as handled', async () => {
+    renderMenu();
+    fireEvent.contextMenu(screen.getByText('Right click here'), { clientX: 10, clientY: 10 });
+    const menu = await screen.findByRole('menu');
+
+    expect(fireEvent.keyDown(menu, { key: 'Escape' })).toBe(false);
+  });
+
+  it.each([
+    ['scroll', () => fireEvent.scroll(window)],
+    ['resize', () => fireEvent(window, new Event('resize'))],
+    ['blur', () => fireEvent.blur(window)],
+  ])('closes on window %s', async (_name, dispatch) => {
+    renderMenu();
+    fireEvent.contextMenu(screen.getByText('Right click here'), { clientX: 10, clientY: 10 });
+    await screen.findByRole('menu');
+
+    act(() => dispatch());
+
+    await waitFor(() => expect(screen.queryByRole('menu')).not.toBeInTheDocument());
+  });
+
+  it('focuses the item under the pointer so only one item is highlighted', async () => {
+    const user = userEvent.setup();
+    renderMenu();
+    fireEvent.contextMenu(screen.getByText('Right click here'), { clientX: 10, clientY: 10 });
+    await waitFor(() => expect(screen.getByText('Copy')).toHaveFocus());
+
+    await user.hover(screen.getByText('Delete'));
+
+    expect(screen.getByText('Delete')).toHaveFocus();
+    expect(screen.getByText('Delete').className).not.toContain('hover:bg-muted');
+  });
+
+  it('keeps a long press alive through small finger jitter', () => {
+    vi.useFakeTimers();
+    try {
+      renderMenu();
+      const trigger = screen.getByText('Right click here');
+
+      fireEvent.touchStart(trigger, { touches: [{ clientX: 100, clientY: 100 }] });
+      fireEvent.touchMove(trigger, { touches: [{ clientX: 103, clientY: 102 }] });
+      act(() => vi.advanceTimersByTime(600));
+
+      expect(screen.getByRole('menu')).toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('cancels a long press when the finger really moves', () => {
+    vi.useFakeTimers();
+    try {
+      renderMenu();
+      const trigger = screen.getByText('Right click here');
+
+      fireEvent.touchStart(trigger, { touches: [{ clientX: 100, clientY: 100 }] });
+      fireEvent.touchMove(trigger, { touches: [{ clientX: 100, clientY: 130 }] });
+      act(() => vi.advanceTimersByTime(600));
+
+      expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('has no axe violations while open', async () => {
+    renderMenu();
+    fireEvent.contextMenu(screen.getByText('Right click here'), { clientX: 10, clientY: 10 });
+    await screen.findByRole('menu');
+
+    await expectNoAxeViolations(document.body);
   });
 });

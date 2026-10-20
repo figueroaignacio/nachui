@@ -3,7 +3,9 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { FloatingPortal, useFloating } from '../lib/floating';
 import { floatingVariants, reveal } from '../lib/motion';
+import { useLayer } from '../lib/overlay';
 import { useControllableState } from '../lib/use-controllable-state';
 
 interface ContextMenuContextValue {
@@ -11,7 +13,6 @@ interface ContextMenuContextValue {
   point: { x: number; y: number } | null;
   openAt: (x: number, y: number) => void;
   closeMenu: (options?: { restoreFocus?: boolean }) => void;
-  rootRef: React.RefObject<HTMLDivElement | null>;
   triggerRef: React.RefObject<HTMLDivElement | null>;
   triggerId: string;
   contentId: string;
@@ -47,7 +48,8 @@ interface ContextMenuItemProps {
 const CONTEXT_MENU_STYLE = { willChange: 'opacity, transform, filter' } as const;
 
 const LONG_PRESS_MS = 500;
-const VIEWPORT_PADDING = 8;
+const LONG_PRESS_TOLERANCE = 10;
+const TYPEAHEAD_RESET_MS = 500;
 
 const ContextMenuContext = React.createContext<ContextMenuContextValue | null>(null);
 
@@ -64,6 +66,31 @@ function getMenuItems(container: HTMLElement | null): HTMLElement[] {
   );
 }
 
+function useTypeahead() {
+  const bufferRef = React.useRef('');
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  React.useEffect(() => () => clearTimeout(timerRef.current), []);
+
+  const isTyping = React.useCallback(() => bufferRef.current !== '', []);
+
+  const search = React.useCallback((key: string, items: HTMLElement[], current: number) => {
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      bufferRef.current = '';
+    }, TYPEAHEAD_RESET_MS);
+    const buffer = bufferRef.current + key.toLowerCase();
+    bufferRef.current = buffer;
+    const repeated = Array.from(buffer).every((char) => char === buffer[0]);
+    const query = repeated ? buffer.charAt(0) : buffer;
+    const start = repeated ? current + 1 : Math.max(current, 0);
+    const ordered = [...items.slice(start), ...items.slice(0, start)];
+    return ordered.find((item) => item.textContent?.trim().toLowerCase().startsWith(query));
+  }, []);
+
+  return React.useMemo(() => ({ search, isTyping }), [search, isTyping]);
+}
+
 const ContextMenuRoot = ({
   children,
   className,
@@ -77,7 +104,6 @@ const ContextMenuRoot = ({
     onChange: onOpenChange,
   });
   const [point, setPoint] = React.useState<{ x: number; y: number } | null>(null);
-  const rootRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLDivElement>(null);
 
   const openAt = React.useCallback(
@@ -103,15 +129,13 @@ const ContextMenuRoot = ({
   const contentId = `context-menu-content-${id}`;
 
   const contextValue = React.useMemo(
-    () => ({ isOpen, point, openAt, closeMenu, rootRef, triggerRef, triggerId, contentId }),
+    () => ({ isOpen, point, openAt, closeMenu, triggerRef, triggerId, contentId }),
     [isOpen, point, openAt, closeMenu, triggerId, contentId],
   );
 
   return (
     <ContextMenuContext value={contextValue}>
-      <div ref={rootRef} className={cn('relative', className)}>
-        {children}
-      </div>
+      <div className={cn('relative', className)}>{children}</div>
     </ContextMenuContext>
   );
 };
@@ -124,8 +148,9 @@ const ContextMenuTrigger = ({
   onKeyDown,
   ...props
 }: ContextMenuTriggerProps): React.JSX.Element => {
-  const { isOpen, openAt, triggerRef, triggerId, contentId } = useContextMenuContext();
+  const { isOpen, openAt, triggerRef, triggerId } = useContextMenuContext();
   const longPressTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const longPressStart = React.useRef<{ x: number; y: number } | null>(null);
 
   const clearLongPress = React.useCallback(() => {
     if (longPressTimer.current !== null) {
@@ -153,9 +178,21 @@ const ContextMenuTrigger = ({
       if (!touch) return;
       const { clientX, clientY } = touch;
       clearLongPress();
+      longPressStart.current = { x: clientX, y: clientY };
       longPressTimer.current = setTimeout(() => openAt(clientX, clientY), LONG_PRESS_MS);
     },
     [disabled, openAt, clearLongPress],
+  );
+
+  const handleTouchMove = React.useCallback(
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      const start = longPressStart.current;
+      const touch = e.touches[0];
+      if (!start || !touch) return;
+      const distance = Math.hypot(touch.clientX - start.x, touch.clientY - start.y);
+      if (distance > LONG_PRESS_TOLERANCE) clearLongPress();
+    },
+    [clearLongPress],
   );
 
   const handleKeyDown = React.useCallback(
@@ -176,17 +213,16 @@ const ContextMenuTrigger = ({
       ref={triggerRef}
       id={triggerId}
       tabIndex={disabled ? undefined : 0}
-      aria-haspopup="menu"
-      aria-expanded={isOpen}
-      aria-controls={isOpen ? contentId : undefined}
+      aria-keyshortcuts={disabled ? undefined : 'Shift+F10 ContextMenu'}
       data-state={isOpen ? 'open' : 'closed'}
       onContextMenu={handleContextMenu}
       onTouchStart={handleTouchStart}
       onTouchEnd={clearLongPress}
-      onTouchMove={clearLongPress}
+      onTouchCancel={clearLongPress}
+      onTouchMove={handleTouchMove}
       onKeyDown={handleKeyDown}
       className={cn(
-        'ring-offset-background focus-visible:ring-ring select-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+        'ring-offset-background focus-visible:ring-ring select-none [-webkit-touch-callout:none] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
         className,
       )}
       {...props}
@@ -200,48 +236,50 @@ const ContextMenuContent = ({
   children,
   className,
 }: ContextMenuContentProps): React.JSX.Element | null => {
-  const { isOpen, point, closeMenu, rootRef, triggerRef, contentId, triggerId } =
-    useContextMenuContext();
+  const { isOpen, point, closeMenu, triggerRef, contentId, triggerId } = useContextMenuContext();
   const contentRef = React.useRef<HTMLDivElement>(null);
-  const [placement, setPlacement] = React.useState<{
-    point: { x: number; y: number } | null;
-    left: number;
-    top: number;
-  } | null>(null);
-  const coords = placement?.point === point ? placement : null;
-
-  React.useLayoutEffect(() => {
-    if (!isOpen) return;
-    const content = contentRef.current;
-    const root = rootRef.current ?? content?.parentElement;
-    if (!content || !root) return;
-
-    const rootRect = root.getBoundingClientRect();
-    const triggerRect = triggerRef.current?.getBoundingClientRect() ?? rootRect;
-    let x = point?.x ?? triggerRect.left;
-    let y = point?.y ?? triggerRect.bottom;
-    x = Math.min(x, window.innerWidth - content.offsetWidth - VIEWPORT_PADDING);
-    y = Math.min(y, window.innerHeight - content.offsetHeight - VIEWPORT_PADDING);
-    x = Math.max(VIEWPORT_PADDING, x);
-    y = Math.max(VIEWPORT_PADDING, y);
-
-    setPlacement({ point, left: x - rootRect.left, top: y - rootRect.top });
-  }, [isOpen, point, rootRef, triggerRef]);
+  const layer = useLayer(isOpen, false, contentRef);
+  const typeahead = useTypeahead();
+  const shouldReduceMotion = useReducedMotion();
+  const { style: floatingStyle, side } = useFloating({
+    open: isOpen,
+    anchorRef: triggerRef,
+    floatingRef: contentRef,
+    point,
+    side: 'bottom',
+    align: 'start',
+    sideOffset: point ? 0 : 4,
+  });
+  const verticalSide = side === 'top' ? 'top' : 'bottom';
 
   React.useEffect(() => {
     if (!isOpen) return;
+    const dismiss = () => closeMenu({ restoreFocus: false });
     const handlePointerDown = (event: PointerEvent) => {
       if (contentRef.current?.contains(event.target as Node)) return;
-      closeMenu({ restoreFocus: false });
+      if (layer.isInsideUpperLayer(event.target)) return;
+      dismiss();
+    };
+    const handleScroll = (event: Event) => {
+      if (event.target instanceof Node && contentRef.current?.contains(event.target)) return;
+      dismiss();
     };
     document.addEventListener('pointerdown', handlePointerDown);
-    return () => document.removeEventListener('pointerdown', handlePointerDown);
-  }, [isOpen, closeMenu]);
+    window.addEventListener('scroll', handleScroll, { capture: true, passive: true });
+    window.addEventListener('resize', dismiss);
+    window.addEventListener('blur', dismiss);
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      window.removeEventListener('scroll', handleScroll, { capture: true });
+      window.removeEventListener('resize', dismiss);
+      window.removeEventListener('blur', dismiss);
+    };
+  }, [isOpen, closeMenu, layer]);
 
   React.useEffect(() => {
     if (!isOpen) return;
     const frame = requestAnimationFrame(() => {
-      getMenuItems(contentRef.current)[0]?.focus();
+      getMenuItems(contentRef.current)[0]?.focus({ preventScroll: true });
     });
     return () => cancelAnimationFrame(frame);
   }, [isOpen]);
@@ -249,6 +287,7 @@ const ContextMenuContent = ({
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (e.key === 'Escape') {
+        if (!layer.isTopmost()) return;
         e.preventDefault();
         closeMenu();
         return;
@@ -273,6 +312,17 @@ const ContextMenuContent = ({
         nextIndex = 0;
       } else if (e.key === 'End') {
         nextIndex = items.length - 1;
+      } else if (
+        e.key.length === 1 &&
+        !e.altKey &&
+        !e.ctrlKey &&
+        !e.metaKey &&
+        (e.key !== ' ' || typeahead.isTyping())
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        typeahead.search(e.key, items, currentIndex)?.focus();
+        return;
       }
 
       if (nextIndex !== null) {
@@ -280,39 +330,46 @@ const ContextMenuContent = ({
         items[nextIndex]?.focus();
       }
     },
-    [closeMenu],
+    [closeMenu, layer, typeahead],
   );
 
-  const shouldReduceMotion = useReducedMotion();
+  const style = React.useMemo(
+    () => ({
+      ...floatingStyle,
+      ...(isOpen ? null : { visibility: undefined }),
+      ...CONTEXT_MENU_STYLE,
+    }),
+    [floatingStyle, isOpen],
+  );
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          ref={contentRef}
-          id={contentId}
-          role="menu"
-          aria-labelledby={triggerId}
-          onKeyDown={handleKeyDown}
-          variants={shouldReduceMotion ? reveal : floatingVariants.bottom}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          style={{
-            left: coords?.left ?? 0,
-            top: coords?.top ?? 0,
-            visibility: coords ? undefined : 'hidden',
-            ...CONTEXT_MENU_STYLE,
-          }}
-          className={cn(
-            'bg-popover text-popover-foreground border-border absolute z-50 min-w-48 origin-top-left overflow-hidden rounded-md border shadow-md',
-            className,
-          )}
-        >
-          <div className="flex flex-col gap-0.5 p-1">{children}</div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <FloatingPortal>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            ref={contentRef}
+            id={contentId}
+            role="menu"
+            tabIndex={-1}
+            aria-labelledby={triggerId}
+            onKeyDownCapture={handleKeyDown}
+            onContextMenu={(event: React.MouseEvent) => event.preventDefault()}
+            variants={shouldReduceMotion ? reveal : floatingVariants[verticalSide]}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            style={style}
+            className={cn(
+              'bg-popover text-popover-foreground border-border z-500 max-h-(--available-height) min-w-48 overflow-y-auto overscroll-contain rounded-md border shadow-md outline-none',
+              verticalSide === 'top' ? 'origin-bottom-left' : 'origin-top-left',
+              className,
+            )}
+          >
+            <div className="flex flex-col gap-0.5 p-1">{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </FloatingPortal>
   );
 };
 
@@ -320,7 +377,7 @@ const itemClassName = (disabled: boolean, variant: 'default' | 'destructive') =>
   cn(
     'relative flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none select-none',
     'transition-colors duration-150',
-    'hover:bg-muted focus-visible:bg-muted focus:bg-muted',
+    'focus-visible:bg-muted focus:bg-muted pointer-coarse:py-2.5',
     disabled && 'pointer-events-none opacity-40',
     variant === 'destructive' && 'text-destructive focus:text-destructive',
   );
@@ -360,6 +417,19 @@ const ContextMenuItem = ({
     [disabled, onClick, onSelect, closeMenu],
   );
 
+  const handlePointerMove = React.useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (disabled || e.pointerType === 'touch') return;
+      if (document.activeElement !== e.currentTarget) e.currentTarget.focus();
+    },
+    [disabled],
+  );
+
+  const handlePointerLeave = React.useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (document.activeElement !== e.currentTarget) return;
+    e.currentTarget.closest<HTMLElement>('[role="menu"]')?.focus();
+  }, []);
+
   return (
     <div
       role="menuitem"
@@ -367,6 +437,8 @@ const ContextMenuItem = ({
       aria-disabled={disabled || undefined}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
       className={cn(itemClassName(disabled, variant), className)}
     >
       {children}

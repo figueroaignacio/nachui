@@ -35,7 +35,7 @@ import { ContextMenu } from '@/components/ui/context-menu';
 </ContextMenu>
 ```
 
-El menú se abre en el puntero con clic derecho, con pulsación larga en pantallas táctiles, y desde el teclado con Shift F10 o la tecla de menú contextual. Se ajusta solo al viewport, y las flechas, Home, End y Escape funcionan como en cualquier menú.
+El menú se abre en el puntero con clic derecho, con pulsación larga en pantallas táctiles, y desde el teclado con Shift F10 o la tecla de menú contextual. Se renderiza en un portal, así que un padre con `overflow: hidden` nunca lo recorta, se mantiene dentro del viewport y se cierra cuando la página hace scroll o la ventana pierde el foco. Las flechas, Home, End y Escape funcionan como en cualquier menú, y escribir las primeras letras de un item lo enfoca.
 
 ## Composición
 
