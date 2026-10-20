@@ -20,11 +20,14 @@ const REDUCED_COLLAPSE = {
   open: { height: 'auto', opacity: 1, transition: still },
 } as const;
 
+type AccordionHeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+
 type AccordionContextValue = {
   type: 'single' | 'multiple';
   openItems: string[];
   toggleItem: (value: string) => void;
   baseId: string;
+  headingLevel: AccordionHeadingLevel;
 };
 
 const slugify = (value: string) => value.replace(/[^a-zA-Z0-9-]/gi, '');
@@ -46,6 +49,7 @@ interface AccordionProps {
   className?: string;
   value?: string[];
   onValueChange?: (value: string[]) => void;
+  headingLevel?: AccordionHeadingLevel;
 }
 
 const AccordionRoot = ({
@@ -55,6 +59,7 @@ const AccordionRoot = ({
   className,
   value,
   onValueChange,
+  headingLevel = 3,
   ref,
 }: AccordionProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const [openItems, setOpenItems] = useControllableState<string[]>({
@@ -79,8 +84,8 @@ const AccordionRoot = ({
   );
 
   const contextValue = React.useMemo<AccordionContextValue>(
-    () => ({ type, openItems, toggleItem, baseId }),
-    [type, openItems, toggleItem, baseId],
+    () => ({ type, openItems, toggleItem, baseId, headingLevel }),
+    [type, openItems, toggleItem, baseId, headingLevel],
   );
 
   return (
@@ -123,15 +128,19 @@ interface AccordionTriggerProps {
   children?: React.ReactNode;
   value: string;
   className?: string;
+  headingLevel?: AccordionHeadingLevel;
 }
 
 const AccordionTrigger = ({
   children,
   value,
   className,
+  headingLevel,
   ref,
 }: AccordionTriggerProps & { ref?: React.Ref<HTMLButtonElement> }) => {
-  const { openItems, toggleItem, baseId } = useAccordionContext();
+  const context = useAccordionContext();
+  const { openItems, toggleItem, baseId } = context;
+  const Heading = `h${headingLevel ?? context.headingLevel}` as const;
   const isOpen = openItems.includes(value);
   const shouldReduceMotion = useReducedMotion();
   const triggerId = `${baseId}-trigger-${slugify(value)}`;
@@ -161,43 +170,45 @@ const AccordionTrigger = ({
   };
 
   return (
-    <motion.button
-      ref={ref}
-      id={triggerId}
-      type="button"
-      data-accordion-trigger=""
-      aria-controls={contentId}
-      aria-expanded={isOpen}
-      onClick={() => toggleItem(value)}
-      onKeyDown={handleKeyDown}
-      whileTap={shouldReduceMotion ? undefined : tap}
-      transition={springs.snappy}
-      className={cn(
-        'group hover:text-muted-foreground ring-offset-background focus-visible:ring-ring flex w-full items-center justify-between rounded-sm py-3.5 text-left text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
-        className,
-      )}
-    >
-      {children}
-      <motion.svg
-        aria-hidden="true"
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="text-muted-foreground group-hover:text-primary h-4 w-4 shrink-0 transition-colors"
-        variants={CHEVRON_VARIANTS}
-        animate={shouldReduceMotion ? undefined : isOpen ? 'open' : 'closed'}
+    <Heading className="flex">
+      <motion.button
+        ref={ref}
+        id={triggerId}
+        type="button"
+        data-accordion-trigger=""
+        aria-controls={isOpen ? contentId : undefined}
+        aria-expanded={isOpen}
+        onClick={() => toggleItem(value)}
+        onKeyDown={handleKeyDown}
+        whileTap={shouldReduceMotion ? undefined : tap}
         transition={springs.snappy}
-        style={CHEVRON_STYLE}
+        className={cn(
+          'group hover:text-muted-foreground ring-offset-background focus-visible:ring-ring flex w-full items-center justify-between rounded-sm py-3.5 text-left text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+          className,
+        )}
       >
-        <path d="m6 9 6 6 6-6" />
-      </motion.svg>
-    </motion.button>
+        {children}
+        <motion.svg
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="text-muted-foreground group-hover:text-primary h-4 w-4 shrink-0 transition-colors"
+          variants={CHEVRON_VARIANTS}
+          animate={isOpen ? 'open' : 'closed'}
+          transition={shouldReduceMotion ? still : springs.snappy}
+          style={CHEVRON_STYLE}
+        >
+          <path d="m6 9 6 6 6-6" />
+        </motion.svg>
+      </motion.button>
+    </Heading>
   );
 };
 
@@ -261,4 +272,10 @@ const Accordion = Object.assign(AccordionRoot, {
 });
 
 export { Accordion };
-export type { AccordionContentProps, AccordionItemProps, AccordionProps, AccordionTriggerProps };
+export type {
+  AccordionContentProps,
+  AccordionHeadingLevel,
+  AccordionItemProps,
+  AccordionProps,
+  AccordionTriggerProps,
+};

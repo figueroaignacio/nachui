@@ -64,12 +64,13 @@ You can omit `defaultValue` to have the accordion start completely collapsed.
 
 ### Accordion
 
-| Prop           | Type                       | Default     | Description                                                                    |
-| -------------- | -------------------------- | ----------- | ------------------------------------------------------------------------------ |
-| `type`         | `"single"` \| `"multiple"` | `"single"`  | Controls whether only one item or multiple items can be open at the same time. |
-| `defaultValue` | `string`                   | `undefined` | The initially opened item.                                                     |
-| `children`     | `React.ReactNode`          | —           | Should be `AccordionItem` components.                                          |
-| `className`    | `string`                   | —           | Additional classes for the wrapper.                                            |
+| Prop           | Type                                   | Default     | Description                                                                      |
+| -------------- | -------------------------------------- | ----------- | -------------------------------------------------------------------------------- |
+| `type`         | `"single"` \| `"multiple"`             | `"single"`  | Controls whether only one item or multiple items can be open at the same time.   |
+| `defaultValue` | `string`                               | `undefined` | The initially opened item.                                                       |
+| `children`     | `React.ReactNode`                      | —           | Should be `AccordionItem` components.                                            |
+| `className`    | `string`                               | —           | Additional classes for the wrapper.                                              |
+| `headingLevel` | `1` \| `2` \| `3` \| `4` \| `5` \| `6` | `3`         | Heading level that wraps every trigger. Pick the one that fits the page outline. |
 
 ### Accordion.Item
 
@@ -83,12 +84,13 @@ You can omit `defaultValue` to have the accordion start completely collapsed.
 
 ### Accordion.Trigger
 
-| Prop        | Type              | Default  | Description                                        |
-| ----------- | ----------------- | -------- | -------------------------------------------------- |
-| `children`  | `React.ReactNode` | —        | The title or content of the button.                |
-| `isOpen`    | `boolean`         | Internal | Whether the item is open (controls icon rotation). |
-| `onToggle`  | `() => void`      | Internal | Click handler for toggling.                        |
-| `className` | `string`          | —        | Additional classes for the trigger button.         |
+| Prop           | Type                                   | Default          | Description                                        |
+| -------------- | -------------------------------------- | ---------------- | -------------------------------------------------- |
+| `children`     | `React.ReactNode`                      | —                | The title or content of the button.                |
+| `isOpen`       | `boolean`                              | Internal         | Whether the item is open (controls icon rotation). |
+| `onToggle`     | `() => void`                           | Internal         | Click handler for toggling.                        |
+| `className`    | `string`                               | —                | Additional classes for the trigger button.         |
+| `headingLevel` | `1` \| `2` \| `3` \| `4` \| `5` \| `6` | From `Accordion` | Overrides the heading level for this trigger only. |
 
 ### Accordion.Content
 

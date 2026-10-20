@@ -64,12 +64,13 @@ Puedes omitir `defaultValue` para que el acordeón inicie completamente cerrado.
 
 ### Accordion
 
-| Prop           | Tipo                       | Default     | Descripción                                                       |
-| -------------- | -------------------------- | ----------- | ----------------------------------------------------------------- |
-| `type`         | `"single"` \| `"multiple"` | `"single"`  | Controla si se puede abrir un solo ítem o varios simultáneamente. |
-| `defaultValue` | `string`                   | `undefined` | Ítem inicial abierto.                                             |
-| `children`     | `React.ReactNode`          | —           | Deben ser `AccordionItem`.                                        |
-| `className`    | `string`                   | —           | Clases adicionales para el contenedor.                            |
+| Prop           | Tipo                                   | Default     | Descripción                                                                                         |
+| -------------- | -------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------- |
+| `type`         | `"single"` \| `"multiple"`             | `"single"`  | Controla si se puede abrir un solo ítem o varios simultáneamente.                                   |
+| `defaultValue` | `string`                               | `undefined` | Ítem inicial abierto.                                                                               |
+| `children`     | `React.ReactNode`                      | —           | Deben ser `AccordionItem`.                                                                          |
+| `className`    | `string`                               | —           | Clases adicionales para el contenedor.                                                              |
+| `headingLevel` | `1` \| `2` \| `3` \| `4` \| `5` \| `6` | `3`         | Nivel del encabezado que envuelve cada trigger. Elegí el que encaje con la estructura de la página. |
 
 ### Accordion.Item
 
@@ -83,12 +84,13 @@ Puedes omitir `defaultValue` para que el acordeón inicie completamente cerrado.
 
 ### Accordion.Trigger
 
-| Prop        | Tipo              | Default            | Descripción                             |
-| ----------- | ----------------- | ------------------ | --------------------------------------- |
-| `children`  | `React.ReactNode` | —                  | Título o contenido del botón.           |
-| `isOpen`    | `boolean`         | Controlado interno | Estado abierto/cerrado (rota el ícono). |
-| `onToggle`  | `() => void`      | Controlado interno | Acción al hacer click.                  |
-| `className` | `string`          | —                  | Clases adicionales del botón.           |
+| Prop           | Tipo                                   | Default            | Descripción                                           |
+| -------------- | -------------------------------------- | ------------------ | ----------------------------------------------------- |
+| `children`     | `React.ReactNode`                      | —                  | Título o contenido del botón.                         |
+| `isOpen`       | `boolean`                              | Controlado interno | Estado abierto/cerrado (rota el ícono).               |
+| `onToggle`     | `() => void`                           | Controlado interno | Acción al hacer click.                                |
+| `className`    | `string`                               | —                  | Clases adicionales del botón.                         |
+| `headingLevel` | `1` \| `2` \| `3` \| `4` \| `5` \| `6` | El de `Accordion`  | Cambia el nivel de encabezado solo para este trigger. |
 
 ### Accordion.Content
 
