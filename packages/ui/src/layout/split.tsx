@@ -71,30 +71,32 @@ type SplitCollapse = keyof typeof SPLIT_COLUMNS;
 type SplitGap = keyof typeof SPLIT_GAP;
 type SplitAlign = keyof typeof SPLIT_ALIGN;
 
-interface SplitProps extends React.HTMLAttributes<HTMLDivElement> {
-  as?: React.ElementType;
+type SplitOwnProps<E extends React.ElementType> = {
+  as?: E;
   ratio?: SplitRatio;
   collapse?: SplitCollapse;
   gap?: SplitGap;
   align?: SplitAlign;
   reverse?: boolean;
-}
+  className?: string;
+};
 
-const Split = ({
-  as: Component = 'div',
+type SplitProps<E extends React.ElementType = 'div'> = SplitOwnProps<E> &
+  Omit<React.ComponentPropsWithRef<E>, keyof SplitOwnProps<E>>;
+
+const Split = <E extends React.ElementType = 'div'>({
+  as,
   ratio = '1/2',
   collapse = 'md',
   gap = '6',
   align = 'stretch',
   reverse = false,
   className,
-  children,
-  ref,
   ...props
-}: SplitProps & { ref?: React.Ref<HTMLDivElement> }) => {
+}: SplitProps<E>) => {
+  const Component: React.ElementType = as ?? 'div';
   return (
     <Component
-      ref={ref}
       data-slot="split"
       data-ratio={ratio}
       data-collapse={collapse}
@@ -107,9 +109,7 @@ const Split = ({
         className,
       )}
       {...props}
-    >
-      {children}
-    </Component>
+    />
   );
 };
 

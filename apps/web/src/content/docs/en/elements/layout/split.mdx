@@ -45,7 +45,7 @@ A settings page: navigation on the left at one third, content on the right.
 
 ### Reverse
 
-`reverse` moves the first child below the second when the columns stack, for an image that should lead on mobile but sit beside the text on desktop.
+`reverse` moves the first child below the second when the columns stack, for an image that should lead on mobile but sit beside the text on desktop. It only changes the visual order, so screen readers and the Tab key still follow the source. Put first in the markup whatever should be read first. With `collapse="none"` the columns never stack, so `reverse` has no effect.
 
 <ComponentPreview component="split" demo="reverse" />
 
