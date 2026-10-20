@@ -34,11 +34,11 @@ import { Command } from '@/components/ui/command';
 
 ### CliCommand
 
-| Prop         | Tipo                     | Por defecto | Descripción                                                                                               |
-| ------------ | ------------------------ | ----------- | --------------------------------------------------------------------------------------------------------- |
-| `command`    | `string`                 | —           | El comando CLI que se muestra y se copia al portapapeles.                                                 |
-| `prefix`     | `string`                 | `"$"`       | Símbolo que aparece antes del comando (por ej. `$`, `>`, `%`).                                            |
-| `resetDelay` | `number`                 | `2000`      | Milisegundos antes de que el estado "copiado" vuelva al ícono de copiar.                                  |
-| `onCopied`   | `() => void`             | —           | Callback que se ejecuta cuando el comando se copia correctamente.                                         |
-| `labels`     | `Partial<CommandLabels>` | —           | Textos del botón: `copy` (`"Copy command"`), `copyHint` (`"Copy to clipboard"`) y `copied` (`"Copied!"`). |
-| `className`  | `string`                 | —           | Clases CSS adicionales aplicadas al elemento raíz.                                                        |
+| Prop         | Tipo                     | Por defecto | Descripción                                                                                                                                                                                                  |
+| ------------ | ------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `command`    | `string`                 | —           | El comando CLI que se muestra y se copia al portapapeles.                                                                                                                                                    |
+| `prefix`     | `string`                 | `"$"`       | Símbolo que aparece antes del comando (por ej. `$`, `>`, `%`).                                                                                                                                               |
+| `resetDelay` | `number`                 | `2000`      | Milisegundos antes de que el estado "copiado" vuelva al ícono de copiar.                                                                                                                                     |
+| `onCopied`   | `() => void`             | —           | Callback que se ejecuta cuando el comando se copia correctamente.                                                                                                                                            |
+| `labels`     | `Partial<CommandLabels>` | —           | Textos: `copy` es el nombre del botón (`"Copy command"`), `copyHint` su tooltip (`"Copy to clipboard"`) y `copied` se anuncia a lectores de pantalla y aparece como tooltip después de copiar (`"Copied!"`). |
+| `className`  | `string`                 | —           | Clases CSS adicionales aplicadas al elemento raíz.                                                                                                                                                           |

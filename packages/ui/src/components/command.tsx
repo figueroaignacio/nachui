@@ -118,19 +118,26 @@ export const Command = ({
       await navigator.clipboard.writeText(command);
       markCopied();
     } catch {
+      const previousFocus =
+        document.activeElement instanceof HTMLElement ? document.activeElement : null;
       const textarea = document.createElement('textarea');
       textarea.value = command;
+      textarea.setAttribute('readonly', '');
       textarea.style.position = 'fixed';
       textarea.style.opacity = '0';
       document.body.appendChild(textarea);
       textarea.focus();
       textarea.select();
+      let succeeded: boolean;
       try {
-        document.execCommand('copy');
-        markCopied();
+        succeeded = document.execCommand('copy');
+      } catch {
+        succeeded = false;
       } finally {
         document.body.removeChild(textarea);
+        previousFocus?.focus();
       }
+      if (succeeded) markCopied();
     }
   }, [command, copied, markCopied]);
 
@@ -147,12 +154,14 @@ export const Command = ({
         {prefix}
       </span>
 
-      <code className="flex-1 truncate text-sm select-all">{command}</code>
+      <code className="min-w-0 flex-1 overflow-x-auto text-sm whitespace-nowrap select-all">
+        {command}
+      </code>
 
       <button
         type="button"
         onClick={handleCopy}
-        aria-label={copied ? labels.copied : labels.copy}
+        aria-label={labels.copy}
         title={copied ? labels.copied : labels.copyHint}
         className={cn(
           'text-muted-foreground hover:text-foreground -m-1.5 shrink-0 rounded p-2 transition-colors',
@@ -188,6 +197,9 @@ export const Command = ({
           )}
         </AnimatePresence>
       </button>
+      <span role="status" aria-live="polite" className="sr-only">
+        {copied ? labels.copied : ''}
+      </span>
     </div>
   );
 };
