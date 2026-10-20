@@ -1,5 +1,6 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { ScrollArea } from './scroll-area';
 
 describe('ScrollArea', () => {
@@ -58,5 +59,45 @@ describe('ScrollArea', () => {
       </ScrollArea>,
     );
     expect(viewport).not.toBeNull();
+  });
+
+  it('lets keyboard users focus the viewport', () => {
+    const { container } = render(
+      <ScrollArea>
+        <p>Content</p>
+      </ScrollArea>,
+    );
+    const viewport = container.querySelector<HTMLElement>('[data-slot="scroll-area-viewport"]');
+    expect(viewport).toHaveAttribute('tabindex', '0');
+    viewport?.focus();
+    expect(viewport).toHaveFocus();
+  });
+
+  it('becomes a named region when given a label', async () => {
+    const { container } = render(
+      <ScrollArea label="Release notes">
+        <p>Content</p>
+      </ScrollArea>,
+    );
+    expect(screen.getByRole('region', { name: 'Release notes' })).toHaveAttribute(
+      'data-slot',
+      'scroll-area-viewport',
+    );
+    await expectNoAxeViolations(container);
+  });
+
+  it('batches scroll measurements into an animation frame', () => {
+    const raf = vi.spyOn(window, 'requestAnimationFrame');
+    const { container } = render(
+      <ScrollArea>
+        <p>Content</p>
+      </ScrollArea>,
+    );
+    const viewport = container.querySelector('[data-slot="scroll-area-viewport"]');
+    raf.mockClear();
+    fireEvent.scroll(viewport as Element);
+    fireEvent.scroll(viewport as Element);
+    expect(raf).toHaveBeenCalledTimes(1);
+    raf.mockRestore();
   });
 });

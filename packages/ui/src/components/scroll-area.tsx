@@ -29,6 +29,7 @@ interface ScrollAreaProps extends React.HTMLAttributes<HTMLDivElement> {
   scrollHideDelay?: number;
   viewportRef?: React.Ref<HTMLDivElement>;
   viewportClassName?: string;
+  label?: string;
 }
 
 const MIN_THUMB_SIZE = 18;
@@ -44,6 +45,7 @@ const ScrollAreaRoot = ({
   scrollHideDelay = 600,
   viewportRef: externalViewportRef,
   viewportClassName,
+  label,
   className,
   children,
   onPointerEnter,
@@ -104,9 +106,12 @@ const ScrollAreaRoot = ({
         <div
           ref={mergedViewportRef}
           data-slot="scroll-area-viewport"
+          tabIndex={0}
+          role={label ? 'region' : undefined}
+          aria-label={label}
           onScroll={handleScroll}
           className={cn(
-            'size-full [scrollbar-width:none] rounded-[inherit] [&::-webkit-scrollbar]:hidden',
+            'focus-visible:ring-ring size-full [scrollbar-width:none] rounded-[inherit] outline-none focus-visible:ring-2 focus-visible:ring-inset [&::-webkit-scrollbar]:hidden',
             showVertical ? 'overflow-y-auto' : 'overflow-y-hidden',
             showHorizontal ? 'overflow-x-auto' : 'overflow-x-hidden',
             viewportClassName,
@@ -185,11 +190,20 @@ const ScrollAreaBar = ({
     if (!viewport) return;
 
     measure();
-    viewport.addEventListener('scroll', measure, { passive: true });
+
+    let frame = 0;
+    const schedule = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        measure();
+      });
+    };
+    viewport.addEventListener('scroll', schedule, { passive: true });
 
     let observer: ResizeObserver | undefined;
     if (typeof ResizeObserver !== 'undefined') {
-      observer = new ResizeObserver(measure);
+      observer = new ResizeObserver(schedule);
       observer.observe(viewport);
       for (const child of Array.from(viewport.children)) observer.observe(child);
     }
@@ -205,13 +219,14 @@ const ScrollAreaBar = ({
             if (node instanceof Element) observer?.unobserve(node);
           }
         }
-        measure();
+        schedule();
       });
       mutations.observe(viewport, { childList: true });
     }
 
     return () => {
-      viewport.removeEventListener('scroll', measure);
+      viewport.removeEventListener('scroll', schedule);
+      if (frame) cancelAnimationFrame(frame);
       observer?.disconnect();
       mutations?.disconnect();
     };

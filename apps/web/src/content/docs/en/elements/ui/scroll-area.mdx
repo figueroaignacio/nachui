@@ -26,7 +26,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 </ScrollArea>
 ```
 
-The root wraps your content in a viewport that scrolls natively with the browser scrollbar hidden, then draws its own thumb on top. Wheel, touch, keyboard and drag all keep working because the viewport is a regular overflowing element. The thumb is dragged with the pointer and the track jumps on click.
+The root wraps your content in a viewport that scrolls natively with the browser scrollbar hidden, then draws its own thumb on top. Wheel, touch, keyboard and drag all keep working because the viewport is a regular overflowing element. The thumb is dragged with the pointer and the track jumps on click. The viewport takes focus with `Tab`, so the arrow keys scroll it even when nothing inside is focusable. Pass `label` and it becomes a named `region`.
 
 ## Composition
 
@@ -68,6 +68,7 @@ Vertical scrolling. With `type="hover"` (the default) the bar shows while the po
 | `scrollHideDelay`   | `number`                                          | `600`        | Milliseconds before the bar hides after scrolling      |
 | `viewportRef`       | `React.Ref<HTMLDivElement>`                       | -            | Ref to the scrolling element, for `scrollTo` and alike |
 | `viewportClassName` | `string`                                          | -            | Classes for the viewport                               |
+| `label`             | `string`                                          | -            | Names the viewport and gives it `role="region"`        |
 | `className`         | `string`                                          | -            | Classes for the root. Give it a height or a width      |
 
 ### ScrollArea.Bar

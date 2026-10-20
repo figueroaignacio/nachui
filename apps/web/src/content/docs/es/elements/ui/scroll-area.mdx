@@ -26,7 +26,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 </ScrollArea>
 ```
 
-La raíz envuelve tu contenido en un viewport que hace scroll nativo con la barra del navegador oculta, y dibuja su propio pulgar encima. Rueda, touch, teclado y arrastre siguen funcionando porque el viewport es un elemento normal con overflow. El pulgar se arrastra con el puntero y la pista salta al hacer click.
+La raíz envuelve tu contenido en un viewport que hace scroll nativo con la barra del navegador oculta, y dibuja su propio pulgar encima. Rueda, touch, teclado y arrastre siguen funcionando porque el viewport es un elemento normal con overflow. El pulgar se arrastra con el puntero y la pista salta al hacer click. El viewport recibe foco con `Tab`, así que las flechas lo desplazan aunque adentro no haya nada enfocable. Si le pasás `label` se vuelve una `region` con nombre.
 
 ## Composición
 
@@ -68,6 +68,7 @@ Scroll vertical. Con `type="hover"` (el valor por defecto) la barra aparece mien
 | `scrollHideDelay`   | `number`                                          | `600`        | Milisegundos antes de ocultar la barra tras el scroll        |
 | `viewportRef`       | `React.Ref<HTMLDivElement>`                       | -            | Ref al elemento que hace scroll, para `scrollTo` y similares |
 | `viewportClassName` | `string`                                          | -            | Clases para el viewport                                      |
+| `label`             | `string`                                          | -            | Le da nombre al viewport y `role="region"`                   |
 | `className`         | `string`                                          | -            | Clases para la raíz. Dale una altura o un ancho              |
 
 ### ScrollArea.Bar
