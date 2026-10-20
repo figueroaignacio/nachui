@@ -80,13 +80,14 @@ Un paso toma un `label`, una `description` opcional y un `status` de `complete`,
 
 ### ChainOfThought.Step
 
-| Prop          | Type                                  | Default      | Description                    |
-| ------------- | ------------------------------------- | ------------ | ------------------------------ |
-| `label`       | `ReactNode`                           | -            | Título del paso                |
-| `description` | `ReactNode`                           | -            | Línea de apoyo bajo el título  |
-| `status`      | `'complete' \| 'active' \| 'pending'` | `'complete'` | Define el tono y el latido     |
-| `icon`        | `ComponentType`                       | punto        | Icono del indicador en el riel |
-| `className`   | `string`                              | -            | Clases CSS adicionales         |
+| Prop           | Type                                  | Default                               | Description                                                 |
+| -------------- | ------------------------------------- | ------------------------------------- | ----------------------------------------------------------- |
+| `label`        | `ReactNode`                           | -                                     | Título del paso                                             |
+| `description`  | `ReactNode`                           | -                                     | Línea de apoyo bajo el título                               |
+| `status`       | `'complete' \| 'active' \| 'pending'` | `'complete'`                          | Define el tono y el latido                                  |
+| `icon`         | `ComponentType`                       | punto                                 | Icono del indicador en el riel                              |
+| `statusLabels` | `Partial<Record<status, string>>`     | `Completed`, `In progress`, `Pending` | Estado que leen los lectores de pantalla después del título |
+| `className`    | `string`                              | -                                     | Clases CSS adicionales                                      |
 
 ### ChainOfThought.Image
 

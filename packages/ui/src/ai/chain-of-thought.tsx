@@ -77,10 +77,15 @@ function DotIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
   );
 }
 
-const PULSE_ANIMATE = { opacity: [0.45, 1, 0.45] };
-const PULSE_TRANSITION = { repeat: Infinity, duration: 1.6, ease: 'easeInOut' } as const;
-
 type ChainOfThoughtStatus = 'complete' | 'active' | 'pending';
+
+type ChainOfThoughtStatusLabels = Record<ChainOfThoughtStatus, string>;
+
+const DEFAULT_STATUS_LABELS: ChainOfThoughtStatusLabels = {
+  complete: 'Completed',
+  active: 'In progress',
+  pending: 'Pending',
+};
 
 interface ChainOfThoughtContextValue {
   open: boolean;
@@ -112,6 +117,7 @@ interface ChainOfThoughtStepProps extends React.HTMLAttributes<HTMLDivElement> {
   label: React.ReactNode;
   description?: React.ReactNode;
   status?: ChainOfThoughtStatus;
+  statusLabels?: Partial<ChainOfThoughtStatusLabels>;
 }
 
 type ChainOfThoughtSearchResultsProps = React.HTMLAttributes<HTMLDivElement>;
@@ -180,13 +186,13 @@ const ChainOfThoughtHeader = ({
       type="button"
       id={`${id}-trigger`}
       aria-expanded={open}
-      aria-controls={`${id}-content`}
+      aria-controls={open ? `${id}-content` : undefined}
       onClick={(event) => {
         setOpen(!open);
         onClick?.(event);
       }}
       className={cn(
-        'text-muted-foreground hover:text-foreground focus-visible:ring-ring flex w-full items-center gap-2 rounded-md text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
+        'text-muted-foreground hover:text-foreground focus-visible:ring-ring -my-0.5 flex min-h-6 w-full items-center gap-2 rounded-md text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none pointer-coarse:-my-2 pointer-coarse:min-h-9',
         className,
       )}
       {...props}
@@ -230,7 +236,7 @@ const ChainOfThoughtContent = ({
           exit="closed"
           className="overflow-hidden"
         >
-          <div className={cn('flex flex-col gap-3 pt-2', className)} {...props}>
+          <div role="list" className={cn('flex flex-col gap-3 pt-2', className)} {...props}>
             {children}
           </div>
         </motion.div>
@@ -247,11 +253,12 @@ const ChainOfThoughtStep = ({
   label,
   description,
   status = 'complete',
+  statusLabels,
   children,
   ref,
   ...props
 }: ChainOfThoughtStepProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const shouldReduceMotion = useReducedMotion();
+  const statusLabel = statusLabels?.[status] ?? DEFAULT_STATUS_LABELS[status];
 
   const indicator = (
     <span
@@ -268,6 +275,8 @@ const ChainOfThoughtStep = ({
   return (
     <div
       ref={ref}
+      role="listitem"
+      aria-current={status === 'active' ? 'step' : undefined}
       data-status={status}
       className={cn(
         'group/step relative flex gap-3 text-sm',
@@ -277,19 +286,19 @@ const ChainOfThoughtStep = ({
       )}
       {...props}
     >
-      {status === 'active' && !shouldReduceMotion ? (
-        <motion.span
-          className="flex shrink-0 self-start"
-          animate={PULSE_ANIMATE}
-          transition={PULSE_TRANSITION}
-        >
-          {indicator}
-        </motion.span>
-      ) : (
-        indicator
-      )}
+      <span
+        className={cn(
+          'flex shrink-0 self-start',
+          status === 'active' && 'motion-safe:animate-pulse',
+        )}
+      >
+        {indicator}
+      </span>
       <div className="flex min-w-0 flex-1 flex-col gap-1.5 pb-1">
-        <span className={cn('leading-tight font-medium', STATUS_TONE[status])}>{label}</span>
+        <span className={cn('leading-tight font-medium', STATUS_TONE[status])}>
+          {label}
+          <span className="sr-only">{`, ${statusLabel}`}</span>
+        </span>
         {description && (
           <span className="text-muted-foreground text-xs leading-relaxed">{description}</span>
         )}
@@ -313,6 +322,7 @@ ChainOfThoughtSearchResults.displayName = 'ChainOfThoughtSearchResults';
 
 const ChainOfThoughtSearchResult = ({
   className,
+  children,
   ref,
   ...props
 }: ChainOfThoughtSearchResultProps & { ref?: React.Ref<HTMLSpanElement> }) => {
@@ -320,11 +330,19 @@ const ChainOfThoughtSearchResult = ({
     <span
       ref={ref}
       className={cn(
-        'border-border bg-secondary text-secondary-foreground inline-flex max-w-full items-center gap-1 truncate rounded-sm border px-1.5 py-0.5 text-[11px] [&>svg]:size-3 [&>svg]:shrink-0',
+        'border-border bg-secondary text-secondary-foreground inline-flex max-w-full min-w-0 items-center gap-1 overflow-hidden rounded-sm border px-1.5 py-0.5 text-[11px] [&>svg]:size-3 [&>svg]:shrink-0',
         className,
       )}
       {...props}
-    />
+    >
+      {React.Children.map(children, (child) =>
+        typeof child === 'string' || typeof child === 'number' ? (
+          <span className="min-w-0 truncate">{child}</span>
+        ) : (
+          child
+        ),
+      )}
+    </span>
   );
 };
 
@@ -367,5 +385,6 @@ export type {
   ChainOfThoughtSearchResultProps,
   ChainOfThoughtSearchResultsProps,
   ChainOfThoughtStatus,
+  ChainOfThoughtStatusLabels,
   ChainOfThoughtStepProps,
 };

@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { ChainOfThought } from './chain-of-thought';
 
 describe('ChainOfThought', () => {
@@ -64,7 +65,7 @@ describe('ChainOfThought', () => {
         </ChainOfThought.Content>
       </ChainOfThought>,
     );
-    expect(screen.getByText('docs/theming')).toBeInTheDocument();
+    expect(screen.getByText('docs/theming')).toHaveClass('truncate');
   });
 
   it('renders an image caption', () => {
@@ -79,5 +80,46 @@ describe('ChainOfThought', () => {
       </ChainOfThought>,
     );
     expect(screen.getByText('The rendered page')).toBeInTheDocument();
+  });
+
+  it('exposes the steps as a list with their status in words', async () => {
+    const { container } = render(
+      <ChainOfThought defaultOpen>
+        <ChainOfThought.Header />
+        <ChainOfThought.Content>
+          <ChainOfThought.Step label="Read the request" status="complete" />
+          <ChainOfThought.Step label="Search the docs" status="active" />
+          <ChainOfThought.Step
+            label="Write the answer"
+            status="pending"
+            statusLabels={{ pending: 'Up next' }}
+          />
+        </ChainOfThought.Content>
+      </ChainOfThought>,
+    );
+    const items = screen.getAllByRole('listitem');
+    expect(screen.getByRole('list')).toBeInTheDocument();
+    expect(items).toHaveLength(3);
+    expect(items[0]).toHaveTextContent('Read the request, Completed');
+    expect(items[1]).toHaveAttribute('aria-current', 'step');
+    expect(items[1]).toHaveTextContent('Search the docs, In progress');
+    expect(items[2]).not.toHaveAttribute('aria-current');
+    expect(items[2]).toHaveTextContent('Write the answer, Up next');
+    await expectNoAxeViolations(container);
+  });
+
+  it('only points aria-controls at the content while it is open', async () => {
+    render(
+      <ChainOfThought>
+        <ChainOfThought.Header />
+        <ChainOfThought.Content>
+          <ChainOfThought.Step label="Step" />
+        </ChainOfThought.Content>
+      </ChainOfThought>,
+    );
+    const trigger = screen.getByRole('button');
+    expect(trigger).not.toHaveAttribute('aria-controls');
+    await userEvent.click(trigger);
+    expect(trigger).toHaveAttribute('aria-controls', screen.getByRole('region').id);
   });
 });

@@ -80,13 +80,14 @@ A step takes a `label`, an optional `description` and a `status` of `complete`, 
 
 ### ChainOfThought.Step
 
-| Prop          | Type                                  | Default      | Description                      |
-| ------------- | ------------------------------------- | ------------ | -------------------------------- |
-| `label`       | `ReactNode`                           | -            | Title of the step                |
-| `description` | `ReactNode`                           | -            | Supporting line under the title  |
-| `status`      | `'complete' \| 'active' \| 'pending'` | `'complete'` | Drives the tone and the pulse    |
-| `icon`        | `ComponentType`                       | dot          | Icon shown in the rail indicator |
-| `className`   | `string`                              | -            | Additional CSS classes           |
+| Prop           | Type                                  | Default                               | Description                                   |
+| -------------- | ------------------------------------- | ------------------------------------- | --------------------------------------------- |
+| `label`        | `ReactNode`                           | -                                     | Title of the step                             |
+| `description`  | `ReactNode`                           | -                                     | Supporting line under the title               |
+| `status`       | `'complete' \| 'active' \| 'pending'` | `'complete'`                          | Drives the tone and the pulse                 |
+| `icon`         | `ComponentType`                       | dot                                   | Icon shown in the rail indicator              |
+| `statusLabels` | `Partial<Record<status, string>>`     | `Completed`, `In progress`, `Pending` | Status read by screen readers after the label |
+| `className`    | `string`                              | -                                     | Additional CSS classes                        |
 
 ### ChainOfThought.Image
 
