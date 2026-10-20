@@ -1,12 +1,22 @@
 import * as React from 'react';
 import { cn } from '../lib/cn';
 
+interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
+  label?: string;
+}
+
 const TableRoot = ({
   className,
+  label,
   ref,
   ...props
-}: React.HTMLAttributes<HTMLTableElement> & { ref?: React.Ref<HTMLTableElement> }) => (
-  <div className="border-border relative w-full overflow-auto rounded-md border">
+}: TableProps & { ref?: React.Ref<HTMLTableElement> }) => (
+  <div
+    role={label ? 'region' : undefined}
+    aria-label={label}
+    tabIndex={label ? 0 : undefined}
+    className="border-border focus-visible:ring-ring ring-offset-background relative w-full overflow-auto rounded-md border focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+  >
     <table ref={ref} className={cn('w-full text-xs', className)} {...props} />
   </div>
 );
@@ -63,11 +73,13 @@ TableRow.displayName = 'TableRow';
 
 const TableHead = ({
   className,
+  scope = 'col',
   ref,
   ...props
 }: React.ThHTMLAttributes<HTMLTableCellElement> & { ref?: React.Ref<HTMLTableCellElement> }) => (
   <th
     ref={ref}
+    scope={scope}
     className={cn(
       'border-border text-muted-foreground h-10 border-r px-3 py-4 text-left align-middle font-medium last:border-r-0 [&:has([role=checkbox])]:pr-0',
       className,
@@ -115,3 +127,4 @@ const Table = Object.assign(TableRoot, {
 });
 
 export { Table };
+export type { TableProps };

@@ -77,9 +77,10 @@ Table
 
 ### Table
 
-| Prop        | Type     | Default | Description            |
-| ----------- | -------- | ------- | ---------------------- |
-| `className` | `string` | —       | Additional CSS classes |
+| Prop        | Type     | Default | Description                                                                                                                                        |
+| ----------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `label`     | `string` | -       | Names the scroll container as a region and puts it in the tab order, so keyboard users can scroll a wide table. Set it on tables that can overflow |
+| `className` | `string` | —       | Additional CSS classes                                                                                                                             |
 
 ### Table.Header
 
@@ -107,9 +108,10 @@ Table
 
 ### Table.Head
 
-| Prop        | Type     | Default | Description            |
-| ----------- | -------- | ------- | ---------------------- |
-| `className` | `string` | —       | Additional CSS classes |
+| Prop        | Type                                         | Default | Description                                                                      |
+| ----------- | -------------------------------------------- | ------- | -------------------------------------------------------------------------------- |
+| `scope`     | `'col' \| 'row' \| 'colgroup' \| 'rowgroup'` | `'col'` | Which cells this header describes. Use `'row'` for headers at the start of a row |
+| `className` | `string`                                     | —       | Additional CSS classes                                                           |
 
 ### Table.Cell
 
