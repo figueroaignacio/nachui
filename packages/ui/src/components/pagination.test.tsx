@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { Pagination } from './pagination';
 
 describe('Pagination', () => {
@@ -80,5 +81,27 @@ describe('Pagination', () => {
     expect(ellipsis).not.toHaveAttribute('aria-hidden');
     expect(screen.getByText('More pages')).toHaveClass('sr-only');
     expect(ellipsis.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('sets the current page apart with a filled background and a stronger border', async () => {
+    const { container } = render(
+      <Pagination>
+        <Pagination.Content>
+          <Pagination.Item>
+            <Pagination.Link href="#1">1</Pagination.Link>
+          </Pagination.Item>
+          <Pagination.Item>
+            <Pagination.Link href="#2" isActive>
+              2
+            </Pagination.Link>
+          </Pagination.Item>
+        </Pagination.Content>
+      </Pagination>,
+    );
+    const current = screen.getByRole('link', { name: '2' });
+    expect(current).toHaveAttribute('aria-current', 'page');
+    expect(current).toHaveClass('bg-muted', 'text-foreground', 'border-border-interactive');
+    expect(screen.getByRole('link', { name: '1' })).not.toHaveClass('bg-muted');
+    await expectNoAxeViolations(container);
   });
 });
