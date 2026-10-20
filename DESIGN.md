@@ -144,7 +144,7 @@ Every surface anchored to a trigger shares one recipe: `bg-popover text-popover-
 
 - **Background**: transparent in light mode, `dark:bg-input/30` in dark mode
 - **Border**: 1px `border-input`, moving to `border-border-interactive` on hover or focus-within
-- **Focus**: a 1px ring in `foreground/10` with the border darkened to `foreground/40`
+- **Focus**: on keyboard focus the border and a 1px ring both take `ring`, a 2px band at about 3:1 against the page; invalid fields use the destructive hue instead
 - **Invalid**: `aria-invalid` switches the border and ring to destructive
 - **Placeholder**: `muted-foreground`
 

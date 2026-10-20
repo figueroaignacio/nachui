@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { Input } from './input';
 
 describe('Input', () => {
@@ -79,5 +80,30 @@ describe('Input', () => {
     rerender(<Input size="lg" placeholder="lg" />);
     input = screen.getByPlaceholderText('lg');
     expect(input.className).toContain('h-10');
+  });
+
+  it('keeps the error live region mounted before the error arrives', async () => {
+    const { container, rerender } = render(<Input id="field" label="Email" />);
+    const region = container.querySelector('#field-error');
+    expect(region).toHaveAttribute('aria-live', 'polite');
+    expect(region).toBeEmptyDOMElement();
+    expect(region).toHaveClass('sr-only');
+    expect(screen.getByLabelText('Email')).not.toHaveAttribute('aria-describedby');
+
+    rerender(<Input id="field" label="Email" error="Enter a valid email" />);
+    expect(container.querySelector('#field-error')).toBe(region);
+    expect(region).toHaveTextContent('Enter a valid email');
+    expect(region).toHaveClass('text-destructive-text');
+    expect(screen.getByLabelText('Email')).toHaveAccessibleDescription('Enter a valid email');
+    await expectNoAxeViolations(container);
+  });
+
+  it('shows a clearly visible focus ring', () => {
+    render(<Input aria-label="Search" />);
+    expect(screen.getByRole('textbox', { name: 'Search' })).toHaveClass(
+      'focus-visible:border-ring',
+      'focus-visible:ring-ring',
+      'aria-invalid:focus-visible:ring-destructive',
+    );
   });
 });
