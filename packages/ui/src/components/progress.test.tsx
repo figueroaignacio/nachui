@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { Progress } from './progress';
 
 describe('Progress', () => {
@@ -20,5 +21,16 @@ describe('Progress', () => {
     render(<Progress data-testid="progress" />);
     const progress = screen.getByTestId('progress');
     expect(progress).not.toHaveAttribute('aria-valuenow');
+  });
+
+  it('takes its accessible name from label', async () => {
+    const { container } = render(<Progress value={40} label="Upload" />);
+    expect(screen.getByRole('progressbar', { name: 'Upload' })).toBeInTheDocument();
+    await expectNoAxeViolations(container);
+  });
+
+  it('lets aria-label override label', () => {
+    render(<Progress value={40} label="Upload" aria-label="Subida" />);
+    expect(screen.getByRole('progressbar', { name: 'Subida' })).toBeInTheDocument();
   });
 });

@@ -12,12 +12,14 @@ const DETERMINATE_INITIAL = { x: '-100%' } as const;
 export interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
   value?: number | null;
   max?: number;
+  label?: string;
 }
 
 function Progress({
   className,
   value,
   max = 100,
+  label,
   ref,
   ...props
 }: ProgressProps & { ref?: React.Ref<HTMLDivElement> }) {
@@ -30,6 +32,7 @@ function Progress({
     <div
       ref={ref}
       role="progressbar"
+      aria-label={label}
       aria-valuemin={0}
       aria-valuemax={safeMax}
       aria-valuenow={clampedValue}

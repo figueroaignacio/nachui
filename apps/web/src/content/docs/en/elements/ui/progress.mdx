@@ -46,8 +46,9 @@ Combine the component with custom value labels.
 
 ### Progress
 
-| Prop        | Type             | Default | Description                                              |
-| ----------- | ---------------- | ------- | -------------------------------------------------------- |
-| `value`     | `number \| null` | -       | The progress value (shows indeterminate if null/missing) |
-| `max`       | `number`         | `100`   | The maximum value of the progress bar                    |
-| `className` | `string`         | -       | Additional CSS classes                                   |
+| Prop        | Type             | Default | Description                                                                |
+| ----------- | ---------------- | ------- | -------------------------------------------------------------------------- |
+| `value`     | `number \| null` | -       | The progress value (shows indeterminate if null/missing)                   |
+| `max`       | `number`         | `100`   | The maximum value of the progress bar                                      |
+| `label`     | `string`         | -       | Accessible name, read before the value. `aria-label` wins if you pass both |
+| `className` | `string`         | -       | Additional CSS classes                                                     |
