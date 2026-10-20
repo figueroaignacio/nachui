@@ -29,7 +29,9 @@ import { HoverCard } from '@/components/ui/hover-card';
 </HoverCard>
 ```
 
-The card opens after `openDelay` when the pointer enters the trigger and closes after `closeDelay` when it leaves, unless it moved onto the card. Keyboard focus opens it at once and blur closes it. `Escape` closes it too. Touch pointers never open it, so on phones the trigger keeps its own behaviour.
+The card opens after `openDelay` when the pointer enters the trigger and closes after `closeDelay` when it leaves, unless it moved onto the card. Keyboard focus opens it at once and blur closes it, and Tab moves into any links on the card before continuing with the page. `Escape` closes it without closing a drawer or dialog around it. On touch screens a tap on the trigger toggles the card and a tap anywhere else closes it; the trigger's own click still runs, so a link trigger still navigates.
+
+The card renders in a portal, so `overflow: hidden` on a parent never clips it, and it flips to the other side when there is no room.
 
 ## Composition
 

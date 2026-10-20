@@ -29,7 +29,9 @@ import { HoverCard } from '@/components/ui/hover-card';
 </HoverCard>
 ```
 
-La tarjeta se abre después de `openDelay` cuando el puntero entra al disparador y se cierra después de `closeDelay` cuando sale, salvo que se haya movido sobre la tarjeta. El foco de teclado la abre de inmediato y el blur la cierra. `Escape` también la cierra. Los punteros táctiles nunca la abren, así que en teléfonos el disparador conserva su comportamiento.
+La tarjeta se abre después de `openDelay` cuando el puntero entra al disparador y se cierra después de `closeDelay` cuando sale, salvo que se haya movido sobre la tarjeta. El foco de teclado la abre de inmediato y el blur la cierra, y Tab pasa por los enlaces de la tarjeta antes de seguir con la página. `Escape` la cierra sin cerrar el drawer o dialog que la contiene. En pantallas táctiles un toque en el disparador abre o cierra la tarjeta y un toque en cualquier otro lado la cierra; el click propio del disparador se sigue ejecutando, así que un enlace igual navega.
+
+La tarjeta se renderiza en un portal, así que un `overflow: hidden` en un padre nunca la recorta, y se da vuelta al otro lado cuando no hay lugar.
 
 ## Composición
 

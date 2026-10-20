@@ -3,69 +3,20 @@
 import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { FloatingPortal, useFloating } from '../lib/floating';
 import { floatingOrigin, floatingVariants, reveal } from '../lib/motion';
+import { assignRef, getFocusable, useLayer } from '../lib/overlay';
 import { useControllableState } from '../lib/use-controllable-state';
-
-const HOVER_CARD_POSITION_CLASSES = {
-  top: {
-    start: 'bottom-full left-0 mb-2',
-    center: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
-    end: 'bottom-full right-0 mb-2',
-  },
-  bottom: {
-    start: 'top-full left-0 mt-2',
-    center: 'top-full left-1/2 -translate-x-1/2 mt-2',
-    end: 'top-full right-0 mt-2',
-  },
-  left: {
-    start: 'right-full top-0 mr-2',
-    center: 'right-full top-1/2 -translate-y-1/2 mr-2',
-    end: 'right-full bottom-0 mr-2',
-  },
-  right: {
-    start: 'left-full top-0 ml-2',
-    center: 'left-full top-1/2 -translate-y-1/2 ml-2',
-    end: 'left-full bottom-0 ml-2',
-  },
-} as const;
 
 const HOVER_CARD_STYLE = { willChange: 'opacity, transform, filter' } as const;
 
-const VIEWPORT_PADDING = 8;
-
-function useViewportShift(ref: React.RefObject<HTMLElement | null>, open: boolean) {
-  const [shift, setShift] = React.useState(0);
-
-  React.useLayoutEffect(() => {
-    if (!open) return;
-    const measure = () => {
-      const el = ref.current;
-      if (!el) return;
-      const { transform, translate } = el.style;
-      el.style.transform = 'none';
-      el.style.translate = '';
-      const rect = el.getBoundingClientRect();
-      el.style.transform = transform;
-      el.style.translate = translate;
-      const viewport = document.documentElement.clientWidth || window.innerWidth;
-      if (!rect.width || !viewport) return;
-      let next = 0;
-      if (rect.right > viewport - VIEWPORT_PADDING) next = viewport - VIEWPORT_PADDING - rect.right;
-      if (rect.left + next < VIEWPORT_PADDING) next = VIEWPORT_PADDING - rect.left;
-      setShift(Math.round(next));
-    };
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, [open, ref]);
-
-  return shift;
-}
-
-function shiftTranslate(shift: number, centeredX: boolean, centeredY: boolean) {
-  if (!shift) return undefined;
-  const x = centeredX ? `calc(-50% + ${shift}px)` : `${shift}px`;
-  return centeredY ? `${x} -50%` : x;
+function nextFocusableAfter(anchor: HTMLElement, skip: HTMLElement) {
+  return getFocusable(document.body).find(
+    (element) =>
+      !skip.contains(element) &&
+      !anchor.contains(element) &&
+      Boolean(anchor.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING),
+  );
 }
 
 type HoverCardSide = 'top' | 'bottom' | 'left' | 'right';
@@ -78,7 +29,11 @@ interface HoverCardContextValue {
   scheduleClose: () => void;
   openNow: () => void;
   closeNow: () => void;
-  rootRef: React.RefObject<HTMLDivElement | null>;
+  toggle: () => void;
+  isInside: (node: Node | null) => boolean;
+  rootRef: React.RefObject<HTMLElement | null>;
+  triggerRef: React.RefObject<HTMLElement | null>;
+  contentRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const HoverCardContext = React.createContext<HoverCardContextValue | null>(null);
@@ -113,7 +68,10 @@ const HoverCardRoot = ({
   });
   const id = React.useId();
   const timer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const rootRef = React.useRef<HTMLDivElement>(null);
+  const rootRef = React.useRef<HTMLSpanElement>(null);
+  const triggerRef = React.useRef<HTMLElement>(null);
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  const layer = useLayer(open, false, contentRef);
 
   const clearTimer = React.useCallback(() => {
     if (timer.current) clearTimeout(timer.current);
@@ -140,27 +98,61 @@ const HoverCardRoot = ({
     setOpen(false);
   }, [clearTimer, setOpen]);
 
+  const toggle = React.useCallback(() => {
+    clearTimer();
+    setOpen((current) => !current);
+  }, [clearTimer, setOpen]);
+
+  const isInside = React.useCallback(
+    (node: Node | null) =>
+      Boolean(node && (rootRef.current?.contains(node) || contentRef.current?.contains(node))),
+    [],
+  );
+
   React.useEffect(() => clearTimer, [clearTimer]);
 
   React.useEffect(() => {
     if (!open) return;
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') closeNow();
+      if (event.key !== 'Escape' || event.defaultPrevented || !layer.isTopmost()) return;
+      event.preventDefault();
+      closeNow();
+    };
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (isInside(target) || layer.isInsideUpperLayer(target)) return;
+      closeNow();
     };
     document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [open, closeNow]);
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener('pointerdown', handlePointerDown);
+    };
+  }, [open, closeNow, isInside, layer]);
 
   const context = React.useMemo(
-    () => ({ open, id, scheduleOpen, scheduleClose, openNow, closeNow, rootRef }),
-    [open, id, scheduleOpen, scheduleClose, openNow, closeNow],
+    () => ({
+      open,
+      id,
+      scheduleOpen,
+      scheduleClose,
+      openNow,
+      closeNow,
+      toggle,
+      isInside,
+      rootRef,
+      triggerRef,
+      contentRef,
+    }),
+    [open, id, scheduleOpen, scheduleClose, openNow, closeNow, toggle, isInside],
   );
 
   return (
     <HoverCardContext value={context}>
-      <div ref={rootRef} className="relative inline-flex">
+      <span ref={rootRef} className="relative inline-flex">
         {children}
-      </div>
+      </span>
     </HoverCardContext>
   );
 };
@@ -169,6 +161,19 @@ HoverCardRoot.displayName = 'HoverCard';
 interface HoverCardTriggerProps extends React.HTMLAttributes<HTMLElement> {
   asChild?: boolean;
 }
+
+type TriggerChildProps = {
+  onPointerEnter?: (event: React.PointerEvent<HTMLElement>) => void;
+  onPointerLeave?: (event: React.PointerEvent<HTMLElement>) => void;
+  onPointerDown?: (event: React.PointerEvent<HTMLElement>) => void;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  onFocus?: (event: React.FocusEvent<HTMLElement>) => void;
+  onBlur?: (event: React.FocusEvent<HTMLElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void;
+  className?: string;
+  tabIndex?: number;
+  ref?: React.Ref<HTMLElement>;
+};
 
 const HoverCardTrigger = ({
   asChild = false,
@@ -180,11 +185,34 @@ const HoverCardTrigger = ({
   onBlur,
   onPointerDown,
   onClick,
+  onKeyDown,
   ref,
   ...props
 }: HoverCardTriggerProps & { ref?: React.Ref<HTMLElement> }) => {
-  const { open, id, scheduleOpen, scheduleClose, openNow, rootRef } = useHoverCardContext();
+  const {
+    open,
+    id,
+    scheduleOpen,
+    scheduleClose,
+    openNow,
+    toggle,
+    isInside,
+    triggerRef,
+    contentRef,
+  } = useHoverCardContext();
   const lastPointerType = React.useRef<string | null>(null);
+  const childRef = React.isValidElement(children)
+    ? (children.props as TriggerChildProps).ref
+    : undefined;
+
+  const mergedRef = React.useCallback(
+    (node: HTMLElement | null) => {
+      triggerRef.current = node;
+      assignRef(ref, node);
+      assignRef(childRef, node);
+    },
+    [ref, childRef, triggerRef],
+  );
 
   const handlers = {
     onPointerEnter: (event: React.PointerEvent<HTMLElement>) => {
@@ -201,17 +229,25 @@ const HoverCardTrigger = ({
     },
     onClick: (event: React.MouseEvent<HTMLElement>) => {
       onClick?.(event);
-      if (lastPointerType.current === 'touch') openNow();
+      if (lastPointerType.current === 'touch') toggle();
+      lastPointerType.current = null;
     },
     onFocus: (event: React.FocusEvent<HTMLElement>) => {
       onFocus?.(event);
-      openNow();
+      if (lastPointerType.current !== 'touch') openNow();
     },
     onBlur: (event: React.FocusEvent<HTMLElement>) => {
       onBlur?.(event);
-      const next = event.relatedTarget as Node | null;
-      if (next && rootRef.current?.contains(next)) return;
+      if (isInside(event.relatedTarget as Node | null)) return;
       scheduleClose();
+    },
+    onKeyDown: (event: React.KeyboardEvent<HTMLElement>) => {
+      onKeyDown?.(event);
+      if (event.defaultPrevented || event.key !== 'Tab' || event.shiftKey || !open) return;
+      const first = contentRef.current ? getFocusable(contentRef.current)[0] : undefined;
+      if (!first) return;
+      event.preventDefault();
+      first.focus();
     },
   };
 
@@ -223,21 +259,12 @@ const HoverCardTrigger = ({
 
   if (asChild && React.isValidElement(children)) {
     const child = children as React.ReactElement<Record<string, unknown>>;
-    const childProps = child.props as {
-      onPointerEnter?: (event: React.PointerEvent<HTMLElement>) => void;
-      onPointerLeave?: (event: React.PointerEvent<HTMLElement>) => void;
-      onPointerDown?: (event: React.PointerEvent<HTMLElement>) => void;
-      onClick?: (event: React.MouseEvent<HTMLElement>) => void;
-      onFocus?: (event: React.FocusEvent<HTMLElement>) => void;
-      onBlur?: (event: React.FocusEvent<HTMLElement>) => void;
-      className?: string;
-      tabIndex?: number;
-    };
+    const childProps = child.props as TriggerChildProps;
 
     return React.cloneElement(child, {
       ...props,
       ...shared,
-      ref,
+      ref: mergedRef,
       tabIndex: childProps.tabIndex ?? props.tabIndex ?? 0,
       className: cn(className, childProps.className),
       onPointerEnter: (event: React.PointerEvent<HTMLElement>) => {
@@ -264,12 +291,16 @@ const HoverCardTrigger = ({
         childProps.onBlur?.(event);
         handlers.onBlur(event);
       },
+      onKeyDown: (event: React.KeyboardEvent<HTMLElement>) => {
+        childProps.onKeyDown?.(event);
+        handlers.onKeyDown(event);
+      },
     });
   }
 
   return (
     <span
-      ref={ref as React.Ref<HTMLSpanElement>}
+      ref={mergedRef as React.Ref<HTMLSpanElement>}
       tabIndex={0}
       className={cn('inline-flex cursor-default', className)}
       {...shared}
@@ -289,78 +320,106 @@ interface HoverCardContentProps extends HTMLMotionProps<'div'> {
   children?: React.ReactNode;
 }
 
-const HoverCardContent = ({
-  side = 'bottom',
+const HoverCardPanel = ({
+  side: preferredSide = 'bottom',
   align = 'center',
   sideOffset = 4,
   className,
   children,
+  style,
   onPointerEnter,
   onPointerLeave,
+  onFocus,
   onBlur,
+  onKeyDown,
   ...props
 }: HoverCardContentProps) => {
-  const { open, id, openNow, scheduleClose, rootRef } = useHoverCardContext();
+  const { id, openNow, scheduleClose, isInside, triggerRef, contentRef } = useHoverCardContext();
   const shouldReduceMotion = useReducedMotion();
-  const contentRef = React.useRef<HTMLDivElement>(null);
-  const shift = useViewportShift(contentRef, open);
+  const floating = useFloating({
+    open: true,
+    anchorRef: triggerRef,
+    floatingRef: contentRef,
+    side: preferredSide,
+    align,
+    sideOffset,
+  });
+  const side = floating.side;
 
-  const offsetStyle = React.useMemo(
-    () => ({
-      ...(side === 'top' && { marginBottom: sideOffset }),
-      ...(side === 'bottom' && { marginTop: sideOffset }),
-      ...(side === 'left' && { marginRight: sideOffset }),
-      ...(side === 'right' && { marginLeft: sideOffset }),
-      ...HOVER_CARD_STYLE,
-      translate: shiftTranslate(
-        shift,
-        align === 'center' && (side === 'top' || side === 'bottom'),
-        align === 'center' && (side === 'left' || side === 'right'),
-      ),
-    }),
-    [side, sideOffset, align, shift],
-  );
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    onKeyDown?.(event);
+    if (event.defaultPrevented || event.key !== 'Tab') return;
+    const content = contentRef.current;
+    const trigger = triggerRef.current;
+    if (!content || !trigger) return;
+    const focusable = getFocusable(content);
+    const active = document.activeElement;
+
+    if (event.shiftKey) {
+      if (active === focusable[0]) {
+        event.preventDefault();
+        trigger.focus();
+      }
+      return;
+    }
+
+    if (active === focusable[focusable.length - 1]) {
+      const next = nextFocusableAfter(trigger, content);
+      if (!next) return;
+      event.preventDefault();
+      next.focus();
+    }
+  };
 
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          ref={contentRef}
-          id={id}
-          data-slot="hover-card-content"
-          data-side={side}
-          data-align={align}
-          variants={shouldReduceMotion ? reveal : floatingVariants[side]}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          style={offsetStyle}
-          onPointerEnter={(event) => {
-            onPointerEnter?.(event);
-            openNow();
-          }}
-          onPointerLeave={(event) => {
-            onPointerLeave?.(event);
-            if (event.pointerType !== 'touch') scheduleClose();
-          }}
-          onBlur={(event) => {
-            onBlur?.(event);
-            const next = event.relatedTarget as Node | null;
-            if (next && rootRef.current?.contains(next)) return;
-            scheduleClose();
-          }}
-          className={cn(
-            'bg-popover text-popover-foreground border-border absolute z-50 w-64 max-w-[calc(100vw-2rem)] rounded-md border p-4 shadow-md outline-none',
-            HOVER_CARD_POSITION_CLASSES[side][align],
-            floatingOrigin[side],
-            className,
-          )}
-          {...props}
-        >
-          {children}
-        </motion.div>
+    <motion.div
+      ref={contentRef}
+      id={id}
+      data-slot="hover-card-content"
+      data-side={side}
+      data-align={align}
+      variants={shouldReduceMotion ? reveal : floatingVariants[side]}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      style={{ ...HOVER_CARD_STYLE, ...style, ...floating.style }}
+      onPointerEnter={(event) => {
+        onPointerEnter?.(event);
+        if (event.pointerType !== 'touch') openNow();
+      }}
+      onPointerLeave={(event) => {
+        onPointerLeave?.(event);
+        if (event.pointerType !== 'touch') scheduleClose();
+      }}
+      onFocus={(event) => {
+        onFocus?.(event);
+        openNow();
+      }}
+      onBlur={(event) => {
+        onBlur?.(event);
+        if (isInside(event.relatedTarget as Node | null)) return;
+        scheduleClose();
+      }}
+      onKeyDown={handleKeyDown}
+      className={cn(
+        'bg-popover text-popover-foreground border-border z-500 max-h-(--available-height) w-64 max-w-[calc(100vw-2rem)] overflow-y-auto rounded-md border p-4 shadow-md outline-none',
+        floatingOrigin[side],
+        className,
       )}
-    </AnimatePresence>
+      {...props}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+const HoverCardContent = (props: HoverCardContentProps) => {
+  const { open } = useHoverCardContext();
+
+  return (
+    <FloatingPortal>
+      <AnimatePresence>{open && <HoverCardPanel {...props} />}</AnimatePresence>
+    </FloatingPortal>
   );
 };
 HoverCardContent.displayName = 'HoverCardContent';
