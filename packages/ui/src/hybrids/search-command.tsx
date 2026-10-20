@@ -87,6 +87,21 @@ const isMac = () => typeof navigator !== 'undefined' && /mac|iphone|ipad/i.test(
 
 const subscribeToNothing = () => () => {};
 
+const isEditableTarget = (target: EventTarget | null): boolean => {
+  if (!(target instanceof HTMLElement)) return false;
+  if (target.isContentEditable) return true;
+  return target.closest('input, textarea, select, [contenteditable="true"]') !== null;
+};
+
+const findEnabled = (results: SearchItem[], from: number, step: 1 | -1): number => {
+  const count = results.length;
+  for (let offset = 0; offset < count; offset += 1) {
+    const index = (((from + offset * step) % count) + count) % count;
+    if (!results[index]?.disabled) return index;
+  }
+  return -1;
+};
+
 const defaultFilter = (item: SearchItem, query: string): boolean => {
   const needle = query.trim().toLowerCase();
   if (!needle) return true;
@@ -96,6 +111,12 @@ const defaultFilter = (item: SearchItem, query: string): boolean => {
     .toLowerCase();
   return haystack.includes(needle);
 };
+
+interface SearchCommandItemsContextValue {
+  setActiveIndex: (index: number) => void;
+  select: (item: SearchItem) => void;
+  id: string;
+}
 
 interface SearchCommandContextValue {
   open: boolean;
@@ -114,6 +135,10 @@ interface SearchCommandContextValue {
 }
 
 const SearchCommandContext = React.createContext<SearchCommandContextValue | null>(null);
+
+const SearchCommandItemsContext = React.createContext<SearchCommandItemsContextValue | null>(null);
+
+const optionId = (id: string, item: SearchItem) => `${id}-${item.id}`;
 
 const useSearchCommand = (): SearchCommandContextValue => {
   const context = React.use(SearchCommandContext);
@@ -160,7 +185,7 @@ const SearchCommandRoot = ({
     onChange: onOpenChange,
   });
   const [query, setQueryState] = React.useState('');
-  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [storedIndex, setActiveIndex] = React.useState(0);
   const modifier = React.useSyncExternalStore(
     subscribeToNothing,
     () => (isMac() ? '⌘' : 'Ctrl'),
@@ -187,8 +212,10 @@ const SearchCommandRoot = ({
   React.useEffect(() => {
     if (!hotkey) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (!(event.metaKey || event.ctrlKey)) return;
+      if (event.defaultPrevented || event.isComposing) return;
+      if (!(event.metaKey || event.ctrlKey) || event.shiftKey || event.altKey) return;
       if (event.key.toLowerCase() !== hotkey.toLowerCase()) return;
+      if (!open && isEditableTarget(event.target)) return;
       event.preventDefault();
       setOpen(!open);
     };
@@ -200,6 +227,13 @@ const SearchCommandRoot = ({
     () => items.filter((item) => filter(item, query)),
     [items, filter, query],
   );
+
+  const activeIndex =
+    results[storedIndex] && !results[storedIndex].disabled
+      ? storedIndex
+      : results.length
+        ? findEnabled(results, Math.min(storedIndex, results.length - 1), 1)
+        : -1;
 
   const select = React.useCallback(
     (item: SearchItem) => {
@@ -253,18 +287,25 @@ const SearchCommandRoot = ({
     ],
   );
 
+  const itemsValue = React.useMemo<SearchCommandItemsContextValue>(
+    () => ({ setActiveIndex, select, id }),
+    [select, id],
+  );
+
   return (
     <SearchCommandContext value={value}>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <div className={cn('contents', className)}>
-          {children ?? (
-            <>
-              <SearchCommandTrigger />
-              <SearchCommandDialog />
-            </>
-          )}
-        </div>
-      </Dialog>
+      <SearchCommandItemsContext value={itemsValue}>
+        <Dialog open={open} onOpenChange={setOpen}>
+          <div className={cn('contents', className)}>
+            {children ?? (
+              <>
+                <SearchCommandTrigger />
+                <SearchCommandDialog />
+              </>
+            )}
+          </div>
+        </Dialog>
+      </SearchCommandItemsContext>
     </SearchCommandContext>
   );
 };
@@ -292,7 +333,7 @@ const SearchCommandTrigger = ({
       {...props}
     >
       <SearchIcon size={16} className="shrink-0" />
-      <span className="min-w-0 flex-1 truncate text-left">{children ?? labels.placeholder}</span>
+      <span className="min-w-0 flex-1 truncate text-start">{children ?? labels.placeholder}</span>
       {hotkey ? (
         <KbdGroup aria-hidden="true">
           <Kbd size="sm">{modifier}</Kbd>
@@ -347,21 +388,45 @@ const SearchCommandInput = ({
   const { query, setQuery, results, activeIndex, setActiveIndex, select, labels, id } =
     useSearchCommand();
 
+  const move = (from: number, step: 1 | -1) => {
+    const next = findEnabled(results, from, step);
+    if (next !== -1) setActiveIndex(next);
+  };
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     onKeyDown?.(event);
     if (event.defaultPrevented) return;
     if (event.key === 'ArrowDown') {
       event.preventDefault();
-      if (results.length) setActiveIndex((activeIndex + 1) % results.length);
+      move(activeIndex + 1, 1);
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
-      if (results.length) setActiveIndex((activeIndex - 1 + results.length) % results.length);
+      move(activeIndex === -1 ? results.length - 1 : activeIndex - 1, -1);
+    } else if (event.key === 'Home' && results.length) {
+      event.preventDefault();
+      move(0, 1);
+    } else if (event.key === 'End' && results.length) {
+      event.preventDefault();
+      move(results.length - 1, -1);
     } else if (event.key === 'Enter' && !event.nativeEvent.isComposing && event.keyCode !== 229) {
       event.preventDefault();
       const item = results[activeIndex];
-      if (item) select(item);
+      if (!item || item.disabled) return;
+      if (item.href && !item.onSelect) {
+        const option = document.getElementById(optionId(id, item));
+        if (option instanceof HTMLAnchorElement) {
+          option.click();
+          return;
+        }
+        select(item);
+        window.location.assign(item.href);
+        return;
+      }
+      select(item);
     }
   };
+
+  const activeItem = results[activeIndex];
 
   return (
     <div className="border-border flex items-center gap-2 border-b px-3">
@@ -372,10 +437,9 @@ const SearchCommandInput = ({
         role="combobox"
         aria-expanded="true"
         aria-controls={`${id}-list`}
-        aria-activedescendant={
-          results[activeIndex] ? `${id}-${results[activeIndex].id}` : undefined
-        }
+        aria-activedescendant={activeItem ? optionId(id, activeItem) : undefined}
         aria-autocomplete="list"
+        aria-label={labels.trigger}
         autoComplete="off"
         spellCheck={false}
         placeholder={labels.placeholder}
@@ -414,44 +478,56 @@ const SearchCommandList = ({
 
   const groups = React.useMemo(() => {
     const order: string[] = [];
-    const byGroup = new Map<string, SearchItem[]>();
-    for (const item of results) {
+    const byGroup = new Map<string, { item: SearchItem; index: number }[]>();
+    results.forEach((item, index) => {
       const key = item.group ?? '';
       if (!byGroup.has(key)) {
         byGroup.set(key, []);
         order.push(key);
       }
-      byGroup.get(key)?.push(item);
-    }
-    return order.map((key) => ({ title: key, items: byGroup.get(key) ?? [] }));
+      byGroup.get(key)?.push({ item, index });
+    });
+    return order.map((key) => ({ title: key, entries: byGroup.get(key) ?? [] }));
   }, [results]);
 
+  const empty = results.length === 0;
+
   return (
-    <div
-      ref={ref}
-      id={`${id}-list`}
-      role="listbox"
-      aria-label={labels.trigger}
-      className={cn('max-h-80 overflow-y-auto p-2', className)}
-      {...props}
-    >
-      {results.length === 0 ? (
-        <SearchCommandEmpty />
-      ) : (
-        groups.map((group) => (
+    <>
+      <div
+        ref={ref}
+        id={`${id}-list`}
+        role="listbox"
+        aria-label={labels.trigger}
+        hidden={empty}
+        className={cn('max-h-80 overflow-y-auto p-2', className)}
+        {...props}
+      >
+        {groups.map((group) => (
           <div key={group.title || 'ungrouped'} role="group" aria-label={group.title || undefined}>
             {group.title ? (
-              <p className="text-muted-foreground px-2 pt-2 pb-1 font-mono text-[10px] tracking-[0.2em] uppercase">
+              <p
+                aria-hidden="true"
+                className="text-muted-foreground px-2 pt-2 pb-1 font-mono text-[10px] tracking-[0.2em] uppercase"
+              >
                 {group.title}
               </p>
             ) : null}
-            {group.items.map((item) => (
-              <SearchCommandItem key={item.id} item={item} />
+            {group.entries.map(({ item, index }) => (
+              <SearchCommandItem
+                key={item.id}
+                item={item}
+                index={index}
+                active={index === activeIndex}
+              />
             ))}
           </div>
-        ))
-      )}
-    </div>
+        ))}
+      </div>
+      <div role="status" aria-live="polite" aria-atomic="true">
+        {empty ? <SearchCommandEmpty /> : null}
+      </div>
+    </>
   );
 };
 
@@ -459,28 +535,46 @@ SearchCommandList.displayName = 'SearchCommandList';
 
 interface SearchCommandItemProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
   item: SearchItem;
+  index?: number;
+  active?: boolean;
 }
 
-const SearchCommandItem = ({
+const useItemPosition = (
+  item: SearchItem,
+  index: number | undefined,
+  active: boolean | undefined,
+): { index: number; active: boolean } => {
+  if (index !== undefined && active !== undefined) return { index, active };
+  const context = React.use(SearchCommandContext);
+  const resolved = index ?? context?.results.indexOf(item) ?? -1;
+  return { index: resolved, active: active ?? resolved === context?.activeIndex };
+};
+
+const SearchCommandItemBase = ({
   item,
+  index: indexProp,
+  active: activeProp,
   className,
   ref,
   ...props
 }: SearchCommandItemProps & { ref?: React.Ref<HTMLElement> }) => {
-  const { results, activeIndex, setActiveIndex, select, id } = useSearchCommand();
-  const index = results.indexOf(item);
-  const active = index === activeIndex;
+  const actions = React.use(SearchCommandItemsContext);
+  if (!actions) {
+    throw new Error('SearchCommand components must be used within SearchCommand');
+  }
+  const { setActiveIndex, select, id } = actions;
+  const { index, active } = useItemPosition(item, indexProp, activeProp);
   const asLink = Boolean(item.href) && !item.onSelect;
 
   const shared = {
-    id: `${id}-${item.id}`,
+    id: optionId(id, item),
     role: 'option',
     'aria-selected': active,
     'aria-disabled': item.disabled || undefined,
     'data-active': active ? '' : undefined,
     'data-disabled': item.disabled ? '' : undefined,
     onMouseMove: () => {
-      if (!item.disabled && index !== activeIndex) setActiveIndex(index);
+      if (!item.disabled && !active && index !== -1) setActiveIndex(index);
     },
     onClick: (event: React.MouseEvent) => {
       if (item.disabled) {
@@ -543,6 +637,10 @@ const SearchCommandItem = ({
   );
 };
 
+SearchCommandItemBase.displayName = 'SearchCommandItem';
+
+const SearchCommandItem = React.memo(SearchCommandItemBase);
+
 SearchCommandItem.displayName = 'SearchCommandItem';
 
 type SearchCommandEmptyProps = React.HTMLAttributes<HTMLParagraphElement>;
@@ -558,7 +656,6 @@ const SearchCommandEmpty = ({
   return (
     <p
       ref={ref}
-      role="status"
       className={cn('text-muted-foreground px-2 py-8 text-center text-sm', className)}
       {...props}
     >
