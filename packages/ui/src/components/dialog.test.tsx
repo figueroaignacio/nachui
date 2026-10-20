@@ -1,7 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type * as React from 'react';
+import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { Dialog } from './dialog';
 
 vi.mock('motion/react');
@@ -23,10 +24,8 @@ describe('Dialog', () => {
 
     const trigger = screen.getByRole('button', { name: 'Open Dialog' });
 
-    // initially hidden
     expect(screen.queryByText('Dialog Title')).not.toBeInTheDocument();
 
-    // click trigger
     await userEvent.click(trigger);
 
     await waitFor(() => {
@@ -35,7 +34,6 @@ describe('Dialog', () => {
       expect(screen.getByText('Dialog Content Body')).toBeInTheDocument();
     });
 
-    // click close icon (rendered implicitly by Content)
     const closeBtn = screen.getByRole('button', { name: 'Close' });
     await userEvent.click(closeBtn);
 
@@ -152,5 +150,95 @@ describe('Dialog keyboard and focus', () => {
     await user.click(screen.getByRole('button', { name: 'Rename' }));
     await screen.findByRole('dialog');
     expect(screen.queryByRole('button', { name: 'Close' })).not.toBeInTheDocument();
+  });
+});
+
+describe('Dialog asChild and refs', () => {
+  it('forwards ref and extra props through an asChild trigger and close', async () => {
+    const user = userEvent.setup();
+    const triggerRef = React.createRef<HTMLButtonElement>();
+    const childRef = React.createRef<HTMLButtonElement>();
+    const closeRef = React.createRef<HTMLButtonElement>();
+    const onTriggerKeyDown = vi.fn();
+    const onChildClick = vi.fn();
+
+    render(
+      <Dialog>
+        <Dialog.Trigger
+          asChild
+          ref={triggerRef}
+          className="trigger-class"
+          data-testid="trigger"
+          onKeyDown={onTriggerKeyDown}
+        >
+          <button type="button" ref={childRef} className="child-class" onClick={onChildClick}>
+            Open
+          </button>
+        </Dialog.Trigger>
+        <Dialog.Content showClose={false}>
+          <Dialog.Title>Asked</Dialog.Title>
+          <Dialog.Close asChild ref={closeRef} data-testid="close">
+            <button type="button">Done</button>
+          </Dialog.Close>
+        </Dialog.Content>
+      </Dialog>,
+    );
+
+    const trigger = screen.getByRole('button', { name: 'Open' });
+    expect(triggerRef.current).toBe(trigger);
+    expect(childRef.current).toBe(trigger);
+    expect(trigger).toHaveClass('trigger-class', 'child-class');
+    expect(trigger).toHaveAttribute('data-testid', 'trigger');
+    expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+
+    trigger.focus();
+    await user.keyboard('a');
+    expect(onTriggerKeyDown).toHaveBeenCalled();
+
+    await user.click(trigger);
+    expect(onChildClick).toHaveBeenCalledTimes(1);
+    const done = await screen.findByRole('button', { name: 'Done' });
+    expect(closeRef.current).toBe(done);
+    expect(done).toHaveAttribute('data-testid', 'close');
+
+    await user.click(done);
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  });
+
+  it('keeps the content ref attached across renders', async () => {
+    const user = userEvent.setup();
+    const contentRef = vi.fn();
+
+    function Counter() {
+      const [count, setCount] = React.useState(0);
+      return (
+        <Dialog defaultOpen>
+          <Dialog.Content ref={contentRef}>
+            <Dialog.Title>Count {count}</Dialog.Title>
+            <button type="button" onClick={() => setCount((value) => value + 1)}>
+              Add
+            </button>
+          </Dialog.Content>
+        </Dialog>
+      );
+    }
+
+    render(<Counter />);
+    const add = await screen.findByRole('button', { name: 'Add' });
+    const calls = contentRef.mock.calls.length;
+    await user.click(add);
+    await user.click(add);
+
+    expect(screen.getByRole('heading', { name: 'Count 2' })).toBeInTheDocument();
+    expect(contentRef.mock.calls.length).toBe(calls);
+  });
+
+  it('colors the close icon with theme tokens instead of opacity', async () => {
+    render(<Example />);
+    await userEvent.click(screen.getByRole('button', { name: 'Rename' }));
+    const close = await screen.findByRole('button', { name: 'Close' });
+    expect(close).toHaveClass('text-muted-foreground', 'hover:text-foreground');
+    expect(close).not.toHaveClass('opacity-70');
+    await expectNoAxeViolations(document.body);
   });
 });

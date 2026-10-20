@@ -44,6 +44,48 @@ function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
 const OVERLAY_STYLE = { willChange: 'opacity' } as const;
 const DIALOG_STYLE = { willChange: 'opacity, transform, filter' } as const;
 
+type SlotChildProps = Record<string, unknown> & { ref?: React.Ref<HTMLElement> };
+
+function mergeSlotProps(own: Record<string, unknown>, child: SlotChildProps) {
+  const merged: Record<string, unknown> = { ...own, ...child };
+  for (const [key, ownValue] of Object.entries(own)) {
+    const childValue = child[key];
+    if (
+      /^on[A-Z]/.test(key) &&
+      typeof ownValue === 'function' &&
+      typeof childValue === 'function'
+    ) {
+      merged[key] = (...args: unknown[]) => {
+        childValue(...args);
+        ownValue(...args);
+      };
+    }
+  }
+  if (own.className || child.className) {
+    merged.className = cn(
+      own.className as string | undefined,
+      child.className as string | undefined,
+    );
+  }
+  if (own.style || child.style) {
+    merged.style = { ...(own.style as object | undefined), ...(child.style as object | undefined) };
+  }
+  return merged;
+}
+
+function useComposedRef<T extends HTMLElement>(
+  first: React.Ref<T> | undefined,
+  second: React.Ref<T> | React.Ref<HTMLElement> | undefined,
+) {
+  return React.useCallback(
+    (node: T | null) => {
+      assignRef(first, node);
+      assignRef(second as React.Ref<T> | undefined, node);
+    },
+    [first, second],
+  );
+}
+
 type DialogContextType = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -101,29 +143,25 @@ interface DialogTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 const DialogTrigger = ({
   asChild,
   onClick,
+  children,
   ref,
   ...props
 }: DialogTriggerProps & { ref?: React.Ref<HTMLButtonElement> }) => {
   const { open, setOpen } = useDialogContext();
+  const slot = asChild && React.isValidElement<SlotChildProps>(children) ? children : null;
+  const composedRef = useComposedRef<HTMLButtonElement>(ref, slot?.props.ref);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setOpen(true);
     onClick?.(e);
   };
 
-  if (asChild && React.isValidElement(props.children)) {
-    const child = props.children as React.ReactElement<Record<string, unknown>>;
-    const childOnClick = child.props.onClick as
-      | ((e: React.MouseEvent<HTMLButtonElement>) => void)
-      | undefined;
-
-    return cloneElement(child, {
+  if (slot) {
+    return cloneElement(slot, {
+      ...mergeSlotProps({ ...props, onClick: handleClick }, slot.props),
       'aria-haspopup': 'dialog',
       'aria-expanded': open,
-      onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
-        childOnClick?.(e);
-        handleClick(e);
-      },
+      ref: composedRef,
     });
   }
 
@@ -135,7 +173,9 @@ const DialogTrigger = ({
       onClick={handleClick}
       ref={ref}
       {...props}
-    />
+    >
+      {children}
+    </button>
   );
 };
 DialogTrigger.displayName = 'DialogTrigger';
@@ -159,31 +199,31 @@ interface DialogCloseProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
 const DialogClose = ({
   asChild,
   onClick,
+  children,
   ref,
   ...props
 }: DialogCloseProps & { ref?: React.Ref<HTMLButtonElement> }) => {
   const { setOpen } = useDialogContext();
+  const slot = asChild && React.isValidElement<SlotChildProps>(children) ? children : null;
+  const composedRef = useComposedRef<HTMLButtonElement>(ref, slot?.props.ref);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setOpen(false);
     onClick?.(e);
   };
 
-  if (asChild && React.isValidElement(props.children)) {
-    const child = props.children as React.ReactElement<Record<string, unknown>>;
-    const childOnClick = child.props.onClick as
-      | ((e: React.MouseEvent<HTMLButtonElement>) => void)
-      | undefined;
-
-    return cloneElement(child, {
-      onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
-        childOnClick?.(e);
-        handleClick(e);
-      },
+  if (slot) {
+    return cloneElement(slot, {
+      ...mergeSlotProps({ ...props, onClick: handleClick }, slot.props),
+      ref: composedRef,
     });
   }
 
-  return <button type="button" onClick={handleClick} ref={ref} {...props} />;
+  return (
+    <button type="button" onClick={handleClick} ref={ref} {...props}>
+      {children}
+    </button>
+  );
 };
 DialogClose.displayName = 'DialogClose';
 
@@ -231,6 +271,7 @@ const DialogContent = ({
 }: DialogContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const { id, open, setOpen, hasTitle, hasDescription } = useDialogContext();
   const contentRef = React.useRef<HTMLDivElement>(null);
+  const composedRef = useComposedRef<HTMLDivElement>(contentRef, ref);
   const layer = useLayer(open, true);
   const triggerRef = React.useRef<HTMLElement | null>(null);
   const shouldReduceMotion = useReducedMotion();
@@ -276,10 +317,7 @@ const DialogContent = ({
         <DialogPortal>
           <DialogOverlay />
           <motion.div
-            ref={(node) => {
-              contentRef.current = node;
-              assignRef(ref, node);
-            }}
+            ref={composedRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby={hasTitle ? `${id}-title` : undefined}
@@ -299,7 +337,7 @@ const DialogContent = ({
           >
             {children}
             {showClose && (
-              <DialogClose className="ring-offset-background focus-visible:ring-ring absolute top-2 right-2 rounded-sm p-2 opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none">
+              <DialogClose className="ring-offset-background focus-visible:ring-ring text-muted-foreground hover:text-foreground absolute top-2 right-2 rounded-sm p-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none">
                 <XIcon className="h-4 w-4" size={16} />
                 <span className="sr-only">{closeLabel}</span>
               </DialogClose>
