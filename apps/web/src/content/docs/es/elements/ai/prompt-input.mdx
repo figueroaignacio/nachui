@@ -60,13 +60,17 @@ PromptInput
 
 Enter envía, Shift y Enter hacen un salto de línea, y la escritura por IME se deja en paz para que un candidato sin confirmar nunca se mande de casualidad. El textarea crece con el texto hasta `maxRows` y después scrollea.
 
+En pantallas táctiles Enter agrega un salto de línea, porque el teclado en pantalla no tiene un Shift cómodo y la gente envía con el botón. Poné `submitOnEnter` en el textarea para forzar uno u otro comportamiento; con `true` el teclado además muestra la tecla de enviar. Enter nunca envía mientras el prompt está `disabled` o el estado es `submitted` o `streaming`.
+
+El textarea se llama "Message" para los lectores de pantalla. Pasá `label` para cambiarlo, por ejemplo para traducirlo.
+
 ## Archivos
 
 Los archivos entran por tres lados: el botón del clip, un drop en cualquier parte del composer, y un drop en cualquier parte de la página cuando se activa `globalDrop`. `accept`, `maxFiles` y `maxFileSize` se revisan antes de quedarse con el archivo, y lo que se rechaza va a `onError` con un código que podés mostrar.
 
 <ComponentPreview component="prompt-input" demo="attachments" />
 
-Cada archivo aceptado se convierte en un `PromptInputFile` con una object URL lista para previsualizar y el `File` original para subir:
+Cada archivo aceptado se convierte en un `PromptInputFile` con una object URL lista para previsualizar y el `File` original para subir. Cuando un archivo sale por `onSubmit` su URL pasa a ser tuya, así que sigue andando en el mensaje enviado; llamá a `URL.revokeObjectURL` cuando ya no la necesites. Los archivos que se quitan antes de enviar, o que siguen en el input cuando se desmonta, se limpian solos.
 
 ```ts
 interface PromptInputFile {
@@ -83,7 +87,13 @@ interface PromptInputFile {
 
 ## Estado
 
-`status` en el botón de envío cubre la ida y la vuelta completa: `ready` manda, `submitted` gira, `streaming` se vuelve un cuadrado de stop y `error` se pone destructivo.
+`status` en el botón de envío cubre la ida y la vuelta completa: `ready` manda, `submitted` gira, `streaming` se vuelve un cuadrado de stop y `error` se pone destructivo. Mientras está en `submitted` o `streaming` el botón deja de enviar el formulario: se llama "Stop generating" y llama a `onStop`.
+
+```tsx
+<PromptInput.Submit status={status} onStop={stop} />
+```
+
+También podés poner `status` y `disabled` en la raíz, y todas las partes lo leen.
 
 <ComponentPreview component="prompt-input" demo="statuses" />
 
@@ -91,33 +101,39 @@ interface PromptInputFile {
 
 ### PromptInput
 
-| Prop            | Type                                                      | Default | Description                                    |
-| --------------- | --------------------------------------------------------- | ------- | ---------------------------------------------- |
-| `onSubmit`      | `(message: PromptInputMessage, event: FormEvent) => void` | -       | Se llama con el texto y los archivos           |
-| `accept`        | `string`                                                  | -       | Tipos de archivo aceptados                     |
-| `multiple`      | `boolean`                                                 | `false` | Permite más de un archivo                      |
-| `maxFiles`      | `number`                                                  | -       | Tope de archivos adjuntos                      |
-| `maxFileSize`   | `number`                                                  | -       | Tope en bytes por archivo                      |
-| `globalDrop`    | `boolean`                                                 | `false` | Acepta un drop en cualquier parte de la página |
-| `clearOnSubmit` | `boolean`                                                 | `true`  | Limpia el texto y los archivos al enviar       |
-| `onError`       | `(error: { code, message }) => void`                      | -       | Se llama cuando se rechaza un archivo          |
-| `className`     | `string`                                                  | -       | Clases CSS adicionales                         |
+| Prop            | Type                                                      | Default | Description                                                                     |
+| --------------- | --------------------------------------------------------- | ------- | ------------------------------------------------------------------------------- |
+| `onSubmit`      | `(message: PromptInputMessage, event: FormEvent) => void` | -       | Se llama con el texto y los archivos                                            |
+| `accept`        | `string`                                                  | -       | Tipos de archivo aceptados                                                      |
+| `multiple`      | `boolean`                                                 | `false` | Permite más de un archivo                                                       |
+| `maxFiles`      | `number`                                                  | -       | Tope de archivos adjuntos                                                       |
+| `maxFileSize`   | `number`                                                  | -       | Tope en bytes por archivo                                                       |
+| `globalDrop`    | `boolean`                                                 | `false` | Acepta un drop en cualquier parte de la página                                  |
+| `clearOnSubmit` | `boolean`                                                 | `true`  | Limpia el texto y los archivos al enviar                                        |
+| `onError`       | `(error: { code, message }) => void`                      | -       | Se llama cuando se rechaza un archivo                                           |
+| `status`        | `'ready' \| 'submitted' \| 'streaming' \| 'error'`        | -       | Estado compartido con el botón de envío, bloquea el envío mientras está ocupado |
+| `disabled`      | `boolean`                                                 | `false` | Deshabilita el textarea y el botón de envío                                     |
+| `className`     | `string`                                                  | -       | Clases CSS adicionales                                                          |
 
 ### PromptInput.Textarea
 
-| Prop        | Type     | Default | Description              |
-| ----------- | -------- | ------- | ------------------------ |
-| `minRows`   | `number` | `1`     | Filas antes de crecer    |
-| `maxRows`   | `number` | `8`     | Filas antes de scrollear |
-| `className` | `string` | -       | Clases CSS adicionales   |
+| Prop            | Type      | Default                             | Description              |
+| --------------- | --------- | ----------------------------------- | ------------------------ |
+| `minRows`       | `number`  | `1`                                 | Filas antes de crecer    |
+| `maxRows`       | `number`  | `8`                                 | Filas antes de scrollear |
+| `label`         | `string`  | `'Message'`                         | Nombre accesible         |
+| `submitOnEnter` | `boolean` | `true` con mouse, `false` en táctil | Si Enter envía           |
+| `className`     | `string`  | -                                   | Clases CSS adicionales   |
 
 ### PromptInput.Submit
 
-| Prop        | Type                                               | Default          | Description                  |
-| ----------- | -------------------------------------------------- | ---------------- | ---------------------------- |
-| `status`    | `'ready' \| 'submitted' \| 'streaming' \| 'error'` | `'ready'`        | Icono, color y deshabilitado |
-| `label`     | `string`                                           | `'Send message'` | Nombre accesible             |
-| `className` | `string`                                           | -                | Clases CSS adicionales       |
+| Prop        | Type                                               | Default             | Description                                                        |
+| ----------- | -------------------------------------------------- | ------------------- | ------------------------------------------------------------------ |
+| `status`    | `'ready' \| 'submitted' \| 'streaming' \| 'error'` | `'ready'`           | Icono, color y deshabilitado                                       |
+| `label`     | `string`                                           | `'Send message'`    | Nombre accesible                                                   |
+| `stopLabel` | `string`                                           | `'Stop generating'` | Nombre accesible mientras está ocupado, usa `label` si pasaste uno |
+| `onStop`    | `() => void`                                       | -                   | Se llama al tocar el botón de stop                                 |
+| `className` | `string`                                           | -                   | Clases CSS adicionales                                             |
 
 ### PromptInput.Button
 

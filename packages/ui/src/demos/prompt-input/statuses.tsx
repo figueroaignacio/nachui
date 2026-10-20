@@ -31,7 +31,7 @@ export function Statuses() {
           <PromptInput.Tools>
             <PromptInput.AddAttachments />
           </PromptInput.Tools>
-          <PromptInput.Submit status={status} disabled={status !== 'ready'} />
+          <PromptInput.Submit status={status} onStop={() => setStatus('ready')} />
         </PromptInput.Footer>
       </PromptInput>
     </div>

@@ -1,6 +1,5 @@
 'use client';
 
-import { motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { useControllableState } from '../lib/use-controllable-state';
@@ -133,9 +132,6 @@ function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
   );
 }
 
-const SPIN_ANIMATE = { rotate: 360 };
-const SPIN_TRANSITION = { repeat: Infinity, duration: 1, ease: 'linear' } as const;
-
 type PromptInputStatus = 'ready' | 'submitted' | 'streaming' | 'error';
 type PromptInputErrorCode = 'max_files' | 'max_file_size' | 'accept';
 
@@ -169,6 +165,9 @@ interface PromptInputContextValue {
   dragging: boolean;
   accept: string | undefined;
   id: string;
+  status: PromptInputStatus | undefined;
+  disabled: boolean;
+  reportSubmitStatus: (status: PromptInputStatus | undefined) => void;
 }
 
 const PromptInputContext = React.createContext<PromptInputContextValue | null>(null);
@@ -215,6 +214,8 @@ interface PromptInputProps extends Omit<
   globalDrop?: boolean;
   clearOnSubmit?: boolean;
   onError?: (error: PromptInputError) => void;
+  status?: PromptInputStatus;
+  disabled?: boolean;
 }
 
 type PromptInputHeaderProps = React.HTMLAttributes<HTMLDivElement>;
@@ -229,6 +230,8 @@ interface PromptInputTextareaProps extends Omit<
 > {
   minRows?: number;
   maxRows?: number;
+  label?: string;
+  submitOnEnter?: boolean;
 }
 
 interface PromptInputButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -243,6 +246,8 @@ interface PromptInputAddAttachmentsProps extends React.ButtonHTMLAttributes<HTML
 interface PromptInputSubmitProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   status?: PromptInputStatus;
   label?: string;
+  stopLabel?: string;
+  onStop?: () => void;
 }
 
 const PromptInputRoot = ({
@@ -258,6 +263,8 @@ const PromptInputRoot = ({
   value: controlledText,
   defaultValue = '',
   onValueChange,
+  status,
+  disabled = false,
   children,
   ref,
   ...props
@@ -272,6 +279,18 @@ const PromptInputRoot = ({
   const [dragging, setDragging] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const id = React.useId();
+  const counterRef = React.useRef(0);
+  const handedOffRef = React.useRef(new Set<string>());
+  const submitStatusRef = React.useRef<PromptInputStatus | undefined>(undefined);
+
+  const release = React.useCallback((entry: PromptInputFile) => {
+    if (handedOffRef.current.has(entry.url)) return;
+    URL.revokeObjectURL(entry.url);
+  }, []);
+
+  const reportSubmitStatus = React.useCallback((next: PromptInputStatus | undefined) => {
+    submitStatusRef.current = next;
+  }, []);
 
   const add = React.useCallback(
     (incoming: FileList | File[]) => {
@@ -291,8 +310,9 @@ const PromptInputRoot = ({
           break;
         }
 
+        counterRef.current += 1;
         next.push({
-          id: `${file.name}-${file.size}-${file.lastModified}`,
+          id: `${file.name}-${file.size}-${file.lastModified}-${counterRef.current}`,
           filename: file.name,
           mediaType: file.type,
           size: file.size,
@@ -305,27 +325,37 @@ const PromptInputRoot = ({
 
       const accepted = multiple ? next : next.slice(-1);
       for (const entry of next) {
-        if (!accepted.includes(entry)) URL.revokeObjectURL(entry.url);
+        if (!accepted.includes(entry)) release(entry);
       }
 
       filesRef.current = accepted;
       setFiles(accepted);
     },
-    [accept, maxFileSize, maxFiles, multiple, onError],
+    [accept, maxFileSize, maxFiles, multiple, onError, release],
   );
 
-  const remove = React.useCallback((fileId: string) => {
-    const target = filesRef.current.find((entry) => entry.id === fileId);
-    if (target) URL.revokeObjectURL(target.url);
-    filesRef.current = filesRef.current.filter((entry) => entry.id !== fileId);
-    setFiles(filesRef.current);
-  }, []);
+  const remove = React.useCallback(
+    (fileId: string) => {
+      const target = filesRef.current.find((entry) => entry.id === fileId);
+      if (target) release(target);
+      filesRef.current = filesRef.current.filter((entry) => entry.id !== fileId);
+      setFiles(filesRef.current);
+    },
+    [release],
+  );
 
   const clear = React.useCallback(() => {
-    for (const entry of filesRef.current) URL.revokeObjectURL(entry.url);
+    for (const entry of filesRef.current) release(entry);
     filesRef.current = [];
     setFiles(filesRef.current);
-  }, []);
+  }, [release]);
+
+  React.useEffect(
+    () => () => {
+      for (const entry of filesRef.current) release(entry);
+    },
+    [release],
+  );
 
   const openFileDialog = React.useCallback(() => {
     inputRef.current?.click();
@@ -352,13 +382,18 @@ const PromptInputRoot = ({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const current = status ?? submitStatusRef.current;
+    if (disabled || current === 'streaming' || current === 'submitted') return;
     if (!text.trim() && files.length === 0) return;
-    const result = onSubmit?.({ text, files }, event);
+    const submitted = files;
+    for (const entry of submitted) handedOffRef.current.add(entry.url);
+    const result = onSubmit?.({ text, files: submitted }, event);
     if (!clearOnSubmit) return;
     const reset = (outcome: void | boolean) => {
       if (outcome === false) return;
       setText('');
-      clear();
+      filesRef.current = filesRef.current.filter((entry) => !submitted.includes(entry));
+      setFiles(filesRef.current);
     };
     if (result instanceof Promise) {
       result.then(reset, () => undefined);
@@ -368,8 +403,36 @@ const PromptInputRoot = ({
   };
 
   const value = React.useMemo<PromptInputContextValue>(
-    () => ({ text, setText, files, add, remove, clear, openFileDialog, dragging, accept, id }),
-    [text, setText, files, add, remove, clear, openFileDialog, dragging, accept, id],
+    () => ({
+      text,
+      setText,
+      files,
+      add,
+      remove,
+      clear,
+      openFileDialog,
+      dragging,
+      accept,
+      id,
+      status,
+      disabled,
+      reportSubmitStatus,
+    }),
+    [
+      text,
+      setText,
+      files,
+      add,
+      remove,
+      clear,
+      openFileDialog,
+      dragging,
+      accept,
+      id,
+      status,
+      disabled,
+      reportSubmitStatus,
+    ],
   );
 
   return (
@@ -404,7 +467,7 @@ const PromptInputRoot = ({
           accept={accept}
           multiple={multiple}
           tabIndex={-1}
-          className="hidden"
+          hidden
           onChange={(event) => {
             if (event.target.files) add(event.target.files);
             event.target.value = '';
@@ -470,14 +533,34 @@ const PromptInputAttachments = ({
   ref,
   ...props
 }: PromptInputAttachmentsProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { files, remove } = usePromptInput();
+  const { files, remove, id } = usePromptInput();
+  const listRef = React.useRef<HTMLDivElement | null>(null);
+
+  const setRefs = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      listRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+
+  const removeAndRefocus = (fileId: string, index: number) => {
+    const buttons = Array.from(
+      listRef.current?.querySelectorAll<HTMLButtonElement>('[data-prompt-input-remove]') ?? [],
+    );
+    const next = buttons[index + 1] ?? buttons[index - 1];
+    remove(fileId);
+    if (next) next.focus();
+    else document.getElementById(`${id}-textarea`)?.focus();
+  };
 
   if (files.length === 0) return null;
 
   return (
-    <div ref={ref} className={cn('flex flex-wrap items-center gap-2', className)} {...props}>
+    <div ref={setRefs} className={cn('flex flex-wrap items-center gap-2', className)} {...props}>
       {children ??
-        files.map((file) => (
+        files.map((file, index) => (
           <span
             key={file.id}
             className="border-border bg-secondary text-secondary-foreground flex h-8 max-w-48 items-center gap-1.5 rounded-full border py-1 pr-1 pl-2.5 text-xs"
@@ -486,7 +569,8 @@ const PromptInputAttachments = ({
             <button
               type="button"
               aria-label={`Remove ${file.filename}`}
-              onClick={() => remove(file.id)}
+              data-prompt-input-remove=""
+              onClick={() => removeAndRefocus(file.id, index)}
               className="text-muted-foreground hover:text-foreground focus-visible:ring-ring relative flex size-5 shrink-0 items-center justify-center rounded-full transition-colors after:absolute after:-inset-2 focus-visible:ring-2 focus-visible:outline-none"
             >
               <XIcon size={12} />
@@ -503,22 +587,55 @@ const PromptInputTextarea = ({
   className,
   minRows = 1,
   maxRows = 8,
+  label = 'Message',
+  submitOnEnter,
+  disabled,
   onKeyDown,
   ref,
   ...props
 }: PromptInputTextareaProps & { ref?: React.Ref<HTMLTextAreaElement> }) => {
-  const { text, setText, id } = usePromptInput();
+  const { text, setText, id, disabled: rootDisabled } = usePromptInput();
   const innerRef = React.useRef<HTMLTextAreaElement>(null);
 
   React.useImperativeHandle(ref, () => innerRef.current as HTMLTextAreaElement);
 
-  React.useLayoutEffect(() => {
+  const resize = React.useCallback(() => {
     const node = innerRef.current;
     if (!node) return;
     node.style.height = 'auto';
-    const lineHeight = Number.parseFloat(getComputedStyle(node).lineHeight) || 20;
-    node.style.height = `${Math.min(node.scrollHeight, lineHeight * maxRows)}px`;
-  }, [text, maxRows]);
+    const style = getComputedStyle(node);
+    const lineHeight = Number.parseFloat(style.lineHeight) || 20;
+    const paddingY =
+      (Number.parseFloat(style.paddingTop) || 0) + (Number.parseFloat(style.paddingBottom) || 0);
+    const borderY =
+      (Number.parseFloat(style.borderTopWidth) || 0) +
+      (Number.parseFloat(style.borderBottomWidth) || 0);
+    const limit = lineHeight * maxRows + paddingY;
+    node.style.height = `${Math.min(node.scrollHeight, limit) + borderY}px`;
+  }, [maxRows]);
+
+  React.useLayoutEffect(() => {
+    resize();
+  }, [text, resize]);
+
+  React.useEffect(() => {
+    const node = innerRef.current;
+    if (!node || typeof ResizeObserver === 'undefined') return;
+    let width = node.clientWidth;
+    const observer = new ResizeObserver(() => {
+      if (node.clientWidth === width) return;
+      width = node.clientWidth;
+      resize();
+    });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [resize]);
+
+  const shouldSubmitOnEnter = () => {
+    if (submitOnEnter !== undefined) return submitOnEnter;
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return true;
+    return !window.matchMedia('(pointer: coarse)').matches;
+  };
 
   return (
     <textarea
@@ -526,14 +643,18 @@ const PromptInputTextarea = ({
       id={`${id}-textarea`}
       rows={minRows}
       value={text}
+      aria-label={label}
+      enterKeyHint={submitOnEnter ? 'send' : undefined}
+      disabled={disabled ?? (rootDisabled || undefined)}
       onChange={(event) => setText(event.target.value)}
       onKeyDown={(event) => {
         onKeyDown?.(event);
         if (event.defaultPrevented) return;
-        if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
-          event.preventDefault();
-          event.currentTarget.form?.requestSubmit();
-        }
+        if (event.key !== 'Enter' || event.shiftKey) return;
+        if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
+        if (!shouldSubmitOnEnter()) return;
+        event.preventDefault();
+        event.currentTarget.form?.requestSubmit();
       }}
       className={cn(
         'text-foreground placeholder:text-muted-foreground w-full resize-none bg-transparent px-3 py-3 text-base leading-relaxed outline-none md:text-sm',
@@ -605,45 +726,56 @@ PromptInputAddAttachments.displayName = 'PromptInputAddAttachments';
 
 const PromptInputSubmit = ({
   className,
-  status = 'ready',
-  label = 'Send message',
+  status: statusProp,
+  label,
+  stopLabel,
+  onStop,
   children,
   disabled,
+  onClick,
   ref,
   ...props
 }: PromptInputSubmitProps & { ref?: React.Ref<HTMLButtonElement> }) => {
-  const { text, files } = usePromptInput();
-  const shouldReduceMotion = useReducedMotion();
+  const {
+    text,
+    files,
+    status: rootStatus,
+    disabled: rootDisabled,
+    reportSubmitStatus,
+  } = usePromptInput();
+  const status = statusProp ?? rootStatus ?? 'ready';
   const empty = text.trim().length === 0 && files.length === 0;
+  const busy = status === 'streaming' || status === 'submitted';
+  const name = busy ? (stopLabel ?? label ?? 'Stop generating') : (label ?? 'Send message');
+
+  React.useEffect(() => {
+    reportSubmitStatus(statusProp);
+    return () => reportSubmitStatus(undefined);
+  }, [statusProp, reportSubmitStatus]);
 
   const icon = () => {
     if (status === 'streaming') return <SquareIcon />;
     if (status === 'error') return <AlertIcon />;
-    if (status === 'submitted') {
-      return shouldReduceMotion ? (
-        <LoaderIcon />
-      ) : (
-        <motion.span
-          className="flex"
-          aria-hidden="true"
-          animate={SPIN_ANIMATE}
-          transition={SPIN_TRANSITION}
-        >
-          <LoaderIcon />
-        </motion.span>
-      );
-    }
+    if (status === 'submitted') return <LoaderIcon className="motion-safe:animate-spin" />;
     return <SendIcon />;
   };
+
+  const defaultDisabled = busy
+    ? !onStop && !onClick
+    : rootDisabled || (status === 'ready' && empty);
 
   return (
     <button
       ref={ref}
-      type="submit"
-      aria-label={label}
-      title={label}
+      type={busy ? 'button' : 'submit'}
+      aria-label={name}
+      title={name}
       data-status={status}
-      disabled={disabled ?? (status === 'ready' && empty)}
+      disabled={disabled ?? defaultDisabled}
+      onClick={(event) => {
+        onClick?.(event);
+        if (busy && !event.defaultPrevented) onStop?.();
+      }}
       className={cn(
         'bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex size-8 shrink-0 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&>svg]:size-4 [&>svg]:shrink-0',
         status === 'error' && 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
