@@ -573,6 +573,8 @@ const DataTableToolbar = ({
             return (
               <DropdownMenu.Item
                 key={column.id}
+                role="menuitemcheckbox"
+                checked={visible}
                 disabled={lastVisible}
                 onSelect={() => toggleColumn(column.id)}
                 className="gap-2 text-xs"

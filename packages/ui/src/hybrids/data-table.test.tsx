@@ -99,8 +99,14 @@ describe('DataTable', () => {
   it('hides a column from the columns menu', async () => {
     render(<DataTable data={ROWS} columns={COLUMNS} getRowId={(row) => row.id} />);
     await userEvent.click(screen.getByRole('button', { name: /Columns/ }));
-    await userEvent.click(screen.getByRole('menuitem', { name: /Status/ }));
+    const status = screen.getByRole('menuitemcheckbox', { name: /Status/ });
+    expect(status).toHaveAttribute('aria-checked', 'true');
+    await userEvent.click(status);
     expect(screen.queryByRole('columnheader', { name: /Status/ })).not.toBeInTheDocument();
+    expect(screen.getByRole('menuitemcheckbox', { name: /Status/ })).toHaveAttribute(
+      'aria-checked',
+      'false',
+    );
   });
 
   it('renders the empty state', () => {
@@ -197,7 +203,7 @@ describe('DataTable', () => {
     );
     render(<DataTable data={ROWS} columns={columns} getRowId={(row) => row.id} />);
     await userEvent.click(screen.getByRole('button', { name: /Columns/ }));
-    const item = screen.getByRole('menuitem', { name: /Name/ });
+    const item = screen.getByRole('menuitemcheckbox', { name: /Name/ });
     expect(item).toHaveAttribute('aria-disabled', 'true');
     await userEvent.click(item);
     expect(screen.getByRole('columnheader', { name: /Name/ })).toBeInTheDocument();
