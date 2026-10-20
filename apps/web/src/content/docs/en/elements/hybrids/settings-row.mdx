@@ -77,7 +77,7 @@ SettingsRow.Section
 
 ## Action
 
-`SettingsRow.Action` is a `Button`, outline and small by default. Use it for "Manage", "Rotate" or, with `variant="destructive"`, for the one thing on the page that cannot be undone.
+`SettingsRow.Action` is a `Button`, outline and small by default. Use it for "Manage", "Rotate" or, with `variant="destructive"`, for the one thing on the page that cannot be undone. The button keeps its own text as its name; the row label and description describe it instead.
 
 ## Value
 
@@ -157,10 +157,11 @@ SettingsRow.Section
 
 ### SettingsRow.Section
 
-| Prop          | Type        | Default | Description                           |
-| ------------- | ----------- | ------- | ------------------------------------- |
-| `title`       | `ReactNode` | -       | Heading of the card                   |
-| `description` | `ReactNode` | -       | Text under the heading                |
-| `footer`      | `ReactNode` | -       | Slot at the bottom, right aligned     |
-| `children`    | `ReactNode` | -       | Rows, separated by a `Separator` each |
-| `className`   | `string`    | -       | Additional CSS classes                |
+| Prop           | Type                    | Default | Description                                   |
+| -------------- | ----------------------- | ------- | --------------------------------------------- |
+| `title`        | `ReactNode`             | -       | Heading of the card                           |
+| `description`  | `ReactNode`             | -       | Text under the heading                        |
+| `footer`       | `ReactNode`             | -       | Slot at the bottom, right aligned             |
+| `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `3`     | Level of the heading, so it fits your outline |
+| `children`     | `ReactNode`             | -       | Rows, separated by a `Separator` each         |
+| `className`    | `string`                | -       | Additional CSS classes                        |

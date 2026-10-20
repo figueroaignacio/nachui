@@ -112,6 +112,7 @@ interface SettingsSectionProps extends Omit<React.HTMLAttributes<HTMLElement>, '
   title: React.ReactNode;
   description?: React.ReactNode;
   footer?: React.ReactNode;
+  headingLevel?: 2 | 3 | 4 | 5 | 6;
 }
 
 const SettingsRowRoot = ({
@@ -207,7 +208,6 @@ const SettingsRowSelect = ({
       className={cn('w-full sm:w-48', className)}
     >
       <Select.Trigger
-        id={row.controlId}
         size="sm"
         placeholder={placeholder}
         aria-labelledby={row.labelId}
@@ -264,10 +264,9 @@ const SettingsRowAction = ({
   return (
     <Button
       ref={ref}
-      id={row.controlId}
       variant={variant}
       size={size}
-      aria-describedby={row.descriptionId}
+      aria-describedby={[row.labelId, row.descriptionId].filter(Boolean).join(' ')}
       disabled={disabled ?? row.disabled}
       {...props}
     />
@@ -301,14 +300,12 @@ const SettingsRowValue = ({
   return (
     <div
       ref={ref}
-      className={cn('flex items-center gap-1.5', className)}
+      role="group"
       aria-labelledby={row.labelId}
+      className={cn('flex min-w-0 items-center gap-1.5', className)}
       {...props}
     >
-      <code
-        id={row.controlId}
-        className="bg-secondary text-foreground rounded-md px-2 py-1 font-mono text-xs"
-      >
+      <code className="bg-secondary text-foreground min-w-0 rounded-md px-2 py-1 font-mono text-xs break-all">
         {value}
       </code>
       {copy ? (
@@ -319,13 +316,17 @@ const SettingsRowValue = ({
           data-copied={copied ? '' : undefined}
           disabled={row.disabled}
           onClick={() => {
-            const write = navigator.clipboard?.writeText(value);
-            void Promise.resolve(write).then(() => {
-              onCopied?.(value);
-              setCopied(true);
-              if (timeout.current) clearTimeout(timeout.current);
-              timeout.current = setTimeout(() => setCopied(false), COPIED_TIMEOUT);
-            });
+            const clipboard = typeof navigator === 'undefined' ? undefined : navigator.clipboard;
+            if (!clipboard?.writeText) return;
+            clipboard.writeText(value).then(
+              () => {
+                onCopied?.(value);
+                setCopied(true);
+                if (timeout.current) clearTimeout(timeout.current);
+                timeout.current = setTimeout(() => setCopied(false), COPIED_TIMEOUT);
+              },
+              () => setCopied(false),
+            );
           }}
           className="text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:ring-ring data-[copied]:text-success-text inline-flex size-7 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none"
         >
@@ -343,21 +344,27 @@ const SettingsSection = ({
   title,
   description,
   footer,
+  headingLevel = 3,
   children,
   ref,
   ...props
 }: SettingsSectionProps & { ref?: React.Ref<HTMLElement> }) => {
   const rows = React.Children.toArray(children).filter(Boolean);
+  const titleId = React.useId();
+  const Heading = `h${headingLevel}` as const;
 
   return (
     <section
       ref={ref}
+      aria-labelledby={titleId}
       data-slot="settings-section"
       className={cn('border-border bg-card w-full overflow-hidden rounded-lg border', className)}
       {...props}
     >
       <header className="border-rule flex flex-col gap-1 border-b px-5 py-4">
-        <h3 className="text-foreground text-sm font-medium">{title}</h3>
+        <Heading id={titleId} className="text-foreground text-sm font-medium">
+          {title}
+        </Heading>
         {description ? (
           <p className="text-muted-foreground text-xs leading-relaxed">{description}</p>
         ) : null}

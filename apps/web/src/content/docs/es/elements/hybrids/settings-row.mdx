@@ -77,7 +77,7 @@ SettingsRow.Section
 
 ## Action
 
-`SettingsRow.Action` es un `Button`, outline y chico por defecto. Usalo para "Administrar", "Rotar" o, con `variant="destructive"`, para la única cosa de la página que no se puede deshacer.
+`SettingsRow.Action` es un `Button`, outline y chico por defecto. Usalo para "Administrar", "Rotar" o, con `variant="destructive"`, para la única cosa de la página que no se puede deshacer. El botón conserva su propio texto como nombre; el label y la descripción de la fila lo describen.
 
 ## Value
 
@@ -157,10 +157,11 @@ SettingsRow.Section
 
 ### SettingsRow.Section
 
-| Prop          | Tipo        | Default | Descripción                              |
-| ------------- | ----------- | ------- | ---------------------------------------- |
-| `title`       | `ReactNode` | -       | Encabezado de la tarjeta                 |
-| `description` | `ReactNode` | -       | Texto bajo el encabezado                 |
-| `footer`      | `ReactNode` | -       | Slot al pie, alineado a la derecha       |
-| `children`    | `ReactNode` | -       | Filas, con un `Separator` entre cada par |
-| `className`   | `string`    | -       | Clases CSS adicionales                   |
+| Prop           | Tipo                    | Default | Descripción                                            |
+| -------------- | ----------------------- | ------- | ------------------------------------------------------ |
+| `title`        | `ReactNode`             | -       | Encabezado de la tarjeta                               |
+| `description`  | `ReactNode`             | -       | Texto bajo el encabezado                               |
+| `footer`       | `ReactNode`             | -       | Slot al pie, alineado a la derecha                     |
+| `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `3`     | Nivel del encabezado, para que encaje en tu estructura |
+| `children`     | `ReactNode`             | -       | Filas, con un `Separator` entre cada par               |
+| `className`    | `string`                | -       | Clases CSS adicionales                                 |
