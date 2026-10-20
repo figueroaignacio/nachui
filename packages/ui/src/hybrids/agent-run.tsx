@@ -196,18 +196,49 @@ function useElapsed(
   finishedAt: Date | number | undefined,
   live: boolean,
 ): string | null {
-  const [now, setNow] = React.useState(() => Date.now());
+  const [now, setNow] = React.useState<number | null>(null);
 
   React.useEffect(() => {
     if (!live || startedAt === undefined || finishedAt !== undefined) return;
-    const interval = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(interval);
+    const tick = () => setNow(Date.now());
+    const first = setTimeout(tick, 0);
+    const interval = setInterval(tick, 1000);
+    return () => {
+      clearTimeout(first);
+      clearInterval(interval);
+    };
   }, [live, startedAt, finishedAt]);
 
   if (startedAt === undefined) return null;
-  const end = finishedAt !== undefined ? toMillis(finishedAt) : live ? now : toMillis(startedAt);
-  return formatElapsed(end - toMillis(startedAt));
+  const start = toMillis(startedAt);
+  const end =
+    finishedAt !== undefined
+      ? toMillis(finishedAt)
+      : live && now !== null
+        ? Math.max(now, start)
+        : start;
+  return formatElapsed(end - start);
 }
+
+function useAutoOpen(
+  status: string,
+  initialOpen: boolean,
+  shouldOpen: (status: string) => boolean,
+  enabled: boolean,
+) {
+  const [open, setOpen] = React.useState(initialOpen);
+  const [seenStatus, setSeenStatus] = React.useState(status);
+
+  if (seenStatus !== status) {
+    setSeenStatus(status);
+    if (enabled && shouldOpen(status) && !open) setOpen(true);
+  }
+
+  return [open, setOpen] as const;
+}
+
+const opensStep = (status: string) => status === 'active' || status === 'error';
+const opensTool = (status: string) => status === 'error';
 
 interface AgentRunProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
@@ -311,6 +342,8 @@ const AgentRunHeader = ({
         </span>
       ) : null}
       <span
+        role="status"
+        aria-atomic="true"
         data-status={status}
         className={cn(
           'inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[11px]',
@@ -355,7 +388,7 @@ const AgentRunProgress = ({
       {...props}
     >
       <motion.div
-        className="bg-foreground absolute inset-y-0 left-0"
+        className="bg-foreground absolute inset-y-0 start-0"
         initial={false}
         animate={{ width: `${ratio * 100}%` }}
         transition={shouldReduceMotion ? { duration: 0 } : BAR_TRANSITION}
@@ -366,23 +399,69 @@ const AgentRunProgress = ({
 
 AgentRunProgress.displayName = 'AgentRunProgress';
 
+function StepTool({ tool, labels }: { tool: AgentTool; labels: AgentRunLabels }) {
+  const [open, setOpen] = useAutoOpen(tool.status, opensTool(tool.status), opensTool, true);
+
+  return (
+    <Tool status={tool.status} open={open} onOpenChange={setOpen}>
+      <Tool.Header name={tool.name} description={tool.description} />
+      <Tool.Content>
+        {tool.input !== undefined ? <Tool.Input label={labels.input} value={tool.input} /> : null}
+        {tool.output !== undefined ? (
+          <Tool.Output label={labels.output} value={tool.output} error={tool.error} />
+        ) : null}
+      </Tool.Content>
+    </Tool>
+  );
+}
+
 function StepTools({ tools, labels }: { tools: AgentTool[]; labels: AgentRunLabels }) {
   return (
     <div className="flex flex-col gap-2">
       {tools.map((tool) => (
-        <Tool key={tool.id} status={tool.status} defaultOpen={tool.status === 'error'}>
-          <Tool.Header name={tool.name} description={tool.description} />
-          <Tool.Content>
-            {tool.input !== undefined ? (
-              <Tool.Input label={labels.input} value={tool.input} />
-            ) : null}
-            {tool.output !== undefined ? (
-              <Tool.Output label={labels.output} value={tool.output} error={tool.error} />
-            ) : null}
-          </Tool.Content>
-        </Tool>
+        <StepTool key={tool.id} tool={tool} labels={labels} />
       ))}
     </div>
+  );
+}
+
+function AgentRunStep({
+  step,
+  labels,
+  defaultOpen,
+}: {
+  step: AgentStep;
+  labels: AgentRunLabels;
+  defaultOpen: boolean | undefined;
+}) {
+  const [open, setOpen] = useAutoOpen(
+    step.status,
+    defaultOpen ?? opensStep(step.status),
+    opensStep,
+    defaultOpen === undefined,
+  );
+
+  return (
+    <Task open={open} onOpenChange={setOpen}>
+      <Task.Trigger title={step.title} status={step.status} />
+      <Task.Content>
+        {step.detail ? <Task.Item>{step.detail}</Task.Item> : null}
+        {step.files?.length ? (
+          <Task.Item>
+            {step.files.map((file) => (
+              <Task.File key={file}>{file}</Task.File>
+            ))}
+          </Task.Item>
+        ) : null}
+        {step.reasoning ? (
+          <Reasoning isStreaming={step.status === 'active'} defaultOpen={false}>
+            <Reasoning.Trigger />
+            <Reasoning.Content>{step.reasoning}</Reasoning.Content>
+          </Reasoning>
+        ) : null}
+        {step.tools?.length ? <StepTools tools={step.tools} labels={labels} /> : null}
+      </Task.Content>
+    </Task>
   );
 }
 
@@ -396,26 +475,7 @@ const AgentRunSteps = ({
   return (
     <div ref={ref} className={cn('flex flex-col gap-3 px-4 py-3', className)} {...props}>
       {steps.map((step) => (
-        <Task key={step.id} defaultOpen={defaultOpen ?? step.status === 'active'}>
-          <Task.Trigger title={step.title} status={step.status} />
-          <Task.Content>
-            {step.detail ? <Task.Item>{step.detail}</Task.Item> : null}
-            {step.files?.length ? (
-              <Task.Item>
-                {step.files.map((file) => (
-                  <Task.File key={file}>{file}</Task.File>
-                ))}
-              </Task.Item>
-            ) : null}
-            {step.reasoning ? (
-              <Reasoning isStreaming={step.status === 'active'} defaultOpen={false}>
-                <Reasoning.Trigger />
-                <Reasoning.Content>{step.reasoning}</Reasoning.Content>
-              </Reasoning>
-            ) : null}
-            {step.tools?.length ? <StepTools tools={step.tools} labels={labels} /> : null}
-          </Task.Content>
-        </Task>
+        <AgentRunStep key={step.id} step={step} labels={labels} defaultOpen={defaultOpen} />
       ))}
     </div>
   );

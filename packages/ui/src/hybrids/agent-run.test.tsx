@@ -1,5 +1,8 @@
-import { render, screen, within } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { act, render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { renderToString } from 'react-dom/server';
+import { describe, expect, it, vi } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { AgentRun, agentRunProgress, type AgentStep } from './agent-run';
 
 const STEPS: AgentStep[] = [
@@ -92,5 +95,76 @@ describe('AgentRun', () => {
   it('computes progress', () => {
     expect(agentRunProgress(STEPS)).toEqual({ done: 2, total: 4, ratio: 0.5 });
     expect(agentRunProgress([])).toEqual({ done: 0, total: 0, ratio: 0 });
+  });
+
+  it('announces status changes through a live status pill', () => {
+    const { rerender } = render(<AgentRun status="running" steps={STEPS} />);
+    const pill = screen.getByText('Running');
+    expect(pill).toHaveAttribute('role', 'status');
+    expect(pill).toHaveTextContent('Running');
+    rerender(<AgentRun status="error" steps={STEPS} />);
+    expect(pill).toHaveTextContent('Failed');
+    expect(pill).toHaveAttribute('data-status', 'error');
+  });
+
+  it('renders the elapsed time from startedAt on the first pass', () => {
+    vi.useFakeTimers();
+    try {
+      vi.setSystemTime(10_000);
+      const markup = renderToString(<AgentRun status="running" steps={STEPS} startedAt={5_000} />);
+      expect(markup).toContain('>0s<');
+      render(<AgentRun status="running" steps={STEPS} startedAt={5_000} />);
+      act(() => {
+        vi.advanceTimersByTime(0);
+      });
+      expect(screen.getByText('5s')).toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('opens a step when it becomes active or fails, unless the user closed it after', async () => {
+    const pending: AgentStep[] = [
+      { id: 'one', title: 'Step one', status: 'pending', detail: 'Doing it' },
+    ];
+    const { rerender } = render(<AgentRun status="running" steps={pending} />);
+    const trigger = screen.getByRole('button', { name: /Step one/ });
+    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    rerender(<AgentRun status="running" steps={[{ ...pending[0]!, status: 'active' }]} />);
+    expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await userEvent.click(trigger);
+    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    rerender(
+      <AgentRun status="running" steps={[{ ...pending[0]!, status: 'active', detail: 'Still' }]} />,
+    );
+    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    rerender(<AgentRun status="error" steps={[{ ...pending[0]!, status: 'error' }]} />);
+    expect(trigger).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('keeps steps closed when defaultOpen is false', () => {
+    const steps: AgentStep[] = [{ id: 'one', title: 'Step one', status: 'pending' }];
+    const { rerender } = render(<AgentRun status="running" steps={steps} defaultOpen={false} />);
+    rerender(
+      <AgentRun
+        status="running"
+        steps={[{ ...steps[0]!, status: 'active' }]}
+        defaultOpen={false}
+      />,
+    );
+    expect(screen.getByRole('button', { name: /Step one/ })).toHaveAttribute(
+      'aria-expanded',
+      'false',
+    );
+  });
+
+  it('anchors the progress fill to the logical start', () => {
+    render(<AgentRun status="running" steps={STEPS} />);
+    expect(screen.getByRole('progressbar').firstElementChild).toHaveClass('start-0');
+  });
+
+  it('has no axe violations', async () => {
+    const { container } = render(<AgentRun title="Run" status="running" steps={STEPS} />);
+    await expectNoAxeViolations(container);
   });
 });
