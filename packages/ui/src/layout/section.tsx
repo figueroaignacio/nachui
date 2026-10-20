@@ -12,11 +12,15 @@ const sectionVariants = cva('relative w-full', {
       xl: 'py-24 sm:py-32',
     },
     background: {
-      default: 'bg-background text-foreground',
-      muted: 'bg-muted text-foreground',
-      card: 'bg-card text-card-foreground',
-      primary: 'bg-primary text-primary-foreground',
-      inverted: 'bg-foreground text-background',
+      default:
+        'bg-background text-foreground [--section-accent:var(--primary)] [--section-subtle:var(--muted-foreground)]',
+      muted:
+        'bg-muted text-foreground [--section-accent:var(--primary)] [--section-subtle:var(--muted-strong)]',
+      card: 'bg-card text-card-foreground [--section-accent:var(--primary)] [--section-subtle:var(--muted-foreground)]',
+      primary:
+        'bg-primary text-primary-foreground [--section-accent:var(--primary-foreground)] [--section-subtle:color-mix(in_oklab,var(--primary-foreground)_82%,var(--primary))]',
+      inverted:
+        'bg-foreground text-background [--section-accent:var(--background)] [--section-subtle:color-mix(in_oklab,var(--background)_82%,var(--foreground))]',
     },
     bordered: {
       true: 'border-border border-y',
@@ -30,23 +34,27 @@ const sectionVariants = cva('relative w-full', {
   },
 });
 
-interface SectionProps
-  extends React.HTMLAttributes<HTMLElement>, VariantProps<typeof sectionVariants> {
-  as?: React.ElementType;
+type SectionOwnProps<E extends React.ElementType> = VariantProps<typeof sectionVariants> & {
+  as?: E;
   contained?: boolean | NonNullable<ContainerProps['size']>;
-}
+  className?: string;
+  children?: React.ReactNode;
+};
 
-const SectionRoot = ({
-  as: Component = 'section',
+type SectionProps<E extends React.ElementType = 'section'> = SectionOwnProps<E> &
+  Omit<React.ComponentPropsWithRef<E>, keyof SectionOwnProps<E>>;
+
+const SectionRoot = <E extends React.ElementType = 'section'>({
+  as,
   size,
   background,
   bordered,
   contained = true,
   className,
   children,
-  ref,
   ...props
-}: SectionProps & { ref?: React.Ref<HTMLElement> }) => {
+}: SectionProps<E>) => {
+  const Component: React.ElementType = as ?? 'section';
   const content = contained ? (
     <Container size={contained === true ? undefined : contained}>{children}</Container>
   ) : (
@@ -55,7 +63,6 @@ const SectionRoot = ({
 
   return (
     <Component
-      ref={ref}
       data-slot="section"
       data-background={background ?? 'default'}
       className={cn(sectionVariants({ size, background, bordered }), className)}
@@ -70,7 +77,7 @@ SectionRoot.displayName = 'Section';
 const sectionHeaderVariants = cva('flex flex-col gap-3', {
   variants: {
     align: {
-      start: 'items-start text-left',
+      start: 'items-start text-start',
       center: 'items-center text-center',
     },
     spacing: {
@@ -112,7 +119,10 @@ const SectionEyebrow = ({
   <p
     ref={ref}
     data-slot="section-eyebrow"
-    className={cn('text-primary text-xs font-medium tracking-widest uppercase', className)}
+    className={cn(
+      'text-xs font-medium tracking-widest text-[color:var(--section-accent,var(--primary))] uppercase',
+      className,
+    )}
     {...props}
   />
 );
@@ -148,7 +158,10 @@ const SectionDescription = ({
   <p
     ref={ref}
     data-slot="section-description"
-    className={cn('max-w-2xl text-base text-pretty opacity-70 sm:text-lg', className)}
+    className={cn(
+      'max-w-2xl text-base text-pretty text-[color:var(--section-subtle,var(--muted-foreground))] sm:text-lg',
+      className,
+    )}
     {...props}
   />
 );

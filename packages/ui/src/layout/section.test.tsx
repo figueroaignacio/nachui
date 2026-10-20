@@ -49,4 +49,28 @@ describe('Section', () => {
     expect(screen.getByText('Platform')).toBeInTheDocument();
     expect(screen.getByText('Description').parentElement).toHaveClass('text-center');
   });
+
+  it('keeps the eyebrow and description readable on a primary background', () => {
+    render(
+      <Section background="primary" data-testid="section">
+        <Section.Eyebrow>Eyebrow</Section.Eyebrow>
+        <Section.Description>Description</Section.Description>
+      </Section>,
+    );
+    expect(screen.getByTestId('section').className).toContain(
+      '[--section-accent:var(--primary-foreground)]',
+    );
+    expect(screen.getByText('Eyebrow').className).toContain('var(--section-accent');
+    expect(screen.getByText('Eyebrow')).not.toHaveClass('text-primary');
+    expect(screen.getByText('Description')).not.toHaveClass('opacity-70');
+  });
+
+  it('aligns the header to the logical start', () => {
+    render(
+      <Section.Header data-testid="header">
+        <Section.Title>Title</Section.Title>
+      </Section.Header>,
+    );
+    expect(screen.getByTestId('header')).toHaveClass('text-start');
+  });
 });
