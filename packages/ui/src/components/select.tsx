@@ -4,7 +4,9 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
-import { springs, still } from '../lib/motion';
+import { FloatingPortal, useFloating } from '../lib/floating';
+import { floatingOrigin, springs, still } from '../lib/motion';
+import { useLayer } from '../lib/overlay';
 import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
@@ -65,6 +67,12 @@ interface SelectContextValue {
   listRef: React.RefObject<HTMLDivElement | null>;
   triggerId: string;
   contentId: string;
+  layer: ReturnType<typeof useLayer>;
+}
+
+interface SelectGroupContextValue {
+  labelId: string;
+  registerLabel: () => () => void;
 }
 
 interface SelectProps {
@@ -146,8 +154,7 @@ const ICON_VARIANTS = {
 } as const;
 
 const ICON_TRANSITION = springs.snappy;
-const MAX_CONTENT_HEIGHT = 288;
-const VIEWPORT_PADDING = 8;
+const TYPEAHEAD_RESET_MS = 500;
 const ICON_STYLE = { willChange: 'transform' } as const;
 const CONTENT_STYLE = { willChange: 'opacity, transform' } as const;
 
@@ -178,24 +185,30 @@ const CONTENT_CLOSED = {
 
 const SelectContext = React.createContext<SelectContextValue | null>(null);
 
+const SelectGroupContext = React.createContext<SelectGroupContextValue | null>(null);
+
 const useSelectContext = (): SelectContextValue => {
   const context = React.use(SelectContext);
   if (!context) throw new Error('Select components must be used within Select');
   return context;
 };
 
+const noop = () => undefined;
+
 function useClickOutside(
   ref: React.RefObject<HTMLElement | null>,
   triggerRef: React.RefObject<HTMLElement | null>,
   handler: () => void,
   enabled: boolean,
+  isInsideUpperLayer: (target: EventTarget | null) => boolean,
 ) {
   React.useEffect(() => {
     if (!enabled) return;
     const handlePointerDownOutside = (event: PointerEvent) => {
       if (
         ref.current?.contains(event.target as Node) ||
-        triggerRef.current?.contains(event.target as Node)
+        triggerRef.current?.contains(event.target as Node) ||
+        isInsideUpperLayer(event.target)
       ) {
         return;
       }
@@ -203,7 +216,40 @@ function useClickOutside(
     };
     document.addEventListener('pointerdown', handlePointerDownOutside);
     return () => document.removeEventListener('pointerdown', handlePointerDownOutside);
-  }, [ref, triggerRef, handler, enabled]);
+  }, [ref, triggerRef, handler, enabled, isInsideUpperLayer]);
+}
+
+function useTypeahead() {
+  const bufferRef = React.useRef('');
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  React.useEffect(() => () => clearTimeout(timerRef.current), []);
+
+  const isTyping = React.useCallback(() => bufferRef.current !== '', []);
+
+  const search = React.useCallback(
+    (
+      key: string,
+      options: HTMLElement[],
+      current: number,
+      labelOf: (option: HTMLElement) => string,
+    ) => {
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        bufferRef.current = '';
+      }, TYPEAHEAD_RESET_MS);
+      const buffer = bufferRef.current + key.toLowerCase();
+      bufferRef.current = buffer;
+      const repeated = Array.from(buffer).every((char) => char === buffer[0]);
+      const query = repeated ? buffer.charAt(0) : buffer;
+      const start = repeated ? current + 1 : Math.max(current, 0);
+      const ordered = [...options.slice(start), ...options.slice(0, start)];
+      return ordered.find((option) => labelOf(option).toLowerCase().startsWith(query));
+    },
+    [],
+  );
+
+  return React.useMemo(() => ({ search, isTyping }), [search, isTyping]);
 }
 
 function getOptions(container: HTMLElement | null): HTMLElement[] {
@@ -245,6 +291,7 @@ const SelectRoot = ({
   const [labels, setLabels] = React.useState<ReadonlyMap<string, string>>(() => new Map());
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
+  const layer = useLayer(isOpen, false, listRef);
 
   const openMenu = React.useCallback(() => {
     if (!disabled) setOpen(true);
@@ -307,6 +354,7 @@ const SelectRoot = ({
       listRef,
       triggerId,
       contentId,
+      layer,
     }),
     [
       value,
@@ -320,6 +368,7 @@ const SelectRoot = ({
       registerItem,
       triggerId,
       contentId,
+      layer,
     ],
   );
 
@@ -327,7 +376,19 @@ const SelectRoot = ({
     <SelectContext value={contextValue}>
       <div className={cn('relative w-full', className)}>
         {children}
-        {name && <input type="hidden" name={name} value={value} required={required} />}
+        {(name || required) && (
+          <input
+            aria-hidden="true"
+            tabIndex={-1}
+            name={name}
+            value={value}
+            required={required}
+            disabled={disabled}
+            onChange={noop}
+            onFocus={() => triggerRef.current?.focus()}
+            className="pointer-events-none absolute bottom-0 left-0 h-px w-full opacity-0"
+          />
+        )}
       </div>
     </SelectContext>
   );
@@ -355,6 +416,8 @@ const SelectTrigger = ({
     triggerId,
     contentId,
     listRef,
+    closeMenu,
+    layer,
   } = useSelectContext();
 
   React.useImperativeHandle(ref, () => triggerRef.current as HTMLButtonElement);
@@ -374,13 +437,23 @@ const SelectTrigger = ({
     (e: React.KeyboardEvent<HTMLButtonElement>) => {
       onKeyDown?.(e);
       if (e.defaultPrevented) return;
+      if (isOpen && e.key === 'Escape') {
+        if (!layer.isTopmost()) return;
+        e.preventDefault();
+        closeMenu();
+        return;
+      }
+      if (isOpen && e.key === 'Tab') {
+        closeMenu({ restoreFocus: false });
+        return;
+      }
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         openMenu();
         requestAnimationFrame(() => focusOption(listRef.current, value));
       }
     },
-    [onKeyDown, openMenu, listRef, value],
+    [onKeyDown, openMenu, closeMenu, isOpen, layer, listRef, value],
   );
 
   return (
@@ -415,70 +488,97 @@ const SelectTrigger = ({
   );
 };
 
+type ListboxName = { 'aria-labelledby': string } | { 'aria-label': string };
+
+function listboxNameFor(trigger: HTMLButtonElement | null, fallbackId: string): ListboxName {
+  if (!trigger) return { 'aria-labelledby': fallbackId };
+  const labelledBy = trigger.getAttribute('aria-labelledby');
+  if (labelledBy) return { 'aria-labelledby': labelledBy };
+  const label = trigger.getAttribute('aria-label') ?? trigger.labels?.[0]?.textContent?.trim();
+  if (label) return { 'aria-label': label };
+  return { 'aria-labelledby': trigger.id || fallbackId };
+}
+
 const SelectContent = ({
   children,
   className,
   sideOffset = 4,
 }: SelectContentProps): React.JSX.Element => {
-  const { isOpen, closeMenu, selectValue, contentId, triggerId, triggerRef, listRef } =
-    useSelectContext();
+  const {
+    isOpen,
+    closeMenu,
+    selectValue,
+    contentId,
+    triggerId,
+    triggerRef,
+    listRef,
+    labels,
+    layer,
+  } = useSelectContext();
   const shouldReduceMotion = useReducedMotion();
-  const [position, setPosition] = React.useState<'bottom' | 'top'>('bottom');
-  const [maxHeight, setMaxHeight] = React.useState(MAX_CONTENT_HEIGHT);
+  const typeahead = useTypeahead();
+  const [triggerWidth, setTriggerWidth] = React.useState<number>();
+  const [name, setName] = React.useState<ListboxName>({ 'aria-labelledby': triggerId });
+  const { style: floatingStyle, side } = useFloating({
+    open: isOpen,
+    anchorRef: triggerRef,
+    floatingRef: listRef,
+    side: 'bottom',
+    align: 'start',
+    sideOffset,
+  });
+  const position = side === 'top' ? 'top' : 'bottom';
 
   const closeWithoutFocus = React.useCallback(
     () => closeMenu({ restoreFocus: false }),
     [closeMenu],
   );
 
-  useClickOutside(listRef, triggerRef, closeWithoutFocus, isOpen);
+  useClickOutside(listRef, triggerRef, closeWithoutFocus, isOpen, layer.isInsideUpperLayer);
 
   React.useLayoutEffect(() => {
-    if (!isOpen) return;
-
-    const measure = () => {
-      const trigger = triggerRef.current;
-      if (!trigger) return;
-      const triggerRect = trigger.getBoundingClientRect();
-      const list = listRef.current;
-      const border = list ? list.offsetHeight - list.clientHeight : 0;
-      const contentHeight = Math.min(
-        MAX_CONTENT_HEIGHT,
-        (list?.scrollHeight || 240) + Math.max(border, 0),
-      );
-      const viewportHeight = window.innerHeight;
-      const spaceBelow = viewportHeight - triggerRect.bottom - sideOffset;
-      const spaceAbove = triggerRect.top - sideOffset;
-      const fitsBelow = spaceBelow >= contentHeight + VIEWPORT_PADDING;
-      const nextPosition = fitsBelow || spaceBelow >= spaceAbove ? 'bottom' : 'top';
-      const available = nextPosition === 'bottom' ? spaceBelow : spaceAbove;
-      setPosition(nextPosition);
-      setMaxHeight(Math.max(0, Math.min(MAX_CONTENT_HEIGHT, available - VIEWPORT_PADDING)));
-    };
-
+    const trigger = triggerRef.current;
+    setName(listboxNameFor(trigger, triggerId));
+    if (!isOpen || !trigger) return;
+    const measure = () => setTriggerWidth(trigger.offsetWidth || undefined);
     measure();
-
-    const viewport = window.visualViewport;
-    window.addEventListener('resize', measure);
-    viewport?.addEventListener('resize', measure);
-    return () => {
-      window.removeEventListener('resize', measure);
-      viewport?.removeEventListener('resize', measure);
-    };
-  }, [isOpen, triggerRef, listRef, sideOffset]);
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
+    observer?.observe(trigger);
+    return () => observer?.disconnect();
+  }, [isOpen, triggerRef, triggerId]);
 
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       const options = getOptions(listRef.current);
       const currentIndex = options.findIndex((option) => option === document.activeElement);
 
+      if (
+        e.key.length === 1 &&
+        !e.altKey &&
+        !e.ctrlKey &&
+        !e.metaKey &&
+        (e.key !== ' ' || typeahead.isTyping())
+      ) {
+        e.preventDefault();
+        typeahead
+          .search(
+            e.key,
+            options,
+            currentIndex,
+            (option) => labels.get(option.dataset.value ?? '') ?? option.textContent?.trim() ?? '',
+          )
+          ?.focus();
+        return;
+      }
+
       switch (e.key) {
         case 'Escape':
+          if (!layer.isTopmost()) return;
           e.preventDefault();
           closeMenu();
           return;
         case 'Tab':
-          closeMenu({ restoreFocus: false });
+          closeMenu();
           return;
         case 'ArrowDown':
           e.preventDefault();
@@ -503,20 +603,9 @@ const SelectContent = ({
           if (active?.dataset.value !== undefined) selectValue(active.dataset.value);
           return;
         }
-        default: {
-          if (e.key.length !== 1 || e.altKey || e.ctrlKey || e.metaKey) return;
-          const char = e.key.toLowerCase();
-          const ordered = [
-            ...options.slice(currentIndex + 1),
-            ...options.slice(0, currentIndex + 1),
-          ];
-          ordered
-            .find((option) => option.textContent?.trim().toLowerCase().startsWith(char))
-            ?.focus();
-        }
       }
     },
-    [listRef, closeMenu, selectValue],
+    [listRef, closeMenu, selectValue, labels, layer, typeahead],
   );
 
   const handleClick = React.useCallback(
@@ -528,42 +617,44 @@ const SelectContent = ({
     [selectValue],
   );
 
-  const verticalStyle =
-    position === 'bottom'
-      ? { top: `calc(100% + ${sideOffset}px)` }
-      : { bottom: `calc(100% + ${sideOffset}px)` };
-
   const closedState = shouldReduceMotion
     ? { ...CONTENT_CLOSED[position], scale: 1, y: 0, transition: still }
     : CONTENT_CLOSED[position];
 
+  const style = React.useMemo(
+    () => ({ ...floatingStyle, visibility: undefined, width: triggerWidth, ...CONTENT_STYLE }),
+    [floatingStyle, triggerWidth],
+  );
+
   return (
-    <motion.div
-      ref={listRef}
-      id={contentId}
-      role="listbox"
-      aria-labelledby={triggerId}
-      aria-hidden={!isOpen}
-      tabIndex={-1}
-      onKeyDown={handleKeyDown}
-      onClick={handleClick}
-      initial={false}
-      animate={
-        isOpen
-          ? shouldReduceMotion
-            ? { ...CONTENT_OPEN, transition: still }
-            : CONTENT_OPEN
-          : closedState
-      }
-      style={{ ...verticalStyle, ...CONTENT_STYLE, maxHeight }}
-      className={cn(
-        'bg-popover text-popover-foreground border-border absolute right-0 left-0 z-50 overflow-y-auto rounded-md border p-1 shadow-md outline-none',
-        position === 'bottom' ? 'origin-top' : 'origin-bottom',
-        className,
-      )}
-    >
-      {children}
-    </motion.div>
+    <FloatingPortal>
+      <motion.div
+        ref={listRef}
+        id={contentId}
+        role="listbox"
+        {...name}
+        aria-hidden={!isOpen}
+        tabIndex={-1}
+        onKeyDown={handleKeyDown}
+        onClick={handleClick}
+        initial={false}
+        animate={
+          isOpen
+            ? shouldReduceMotion
+              ? { ...CONTENT_OPEN, transition: still }
+              : CONTENT_OPEN
+            : closedState
+        }
+        style={style}
+        className={cn(
+          'bg-popover text-popover-foreground border-border z-500 max-h-[min(18rem,var(--available-height,18rem))] overflow-y-auto overscroll-contain rounded-md border p-1 shadow-md outline-none',
+          floatingOrigin[position],
+          className,
+        )}
+      >
+        {children}
+      </motion.div>
+    </FloatingPortal>
   );
 };
 
@@ -612,23 +703,49 @@ const SelectItem = ({
   );
 };
 
-const SelectGroup = ({ children, className }: SelectGroupProps): React.JSX.Element => (
-  <div role="group" className={cn('flex flex-col', className)}>
-    {children}
-  </div>
-);
+const SelectGroup = ({ children, className }: SelectGroupProps): React.JSX.Element => {
+  const labelId = React.useId();
+  const [labelCount, setLabelCount] = React.useState(0);
 
-const SelectLabel = ({ children, className }: SelectLabelProps): React.JSX.Element => (
-  <div
-    role="presentation"
-    className={cn(
-      'text-muted-foreground px-2 py-1.5 text-xs font-semibold tracking-wider uppercase',
-      className,
-    )}
-  >
-    {children}
-  </div>
-);
+  const registerLabel = React.useCallback(() => {
+    setLabelCount((count) => count + 1);
+    return () => setLabelCount((count) => count - 1);
+  }, []);
+
+  const contextValue = React.useMemo(() => ({ labelId, registerLabel }), [labelId, registerLabel]);
+
+  return (
+    <SelectGroupContext value={contextValue}>
+      <div
+        role="group"
+        aria-labelledby={labelCount > 0 ? labelId : undefined}
+        className={cn('flex flex-col', className)}
+      >
+        {children}
+      </div>
+    </SelectGroupContext>
+  );
+};
+
+const SelectLabel = ({ children, className }: SelectLabelProps): React.JSX.Element => {
+  const group = React.use(SelectGroupContext);
+  const registerLabel = group?.registerLabel;
+
+  React.useLayoutEffect(() => registerLabel?.(), [registerLabel]);
+
+  return (
+    <div
+      id={group?.labelId}
+      role="presentation"
+      className={cn(
+        'text-muted-foreground px-2 py-1.5 text-xs font-semibold tracking-wider uppercase',
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+};
 
 const SelectSeparator = ({ className }: SelectSeparatorProps): React.JSX.Element => (
   <div

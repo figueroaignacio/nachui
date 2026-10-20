@@ -65,9 +65,10 @@ Wrap related items in `Select.Group` and give each group a `Select.Label`.
 | `Enter`, `Space`, `Arrows` | Open the list and focus the selected item      |
 | `ArrowUp`, `ArrowDown`     | Move between items                             |
 | `Home`, `End`              | Jump to the first or last item                 |
-| A letter                   | Focus the next item whose label starts with it |
+| Typing                     | Focus the next item whose label starts with it |
 | `Enter`, `Space`           | Select the focused item                        |
 | `Escape`                   | Close the list and return focus to the trigger |
+| `Tab`                      | Close the list and move on                     |
 
 ## API Reference
 
@@ -83,12 +84,12 @@ Wrap related items in `Select.Group` and give each group a `Select.Label`.
 | `onOpenChange`  | `(open: boolean) => void` | -       | Called when the open state changes                     |
 | `disabled`      | `boolean`                 | `false` | Disables the trigger                                   |
 | `name`          | `string`                  | -       | Renders a hidden input so the value submits with forms |
-| `required`      | `boolean`                 | -       | Marks the hidden input as required                     |
+| `required`      | `boolean`                 | -       | Blocks form submission until a value is picked         |
 | `className`     | `string`                  | -       | Additional CSS classes for the wrapper                 |
 
 ### Select.Trigger
 
-Accepts every `button` attribute, so `id` and `aria-label` work as usual.
+Accepts every `button` attribute, so `id` and `aria-label` work as usual. Name the trigger with `aria-label`, `aria-labelledby` or a `<label htmlFor>` pointing at its `id`. The open list reuses that name, so screen readers announce what the list is for instead of the current value.
 
 | Prop          | Type                        | Default     | Description                                     |
 | ------------- | --------------------------- | ----------- | ----------------------------------------------- |

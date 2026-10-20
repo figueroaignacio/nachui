@@ -60,14 +60,15 @@ Envolvé los elementos relacionados en `Select.Group` y dale a cada grupo un `Se
 
 ## Teclado
 
-| Tecla                         | Acción                                                      |
-| ----------------------------- | ----------------------------------------------------------- |
-| `Enter`, `Espacio`, `Flechas` | Abre la lista y enfoca el elemento seleccionado             |
-| `ArrowUp`, `ArrowDown`        | Se mueve entre elementos                                    |
-| `Home`, `End`                 | Salta al primer o último elemento                           |
-| Una letra                     | Enfoca el siguiente elemento cuya etiqueta empieza con ella |
-| `Enter`, `Espacio`            | Selecciona el elemento enfocado                             |
-| `Escape`                      | Cierra la lista y devuelve el foco al trigger               |
+| Tecla                         | Acción                                                     |
+| ----------------------------- | ---------------------------------------------------------- |
+| `Enter`, `Espacio`, `Flechas` | Abre la lista y enfoca el elemento seleccionado            |
+| `ArrowUp`, `ArrowDown`        | Se mueve entre elementos                                   |
+| `Home`, `End`                 | Salta al primer o último elemento                          |
+| Escribir                      | Enfoca el siguiente elemento cuya etiqueta empieza con eso |
+| `Enter`, `Espacio`            | Selecciona el elemento enfocado                            |
+| `Escape`                      | Cierra la lista y devuelve el foco al trigger              |
+| `Tab`                         | Cierra la lista y sigue al próximo elemento                |
 
 ## Referencia de API
 
@@ -83,12 +84,12 @@ Envolvé los elementos relacionados en `Select.Group` y dale a cada grupo un `Se
 | `onOpenChange`  | `(open: boolean) => void` | -           | Se llama cuando cambia el estado de apertura                         |
 | `disabled`      | `boolean`                 | `false`     | Deshabilita el trigger                                               |
 | `name`          | `string`                  | -           | Renderiza un input oculto para que el valor se envíe con formularios |
-| `required`      | `boolean`                 | -           | Marca el input oculto como requerido                                 |
+| `required`      | `boolean`                 | -           | Bloquea el envío del formulario hasta que se elija un valor          |
 | `className`     | `string`                  | -           | Clases CSS adicionales para el contenedor                            |
 
 ### Select.Trigger
 
-Acepta todos los atributos de `button`, así que `id` y `aria-label` funcionan como siempre.
+Acepta todos los atributos de `button`, así que `id` y `aria-label` funcionan como siempre. Nombrá el trigger con `aria-label`, `aria-labelledby` o un `<label htmlFor>` que apunte a su `id`. La lista abierta usa ese mismo nombre, así los lectores de pantalla anuncian para qué es la lista y no el valor actual.
 
 | Prop          | Tipo                        | Por defecto | Descripción                                                |
 | ------------- | --------------------------- | ----------- | ---------------------------------------------------------- |
