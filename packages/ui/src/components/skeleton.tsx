@@ -10,7 +10,7 @@ function Skeleton({ className, ref, ...props }: SkeletonProps) {
     <div
       ref={ref}
       aria-hidden="true"
-      className={cn('bg-muted animate-pulse rounded-md', className)}
+      className={cn('bg-muted rounded-md motion-safe:animate-pulse', className)}
       {...props}
     />
   );

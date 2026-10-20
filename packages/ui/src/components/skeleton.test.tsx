@@ -7,7 +7,8 @@ describe('Skeleton', () => {
     const { container } = render(<Skeleton />);
     const skeleton = container.firstChild as HTMLElement;
     expect(skeleton).toBeInTheDocument();
-    expect(skeleton.className).toContain('animate-pulse');
+    expect(skeleton).toHaveClass('motion-safe:animate-pulse');
+    expect(skeleton).not.toHaveClass('animate-pulse');
   });
 
   it('applies custom className', () => {
