@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { assignRef } from '../lib/overlay';
 
 const bubbleVariants = cva(
   'relative flex w-fit max-w-full flex-col rounded-xl text-sm transition-colors',
@@ -73,6 +74,34 @@ interface BubbleReactionsProps
 interface BubbleGroupProps
   extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof bubbleGroupVariants> {}
 
+type SlotProps = Record<string, unknown> & {
+  className?: string;
+  style?: React.CSSProperties;
+};
+
+function mergeSlotProps(slotProps: SlotProps, childProps: SlotProps): SlotProps {
+  const merged: SlotProps = { ...slotProps, ...childProps };
+  for (const key of Object.keys(slotProps)) {
+    const slotValue = slotProps[key];
+    const childValue = childProps[key];
+    if (
+      /^on[A-Z]/.test(key) &&
+      typeof slotValue === 'function' &&
+      typeof childValue === 'function'
+    ) {
+      merged[key] = (...args: unknown[]) => {
+        childValue(...args);
+        slotValue(...args);
+      };
+    }
+  }
+  if (slotProps.style || childProps.style) {
+    merged.style = { ...slotProps.style, ...childProps.style };
+  }
+  merged.className = cn(slotProps.className, childProps.className);
+  return merged;
+}
+
 const BubbleRoot = ({
   className,
   variant,
@@ -98,11 +127,18 @@ const BubbleContent = ({
   );
 
   if (asChild && React.isValidElement(children)) {
-    const childProps = children.props as { className?: string };
-    return React.cloneElement(children, {
-      className: cn(contentClassName, childProps.className),
-      ...props,
-    } as React.HTMLAttributes<HTMLElement>);
+    const childProps = children.props as SlotProps & { ref?: React.Ref<HTMLElement> };
+    const childRef = childProps.ref;
+    return React.cloneElement(children as React.ReactElement<SlotProps>, {
+      ...mergeSlotProps({ ...props, className: contentClassName }, childProps),
+      ref:
+        ref || childRef
+          ? (node: HTMLDivElement | null) => {
+              assignRef(ref, node);
+              assignRef(childRef, node);
+            }
+          : undefined,
+    });
   }
 
   return (
