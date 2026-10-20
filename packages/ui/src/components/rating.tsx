@@ -38,9 +38,9 @@ const RATING_SIZE_CLASSES: Record<RatingSize, string> = {
 };
 
 const RATING_HIT_CLASSES: Record<RatingSize, string> = {
-  sm: 'pointer-coarse:p-2',
-  default: 'pointer-coarse:p-1.5',
-  lg: 'pointer-coarse:p-0.5',
+  sm: 'pointer-coarse:p-3.5',
+  default: 'pointer-coarse:p-3',
+  lg: 'pointer-coarse:p-2',
 };
 
 interface RatingProps extends Omit<
@@ -57,6 +57,7 @@ interface RatingProps extends Omit<
   disabled?: boolean;
   allowClear?: boolean;
   name?: string;
+  label?: string;
   icon?: React.ReactNode;
   filledIcon?: React.ReactNode;
   getLabel?: (value: number, max: number) => string;
@@ -81,6 +82,7 @@ const RatingRoot = ({
   disabled = false,
   allowClear = false,
   name,
+  label = 'Rating',
   icon,
   filledIcon,
   getLabel = defaultLabel,
@@ -99,13 +101,15 @@ const RatingRoot = ({
   const [hoverValue, setHoverValue] = React.useState<number | null>(null);
   const interactive = !readOnly && !disabled;
   const displayed = hoverValue ?? value;
+  const mode = readOnly ? 'img' : precision === 1 ? 'radiogroup' : 'slider';
+  const itemRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
 
   const setValue = React.useCallback(
     (next: number) => setStoredValue(Math.min(Math.max(next, 0), max)),
     [max, setStoredValue],
   );
 
-  const valueFromPointer = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
+  const valueFromPointer = (event: React.MouseEvent<HTMLElement>, index: number) => {
     if (precision === 1) return index + 1;
     const rect = event.currentTarget.getBoundingClientRect();
     const ratio = rect.width > 0 ? (event.clientX - rect.left) / rect.width : 1;
@@ -125,12 +129,14 @@ const RatingRoot = ({
 
     if (next === null) return;
     event.preventDefault();
-    setValue(roundToPrecision(next, precision));
+    const rounded = Math.min(Math.max(roundToPrecision(next, precision), 0), max);
+    setValue(rounded);
+    if (mode === 'radiogroup') itemRefs.current[Math.max(Math.ceil(rounded) - 1, 0)]?.focus();
   };
 
   const focusIndex = Math.max(Math.ceil(value) - 1, 0);
   const items = Array.from({ length: max }, (_, index) => index);
-  const label = getLabel(value, max);
+  const valueLabel = getLabel(value, max);
 
   const renderIcon = (fill: number) => {
     const outline = icon ?? <StarIcon strokeWidth={1.5} />;
@@ -159,10 +165,14 @@ const RatingRoot = ({
   return (
     <div
       ref={ref}
-      role={readOnly ? 'img' : 'radiogroup'}
-      aria-label={readOnly ? label : undefined}
+      role={mode}
+      aria-label={readOnly ? valueLabel : label}
       aria-disabled={disabled || undefined}
-      aria-readonly={readOnly || undefined}
+      aria-valuemin={mode === 'slider' ? 0 : undefined}
+      aria-valuemax={mode === 'slider' ? max : undefined}
+      aria-valuenow={mode === 'slider' ? value : undefined}
+      aria-valuetext={mode === 'slider' ? valueLabel : undefined}
+      tabIndex={mode === 'slider' && interactive ? 0 : undefined}
       data-slot="rating"
       data-value={value}
       data-disabled={disabled ? '' : undefined}
@@ -174,6 +184,8 @@ const RatingRoot = ({
       }}
       className={cn(
         'inline-flex items-center gap-2',
+        mode === 'slider' &&
+          'focus-visible:ring-ring ring-offset-background rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-offset-1',
         disabled && 'cursor-not-allowed opacity-40',
         className,
       )}
@@ -184,6 +196,11 @@ const RatingRoot = ({
           const fill = Math.min(Math.max(displayed - index, 0), 1);
           const itemValue = index + 1;
 
+          const handlePointerMove = (event: React.PointerEvent<HTMLElement>) => {
+            if (!interactive || event.pointerType === 'touch') return;
+            setHoverValue(valueFromPointer(event, index));
+          };
+
           if (readOnly) {
             return (
               <span key={index} data-slot="rating-item" className="inline-flex">
@@ -192,9 +209,38 @@ const RatingRoot = ({
             );
           }
 
+          if (mode === 'slider') {
+            return (
+              <span
+                key={index}
+                aria-hidden="true"
+                data-slot="rating-item"
+                data-active={fill > 0 ? '' : undefined}
+                onPointerMove={handlePointerMove}
+                onClick={(event) => {
+                  if (!interactive) return;
+                  const next = valueFromPointer(event, index);
+                  setValue(allowClear && next === value ? 0 : next);
+                  setHoverValue(null);
+                }}
+                className={cn(
+                  'inline-flex cursor-pointer rounded-sm transition-transform',
+                  RATING_HIT_CLASSES[size],
+                  interactive && 'hover:scale-110',
+                  disabled && 'pointer-events-none',
+                )}
+              >
+                {renderIcon(fill)}
+              </span>
+            );
+          }
+
           return (
             <button
               key={index}
+              ref={(node) => {
+                itemRefs.current[index] = node;
+              }}
               type="button"
               role="radio"
               aria-checked={Math.ceil(value) === itemValue}
@@ -203,10 +249,7 @@ const RatingRoot = ({
               disabled={disabled}
               data-slot="rating-item"
               data-active={fill > 0 ? '' : undefined}
-              onPointerMove={(event) => {
-                if (!interactive || event.pointerType === 'touch') return;
-                setHoverValue(valueFromPointer(event, index));
-              }}
+              onPointerMove={handlePointerMove}
               onClick={(event) => {
                 if (!interactive) return;
                 const next = event.detail === 0 ? itemValue : valueFromPointer(event, index);

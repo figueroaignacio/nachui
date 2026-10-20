@@ -24,7 +24,7 @@ import { Rating } from '@/components/ui/rating';
 <Rating defaultValue={3} onValueChange={setScore} aria-label="Califica esta versión" />
 ```
 
-La calificación interactiva es un `radiogroup` con un `radio` por paso, así que la tecnología asistiva lo lee como una elección entre valores. El foco cae en el valor actual, las flechas mueven un paso, `Home` y `End` saltan a los extremos y `Backspace` limpia. Pasar el cursor previsualiza un valor sin confirmarlo.
+La calificación interactiva es un `radiogroup` con un `radio` por paso, así que la tecnología asistiva lo lee como una elección entre valores. El foco cae en el valor actual, las flechas mueven un paso, `Home` y `End` saltan a los extremos y `Backspace` limpia. Pasar el cursor previsualiza un valor sin confirmarlo. El grupo se llama `Rating` salvo que le pases `label` o `aria-label`.
 
 ## Variantes
 
@@ -36,7 +36,7 @@ Controlado con `value` y `onValueChange`, o no controlado con `defaultValue`.
 
 ### Medios pasos
 
-`precision={0.5}` divide cada estrella. La mitad se elige según dónde está el puntero. `allowClear` vuelve a cero cuando se clickea el valor actual otra vez.
+`precision={0.5}` divide cada estrella. La mitad se elige según dónde está el puntero. Los medios pasos no entran en un grupo de radios, así que la calificación pasa a ser un único `slider` con foco y el lector de pantalla escucha el valor exacto, por ejemplo `2.5 of 5`. `allowClear` vuelve a cero cuando se clickea el valor actual otra vez.
 
 <ComponentPreview component="rating" demo="half" />
 
@@ -72,7 +72,8 @@ Controlado con `value` y `onValueChange`, o no controlado con `defaultValue`.
 | `disabled`      | `boolean`                                | `false`           | Atenúa y bloquea la interacción                        |
 | `allowClear`    | `boolean`                                | `false`           | Elegir el valor actual lo limpia                       |
 | `name`          | `string`                                 | -                 | Renderiza un input oculto para enviar formularios      |
+| `label`         | `string`                                 | `"Rating"`        | Nombre accesible del grupo o del slider                |
 | `icon`          | `ReactNode`                              | estrella en línea | Ícono de contorno                                      |
 | `filledIcon`    | `ReactNode`                              | estrella rellena  | Ícono dibujado sobre el contorno, recortado al relleno |
-| `getLabel`      | `(value: number, max: number) => string` | `"3 of 5"`        | Etiqueta accesible de cada paso y del grupo            |
+| `getLabel`      | `(value: number, max: number) => string` | `"3 of 5"`        | Texto accesible de cada paso y del valor actual        |
 | `className`     | `string`                                 | -                 | Clases CSS adicionales                                 |
