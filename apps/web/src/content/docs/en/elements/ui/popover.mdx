@@ -29,6 +29,12 @@ import { Popover } from '@/components/ui/popover';
 </Popover>
 ```
 
+The content renders in a portal on `document.body`, so `overflow: hidden` on a parent never clips it. It flips to the other side when there is no room and stays inside the viewport while the page scrolls.
+
+Focus moves into the content when it opens. `Escape`, `Popover.Close` and the built-in close button all close it and put focus back on the trigger; a click outside closes it and leaves focus where you clicked. Tab moves through the content and then on to whatever follows the trigger on the page, and Shift+Tab from the first control goes back to the trigger.
+
+The content is a `dialog` named after its trigger. Pass `aria-label` or `aria-labelledby` to `Popover.Content` when the trigger text alone does not describe it, for example an icon button.
+
 ## Composition
 
 Use the following composition to build a `Popover`:
@@ -37,6 +43,7 @@ Use the following composition to build a `Popover`:
 Popover
 ├── Popover.Trigger
 └── Popover.Content
+    └── Popover.Close
 ```
 
 ## Examples
@@ -57,19 +64,20 @@ Popover
 
 ### Popover.Trigger
 
-| Prop      | Type      | Default | Description              |
-| --------- | --------- | ------- | ------------------------ |
-| `asChild` | `boolean` | `false` | Render as child element. |
+| Prop      | Type      | Default | Description                                                                                                                     |
+| --------- | --------- | ------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `asChild` | `boolean` | `false` | Render as child element. Props you set on the trigger, like `className`, `aria-label` or `disabled`, are merged into the child. |
 
 ### Popover.Content
 
-| Prop         | Type                                           | Default    | Description                          |
-| ------------ | ---------------------------------------------- | ---------- | ------------------------------------ |
-| `side`       | `"top"` \| `"bottom"` \| `"left"` \| `"right"` | `"bottom"` | Placement relative to trigger.       |
-| `sideOffset` | `number`                                       | `4`        | Offset from the trigger.             |
-| `showClose`  | `boolean`                                      | `false`    | Shows a close button.                |
-| `closeLabel` | `string`                                       | `"Close"`  | Accessible name of the close button. |
-| `className`  | `string`                                       | —          | Additional CSS classes.              |
+| Prop         | Type                                           | Default    | Description                                                                  |
+| ------------ | ---------------------------------------------- | ---------- | ---------------------------------------------------------------------------- |
+| `side`       | `"top"` \| `"bottom"` \| `"left"` \| `"right"` | `"bottom"` | Placement relative to trigger.                                               |
+| `sideOffset` | `number`                                       | `4`        | Offset from the trigger.                                                     |
+| `showClose`  | `boolean`                                      | `false`    | Shows a close button.                                                        |
+| `closeLabel` | `string`                                       | `"Close"`  | Accessible name of the close button.                                         |
+| `aria-label` | `string`                                       | —          | Name for the dialog. Without it (or `aria-labelledby`) the trigger names it. |
+| `className`  | `string`                                       | —          | Additional CSS classes.                                                      |
 
 ### Popover.Close
 

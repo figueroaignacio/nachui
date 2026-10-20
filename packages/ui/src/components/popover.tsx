@@ -3,7 +3,9 @@
 import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { FloatingPortal, useFloating } from '../lib/floating';
 import { floatingOrigin, floatingVariants, reveal } from '../lib/motion';
+import { assignRef, getFocusable, useLayer } from '../lib/overlay';
 import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
@@ -31,57 +33,28 @@ function XIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
   );
 }
 
-const POPOVER_POSITION_CLASSES = {
-  top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
-  bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
-  left: 'right-full top-1/2 -translate-y-1/2 mr-2',
-  right: 'left-full top-1/2 -translate-y-1/2 ml-2',
-} as const;
-
 const POPOVER_STYLE = { willChange: 'opacity, transform, filter' } as const;
 
-const VIEWPORT_PADDING = 8;
+type PopoverSide = 'top' | 'bottom' | 'left' | 'right';
 
-function useViewportShift(ref: React.RefObject<HTMLElement | null>, open: boolean) {
-  const [shift, setShift] = React.useState(0);
-
-  React.useLayoutEffect(() => {
-    if (!open) return;
-    const measure = () => {
-      const el = ref.current;
-      if (!el) return;
-      const { transform, translate } = el.style;
-      el.style.transform = 'none';
-      el.style.translate = '';
-      const rect = el.getBoundingClientRect();
-      el.style.transform = transform;
-      el.style.translate = translate;
-      const viewport = document.documentElement.clientWidth || window.innerWidth;
-      if (!rect.width || !viewport) return;
-      let next = 0;
-      if (rect.right > viewport - VIEWPORT_PADDING) next = viewport - VIEWPORT_PADDING - rect.right;
-      if (rect.left + next < VIEWPORT_PADDING) next = VIEWPORT_PADDING - rect.left;
-      setShift(Math.round(next));
-    };
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, [open, ref]);
-
-  return shift;
-}
-
-function shiftTranslate(shift: number, centeredX: boolean, centeredY: boolean) {
-  if (!shift) return undefined;
-  const x = centeredX ? `calc(-50% + ${shift}px)` : `${shift}px`;
-  return centeredY ? `${x} -50%` : x;
+function nextFocusableAfter(anchor: HTMLElement, skip: HTMLElement) {
+  return getFocusable(document.body).find(
+    (element) =>
+      !skip.contains(element) &&
+      !anchor.contains(element) &&
+      Boolean(anchor.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING),
+  );
 }
 
 interface PopoverContextType {
   open: boolean;
   setOpen: (open: boolean) => void;
+  close: () => void;
   id: string;
+  triggerId: string | undefined;
+  registerTrigger: (node: HTMLButtonElement | null) => void;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
+  contentRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const PopoverContext = React.createContext<PopoverContextType | undefined>(undefined);
@@ -113,23 +86,38 @@ const PopoverRoot = ({
     onChange: onOpenChange,
   });
   const id = React.useId();
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = React.useRef<HTMLSpanElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  const [triggerId, setTriggerId] = React.useState<string | undefined>(undefined);
+  const layer = useLayer(open, false, contentRef);
+
+  const registerTrigger = React.useCallback((node: HTMLButtonElement | null) => {
+    triggerRef.current = node;
+    setTriggerId(node?.id || undefined);
+  }, []);
+
+  const close = React.useCallback(() => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  }, [setOpen]);
 
   React.useEffect(() => {
     if (!open) return;
 
-    const handlePointerDownOutside = (e: PointerEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
+    const handlePointerDownOutside = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (containerRef.current?.contains(target)) return;
+      if (contentRef.current?.contains(target)) return;
+      if (layer.isInsideUpperLayer(target)) return;
+      setOpen(false);
     };
 
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setOpen(false);
-        triggerRef.current?.focus();
-      }
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || event.defaultPrevented || !layer.isTopmost()) return;
+      event.preventDefault();
+      close();
     };
 
     document.addEventListener('pointerdown', handlePointerDownOutside);
@@ -138,13 +126,18 @@ const PopoverRoot = ({
       document.removeEventListener('pointerdown', handlePointerDownOutside);
       document.removeEventListener('keydown', handleEscape);
     };
-  }, [open, setOpen]);
+  }, [open, setOpen, close, layer]);
+
+  const context = React.useMemo(
+    () => ({ open, setOpen, close, id, triggerId, registerTrigger, triggerRef, contentRef }),
+    [open, setOpen, close, id, triggerId, registerTrigger],
+  );
 
   return (
-    <PopoverContext value={{ open, setOpen, id, triggerRef }}>
-      <div ref={containerRef} className="relative inline-flex">
+    <PopoverContext value={context}>
+      <span ref={containerRef} className="relative inline-flex">
         {children}
-      </div>
+      </span>
     </PopoverContext>
   );
 };
@@ -153,56 +146,96 @@ interface PopoverTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonEleme
   asChild?: boolean;
 }
 
+type SlotChildProps = React.HTMLAttributes<HTMLElement> & {
+  ref?: React.Ref<HTMLElement>;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
+};
+
 const PopoverTrigger = ({
   asChild,
   onClick,
+  onKeyDown,
+  children,
+  className,
+  style,
   ref,
   ...props
 }: PopoverTriggerProps & { ref?: React.Ref<HTMLButtonElement> }) => {
-  const { open, setOpen, id, triggerRef } = usePopoverContext();
+  const { open, setOpen, close, id, registerTrigger, contentRef } = usePopoverContext();
+  const childRef = React.isValidElement(children)
+    ? (children.props as SlotChildProps).ref
+    : undefined;
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setOpen(!open);
-    onClick?.(e);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.(event);
+    if (event.defaultPrevented) return;
+    if (open) close();
+    else setOpen(true);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    onKeyDown?.(event);
+    if (event.defaultPrevented || event.key !== 'Tab' || event.shiftKey || !open) return;
+    const content = contentRef.current;
+    if (!content) return;
+    event.preventDefault();
+    (getFocusable(content)[0] ?? content).focus();
   };
 
   const mergedRef = React.useCallback(
     (node: HTMLButtonElement | null) => {
-      triggerRef.current = node;
-      if (typeof ref === 'function') ref(node);
-      else if (ref) (ref as React.MutableRefObject<HTMLButtonElement | null>).current = node;
+      registerTrigger(node);
+      assignRef(ref, node);
+      assignRef(childRef as React.Ref<HTMLButtonElement | null> | undefined, node);
     },
-    [ref, triggerRef],
+    [ref, childRef, registerTrigger],
   );
 
-  if (asChild && React.isValidElement(props.children)) {
-    const child = props.children as React.ReactElement<Record<string, unknown>>;
-    const childOnClick = child.props.onClick as
-      | ((e: React.MouseEvent<HTMLButtonElement>) => void)
-      | undefined;
+  const shared = {
+    id: props.id ?? `${id}-trigger`,
+    'aria-expanded': open,
+    'aria-haspopup': 'dialog' as const,
+    'aria-controls': open ? id : undefined,
+    'data-state': open ? 'open' : 'closed',
+  };
+
+  if (asChild && React.isValidElement(children)) {
+    const child = children as React.ReactElement<SlotChildProps>;
+    const childProps = child.props;
 
     return React.cloneElement(child, {
+      ...props,
+      ...childProps,
+      ...shared,
+      id: childProps.id ?? shared.id,
       ref: mergedRef,
-      onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
-        childOnClick?.(e);
-        handleClick(e);
+      className: cn(className, childProps.className),
+      style: style || childProps.style ? { ...style, ...childProps.style } : undefined,
+      onClick: (event: React.MouseEvent<HTMLButtonElement>) => {
+        childProps.onClick?.(event);
+        handleClick(event);
       },
-      'aria-expanded': open,
-      'aria-haspopup': 'dialog',
-      'aria-controls': open ? id : undefined,
-    });
+      onKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => {
+        childProps.onKeyDown?.(event);
+        handleKeyDown(event);
+      },
+    } as SlotChildProps);
   }
 
   return (
     <button
       type="button"
-      onClick={handleClick}
-      ref={mergedRef}
-      aria-expanded={open}
-      aria-haspopup="dialog"
-      aria-controls={open ? id : undefined}
+      className={className}
+      style={style}
       {...props}
-    />
+      {...shared}
+      ref={mergedRef}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+    >
+      {children}
+    </button>
   );
 };
 PopoverTrigger.displayName = 'PopoverTrigger';
@@ -210,118 +243,172 @@ PopoverTrigger.displayName = 'PopoverTrigger';
 const PopoverClose = ({
   asChild,
   onClick,
+  children,
+  className,
+  style,
   ref,
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
   asChild?: boolean;
   ref?: React.Ref<HTMLButtonElement>;
 }) => {
-  const { setOpen } = usePopoverContext();
+  const { close } = usePopoverContext();
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setOpen(false);
-    onClick?.(e);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.(event);
+    if (!event.defaultPrevented) close();
   };
 
-  if (asChild && React.isValidElement(props.children)) {
-    const child = props.children as React.ReactElement<Record<string, unknown>>;
-    const childOnClick = child.props.onClick as
-      | ((e: React.MouseEvent<HTMLButtonElement>) => void)
-      | undefined;
+  if (asChild && React.isValidElement(children)) {
+    const child = children as React.ReactElement<SlotChildProps>;
+    const childProps = child.props;
+    const childRef = childProps.ref;
 
     return React.cloneElement(child, {
-      onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
-        childOnClick?.(e);
-        handleClick(e);
+      ...props,
+      ...childProps,
+      ref: (node: HTMLButtonElement | null) => {
+        assignRef(ref, node);
+        assignRef(childRef as React.Ref<HTMLButtonElement | null> | undefined, node);
       },
-    });
+      className: cn(className, childProps.className),
+      style: style || childProps.style ? { ...style, ...childProps.style } : undefined,
+      onClick: (event: React.MouseEvent<HTMLButtonElement>) => {
+        childProps.onClick?.(event);
+        handleClick(event);
+      },
+    } as SlotChildProps);
   }
 
-  return <button type="button" onClick={handleClick} ref={ref} {...props} />;
+  return (
+    <button
+      type="button"
+      className={className}
+      style={style}
+      {...props}
+      ref={ref}
+      onClick={handleClick}
+    >
+      {children}
+    </button>
+  );
 };
 PopoverClose.displayName = 'PopoverClose';
 
 interface PopoverContentProps extends HTMLMotionProps<'div'> {
-  side?: 'top' | 'bottom' | 'left' | 'right';
+  side?: PopoverSide;
   sideOffset?: number;
   children?: React.ReactNode;
   showClose?: boolean;
   closeLabel?: string;
 }
 
-const PopoverContent = ({
-  side = 'bottom',
+const PopoverPanel = ({
+  side: preferredSide = 'bottom',
   sideOffset = 4,
   className,
   children,
   showClose = false,
   closeLabel = 'Close',
+  style,
+  onKeyDown,
+  ref,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
   ...props
-}: PopoverContentProps) => {
-  const { open, id, setOpen } = usePopoverContext();
-  const contentRef = React.useRef<HTMLDivElement>(null);
+}: PopoverContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
+  const { id, close, setOpen, triggerId, triggerRef, contentRef } = usePopoverContext();
   const shouldReduceMotion = useReducedMotion();
-  const shift = useViewportShift(contentRef, open);
+  const floating = useFloating({
+    open: true,
+    anchorRef: triggerRef,
+    floatingRef: contentRef,
+    side: preferredSide,
+    sideOffset,
+  });
+  const side = floating.side;
 
   React.useEffect(() => {
-    if (!open) return;
     const frame = requestAnimationFrame(() => {
       contentRef.current?.focus();
     });
     return () => cancelAnimationFrame(frame);
-  }, [open]);
+  }, [contentRef]);
 
-  const sideOffsetStyle = React.useMemo(
-    () => ({
-      ...(side === 'top' && { marginBottom: sideOffset }),
-      ...(side === 'bottom' && { marginTop: sideOffset }),
-      ...(side === 'left' && { marginRight: sideOffset }),
-      ...(side === 'right' && { marginLeft: sideOffset }),
-      ...POPOVER_STYLE,
-      translate: shiftTranslate(
-        shift,
-        side === 'top' || side === 'bottom',
-        side === 'left' || side === 'right',
-      ),
-    }),
-    [side, sideOffset, shift],
-  );
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    onKeyDown?.(event);
+    if (event.defaultPrevented || event.key !== 'Tab') return;
+    const content = contentRef.current;
+    const trigger = triggerRef.current;
+    if (!content || !trigger) return;
+
+    const focusable = getFocusable(content);
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const active = document.activeElement;
+
+    if (event.shiftKey) {
+      if (active === content || active === first || !first) {
+        event.preventDefault();
+        trigger.focus();
+      }
+      return;
+    }
+
+    if (active === last || !last) {
+      event.preventDefault();
+      setOpen(false);
+      (nextFocusableAfter(trigger, content) ?? trigger).focus();
+    }
+  };
 
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          ref={contentRef}
-          id={id}
-          role="dialog"
-          tabIndex={-1}
-          variants={shouldReduceMotion ? reveal : floatingVariants[side]}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          style={sideOffsetStyle}
-          className={cn(
-            'bg-popover text-popover-foreground border-border absolute z-50 w-72 max-w-[calc(100vw-2rem)] rounded-md border p-4 shadow-md outline-none',
-            POPOVER_POSITION_CLASSES[side],
-            floatingOrigin[side],
-            className,
-          )}
-          {...props}
-        >
-          {children}
-          {showClose && (
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              className="ring-offset-background focus-visible:ring-ring absolute top-1 right-1 rounded-md p-2 opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-            >
-              <XIcon className="h-4 w-4" size={16} />
-              <span className="sr-only">{closeLabel}</span>
-            </button>
-          )}
-        </motion.div>
+    <motion.div
+      ref={(node: HTMLDivElement | null) => {
+        contentRef.current = node;
+        assignRef(ref, node);
+      }}
+      id={id}
+      role="dialog"
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy ?? (ariaLabel ? undefined : triggerId)}
+      tabIndex={-1}
+      data-side={side}
+      variants={shouldReduceMotion ? reveal : floatingVariants[side]}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      style={{ ...POPOVER_STYLE, ...style, ...floating.style }}
+      onKeyDown={handleKeyDown}
+      className={cn(
+        'bg-popover text-popover-foreground border-border z-500 max-h-(--available-height) w-72 max-w-[calc(100vw-2rem)] overflow-y-auto rounded-md border p-4 shadow-md outline-none',
+        floatingOrigin[side],
+        className,
       )}
-    </AnimatePresence>
+      {...props}
+    >
+      {children}
+      {showClose && (
+        <button
+          type="button"
+          onClick={close}
+          className="ring-offset-background focus-visible:ring-ring absolute top-1 right-1 rounded-md p-2 opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+        >
+          <XIcon className="h-4 w-4" size={16} />
+          <span className="sr-only">{closeLabel}</span>
+        </button>
+      )}
+    </motion.div>
+  );
+};
+
+const PopoverContent = (props: PopoverContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
+  const { open } = usePopoverContext();
+
+  return (
+    <FloatingPortal>
+      <AnimatePresence>{open && <PopoverPanel {...props} />}</AnimatePresence>
+    </FloatingPortal>
   );
 };
 PopoverContent.displayName = 'PopoverContent';
@@ -333,3 +420,4 @@ const Popover = Object.assign(PopoverRoot, {
 });
 
 export { Popover };
+export type { PopoverProps, PopoverTriggerProps, PopoverContentProps, PopoverSide };
