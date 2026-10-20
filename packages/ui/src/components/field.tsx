@@ -8,6 +8,8 @@ type FieldOrientation = 'vertical' | 'horizontal' | 'responsive';
 
 interface FieldContextValue {
   id: string;
+  controlId: string;
+  setControlId: (id: string | undefined) => void;
   descriptionId: string;
   errorId: string;
   invalid: boolean;
@@ -72,10 +74,14 @@ const FieldRoot = ({
   const fieldId = id ?? generatedId;
   const [hasDescription, setHasDescription] = React.useState(false);
   const [hasError, setHasError] = React.useState(false);
+  const [customControlId, setControlId] = React.useState<string | undefined>(undefined);
+  const labelled = Boolean(props['aria-label'] || props['aria-labelledby']);
 
   const context = React.useMemo(
     () => ({
       id: fieldId,
+      controlId: customControlId ?? fieldId,
+      setControlId,
       descriptionId: `${fieldId}-description`,
       errorId: `${fieldId}-error`,
       invalid,
@@ -85,21 +91,21 @@ const FieldRoot = ({
       setHasDescription,
       setHasError,
     }),
-    [fieldId, invalid, disabled, hasDescription, hasError],
+    [fieldId, customControlId, invalid, disabled, hasDescription, hasError],
   );
 
   return (
     <FieldContext value={context}>
       <div
         ref={ref}
-        role="group"
+        role={labelled ? 'group' : undefined}
         data-slot="field"
         data-name={name}
         data-orientation={orientation}
         data-invalid={invalid ? '' : undefined}
         data-disabled={disabled ? '' : undefined}
         className={cn(
-          'group/field data-[invalid]:text-destructive flex w-full gap-2 data-[disabled]:opacity-60',
+          'group/field data-[invalid]:text-destructive-text flex w-full gap-2 data-[disabled]:opacity-60',
           orientation === 'vertical' && 'flex-col [&>*]:w-full',
           orientation === 'horizontal' &&
             'flex-row items-center [&>[data-slot=field-content]]:flex-1 [&>[data-slot=field-label]]:flex-auto',
@@ -121,6 +127,13 @@ interface FieldControlSlotProps {
 const FieldControl = ({ children }: FieldControlSlotProps) => {
   const control = useField();
   const childProps = children.props;
+  const ownId = childProps.id as string | undefined;
+  const setControlId = React.use(FieldContext)?.setControlId;
+
+  React.useLayoutEffect(() => {
+    setControlId?.(ownId);
+    return () => setControlId?.(undefined);
+  }, [setControlId, ownId]);
   const describedBy =
     [control['aria-describedby'], childProps['aria-describedby'] as string | undefined]
       .filter(Boolean)
@@ -145,11 +158,8 @@ const FieldLabel = ({ className, htmlFor, ...props }: FieldLabelProps) => {
   return (
     <Label
       data-slot="field-label"
-      htmlFor={htmlFor ?? field?.id}
-      className={cn(
-        'group-data-[invalid]/field:text-destructive group-data-[disabled]/field:opacity-70',
-        className,
-      )}
+      htmlFor={htmlFor ?? field?.controlId}
+      className={cn('group-data-[invalid]/field:text-destructive-text', className)}
       {...props}
     />
   );
@@ -237,7 +247,7 @@ const FieldError = ({
       id={id ?? field?.errorId}
       role="alert"
       data-slot="field-error"
-      className={cn('text-destructive text-sm font-normal', className)}
+      className={cn('text-destructive-text text-sm font-normal', className)}
       {...props}
     >
       {content}
@@ -268,10 +278,7 @@ const FieldTitle = ({
   <div
     ref={ref}
     data-slot="field-title"
-    className={cn(
-      'flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled]/field:opacity-70',
-      className,
-    )}
+    className={cn('flex w-fit items-center gap-2 text-sm leading-snug font-medium', className)}
     {...props}
   />
 );

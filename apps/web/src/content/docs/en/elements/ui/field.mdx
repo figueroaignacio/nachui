@@ -31,7 +31,7 @@ import { Field } from '@/components/ui/field';
 </Field>
 ```
 
-`Field` generates an id and shares it with its parts. `Label` points at it, `Description` and `Error` register their ids, and `Control` clones the element inside it with `id`, `aria-describedby`, `aria-invalid` and `disabled`. Anything that renders a native control works: `Input`, `Textarea`, `Select`, `Switch`, `Checkbox`, `Radio` or a plain element. For a component that cannot take a child, call `useField()` and spread the result.
+`Field` generates an id and shares it with its parts. `Label` points at it (or at the control's own `id` when you give it one), `Description` and `Error` register their ids, and `Control` clones the element inside it with `id`, `aria-describedby`, `aria-invalid` and `disabled`. Anything that renders a native control works: `Input`, `Textarea`, `Select`, `Switch`, `Checkbox`, `Radio` or a plain element. For a component that cannot take a child, call `useField()` and spread the result.
 
 ## Composition
 

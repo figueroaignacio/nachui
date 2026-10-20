@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { expectNoAxeViolations } from '../../test-utils/axe';
 import { Field, useField } from './field';
 
 function BareControl() {
@@ -73,5 +74,63 @@ describe('Field', () => {
       </Field.Set>,
     );
     expect(screen.getByRole('group', { name: 'Plan' })).toBeInTheDocument();
+  });
+
+  it('points the label at a control that brings its own id', () => {
+    render(
+      <Field>
+        <Field.Label>Username</Field.Label>
+        <Field.Control>
+          <input id="custom-username" />
+        </Field.Control>
+      </Field>,
+    );
+    const input = screen.getByLabelText('Username');
+    expect(input).toHaveAttribute('id', 'custom-username');
+  });
+
+  it('only exposes a group role when the field is labelled', () => {
+    const { container } = render(
+      <>
+        <Field>
+          <Field.Label>Plain</Field.Label>
+          <Field.Control>
+            <input />
+          </Field.Control>
+        </Field>
+        <Field aria-label="Billing">
+          <Field.Label>Card</Field.Label>
+          <Field.Control>
+            <input />
+          </Field.Control>
+        </Field>
+      </>,
+    );
+    const roots = container.querySelectorAll('[data-slot="field"]');
+    expect(roots[0]).not.toHaveAttribute('role');
+    expect(screen.getByRole('group', { name: 'Billing' })).toBe(roots[1]);
+  });
+
+  it('dims a disabled field once and uses the error text token', async () => {
+    const { container } = render(
+      <Field disabled invalid>
+        <Field.Label>Name</Field.Label>
+        <Field.Title>Title</Field.Title>
+        <Field.Control>
+          <input />
+        </Field.Control>
+        <Field.Error>Required</Field.Error>
+      </Field>,
+    );
+    const label = screen.getByText('Name');
+    expect(label.className).not.toMatch(/opacity-70/);
+    expect(screen.getByText('Title').className).not.toMatch(/opacity-70/);
+    expect(label).toHaveClass('group-data-[invalid]/field:text-destructive-text');
+    expect(screen.getByRole('alert')).toHaveClass('text-destructive-text');
+    expect(container.querySelector('[data-slot="field"]')).toHaveClass(
+      'data-[disabled]:opacity-60',
+      'data-[invalid]:text-destructive-text',
+    );
+    await expectNoAxeViolations(container);
   });
 });
