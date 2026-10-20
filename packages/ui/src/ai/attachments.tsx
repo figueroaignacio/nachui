@@ -115,6 +115,8 @@ interface AttachmentItemContextValue {
   data: AttachmentData;
   onRemove?: () => void;
   variant: 'grid' | 'inline' | 'list';
+  hasInfo: boolean;
+  registerInfo: () => () => void;
 }
 
 const AttachmentsContext = React.createContext<AttachmentsContextValue>({ variant: 'grid' });
@@ -145,7 +147,7 @@ interface AttachmentInfoProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 interface AttachmentRemoveProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  label?: string;
+  label?: string | ((name: string) => string);
 }
 
 type AttachmentEmptyProps = React.HTMLAttributes<HTMLDivElement>;
@@ -164,6 +166,7 @@ const AttachmentsRoot = ({
     <AttachmentsContext value={value}>
       <div
         ref={ref}
+        data-attachments=""
         data-variant={resolved}
         className={cn(attachmentsVariants({ variant }), className)}
         {...props}
@@ -185,9 +188,18 @@ const AttachmentItem = ({
   ...props
 }: AttachmentItemProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const { variant } = React.use(AttachmentsContext);
+  const [infoCount, setInfoCount] = React.useState(0);
+
+  const registerInfo = React.useCallback(() => {
+    setInfoCount((count) => count + 1);
+    return () => setInfoCount((count) => count - 1);
+  }, []);
+
+  const hasInfo = infoCount > 0;
+
   const value = React.useMemo<AttachmentItemContextValue>(
-    () => ({ data, onRemove, variant }),
-    [data, onRemove, variant],
+    () => ({ data, onRemove, variant, hasInfo, registerInfo }),
+    [data, onRemove, variant, hasInfo, registerInfo],
   );
 
   return (
@@ -207,7 +219,7 @@ const AttachmentPreview = ({
   ref,
   ...props
 }: AttachmentPreviewProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { data, variant } = useAttachment();
+  const { data, variant, hasInfo } = useAttachment();
   const size = variant === 'inline' ? 'size-7' : 'size-9';
 
   return (
@@ -222,7 +234,11 @@ const AttachmentPreview = ({
       {...props}
     >
       {isImage(data) && data.url ? (
-        <img src={data.url} alt={attachmentLabel(data)} className="size-full object-cover" />
+        <img
+          src={data.url}
+          alt={hasInfo ? '' : attachmentLabel(data)}
+          className="size-full object-cover"
+        />
       ) : (
         (fallbackIcon ?? <FileIcon size={16} />)
       )}
@@ -239,7 +255,9 @@ const AttachmentInfo = ({
   ref,
   ...props
 }: AttachmentInfoProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { data } = useAttachment();
+  const { data, registerInfo } = useAttachment();
+
+  React.useEffect(() => registerInfo(), [registerInfo]);
 
   const meta = [
     showMediaType ? data.mediaType : undefined,
@@ -273,20 +291,42 @@ const AttachmentRemove = ({
   ...props
 }: AttachmentRemoveProps & { ref?: React.Ref<HTMLButtonElement> }) => {
   const { data, onRemove, variant } = useAttachment();
+  const name = attachmentLabel(data);
+  const accessibleName =
+    typeof label === 'function' ? label(name) : label.includes(name) ? label : `${label} ${name}`;
+
+  const removeAndRefocus = (button: HTMLButtonElement) => {
+    const container = button.closest<HTMLElement>('[data-attachments]');
+    const buttons = Array.from(
+      container?.querySelectorAll<HTMLButtonElement>('[data-attachment-remove]') ?? [],
+    );
+    const index = buttons.indexOf(button);
+    const next = buttons[index + 1] ?? buttons[index - 1];
+    onRemove?.();
+    if (!onRemove) return;
+    if (next) {
+      next.focus();
+    } else if (container) {
+      if (!container.hasAttribute('tabindex')) container.tabIndex = -1;
+      container.focus();
+    }
+  };
 
   return (
     <button
       ref={ref}
       type="button"
-      aria-label={`${label} ${attachmentLabel(data)}`}
+      aria-label={accessibleName}
+      data-attachment-remove=""
       onClick={(event) => {
-        onRemove?.();
+        if (event.currentTarget === document.activeElement) removeAndRefocus(event.currentTarget);
+        else onRemove?.();
         onClick?.(event);
       }}
       className={cn(
         'border-border bg-background text-muted-foreground hover:text-foreground focus-visible:ring-ring relative flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors after:absolute after:-inset-2 focus-visible:ring-2 focus-visible:outline-none',
         variant === 'grid' &&
-          'absolute -top-2 -right-2 group-hover/attachment:opacity-100 focus-visible:opacity-100 [@media(hover:hover)]:opacity-0',
+          'absolute -top-2 -right-2 group-hover/attachment:opacity-100 focus-visible:opacity-100 [@media(hover:hover)_and_(pointer:fine)]:opacity-0',
         variant === 'list' && 'ml-auto',
         className,
       )}

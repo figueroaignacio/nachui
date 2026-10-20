@@ -104,10 +104,10 @@ interface AttachmentData {
 
 ### Attachments.Remove
 
-| Prop        | Type     | Default    | Description                   |
-| ----------- | -------- | ---------- | ----------------------------- |
-| `label`     | `string` | `'Remove'` | Prefix of the accessible name |
-| `className` | `string` | -          | Additional CSS classes        |
+| Prop        | Type                                 | Default    | Description                                                                                                         |
+| ----------- | ------------------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------- |
+| `label`     | `string \| (name: string) => string` | `'Remove'` | Prefix of the accessible name. A label that already contains the file name, or a function, is used as the full name |
+| `className` | `string`                             | -          | Additional CSS classes                                                                                              |
 
 ### Attachments.Empty
 
