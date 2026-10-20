@@ -5,6 +5,7 @@ import { AnimatePresence, type HTMLMotionProps, motion, useReducedMotion } from 
 import * as React from 'react';
 import { cn } from '../lib/cn';
 import { collapse, collapseInner, springs, still, tap } from '../lib/motion';
+import { assignRef } from '../lib/overlay';
 import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
@@ -198,10 +199,22 @@ const CollapsibleTrigger = ({
 
   const chevron = chevronIcon ?? <ChevronDownIcon className="h-4 w-4 shrink-0" size={16} />;
 
-  if (asChild && React.isValidElement<React.HTMLAttributes<HTMLElement>>(children)) {
-    const childOnClick = children.props.onClick;
+  if (asChild && React.isValidElement<React.ButtonHTMLAttributes<HTMLElement>>(children)) {
+    const childProps = children.props as React.ButtonHTMLAttributes<HTMLElement> & {
+      ref?: React.Ref<HTMLElement>;
+    };
+    const childOnClick = childProps.onClick;
+    const childRef = childProps.ref;
     return React.cloneElement(children, {
-      id: children.props.id ?? `${id}-trigger`,
+      ref:
+        ref || childRef
+          ? (node: HTMLButtonElement | null) => {
+              assignRef(ref, node);
+              assignRef(childRef, node);
+            }
+          : undefined,
+      type: childProps.type ?? (children.type === 'button' ? 'button' : undefined),
+      id: childProps.id ?? `${id}-trigger`,
       onClick: (e: React.MouseEvent<HTMLElement>) => {
         childOnClick?.(e);
         if (e.defaultPrevented) return;
@@ -211,7 +224,7 @@ const CollapsibleTrigger = ({
       'aria-expanded': isOpen,
       'aria-controls': `${id}-content`,
       disabled,
-    } as React.HTMLAttributes<HTMLElement>);
+    } as React.ButtonHTMLAttributes<HTMLElement> & { ref?: React.Ref<HTMLButtonElement> });
   }
 
   return (
@@ -232,8 +245,8 @@ const CollapsibleTrigger = ({
       {showChevron && chevronPosition === 'left' && (
         <motion.span
           aria-hidden="true"
-          animate={shouldReduceMotion ? undefined : { rotate: isOpen ? 90 : 0 }}
-          transition={springs.snappy}
+          animate={{ rotate: isOpen ? 90 : 0 }}
+          transition={shouldReduceMotion ? still : springs.snappy}
           className="mr-2"
         >
           {chevron}
@@ -243,8 +256,8 @@ const CollapsibleTrigger = ({
       {showChevron && chevronPosition === 'right' && (
         <motion.span
           aria-hidden="true"
-          animate={shouldReduceMotion ? undefined : { rotate: isOpen ? 180 : 0 }}
-          transition={springs.snappy}
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={shouldReduceMotion ? still : springs.snappy}
           className="ml-2"
         >
           {chevron}
@@ -260,11 +273,16 @@ const CollapsibleContent = ({
   className,
   forceMount = false,
   children,
+  onAnimationComplete,
   ref,
   ...props
 }: CollapsibleContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const { isOpen, variant, id } = useCollapsibleContext();
   const shouldReduceMotion = useReducedMotion();
+  const [closeSettled, setCloseSettled] = React.useState(!isOpen);
+  const state = isOpen ? 'open' : 'closed';
+
+  if (isOpen && closeSettled) setCloseSettled(false);
 
   return (
     <AnimatePresence initial={false} mode="sync">
@@ -274,10 +292,17 @@ const CollapsibleContent = ({
           id={`${id}-content`}
           role="region"
           aria-labelledby={`${id}-trigger`}
+          data-state={state}
+          hidden={forceMount && !isOpen && closeSettled ? true : undefined}
+          inert={!isOpen || undefined}
           variants={shouldReduceMotion ? REDUCED_COLLAPSE : collapse}
           initial="closed"
-          animate="open"
+          animate={state}
           exit="closed"
+          onAnimationComplete={(definition) => {
+            if (definition === 'closed' && !isOpen) setCloseSettled(true);
+            onAnimationComplete?.(definition);
+          }}
           style={shouldReduceMotion ? undefined : COLLAPSIBLE_CONTENT_STYLE}
           className={cn(collapsibleContentVariants({ variant }), className)}
           {...props}
@@ -285,7 +310,7 @@ const CollapsibleContent = ({
           <motion.div
             variants={shouldReduceMotion ? undefined : collapseInner}
             initial="closed"
-            animate="open"
+            animate={state}
             exit="closed"
           >
             {children}
