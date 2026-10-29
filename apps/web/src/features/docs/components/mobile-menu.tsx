@@ -9,6 +9,7 @@ import type { Navigation } from '@/lib/definitions';
 import { isHiddenProductLink } from '@/lib/hidden-product-links';
 import { Button } from '@repo/ui/components/button';
 import { Typography } from '@repo/ui/components/typography';
+import { SparklesIcon } from '@repo/ui/icons/sparkles';
 import { XIcon } from '@repo/ui/icons/x';
 import { cn } from '@repo/ui/lib/cn';
 import { springs, still } from '@repo/ui/lib/motion';
@@ -23,7 +24,9 @@ import {
   sectionOf,
 } from '../lib/section-filters';
 import { LocaleSwitcher } from '@/components/common/locale-switcher';
-import { Logo } from '@/components/common/logo';
+import { GitHubIcon } from '@/components/common/github-icon';
+import { useChatStore } from '@/features/chat/store/chat-store';
+import { GITHUB_REPO_URL } from '@/lib/domains';
 import { ThemeToggle } from '@/components/common/theme-toggle';
 
 const SWIPE_CLOSE_THRESHOLD = 80;
@@ -39,6 +42,7 @@ type MobileMenuPanelProps = {
 
 export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelProps) {
   const t = useTranslations();
+  const openChat = useChatStore((state) => state.openChat);
   const pathname = usePathname();
 
   const docsNavigation = useDocsSections();
@@ -154,16 +158,10 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
         </div>
         <div
           onPointerDown={(event) => dragControls.start(event)}
-          className="border-rule flex touch-none items-center justify-between border-b px-6 pt-2 pb-4"
+          className="flex shrink-0 touch-none items-center justify-between pr-3 pl-6"
         >
-          <div className="flex items-center gap-x-3">
-            <Link href="/" onClick={toggleMenu} aria-label={t('ui.header.homeLink')}>
-              <Logo withText />
-            </Link>
-          </div>
-          <div className="flex items-center gap-x-3">
-            <LocaleSwitcher />
-            <ThemeToggle />
+          <span className="text-foreground text-[15px] font-semibold">{t('ui.header.menu')}</span>
+          <div className="flex items-center">
             <Button
               variant="ghost"
               size="icon"
@@ -176,10 +174,33 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
             </Button>
           </div>
         </div>
-        <div
-          ref={scrollRef}
-          className="flex-1 overflow-y-auto px-6 pt-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
-        >
+        <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 pb-6">
+          <div
+            ref={anchorBarRef}
+            className="bg-background border-rule hide-scrollbar sticky top-0 z-10 -mx-6 mb-4 flex items-center gap-1.5 overflow-x-auto border-b px-6 pt-1 pb-3"
+            role="group"
+            aria-label={t('docs.sidebar.filterLabel')}
+          >
+            {anchors.map(({ id, label }) => {
+              const isActive = id === anchor;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  aria-pressed={isActive}
+                  onClick={() => jumpTo(id, shouldReduceMotion ? 'instant' : 'smooth')}
+                  className={cn(
+                    'focus-visible:ring-ring flex h-9 shrink-0 items-center rounded-md border px-3 text-[13px] whitespace-nowrap focus-visible:ring-2 focus-visible:outline-none',
+                    isActive
+                      ? 'bg-muted border-muted text-foreground font-medium'
+                      : 'border-border text-muted-foreground hover:text-foreground',
+                  )}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
           {menuLinks.length > 0 && (
             <div className="mb-8">
               <Typography className="text-muted-foreground mb-2 px-2.5 text-xs">
@@ -241,40 +262,6 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
               </ul>
             </div>
           )}
-          <div
-            ref={anchorBarRef}
-            className="bg-background/90 sticky -top-6 z-10 -mx-6 mb-4 flex items-center gap-1 px-6 py-2 backdrop-blur-md"
-            role="group"
-            aria-label={t('docs.sidebar.filterLabel')}
-          >
-            {anchors.map(({ id, label, Icon }) => {
-              const isActive = id === anchor;
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  aria-pressed={isActive}
-                  aria-label={label}
-                  onClick={() => jumpTo(id, shouldReduceMotion ? 'instant' : 'smooth')}
-                  className={cn(
-                    'relative flex size-9 items-center justify-center rounded-md transition-colors',
-                    isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
-                  )}
-                >
-                  {isActive && (
-                    <motion.span
-                      layoutId="mobile-menu-anchor"
-                      transition={shouldReduceMotion ? still : springs.smooth}
-                      className="bg-card absolute inset-0 rounded-md"
-                    />
-                  )}
-                  <span className="relative">
-                    <Icon size={16} />
-                  </span>
-                </button>
-              );
-            })}
-          </div>
           {docsNavigation.map((section, sectionIndex) => (
             <div key={sectionIndex} data-section={section.id} className="mb-8 last:mb-0">
               <Typography className="text-muted-foreground mb-2 flex items-center gap-1.5 px-2.5 text-xs">
@@ -310,6 +297,30 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
               </ul>
             </div>
           ))}
+        </div>
+        <div className="border-rule flex shrink-0 items-center gap-1 border-t px-4 pt-2.5 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+          <ThemeToggle />
+          <LocaleSwitcher />
+          <a
+            href={GITHUB_REPO_URL}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={t('ui.header.github')}
+            className="text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring inline-flex size-8 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:outline-none"
+          >
+            <GitHubIcon size={16} />
+          </a>
+          <button
+            type="button"
+            onClick={() => {
+              onClose();
+              openChat();
+            }}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring ring-offset-background ml-auto inline-flex h-10 items-center gap-1.5 rounded-md px-4 text-sm font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          >
+            <SparklesIcon size={14} aria-hidden="true" />
+            {t('ui.header.ask')}
+          </button>
         </div>
       </motion.nav>
     </div>
