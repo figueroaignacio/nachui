@@ -38,6 +38,12 @@
       "skillPath": "skills/design-md/SKILL.md",
       "computedHash": "d3a4c7d2f2715a33662c8b06ffc16035d01965a8b4ed81c2958fb22ae94760f8"
     },
+    "design-taste-frontend": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/taste-skill/SKILL.md",
+      "computedHash": "6ac8ba6089dcbc303744a507a4587113c5d845ca2f658b3ce2b0b5eab108fb0d"
+    },
     "drizzle": {
       "source": "bobmatnyc/claude-mpm-skills",
       "sourceType": "autoskills-registry",
