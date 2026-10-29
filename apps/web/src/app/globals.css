@@ -566,15 +566,22 @@ body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
   --silk-deep: oklch(26% 0.0081 72);
 }
 
-/* Two rows: brand, search and utilities on top, section tabs below. While the
-   user scrolls down the top row slides away and only the tabs stay, so sticky
-   rails read this variable to sit right under whatever is showing. */
+/* Desktop gets one fixed row. Below lg the header has two rows and the top one
+   slides away while scrolling down, so sticky rails read this variable to sit
+   right under whatever is showing. */
 :root {
   --site-header-height: 6.25rem;
 }
 
 :root:has([data-site-header][data-collapsed='true']) {
   --site-header-height: 2.75rem;
+}
+
+@media (min-width: 64rem) {
+  :root,
+  :root:has([data-site-header][data-collapsed='true']) {
+    --site-header-height: 3.5rem;
+  }
 }
 
 /* Opaque, but tinted with the same fold colour the dome puts behind it, so the
