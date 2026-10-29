@@ -2,13 +2,13 @@
 
 import type { BrickSourceFile } from '@/features/bricks/lib/get-brick-source';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
+import { useTabState } from '@/hooks/use-tab-state';
 import { Callout } from '@repo/ui/components/callout';
 import { Tabs } from '@repo/ui/components/tabs';
 import { CheckIcon } from '@repo/ui/icons/check';
 import { CopyIcon } from '@repo/ui/icons/copy';
 import { LaptopIcon } from '@repo/ui/icons/laptop';
 import { cn } from '@repo/ui/lib/cn';
-import { useState } from 'react';
 import { BrickCodeViewer } from './brick-code-viewer';
 
 interface BrickPreviewProps {
@@ -21,6 +21,10 @@ interface BrickPreviewProps {
 }
 
 type ViewportSize = 'desktop' | 'mobile';
+type BrickTab = 'preview' | 'code';
+
+const VIEWPORTS: ViewportSize[] = ['desktop', 'mobile'];
+const BRICK_TABS: BrickTab[] = ['preview', 'code'];
 
 const VIEWPORT_WIDTHS: Record<ViewportSize, string> = {
   desktop: 'w-full',
@@ -35,12 +39,21 @@ export function BrickPreview({
   files,
   installCommand,
 }: BrickPreviewProps) {
-  const [viewport, setViewport] = useState<ViewportSize>('desktop');
+  const [tab, setTab] = useTabState({
+    values: BRICK_TABS,
+    defaultValue: 'preview',
+    param: `${id}-tab`,
+  });
+  const [viewport, setViewport] = useTabState({
+    values: VIEWPORTS,
+    defaultValue: 'desktop',
+    param: `${id}-view`,
+  });
   const { isCopied, copyToClipboard } = useCopyToClipboard(2000);
 
   return (
     <section aria-labelledby={`brick-${id}-title`} className="border-border border-t pt-10">
-      <Tabs defaultValue="preview" variant="underline" className="space-y-6">
+      <Tabs value={tab} onValueChange={setTab} variant="underline" className="space-y-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2
