@@ -34,7 +34,14 @@ The components only import from `react`, `react-dom`, `motion`, `clsx`, `tailwin
 
 Pick your framework. If you already have a project with Tailwind CSS v4 running, skip to the next step and just note where your main stylesheet is.
 
-<Tabs defaultValue="next" className="mt-5 w-full" size="sm">
+<SyncedTabs
+  values={["next", "vite", "tanstack", "react-router"]}
+  defaultValue="next"
+  storageKey="framework"
+  param="framework"
+  className="mt-5 w-full"
+  size="sm"
+>
 <TabsList>
   <TabsTrigger value="next">Next.js</TabsTrigger>
   <TabsTrigger value="vite">Vite</TabsTrigger>
@@ -145,7 +152,7 @@ The template already ships with Tailwind CSS v4 and `@tailwindcss/vite`, so ther
 The template's stylesheet sets its own colors on `html` and `body`. You will replace that file in a later step, so you don't need to keep them.
 
 </TabsContent>
-</Tabs>
+</SyncedTabs>
 
 #### Install the dependencies
 

@@ -31,6 +31,7 @@ import {
 } from './compound-components';
 import { InlineCode } from '@/components/mdx/inline-code';
 import { PackageManagerTabs } from './package-manager-tabs';
+import { SyncedTabs } from './synced-tabs';
 import { SkillsList } from './skills-list';
 
 // Tight, quiet scale: headings carry the hierarchy through weight and spacing
@@ -244,6 +245,7 @@ export const mdxComponents = {
   ComponentsList,
   ComponentSource,
   PackageManagerTabs,
+  SyncedTabs,
   SkillsList,
   Accordion: MdxAccordion,
   AccordionContent: MdxAccordionContent,

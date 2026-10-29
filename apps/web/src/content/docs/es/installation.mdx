@@ -34,7 +34,14 @@ Los componentes solo importan de `react`, `react-dom`, `motion`, `clsx`, `tailwi
 
 Elige tu framework. Si ya tienes un proyecto con Tailwind CSS v4 funcionando, pasa al siguiente paso y solo fíjate dónde está tu hoja de estilos principal.
 
-<Tabs defaultValue="next" className="mt-5 w-full" size="sm">
+<SyncedTabs
+  values={["next", "vite", "tanstack", "react-router"]}
+  defaultValue="next"
+  storageKey="framework"
+  param="framework"
+  className="mt-5 w-full"
+  size="sm"
+>
 <TabsList>
   <TabsTrigger value="next">Next.js</TabsTrigger>
   <TabsTrigger value="vite">Vite</TabsTrigger>
@@ -145,7 +152,7 @@ El template ya trae Tailwind CSS v4 y `@tailwindcss/vite`, así que no hace falt
 La hoja de estilos del template define sus propios colores en `html` y `body`. Vas a reemplazar ese archivo en un paso posterior, así que no necesitas conservarlos.
 
 </TabsContent>
-</Tabs>
+</SyncedTabs>
 
 #### Instala las dependencias
 
