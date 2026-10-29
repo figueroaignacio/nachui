@@ -30,7 +30,7 @@
   /* Anchor jumps have to clear the sticky header and the mobile toc bar,
      otherwise the heading lands underneath them. */
   main :is(h1, h2, h3, h4)[id] {
-    scroll-margin-top: 7rem;
+    scroll-margin-top: calc(var(--site-header-height) + 1.5rem);
   }
 }
 
@@ -566,22 +566,9 @@ body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
   --silk-deep: oklch(26% 0.0081 72);
 }
 
-/* Desktop gets one fixed row. Below lg the header has two rows and the top one
-   slides away while scrolling down, so sticky rails read this variable to sit
-   right under whatever is showing. */
+/* One fixed row on every screen. Sticky rails read this to sit right under it. */
 :root {
-  --site-header-height: 6.25rem;
-}
-
-:root:has([data-site-header][data-collapsed='true']) {
-  --site-header-height: 2.75rem;
-}
-
-@media (min-width: 64rem) {
-  :root,
-  :root:has([data-site-header][data-collapsed='true']) {
-    --site-header-height: 3.5rem;
-  }
+  --site-header-height: 3.5rem;
 }
 
 /* Opaque, but tinted with the same fold colour the dome puts behind it, so the
