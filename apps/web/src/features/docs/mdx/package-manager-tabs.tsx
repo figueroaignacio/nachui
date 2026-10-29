@@ -1,15 +1,20 @@
 'use client';
 
+import { useTabState } from '@/hooks/use-tab-state';
 import { Tabs } from '@repo/ui/components/tabs';
 import { Command } from '@repo/ui/src/components/command';
 import { PackageManagerIcons } from './package-manager-icons';
 
+type Manager = 'npm' | 'pnpm' | 'yarn' | 'bun';
+
 interface PackageManagerTabsProps {
   command: string;
-  managers?: Array<'npm' | 'pnpm' | 'yarn' | 'bun'>;
-  defaultManager?: 'npm' | 'pnpm' | 'yarn' | 'bun';
+  managers?: Manager[];
+  defaultManager?: Manager;
   showLineNumbers?: boolean;
 }
+
+const ALL_MANAGERS: Manager[] = ['npm', 'pnpm', 'yarn', 'bun'];
 
 const PACKAGE_MANAGERS = {
   npm: {
@@ -39,11 +44,17 @@ const PACKAGE_MANAGER_COMMANDS = {
 
 export function PackageManagerTabs({
   command,
-  managers = ['npm', 'pnpm', 'yarn', 'bun'],
+  managers = ALL_MANAGERS,
   defaultManager = 'npm',
 }: PackageManagerTabsProps) {
+  const [manager, setManager] = useTabState({
+    values: managers,
+    defaultValue: defaultManager,
+    storageKey: 'package-manager',
+  });
+
   return (
-    <Tabs defaultValue={defaultManager} className="mt-5 w-full" size="sm">
+    <Tabs value={manager} onValueChange={setManager} className="mt-5 w-full" size="sm">
       <Tabs.List variant="default">
         {managers.map((manager) => (
           <Tabs.Trigger key={manager} value={manager} className="flex-row gap-2">

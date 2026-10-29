@@ -1,5 +1,6 @@
 'use client';
 
+import { useTabState } from '@/hooks/use-tab-state';
 import { Tabs } from '@repo/ui/components/tabs';
 import { Command } from '@repo/ui/src/components/command';
 import type { ReactNode } from 'react';
@@ -22,12 +23,26 @@ const MANAGERS: Manager[] = ['pnpm', 'npm', 'yarn', 'bun'];
 // The CLI is still being built. Flip this back on once `nachui add` ships.
 const CLI_ENABLED = false;
 
+type Method = 'cli' | 'manual';
+const METHODS: Method[] = CLI_ENABLED ? ['cli', 'manual'] : ['manual'];
+
 export function ComponentInstallTabsClient({
   component,
   manualContent,
 }: ComponentInstallTabsClientProps) {
+  const [method, setMethod] = useTabState({
+    values: METHODS,
+    defaultValue: CLI_ENABLED ? 'cli' : 'manual',
+    storageKey: 'install-method',
+  });
+  const [manager, setManager] = useTabState({
+    values: MANAGERS,
+    defaultValue: 'pnpm',
+    storageKey: 'package-manager',
+  });
+
   return (
-    <Tabs defaultValue={CLI_ENABLED ? 'cli' : 'manual'} className="mt-5 w-full" size="sm">
+    <Tabs value={method} onValueChange={setMethod} className="mt-5 w-full" size="sm">
       <Tabs.List variant="unstyled">
         <Tabs.Trigger value="cli" variant="underline" disabled={!CLI_ENABLED}>
           CLI
@@ -37,7 +52,7 @@ export function ComponentInstallTabsClient({
         </Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content value="cli" className="mt-4">
-        <Tabs defaultValue="pnpm" className="w-full" size="sm">
+        <Tabs value={manager} onValueChange={setManager} className="w-full" size="sm">
           <Tabs.List variant="default">
             {MANAGERS.map((m) => (
               <Tabs.Trigger key={m} value={m}>
