@@ -18,7 +18,7 @@ export function PreviewSources() {
           Grounding this answer, 3 of 12 indexed.
         </Card.Description>
       </Card.Header>
-      <Card.Content compact className="mt-4">
+      <Card.Content compact>
         <Attachments variant="list">
           {SOURCES.map((source) => (
             <Attachments.Item key={source.id} data={source}>

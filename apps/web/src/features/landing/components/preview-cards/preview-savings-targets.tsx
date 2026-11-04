@@ -16,12 +16,10 @@ export function PreviewSavingsTargets() {
           savings goal.
         </Card.Description>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-3">
+      <Card.Content compact className="space-y-3">
         {targets.map((target) => (
           <div key={target.name} className="bg-surface-muted space-y-2 rounded-md p-3.5">
-            <span className="text-muted-foreground text-[9px] font-semibold tracking-wider uppercase">
-              {target.name}
-            </span>
+            <span className="text-muted-foreground text-[9px] font-semibold">{target.name}</span>
             <div className="text-foreground text-2xl font-bold tracking-tight">{target.amount}</div>
             <Progress value={target.progress} aria-label={`${target.name} savings progress`} />
             <div className="text-muted-foreground flex justify-between text-[10px]">

@@ -10,7 +10,7 @@ export function PreviewThinking() {
         <Card.Title className="text-sm font-semibold">Why this answer</Card.Title>
         <Card.Description className="text-xs">Every source the agent opened.</Card.Description>
       </Card.Header>
-      <Card.Content compact className="mt-4">
+      <Card.Content compact>
         <ChainOfThought defaultOpen>
           <ChainOfThought.Header>Chain of thought</ChainOfThought.Header>
           <ChainOfThought.Content>

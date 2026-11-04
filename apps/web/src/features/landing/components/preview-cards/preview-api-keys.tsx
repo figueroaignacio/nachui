@@ -20,7 +20,7 @@ export function PreviewApiKeys() {
           Rotating a key revokes the old one right away.
         </Card.Description>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-1">
+      <Card.Content compact className="space-y-1">
         {keys.map((key) => (
           <div
             key={key.label}

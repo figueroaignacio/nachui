@@ -32,7 +32,7 @@ function LayoutCard({
         <Card.Title className="text-sm font-semibold">{title}</Card.Title>
         <Card.Description className="text-xs">{description}</Card.Description>
       </Card.Header>
-      <Card.Content compact className="mt-4">
+      <Card.Content compact>
         <div className="border-foreground/20 rounded-md border border-dashed p-2.5">{children}</div>
       </Card.Content>
     </Card>

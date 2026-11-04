@@ -12,7 +12,7 @@ export function PreviewAccountAccess() {
           Update your credentials or re-authenticate.
         </Card.Description>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-3">
+      <Card.Content compact className="space-y-3">
         <Input label="Email Address" placeholder="artist@studio.inc" size="sm" />
         <Input
           label="Current Password"

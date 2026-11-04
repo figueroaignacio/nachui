@@ -3,7 +3,6 @@
     "subheading1": "Nothing extra, nothing missing: React components for UI, AI and layout that you copy and own",
     "headline1": "Nothing extra",
     "headline2": "Nothing missing",
-    "tagline": "minimal by default · detailed on purpose",
     "description": "Few colors, thin lines, no decoration for its own sake. What's left got the hours: focus rings, keyboard support, states that were actually designed. React components you copy into your repo and own.",
     "actions": [
       {
@@ -21,14 +20,7 @@
         "href": "/docs/elements/ai",
         "variant": "outline"
       }
-    ],
-    "wall": {
-      "label": "preview",
-      "title1": "Real components,",
-      "title2": "running live.",
-      "description": "UI, AI and layout elements rendered right here, not screenshots. Copy any of them into your repo as plain source.",
-      "browse": "browse all elements"
-    }
+    ]
   },
   "bricks": {
     "title": "Copy. Paste. Ship.",

@@ -18,7 +18,7 @@ export function PreviewInviteTeam() {
           They get access to every project in acme.
         </Card.Description>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-4">
+      <Card.Content compact className="space-y-4">
         <div className="space-y-1.5">
           <Label className="text-xs">Email</Label>
           <Input size="sm" placeholder="teammate@acme.com" aria-label="Email" />

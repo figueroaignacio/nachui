@@ -13,7 +13,7 @@ export function PreviewAiComposer() {
           Drop a file or paste a stack trace to give it context.
         </Card.Description>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-2.5">
+      <Card.Content compact className="space-y-2.5">
         <PromptInput>
           <PromptInput.Body>
             <PromptInput.Textarea

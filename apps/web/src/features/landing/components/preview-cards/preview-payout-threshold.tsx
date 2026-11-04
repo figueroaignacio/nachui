@@ -15,7 +15,7 @@ export function PreviewPayoutThreshold() {
           Set the minimum balance required before a payout is triggered.
         </Card.Description>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-5">
+      <Card.Content compact className="space-y-5">
         <div className="space-y-1.5">
           <Label className="text-xs">Preferred Currency</Label>
           <Select defaultValue="usd">

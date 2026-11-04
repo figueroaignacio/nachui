@@ -22,7 +22,7 @@ export function PreviewDeployReview() {
           </Badge>
         </div>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-3">
+      <Card.Content compact className="space-y-3">
         <div className="bg-surface-muted space-y-2.5 rounded-md p-3.5 text-xs">
           {changes.map((change) => (
             <div key={change.file} className="flex justify-between">

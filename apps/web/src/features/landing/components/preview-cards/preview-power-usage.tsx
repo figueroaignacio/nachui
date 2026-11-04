@@ -18,7 +18,7 @@ export function PreviewPowerUsage() {
         <Card.Title className="text-sm font-semibold">Power Usage</Card.Title>
         <Card.Description className="text-xs">Whole Home</Card.Description>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-4">
+      <Card.Content compact className="space-y-4">
         <div
           className="flex h-24 items-end gap-1.5"
           role="img"

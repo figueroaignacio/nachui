@@ -36,7 +36,7 @@ export function PreviewPaymentsNav() {
           </Breadcrumb.List>
         </Breadcrumb>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-2">
+      <Card.Content compact className="space-y-2">
         {actions.map((action) => (
           <div
             key={action.title}

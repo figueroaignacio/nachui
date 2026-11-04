@@ -18,7 +18,7 @@ export function PreviewPromptStarters() {
         <Card.Title className="text-sm font-semibold">Start a thread</Card.Title>
         <Card.Description className="text-xs">Pick one, or just start typing.</Card.Description>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-4">
+      <Card.Content compact className="space-y-4">
         <Suggestion.Group className="flex-wrap overflow-x-visible">
           {STARTERS.map((starter) => (
             <Suggestion key={starter} suggestion={starter} size="sm" />

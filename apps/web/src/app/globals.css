@@ -198,16 +198,14 @@ body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
 }
 
 /*
- * The hero wall: a masonry of real component previews drifting up a plane
- * tilted away from the reader. Columns keep their natural card heights, which
- * is what makes it read as a wall of components and not a row of tiles.
- *
- * The tilt is what keeps it reading as a backdrop instead of a carousel you
- * are meant to operate, so the whole thing is inert.
+ * The hero wall. From lg up it is a flat grid of real component previews that
+ * fades out at the bottom. Below lg the same columns sit zoomed out on a tilted
+ * plane, so they read as a wall seen from afar and not as a list of cards.
+ * Either way it is a backdrop you look at, so the whole thing is inert.
  */
 .preview-stage {
   mask-image:
-    linear-gradient(to bottom, transparent 8%, black 42%, black 80%, transparent),
+    linear-gradient(to bottom, transparent, black 24%, black 80%, transparent),
     linear-gradient(to right, transparent, black 6%, black 94%, transparent);
   mask-composite: intersect;
 }
@@ -219,13 +217,6 @@ body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
   transform-origin: 50% 0;
 }
 
-/*
- * On a phone the wall is scaled down instead of reflowed, so more columns fit
- * across and it still reads as a wall of components. The columns keep their
- * layout size, so the copy-taller-than-stage rule from WallColumn still holds:
- * at 0.5 the stage sees twice its height in plane space, which is why the
- * stage is shorter on a phone than the shortest column would otherwise allow.
- */
 @media (min-width: 40rem) {
   .preview-plane {
     --preview-scale: 0.55;
@@ -233,45 +224,12 @@ body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
 }
 
 @media (min-width: 64rem) {
+  .preview-stage {
+    mask-image: linear-gradient(to bottom, black 78%, transparent);
+  }
+
   .preview-plane {
-    --preview-scale: 0.68;
-  }
-}
-
-.preview-column {
-  display: flex;
-  flex-direction: column;
-  height: max-content;
-}
-
-@media (min-width: 40rem) {
-  .preview-column {
-    will-change: transform;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) and (min-width: 40rem) {
-  .preview-column {
-    animation: preview-drift var(--preview-duration, 90s) linear infinite;
-  }
-
-  .preview-column[data-direction='reverse'] {
-    animation-direction: reverse;
-  }
-
-  .preview-stage[data-paused] .preview-column {
-    animation-play-state: paused;
-    will-change: auto;
-  }
-}
-
-@keyframes preview-drift {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-
-  to {
-    transform: translate3d(0, -50%, 0);
+    transform: none;
   }
 }
 
@@ -486,11 +444,6 @@ body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
 
   --brand: oklch(78% 0.12 75);
   --brand-foreground: oklch(14.5% 0 0);
-
-  --silk-base: oklch(10% 0.006 75);
-  --silk-fold: oklch(17% 0.0054 75);
-  --silk-deep: oklch(26% 0.0054 75);
-  --silk-glow: oklch(70% 0.12 75 / 0.35);
 }
 
 /* Dark background explorations: activate one with data-ink on <html>. Temporary. */
@@ -507,9 +460,6 @@ body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
   --border: oklch(19% 0 0);
   --rule: oklch(19% 0 0);
   --input: oklch(26% 0 0);
-  --silk-base: oklch(8% 0 0);
-  --silk-fold: oklch(15% 0 0);
-  --silk-deep: oklch(24% 0.006 80);
 }
 
 .dark[data-ink='ink'] {
@@ -525,9 +475,6 @@ body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
   --border: oklch(21% 0.0154 262);
   --rule: oklch(21% 0.0154 262);
   --input: oklch(28% 0.0121 262);
-  --silk-base: oklch(10% 0.022 262);
-  --silk-fold: oklch(17% 0.0198 262);
-  --silk-deep: oklch(26% 0.0198 262);
 }
 
 .dark[data-ink='espresso'] {
@@ -543,9 +490,6 @@ body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
   --border: oklch(21% 0.0098 62);
   --rule: oklch(21% 0.0098 62);
   --input: oklch(28% 0.0077 62);
-  --silk-base: oklch(10% 0.014 62);
-  --silk-fold: oklch(17% 0.0126 62);
-  --silk-deep: oklch(26% 0.0126 62);
 }
 
 .dark[data-ink='carbon-warmer'] {
@@ -561,9 +505,6 @@ body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
   --border: oklch(21% 0.0063 72);
   --rule: oklch(21% 0.0063 72);
   --input: oklch(28% 0.005 72);
-  --silk-base: oklch(10% 0.009 72);
-  --silk-fold: oklch(17% 0.0081 72);
-  --silk-deep: oklch(26% 0.0081 72);
 }
 
 /* One fixed row on every screen. Sticky rails read this to sit right under it. */
@@ -571,96 +512,6 @@ body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
   --site-header-height: 3.5rem;
 }
 
-/* Opaque, but tinted with the same fold colour the dome puts behind it, so the
-   header reads as part of the backdrop without letting the page show through. */
 .site-header {
   background-color: var(--background);
-}
-
-.dark .site-header {
-  background-color: color-mix(in oklab, var(--background) 78%, var(--silk-fold));
-}
-
-.page-backdrop {
-  display: none;
-}
-
-.dark .page-backdrop {
-  display: block;
-  position: absolute;
-  inset: 0 0 auto;
-  z-index: -1;
-  block-size: min(72vh, 42rem);
-  overflow: hidden;
-  pointer-events: none;
-  mask-image: radial-gradient(120% 100% at 50% 0%, black 45%, transparent 78%);
-}
-
-.page-backdrop-silk {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    100deg,
-    var(--silk-base) 0%,
-    var(--silk-fold) 20%,
-    var(--silk-base) 36%,
-    var(--silk-deep) 58%,
-    var(--silk-fold) 76%,
-    var(--silk-base) 100%
-  );
-}
-
-/* Slow folds running across the sheet. Wide and low contrast on purpose: they
-   should read as the fabric catching light, not as stripes. Two layers drifting
-   against each other is what makes the light move instead of just sliding. */
-.page-backdrop-waves {
-  position: absolute;
-  inset: -25% -35%;
-  opacity: 0.6;
-  background-image:
-    radial-gradient(
-      130% 26% at 18% 18%,
-      color-mix(in oklab, var(--silk-fold) 85%, transparent) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      150% 24% at 42% 62%,
-      color-mix(in oklab, var(--silk-fold) 60%, transparent) 0%,
-      transparent 75%
-    );
-}
-
-.page-backdrop-waves::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(
-      115% 22% at 82% 34%,
-      color-mix(in oklab, var(--silk-deep) 85%, transparent) 0%,
-      transparent 72%
-    ),
-    radial-gradient(
-      125% 20% at 60% 80%,
-      color-mix(in oklab, var(--silk-deep) 60%, transparent) 0%,
-      transparent 74%
-    );
-}
-
-/* The warm glow the portfolio's silk carries, parked where the light would
-   catch the fold. Static: the sheet reads as lit, not as moving. */
-.page-backdrop-glow {
-  position: absolute;
-  inset: -20%;
-  filter: blur(48px);
-  background: radial-gradient(35% 30% at 65% 30%, var(--silk-glow), transparent 70%);
-}
-
-.page-backdrop-grain {
-  position: absolute;
-  inset: 0;
-  opacity: 0.35;
-  mix-blend-mode: screen;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 240px 240px;
 }

@@ -18,7 +18,7 @@ export function PreviewAgentRun() {
           </Badge>
         </div>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-3">
+      <Card.Content compact className="space-y-3">
         <Task defaultOpen={false}>
           <Task.Trigger title="Read the schema" status="complete" />
           <Task.Content>

@@ -34,7 +34,7 @@ export function PreviewNotificationPrefs() {
           Choose which email and push alerts you want to receive.
         </Card.Description>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-4">
+      <Card.Content compact className="space-y-4">
         {preferences.map((pref) => (
           <div key={pref.title} className="flex items-start gap-3">
             <Checkbox defaultChecked={pref.checked} aria-label={pref.title} className="mt-0.5" />

@@ -10,7 +10,7 @@ export function PreviewContextWindow() {
         <Card.Description className="text-xs">Context window</Card.Description>
         <Card.Title className="text-3xl font-bold tracking-tight">84.3K</Card.Title>
       </Card.Header>
-      <Card.Content compact className="mt-4">
+      <Card.Content compact>
         <Context
           maxTokens={200000}
           usedTokens={84320}

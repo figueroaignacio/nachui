@@ -15,7 +15,7 @@ export function PreviewDividendIncome() {
           Quarterly dividend payouts across your portfolio holdings.
         </Card.Description>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-2">
+      <Card.Content compact className="space-y-2">
         {holdings.map((holding) => (
           <div
             key={holding.name}

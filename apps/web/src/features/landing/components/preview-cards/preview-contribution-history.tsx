@@ -17,7 +17,7 @@ export function PreviewContributionHistory() {
         <Card.Title className="text-sm font-semibold">Contribution History</Card.Title>
         <Card.Description className="text-xs">Last 6 months of activity</Card.Description>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-4">
+      <Card.Content compact className="space-y-4">
         <div
           className="flex h-32 items-end gap-2"
           role="img"
@@ -36,16 +36,12 @@ export function PreviewContributionHistory() {
         </div>
         <div className="grid grid-cols-2 gap-2">
           <div className="bg-surface-muted rounded-md p-3">
-            <span className="text-muted-foreground text-[9px] font-semibold tracking-wider uppercase">
-              Upcoming
-            </span>
+            <span className="text-muted-foreground text-[9px] font-semibold">Upcoming</span>
             <div className="text-foreground mt-1 text-sm font-bold">May 2024</div>
             <div className="text-muted-foreground text-xs">Scheduled</div>
           </div>
           <div className="bg-surface-muted rounded-md p-3">
-            <span className="text-muted-foreground text-[9px] font-semibold tracking-wider uppercase">
-              Savings Plan
-            </span>
+            <span className="text-muted-foreground text-[9px] font-semibold">Savings Plan</span>
             <div className="text-foreground mt-1 text-sm font-bold">Accelerated</div>
             <div className="text-muted-foreground text-xs">Recurring</div>
           </div>

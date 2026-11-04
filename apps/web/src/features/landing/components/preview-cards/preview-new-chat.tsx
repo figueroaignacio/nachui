@@ -9,7 +9,7 @@ export function PreviewNewChat() {
         <Card.Title className="text-sm font-semibold">New Chat</Card.Title>
         <Card.Description className="text-xs">How can I help you today?</Card.Description>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-6">
+      <Card.Content compact className="space-y-6">
         <div className="flex flex-col items-center gap-1.5 py-6 text-center">
           <div className="text-foreground text-sm font-bold">Morning, nachui!</div>
           <p className="text-muted-foreground max-w-52 text-[11px] leading-relaxed">

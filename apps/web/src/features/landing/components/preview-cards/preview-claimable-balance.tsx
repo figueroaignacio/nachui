@@ -19,7 +19,7 @@ export function PreviewClaimableBalance() {
           </Badge>
         </div>
       </Card.Header>
-      <Card.Content compact className="mt-4 space-y-4">
+      <Card.Content compact className="space-y-4">
         <div className="bg-surface-muted space-y-2.5 rounded-md p-3.5 text-xs">
           {rows.map((row) => (
             <div key={row.label} className="flex justify-between">
