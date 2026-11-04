@@ -61,7 +61,7 @@ export async function SpriteView({ id }: { id: string }) {
           </div>
         </div>
 
-        <h2 className="text-muted-foreground mt-12 mb-4 font-mono text-[0.68rem] tracking-widest uppercase">
+        <h2 className="text-muted-foreground mt-12 mb-4 font-mono text-[0.68rem]">
           {t('statesTitle')}
         </h2>
         <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -80,7 +80,7 @@ export async function SpriteView({ id }: { id: string }) {
           ))}
         </ul>
 
-        <h2 className="text-muted-foreground mt-12 mb-4 font-mono text-[0.68rem] tracking-widest uppercase">
+        <h2 className="text-muted-foreground mt-12 mb-4 font-mono text-[0.68rem]">
           {t('recipeTitle')}
         </h2>
         <dl className="border-border divide-border divide-y overflow-hidden rounded-lg border font-mono text-[0.8rem]">
@@ -105,7 +105,7 @@ export async function SpriteView({ id }: { id: string }) {
           ))}
         </dl>
 
-        <h2 className="text-muted-foreground mt-12 mb-4 font-mono text-[0.68rem] tracking-widest uppercase">
+        <h2 className="text-muted-foreground mt-12 mb-4 font-mono text-[0.68rem]">
           {t('codeTitle')}
         </h2>
         <Frame spacing="sm">

@@ -42,7 +42,7 @@ const headingStyles = {
   h3: 'font-heading mt-10 mb-3 scroll-m-20 text-base font-bold tracking-[-0.02em] text-foreground',
   h4: 'font-heading mt-8 mb-2 scroll-m-20 text-[15px] font-semibold tracking-tight text-foreground/90',
   h5: 'font-heading mt-6 scroll-m-20 text-[15px] font-semibold text-foreground/90',
-  h6: 'font-heading mt-6 scroll-m-20 text-xs font-medium tracking-wide uppercase text-muted-foreground',
+  h6: 'font-heading mt-6 scroll-m-20 text-xs font-medium text-muted-foreground',
 } as const;
 
 function createHeading(Tag: keyof typeof headingStyles) {

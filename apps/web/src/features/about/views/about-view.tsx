@@ -64,7 +64,7 @@ export async function AboutView() {
               />
             </div>
             <div className="pt-1">
-              <p className="text-muted-foreground mb-1 font-mono text-[0.68rem] tracking-widest uppercase">
+              <p className="text-muted-foreground mb-1 font-mono text-[0.68rem]">
                 About the author
               </p>
               <h1 className="font-serif text-[clamp(1.6rem,4vw,2.2rem)] leading-tight tracking-tight">
@@ -96,9 +96,7 @@ export async function AboutView() {
                 <div className="text-foreground mb-1 font-serif text-2xl tracking-tight">
                   {s.value}
                 </div>
-                <div className="text-muted-foreground font-mono text-[0.63rem] tracking-widest uppercase">
-                  {s.label}
-                </div>
+                <div className="text-muted-foreground font-mono text-[0.63rem]">{s.label}</div>
               </div>
             ))}
           </div>
@@ -116,7 +114,7 @@ export async function AboutView() {
                 <span className="flex items-center gap-3">
                   <Badge
                     variant="outline"
-                    className="bg-muted text-muted-foreground font-mono text-[0.63rem] tracking-widest uppercase"
+                    className="bg-muted text-muted-foreground font-mono text-[0.63rem]"
                   >
                     {action.meta}
                   </Badge>

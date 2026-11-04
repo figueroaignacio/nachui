@@ -41,9 +41,7 @@ function Segmented<T extends number>({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-muted-foreground font-mono text-[0.68rem] tracking-widest uppercase">
-        {label}
-      </span>
+      <span className="text-muted-foreground font-mono text-[0.68rem]">{label}</span>
       <div
         role="group"
         aria-label={label}

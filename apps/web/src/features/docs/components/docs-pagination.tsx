@@ -44,7 +44,7 @@ function PaginationLink({
           {label}
           {isNext && <Icon className="h-4 w-4" />}
         </span>
-        <span className="font-heading group-hover:text-brand text-lg leading-none font-black tracking-[-0.04em] uppercase transition-colors">
+        <span className="font-heading group-hover:text-brand text-lg leading-none font-black tracking-[-0.04em] transition-colors">
           {item.title}
         </span>
       </Stack>

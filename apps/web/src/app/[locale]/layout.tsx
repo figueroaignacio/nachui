@@ -2,7 +2,6 @@ import '@/app/globals.css';
 import { SkipLink } from '@/components/common/skip-link';
 import { ThemeInitScript } from '@/components/common/theme-init-script';
 import { AiChat } from '@/features/chat/containers/ai-chat';
-import { Backdrop } from '@/components/layout/backdrop';
 import { Footer } from '@/components/layout/footer';
 import { PageFrame } from '@/components/layout/page-frame';
 import { SiteHeader } from '@/features/shell/components/site-header';
@@ -80,7 +79,6 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
         className={`relative ${fontSans.variable} ${fontHeading.variable} ${fontSerif.variable} ${fontCode.variable}`}
       >
         <SkipLink />
-        <Backdrop />
         <NextIntlClientProvider>
           <Providers>
             <SiteHeader />

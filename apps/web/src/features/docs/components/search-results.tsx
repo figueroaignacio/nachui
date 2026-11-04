@@ -59,7 +59,7 @@ function ResultItem({
             <NavBadge badge={badge} />
           </div>
           {meta && (
-            <span className="text-muted-foreground/40 shrink-0 text-[10px] font-medium tracking-wide uppercase">
+            <span className="text-muted-foreground/40 shrink-0 text-[10px] font-medium">
               {meta}
             </span>
           )}
@@ -73,7 +73,7 @@ function SectionHeader({ label }: { label: string }) {
   return (
     <Separator
       label={label}
-      className="[&>span:last-child]:bg-border/30 [&>span:nth-child(2)]:text-muted-foreground/40 px-3 pt-3 pb-1 first:pt-0 [&>span:first-child]:hidden [&>span:nth-child(2)]:text-[10px] [&>span:nth-child(2)]:font-semibold [&>span:nth-child(2)]:tracking-widest [&>span:nth-child(2)]:uppercase"
+      className="[&>span:last-child]:bg-border/30 [&>span:nth-child(2)]:text-muted-foreground/40 px-3 pt-3 pb-1 first:pt-0 [&>span:first-child]:hidden [&>span:nth-child(2)]:text-[10px] [&>span:nth-child(2)]:font-semibold"
     />
   );
 }

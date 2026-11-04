@@ -145,10 +145,7 @@ export function BrickCodeViewer({ files }: BrickCodeViewerProps) {
     <div className="dark text-foreground bg-background flex min-h-[500px] flex-col overflow-hidden rounded-lg md:flex-row">
       <div className="flex flex-col border-b md:w-64 md:border-r md:border-b-0">
         <div className="p-3">
-          <Typography
-            variant="h4"
-            className="text-muted-strong text-xs font-semibold tracking-wider uppercase"
-          >
+          <Typography variant="h4" className="text-muted-strong text-xs font-semibold">
             Files
           </Typography>
         </div>
