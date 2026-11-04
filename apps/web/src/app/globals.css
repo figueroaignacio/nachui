@@ -78,6 +78,11 @@ body:has([data-chat-resizer][data-dragging]) [data-docs-grid] {
   }
 }
 
+/* Keeps the footer readable above the floating ask box at the end of a page. */
+body:has([data-chat-launcher]) footer {
+  padding-bottom: 7rem;
+}
+
 @media (min-width: 80rem) {
   [data-docs-grid] {
     transition: grid-template-columns 300ms cubic-bezier(0.4, 0, 0.2, 1);
