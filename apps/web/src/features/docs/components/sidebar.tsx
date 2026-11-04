@@ -179,7 +179,6 @@ export function Sidebar({ previews = {} }: SidebarProps) {
           {docsNavigation.map((section: DocSection) => (
             <div key={section.id} data-section={section.id} className="mb-6 last:mb-0">
               <p className="text-muted-foreground px-2.5 font-mono text-[11px] lowercase">
-                <span className="text-muted-foreground/50">./</span>
                 {section.title}
               </p>
               <ul className="mt-2">

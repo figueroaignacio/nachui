@@ -92,7 +92,6 @@ export function Toc({ toc, footer }: TocPanelProps) {
       transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
     >
       <p className="text-muted-foreground mb-2 px-2 font-mono text-[11px] lowercase">
-        <span className="text-muted-foreground/50">./</span>
         {t('label')}
       </p>
 
