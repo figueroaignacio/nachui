@@ -12,7 +12,7 @@
     "label": "Product",
     "items": [
       {
-        "title": "UI Elements",
+        "title": "Components",
         "description": "Buttons, dialogs, tables and every interactive primitive.",
         "href": "/docs/elements/ui"
       },
@@ -25,11 +25,6 @@
         "title": "AI Elements",
         "description": "Chat, prompts and streaming primitives for AI apps.",
         "href": "/docs/elements/ai"
-      },
-      {
-        "title": "Hybrids",
-        "description": "Chat, composer and agent run, assembled from the elements.",
-        "href": "/docs/elements/hybrids"
       },
       {
         "title": "Components",
@@ -88,7 +83,7 @@
         "href": "/docs"
       },
       {
-        "title": "UI",
+        "title": "Components",
         "href": "/docs/elements/ui"
       },
       {
@@ -96,12 +91,8 @@
         "href": "/docs/elements/layout"
       },
       {
-        "title": "AI",
+        "title": "AI Elements",
         "href": "/docs/elements/ai"
-      },
-      {
-        "title": "Hybrids",
-        "href": "/docs/elements/hybrids"
       },
       {
         "title": "Components",

@@ -12,7 +12,7 @@
     "label": "Producto",
     "items": [
       {
-        "title": "Elementos UI",
+        "title": "Componentes",
         "description": "Botones, diálogos, tablas y todas las primitivas interactivas.",
         "href": "/docs/elements/ui"
       },
@@ -25,11 +25,6 @@
         "title": "Elementos AI",
         "description": "Chat, prompts y primitivos de streaming para apps con IA.",
         "href": "/docs/elements/ai"
-      },
-      {
-        "title": "Hybrids",
-        "description": "Chat, composer y agent run, armados con los elements.",
-        "href": "/docs/elements/hybrids"
       },
       {
         "title": "Componentes",
@@ -88,7 +83,7 @@
         "href": "/docs"
       },
       {
-        "title": "UI",
+        "title": "Componentes",
         "href": "/docs/elements/ui"
       },
       {
@@ -96,12 +91,8 @@
         "href": "/docs/elements/layout"
       },
       {
-        "title": "AI",
+        "title": "Elementos AI",
         "href": "/docs/elements/ai"
-      },
-      {
-        "title": "Hybrids",
-        "href": "/docs/elements/hybrids"
       },
       {
         "title": "Componentes",

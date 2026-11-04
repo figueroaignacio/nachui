@@ -16,20 +16,16 @@
           "href": "/docs"
         },
         {
-          "title": "AI",
+          "title": "Elementos AI",
           "href": "/docs/elements/ai"
         },
         {
-          "title": "UI",
+          "title": "Componentes",
           "href": "/docs/elements/ui"
         },
         {
           "title": "Layout",
           "href": "/docs/elements/layout"
-        },
-        {
-          "title": "Hybrids",
-          "href": "/docs/elements/hybrids"
         }
       ]
     },
@@ -69,7 +65,7 @@
     },
     {
       "id": "ai",
-      "title": "AI",
+      "title": "Elementos AI",
       "items": [
         {
           "title": "Actions",
@@ -145,7 +141,7 @@
     },
     {
       "id": "ui",
-      "title": "UI",
+      "title": "Componentes",
       "items": [
         {
           "title": "Accordion",
