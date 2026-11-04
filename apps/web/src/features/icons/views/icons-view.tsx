@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { Separator } from '@repo/ui/components/separator';
 import { getTranslations } from 'next-intl/server';
 import { IconsBrowser } from '../components/icons-browser';
 import { getIconCatalog } from '../lib/get-icon-catalog';
@@ -9,21 +8,12 @@ export async function IconsView() {
   const icons = await getIconCatalog();
 
   return (
-    <section className="px-6 py-24">
-      <div className="mx-auto max-w-5xl">
-        <p className="text-muted-foreground mb-1 font-mono text-[0.68rem]">{t('eyebrow')}</p>
-        <h1 className="font-serif text-[clamp(1.6rem,4vw,2.2rem)] leading-tight tracking-tight">
-          {t('title')}
-        </h1>
-        <p className="text-muted-foreground mt-3 max-w-2xl text-sm leading-relaxed">
-          {t('subtitle')}
-        </p>
-        <p className="text-muted-foreground mt-3 max-w-2xl text-sm leading-relaxed">
-          {t('explainer', { count: icons.length })}
-        </p>
-
-        <Separator className="my-10" />
-
+    <section className="w-full pt-16 pb-10 md:pt-24">
+      <h1 className="font-heading text-foreground text-[clamp(2.25rem,min(11vw,6vh),2.75rem)] leading-[0.95] font-bold tracking-[-0.04em] lg:text-[clamp(2.75rem,min(4.5vw,8vh),3.25rem)]">
+        {t('title')}
+        <span className="bg-brand ml-[0.05em] inline-block size-[0.16em]" />
+      </h1>
+      <div className="mt-10 md:mt-12">
         <Suspense fallback={null}>
           <IconsBrowser icons={icons} />
         </Suspense>
