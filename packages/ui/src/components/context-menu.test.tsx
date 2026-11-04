@@ -92,7 +92,7 @@ describe('ContextMenu', () => {
     await screen.findByRole('menu');
 
     expect(screen.getByText('Paste')).toHaveAttribute('aria-disabled', 'true');
-    expect(screen.getByText('Delete')).toHaveClass('text-destructive');
+    expect(screen.getByText('Delete')).toHaveClass('text-destructive-text');
   });
 
   it('moves focus between items with arrow keys', async () => {

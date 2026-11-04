@@ -3,7 +3,7 @@ import * as React from 'react';
 import { cn } from '../lib/cn';
 
 const kbdVariants = cva(
-  'inline-flex items-center justify-center border border-b-2 font-mono font-medium text-muted-foreground transition-all gap-1',
+  'inline-flex items-center justify-center border border-b-2 font-mono font-medium text-muted-foreground transition-colors gap-1',
   {
     variants: {
       size: {

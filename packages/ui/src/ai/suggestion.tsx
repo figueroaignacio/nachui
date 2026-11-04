@@ -78,7 +78,9 @@ const SuggestionGroup = ({
       data-wrap={wrap ? '' : undefined}
       className={cn(
         'flex w-full items-center gap-2',
-        wrap ? 'flex-wrap' : 'hide-scrollbar overflow-x-auto',
+        wrap
+          ? 'flex-wrap'
+          : 'hide-scrollbar overflow-x-auto [mask-image:linear-gradient(to_right,black_calc(100%-2rem),transparent)]',
         className,
       )}
       {...props}

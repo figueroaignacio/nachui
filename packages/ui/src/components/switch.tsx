@@ -17,7 +17,7 @@ function Switch({
   return (
     <label
       className={cn(
-        'has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-background border-border/60 relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border transition-colors has-disabled:cursor-not-allowed has-disabled:opacity-40 has-[:focus-visible]:ring-1 has-[:focus-visible]:ring-offset-1 has-[:focus-visible]:outline-none',
+        'has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-background border-border/60 relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border transition-colors has-disabled:cursor-not-allowed has-disabled:opacity-40 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:outline-none',
         'before:absolute before:-inset-x-1 before:-inset-y-1 before:rounded-full pointer-coarse:before:-inset-x-1.5 pointer-coarse:before:-inset-y-3',
         className,
       )}

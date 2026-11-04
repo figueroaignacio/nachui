@@ -7,7 +7,7 @@ export function Indeterminate() {
       <p className="text-muted-foreground mt-1 text-xs">
         We do not know the total yet, so this bar keeps moving until the import finishes.
       </p>
-      <Progress className="mt-4" />
+      <Progress label="Loading" className="mt-4" />
       <p className="text-muted-foreground mt-3 text-xs">
         You can close this page, we will email you when it is done.
       </p>

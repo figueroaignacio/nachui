@@ -9,9 +9,7 @@ export function Default() {
   return (
     <ScrollArea className="border-border bg-card h-72 w-56 rounded-lg border">
       <div className="p-3">
-        <p className="text-muted-foreground mb-3 px-1 text-xs font-medium tracking-wide uppercase">
-          Releases
-        </p>
+        <p className="text-muted-foreground mb-3 px-1 text-xs font-medium">Releases</p>
         <ul className="flex flex-col">
           {versions.map((version) => (
             <li

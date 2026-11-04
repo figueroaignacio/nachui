@@ -680,7 +680,7 @@ const DataTableContent = ({
                         )}
                       />
                     ) : (
-                      <ArrowUpDownIcon size={12} className="opacity-50" />
+                      <ArrowUpDownIcon size={12} className="text-muted-foreground" />
                     )}
                   </button>
                 ) : (

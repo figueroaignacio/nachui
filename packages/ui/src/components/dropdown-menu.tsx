@@ -360,7 +360,7 @@ const DropdownMenuTrigger = ({
         transition={springs.snappy}
         style={DROPDOWN_ICON_STYLE}
       >
-        <ChevronDownIcon className="h-4 w-4 opacity-50" size={16} />
+        <ChevronDownIcon className="text-muted-foreground size-4" size={16} />
       </motion.span>
     </motion.button>
   );
@@ -494,9 +494,9 @@ const itemClassName = (disabled: boolean, variant: 'default' | 'destructive') =>
   cn(
     'relative flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none select-none',
     'transition-colors duration-150',
-    'focus-visible:bg-muted focus:bg-muted pointer-coarse:py-2.5',
+    'focus:bg-muted pointer-coarse:py-2.5',
     disabled && 'pointer-events-none opacity-40',
-    variant === 'destructive' && 'text-destructive focus:text-destructive',
+    variant === 'destructive' && 'text-destructive-text focus:text-destructive-text',
   );
 
 const DropdownMenuItem = ({
@@ -684,10 +684,7 @@ const DropdownLabel = ({
   return (
     <div
       role="presentation"
-      className={cn(
-        'text-muted-foreground px-2 py-2 text-xs font-semibold tracking-wider uppercase',
-        className,
-      )}
+      className={cn('text-muted-foreground px-2 py-2 text-xs font-medium', className)}
     >
       {children}
     </div>

@@ -128,7 +128,13 @@ const BreadcrumbLink = ({
     const childRef = childProps.ref;
     return React.cloneElement(children as React.ReactElement<SlotProps>, {
       ...mergeSlotProps(
-        { ...props, className: cn('hover:text-foreground', className) },
+        {
+          ...props,
+          className: cn(
+            'hover:text-foreground focus-visible:ring-ring rounded-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
+            className,
+          ),
+        },
         childProps,
       ),
       ref:
@@ -142,7 +148,14 @@ const BreadcrumbLink = ({
   }
 
   return (
-    <a ref={ref} className={cn('hover:text-foreground', className)} {...props}>
+    <a
+      ref={ref}
+      className={cn(
+        'hover:text-foreground focus-visible:ring-ring rounded-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
+        className,
+      )}
+      {...props}
+    >
       {children}
     </a>
   );

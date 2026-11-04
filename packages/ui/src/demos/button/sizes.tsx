@@ -40,7 +40,7 @@ export function Sizes() {
           className="border-border bg-card rounded-xl border p-4"
         >
           <div className="min-w-0">
-            <p className="text-muted-foreground text-[11px] tracking-wide uppercase">{row.place}</p>
+            <p className="text-muted-foreground text-[11px]">{row.place}</p>
             <p className="mt-1 truncate text-sm font-medium">{row.title}</p>
             <p className="text-muted-foreground truncate text-xs">{row.detail}</p>
           </div>
@@ -64,7 +64,7 @@ export function Sizes() {
         className="border-border bg-card rounded-xl border p-4"
       >
         <div className="min-w-0">
-          <p className="text-muted-foreground text-[11px] tracking-wide uppercase">Toolbar</p>
+          <p className="text-muted-foreground text-[11px]">Toolbar</p>
           <p className="mt-1 truncate text-sm font-medium">Search this project</p>
           <p className="text-muted-foreground truncate text-xs">
             Icon size keeps the button square

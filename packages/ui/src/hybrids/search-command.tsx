@@ -508,7 +508,7 @@ const SearchCommandList = ({
             {group.title ? (
               <p
                 aria-hidden="true"
-                className="text-muted-foreground px-2 pt-2 pb-1 font-mono text-[10px] tracking-[0.2em] uppercase"
+                className="text-muted-foreground px-2 pt-2 pb-1 font-mono text-[11px]"
               >
                 {group.title}
               </p>

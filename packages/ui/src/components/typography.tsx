@@ -10,7 +10,7 @@ export const typographyVariants = cva('text-foreground', {
       h3: 'scroll-m-20 text-xl font-semibold tracking-tight',
       h4: 'scroll-m-20 text-lg font-semibold tracking-tight',
       h5: 'scroll-m-20 text-base font-medium',
-      h6: 'scroll-m-20 text-sm font-medium tracking-wide uppercase text-muted-foreground',
+      h6: 'scroll-m-20 text-sm font-medium text-muted-foreground',
       p: 'leading-7 [&:not(:first-child)]:mt-6',
       blockquote: 'mt-6 border-l border-border pl-5 font-serif italic text-muted-foreground',
       lead: 'text-lg text-muted-foreground leading-relaxed',

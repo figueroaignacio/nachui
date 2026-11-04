@@ -330,7 +330,7 @@ const DialogContent = ({
             exit="exit"
             style={DIALOG_STYLE}
             className={cn(
-              'bg-background fixed top-[50%] left-[50%] z-500 grid max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-xl translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto rounded-lg border p-6 shadow-lg outline-none',
+              'bg-popover text-popover-foreground fixed top-[50%] left-[50%] z-500 grid max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-xl translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto rounded-lg border p-6 shadow-lg outline-none',
               className,
             )}
             {...props}

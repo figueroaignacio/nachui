@@ -45,13 +45,13 @@ export function Default() {
       </NavigationMenu.Item>
       <a
         href="#docs"
-        className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+        className="text-muted-foreground hover:text-foreground flex min-h-9 items-center text-sm transition-colors"
       >
         Docs
       </a>
       <a
         href="#pricing"
-        className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+        className="text-muted-foreground hover:text-foreground flex min-h-9 items-center text-sm transition-colors"
       >
         Pricing
       </a>

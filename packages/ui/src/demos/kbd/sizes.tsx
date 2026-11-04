@@ -42,7 +42,7 @@ export function Sizes() {
           className="border-border bg-card rounded-xl border p-4"
         >
           <div className="min-w-0">
-            <p className="text-muted-foreground text-[11px] tracking-wide uppercase">{row.place}</p>
+            <p className="text-muted-foreground text-[11px]">{row.place}</p>
             <p className="mt-1 truncate text-sm font-medium">{row.action}</p>
           </div>
           <KbdGroup>

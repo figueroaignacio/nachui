@@ -693,7 +693,7 @@ const SelectItem = ({
       className={cn(
         'relative flex cursor-pointer items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-none select-none',
         'transition-colors duration-150',
-        'hover:bg-muted focus-visible:bg-muted focus:bg-muted',
+        'hover:bg-muted focus:bg-muted',
         disabled && 'pointer-events-none opacity-40',
         className,
       )}
@@ -742,10 +742,7 @@ const SelectLabel = ({ children, className }: SelectLabelProps): React.JSX.Eleme
     <div
       id={group?.labelId}
       role="presentation"
-      className={cn(
-        'text-muted-foreground px-2 py-1.5 text-xs font-semibold tracking-wider uppercase',
-        className,
-      )}
+      className={cn('text-muted-foreground px-2 py-1.5 text-xs font-medium', className)}
     >
       {children}
     </div>

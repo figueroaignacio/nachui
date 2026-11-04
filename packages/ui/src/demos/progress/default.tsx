@@ -7,7 +7,7 @@ export function Default() {
         <p className="text-sm font-medium">Storage</p>
         <p className="text-muted-foreground text-xs">6.4 GB of 10 GB</p>
       </div>
-      <Progress value={64} className="mt-3" />
+      <Progress value={64} label="Storage used" className="mt-3" />
       <p className="text-muted-foreground mt-3 text-xs">
         Backups and build artifacts count toward this limit.
       </p>

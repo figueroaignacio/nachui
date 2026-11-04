@@ -85,7 +85,7 @@ Four font roles, all set by the host app through CSS variables:
 - **Sans** `var(--font-sans)`: body text, UI labels, form elements. Body letter spacing is 0.
 - **Heading** `var(--font-heading)`: every `h1` to `h6`.
 - **Serif** `var(--font-serif)`: long-form reading text through `.prose-reading` (falls back to sans).
-- **Mono** `var(--font-mono)`: code and the small uppercase `.section-label`.
+- **Mono** `var(--font-mono)`: code and the small `.section-label`.
 
 All text uses `antialiased` rendering.
 
@@ -97,11 +97,13 @@ The base is `--radius: 0.75rem`. Tailwind's radius utilities are derived from it
 
 | Utility       | Value                    | Use                                                                         |
 | ------------- | ------------------------ | --------------------------------------------------------------------------- |
-| `rounded-sm`  | `--radius * 0.5` (6px)   | Items inside a surface: menu items, tab pill, checkbox, tooltip             |
+| `rounded-sm`  | `--radius * 0.5` (6px)   | Items inside a surface: menu items, tab pill, tooltip                       |
 | `rounded-md`  | `--radius` (12px)        | Controls (button, input, select trigger), floating surfaces, toast, callout |
 | `rounded-lg`  | `--radius * 1.33` (16px) | Primary containers: card, dialog                                            |
 | `rounded-xl`  | `--radius * 1.66` (20px) | Composer-like shells such as the prompt input                               |
 | `rounded-2xl` | `--radius * 2` (24px)    | Drawer and similar large sheets                                             |
+
+The checkbox sits below the scale at `--radius * 0.33` (4px): at 16px wide, `rounded-sm` would read as a radio.
 
 `rounded-full` is for avatars, dots, icon buttons and pills that are pills on purpose (the context chip, attachment chips). Nested elements always use a smaller radius than the element that holds them.
 

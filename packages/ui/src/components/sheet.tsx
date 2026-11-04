@@ -335,7 +335,7 @@ const SheetContent = ({
             exit="exit"
             style={PANEL_STYLE}
             className={cn(
-              'bg-background border-border fixed z-500 flex max-w-full flex-col shadow-lg outline-none',
+              'bg-popover text-popover-foreground border-border fixed z-500 flex max-w-full flex-col shadow-lg outline-none',
               SIDE_CLASSES[side],
               horizontal ? HORIZONTAL_SIZE[size] : VERTICAL_SIZE[size],
               className,

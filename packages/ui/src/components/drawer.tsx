@@ -146,7 +146,7 @@ const DrawerOverlay = ({ className }: { className?: string }) => {
 };
 
 const drawerVariants = cva(
-  'fixed z-500 flex flex-col overflow-hidden bg-background border shadow-lg rounded-2xl',
+  'fixed z-500 flex flex-col overflow-hidden bg-popover text-popover-foreground border shadow-lg rounded-2xl',
   {
     variants: {
       side: {

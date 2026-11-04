@@ -21,8 +21,8 @@ const cardVariants = cva(
 const cardHeaderVariants = cva('flex flex-col space-y-1.5', {
   variants: {
     compact: {
-      true: 'px-4 pt-4',
-      false: 'px-6 pt-6',
+      true: 'p-4',
+      false: 'px-6 pt-6 pb-4 last:pb-6',
     },
   },
   defaultVariants: {
@@ -36,8 +36,8 @@ const cardDescriptionVariants = cva('text-sm text-muted-foreground leading-relax
 const cardContentVariants = cva('flex-1', {
   variants: {
     compact: {
-      true: 'p-4 pt-0',
-      false: 'p-6 pt-0',
+      true: 'p-4 pt-0 first:pt-4',
+      false: 'p-6 pt-0 first:pt-6',
     },
   },
   defaultVariants: {
@@ -54,8 +54,8 @@ const cardFooterVariants = cva('flex items-center', {
       between: 'justify-between',
     },
     compact: {
-      true: 'p-4 pt-0',
-      false: 'p-6 pt-0',
+      true: 'p-4 pt-0 first:pt-4',
+      false: 'p-6 pt-0 first:pt-6',
     },
   },
   defaultVariants: {

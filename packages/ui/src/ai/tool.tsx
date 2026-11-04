@@ -372,7 +372,7 @@ const ToolBlock = ({
     >
       <span
         className={cn(
-          'font-mono text-[10px] tracking-[0.2em] uppercase',
+          'font-mono text-[11px]',
           error ? 'text-destructive-text' : 'text-muted-foreground',
         )}
       >

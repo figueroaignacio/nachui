@@ -120,7 +120,7 @@ const SectionEyebrow = ({
     ref={ref}
     data-slot="section-eyebrow"
     className={cn(
-      'text-xs font-medium tracking-widest text-[color:var(--section-accent,var(--primary))] uppercase',
+      'text-xs font-medium text-[color:var(--section-accent,var(--primary))]',
       className,
     )}
     {...props}

@@ -9,7 +9,7 @@ export function Default() {
       collapse="sm"
       className="border-border bg-card w-full max-w-lg rounded-xl border p-4"
     >
-      <nav className="flex flex-col gap-1">
+      <nav aria-label="Settings" className="flex flex-col gap-1">
         {links.map((link, index) => (
           <a
             key={link}

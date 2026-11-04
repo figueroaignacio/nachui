@@ -56,13 +56,13 @@ There are no accent presets. To rebrand, redefine the tokens on `:root` and `.da
 - **Sans** `var(--font-sans)`: body text and UI labels, letter spacing 0.
 - **Heading** `var(--font-heading)`: every `h1` to `h6`.
 - **Serif** `var(--font-serif)`: long-form reading text through `.prose-reading`.
-- **Mono** `var(--font-mono)`: code and small uppercase section labels.
+- **Mono** `var(--font-mono)`: code and small section labels.
 - Always use `antialiased` rendering.
 
 ## Styling Rules
 
 1. **Radius scale** (base `--radius: 0.75rem`):
-   - `rounded-sm` (6px): items inside a surface, such as menu items, the tab pill, checkboxes and tooltips.
+   - `rounded-sm` (6px): items inside a surface, such as menu items, the tab pill and tooltips. The checkbox uses `--radius * 0.33` so it never reads as a radio.
    - `rounded-md` (12px): controls, floating surfaces, toasts and callouts.
    - `rounded-lg` (16px): primary containers such as cards and dialogs.
    - `rounded-xl` and `rounded-2xl`: only for composer shells and drawers.

@@ -44,7 +44,7 @@ function Radio({
         type="radio"
         ref={mergedRef}
         className={cn(
-          'peer focus-visible:ring-ring border-primary checked:border-primary checked:bg-primary bg-background ring-offset-background relative size-4 shrink-0 cursor-pointer appearance-none rounded-full border transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 forced-colors:checked:border-[Highlight]',
+          'peer focus-visible:ring-ring border-primary checked:border-primary checked:bg-primary bg-background ring-offset-background relative size-4 shrink-0 cursor-pointer appearance-none rounded-full border transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40 forced-colors:checked:border-[Highlight]',
           inputClassName,
         )}
         onChange={(e) => {

@@ -25,7 +25,7 @@ export function WithValue() {
         <p className="truncate text-sm font-medium">q3-report.pdf</p>
         <p className="text-muted-foreground shrink-0 text-xs">{percent}%</p>
       </div>
-      <Progress value={percent} max={100} className="mt-3" />
+      <Progress value={percent} max={100} label="Upload progress" className="mt-3" />
       <p className={cn('mt-3 text-xs', done ? 'text-success-text' : 'text-muted-foreground')}>
         {done ? 'Upload complete, ready to share' : `${uploaded} MB of ${TOTAL_MB} MB uploaded`}
       </p>
