@@ -203,16 +203,19 @@ body:has([data-chat-launcher]) footer {
 }
 
 /*
- * The hero wall. From lg up it is a flat grid of real component previews that
- * fades out at the bottom. Below lg the same columns sit zoomed out on a tilted
- * plane, so they read as a wall seen from afar and not as a list of cards.
- * Either way it is a backdrop you look at, so the whole thing is inert.
+ * The hero wall: a still masonry of real component previews on a plane tilted
+ * away from the reader, zoomed out so it reads as a wall seen from afar. It is
+ * a backdrop you look at, so the whole thing is inert.
  */
 .preview-stage {
   mask-image:
     linear-gradient(to bottom, transparent, black 24%, black 80%, transparent),
     linear-gradient(to right, transparent, black 6%, black 94%, transparent);
   mask-composite: intersect;
+}
+
+.preview-plane * {
+  animation: none;
 }
 
 .preview-plane {
@@ -229,12 +232,8 @@ body:has([data-chat-launcher]) footer {
 }
 
 @media (min-width: 64rem) {
-  .preview-stage {
-    mask-image: linear-gradient(to bottom, black 78%, transparent);
-  }
-
   .preview-plane {
-    transform: none;
+    --preview-scale: 0.68;
   }
 }
 
