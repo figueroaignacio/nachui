@@ -577,6 +577,11 @@ Replace the contents of your main stylesheet (the one you noted in the first ste
     @apply border-border;
   }
 
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
   }

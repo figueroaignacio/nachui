@@ -577,6 +577,11 @@ Reemplaza el contenido de tu hoja de estilos principal (la que anotaste en el pr
     @apply border-border;
   }
 
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
   }

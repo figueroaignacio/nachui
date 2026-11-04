@@ -237,6 +237,11 @@
     @apply border-border scroll-smooth;
   }
 
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']) {
+    cursor: pointer;
+  }
+
   @supports not selector(::-webkit-scrollbar) {
     * {
       scrollbar-width: thin;
@@ -292,7 +297,7 @@
 
 /* Editorial utility classes */
 .section-label {
-  @apply text-muted-foreground font-mono text-[11px] tracking-[0.2em] uppercase;
+  @apply text-muted-foreground font-mono text-[11px];
 }
 
 .section-rule {
