@@ -43,3 +43,32 @@ jobs:
 
       - name: Build
         run: pnpm turbo run build --filter=web --filter=api
+
+  browser:
+    name: Browser tests (Chromium, Firefox, WebKit)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install browsers
+        run: pnpm --filter @repo/ui exec playwright install --with-deps chromium firefox webkit
+
+      - name: Browser tests
+        run: pnpm --filter @repo/ui test:browser
+        env:
+          VITEST_BROWSERS: chromium,firefox,webkit
