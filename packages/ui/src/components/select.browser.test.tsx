@@ -60,4 +60,18 @@ describe('Select in a real browser', () => {
     await userEvent.keyboard('{Escape}');
     await expect.element(trigger).toHaveFocus();
   });
+
+  it('moves focus into the list when opened with the keyboard after tabbing in', async () => {
+    const screen = await render(
+      <div>
+        <button type="button">Before</button>
+        <Regions anchored="top" />
+      </div>,
+    );
+    screen.getByRole('button', { name: 'Before' }).element().focus();
+    await userEvent.tab();
+    await expect.element(screen.getByRole('combobox')).toHaveFocus();
+    await userEvent.keyboard('{ArrowDown}');
+    await expect.element(screen.getByRole('option', { name: 'Europe' })).toHaveFocus();
+  });
 });

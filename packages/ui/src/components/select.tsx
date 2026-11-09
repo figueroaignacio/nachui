@@ -232,6 +232,20 @@ function focusOption(container: HTMLElement | null, value: string) {
   (selected ?? options[0])?.focus();
 }
 
+function focusOptionWhenShown(
+  listRef: React.RefObject<HTMLElement | null>,
+  value: string,
+  attempts = 6,
+) {
+  requestAnimationFrame(() => {
+    const list = listRef.current;
+    focusOption(list, value);
+    if (attempts > 0 && list && !list.contains(document.activeElement)) {
+      focusOptionWhenShown(listRef, value, attempts - 1);
+    }
+  });
+}
+
 const SelectRoot = ({
   children,
   value: controlledValue,
@@ -398,7 +412,7 @@ const SelectTrigger = ({
       if (e.defaultPrevented) return;
       const opening = !isOpen;
       toggleMenu();
-      if (opening) requestAnimationFrame(() => focusOption(listRef.current, value));
+      if (opening) focusOptionWhenShown(listRef, value);
     },
     [onClick, toggleMenu, isOpen, listRef, value],
   );
@@ -420,7 +434,7 @@ const SelectTrigger = ({
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         openMenu();
-        requestAnimationFrame(() => focusOption(listRef.current, value));
+        focusOptionWhenShown(listRef, value);
       }
     },
     [onKeyDown, openMenu, closeMenu, isOpen, layer, listRef, value],
