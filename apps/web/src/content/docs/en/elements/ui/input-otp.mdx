@@ -1,0 +1,126 @@
+---
+title: Input OTP
+description: One-time codes, one box per character. SMS autofill and paste work out of the box.
+published: true
+date: 2026-11-09
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="input-otp" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="input-otp" />
+
+## Anatomy
+
+```tsx
+import { InputOTP } from '@/components/input-otp';
+```
+
+```tsx
+<InputOTP aria-label="Verification code" />
+```
+
+```tsx
+<InputOTP aria-label="Verification code">
+  <InputOTP.Group>
+    <InputOTP.Slot index={0} />
+    <InputOTP.Slot index={1} />
+    <InputOTP.Slot index={2} />
+  </InputOTP.Group>
+  <InputOTP.Separator />
+  <InputOTP.Group>
+    <InputOTP.Slot index={3} />
+    <InputOTP.Slot index={4} />
+    <InputOTP.Slot index={5} />
+  </InputOTP.Group>
+</InputOTP>
+```
+
+## Composition
+
+Use the following composition to build an `InputOTP`:
+
+```tree
+InputOTP
+├── InputOTP.Group
+│   └── InputOTP.Slot
+└── InputOTP.Separator
+```
+
+Without children it renders `length` slots in a single group. Pass groups and separators when you want to split the code, and give each slot its `index`.
+
+Under the slots there is one real `<input>` that holds the whole code. The slots only draw it. That is why the code from an SMS shows up as a keyboard suggestion on iOS and Android, why pasting a full code fills every slot, and why password managers and screen readers treat it like any other text field.
+
+## Variants
+
+### Default
+
+<ComponentPreview component="input-otp" demo="default" />
+
+### Alphanumeric
+
+Set `pattern="alphanumeric"` to accept letters too. The mobile keyboard switches to text. Make the value controlled if you want to normalize it, like turning it uppercase.
+
+<ComponentPreview component="input-otp" demo="alphanumeric" />
+
+`pattern` also takes a `RegExp`, which is tested against each character: `/^[A-F0-9]$/` accepts hex codes only.
+
+## Keyboard
+
+| Key                       | Action                                                         |
+| ------------------------- | -------------------------------------------------------------- |
+| Typing                    | Fills the active slot and moves on. Ignores other characters   |
+| `Backspace`               | Deletes the character before the caret                         |
+| `ArrowLeft`, `ArrowRight` | Moves between slots                                            |
+| `Home`, `End`             | Jumps to the first slot or the first empty one                 |
+| Paste                     | Fills the slots from the clipboard, skipping spaces and dashes |
+
+Clicking a slot moves the caret there, and typing replaces that character.
+
+## Accessibility
+
+- Name it like any input: a `<label htmlFor>` pointing at `id`, `aria-label` or `aria-labelledby`. These go to the real input.
+- The slots are hidden from assistive tech, so screen readers announce a single text field with its value.
+- The input has `autocomplete="one-time-code"` and `inputmode="numeric"` for digits.
+- `aria-invalid` turns the slot borders red. Point `aria-describedby` at the error message.
+
+## API Reference
+
+### InputOTP
+
+| Prop             | Type                                   | Default    | Description                                       |
+| ---------------- | -------------------------------------- | ---------- | ------------------------------------------------- |
+| `length`         | `number`                               | `6`        | Number of characters in the code                  |
+| `value`          | `string`                               | -          | Controlled value                                  |
+| `defaultValue`   | `string`                               | `''`       | Initial value when uncontrolled                   |
+| `onValueChange`  | `(value: string) => void`              | -          | Called when the value changes                     |
+| `onComplete`     | `(value: string) => void`              | -          | Called when every slot is filled                  |
+| `pattern`        | `'digits' \| 'alphanumeric' \| RegExp` | `'digits'` | Which characters are accepted                     |
+| `disabled`       | `boolean`                              | `false`    | Disables the input                                |
+| `name`           | `string`                               | -          | Submits the code with forms under this name       |
+| `required`       | `boolean`                              | -          | Blocks form submission until the code is complete |
+| `autoFocus`      | `boolean`                              | `false`    | Focuses the input on mount                        |
+| `id`             | `string`                               | -          | Id of the real input, for `<label htmlFor>`       |
+| `aria-invalid`   | `boolean`                              | -          | Marks the code as invalid                         |
+| `className`      | `string`                               | -          | Additional CSS classes for the wrapper            |
+| `inputClassName` | `string`                               | -          | Additional CSS classes for the hidden input       |
+| `ref`            | `Ref<HTMLInputElement>`                | -          | Ref to the real input                             |
+
+### InputOTP.Slot
+
+| Prop        | Type     | Default | Description                        |
+| ----------- | -------- | ------- | ---------------------------------- |
+| `index`     | `number` | -       | Position of the character it shows |
+| `className` | `string` | -       | Additional CSS classes             |
+
+Each slot sets `data-active` while the caret is on it and `data-filled` when it has a character.
+
+### InputOTP.Group, InputOTP.Separator
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |

@@ -1,0 +1,141 @@
+---
+title: Alert Dialog
+description: Ask before something destructive. Cancel gets focus first. Async actions wait.
+published: true
+date: 2026-11-09
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="alert-dialog" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="alert-dialog" />
+
+## Anatomy
+
+```tsx
+import { AlertDialog } from '@/components/alert-dialog';
+```
+
+```tsx
+<AlertDialog>
+  <AlertDialog.Trigger asChild>
+    <Button variant="outline">Delete project</Button>
+  </AlertDialog.Trigger>
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>Delete project?</AlertDialog.Title>
+      <AlertDialog.Description>This cannot be undone.</AlertDialog.Description>
+    </AlertDialog.Header>
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+      <AlertDialog.Action variant="destructive">Delete</AlertDialog.Action>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog>
+```
+
+## Composition
+
+Use the following composition to build an `AlertDialog`:
+
+```tree
+AlertDialog
+├── AlertDialog.Trigger
+└── AlertDialog.Content
+    ├── AlertDialog.Header
+    │   ├── AlertDialog.Title
+    │   └── AlertDialog.Description
+    └── AlertDialog.Footer
+        ├── AlertDialog.Cancel
+        └── AlertDialog.Action
+```
+
+Reach for it when the person has to answer before moving on, like deleting data or revoking access. For forms and anything that can be dismissed casually, use [Dialog](/docs/elements/ui/dialog). Compared to `Dialog`, an alert dialog:
+
+- Does not close when you click the backdrop and has no close button in the corner.
+- Puts focus on `AlertDialog.Cancel` when it opens, so a stray `Enter` never confirms.
+- Needs both a `Title` and a `Description`. It logs an error in the console when one is missing.
+
+## Variants
+
+### Default
+
+<ComponentPreview component="alert-dialog" demo="default" />
+
+### Async Action
+
+When `onClick` on `AlertDialog.Action` returns a promise, the dialog waits for it. The button shows a spinner and is marked busy, Cancel and `Escape` are disabled, and the dialog closes once the promise resolves. If it rejects, the dialog stays open so you can show what went wrong.
+
+<ComponentPreview component="alert-dialog" demo="async" />
+
+Call `event.preventDefault()` inside `onClick` to keep the dialog open without a promise, for example when a check fails.
+
+## Keyboard
+
+| Key         | Action                                                       |
+| ----------- | ------------------------------------------------------------ |
+| `Tab`       | Moves between the buttons, focus stays inside the dialog     |
+| `Shift+Tab` | Moves backwards, wrapping around                             |
+| `Escape`    | Same as pressing Cancel, then returns focus to the trigger   |
+| `Enter`     | Activates the focused button. Cancel has focus when it opens |
+
+## Accessibility
+
+- The content has `role="alertdialog"` and `aria-modal="true"`, named by the title and described by the description.
+- Escape runs Cancel, including its `onClick`, so both ways out behave the same.
+- Put `data-autofocus` on another element if Cancel is not the safest place for focus to start.
+- Page scroll is locked while it is open and focus goes back to the trigger when it closes.
+
+## API Reference
+
+### AlertDialog
+
+| Prop           | Type                      | Default | Description                          |
+| -------------- | ------------------------- | ------- | ------------------------------------ |
+| `open`         | `boolean`                 | -       | Controlled open state                |
+| `defaultOpen`  | `boolean`                 | `false` | Initial open state when uncontrolled |
+| `onOpenChange` | `(open: boolean) => void` | -       | Called when the open state changes   |
+
+### AlertDialog.Trigger
+
+| Prop        | Type      | Default | Description                                   |
+| ----------- | --------- | ------- | --------------------------------------------- |
+| `asChild`   | `boolean` | `false` | Renders the child element instead of a button |
+| `className` | `string`  | -       | Additional CSS classes                        |
+
+### AlertDialog.Content
+
+| Prop               | Type     | Default | Description                             |
+| ------------------ | -------- | ------- | --------------------------------------- |
+| `className`        | `string` | -       | Additional CSS classes                  |
+| `overlayClassName` | `string` | -       | Additional CSS classes for the backdrop |
+
+### AlertDialog.Cancel
+
+Renders a `Button` with the `outline` variant and accepts all of its props.
+
+| Prop      | Type                          | Default     | Description                                          |
+| --------- | ----------------------------- | ----------- | ---------------------------------------------------- |
+| `asChild` | `boolean`                     | `false`     | Renders the child element instead of a button        |
+| `variant` | `ButtonProps['variant']`      | `'outline'` | Button variant                                       |
+| `onClick` | `(event: MouseEvent) => void` | -           | Runs before closing. Call `preventDefault()` to stay |
+
+### AlertDialog.Action
+
+Renders a `Button` and accepts all of its props.
+
+| Prop      | Type                                              | Default     | Description                                                      |
+| --------- | ------------------------------------------------- | ----------- | ---------------------------------------------------------------- |
+| `asChild` | `boolean`                                         | `false`     | Renders the child element instead of a button                    |
+| `variant` | `ButtonProps['variant']`                          | `'default'` | Button variant, usually `'destructive'`                          |
+| `onClick` | `(event: MouseEvent) => void \| Promise<unknown>` | -           | Return a promise to wait for it. Call `preventDefault()` to stay |
+
+### AlertDialog.Header, AlertDialog.Footer, AlertDialog.Title, AlertDialog.Description
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |

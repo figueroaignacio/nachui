@@ -1,0 +1,141 @@
+---
+title: Alert Dialog
+description: Preguntar antes de algo destructivo. Cancelar recibe el foco. Las acciones async esperan.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="alert-dialog" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="alert-dialog" />
+
+## Anatomía
+
+```tsx
+import { AlertDialog } from '@/components/alert-dialog';
+```
+
+```tsx
+<AlertDialog>
+  <AlertDialog.Trigger asChild>
+    <Button variant="outline">Eliminar proyecto</Button>
+  </AlertDialog.Trigger>
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>¿Eliminar el proyecto?</AlertDialog.Title>
+      <AlertDialog.Description>Esta acción no se puede deshacer.</AlertDialog.Description>
+    </AlertDialog.Header>
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel>Cancelar</AlertDialog.Cancel>
+      <AlertDialog.Action variant="destructive">Eliminar</AlertDialog.Action>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog>
+```
+
+## Composición
+
+Usá la siguiente composición para construir un `AlertDialog`:
+
+```tree
+AlertDialog
+├── AlertDialog.Trigger
+└── AlertDialog.Content
+    ├── AlertDialog.Header
+    │   ├── AlertDialog.Title
+    │   └── AlertDialog.Description
+    └── AlertDialog.Footer
+        ├── AlertDialog.Cancel
+        └── AlertDialog.Action
+```
+
+Usalo cuando la persona tiene que responder antes de seguir, como al borrar datos o revocar un acceso. Para formularios y cosas que se pueden cerrar sin pensar, usá [Dialog](/docs/elements/ui/dialog). A diferencia de `Dialog`, un alert dialog:
+
+- No se cierra al hacer clic en el fondo y no tiene botón de cerrar en la esquina.
+- Pone el foco en `AlertDialog.Cancel` al abrirse, así un `Enter` de más nunca confirma.
+- Necesita un `Title` y una `Description`. Si falta alguno, deja un error en la consola.
+
+## Variantes
+
+### Por defecto (Default)
+
+<ComponentPreview component="alert-dialog" demo="default" />
+
+### Acción async (Async Action)
+
+Cuando el `onClick` de `AlertDialog.Action` devuelve una promesa, el diálogo la espera. El botón muestra un spinner y queda marcado como ocupado, Cancelar y `Escape` se desactivan, y el diálogo se cierra cuando la promesa se resuelve. Si se rechaza, queda abierto para que puedas mostrar qué salió mal.
+
+<ComponentPreview component="alert-dialog" demo="async" />
+
+Llamá a `event.preventDefault()` dentro de `onClick` para dejarlo abierto sin promesa, por ejemplo cuando falla una validación.
+
+## Teclado
+
+| Tecla       | Acción                                                         |
+| ----------- | -------------------------------------------------------------- |
+| `Tab`       | Se mueve entre los botones, el foco no sale del diálogo        |
+| `Shift+Tab` | Se mueve hacia atrás y vuelve a empezar al llegar al borde     |
+| `Escape`    | Igual que Cancelar, y devuelve el foco al trigger              |
+| `Enter`     | Activa el botón enfocado. Al abrirse, el foco está en Cancelar |
+
+## Accesibilidad
+
+- El contenido tiene `role="alertdialog"` y `aria-modal="true"`, con el título como nombre y la descripción como descripción accesible.
+- `Escape` ejecuta Cancelar, incluido su `onClick`, así las dos salidas se comportan igual.
+- Poné `data-autofocus` en otro elemento si Cancelar no es el lugar más seguro para empezar.
+- El scroll de la página se bloquea mientras está abierto y el foco vuelve al trigger al cerrarse.
+
+## Referencia de API
+
+### AlertDialog
+
+| Prop           | Tipo                      | Por defecto | Descripción                              |
+| -------------- | ------------------------- | ----------- | ---------------------------------------- |
+| `open`         | `boolean`                 | -           | Estado abierto controlado                |
+| `defaultOpen`  | `boolean`                 | `false`     | Estado abierto inicial sin controlar     |
+| `onOpenChange` | `(open: boolean) => void` | -           | Callback cuando cambia el estado abierto |
+
+### AlertDialog.Trigger
+
+| Prop        | Tipo      | Por defecto | Descripción                                   |
+| ----------- | --------- | ----------- | --------------------------------------------- |
+| `asChild`   | `boolean` | `false`     | Renderiza el elemento hijo en vez de un botón |
+| `className` | `string`  | -           | Clases CSS adicionales                        |
+
+### AlertDialog.Content
+
+| Prop               | Tipo     | Por defecto | Descripción                      |
+| ------------------ | -------- | ----------- | -------------------------------- |
+| `className`        | `string` | -           | Clases CSS adicionales           |
+| `overlayClassName` | `string` | -           | Clases CSS adicionales del fondo |
+
+### AlertDialog.Cancel
+
+Renderiza un `Button` con la variante `outline` y acepta todas sus props.
+
+| Prop      | Tipo                          | Por defecto | Descripción                                                     |
+| --------- | ----------------------------- | ----------- | --------------------------------------------------------------- |
+| `asChild` | `boolean`                     | `false`     | Renderiza el elemento hijo en vez de un botón                   |
+| `variant` | `ButtonProps['variant']`      | `'outline'` | Variante del botón                                              |
+| `onClick` | `(event: MouseEvent) => void` | -           | Corre antes de cerrar. Llamá a `preventDefault()` para quedarte |
+
+### AlertDialog.Action
+
+Renderiza un `Button` y acepta todas sus props.
+
+| Prop      | Tipo                                              | Por defecto | Descripción                                                                |
+| --------- | ------------------------------------------------- | ----------- | -------------------------------------------------------------------------- |
+| `asChild` | `boolean`                                         | `false`     | Renderiza el elemento hijo en vez de un botón                              |
+| `variant` | `ButtonProps['variant']`                          | `'default'` | Variante del botón, casi siempre `'destructive'`                           |
+| `onClick` | `(event: MouseEvent) => void \| Promise<unknown>` | -           | Devolvé una promesa para que la espere. `preventDefault()` lo deja abierto |
+
+### AlertDialog.Header, AlertDialog.Footer, AlertDialog.Title, AlertDialog.Description
+
+| Prop        | Tipo     | Por defecto | Descripción            |
+| ----------- | -------- | ----------- | ---------------------- |
+| `className` | `string` | -           | Clases CSS adicionales |

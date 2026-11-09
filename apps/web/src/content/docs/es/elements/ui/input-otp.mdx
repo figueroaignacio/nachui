@@ -1,0 +1,126 @@
+---
+title: Input OTP
+description: Códigos de un solo uso, una casilla por carácter. El autocompletado de SMS y pegar funcionan solos.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="input-otp" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="input-otp" />
+
+## Anatomía
+
+```tsx
+import { InputOTP } from '@/components/input-otp';
+```
+
+```tsx
+<InputOTP aria-label="Código de verificación" />
+```
+
+```tsx
+<InputOTP aria-label="Código de verificación">
+  <InputOTP.Group>
+    <InputOTP.Slot index={0} />
+    <InputOTP.Slot index={1} />
+    <InputOTP.Slot index={2} />
+  </InputOTP.Group>
+  <InputOTP.Separator />
+  <InputOTP.Group>
+    <InputOTP.Slot index={3} />
+    <InputOTP.Slot index={4} />
+    <InputOTP.Slot index={5} />
+  </InputOTP.Group>
+</InputOTP>
+```
+
+## Composición
+
+Usá la siguiente composición para construir un `InputOTP`:
+
+```tree
+InputOTP
+├── InputOTP.Group
+│   └── InputOTP.Slot
+└── InputOTP.Separator
+```
+
+Sin children renderiza `length` casillas en un solo grupo. Pasá grupos y separadores cuando quieras partir el código, y dale a cada casilla su `index`.
+
+Debajo de las casillas hay un único `<input>` real que guarda el código entero. Las casillas solo lo dibujan. Por eso el código de un SMS aparece como sugerencia del teclado en iOS y Android, pegar un código completo llena todas las casillas, y los gestores de contraseñas y lectores de pantalla lo tratan como cualquier campo de texto.
+
+## Variantes
+
+### Por defecto (Default)
+
+<ComponentPreview component="input-otp" demo="default" />
+
+### Alfanumérico (Alphanumeric)
+
+Con `pattern="alphanumeric"` también acepta letras y el teclado del celular pasa a texto. Si querés normalizar el valor, por ejemplo pasarlo a mayúsculas, controlalo.
+
+<ComponentPreview component="input-otp" demo="alphanumeric" />
+
+`pattern` también acepta una `RegExp`, que se prueba contra cada carácter: `/^[A-F0-9]$/` acepta solo códigos hexadecimales.
+
+## Teclado
+
+| Tecla                     | Acción                                                            |
+| ------------------------- | ----------------------------------------------------------------- |
+| Escribir                  | Llena la casilla activa y avanza. Ignora otros caracteres         |
+| `Backspace`               | Borra el carácter antes del cursor                                |
+| `ArrowLeft`, `ArrowRight` | Se mueve entre casillas                                           |
+| `Home`, `End`             | Salta a la primera casilla o a la primera vacía                   |
+| Pegar                     | Llena las casillas desde el portapapeles, sin espacios ni guiones |
+
+Hacer clic en una casilla mueve el cursor ahí, y lo que escribas reemplaza ese carácter.
+
+## Accesibilidad
+
+- Nombralo como cualquier input: un `<label htmlFor>` que apunte al `id`, `aria-label` o `aria-labelledby`. Todo eso va al input real.
+- Las casillas están ocultas para las tecnologías de asistencia, así que los lectores de pantalla anuncian un solo campo de texto con su valor.
+- El input tiene `autocomplete="one-time-code"` e `inputmode="numeric"` para dígitos.
+- `aria-invalid` pone en rojo el borde de las casillas. Apuntá `aria-describedby` al mensaje de error.
+
+## Referencia de API
+
+### InputOTP
+
+| Prop             | Tipo                                   | Por defecto | Descripción                                        |
+| ---------------- | -------------------------------------- | ----------- | -------------------------------------------------- |
+| `length`         | `number`                               | `6`         | Cantidad de caracteres del código                  |
+| `value`          | `string`                               | -           | Valor controlado                                   |
+| `defaultValue`   | `string`                               | `''`        | Valor inicial sin controlar                        |
+| `onValueChange`  | `(value: string) => void`              | -           | Callback cuando cambia el valor                    |
+| `onComplete`     | `(value: string) => void`              | -           | Callback cuando se llenan todas las casillas       |
+| `pattern`        | `'digits' \| 'alphanumeric' \| RegExp` | `'digits'`  | Qué caracteres acepta                              |
+| `disabled`       | `boolean`                              | `false`     | Desactiva el input                                 |
+| `name`           | `string`                               | -           | Envía el código con el formulario bajo este nombre |
+| `required`       | `boolean`                              | -           | Bloquea el envío hasta que el código esté completo |
+| `autoFocus`      | `boolean`                              | `false`     | Enfoca el input al montarse                        |
+| `id`             | `string`                               | -           | Id del input real, para `<label htmlFor>`          |
+| `aria-invalid`   | `boolean`                              | -           | Marca el código como inválido                      |
+| `className`      | `string`                               | -           | Clases CSS adicionales del contenedor              |
+| `inputClassName` | `string`                               | -           | Clases CSS adicionales del input oculto            |
+| `ref`            | `Ref<HTMLInputElement>`                | -           | Ref al input real                                  |
+
+### InputOTP.Slot
+
+| Prop        | Tipo     | Por defecto | Descripción                       |
+| ----------- | -------- | ----------- | --------------------------------- |
+| `index`     | `number` | -           | Posición del carácter que muestra |
+| `className` | `string` | -           | Clases CSS adicionales            |
+
+Cada casilla lleva `data-active` mientras el cursor está en ella y `data-filled` cuando tiene un carácter.
+
+### InputOTP.Group, InputOTP.Separator
+
+| Prop        | Tipo     | Por defecto | Descripción            |
+| ----------- | -------- | ----------- | ---------------------- |
+| `className` | `string` | -           | Clases CSS adicionales |
