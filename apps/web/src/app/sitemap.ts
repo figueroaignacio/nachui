@@ -33,6 +33,7 @@ const STATIC_PAGES: [path: string, options: EntryOptions][] = [
   ['/components', { changeFrequency: 'weekly', priority: 0.9 }],
   ['/bricks', { changeFrequency: 'weekly', priority: 0.9 }],
   ['/icons', { changeFrequency: 'weekly', priority: 0.8 }],
+  ['/themes', { changeFrequency: 'weekly', priority: 0.8 }],
   ['/sprites', { changeFrequency: 'monthly', priority: 0.6 }],
   ['/about', { changeFrequency: 'monthly', priority: 0.7 }],
 ];
