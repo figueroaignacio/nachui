@@ -41,10 +41,10 @@ export function isAnchorHidden(
   viewport: { width: number; height: number },
 ) {
   return (
-    anchor.bottom <= 0 ||
-    anchor.right <= 0 ||
-    anchor.top >= viewport.height ||
-    anchor.left >= viewport.width
+    anchor.bottom < 0 ||
+    anchor.right < 0 ||
+    anchor.top > viewport.height ||
+    anchor.left > viewport.width
   );
 }
 

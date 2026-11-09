@@ -65,6 +65,10 @@ describe('computeFloatingPosition', () => {
 describe('isAnchorHidden', () => {
   const viewport = { width: 800, height: 600 };
 
+  it('is false for an unmeasured anchor with an empty rect', () => {
+    expect(isAnchorHidden({ top: 0, bottom: 0, left: 0, right: 0 }, viewport)).toBe(false);
+  });
+
   it('is false while any part of the anchor is on screen', () => {
     expect(isAnchorHidden({ top: -10, bottom: 5, left: 10, right: 50 }, viewport)).toBe(false);
   });
