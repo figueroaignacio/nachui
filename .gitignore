@@ -42,3 +42,8 @@ yarn-error.log*
 .idea
 # Claude Code agent worktrees
 .claude/worktrees/
+
+# Vitest browser mode failure captures (baselines live in packages/ui/src/visual)
+packages/ui/src/**/__screenshots__/
+!packages/ui/src/visual/__screenshots__/
+.vitest-attachments/
