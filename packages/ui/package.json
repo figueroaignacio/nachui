@@ -34,7 +34,7 @@
     "generate:registry": "node scripts/generate-registry.mjs",
     "check:registry": "node scripts/generate-registry.mjs --check",
     "check:comments": "node scripts/check-no-comments.mjs",
-    "checks": "pnpm run check:registry && pnpm run check:comments && pnpm run check:logical",
+    "checks": "pnpm run check:tokens && pnpm run check:registry && pnpm run check:comments && pnpm run check:logical",
     "lint": "eslint . --max-warnings 0",
     "test": "vitest run --project unit",
     "test:run": "vitest run --project unit",
@@ -46,7 +46,9 @@
     "check:logical": "node scripts/check-logical-classes.mjs",
     "test:browser": "vitest run --project browser",
     "test:visual": "vitest run --project visual",
-    "test:visual:update": "vitest run --project visual --update"
+    "test:visual:update": "vitest run --project visual --update",
+    "tokens": "node scripts/build-tokens.mjs",
+    "check:tokens": "node scripts/build-tokens.mjs --check"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
