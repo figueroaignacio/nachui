@@ -1,0 +1,152 @@
+---
+title: Form
+description: Estado de formulario sobre Field. Validación nativa y con zod, resumen de errores, errores del servidor y botón de envío con estado pendiente.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="form" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="form" />
+
+## Anatomía
+
+```tsx
+import { Field } from '@/components/field';
+import { Form } from '@/components/form';
+import { Input } from '@/components/input';
+```
+
+```tsx
+<Form schema={schema} action={action} errors={state?.errors}>
+  <Form.ErrorSummary title="Revisá estos campos" />
+  <Form.Field name="email">
+    <Field.Label>Email</Field.Label>
+    <Field.Control>
+      <Input type="email" required />
+    </Field.Control>
+    <Field.Error />
+  </Form.Field>
+  <Form.Submit>Crear cuenta</Form.Submit>
+</Form>
+```
+
+## Composición
+
+Utiliza la siguiente composición para construir un `Form`:
+
+```tree
+Form
+├── Form.ErrorSummary
+├── Form.Field
+│   ├── Field.Label
+│   ├── Field.Control
+│   ├── Field.Description
+│   └── Field.Error
+└── Form.Submit
+```
+
+`Form` no reemplaza a [Field](/docs/elements/ui/field). `Form.Field` es un `Field` que conoce su `name`: le pone ese nombre al control, lo marca como inválido y completa `Field.Error` con los mensajes de ese nombre. Todo lo demás de `Field` funciona igual.
+
+## Cómo valida
+
+El form se renderiza con `noValidate`, así que el navegador nunca muestra sus propios globos. Al enviar:
+
+1. Cada control con nombre pasa por las validaciones nativas del navegador (`required`, `type="email"`, `minLength`, `pattern` y demás) y su `validationMessage` pasa a ser el error.
+2. Si pasás un `schema`, los datos del form pasan por `schema.safeParse`. Las claves repetidas llegan como arrays. Cada issue se asigna al campo por su path unido con puntos, así `address.city` cae en `<Form.Field name="address.city">`. Si los dos reportan el mismo campo, gana el mensaje del schema, porque es el texto que escribiste vos.
+3. Si algo falló, el envío se cancela, `Form.ErrorSummary` lista los problemas y el foco va al primer campo inválido.
+4. Si todo pasó, la `action` corre como siempre y se llama a `onSubmit` con los datos, parseados por el schema cuando hay uno.
+
+Después de un envío fallido cada campo se vuelve a validar cuando pierde el foco, así los errores desaparecen a medida que se corrigen. Escribir nunca dispara la validación salvo que pidas `validationMode="onChange"`. Resetear el form limpia todos los errores.
+
+Sirve cualquier librería de validación con un `safeParse` al estilo zod. El componente no importa zod.
+
+## Variantes
+
+### Errores del servidor (Server Errors)
+
+Pasale a `errors` lo que devuelve tu action, con el nombre de cada campo como clave. Los errores del servidor se muestran en el campo y en el resumen igual que los del cliente, el foco va al primero, y un campo pierde su error del servidor apenas alguien lo edita.
+
+<ComponentPreview component="form" demo="server-errors" />
+
+### Select y otros controles propios
+
+Los controles que guardan su valor en un input oculto, como `Select`, reciben el `name` ellos mismos. Envolvé solo el trigger en `Field.Control` para que la etiqueta apunte a él:
+
+```tsx
+<Form.Field name="plan">
+  <Field.Label>Plan</Field.Label>
+  <Select name="plan">
+    <Field.Control>
+      <Select.Trigger placeholder="Elegí un plan" />
+    </Field.Control>
+    <Select.Content>...</Select.Content>
+  </Select>
+  <Field.Error />
+</Form.Field>
+```
+
+### Sin action
+
+Con solo `onSubmit`, el form evita la navegación del navegador por vos y llama a `onSubmit(data, event)`. Si devuelve una promesa, `Form.Submit` queda ocupado hasta que termine.
+
+## Teclado
+
+| Tecla   | Acción                                                      |
+| ------- | ----------------------------------------------------------- |
+| `Enter` | Envía desde un campo de texto, como cualquier form HTML     |
+| `Tab`   | Recorre los campos y los links del resumen                  |
+| `Enter` | En un link del resumen, lleva el foco al campo que menciona |
+
+## Accesibilidad
+
+- Los controles inválidos reciben `aria-invalid` y su `aria-describedby` apunta al texto del error.
+- `Form.ErrorSummary` es una alerta nombrada por su título. Cada entrada es un link al campo, y seguirlo mueve el foco ahí.
+- El foco va al primer campo inválido en orden del documento después de un envío fallido o cuando llegan errores del servidor.
+- `Form.Submit` pone `aria-busy` mientras una action o un `onSubmit` asíncrono está pendiente e ignora los clicks extra.
+
+## Referencia de API
+
+### Form
+
+Acepta todos los atributos de `form`.
+
+| Prop             | Tipo                                        | Por defecto  | Descripción                                                  |
+| ---------------- | ------------------------------------------- | ------------ | ------------------------------------------------------------ |
+| `schema`         | `{ safeParse(data) }`                       | -            | Schema que se valida al enviar, por ejemplo un objeto de zod |
+| `action`         | `string \| (formData: FormData) => void`    | -            | Action del form. Solo corre si la validación pasa            |
+| `onSubmit`       | `(data, event) => void \| Promise<unknown>` | -            | Se llama con los datos cuando la validación pasa             |
+| `errors`         | `Record<string, string \| string[]>`        | -            | Errores del servidor, con el nombre del campo como clave     |
+| `validationMode` | `'onSubmit' \| 'onBlur' \| 'onChange'`      | `'onSubmit'` | Cuándo se validan los campos antes del primer envío          |
+
+### Form.Field
+
+Acepta todas las props de `Field`.
+
+| Prop   | Tipo     | Por defecto | Descripción                                        |
+| ------ | -------- | ----------- | -------------------------------------------------- |
+| `name` | `string` | -           | Nombre del campo. Lo usan los errores y el control |
+
+### Form.ErrorSummary
+
+| Prop        | Tipo        | Por defecto            | Descripción            |
+| ----------- | ----------- | ---------------------- | ---------------------- |
+| `title`     | `ReactNode` | `"Check these fields"` | Título del resumen     |
+| `className` | `string`    | -                      | Clases CSS adicionales |
+
+### Form.Submit
+
+Acepta todas las props de `Button`. Es un botón `type="submit"` que muestra el estado de carga mientras el form está pendiente.
+
+### useFormField(name)
+
+Devuelve `{ name, errors, invalid }` de un campo. Usalo en controles que necesitan los errores directamente.
+
+### useFormContext()
+
+Devuelve `errors`, `submitted`, `submitting`, `getErrors(name)`, `focusField(name)` y `validate()`.

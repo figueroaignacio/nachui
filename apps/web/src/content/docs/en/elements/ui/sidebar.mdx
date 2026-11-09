@@ -1,0 +1,201 @@
+---
+title: Sidebar
+description: App shell navigation that collapses offcanvas or to an icon rail and turns into a sheet on small screens.
+published: true
+date: 2026-11-09
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="sidebar" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="sidebar" />
+
+## Anatomy
+
+```tsx
+import { Sidebar } from '@/components/sidebar';
+```
+
+```tsx
+<Sidebar.Provider>
+  <Sidebar>
+    <Sidebar.Header />
+    <Sidebar.Content>
+      <Sidebar.Group label="Platform">
+        <Sidebar.Menu>
+          <Sidebar.Item href="/projects" icon={<FolderIcon />} active>
+            Projects
+          </Sidebar.Item>
+        </Sidebar.Menu>
+      </Sidebar.Group>
+    </Sidebar.Content>
+    <Sidebar.Footer />
+    <Sidebar.Rail />
+  </Sidebar>
+  <Sidebar.Inset>
+    <Sidebar.Trigger />
+  </Sidebar.Inset>
+</Sidebar.Provider>
+```
+
+## Composition
+
+Use the following composition to build a `Sidebar`:
+
+```tree
+Sidebar.Provider
+├── Sidebar
+│   ├── Sidebar.Header
+│   ├── Sidebar.Content
+│   │   ├── Sidebar.Group
+│   │   │   ├── Sidebar.GroupLabel
+│   │   │   └── Sidebar.Menu
+│   │   │       └── Sidebar.Item
+│   │   └── Sidebar.Separator
+│   ├── Sidebar.Footer
+│   └── Sidebar.Rail
+└── Sidebar.Inset
+    └── Sidebar.Trigger
+```
+
+`Sidebar.Provider` owns the open state and renders the flex row that holds the sidebar and the page. `Sidebar.Inset` is the main area and takes whatever width the sidebar leaves free. Put `Sidebar.Trigger` anywhere inside the provider.
+
+`Sidebar.Inset` renders a `<main>` by default. Pass `as="div"` when the page already has a `main` landmark, so there is only one.
+
+The provider is `min-h-svh` by default, so it fills the screen. To embed it in a fixed height box, pass `className="h-full min-h-0"` like the demos do.
+
+## Variants
+
+### Icon rail
+
+With `collapsible="icon"` the collapsed sidebar keeps a narrow rail of icons. Group labels hide, and each item shows its label in a tooltip on hover or focus. The label stays in the accessibility tree, so screen readers still announce it.
+
+<ComponentPreview component="sidebar" demo="icon" />
+
+### Collapse modes
+
+| Value       | What happens when collapsed                                         |
+| ----------- | ------------------------------------------------------------------- |
+| `offcanvas` | Slides out of view and becomes inert. The inset takes the full row. |
+| `icon`      | Shrinks to `--sidebar-width-icon` and shows only icons.             |
+| `none`      | Never collapses and never turns into a sheet.                       |
+
+### Visual variants
+
+`variant="sidebar"` sits flush against the page edge with a border. `floating` adds a gap, rounded corners and a soft shadow. `inset` tints the background and draws `Sidebar.Inset` as a rounded card next to the sidebar.
+
+### Mobile
+
+Below `mobileBreakpoint` (768px by default) the sidebar renders inside a `Sheet` that opens from the same logical side. `Sidebar.Trigger` opens it, Escape or a click on the backdrop closes it, and picking an item closes it too. During server rendering the provider assumes a desktop screen and switches after hydration.
+
+### Remembering the state
+
+The sidebar does not persist anything on its own. Control it and store the value wherever you like. The default demo keeps it in `localStorage`:
+
+```tsx
+const open = React.useSyncExternalStore(subscribe, readOpen, () => true);
+
+<Sidebar.Provider open={open} onOpenChange={writeOpen}>
+```
+
+### Router links
+
+`Sidebar.Item` renders an `<a>` when it gets `href` and a `<button>` otherwise. To use your router's link, pass `asChild` and the item keeps its styles, icon, badge and `aria-current`:
+
+```tsx
+<Sidebar.Item asChild active={pathname === '/team'} icon={<UsersIcon />}>
+  <Link href="/team">Team</Link>
+</Sidebar.Item>
+```
+
+### Width
+
+The provider sets `--sidebar-width` (16rem) and `--sidebar-width-icon` (3.5rem). Override them through `style`:
+
+```tsx
+<Sidebar.Provider style={{ '--sidebar-width': '18rem' } as React.CSSProperties}>
+```
+
+## Keyboard
+
+| Key                   | Action                                                           |
+| --------------------- | ---------------------------------------------------------------- |
+| `Tab`                 | Moves through the trigger, items and group toggles               |
+| `Enter`, `Space`      | Toggles the sidebar from the trigger or folds a group            |
+| `Escape`              | Closes the mobile sheet and returns focus to the trigger         |
+| `shortcut` (optional) | Toggles the sidebar, for example `Ctrl+B` or `Cmd+B` for `mod+b` |
+
+## Accessibility
+
+- `Sidebar.Trigger` is labelled "Toggle sidebar" and exposes `aria-expanded` and `aria-controls`, pointing at the sidebar or at the sheet on mobile.
+- The active item gets `aria-current="page"`.
+- A group with a `label` is a `group` named by that label. Collapsible groups use a disclosure button.
+- When collapsed offcanvas, the sidebar is `inert`, so nothing hidden can take focus.
+- On mobile the sheet is a modal dialog named by the `label` prop.
+- `Sidebar.Rail` is a pointer shortcut. It is hidden from assistive tech and out of the tab order because the trigger already covers it.
+
+## API Reference
+
+### Sidebar.Provider
+
+| Prop                 | Type                      | Default | Description                                                             |
+| -------------------- | ------------------------- | ------- | ----------------------------------------------------------------------- |
+| `open`               | `boolean`                 | -       | Controlled desktop state                                                |
+| `defaultOpen`        | `boolean`                 | `true`  | Initial desktop state when uncontrolled                                 |
+| `onOpenChange`       | `(open: boolean) => void` | -       | Called when the desktop state changes                                   |
+| `openMobile`         | `boolean`                 | -       | Controlled state of the mobile sheet                                    |
+| `onOpenMobileChange` | `(open: boolean) => void` | -       | Called when the mobile sheet opens or closes                            |
+| `mobileBreakpoint`   | `number`                  | `768`   | Width in pixels below which the sidebar becomes a sheet                 |
+| `shortcut`           | `string`                  | -       | Keyboard shortcut like `'mod+b'`. `mod` is Cmd on Apple, Ctrl elsewhere |
+| `style`              | `CSSProperties`           | -       | Override `--sidebar-width` and `--sidebar-width-icon` here              |
+
+### Sidebar
+
+| Prop          | Type                                 | Default       | Description                                |
+| ------------- | ------------------------------------ | ------------- | ------------------------------------------ |
+| `side`        | `'start' \| 'end'`                   | `'start'`     | Logical side, so it flips in right to left |
+| `variant`     | `'sidebar' \| 'floating' \| 'inset'` | `'sidebar'`   | Visual style                               |
+| `collapsible` | `'offcanvas' \| 'icon' \| 'none'`    | `'offcanvas'` | How the sidebar collapses                  |
+| `label`       | `string`                             | `'Sidebar'`   | Accessible name of the mobile sheet        |
+
+The root exposes `data-state` (`expanded` or `collapsed`), `data-collapsible`, `data-variant` and `data-side` for styling.
+
+### Sidebar.Group
+
+| Prop           | Type                      | Default | Description                                     |
+| -------------- | ------------------------- | ------- | ----------------------------------------------- |
+| `label`        | `ReactNode`               | -       | Renders a group label and names the group       |
+| `collapsible`  | `boolean`                 | `false` | Lets the label fold the group                   |
+| `open`         | `boolean`                 | -       | Controlled open state of a collapsible group    |
+| `defaultOpen`  | `boolean`                 | `true`  | Initial open state of a collapsible group       |
+| `onOpenChange` | `(open: boolean) => void` | -       | Called when a collapsible group opens or closes |
+
+### Sidebar.Item
+
+| Prop       | Type        | Default | Description                                                 |
+| ---------- | ----------- | ------- | ----------------------------------------------------------- |
+| `href`     | `string`    | -       | Renders a link instead of a button                          |
+| `active`   | `boolean`   | `false` | Highlights the item and sets `aria-current="page"`          |
+| `icon`     | `ReactNode` | -       | Icon shown before the label and alone on the icon rail      |
+| `badge`    | `ReactNode` | -       | Count or tag at the end of the row, hidden on the icon rail |
+| `tooltip`  | `ReactNode` | -       | Tooltip text on the icon rail. Defaults to the label        |
+| `disabled` | `boolean`   | `false` | Disables the item                                           |
+| `asChild`  | `boolean`   | `false` | Merges the item into its child, for router links            |
+
+### Sidebar.Trigger
+
+Accepts every `Button` prop. `aria-label` defaults to `"Toggle sidebar"`. Pass children to replace the icon.
+
+### Sidebar.Header, Sidebar.Content, Sidebar.Footer, Sidebar.GroupLabel, Sidebar.Menu, Sidebar.Separator, Sidebar.Rail, Sidebar.Inset
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
+
+### useSidebar()
+
+Returns `state`, `open`, `setOpen`, `openMobile`, `setOpenMobile`, `isMobile` and `toggleSidebar`. Call it inside `Sidebar.Provider`.

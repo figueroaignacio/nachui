@@ -1,0 +1,152 @@
+---
+title: Form
+description: Form state on top of Field. Native and zod validation, an error summary, server errors and a pending submit button.
+published: true
+date: 2026-11-09
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="form" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="form" />
+
+## Anatomy
+
+```tsx
+import { Field } from '@/components/field';
+import { Form } from '@/components/form';
+import { Input } from '@/components/input';
+```
+
+```tsx
+<Form schema={schema} action={action} errors={state?.errors}>
+  <Form.ErrorSummary title="Check these fields" />
+  <Form.Field name="email">
+    <Field.Label>Email</Field.Label>
+    <Field.Control>
+      <Input type="email" required />
+    </Field.Control>
+    <Field.Error />
+  </Form.Field>
+  <Form.Submit>Create account</Form.Submit>
+</Form>
+```
+
+## Composition
+
+Use the following composition to build a `Form`:
+
+```tree
+Form
+├── Form.ErrorSummary
+├── Form.Field
+│   ├── Field.Label
+│   ├── Field.Control
+│   ├── Field.Description
+│   └── Field.Error
+└── Form.Submit
+```
+
+`Form` does not replace [Field](/docs/elements/ui/field). `Form.Field` is a `Field` that knows its `name`: it gives the control that name, marks it invalid and fills `Field.Error` with the messages for that name. Everything else about `Field` works the same.
+
+## How validation works
+
+The form renders with `noValidate`, so the browser never shows its own bubbles. On submit:
+
+1. Every named control runs the browser's constraint checks (`required`, `type="email"`, `minLength`, `pattern` and so on) and its `validationMessage` becomes the error.
+2. If you pass a `schema`, the form data goes through `schema.safeParse`. Repeated keys arrive as arrays. Issues are matched to fields by their path joined with dots, so `address.city` lands on `<Form.Field name="address.city">`. When both report the same field, the schema message wins, since it is the copy you wrote.
+3. If anything failed, the submit is cancelled, `Form.ErrorSummary` lists the problems and focus moves to the first invalid field.
+4. If everything passed, an `action` runs as usual and `onSubmit` is called with the data, parsed by the schema when there is one.
+
+After a failed submit each field checks itself again when it loses focus, so errors clear as people fix them. Typing never triggers validation unless you ask for `validationMode="onChange"`. Resetting the form clears every error.
+
+Any validation library with a zod style `safeParse` works. Zod is not imported by the component.
+
+## Variants
+
+### Server errors
+
+Pass what your action returns to `errors`, keyed by field name. Server errors show in the field and in the summary like client ones, focus moves to the first of them, and a field drops its server error as soon as someone edits it.
+
+<ComponentPreview component="form" demo="server-errors" />
+
+### Select and other custom controls
+
+Controls that keep their value in a hidden input, like `Select`, take the `name` themselves. Wrap only the trigger in `Field.Control` so the label points at it:
+
+```tsx
+<Form.Field name="plan">
+  <Field.Label>Plan</Field.Label>
+  <Select name="plan">
+    <Field.Control>
+      <Select.Trigger placeholder="Pick a plan" />
+    </Field.Control>
+    <Select.Content>...</Select.Content>
+  </Select>
+  <Field.Error />
+</Form.Field>
+```
+
+### Without an action
+
+With only `onSubmit`, the form prevents the browser navigation for you and calls `onSubmit(data, event)`. If it returns a promise, `Form.Submit` stays busy until it settles.
+
+## Keyboard
+
+| Key     | Action                                               |
+| ------- | ---------------------------------------------------- |
+| `Enter` | Submits from a text field, like any HTML form        |
+| `Tab`   | Moves through the fields and the summary links       |
+| `Enter` | On a summary link, moves focus to the field it names |
+
+## Accessibility
+
+- Invalid controls get `aria-invalid` and their `aria-describedby` points at the error text.
+- `Form.ErrorSummary` is an alert named by its title. Each entry is a link to the field, and following it moves focus there.
+- Focus goes to the first invalid field in document order after a failed submit or when server errors arrive.
+- `Form.Submit` sets `aria-busy` while an action or an async `onSubmit` is pending and ignores extra clicks.
+
+## API Reference
+
+### Form
+
+Accepts every `form` attribute.
+
+| Prop             | Type                                        | Default      | Description                                          |
+| ---------------- | ------------------------------------------- | ------------ | ---------------------------------------------------- |
+| `schema`         | `{ safeParse(data) }`                       | -            | Schema checked on submit, for example a zod object   |
+| `action`         | `string \| (formData: FormData) => void`    | -            | Form action. It only runs when validation passes     |
+| `onSubmit`       | `(data, event) => void \| Promise<unknown>` | -            | Called with the data when validation passes          |
+| `errors`         | `Record<string, string \| string[]>`        | -            | Errors from the server, keyed by field name          |
+| `validationMode` | `'onSubmit' \| 'onBlur' \| 'onChange'`      | `'onSubmit'` | When fields check themselves before the first submit |
+
+### Form.Field
+
+Accepts every `Field` prop.
+
+| Prop   | Type     | Default | Description                               |
+| ------ | -------- | ------- | ----------------------------------------- |
+| `name` | `string` | -       | Field name. Errors and the control use it |
+
+### Form.ErrorSummary
+
+| Prop        | Type        | Default                | Description            |
+| ----------- | ----------- | ---------------------- | ---------------------- |
+| `title`     | `ReactNode` | `"Check these fields"` | Heading of the summary |
+| `className` | `string`    | -                      | Additional CSS classes |
+
+### Form.Submit
+
+Accepts every `Button` prop. It is a `type="submit"` button that shows the loading state while the form is pending.
+
+### useFormField(name)
+
+Returns `{ name, errors, invalid }` for one field. Use it for controls that need the errors directly.
+
+### useFormContext()
+
+Returns `errors`, `submitted`, `submitting`, `getErrors(name)`, `focusField(name)` and `validate()`.

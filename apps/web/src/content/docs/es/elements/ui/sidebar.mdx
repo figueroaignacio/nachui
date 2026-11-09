@@ -1,0 +1,201 @@
+---
+title: Sidebar
+description: Navegación lateral para el shell de la app que se oculta o queda como riel de íconos y en pantallas chicas se abre como sheet.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="sidebar" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="sidebar" />
+
+## Anatomía
+
+```tsx
+import { Sidebar } from '@/components/sidebar';
+```
+
+```tsx
+<Sidebar.Provider>
+  <Sidebar>
+    <Sidebar.Header />
+    <Sidebar.Content>
+      <Sidebar.Group label="Plataforma">
+        <Sidebar.Menu>
+          <Sidebar.Item href="/projects" icon={<FolderIcon />} active>
+            Proyectos
+          </Sidebar.Item>
+        </Sidebar.Menu>
+      </Sidebar.Group>
+    </Sidebar.Content>
+    <Sidebar.Footer />
+    <Sidebar.Rail />
+  </Sidebar>
+  <Sidebar.Inset>
+    <Sidebar.Trigger />
+  </Sidebar.Inset>
+</Sidebar.Provider>
+```
+
+## Composición
+
+Utiliza la siguiente composición para construir un `Sidebar`:
+
+```tree
+Sidebar.Provider
+├── Sidebar
+│   ├── Sidebar.Header
+│   ├── Sidebar.Content
+│   │   ├── Sidebar.Group
+│   │   │   ├── Sidebar.GroupLabel
+│   │   │   └── Sidebar.Menu
+│   │   │       └── Sidebar.Item
+│   │   └── Sidebar.Separator
+│   ├── Sidebar.Footer
+│   └── Sidebar.Rail
+└── Sidebar.Inset
+    └── Sidebar.Trigger
+```
+
+`Sidebar.Provider` guarda el estado y renderiza la fila flex que contiene al sidebar y a la página. `Sidebar.Inset` es el área principal y ocupa el ancho que el sidebar deja libre. `Sidebar.Trigger` puede ir en cualquier lugar dentro del provider.
+
+`Sidebar.Inset` renderiza un `<main>` por defecto. Pasale `as="div"` cuando la página ya tiene un landmark `main`, así queda uno solo.
+
+Por defecto el provider es `min-h-svh`, así que llena la pantalla. Para meterlo en una caja de alto fijo, pasale `className="h-full min-h-0"` como hacen los demos.
+
+## Variantes
+
+### Riel de íconos (Icon)
+
+Con `collapsible="icon"` el sidebar colapsado queda como un riel angosto de íconos. Las etiquetas de grupo se ocultan y cada item muestra su texto en un tooltip al pasar el mouse o al enfocarlo. El texto sigue en el árbol de accesibilidad, así que los lectores de pantalla lo anuncian igual.
+
+<ComponentPreview component="sidebar" demo="icon" />
+
+### Modos de colapso
+
+| Valor       | Qué pasa al colapsar                                                       |
+| ----------- | -------------------------------------------------------------------------- |
+| `offcanvas` | Se desliza fuera de la vista y queda `inert`. El inset ocupa toda la fila. |
+| `icon`      | Se achica a `--sidebar-width-icon` y muestra solo los íconos.              |
+| `none`      | Nunca colapsa ni se convierte en sheet.                                    |
+
+### Variantes visuales
+
+`variant="sidebar"` queda pegado al borde de la página con un borde. `floating` suma un margen, esquinas redondeadas y una sombra suave. `inset` tiñe el fondo y dibuja `Sidebar.Inset` como una card redondeada al lado del sidebar.
+
+### Mobile
+
+Debajo de `mobileBreakpoint` (768px por defecto) el sidebar se renderiza dentro de un `Sheet` que se abre desde el mismo lado lógico. `Sidebar.Trigger` lo abre, Escape o un click en el fondo lo cierran, y elegir un item también lo cierra. Durante el render en el servidor el provider asume una pantalla de escritorio y cambia después de la hidratación.
+
+### Recordar el estado
+
+El sidebar no guarda nada por su cuenta. Controlalo y guardá el valor donde quieras. El demo principal lo guarda en `localStorage`:
+
+```tsx
+const open = React.useSyncExternalStore(subscribe, readOpen, () => true);
+
+<Sidebar.Provider open={open} onOpenChange={writeOpen}>
+```
+
+### Links del router
+
+`Sidebar.Item` renderiza un `<a>` cuando recibe `href` y un `<button>` si no. Para usar el link de tu router, pasá `asChild` y el item conserva sus estilos, ícono, badge y `aria-current`:
+
+```tsx
+<Sidebar.Item asChild active={pathname === '/team'} icon={<UsersIcon />}>
+  <Link href="/team">Equipo</Link>
+</Sidebar.Item>
+```
+
+### Ancho
+
+El provider define `--sidebar-width` (16rem) y `--sidebar-width-icon` (3.5rem). Cambialos con `style`:
+
+```tsx
+<Sidebar.Provider style={{ '--sidebar-width': '18rem' } as React.CSSProperties}>
+```
+
+## Teclado
+
+| Tecla                 | Acción                                                               |
+| --------------------- | -------------------------------------------------------------------- |
+| `Tab`                 | Recorre el trigger, los items y los grupos plegables                 |
+| `Enter`, `Space`      | Abre o cierra el sidebar desde el trigger, o pliega un grupo         |
+| `Escape`              | Cierra el sheet en mobile y devuelve el foco al trigger              |
+| `shortcut` (opcional) | Abre o cierra el sidebar, por ejemplo `Ctrl+B` o `Cmd+B` con `mod+b` |
+
+## Accesibilidad
+
+- `Sidebar.Trigger` se llama "Toggle sidebar" y expone `aria-expanded` y `aria-controls`, que apunta al sidebar o al sheet en mobile.
+- El item activo lleva `aria-current="page"`.
+- Un grupo con `label` es un `group` nombrado por esa etiqueta. Los grupos plegables usan un botón de disclosure.
+- Colapsado en modo offcanvas, el sidebar queda `inert`, así que nada oculto puede recibir foco.
+- En mobile el sheet es un diálogo modal nombrado con la prop `label`.
+- `Sidebar.Rail` es un atajo para el puntero. Está oculto para tecnologías de asistencia y fuera del orden de tabulación porque el trigger ya cubre esa función.
+
+## Referencia de API
+
+### Sidebar.Provider
+
+| Prop                 | Tipo                      | Por defecto | Descripción                                                               |
+| -------------------- | ------------------------- | ----------- | ------------------------------------------------------------------------- |
+| `open`               | `boolean`                 | -           | Estado controlado en escritorio                                           |
+| `defaultOpen`        | `boolean`                 | `true`      | Estado inicial en escritorio cuando no está controlado                    |
+| `onOpenChange`       | `(open: boolean) => void` | -           | Se llama cuando cambia el estado en escritorio                            |
+| `openMobile`         | `boolean`                 | -           | Estado controlado del sheet en mobile                                     |
+| `onOpenMobileChange` | `(open: boolean) => void` | -           | Se llama cuando el sheet se abre o se cierra                              |
+| `mobileBreakpoint`   | `number`                  | `768`       | Ancho en píxeles debajo del cual el sidebar pasa a ser un sheet           |
+| `shortcut`           | `string`                  | -           | Atajo de teclado como `'mod+b'`. `mod` es Cmd en Apple y Ctrl en el resto |
+| `style`              | `CSSProperties`           | -           | Acá se cambian `--sidebar-width` y `--sidebar-width-icon`                 |
+
+### Sidebar
+
+| Prop          | Tipo                                 | Por defecto   | Descripción                                                |
+| ------------- | ------------------------------------ | ------------- | ---------------------------------------------------------- |
+| `side`        | `'start' \| 'end'`                   | `'start'`     | Lado lógico, se invierte en idiomas de derecha a izquierda |
+| `variant`     | `'sidebar' \| 'floating' \| 'inset'` | `'sidebar'`   | Estilo visual                                              |
+| `collapsible` | `'offcanvas' \| 'icon' \| 'none'`    | `'offcanvas'` | Cómo colapsa el sidebar                                    |
+| `label`       | `string`                             | `'Sidebar'`   | Nombre accesible del sheet en mobile                       |
+
+La raíz expone `data-state` (`expanded` o `collapsed`), `data-collapsible`, `data-variant` y `data-side` para estilos.
+
+### Sidebar.Group
+
+| Prop           | Tipo                      | Por defecto | Descripción                                        |
+| -------------- | ------------------------- | ----------- | -------------------------------------------------- |
+| `label`        | `ReactNode`               | -           | Renderiza la etiqueta del grupo y le da nombre     |
+| `collapsible`  | `boolean`                 | `false`     | Permite plegar el grupo desde la etiqueta          |
+| `open`         | `boolean`                 | -           | Estado controlado de un grupo plegable             |
+| `defaultOpen`  | `boolean`                 | `true`      | Estado inicial de un grupo plegable                |
+| `onOpenChange` | `(open: boolean) => void` | -           | Se llama cuando un grupo plegable se abre o cierra |
+
+### Sidebar.Item
+
+| Prop       | Tipo        | Por defecto | Descripción                                                     |
+| ---------- | ----------- | ----------- | --------------------------------------------------------------- |
+| `href`     | `string`    | -           | Renderiza un link en lugar de un botón                          |
+| `active`   | `boolean`   | `false`     | Resalta el item y pone `aria-current="page"`                    |
+| `icon`     | `ReactNode` | -           | Ícono antes del texto, y lo único visible en el riel de íconos  |
+| `badge`    | `ReactNode` | -           | Contador o etiqueta al final de la fila, oculto en el riel      |
+| `tooltip`  | `ReactNode` | -           | Texto del tooltip en el riel. Por defecto usa el texto del item |
+| `disabled` | `boolean`   | `false`     | Deshabilita el item                                             |
+| `asChild`  | `boolean`   | `false`     | Fusiona el item con su hijo, para links del router              |
+
+### Sidebar.Trigger
+
+Acepta todas las props de `Button`. `aria-label` es `"Toggle sidebar"` por defecto. Pasale children para reemplazar el ícono.
+
+### Sidebar.Header, Sidebar.Content, Sidebar.Footer, Sidebar.GroupLabel, Sidebar.Menu, Sidebar.Separator, Sidebar.Rail, Sidebar.Inset
+
+| Prop        | Tipo     | Por defecto | Descripción            |
+| ----------- | -------- | ----------- | ---------------------- |
+| `className` | `string` | -           | Clases CSS adicionales |
+
+### useSidebar()
+
+Devuelve `state`, `open`, `setOpen`, `openMobile`, `setOpenMobile`, `isMobile` y `toggleSidebar`. Llamalo dentro de `Sidebar.Provider`.
