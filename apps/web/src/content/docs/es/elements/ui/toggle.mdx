@@ -1,0 +1,80 @@
+---
+title: Toggle
+description: Un botón de dos estados. Prender o apagar una opción. Dejar el estado a la vista.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="toggle" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="toggle" />
+
+## Anatomía
+
+```tsx
+import { Toggle } from '@/components/toggle';
+```
+
+```tsx
+<Toggle aria-label="Negrita">
+  <BoldIcon />
+</Toggle>
+```
+
+## Composición
+
+`Toggle` es una sola pieza: un `button` con `aria-pressed`. Para agrupar varios usá [Toggle Group](/docs/elements/ui/toggle-group), y dentro de un [Toolbar](/docs/elements/ui/toolbar) usá `Toolbar.Toggle`.
+
+```tree
+Toggle
+```
+
+Un toggle presionado usa el fondo muted, nunca el color primario. Muestra un estado, no es la acción principal de la página.
+
+## Variantes
+
+### Predeterminado (Default)
+
+<ComponentPreview component="toggle" demo="default" />
+
+### Outline con texto (With Text)
+
+Sumá una etiqueta al lado del ícono cuando el estado necesita palabras. Con texto adentro podés sacar el `aria-label`.
+
+<ComponentPreview component="toggle" demo="with-text" />
+
+## Teclado
+
+| Tecla              | Acción                   |
+| ------------------ | ------------------------ |
+| `Tab`              | Lleva el foco al toggle  |
+| `Espacio`, `Enter` | Prende o apaga el toggle |
+
+## Accesibilidad
+
+- Renderiza un `button type="button"` nativo con `aria-pressed`, así los lectores de pantalla lo anuncian como botón de alternancia y leen si está presionado.
+- A un toggle que es solo ícono dale un `aria-label` que nombre la opción, como "Negrita", no la acción. El estado presionado ya dice si está prendido.
+- `data-state="on"` o `data-state="off"` está para estilos, junto con `data-disabled` cuando está deshabilitado.
+
+## Referencia de API
+
+### Toggle
+
+Acepta también todos los atributos de `button`.
+
+| Prop              | Tipo                         | Por defecto | Descripción                                          |
+| ----------------- | ---------------------------- | ----------- | ---------------------------------------------------- |
+| `pressed`         | `boolean`                    | -           | Estado presionado controlado                         |
+| `defaultPressed`  | `boolean`                    | `false`     | Estado inicial cuando no es controlado               |
+| `onPressedChange` | `(pressed: boolean) => void` | -           | Se llama cuando cambia el estado presionado          |
+| `variant`         | `'default' \| 'outline'`     | `'default'` | Transparente, o con borde de input                   |
+| `size`            | `'sm' \| 'default' \| 'lg'`  | `'default'` | Alto de 32, 36 o 40px. Con solo ícono queda cuadrado |
+| `disabled`        | `boolean`                    | `false`     | Bloquea la interacción                               |
+| `className`       | `string`                     | -           | Clases CSS adicionales                               |
+
+El archivo también exporta `toggleVariants`, la receta de clases que Toggle Group reusa para sus items.

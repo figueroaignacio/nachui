@@ -1,0 +1,135 @@
+---
+title: Toolbar
+description: Group related controls. One tab stop. Arrow keys between every control.
+published: true
+date: 2026-11-09
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="toolbar" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="toolbar" />
+
+## Anatomy
+
+```tsx
+import { Toolbar } from '@/components/toolbar';
+import { ToggleGroup } from '@/components/toggle-group';
+```
+
+```tsx
+<Toolbar aria-label="Text formatting">
+  <ToggleGroup type="multiple" aria-label="Text style">
+    <ToggleGroup.Item value="bold" aria-label="Bold">
+      <BoldIcon />
+    </ToggleGroup.Item>
+    <ToggleGroup.Item value="italic" aria-label="Italic">
+      <ItalicIcon />
+    </ToggleGroup.Item>
+  </ToggleGroup>
+  <Toolbar.Separator />
+  <Toolbar.Toggle aria-label="Strikethrough">
+    <StrikethroughIcon />
+  </Toolbar.Toggle>
+  <Toolbar.Link href="/help">Help</Toolbar.Link>
+  <Toolbar.Button>Share</Toolbar.Button>
+</Toolbar>
+```
+
+## Composition
+
+Use the following composition to build a `Toolbar`:
+
+```tree
+Toolbar
+├── Toolbar.Button
+├── Toolbar.Toggle
+├── Toolbar.Link
+├── Toolbar.Item
+├── Toolbar.Separator
+└── ToggleGroup
+    └── ToggleGroup.Item
+```
+
+Only the parts above take part in the arrow key navigation. A plain `button` dropped inside the toolbar stays a separate tab stop.
+
+To bring in another control, wrap it in `Toolbar.Item asChild`. The child keeps its own props and gets the toolbar's focus handling, for example a select:
+
+```tsx
+<Select defaultValue="sans">
+  <Toolbar.Item asChild>
+    <Select.Trigger aria-label="Font" className="w-28" />
+  </Toolbar.Item>
+  <Select.Content>
+    <Select.Item value="sans">Sans</Select.Item>
+    <Select.Item value="serif">Serif</Select.Item>
+  </Select.Content>
+</Select>
+```
+
+The select still opens with `ArrowDown`, because the toolbar only listens to the arrows that run along it.
+
+## Keyboard
+
+The whole toolbar is a single tab stop. The first time, Tab lands on the first enabled control. After that it returns to the last control you used.
+
+| Key                       | Action                                                 |
+| ------------------------- | ------------------------------------------------------ |
+| `Tab`, `Shift+Tab`        | Moves focus into the toolbar or out of it              |
+| `ArrowRight`, `ArrowLeft` | Moves to the next or previous control. Reversed in RTL |
+| `ArrowDown`, `ArrowUp`    | Same, when `orientation="vertical"`                    |
+| `Home`, `End`             | Jumps to the first or last control                     |
+| `Space`, `Enter`          | Activates the focused control                          |
+
+Disabled controls are skipped. Inside a text field registered with `Toolbar.Item`, the left and right arrows, `Home` and `End` move the caret instead.
+
+## Accessibility
+
+- The root has `role="toolbar"` and `aria-orientation`. Always give it an `aria-label` or `aria-labelledby`, since a page often has more than one toolbar.
+- A nested `ToggleGroup` keeps its `role="group"` and its own label, so screen readers still announce the group, but its items share the toolbar's single tab stop.
+- `Toolbar.Separator` is a `role="separator"` with the opposite orientation: vertical in a horizontal toolbar.
+- Direction comes from `dir`, a `DirectionProvider` or the computed CSS direction, so the arrows match the layout in RTL.
+
+## API Reference
+
+### Toolbar
+
+Accepts every `div` attribute as well.
+
+| Prop          | Type                         | Default        | Description                                   |
+| ------------- | ---------------------------- | -------------- | --------------------------------------------- |
+| `aria-label`  | `string`                     | -              | Names the toolbar. Required in practice       |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Layout and which arrow keys move focus        |
+| `dir`         | `'ltr' \| 'rtl'`             | Inherited      | Text direction for layout and arrow keys      |
+| `loop`        | `boolean`                    | `true`         | Wrap focus from the last control to the first |
+| `className`   | `string`                     | -              | Additional CSS classes                        |
+
+### Toolbar.Button
+
+A ghost button, 32px tall. Accepts every `button` attribute.
+
+### Toolbar.Toggle
+
+A [Toggle](/docs/elements/ui/toggle) with `size="sm"` by default. Takes the same props: `pressed`, `defaultPressed`, `onPressedChange`, `variant`, `size` and `disabled`.
+
+### Toolbar.Link
+
+An `a` styled like a toolbar button. Accepts every anchor attribute.
+
+### Toolbar.Item
+
+| Prop        | Type      | Default | Description                                                          |
+| ----------- | --------- | ------- | -------------------------------------------------------------------- |
+| `asChild`   | `boolean` | `false` | Registers the child element instead of rendering a `button`          |
+| `disabled`  | `boolean` | `false` | Skips the control. With `asChild`, the child's `disabled` counts too |
+| `className` | `string`  | -       | Additional CSS classes, merged with the child's                      |
+
+### Toolbar.Separator
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |

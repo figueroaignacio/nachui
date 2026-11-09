@@ -1,0 +1,112 @@
+---
+title: Toggle Group
+description: A set of toggles. Pick one or several. Move between them with the arrow keys.
+published: true
+date: 2026-11-09
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="toggle-group" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="toggle-group" />
+
+## Anatomy
+
+```tsx
+import { ToggleGroup } from '@/components/toggle-group';
+```
+
+```tsx
+<ToggleGroup type="single" defaultValue="left" aria-label="Text alignment">
+  <ToggleGroup.Item value="left" aria-label="Align left">
+    <AlignLeftIcon />
+  </ToggleGroup.Item>
+  <ToggleGroup.Item value="center" aria-label="Align center">
+    <AlignCenterIcon />
+  </ToggleGroup.Item>
+</ToggleGroup>
+```
+
+## Composition
+
+Use the following composition to build a `ToggleGroup`:
+
+```tree
+ToggleGroup
+└── ToggleGroup.Item
+```
+
+`type="single"` keeps at most one item pressed and its value is a `string`. `type="multiple"` lets any number of items be pressed and its value is a `string[]`. With `type="single"` the pressed item can be turned off again, which sets the value to `''`. Add `required` when there must always be one, like a radio group.
+
+## Variants
+
+### Single
+
+<ComponentPreview component="toggle-group" demo="default" />
+
+### Multiple
+
+<ComponentPreview component="toggle-group" demo="multiple" />
+
+### Outline
+
+`variant="outline"` joins the items into a segmented control, with a divider between each one.
+
+<ComponentPreview component="toggle-group" demo="outline" />
+
+## Keyboard
+
+The group is a single tab stop. Tab lands on the pressed item, or on the first enabled item when nothing is pressed.
+
+| Key                       | Action                                              |
+| ------------------------- | --------------------------------------------------- |
+| `Tab`, `Shift+Tab`        | Moves focus into the group or out of it             |
+| `ArrowRight`, `ArrowLeft` | Moves to the next or previous item. Reversed in RTL |
+| `ArrowDown`, `ArrowUp`    | Same, when `orientation="vertical"`                 |
+| `Home`, `End`             | Jumps to the first or last item                     |
+| `Space`, `Enter`          | Presses or releases the focused item                |
+
+The arrows only move focus, they never change the value. Disabled items are skipped, and focus wraps around unless `loop={false}`.
+
+## Accessibility
+
+- The root is a `role="group"`. Name it with `aria-label` or `aria-labelledby`.
+- Every item is a `button` with `aria-pressed`, in both modes. A radio group was considered for `type="single"`, but the WAI-ARIA radio pattern selects on arrow keys and never lets the checked option be cleared, and this component does neither: arrows only move focus and, without `required`, the pressed item can be released.
+- Icon-only items need their own `aria-label`.
+- Inside a [Toolbar](/docs/elements/ui/toolbar) the group stops managing focus. Its items join the toolbar's arrow key navigation and the group adds no tab stop of its own.
+- Direction comes from `dir`, a `DirectionProvider` or the computed CSS direction, so the arrows match what you see in RTL layouts.
+
+## API Reference
+
+### ToggleGroup
+
+Accepts every `div` attribute as well.
+
+| Prop            | Type                                                     | Default        | Description                                                        |
+| --------------- | -------------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
+| `type`          | `'single' \| 'multiple'`                                 | -              | One pressed item, or any number                                    |
+| `value`         | `string` or `string[]`                                   | -              | Controlled value. A `string` for single, a `string[]` for multiple |
+| `defaultValue`  | `string` or `string[]`                                   | `''` or `[]`   | Initial value when uncontrolled                                    |
+| `onValueChange` | `(value: string) => void` or `(value: string[]) => void` | -              | Called when the value changes                                      |
+| `required`      | `boolean`                                                | `false`        | Single only. The pressed item cannot be released                   |
+| `variant`       | `'default' \| 'outline'`                                 | `'default'`    | Items in a card, or a segmented control                            |
+| `size`          | `'sm' \| 'default' \| 'lg'`                              | `'default'`    | Item height                                                        |
+| `orientation`   | `'horizontal' \| 'vertical'`                             | `'horizontal'` | Layout and which arrow keys move focus                             |
+| `dir`           | `'ltr' \| 'rtl'`                                         | Inherited      | Text direction for layout and arrow keys                           |
+| `loop`          | `boolean`                                                | `true`         | Wrap focus from the last item to the first                         |
+| `disabled`      | `boolean`                                                | `false`        | Disables every item                                                |
+| `className`     | `string`                                                 | -              | Additional CSS classes                                             |
+
+### ToggleGroup.Item
+
+Accepts every `button` attribute as well.
+
+| Prop        | Type      | Default | Description                           |
+| ----------- | --------- | ------- | ------------------------------------- |
+| `value`     | `string`  | -       | Value added to the group when pressed |
+| `disabled`  | `boolean` | `false` | Skips the item and blocks interaction |
+| `className` | `string`  | -       | Additional CSS classes                |

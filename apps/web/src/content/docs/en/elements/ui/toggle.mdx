@@ -1,0 +1,80 @@
+---
+title: Toggle
+description: A two-state button. Turn a setting on or off. Keep the state visible.
+published: true
+date: 2026-11-09
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="toggle" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="toggle" />
+
+## Anatomy
+
+```tsx
+import { Toggle } from '@/components/toggle';
+```
+
+```tsx
+<Toggle aria-label="Toggle bold">
+  <BoldIcon />
+</Toggle>
+```
+
+## Composition
+
+`Toggle` is a single part: a `button` with `aria-pressed`. To group several of them, use [Toggle Group](/docs/elements/ui/toggle-group), and inside a [Toolbar](/docs/elements/ui/toolbar) use `Toolbar.Toggle`.
+
+```tree
+Toggle
+```
+
+A pressed toggle uses the muted fill, never the primary color. It shows a state, it is not the main action on the page.
+
+## Variants
+
+### Default
+
+<ComponentPreview component="toggle" demo="default" />
+
+### Outline with text
+
+Add a label next to the icon when the state needs words. With text inside, you can drop `aria-label`.
+
+<ComponentPreview component="toggle" demo="with-text" />
+
+## Keyboard
+
+| Key              | Action                     |
+| ---------------- | -------------------------- |
+| `Tab`            | Moves focus to the toggle  |
+| `Space`, `Enter` | Turns the toggle on or off |
+
+## Accessibility
+
+- Renders a native `button type="button"` with `aria-pressed`, so screen readers announce it as a toggle button and read whether it is pressed.
+- Give an icon-only toggle an `aria-label` that names the setting, like "Bold", not the action. The pressed state already says whether it is on.
+- `data-state="on"` or `data-state="off"` is there for styling, alongside `data-disabled` when it is disabled.
+
+## API Reference
+
+### Toggle
+
+Accepts every `button` attribute as well.
+
+| Prop              | Type                         | Default     | Description                                   |
+| ----------------- | ---------------------------- | ----------- | --------------------------------------------- |
+| `pressed`         | `boolean`                    | -           | Controlled pressed state                      |
+| `defaultPressed`  | `boolean`                    | `false`     | Initial pressed state when uncontrolled       |
+| `onPressedChange` | `(pressed: boolean) => void` | -           | Called when the pressed state changes         |
+| `variant`         | `'default' \| 'outline'`     | `'default'` | Transparent, or with an input border          |
+| `size`            | `'sm' \| 'default' \| 'lg'`  | `'default'` | Height of 32, 36 or 40px. Icon-only is square |
+| `disabled`        | `boolean`                    | `false`     | Blocks interaction                            |
+| `className`       | `string`                     | -           | Additional CSS classes                        |
+
+The file also exports `toggleVariants`, the class recipe that Toggle Group reuses for its items.

@@ -1,0 +1,135 @@
+---
+title: Toolbar
+description: Agrupar controles relacionados. Una sola parada de Tab. Flechas entre todos los controles.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="toolbar" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="toolbar" />
+
+## Anatomía
+
+```tsx
+import { Toolbar } from '@/components/toolbar';
+import { ToggleGroup } from '@/components/toggle-group';
+```
+
+```tsx
+<Toolbar aria-label="Formato de texto">
+  <ToggleGroup type="multiple" aria-label="Estilo">
+    <ToggleGroup.Item value="bold" aria-label="Negrita">
+      <BoldIcon />
+    </ToggleGroup.Item>
+    <ToggleGroup.Item value="italic" aria-label="Cursiva">
+      <ItalicIcon />
+    </ToggleGroup.Item>
+  </ToggleGroup>
+  <Toolbar.Separator />
+  <Toolbar.Toggle aria-label="Tachado">
+    <StrikethroughIcon />
+  </Toolbar.Toggle>
+  <Toolbar.Link href="/ayuda">Ayuda</Toolbar.Link>
+  <Toolbar.Button>Compartir</Toolbar.Button>
+</Toolbar>
+```
+
+## Composición
+
+Utiliza la siguiente composición para construir un `Toolbar`:
+
+```tree
+Toolbar
+├── Toolbar.Button
+├── Toolbar.Toggle
+├── Toolbar.Link
+├── Toolbar.Item
+├── Toolbar.Separator
+└── ToggleGroup
+    └── ToggleGroup.Item
+```
+
+Solo las piezas de arriba participan de la navegación con flechas. Un `button` común dentro del toolbar sigue siendo una parada de Tab aparte.
+
+Para sumar otro control, envolvelo en `Toolbar.Item asChild`. El hijo conserva sus props y recibe el manejo de foco del toolbar, por ejemplo un select:
+
+```tsx
+<Select defaultValue="sans">
+  <Toolbar.Item asChild>
+    <Select.Trigger aria-label="Fuente" className="w-28" />
+  </Toolbar.Item>
+  <Select.Content>
+    <Select.Item value="sans">Sans</Select.Item>
+    <Select.Item value="serif">Serif</Select.Item>
+  </Select.Content>
+</Select>
+```
+
+El select se sigue abriendo con `ArrowDown`, porque el toolbar solo escucha las flechas que van a lo largo de él.
+
+## Teclado
+
+Todo el toolbar es una sola parada de Tab. La primera vez, Tab cae en el primer control habilitado. Después vuelve al último control que usaste.
+
+| Tecla                     | Acción                                                  |
+| ------------------------- | ------------------------------------------------------- |
+| `Tab`, `Shift+Tab`        | Entra al toolbar o sale de él                           |
+| `ArrowRight`, `ArrowLeft` | Va al control siguiente o anterior. Se invierten en RTL |
+| `ArrowDown`, `ArrowUp`    | Lo mismo, con `orientation="vertical"`                  |
+| `Home`, `End`             | Salta al primer o al último control                     |
+| `Espacio`, `Enter`        | Activa el control enfocado                              |
+
+Los controles deshabilitados se saltean. Dentro de un campo de texto registrado con `Toolbar.Item`, las flechas izquierda y derecha, `Home` y `End` mueven el cursor.
+
+## Accesibilidad
+
+- La raíz tiene `role="toolbar"` y `aria-orientation`. Dale siempre un `aria-label` o `aria-labelledby`, porque una página suele tener más de un toolbar.
+- Un `ToggleGroup` anidado conserva su `role="group"` y su propia etiqueta, así los lectores de pantalla siguen anunciando el grupo, pero sus items comparten la única parada de Tab del toolbar.
+- `Toolbar.Separator` es un `role="separator"` con la orientación opuesta: vertical en un toolbar horizontal.
+- La dirección sale de `dir`, de un `DirectionProvider` o de la dirección CSS calculada, así las flechas coinciden con el layout en RTL.
+
+## Referencia de API
+
+### Toolbar
+
+Acepta también todos los atributos de `div`.
+
+| Prop          | Tipo                         | Por defecto    | Descripción                                      |
+| ------------- | ---------------------------- | -------------- | ------------------------------------------------ |
+| `aria-label`  | `string`                     | -              | Nombra el toolbar. En la práctica, obligatorio   |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Disposición y qué flechas mueven el foco         |
+| `dir`         | `'ltr' \| 'rtl'`             | Heredado       | Dirección del texto para el layout y las flechas |
+| `loop`        | `boolean`                    | `true`         | Pasa el foco del último control al primero       |
+| `className`   | `string`                     | -              | Clases CSS adicionales                           |
+
+### Toolbar.Button
+
+Un botón ghost de 32px de alto. Acepta todos los atributos de `button`.
+
+### Toolbar.Toggle
+
+Un [Toggle](/docs/elements/ui/toggle) con `size="sm"` por defecto. Recibe las mismas props: `pressed`, `defaultPressed`, `onPressedChange`, `variant`, `size` y `disabled`.
+
+### Toolbar.Link
+
+Un `a` con el estilo de un botón del toolbar. Acepta todos los atributos de un enlace.
+
+### Toolbar.Item
+
+| Prop        | Tipo      | Por defecto | Descripción                                                            |
+| ----------- | --------- | ----------- | ---------------------------------------------------------------------- |
+| `asChild`   | `boolean` | `false`     | Registra el elemento hijo en lugar de renderizar un `button`           |
+| `disabled`  | `boolean` | `false`     | Saltea el control. Con `asChild` también cuenta el `disabled` del hijo |
+| `className` | `string`  | -           | Clases CSS adicionales, combinadas con las del hijo                    |
+
+### Toolbar.Separator
+
+| Prop        | Tipo     | Por defecto | Descripción            |
+| ----------- | -------- | ----------- | ---------------------- |
+| `className` | `string` | -           | Clases CSS adicionales |

@@ -1,0 +1,112 @@
+---
+title: Toggle Group
+description: Un conjunto de toggles. Elegir uno o varios. Moverse entre ellos con las flechas.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="toggle-group" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="toggle-group" />
+
+## Anatomía
+
+```tsx
+import { ToggleGroup } from '@/components/toggle-group';
+```
+
+```tsx
+<ToggleGroup type="single" defaultValue="left" aria-label="Alineación del texto">
+  <ToggleGroup.Item value="left" aria-label="Alinear a la izquierda">
+    <AlignLeftIcon />
+  </ToggleGroup.Item>
+  <ToggleGroup.Item value="center" aria-label="Centrar">
+    <AlignCenterIcon />
+  </ToggleGroup.Item>
+</ToggleGroup>
+```
+
+## Composición
+
+Utiliza la siguiente composición para construir un `ToggleGroup`:
+
+```tree
+ToggleGroup
+└── ToggleGroup.Item
+```
+
+`type="single"` deja como mucho un item presionado y su valor es un `string`. `type="multiple"` permite presionar cualquier cantidad y su valor es un `string[]`. Con `type="single"` el item presionado se puede volver a soltar, y el valor queda en `''`. Agregá `required` cuando siempre tiene que haber uno, como en un grupo de radios.
+
+## Variantes
+
+### Simple (Single)
+
+<ComponentPreview component="toggle-group" demo="default" />
+
+### Múltiple (Multiple)
+
+<ComponentPreview component="toggle-group" demo="multiple" />
+
+### Outline
+
+`variant="outline"` une los items en un control segmentado, con un divisor entre cada uno.
+
+<ComponentPreview component="toggle-group" demo="outline" />
+
+## Teclado
+
+El grupo es una sola parada de Tab. Tab cae en el item presionado, o en el primero habilitado si no hay ninguno presionado.
+
+| Tecla                     | Acción                                               |
+| ------------------------- | ---------------------------------------------------- |
+| `Tab`, `Shift+Tab`        | Entra al grupo o sale de él                          |
+| `ArrowRight`, `ArrowLeft` | Va al item siguiente o anterior. Se invierten en RTL |
+| `ArrowDown`, `ArrowUp`    | Lo mismo, con `orientation="vertical"`               |
+| `Home`, `End`             | Salta al primer o al último item                     |
+| `Espacio`, `Enter`        | Presiona o suelta el item enfocado                   |
+
+Las flechas solo mueven el foco, nunca cambian el valor. Los items deshabilitados se saltean, y el foco da la vuelta salvo con `loop={false}`.
+
+## Accesibilidad
+
+- La raíz es un `role="group"`. Nombralo con `aria-label` o `aria-labelledby`.
+- Cada item es un `button` con `aria-pressed`, en los dos modos. Para `type="single"` evaluamos un grupo de radios, pero el patrón de radio de WAI-ARIA selecciona con las flechas y nunca deja vaciar la opción marcada, y este componente no hace ninguna de las dos cosas: las flechas solo mueven el foco y, sin `required`, el item presionado se puede soltar.
+- Los items que son solo ícono necesitan su propio `aria-label`.
+- Dentro de un [Toolbar](/docs/elements/ui/toolbar) el grupo deja de manejar el foco. Sus items se suman a la navegación con flechas del toolbar y el grupo no agrega una parada de Tab propia.
+- La dirección sale de `dir`, de un `DirectionProvider` o de la dirección CSS calculada, así las flechas coinciden con lo que ves en layouts RTL.
+
+## Referencia de API
+
+### ToggleGroup
+
+Acepta también todos los atributos de `div`.
+
+| Prop            | Tipo                                                    | Por defecto    | Descripción                                                  |
+| --------------- | ------------------------------------------------------- | -------------- | ------------------------------------------------------------ |
+| `type`          | `'single' \| 'multiple'`                                | -              | Un item presionado, o cualquier cantidad                     |
+| `value`         | `string` o `string[]`                                   | -              | Valor controlado. `string` en single, `string[]` en multiple |
+| `defaultValue`  | `string` o `string[]`                                   | `''` o `[]`    | Valor inicial cuando no es controlado                        |
+| `onValueChange` | `(value: string) => void` o `(value: string[]) => void` | -              | Se llama cuando cambia el valor                              |
+| `required`      | `boolean`                                               | `false`        | Solo single. El item presionado no se puede soltar           |
+| `variant`       | `'default' \| 'outline'`                                | `'default'`    | Items dentro de una tarjeta, o control segmentado            |
+| `size`          | `'sm' \| 'default' \| 'lg'`                             | `'default'`    | Alto de los items                                            |
+| `orientation`   | `'horizontal' \| 'vertical'`                            | `'horizontal'` | Disposición y qué flechas mueven el foco                     |
+| `dir`           | `'ltr' \| 'rtl'`                                        | Heredado       | Dirección del texto para el layout y las flechas             |
+| `loop`          | `boolean`                                               | `true`         | Pasa el foco del último item al primero                      |
+| `disabled`      | `boolean`                                               | `false`        | Deshabilita todos los items                                  |
+| `className`     | `string`                                                | -              | Clases CSS adicionales                                       |
+
+### ToggleGroup.Item
+
+Acepta también todos los atributos de `button`.
+
+| Prop        | Tipo      | Por defecto | Descripción                                   |
+| ----------- | --------- | ----------- | --------------------------------------------- |
+| `value`     | `string`  | -           | Valor que se suma al grupo cuando se presiona |
+| `disabled`  | `boolean` | `false`     | Lo saltea y bloquea la interacción            |
+| `className` | `string`  | -           | Clases CSS adicionales                        |
