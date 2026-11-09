@@ -17,7 +17,7 @@ toc:
 ## Anatomy
 
 ```tsx
-import { Command } from '@/components/ui/command';
+import { Command } from '@/components/command';
 ```
 
 ```tsx
@@ -36,9 +36,9 @@ import { Command } from '@/components/ui/command';
 
 | Prop         | Type                     | Default | Description                                                                                                                                                                                            |
 | ------------ | ------------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `command`    | `string`                 | —       | The CLI command string to display and copy to clipboard.                                                                                                                                               |
+| `command`    | `string`                 | -       | The CLI command string to display and copy to clipboard.                                                                                                                                               |
 | `prefix`     | `string`                 | `"$"`   | Symbol displayed before the command (e.g. `$`, `>`, `%`).                                                                                                                                              |
 | `resetDelay` | `number`                 | `2000`  | Milliseconds before the copied state resets back to the copy icon.                                                                                                                                     |
-| `onCopied`   | `() => void`             | —       | Callback fired after the command is successfully copied.                                                                                                                                               |
-| `labels`     | `Partial<CommandLabels>` | —       | Labels: `copy` names the button (`"Copy command"`), `copyHint` is its tooltip (`"Copy to clipboard"`) and `copied` is announced to screen readers and shown as the tooltip after a copy (`"Copied!"`). |
-| `className`  | `string`                 | —       | Additional CSS class names applied to the root element.                                                                                                                                                |
+| `onCopied`   | `() => void`             | -       | Callback fired after the command is successfully copied.                                                                                                                                               |
+| `labels`     | `Partial<CommandLabels>` | -       | Labels: `copy` names the button (`"Copy command"`), `copyHint` is its tooltip (`"Copy to clipboard"`) and `copied` is announced to screen readers and shown as the tooltip after a copy (`"Copied!"`). |
+| `className`  | `string`                 | -       | Additional CSS class names applied to the root element.                                                                                                                                                |

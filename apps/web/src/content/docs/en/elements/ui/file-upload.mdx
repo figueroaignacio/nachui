@@ -17,7 +17,7 @@ toc:
 ## Anatomy
 
 ```tsx
-import { FileUpload } from '@/components/ui/file-upload';
+import { FileUpload } from '@/components/file-upload';
 ```
 
 ```tsx
@@ -88,7 +88,7 @@ The same parts arranged as a grid of thumbnails, with the remove button revealed
 `useFileUpload` is the engine behind the component and is exported on its own for interfaces that do not fit the parts above. It takes the same options as the root and returns the state plus the handlers to wire into any element.
 
 ```tsx
-import { useFileUpload, formatBytes } from '@/components/ui/file-upload';
+import { useFileUpload, formatBytes } from '@/components/file-upload';
 
 const { files, errors, isDragging, openFileDialog, getInputProps, getDropzoneProps, removeFile } =
   useFileUpload({ multiple: true, maxSize: 5 * 1024 * 1024 });

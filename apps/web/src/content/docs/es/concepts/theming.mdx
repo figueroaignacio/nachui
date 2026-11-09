@@ -1,14 +1,14 @@
 ---
 title: Tematización
-description: El sistema de diseño detrás de NachUI — tokens semánticos, el contrato de temas y cómo adaptarlos a tu marca.
+description: El sistema de diseño detrás de NachUI: tokens semánticos, el contrato de temas y cómo adaptarlos a tu marca.
 published: true
 toc:
   visible: true
-date: 2024-03-14
+date: 2026-11-09
 locale: es
 ---
 
-NachUI no tiene colores hardcodeados. Cada componente se pinta con tokens semánticos — `bg-card`, `text-muted-foreground`, `border-rule` — y esos tokens son variables CSS que te pertenecen. Cambiás una variable y todo el sistema se mueve con ella, en claro y en oscuro, sin tocar un solo componente.
+NachUI no tiene colores hardcodeados. Cada componente se pinta con tokens semánticos como `bg-card`, `text-muted-foreground` y `border-rule`, y esos tokens son variables CSS que te pertenecen. Cambiás una variable y todo el sistema se mueve con ella, en claro y en oscuro, sin tocar un solo componente.
 
 ## Cómo funciona
 
@@ -118,13 +118,13 @@ Los cinco tienen su contraparte `-foreground`.
 | `--input`              | `border-input`              | Bordes de campos de formulario                       |
 | `--ring`               | `ring-ring`                 | Anillos de foco                                      |
 | `--rule`               | `border-rule`               | Filetes editoriales: divisores de sección, rieles    |
-| `--grid-color`         | —                           | Fondos de puntos y grillas, usado directo en CSS     |
+| `--grid-color`         | -                           | Fondos de puntos y grillas, usado directo en CSS     |
 
 `--border` y `--rule` suelen tener el mismo valor, pero están separados a propósito: uno es cromo de componente, el otro es estructura de página. Retocar los filetes de tu layout no debería tocar todas las tarjetas.
 
 ### Feedback
 
-Cada uno de los cuatro tonos de feedback — `destructive`, `warning`, `success`, `info` — trae una escala de cinco roles en vez de un solo color. Eso es lo que permite que un botón sólido y una alerta suave compartan tono sin que uno de los dos falle el contraste.
+Cada uno de los cuatro tonos de feedback (`destructive`, `warning`, `success`, `info`) trae una escala de cinco roles en vez de un solo color. Eso es lo que permite que un botón sólido y una alerta suave compartan tono sin que uno de los dos falle el contraste.
 
 | Sufijo        | Ejemplo de utilidad           | Rol                                               |
 | ------------- | ----------------------------- | ------------------------------------------------- |
@@ -134,13 +134,13 @@ Cada uno de los cuatro tonos de feedback — `destructive`, `warning`, `success`
 | `-surface`    | `bg-destructive-surface`      | Fondo teñido para alertas y badges                |
 | `-border`     | `border-destructive-border`   | Borde a juego con ese fondo teñido                |
 
-Sólido — el relleno lleva el significado:
+Sólido, donde el relleno lleva el significado:
 
 ```tsx
 <Button variant="destructive">Eliminar cuenta</Button>
 ```
 
-Suave — lo lleva el tinte, y el texto se mantiene legible:
+Suave, donde lo lleva el tinte y el texto se mantiene legible:
 
 ```tsx
 <div className="bg-destructive-surface text-destructive-text border-destructive-border border">
@@ -157,7 +157,7 @@ Usar `text-destructive` sobre un fondo claro es el error típico: ese es el rell
 | `--overlay`                                                                                                                                 | `bg-overlay`                | Velo detrás de diálogos y drawers                           |
 | `--elevation-sm` / `-md` / `-lg`                                                                                                            | `shadow-sm` / `-md` / `-lg` | La escala de sombras                                        |
 | `--code`                                                                                                                                    | `bg-code`                   | Superficie de los bloques de código                         |
-| `--code-plain`, `--code-keyword`, `--code-string`, `--code-function`, `--code-number`, `--code-tag`, `--code-comment`, `--code-punctuation` | —                           | Colores de sintaxis, leídos directo por el bloque de código |
+| `--code-plain`, `--code-keyword`, `--code-string`, `--code-function`, `--code-number`, `--code-tag`, `--code-comment`, `--code-punctuation` | -                           | Colores de sintaxis, leídos directo por el bloque de código |
 
 Las sombras son valores tematizables, no drop shadows fijas: un tema oscuro les sube la opacidad, porque una sombra calibrada para un lienzo blanco desaparece sobre uno casi negro.
 
@@ -189,7 +189,7 @@ Para esquinas más filosas en todos lados, bajá la base:
 }
 ```
 
-`--radius` es el único token declarado solo en `:root` — una esquina no tiene variante clara y oscura.
+`--radius` es el único token declarado solo en `:root`, porque una esquina no tiene variante clara y oscura.
 
 ## Tipografía
 
@@ -225,12 +225,12 @@ Todos los tokens están escritos en OKLCH:
 ```css
 oklch(54.6% 0.245 262.881);
 /*    ↑      ↑     ↑
-      |      |     tono, 0–360°
+      |      |     tono, 0 a 360°
       |      croma, 0 = gris
       luminosidad, 0% = negro, 100% = blanco */
 ```
 
-Es perceptualmente uniforme, y eso importa cuando construís una escala. En HSL, `hsl(60 100% 50%)` y `hsl(240 100% 50%)` declaran la misma luminosidad mientras el amarillo se ve mucho más brillante que el azul. En OKLCH, luminosidad igual se ve igual de clara — así que mantener el valor L fijo entre tonos te da una paleta de feedback realmente equilibrada, en vez de una donde el badge de warning grita y el de info susurra.
+Es perceptualmente uniforme, y eso importa cuando construís una escala. En HSL, `hsl(60 100% 50%)` y `hsl(240 100% 50%)` declaran la misma luminosidad mientras el amarillo se ve mucho más brillante que el azul. En OKLCH, luminosidad igual se ve igual de clara, así que mantener el valor L fijo entre tonos te da una paleta de feedback realmente equilibrada, en vez de una donde el badge de warning grita y el de info susurra.
 
 Además llega a colores que sRGB no puede expresar y degrada bien en navegadores viejos. [oklch.com](https://oklch.com/) es un buen lugar para elegir valores.
 
@@ -238,7 +238,7 @@ Además llega a colores que sRGB no puede expresar y degrada bien en navegadores
 
 ### Sobrescribir un token
 
-Editá la variable en tu CSS. Cambiala en los dos bloques — un valor puesto solo en `:root` se filtra al modo oscuro.
+Editá la variable en tu CSS. Cambiala en los dos bloques: un valor puesto solo en `:root` se filtra al modo oscuro.
 
 ```css
 :root {
@@ -299,13 +299,13 @@ La regla existe por cómo falla la cascada acá. Un tema que omite `--success-su
 
 Así que cuando escribas un tema, recorré el contrato:
 
-- **Superficies** — `background`, `card`, `popover`, `surface-muted` y sus foregrounds
-- **Interacción** — `primary`, `secondary`, `accent`, `muted`, `inverse` y sus foregrounds, más `muted-strong`
-- **Estructura** — `border`, `border-interactive`, `input`, `ring`, `rule`, `grid-color`
-- **Feedback** — los cinco roles de `destructive`, `warning`, `success` e `info`
-- **Scrim y elevación** — `overlay`, `elevation-sm`, `elevation-md`, `elevation-lg`
-- **Código** — `code` más los ocho tokens de sintaxis
-- **Radio** — `--radius`, solo en `:root`
+- **Superficies**: `background`, `card`, `popover`, `surface-muted` y sus foregrounds
+- **Interacción**: `primary`, `secondary`, `accent`, `muted`, `inverse` y sus foregrounds, más `muted-strong`
+- **Estructura**: `border`, `border-interactive`, `input`, `ring`, `rule`, `grid-color`
+- **Feedback**: los cinco roles de `destructive`, `warning`, `success` e `info`
+- **Scrim y elevación**: `overlay`, `elevation-sm`, `elevation-md`, `elevation-lg`
+- **Código**: `code` más los ocho tokens de sintaxis
+- **Radio**: `--radius`, solo en `:root`
 
 ## Cambiar de tema
 

@@ -17,7 +17,7 @@ toc:
 ## Anatomía
 
 ```tsx
-import { Popover } from '@/components/ui/popover';
+import { Popover } from '@/components/popover';
 ```
 
 ```tsx
@@ -59,8 +59,8 @@ Popover
 | Prop           | Tipo                      | Por defecto | Descripción                                   |
 | -------------- | ------------------------- | ----------- | --------------------------------------------- |
 | `defaultOpen`  | `boolean`                 | `false`     | Estado inicial de apertura.                   |
-| `open`         | `boolean`                 | —           | Estado controlado.                            |
-| `onOpenChange` | `(open: boolean) => void` | —           | Callback cuando cambia el estado de apertura. |
+| `open`         | `boolean`                 | -           | Estado controlado.                            |
+| `onOpenChange` | `(open: boolean) => void` | -           | Callback cuando cambia el estado de apertura. |
 
 ### Popover.Trigger
 
@@ -76,8 +76,8 @@ Popover
 | `sideOffset` | `number`                                       | `4`         | Distancia desde el trigger.                                              |
 | `showClose`  | `boolean`                                      | `false`     | Muestra un botón de cerrar.                                              |
 | `closeLabel` | `string`                                       | `"Close"`   | Nombre accesible del botón de cierre.                                    |
-| `aria-label` | `string`                                       | —           | Nombre del dialog. Sin esto (ni `aria-labelledby`) lo nombra el trigger. |
-| `className`  | `string`                                       | —           | Clases CSS adicionales.                                                  |
+| `aria-label` | `string`                                       | -           | Nombre del dialog. Sin esto (ni `aria-labelledby`) lo nombra el trigger. |
+| `className`  | `string`                                       | -           | Clases CSS adicionales.                                                  |
 
 ### Popover.Close
 

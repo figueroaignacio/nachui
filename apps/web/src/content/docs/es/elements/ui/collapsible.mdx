@@ -17,7 +17,7 @@ toc:
 ## Anatomía
 
 ```tsx
-import { Collapsible } from '@/components/ui/collapsible';
+import { Collapsible } from '@/components/collapsible';
 ```
 
 ```tsx
@@ -58,29 +58,29 @@ Collapsible con estilo de tarjeta incluyendo borde, fondo y sombra.
 | Prop           | Tipo                                    | Default     | Descripción                                              |
 | -------------- | --------------------------------------- | ----------- | -------------------------------------------------------- |
 | `defaultOpen`  | `boolean`                               | `false`     | Estado inicial abierto (modo no controlado).             |
-| `open`         | `boolean`                               | —           | Estado abierto controlado.                               |
-| `onOpenChange` | `(open: boolean) => void`               | —           | Callback que se ejecuta cuando cambia el estado abierto. |
+| `open`         | `boolean`                               | -           | Estado abierto controlado.                               |
+| `onOpenChange` | `(open: boolean) => void`               | -           | Callback que se ejecuta cuando cambia el estado abierto. |
 | `disabled`     | `boolean`                               | `false`     | Desactiva la interacción.                                |
 | `variant`      | `'default'` \| `'bordered'` \| `'card'` | `'default'` | Estilo visual del contenedor collapsible.                |
-| `className`    | `string`                                | —           | Clases adicionales.                                      |
-| `children`     | `React.ReactNode`                       | —           | Contenido dentro del collapsible.                        |
+| `className`    | `string`                                | -           | Clases adicionales.                                      |
+| `children`     | `React.ReactNode`                       | -           | Contenido dentro del collapsible.                        |
 
 ### Collapsible.Trigger
 
 | Prop              | Tipo                                | Default   | Descripción                                                   |
 | ----------------- | ----------------------------------- | --------- | ------------------------------------------------------------- |
 | `showChevron`     | `boolean`                           | `true`    | Muestra el ícono de chevron.                                  |
-| `chevronIcon`     | `React.ReactNode`                   | —         | Ícono personalizado para el chevron.                          |
+| `chevronIcon`     | `React.ReactNode`                   | -         | Ícono personalizado para el chevron.                          |
 | `chevronPosition` | `'left'` \| `'right'`               | `'right'` | Posición del ícono.                                           |
 | `asChild`         | `boolean`                           | `false`   | Permite usar un elemento personalizado como trigger.          |
-| `children`        | `React.ReactNode`                   | —         | Texto o contenido del trigger.                                |
-| `onClick`         | `(event: React.MouseEvent) => void` | —         | Manejador de click (combinado con la lógica de abrir/cerrar). |
-| `className`       | `string`                            | —         | Clases adicionales.                                           |
+| `children`        | `React.ReactNode`                   | -         | Texto o contenido del trigger.                                |
+| `onClick`         | `(event: React.MouseEvent) => void` | -         | Manejador de click (combinado con la lógica de abrir/cerrar). |
+| `className`       | `string`                            | -         | Clases adicionales.                                           |
 
 ### Collapsible.Content
 
 | Prop         | Tipo              | Default | Descripción                                                                                                   |
 | ------------ | ----------------- | ------- | ------------------------------------------------------------------------------------------------------------- |
 | `forceMount` | `boolean`         | `false` | Mantiene el contenido en el DOM aunque esté cerrado (útil para SSR). Queda oculto e inerte hasta que se abre. |
-| `children`   | `React.ReactNode` | —       | Contenido a mostrar u ocultar.                                                                                |
-| `className`  | `string`          | —       | Clases adicionales.                                                                                           |
+| `children`   | `React.ReactNode` | -       | Contenido a mostrar u ocultar.                                                                                |
+| `className`  | `string`          | -       | Clases adicionales.                                                                                           |

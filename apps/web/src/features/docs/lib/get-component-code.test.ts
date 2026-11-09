@@ -5,7 +5,7 @@ import { fromRepoRoot } from '@/lib/repo-root';
 import { rewriteDemoImports } from './get-component-code';
 
 describe('rewriteDemoImports', () => {
-  it('points every component family at the components alias', () => {
+  it('points every family at the alias of the same folder', () => {
     const code = [
       "import { Button } from '../../components/button';",
       'import { Flex } from "../../layout/flex";',
@@ -16,11 +16,11 @@ describe('rewriteDemoImports', () => {
 
     expect(rewriteDemoImports(code)).toBe(
       [
-        "import { Button } from '@/components/ui/button';",
-        'import { Flex } from "@/components/ui/flex";',
-        "import { Message } from '@/components/ui/message';",
-        "import { AgentRun } from '@/components/ui/agent-run';",
-        "import { CheckIcon } from '@/components/ui/check';",
+        "import { Button } from '@/components/button';",
+        'import { Flex } from "@/layout/flex";',
+        "import { Message } from '@/ai/message';",
+        "import { AgentRun } from '@/hybrids/agent-run';",
+        "import { CheckIcon } from '@/icons/check';",
       ].join('\n'),
     );
   });

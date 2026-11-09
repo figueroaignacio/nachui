@@ -14,23 +14,16 @@ type ComponentCodeResult = {
  * Demos import their siblings by relative path inside packages/ui, from more
  * than one family directory: `../../components/` for UI primitives,
  * `../../layout/` for Flex, Stack, Grid and Container, `../../ai/` for the AI
- * elements, and `../../icons/` for the icon set. The CLI writes every component
- * to `aliases.components` regardless of family, so all of them collapse to the
- * same target here.
- *
- * `../../lib/` is the exception, because it is not a component. It holds the
- * `cn` helper that the installation guide has the reader create at `lib/cn.ts`,
- * so it keeps its own target.
+ * elements, `../../hybrids/` and `../../icons/`. The CLI and the installation
+ * guide mirror those folders under `src/`, so each one maps to the alias of the
+ * same name: `@/components/button`, `@/layout/flex`, `@/icons/check`.
  *
  * Exported so a test can assert that no demo escapes the rewrite. When a new
  * family directory appears in packages/ui, it has to be added to this list.
  */
 export function rewriteDemoImports(code: string): string {
   return code
-    .replaceAll(
-      /from (['"])\.\.\/\.\.\/(?:components|layout|ai|hybrids|icons)\//g,
-      'from $1@/components/ui/',
-    )
+    .replaceAll(/from (['"])\.\.\/\.\.\/(components|layout|ai|hybrids|icons)\//g, 'from $1@/$2/')
     .replaceAll(/from (['"])\.\.\/\.\.\/lib\//g, 'from $1@/lib/');
 }
 

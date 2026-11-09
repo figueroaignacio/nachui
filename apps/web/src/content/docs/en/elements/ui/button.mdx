@@ -17,7 +17,7 @@ toc:
 ## Anatomy
 
 ```tsx
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/button';
 ```
 
 ```tsx
@@ -60,13 +60,13 @@ import { Button } from '@/components/ui/button';
 | `size`      | `"default"` \| `"sm"` \| `"lg"` \| `"icon"`                                             | `"default"`   | The button size.                                                                               |
 | `loading`   | `boolean`                                                                               | `false`       | Shows the loader and ignores clicks. The button stays focusable and is marked `aria-disabled`. |
 | `loader`    | `React.ReactNode`                                                                       | `<Loader2 />` | Custom loader component to be displayed when loading.                                          |
-| `leftIcon`  | `React.ReactNode`                                                                       | —             | Icon to display on the left side of the button.                                                |
-| `rightIcon` | `React.ReactNode`                                                                       | —             | Icon to display on the right side of the button.                                               |
+| `leftIcon`  | `React.ReactNode`                                                                       | -             | Icon to display on the left side of the button.                                                |
+| `rightIcon` | `React.ReactNode`                                                                       | -             | Icon to display on the right side of the button.                                               |
 | `fullWidth` | `boolean`                                                                               | `false`       | Whether the button should take up the full width of its container.                             |
-| `disabled`  | `boolean`                                                                               | —             | Disables the button.                                                                           |
-| `className` | `string`                                                                                | —             | Additional CSS class names.                                                                    |
+| `disabled`  | `boolean`                                                                               | -             | Disables the button.                                                                           |
+| `className` | `string`                                                                                | -             | Additional CSS class names.                                                                    |
 | `type`      | `"button"` \| `"submit"` \| `"reset"`                                                   | `"button"`    | The type of the button element.                                                                |
-| `children`  | `React.ReactNode`                                                                       | —             | The button content (text or other elements).                                                   |
+| `children`  | `React.ReactNode`                                                                       | -             | The button content (text or other elements).                                                   |
 
 ### ButtonGroup
 
@@ -74,5 +74,5 @@ import { Button } from '@/components/ui/button';
 | ------------- | ------------------------------ | -------------- | ----------------------------------------------------------------------------------------------------- |
 | `orientation` | `"horizontal"` \| `"vertical"` | `"horizontal"` | The layout of the button group, either horizontal or vertical.                                        |
 | `attached`    | `boolean`                      | `false`        | Whether the buttons in the group are attached to each other (i.e., no border-radius between buttons). |
-| `className`   | `string`                       | —              | Additional CSS class names.                                                                           |
-| `children`    | `React.ReactNode`              | —              | The buttons inside the group.                                                                         |
+| `className`   | `string`                       | -              | Additional CSS class names.                                                                           |
+| `children`    | `React.ReactNode`              | -              | The buttons inside the group.                                                                         |

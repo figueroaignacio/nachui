@@ -10,7 +10,7 @@ toc:
 
 <ComponentPreview component="sprite" demo="default" />
 
-Cada sprite son cinco ranuras — piel, pelo, ojos, ropa y accesorio — dibujadas
+Cada sprite son cinco ranuras (piel, pelo, ojos, ropa y accesorio) dibujadas
 sobre un mismo esqueleto fijo: la caja de la cara, la línea de ojos, los hombros
 y la cadera. Como el esqueleto no se mueve, cualquier combinación de partes
 hereda las animaciones sin trabajo extra.
@@ -21,7 +21,7 @@ hereda las animaciones sin trabajo extra.
 
 Instalarlo a mano funciona como con cualquier otro componente: copiá el archivo
 de la pestaña Manual y ajustá los imports. Las animaciones viajan adentro del
-archivo como `SPRITE_CSS`, así que no hay nada más que copiar — renderizá con
+archivo como `SPRITE_CSS`, así que no hay nada más que copiar: renderizá con
 `withStyles` o inyectá el string una sola vez:
 
 ```tsx
@@ -31,7 +31,7 @@ archivo como `SPRITE_CSS`, así que no hay nada más que copiar — renderizá c
 ## Anatomía
 
 ```tsx
-import { Sprite } from '@/components/ui/sprite';
+import { Sprite } from '@/components/sprite';
 ```
 
 ```tsx
@@ -40,7 +40,7 @@ import { Sprite } from '@/components/ui/sprite';
 
 ## Semillas
 
-Cualquier string arma un sprite, y el mismo string arma siempre el mismo — así
+Cualquier string arma un sprite, y el mismo string arma siempre el mismo, así
 que un usuario o un email sirven de avatar sin guardar nada.
 
 <ComponentPreview component="sprite" demo="seeds" />
@@ -63,7 +63,7 @@ un eje aparte de la forma: seis peinados y cinco colores son treinta cabezas.
 ## Suelto
 
 `spriteToSvg` devuelve el sprite entero como un string SVG, animaciones
-incluidas, así que funciona donde la hoja de estilos de una página no llega — una
+incluidas, así que funciona donde la hoja de estilos de una página no llega: una
 respuesta de servidor, un archivo guardado, un README. En este sitio, además,
 cada sprite es una URL:
 
@@ -79,7 +79,7 @@ cachea como inmutable.
 | Prop         | Tipo                                   | Default  | Descripción                                                                                             |
 | ------------ | -------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------- |
 | `seed`       | `string`                               | `nachui` | Cualquier string. El mismo string da el mismo sprite.                                                   |
-| `parts`      | `Partial<SpriteParts>`                 | —        | Pisa la semilla, ranura por ranura.                                                                     |
+| `parts`      | `Partial<SpriteParts>`                 | -        | Pisa la semilla, ranura por ranura.                                                                     |
 | `state`      | `bust \| idle \| walk \| work \| loop` | `idle`   | Qué está haciendo.                                                                                      |
 | `size`       | `number`                               | `48`     | Ancho en píxeles; el alto sale de la grilla.                                                            |
 | `label`      | `string`                               | -        | Convierte al sprite en una imagen con nombre. Sin esto el SVG queda oculto para la tecnología asistiva. |

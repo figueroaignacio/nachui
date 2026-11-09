@@ -17,7 +17,7 @@ toc:
 ## Anatomía
 
 ```tsx
-import { Accordion } from '@/components/ui/accordion';
+import { Accordion } from '@/components/accordion';
 ```
 
 ```tsx
@@ -68,34 +68,34 @@ Puedes omitir `defaultValue` para que el acordeón inicie completamente cerrado.
 | -------------- | -------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------- |
 | `type`         | `"single"` \| `"multiple"`             | `"single"`  | Controla si se puede abrir un solo ítem o varios simultáneamente.                                   |
 | `defaultValue` | `string`                               | `undefined` | Ítem inicial abierto.                                                                               |
-| `children`     | `React.ReactNode`                      | —           | Deben ser `AccordionItem`.                                                                          |
-| `className`    | `string`                               | —           | Clases adicionales para el contenedor.                                                              |
+| `children`     | `React.ReactNode`                      | -           | Deben ser `AccordionItem`.                                                                          |
+| `className`    | `string`                               | -           | Clases adicionales para el contenedor.                                                              |
 | `headingLevel` | `1` \| `2` \| `3` \| `4` \| `5` \| `6` | `3`         | Nivel del encabezado que envuelve cada trigger. Elegí el que encaje con la estructura de la página. |
 
 ### Accordion.Item
 
 | Prop        | Tipo              | Default            | Descripción                                           |
 | ----------- | ----------------- | ------------------ | ----------------------------------------------------- |
-| `value`     | `string`          | —                  | ID único del ítem. **Obligatorio.**                   |
-| `children`  | `React.ReactNode` | —                  | Debe incluir `AccordionTrigger` y `AccordionContent`. |
+| `value`     | `string`          | -                  | ID único del ítem. **Obligatorio.**                   |
+| `children`  | `React.ReactNode` | -                  | Debe incluir `AccordionTrigger` y `AccordionContent`. |
 | `isOpen`    | `boolean`         | Controlado interno | Indica si el ítem está abierto.                       |
 | `onToggle`  | `() => void`      | Controlado interno | Función para abrir/cerrar.                            |
-| `className` | `string`          | —                  | Clases adicionales para el wrapper.                   |
+| `className` | `string`          | -                  | Clases adicionales para el wrapper.                   |
 
 ### Accordion.Trigger
 
 | Prop           | Tipo                                   | Default            | Descripción                                           |
 | -------------- | -------------------------------------- | ------------------ | ----------------------------------------------------- |
-| `children`     | `React.ReactNode`                      | —                  | Título o contenido del botón.                         |
+| `children`     | `React.ReactNode`                      | -                  | Título o contenido del botón.                         |
 | `isOpen`       | `boolean`                              | Controlado interno | Estado abierto/cerrado (rota el ícono).               |
 | `onToggle`     | `() => void`                           | Controlado interno | Acción al hacer click.                                |
-| `className`    | `string`                               | —                  | Clases adicionales del botón.                         |
+| `className`    | `string`                               | -                  | Clases adicionales del botón.                         |
 | `headingLevel` | `1` \| `2` \| `3` \| `4` \| `5` \| `6` | El de `Accordion`  | Cambia el nivel de encabezado solo para este trigger. |
 
 ### Accordion.Content
 
 | Prop        | Tipo              | Default            | Descripción                                    |
 | ----------- | ----------------- | ------------------ | ---------------------------------------------- |
-| `children`  | `React.ReactNode` | —                  | Contenido colapsable.                          |
+| `children`  | `React.ReactNode` | -                  | Contenido colapsable.                          |
 | `isOpen`    | `boolean`         | Controlado interno | Controla apertura y animación.                 |
-| `className` | `string`          | —                  | Clases adicionales para el contenedor animado. |
+| `className` | `string`          | -                  | Clases adicionales para el contenedor animado. |

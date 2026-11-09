@@ -23,7 +23,7 @@ const Dialog = Object.assign(DialogRoot, {
   Close: DialogClose,
 });
 
-// Usage — all parts live under one import
+// Usage: all parts live under one import
 import { Dialog } from '@repo/ui/components/dialog';
 
 <Dialog>
@@ -69,7 +69,7 @@ Internally, compound components share state via React Context. The root componen
 // 1. Define context
 const AccordionContext = React.createContext<AccordionContextValue | null>(null);
 
-// 2. Guard hook — throws if used outside provider
+// 2. Guard hook: throws if used outside provider
 const useAccordionContext = () => {
   const context = React.use(AccordionContext);
   if (!context) throw new Error('Accordion components must be used within an Accordion');
@@ -110,7 +110,7 @@ export { Accordion };
 All stateful compound components support both modes.
 
 ```tsx
-// Uncontrolled — internal state, no props needed
+// Uncontrolled: internal state, no props needed
 <Accordion defaultValue="item-1">
   <Accordion.Item value="item-1">
     <Accordion.Trigger value="item-1">Question</Accordion.Trigger>
@@ -118,7 +118,7 @@ All stateful compound components support both modes.
   </Accordion.Item>
 </Accordion>
 
-// Controlled — you own the state
+// Controlled: you own the state
 const [open, setOpen] = React.useState<string[]>([])
 
 <Accordion value={open} onValueChange={setOpen}>
@@ -237,8 +237,8 @@ import { Tooltip } from '@repo/ui/components/tooltip';
 
 ## Rules When Extending
 
-1. **Never skip the root** — sub-parts thrown without their root will throw a runtime error from the context guard.
+1. **Never skip the root**: sub-parts thrown without their root will throw a runtime error from the context guard.
 2. **Always set `displayName`** on every sub-component for React DevTools legibility.
-3. **Hoist animation constants** to module level — never define `variants` objects inside component functions.
+3. **Hoist animation constants** to module level. Never define `variants` objects inside component functions.
 4. **Use `React.use(Context)`** (React 19 API), not `React.useContext(Context)` in new components.
 5. **Preserve `asChild` pattern** on `Trigger` and `Close` sub-parts so consumers can swap the rendered element.

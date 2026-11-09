@@ -17,7 +17,7 @@ toc:
 ## Anatomía
 
 ```tsx
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/card';
 ```
 
 ```tsx
@@ -76,39 +76,39 @@ Tarjetas con padding reducido para diseños densos.
 | ----------- | --------------------------------------- | ----------- | --------------------------------- |
 | `variant`   | `"default"` \| `"outline"` \| `"ghost"` | `"default"` | Variante visual del card.         |
 | `as`        | `React.ElementType`                     | `'div'`     | Cambia el elemento raíz del card. |
-| `className` | `string`                                | —           | Clases adicionales.               |
-| `children`  | `React.ReactNode`                       | —           | Contenido del card.               |
+| `className` | `string`                                | -           | Clases adicionales.               |
+| `children`  | `React.ReactNode`                       | -           | Contenido del card.               |
 
 ### Card.Header
 
 | Prop        | Tipo              | Default | Descripción                                       |
 | ----------- | ----------------- | ------- | ------------------------------------------------- |
 | `compact`   | `boolean`         | `false` | Reduce el padding superior e inferior del header. |
-| `className` | `string`          | —       | Clases adicionales.                               |
-| `children`  | `React.ReactNode` | —       | Contenido del header.                             |
+| `className` | `string`          | -       | Clases adicionales.                               |
+| `children`  | `React.ReactNode` | -       | Contenido del header.                             |
 
 ### Card.Title
 
 | Prop        | Tipo                                                     | Default | Descripción                       |
 | ----------- | -------------------------------------------------------- | ------- | --------------------------------- |
 | `as`        | `'h1'` \| `'h2'` \| `'h3'` \| `'h4'` \| `'h5'` \| `'h6'` | `'h3'`  | Tag HTML para el título del card. |
-| `className` | `string`                                                 | —       | Clases adicionales.               |
-| `children`  | `React.ReactNode`                                        | —       | Contenido del título.             |
+| `className` | `string`                                                 | -       | Clases adicionales.               |
+| `children`  | `React.ReactNode`                                        | -       | Contenido del título.             |
 
 ### Card.Description
 
 | Prop        | Tipo              | Default | Descripción         |
 | ----------- | ----------------- | ------- | ------------------- |
-| `className` | `string`          | —       | Clases adicionales. |
-| `children`  | `React.ReactNode` | —       | Texto descriptivo.  |
+| `className` | `string`          | -       | Clases adicionales. |
+| `children`  | `React.ReactNode` | -       | Texto descriptivo.  |
 
 ### Card.Content
 
 | Prop        | Tipo              | Default | Descripción                      |
 | ----------- | ----------------- | ------- | -------------------------------- |
 | `compact`   | `boolean`         | `false` | Reduce el padding del contenido. |
-| `className` | `string`          | —       | Clases adicionales.              |
-| `children`  | `React.ReactNode` | —       | Contenido principal del card.    |
+| `className` | `string`          | -       | Clases adicionales.              |
+| `children`  | `React.ReactNode` | -       | Contenido principal del card.    |
 
 ### Card.Footer
 
@@ -116,5 +116,5 @@ Tarjetas con padding reducido para diseños densos.
 | ----------- | ------------------------------------------------- | --------- | ------------------------------------------ |
 | `align`     | `'start'` \| `'center'` \| `'end'` \| `'between'` | `'start'` | Controla la alineación horizontal del pie. |
 | `compact`   | `boolean`                                         | `false`   | Reduce el padding del footer.              |
-| `className` | `string`                                          | —         | Clases adicionales.                        |
-| `children`  | `React.ReactNode`                                 | —         | Contenido del footer.                      |
+| `className` | `string`                                          | -         | Clases adicionales.                        |
+| `children`  | `React.ReactNode`                                 | -         | Contenido del footer.                      |

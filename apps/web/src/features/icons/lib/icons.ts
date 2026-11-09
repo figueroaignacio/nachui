@@ -184,5 +184,5 @@ export function iconCliCommand(name: string) {
 
 export function iconUsageSnippet(name: string) {
   const component = iconComponentName(name);
-  return `import { ${component} } from '@/components/ui/${name}';\n\n<${component} size={16} />`;
+  return `import { ${component} } from '@/icons/${name}';\n\n<${component} size={16} />`;
 }

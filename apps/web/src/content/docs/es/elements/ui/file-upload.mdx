@@ -17,7 +17,7 @@ toc:
 ## Anatomía
 
 ```tsx
-import { FileUpload } from '@/components/ui/file-upload';
+import { FileUpload } from '@/components/file-upload';
 ```
 
 ```tsx
@@ -88,7 +88,7 @@ Las mismas partes acomodadas como una grilla de miniaturas, con el botón de qui
 `useFileUpload` es el motor detrás del componente y se exporta por separado para interfaces que no encajan con las partes de arriba. Recibe las mismas opciones que la raíz y devuelve el estado más los handlers para conectar a cualquier elemento.
 
 ```tsx
-import { useFileUpload, formatBytes } from '@/components/ui/file-upload';
+import { useFileUpload, formatBytes } from '@/components/file-upload';
 
 const { files, errors, isDragging, openFileDialog, getInputProps, getDropzoneProps, removeFile } =
   useFileUpload({ multiple: true, maxSize: 5 * 1024 * 1024 });

@@ -17,7 +17,7 @@ toc:
 ## Anatomía
 
 ```tsx
-import { Toast, useToast } from '@/components/ui/toast';
+import { Toast, useToast } from '@/components/toast';
 ```
 
 Envolvé tu app con `Toast.Provider`, después usá `useToast()` en donde quieras:
@@ -76,7 +76,7 @@ Elegí dónde aparecen los toasts en pantalla. Hacé click en una posición para
 
 | Prop        | Tipo                                                                 | Por defecto      | Descripción                                                                                                                                                                                                               |
 | ----------- | -------------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `children`  | `React.ReactNode`                                                    | —                | El contenido de la app.                                                                                                                                                                                                   |
+| `children`  | `React.ReactNode`                                                    | -                | El contenido de la app.                                                                                                                                                                                                   |
 | `maxToasts` | `number`                                                             | `5`              | Número máximo de toasts visibles.                                                                                                                                                                                         |
 | `position`  | `"top-left"` \| `"top-right"` \| `"bottom-left"` \| `"bottom-right"` | `"bottom-right"` | Dónde aparecen los toasts en pantalla.                                                                                                                                                                                    |
 | `labels`    | `Partial<ToastLabels>`                                               | -                | Nombres accesibles: `region` (`"Notifications"`) y `dismiss` (`"Dismiss notification"`).                                                                                                                                  |
@@ -95,8 +95,8 @@ Devuelve un objeto con:
 
 | Prop          | Tipo                                                               | Por defecto | Descripción                                                                                                        |
 | ------------- | ------------------------------------------------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------ |
-| `title`       | `string`                                                           | —           | Título del toast (requerido).                                                                                      |
-| `description` | `string`                                                           | —           | Descripción opcional.                                                                                              |
+| `title`       | `string`                                                           | -           | Título del toast (requerido).                                                                                      |
+| `description` | `string`                                                           | -           | Descripción opcional.                                                                                              |
 | `variant`     | `"default"` \| `"success"` \| `"error"` \| `"info"` \| `"warning"` | `"default"` | Variante visual.                                                                                                   |
 | `duration`    | `number`                                                           | `5000`      | Delay de auto-cierre en ms. `10000` cuando hay `action`. Usá `0` o `Infinity` para que quede hasta que lo cierren. |
-| `action`      | `{ label: string; onClick: () => void }`                           | —           | Botón de acción opcional.                                                                                          |
+| `action`      | `{ label: string; onClick: () => void }`                           | -           | Botón de acción opcional.                                                                                          |

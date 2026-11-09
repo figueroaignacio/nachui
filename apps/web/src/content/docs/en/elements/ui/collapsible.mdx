@@ -17,7 +17,7 @@ toc:
 ## Anatomy
 
 ```tsx
-import { Collapsible } from '@/components/ui/collapsible';
+import { Collapsible } from '@/components/collapsible';
 ```
 
 ```tsx
@@ -58,29 +58,29 @@ Collapsible with card styling including border, background, and shadow.
 | Prop           | Type                                    | Default     | Description                                 |
 | -------------- | --------------------------------------- | ----------- | ------------------------------------------- |
 | `defaultOpen`  | `boolean`                               | `false`     | Initial open state (uncontrolled mode).     |
-| `open`         | `boolean`                               | —           | Controlled open state.                      |
-| `onOpenChange` | `(open: boolean) => void`               | —           | Callback fired when the open state changes. |
+| `open`         | `boolean`                               | -           | Controlled open state.                      |
+| `onOpenChange` | `(open: boolean) => void`               | -           | Callback fired when the open state changes. |
 | `disabled`     | `boolean`                               | `false`     | Disables interaction.                       |
 | `variant`      | `'default'` \| `'bordered'` \| `'card'` | `'default'` | Visual style of the collapsible container.  |
-| `className`    | `string`                                | —           | Additional classes.                         |
-| `children`     | `React.ReactNode`                       | —           | Content inside the collapsible.             |
+| `className`    | `string`                                | -           | Additional classes.                         |
+| `children`     | `React.ReactNode`                       | -           | Content inside the collapsible.             |
 
 ### Collapsible.Trigger
 
 | Prop              | Type                                | Default   | Description                                           |
 | ----------------- | ----------------------------------- | --------- | ----------------------------------------------------- |
 | `showChevron`     | `boolean`                           | `true`    | Shows the chevron icon.                               |
-| `chevronIcon`     | `React.ReactNode`                   | —         | Custom icon for the chevron.                          |
+| `chevronIcon`     | `React.ReactNode`                   | -         | Custom icon for the chevron.                          |
 | `chevronPosition` | `'left'` \| `'right'`               | `'right'` | Position of the chevron icon.                         |
 | `asChild`         | `boolean`                           | `false`   | Allows passing a custom child element as the trigger. |
-| `children`        | `React.ReactNode`                   | —         | Trigger label or content.                             |
-| `onClick`         | `(event: React.MouseEvent) => void` | —         | Click handler (merged with open/close logic).         |
-| `className`       | `string`                            | —         | Additional classes.                                   |
+| `children`        | `React.ReactNode`                   | -         | Trigger label or content.                             |
+| `onClick`         | `(event: React.MouseEvent) => void` | -         | Click handler (merged with open/close logic).         |
+| `className`       | `string`                            | -         | Additional classes.                                   |
 
 ### Collapsible.Content
 
 | Prop         | Type              | Default | Description                                                                                         |
 | ------------ | ----------------- | ------- | --------------------------------------------------------------------------------------------------- |
 | `forceMount` | `boolean`         | `false` | Keeps the content in the DOM while closed (useful for SSR). It stays hidden and inert until opened. |
-| `children`   | `React.ReactNode` | —       | Content to be revealed/collapsed.                                                                   |
-| `className`  | `string`          | —       | Additional classes.                                                                                 |
+| `children`   | `React.ReactNode` | -       | Content to be revealed/collapsed.                                                                   |
+| `className`  | `string`          | -       | Additional classes.                                                                                 |

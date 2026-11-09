@@ -10,7 +10,7 @@ toc:
 
 <ComponentPreview component="sprite" demo="default" />
 
-Every sprite is five slots — skin, hair, eyes, outfit, accessory — drawn on one
+Every sprite is five slots (skin, hair, eyes, outfit, accessory) drawn on one
 fixed skeleton: the face box, the eye line, the shoulders and the hip. Because
 the skeleton never moves, any combination of parts inherits the animations for
 free.
@@ -21,7 +21,7 @@ free.
 
 Installing by hand works the same as any other component: copy the file from
 the Manual tab and adjust the import paths. The animations travel inside the
-file as `SPRITE_CSS`, so nothing else needs copying — either render with
+file as `SPRITE_CSS`, so nothing else needs copying. Either render with
 `withStyles` or inject the string once:
 
 ```tsx
@@ -31,7 +31,7 @@ file as `SPRITE_CSS`, so nothing else needs copying — either render with
 ## Anatomy
 
 ```tsx
-import { Sprite } from '@/components/ui/sprite';
+import { Sprite } from '@/components/sprite';
 ```
 
 ```tsx
@@ -40,7 +40,7 @@ import { Sprite } from '@/components/ui/sprite';
 
 ## Seeds
 
-Any string builds a sprite, and the same string always builds the same one — so
+Any string builds a sprite, and the same string always builds the same one, so
 a username or an email works as an avatar with nothing stored.
 
 <ComponentPreview component="sprite" demo="seeds" />
@@ -62,7 +62,7 @@ separate axis from shape, so six hair shapes and five colours are thirty heads.
 ## Standalone
 
 `spriteToSvg` returns the whole sprite as one SVG string, animations included, so
-it works anywhere a page's stylesheet cannot reach — a server response, a saved
+it works anywhere a page's stylesheet cannot reach: a server response, a saved
 file, a README. On this site every sprite is also a URL:
 
 ```
@@ -77,7 +77,7 @@ immutable.
 | Prop         | Type                                   | Default  | Description                                                                            |
 | ------------ | -------------------------------------- | -------- | -------------------------------------------------------------------------------------- |
 | `seed`       | `string`                               | `nachui` | Any string. The same string builds the same sprite.                                    |
-| `parts`      | `Partial<SpriteParts>`                 | —        | Overrides the seed, slot by slot.                                                      |
+| `parts`      | `Partial<SpriteParts>`                 | -        | Overrides the seed, slot by slot.                                                      |
 | `state`      | `bust \| idle \| walk \| work \| loop` | `idle`   | What it is doing.                                                                      |
 | `size`       | `number`                               | `48`     | Width in pixels; height follows the grid.                                              |
 | `label`      | `string`                               | -        | Turns the sprite into a named image. Without it the SVG is hidden from assistive tech. |

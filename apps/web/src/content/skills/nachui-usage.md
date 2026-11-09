@@ -84,7 +84,7 @@ Use layout primitives for spatial composition. Do not use raw `div` with Tailwin
 
 Accepted `gap` values: `"0" | "1" | "2" | "3" | "4" | "5" | "6" | "8" | "10" | "12" | "16" | "20" | "24" | "32"`.
 
-Do **not** pass arbitrary values like `gap="2.5"` — these will cause TypeScript errors.
+Do **not** pass arbitrary values like `gap="2.5"`, since these will cause TypeScript errors.
 
 ## Button Usage
 
@@ -125,11 +125,11 @@ import { Typography } from '@repo/ui/components/typography';
 
 ## Icons
 
-NachUI ships its own icon set: one self-contained React component per icon, installed with `npx nachui add icons/<name>` and imported from `@/components/ui/<name>` as `<Name>Icon`. Browse it at `/icons`. Components accept any icon through props, so another library is fine when a project already uses one, but do not add an icon dependency on your own.
+NachUI ships its own icon set: one self-contained React component per icon, installed with `npx nachui add icons/<name>` and imported from `@/icons/<name>` as `<Name>Icon`. Browse it at `/icons`. Components accept any icon through props, so another library is fine when a project already uses one, but do not add an icon dependency on your own.
 
 ```tsx
-import { ArrowRightIcon } from '@/components/ui/arrow-right';
-import { CopyIcon } from '@/components/ui/copy';
+import { ArrowRightIcon } from '@/icons/arrow-right';
+import { CopyIcon } from '@/icons/copy';
 
 <ArrowRightIcon size={16} />
 <CopyIcon className="h-4 w-4" strokeWidth={2} />
@@ -137,8 +137,8 @@ import { CopyIcon } from '@/components/ui/copy';
 
 ## Client vs Server Components
 
-- Layout primitives (`Container`, `Stack`, `Flex`, `Grid`) are Server Component safe — no `'use client'` needed.
-- Interactive components (`Button`, `Dialog`, `Accordion`, `Tabs`, etc.) are already marked `'use client'` internally — you do not need to add the directive when consuming them in a Server Component, Next.js handles the boundary automatically.
+- Layout primitives (`Container`, `Stack`, `Flex`, `Grid`) are Server Component safe, so no `'use client'` is needed.
+- Interactive components (`Button`, `Dialog`, `Accordion`, `Tabs`, etc.) are already marked `'use client'` internally. You do not need to add the directive when consuming them in a Server Component, since Next.js handles the boundary automatically.
 - Only add `'use client'` to your own component files when you use React hooks (`useState`, `useEffect`, `useRef`, etc.).
 
 ## `cn` Utility

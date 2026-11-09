@@ -17,7 +17,7 @@ toc:
 ## Anatomía
 
 ```tsx
-import { Label } from '@/components/ui/label';
+import { Label } from '@/components/label';
 ```
 
 ```tsx
@@ -48,10 +48,10 @@ La descripción recibe el id `{htmlFor}-label-description`, o el que pases en `d
 
 | Prop            | Tipo              | Por defecto                   | Descripción                                                 |
 | --------------- | ----------------- | ----------------------------- | ----------------------------------------------------------- |
-| `required`      | `boolean`         | —                             | Muestra un indicador rojo `*` junto al texto del label.     |
-| `optional`      | `boolean`         | —                             | Muestra el texto "(optional)" junto al label.               |
-| `description`   | `string`          | —                             | Texto de ayuda mostrado debajo del label.                   |
+| `required`      | `boolean`         | -                             | Muestra un indicador rojo `*` junto al texto del label.     |
+| `optional`      | `boolean`         | -                             | Muestra el texto "(optional)" junto al label.               |
+| `description`   | `string`          | -                             | Texto de ayuda mostrado debajo del label.                   |
 | `descriptionId` | `string`          | `{htmlFor}-label-description` | Id de la descripción, para el `aria-describedby` del input. |
-| `htmlFor`       | `string`          | —                             | Asocia el label con un elemento del formulario.             |
-| `className`     | `string`          | —                             | Clases CSS adicionales.                                     |
-| `children`      | `React.ReactNode` | —                             | El contenido del label.                                     |
+| `htmlFor`       | `string`          | -                             | Asocia el label con un elemento del formulario.             |
+| `className`     | `string`          | -                             | Clases CSS adicionales.                                     |
+| `children`      | `React.ReactNode` | -                             | El contenido del label.                                     |

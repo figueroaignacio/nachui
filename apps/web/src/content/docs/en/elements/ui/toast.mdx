@@ -17,7 +17,7 @@ toc:
 ## Anatomy
 
 ```tsx
-import { Toast, useToast } from '@/components/ui/toast';
+import { Toast, useToast } from '@/components/toast';
 ```
 
 Wrap your app with `Toast.Provider`, then use `useToast()` anywhere:
@@ -76,7 +76,7 @@ Choose where toasts appear on screen. Click a position to select it, then trigge
 
 | Prop        | Type                                                                 | Default          | Description                                                                                                                                                                             |
 | ----------- | -------------------------------------------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `children`  | `React.ReactNode`                                                    | —                | The app content.                                                                                                                                                                        |
+| `children`  | `React.ReactNode`                                                    | -                | The app content.                                                                                                                                                                        |
 | `maxToasts` | `number`                                                             | `5`              | Maximum number of visible toasts.                                                                                                                                                       |
 | `position`  | `"top-left"` \| `"top-right"` \| `"bottom-left"` \| `"bottom-right"` | `"bottom-right"` | Where toasts appear on screen.                                                                                                                                                          |
 | `labels`    | `Partial<ToastLabels>`                                               | -                | Accessible names: `region` (`"Notifications"`) and `dismiss` (`"Dismiss notification"`).                                                                                                |
@@ -95,8 +95,8 @@ Returns an object with:
 
 | Prop          | Type                                                               | Default     | Description                                                                                                    |
 | ------------- | ------------------------------------------------------------------ | ----------- | -------------------------------------------------------------------------------------------------------------- |
-| `title`       | `string`                                                           | —           | Toast title (required).                                                                                        |
-| `description` | `string`                                                           | —           | Optional description text.                                                                                     |
+| `title`       | `string`                                                           | -           | Toast title (required).                                                                                        |
+| `description` | `string`                                                           | -           | Optional description text.                                                                                     |
 | `variant`     | `"default"` \| `"success"` \| `"error"` \| `"info"` \| `"warning"` | `"default"` | Visual variant.                                                                                                |
 | `duration`    | `number`                                                           | `5000`      | Auto-dismiss delay in ms. `10000` when there is an `action`. Set `0` or `Infinity` to keep it until dismissed. |
-| `action`      | `{ label: string; onClick: () => void }`                           | —           | Optional action button.                                                                                        |
+| `action`      | `{ label: string; onClick: () => void }`                           | -           | Optional action button.                                                                                        |

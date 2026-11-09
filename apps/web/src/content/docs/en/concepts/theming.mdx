@@ -1,14 +1,14 @@
 ---
 title: Theming
-description: The design system behind NachUI — semantic tokens, the theme contract, and how to bend both to your brand.
+description: The design system behind NachUI: semantic tokens, the theme contract, and how to bend both to your brand.
 published: true
 toc:
   visible: true
-date: 2024-03-14
+date: 2026-11-09
 locale: en
 ---
 
-NachUI has no hardcoded colors. Every component paints itself with semantic tokens — `bg-card`, `text-muted-foreground`, `border-rule` — and those tokens are CSS custom properties you own. Change a variable and the whole system moves with it, in both light and dark mode, without touching a single component.
+NachUI has no hardcoded colors. Every component paints itself with semantic tokens like `bg-card`, `text-muted-foreground` and `border-rule`, and those tokens are CSS custom properties you own. Change a variable and the whole system moves with it, in both light and dark mode, without touching a single component.
 
 ## How it works
 
@@ -118,13 +118,13 @@ All five have a `-foreground` counterpart.
 | `--input`              | `border-input`              | Form field borders                                |
 | `--ring`               | `ring-ring`                 | Focus rings                                       |
 | `--rule`               | `border-rule`               | Editorial hairlines: section dividers, page rails |
-| `--grid-color`         | —                           | Dot and grid backdrops, used directly in CSS      |
+| `--grid-color`         | -                           | Dot and grid backdrops, used directly in CSS      |
 
 `--border` and `--rule` often hold the same value, but they are separate on purpose: one is component chrome, the other is page structure. Restyling your layout rules should not touch every card.
 
 ### Feedback
 
-Each of the four feedback hues — `destructive`, `warning`, `success`, `info` — ships a five-role scale rather than one color. This is what lets a solid button and a soft alert share a hue without one of them failing contrast.
+Each of the four feedback hues (`destructive`, `warning`, `success`, `info`) ships a five-role scale rather than one color. This is what lets a solid button and a soft alert share a hue without one of them failing contrast.
 
 | Suffix        | Utility example               | Role                                       |
 | ------------- | ----------------------------- | ------------------------------------------ |
@@ -134,13 +134,13 @@ Each of the four feedback hues — `destructive`, `warning`, `success`, `info` �
 | `-surface`    | `bg-destructive-surface`      | Tinted background for alerts and badges    |
 | `-border`     | `border-destructive-border`   | Border matched to that tinted background   |
 
-Solid — the fill carries the meaning:
+Solid, where the fill carries the meaning:
 
 ```tsx
 <Button variant="destructive">Delete account</Button>
 ```
 
-Soft — the tint carries it, and the text stays legible:
+Soft, where the tint carries it and the text stays legible:
 
 ```tsx
 <div className="bg-destructive-surface text-destructive-text border-destructive-border border">
@@ -148,7 +148,7 @@ Soft — the tint carries it, and the text stays legible:
 </div>
 ```
 
-Reaching for `text-destructive` on a pale background is the common mistake — that is the button fill, and it is tuned for white text, not for reading. Use `-text` instead.
+Reaching for `text-destructive` on a pale background is the common mistake. That is the button fill, and it is tuned for white text, not for reading. Use `-text` instead.
 
 ### Overlay, elevation and code
 
@@ -157,7 +157,7 @@ Reaching for `text-destructive` on a pale background is the common mistake — t
 | `--overlay`                                                                                                                                 | `bg-overlay`                | Scrim behind dialogs and drawers               |
 | `--elevation-sm` / `-md` / `-lg`                                                                                                            | `shadow-sm` / `-md` / `-lg` | The shadow scale                               |
 | `--code`                                                                                                                                    | `bg-code`                   | Code block surface                             |
-| `--code-plain`, `--code-keyword`, `--code-string`, `--code-function`, `--code-number`, `--code-tag`, `--code-comment`, `--code-punctuation` | —                           | Syntax colors, read directly by the code block |
+| `--code-plain`, `--code-keyword`, `--code-string`, `--code-function`, `--code-number`, `--code-tag`, `--code-comment`, `--code-punctuation` | -                           | Syntax colors, read directly by the code block |
 
 Shadows are themeable values, not fixed drop shadows: a dark theme raises their opacity, because a shadow tuned for a white canvas disappears on a near-black one.
 
@@ -189,7 +189,7 @@ For sharper corners across the board, lower the base:
 }
 ```
 
-`--radius` is the one token declared only in `:root` — a corner has no light and dark variant.
+`--radius` is the one token declared only in `:root`, since a corner has no light and dark variant.
 
 ## Typography
 
@@ -225,12 +225,12 @@ Every token is written in OKLCH:
 ```css
 oklch(54.6% 0.245 262.881);
 /*    ↑      ↑     ↑
-      |      |     hue, 0–360°
+      |      |     hue, 0 to 360°
       |      chroma, 0 = gray
       lightness, 0% = black, 100% = white */
 ```
 
-It is perceptually uniform, which matters when you build a scale. In HSL, `hsl(60 100% 50%)` and `hsl(240 100% 50%)` claim the same lightness while yellow reads far brighter than blue. In OKLCH, equal lightness looks equally light — so holding the L value steady across hues gives you a feedback palette that is genuinely balanced, instead of one where the warning badge screams and the info badge whispers.
+It is perceptually uniform, which matters when you build a scale. In HSL, `hsl(60 100% 50%)` and `hsl(240 100% 50%)` claim the same lightness while yellow reads far brighter than blue. In OKLCH, equal lightness looks equally light, so holding the L value steady across hues gives you a feedback palette that is genuinely balanced, instead of one where the warning badge screams and the info badge whispers.
 
 It also reaches colors sRGB cannot express, and degrades gracefully on older browsers. [oklch.com](https://oklch.com/) is a good place to pick values.
 
@@ -238,7 +238,7 @@ It also reaches colors sRGB cannot express, and degrades gracefully on older bro
 
 ### Override a token
 
-Edit the variable in your CSS. Change it in both blocks — a value set only in `:root` will leak into dark mode.
+Edit the variable in your CSS. Change it in both blocks: a value set only in `:root` will leak into dark mode.
 
 ```css
 :root {
@@ -293,19 +293,19 @@ Skipping step 2 is the usual failure: the variable exists, but `bg-brand` never 
 
 ## The theme contract
 
-A theme is not a handful of colors — it is the complete token set, declared in **both** `:root` and `.dark`. That full list lives in `theme-contract.ts` and is enforced by a test.
+A theme is not a handful of colors. It is the complete token set, declared in **both** `:root` and `.dark`. That full list lives in `theme-contract.ts` and is enforced by a test.
 
 The rule exists because of how the cascade fails here. A theme that omits `--success-surface` does not error; it silently inherits the value from the base palette, and you end up with a green tint from the default theme bleeding into your brand colors. Missing tokens are invisible until someone opens the one component that uses them.
 
 So when you write a theme, work down the contract:
 
-- **Surfaces** — `background`, `card`, `popover`, `surface-muted` and their foregrounds
-- **Interactive** — `primary`, `secondary`, `accent`, `muted`, `inverse` and their foregrounds, plus `muted-strong`
-- **Structure** — `border`, `border-interactive`, `input`, `ring`, `rule`, `grid-color`
-- **Feedback** — all five roles for each of `destructive`, `warning`, `success`, `info`
-- **Scrim and elevation** — `overlay`, `elevation-sm`, `elevation-md`, `elevation-lg`
-- **Code** — `code` plus the eight syntax tokens
-- **Radius** — `--radius`, in `:root` only
+- **Surfaces**: `background`, `card`, `popover`, `surface-muted` and their foregrounds
+- **Interactive**: `primary`, `secondary`, `accent`, `muted`, `inverse` and their foregrounds, plus `muted-strong`
+- **Structure**: `border`, `border-interactive`, `input`, `ring`, `rule`, `grid-color`
+- **Feedback**: all five roles for each of `destructive`, `warning`, `success`, `info`
+- **Scrim and elevation**: `overlay`, `elevation-sm`, `elevation-md`, `elevation-lg`
+- **Code**: `code` plus the eight syntax tokens
+- **Radius**: `--radius`, in `:root` only
 
 ## Switching themes
 
@@ -315,4 +315,4 @@ So when you write a theme, work down the contract:
 npx nachui init
 ```
 
-Re-running it replaces that block and leaves the rest of your CSS alone, so you can try a theme on and change your mind. To go back to a palette you edited by hand, keep your overrides _below_ the marker — anything after it survives.
+Re-running it replaces that block and leaves the rest of your CSS alone, so you can try a theme on and change your mind. To go back to a palette you edited by hand, keep your overrides _below_ the marker, since anything after it survives.

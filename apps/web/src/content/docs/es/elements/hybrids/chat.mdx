@@ -17,7 +17,7 @@ toc:
 ## Anatomía
 
 ```tsx
-import { Chat } from '@/components/ui/chat';
+import { Chat } from '@/hybrids/chat';
 ```
 
 ```tsx
@@ -100,7 +100,7 @@ El chat no sabe qué SDK corre tu modelo. `toChatMessages` mapea el array de `UI
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { Chat, toChatMessages } from '@/components/ui/chat';
+import { Chat, toChatMessages } from '@/hybrids/chat';
 
 export function Soporte() {
   const { messages, sendMessage, status, stop, regenerate } = useChat();

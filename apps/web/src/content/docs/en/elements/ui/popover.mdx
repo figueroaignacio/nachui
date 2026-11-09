@@ -17,7 +17,7 @@ toc:
 ## Anatomy
 
 ```tsx
-import { Popover } from '@/components/ui/popover';
+import { Popover } from '@/components/popover';
 ```
 
 ```tsx
@@ -59,8 +59,8 @@ Popover
 | Prop           | Type                      | Default | Description                       |
 | -------------- | ------------------------- | ------- | --------------------------------- |
 | `defaultOpen`  | `boolean`                 | `false` | Initial open state.               |
-| `open`         | `boolean`                 | —       | Controlled open state.            |
-| `onOpenChange` | `(open: boolean) => void` | —       | Callback when open state changes. |
+| `open`         | `boolean`                 | -       | Controlled open state.            |
+| `onOpenChange` | `(open: boolean) => void` | -       | Callback when open state changes. |
 
 ### Popover.Trigger
 
@@ -76,8 +76,8 @@ Popover
 | `sideOffset` | `number`                                       | `4`        | Offset from the trigger.                                                     |
 | `showClose`  | `boolean`                                      | `false`    | Shows a close button.                                                        |
 | `closeLabel` | `string`                                       | `"Close"`  | Accessible name of the close button.                                         |
-| `aria-label` | `string`                                       | —          | Name for the dialog. Without it (or `aria-labelledby`) the trigger names it. |
-| `className`  | `string`                                       | —          | Additional CSS classes.                                                      |
+| `aria-label` | `string`                                       | -          | Name for the dialog. Without it (or `aria-labelledby`) the trigger names it. |
+| `className`  | `string`                                       | -          | Additional CSS classes.                                                      |
 
 ### Popover.Close
 
