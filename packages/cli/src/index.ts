@@ -27,7 +27,8 @@ program
   .command('init')
   .description('Set up NachUI in your project: theme tokens, nachui.json and the cn helper')
   .option('-y, --yes', 'accept the defaults and skip prompts (never replaces existing files)')
-  .action(async (options: { yes?: boolean }) => {
+  .option('-t, --theme <name>', 'install this theme instead of asking')
+  .action(async (options: { yes?: boolean; theme?: string }) => {
     intro();
     await initCommand(options);
   });

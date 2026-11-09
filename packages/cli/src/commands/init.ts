@@ -12,6 +12,7 @@ import { CancelledError, confirmOrCancel, ensurePackages } from '../lib/prompts.
 
 export interface InitOptions {
   yes?: boolean;
+  theme?: string;
 }
 
 const TOKEN_MARKER = '/* NachUI Tokens */';
@@ -38,7 +39,15 @@ function detectStylesheet(cwd: string): string {
   return candidates.find(exists) ?? fallback;
 }
 
-async function chooseTheme(themes: string[], yes: boolean | undefined): Promise<string> {
+export async function chooseTheme(
+  themes: string[],
+  yes: boolean | undefined,
+  requested?: string,
+): Promise<string> {
+  if (requested) {
+    if (themes.includes(requested)) return requested;
+    throw new Error(`Theme "${requested}" does not exist. Available themes: ${themes.join(', ')}.`);
+  }
   const fallback = themes.includes('default') ? 'default' : themes[0];
   if (!fallback) throw new Error('The registry has no themes.');
   if (yes) return fallback;
@@ -111,7 +120,7 @@ export async function initCommand(options: InitOptions = {}) {
       s.stop('Themes loaded.');
     }
 
-    const theme = await chooseTheme(themes, options.yes);
+    const theme = await chooseTheme(themes, options.yes, options.theme);
 
     s.start(`Downloading the ${kleur.cyan(theme)} theme...`);
     let assets;

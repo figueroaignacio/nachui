@@ -38,6 +38,8 @@ Sets up NachUI in your project. This is the **first command you should run**. It
 
 If your stylesheet already has styles, `init` asks before replacing them. The default answer keeps them and adds the tokens at the end. Running `init` again replaces the tokens from the previous run instead of adding a second copy. Pass `--yes` to accept the defaults without prompts; it never replaces your files.
 
+Pass `--theme <name>` to skip the theme prompt, for example `nachui init --theme nachui`; it fails with the list of available themes if the name does not exist.
+
 After running `init`, your project will contain a `nachui.json` file like this:
 
 ```json

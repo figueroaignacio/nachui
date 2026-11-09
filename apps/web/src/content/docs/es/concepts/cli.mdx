@@ -38,6 +38,8 @@ Prepara NachUI en tu proyecto. Este es el **primer comando que debes ejecutar**.
 
 Si tu hoja de estilos ya tiene estilos, `init` pregunta antes de reemplazarlos. La respuesta por defecto los conserva y agrega los tokens al final. Si vuelves a ejecutar `init`, reemplaza los tokens de la vez anterior en lugar de sumar una segunda copia. Con `--yes` acepta los valores por defecto sin preguntar y nunca reemplaza tus archivos.
 
+Con `--theme <nombre>` se saltea la pregunta del tema, por ejemplo `nachui init --theme nachui`; si el nombre no existe, falla y muestra los temas disponibles.
+
 Después de ejecutar `init`, tu proyecto tendrá un archivo `nachui.json` como este:
 
 ```json
