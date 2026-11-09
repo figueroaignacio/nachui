@@ -149,6 +149,12 @@
           "description": "Expandable and collapsible content panels."
         },
         {
+          "title": "Alert Dialog",
+          "href": "/docs/elements/ui/alert-dialog",
+          "description": "Ask before something destructive, with Cancel focused first and async actions that wait.",
+          "badge": "new"
+        },
+        {
           "title": "Attachment",
           "href": "/docs/elements/ui/attachment",
           "description": "Show files as rows, cards or chips with a preview, size, actions and upload progress."
@@ -184,6 +190,12 @@
           "description": "Interactive buttons for user actions."
         },
         {
+          "title": "Calendar",
+          "href": "/docs/elements/ui/calendar",
+          "description": "A month grid for picking a day or a range, with full keyboard support.",
+          "badge": "new"
+        },
+        {
           "title": "Callout",
           "href": "/docs/elements/ui/callout",
           "description": "Callout component to show additional content."
@@ -204,6 +216,12 @@
           "description": "Hide or show sections of content dynamically."
         },
         {
+          "title": "Combobox",
+          "href": "/docs/elements/ui/combobox",
+          "description": "Text input with a filtered list. Single or multiple picks, creatable and async.",
+          "badge": "new"
+        },
+        {
           "title": "Command",
           "href": "/docs/elements/ui/command",
           "description": "A component for displaying and copying CLI commands."
@@ -212,6 +230,12 @@
           "title": "Context Menu",
           "href": "/docs/elements/ui/context-menu",
           "description": "A right-click menu with actions, shortcuts and keyboard navigation."
+        },
+        {
+          "title": "Date Picker",
+          "href": "/docs/elements/ui/date-picker",
+          "description": "A form field that opens a calendar in a popover, for a day or a range.",
+          "badge": "new"
         },
         {
           "title": "Dialog",
@@ -249,6 +273,12 @@
           "description": "Drag and drop or browse for files, with validation, previews and a hook for custom UIs."
         },
         {
+          "title": "Form",
+          "href": "/docs/elements/ui/form",
+          "description": "Form state on top of Field with native and zod validation, an error summary and server errors.",
+          "badge": "new"
+        },
+        {
           "title": "Frame",
           "href": "/docs/elements/ui/frame",
           "description": "A structured container that nests panels, like a card inside a card."
@@ -269,6 +299,12 @@
           "description": "A text input field with label, error handling, icon slots, and size variants."
         },
         {
+          "title": "Input OTP",
+          "href": "/docs/elements/ui/input-otp",
+          "description": "One-time code input with one slot per character, SMS autofill and paste.",
+          "badge": "new"
+        },
+        {
           "title": "Kbd",
           "href": "/docs/elements/ui/kbd",
           "description": "A component to display keyboard shortcuts."
@@ -279,6 +315,12 @@
           "description": "A label component with required indicator, optional text, and description support."
         },
         {
+          "title": "Menubar",
+          "href": "/docs/elements/ui/menubar",
+          "description": "A row of menus like the top of a desktop app, with one tab stop and full keyboard support.",
+          "badge": "new"
+        },
+        {
           "title": "Message",
           "href": "/docs/elements/ui/message",
           "description": "Conversation row layout with avatar, header, footer and alignment."
@@ -287,6 +329,12 @@
           "title": "Navigation Menu",
           "href": "/docs/elements/ui/navigation-menu",
           "description": "A horizontal navigation bar with click-triggered link panels."
+        },
+        {
+          "title": "Number Field",
+          "href": "/docs/elements/ui/number-field",
+          "description": "Type or step through a number. Locale aware formatting, limits and form support.",
+          "badge": "new"
         },
         {
           "title": "Pagination",
@@ -339,9 +387,21 @@
           "description": "A panel pinned to one edge of the screen, for filters, details and forms."
         },
         {
+          "title": "Sidebar",
+          "href": "/docs/elements/ui/sidebar",
+          "description": "App shell navigation that collapses offcanvas or to an icon rail and turns into a sheet on mobile.",
+          "badge": "new"
+        },
+        {
           "title": "Skeleton",
           "href": "/docs/elements/ui/skeleton",
           "description": "A placeholder loading component with pulse animation."
+        },
+        {
+          "title": "Slider",
+          "href": "/docs/elements/ui/slider",
+          "description": "Pick a value or a range by dragging. Works with pointer, keyboard and forms.",
+          "badge": "new"
         },
         {
           "title": "Spinner",
@@ -382,6 +442,24 @@
           "title": "Toast",
           "href": "/docs/elements/ui/toast",
           "description": "A notification system with stackable toasts, variants, and auto-dismiss."
+        },
+        {
+          "title": "Toggle",
+          "href": "/docs/elements/ui/toggle",
+          "description": "A two-state button that turns a setting on or off.",
+          "badge": "new"
+        },
+        {
+          "title": "Toggle Group",
+          "href": "/docs/elements/ui/toggle-group",
+          "description": "A set of toggles with single or multiple selection and arrow key navigation.",
+          "badge": "new"
+        },
+        {
+          "title": "Toolbar",
+          "href": "/docs/elements/ui/toolbar",
+          "description": "Groups related controls behind a single tab stop with arrow key navigation.",
+          "badge": "new"
         },
         {
           "title": "Tooltip",

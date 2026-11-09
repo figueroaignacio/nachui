@@ -149,6 +149,12 @@
           "description": "Muestra y oculta contenido expandible."
         },
         {
+          "title": "Alert Dialog",
+          "href": "/docs/elements/ui/alert-dialog",
+          "description": "Preguntar antes de algo destructivo, con Cancelar enfocado primero y acciones async que esperan.",
+          "badge": "new"
+        },
+        {
           "title": "Attachment",
           "href": "/docs/elements/ui/attachment",
           "description": "Muestra archivos como filas, tarjetas o chips con preview, tamaño, acciones y progreso de subida."
@@ -184,6 +190,12 @@
           "description": "Botones interactivos con distintos estilos y tamaños."
         },
         {
+          "title": "Calendar",
+          "href": "/docs/elements/ui/calendar",
+          "description": "Una grilla mensual para elegir un día o un rango, con soporte completo de teclado.",
+          "badge": "new"
+        },
+        {
           "title": "Callout",
           "href": "/docs/elements/ui/callout",
           "description": "Componente para mostrar contenido adicional."
@@ -204,6 +216,12 @@
           "description": "Secciones plegables con animaciones suaves."
         },
         {
+          "title": "Combobox",
+          "href": "/docs/elements/ui/combobox",
+          "description": "Campo de texto con lista filtrada. Selección simple o múltiple, creable y asíncrona.",
+          "badge": "new"
+        },
+        {
           "title": "Command",
           "href": "/docs/elements/ui/command",
           "description": "Un componente para mostrar y copiar comandos de la línea de comandos."
@@ -212,6 +230,12 @@
           "title": "Context Menu",
           "href": "/docs/elements/ui/context-menu",
           "description": "Un menú de clic derecho con acciones, atajos y navegación por teclado."
+        },
+        {
+          "title": "Date Picker",
+          "href": "/docs/elements/ui/date-picker",
+          "description": "Un campo de formulario que abre un calendario en un popover, para un día o un rango.",
+          "badge": "new"
         },
         {
           "title": "Dialog",
@@ -249,6 +273,12 @@
           "description": "Arrastra y suelta o busca archivos, con validación, previews y un hook para interfaces propias."
         },
         {
+          "title": "Form",
+          "href": "/docs/elements/ui/form",
+          "description": "Estado de formulario sobre Field con validación nativa y zod, resumen de errores y errores del servidor.",
+          "badge": "new"
+        },
+        {
           "title": "Frame",
           "href": "/docs/elements/ui/frame",
           "description": "Un contenedor estructurado que anida paneles, como una card dentro de una card."
@@ -269,6 +299,12 @@
           "description": "Un campo de texto con label, manejo de errores, slots de íconos y variantes de tamaño."
         },
         {
+          "title": "Input OTP",
+          "href": "/docs/elements/ui/input-otp",
+          "description": "Campo para códigos de un solo uso, una casilla por carácter, con autocompletado de SMS y pegado.",
+          "badge": "new"
+        },
+        {
           "title": "Kbd",
           "href": "/docs/elements/ui/kbd",
           "description": "Un componente para mostrar atajos de teclado."
@@ -279,6 +315,12 @@
           "description": "Un componente label con indicador de obligatoriedad, texto opcional y descripción."
         },
         {
+          "title": "Menubar",
+          "href": "/docs/elements/ui/menubar",
+          "description": "Una fila de menús como la de una app de escritorio, con un solo tab stop y teclado completo.",
+          "badge": "new"
+        },
+        {
           "title": "Message",
           "href": "/docs/elements/ui/message",
           "description": "Layout de fila de conversación con avatar, cabecera, pie y alineación."
@@ -287,6 +329,12 @@
           "title": "Navigation Menu",
           "href": "/docs/elements/ui/navigation-menu",
           "description": "Una barra de navegación horizontal con paneles de links que se abren al hacer clic."
+        },
+        {
+          "title": "Number Field",
+          "href": "/docs/elements/ui/number-field",
+          "description": "Escribí un número o movelo de a pasos. Formato según el idioma, límites y soporte para formularios.",
+          "badge": "new"
         },
         {
           "title": "Pagination",
@@ -339,9 +387,21 @@
           "description": "Un panel fijado a un borde de la pantalla, para filtros, detalles y formularios."
         },
         {
+          "title": "Sidebar",
+          "href": "/docs/elements/ui/sidebar",
+          "description": "Navegación lateral que se oculta o queda como riel de íconos y en mobile se abre como sheet.",
+          "badge": "new"
+        },
+        {
           "title": "Skeleton",
           "href": "/docs/elements/ui/skeleton",
           "description": "Un componente de carga de marcador de posición con animación de pulso."
+        },
+        {
+          "title": "Slider",
+          "href": "/docs/elements/ui/slider",
+          "description": "Elegí un valor o un rango arrastrando. Funciona con puntero, teclado y formularios.",
+          "badge": "new"
         },
         {
           "title": "Spinner",
@@ -382,6 +442,24 @@
           "title": "Toast",
           "href": "/docs/elements/ui/toast",
           "description": "Un sistema de notificaciones apilables con variantes y auto-dismiss."
+        },
+        {
+          "title": "Toggle",
+          "href": "/docs/elements/ui/toggle",
+          "description": "Un botón de dos estados que prende o apaga una opción.",
+          "badge": "new"
+        },
+        {
+          "title": "Toggle Group",
+          "href": "/docs/elements/ui/toggle-group",
+          "description": "Un conjunto de toggles con selección simple o múltiple y navegación con flechas.",
+          "badge": "new"
+        },
+        {
+          "title": "Toolbar",
+          "href": "/docs/elements/ui/toolbar",
+          "description": "Agrupa controles relacionados en una sola parada de Tab con navegación con flechas.",
+          "badge": "new"
         },
         {
           "title": "Tooltip",

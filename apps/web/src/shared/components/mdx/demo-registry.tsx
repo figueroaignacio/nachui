@@ -18,6 +18,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
     default: () => import('@repo/ui/src/demos/agent-run/default').then((m) => m.Default),
     live: () => import('@repo/ui/src/demos/agent-run/live').then((m) => m.Live),
   },
+  'alert-dialog': {
+    async: () => import('@repo/ui/src/demos/alert-dialog/async').then((m) => m.Async),
+    default: () => import('@repo/ui/src/demos/alert-dialog/default').then((m) => m.Default),
+  },
   'aspect-ratio': {
     default: () => import('@repo/ui/src/demos/aspect-ratio/default').then((m) => m.Default),
     ratios: () => import('@repo/ui/src/demos/aspect-ratio/ratios').then((m) => m.Ratios),
@@ -73,6 +77,11 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
     sizes: () => import('@repo/ui/src/demos/button/sizes').then((m) => m.Sizes),
     variants: () => import('@repo/ui/src/demos/button/variants').then((m) => m.Variants),
   },
+  calendar: {
+    default: () => import('@repo/ui/src/demos/calendar/default').then((m) => m.Default),
+    'disabled-dates': () => import('@repo/ui/src/demos/calendar/disabled-dates').then((m) => m.DisabledDates),
+    range: () => import('@repo/ui/src/demos/calendar/range').then((m) => m.Range),
+  },
   callout: {
     danger: () => import('@repo/ui/src/demos/callout/danger').then((m) => m.Danger),
     default: () => import('@repo/ui/src/demos/callout/default').then((m) => m.Default),
@@ -112,6 +121,12 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
     card: () => import('@repo/ui/src/demos/collapsible/card').then((m) => m.Card),
     default: () => import('@repo/ui/src/demos/collapsible/default').then((m) => m.Default),
   },
+  combobox: {
+    async: () => import('@repo/ui/src/demos/combobox/async').then((m) => m.Async),
+    creatable: () => import('@repo/ui/src/demos/combobox/creatable').then((m) => m.Creatable),
+    default: () => import('@repo/ui/src/demos/combobox/default').then((m) => m.Default),
+    multiple: () => import('@repo/ui/src/demos/combobox/multiple').then((m) => m.Multiple),
+  },
   command: {
     default: () => import('@repo/ui/src/demos/command/default').then((m) => m.Default),
   },
@@ -140,6 +155,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
   'data-table': {
     compact: () => import('@repo/ui/src/demos/data-table/compact').then((m) => m.Compact),
     default: () => import('@repo/ui/src/demos/data-table/default').then((m) => m.Default),
+  },
+  'date-picker': {
+    default: () => import('@repo/ui/src/demos/date-picker/default').then((m) => m.Default),
+    range: () => import('@repo/ui/src/demos/date-picker/range').then((m) => m.Range),
   },
   dialog: {
     alert: () => import('@repo/ui/src/demos/dialog/alert').then((m) => m.Alert),
@@ -180,6 +199,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
   flex: {
     default: () => import('@repo/ui/src/demos/flex/default').then((m) => m.Default),
   },
+  form: {
+    default: () => import('@repo/ui/src/demos/form/default').then((m) => m.Default),
+    'server-errors': () => import('@repo/ui/src/demos/form/server-errors').then((m) => m.ServerErrors),
+  },
   frame: {
     default: () => import('@repo/ui/src/demos/frame/default').then((m) => m.Default),
     stacked: () => import('@repo/ui/src/demos/frame/stacked').then((m) => m.Stacked),
@@ -207,6 +230,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
     'with-icon': () => import('@repo/ui/src/demos/input/with-icon').then((m) => m.WithIcon),
     'with-label': () => import('@repo/ui/src/demos/input/with-label').then((m) => m.WithLabel),
   },
+  'input-otp': {
+    alphanumeric: () => import('@repo/ui/src/demos/input-otp/alphanumeric').then((m) => m.Alphanumeric),
+    default: () => import('@repo/ui/src/demos/input-otp/default').then((m) => m.Default),
+  },
   kbd: {
     default: () => import('@repo/ui/src/demos/kbd/default').then((m) => m.Default),
     sizes: () => import('@repo/ui/src/demos/kbd/sizes').then((m) => m.Sizes),
@@ -217,6 +244,9 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
     default: () => import('@repo/ui/src/demos/label/default').then((m) => m.Default),
     required: () => import('@repo/ui/src/demos/label/required').then((m) => m.Required),
   },
+  menubar: {
+    default: () => import('@repo/ui/src/demos/menubar/default').then((m) => m.Default),
+  },
   message: {
     default: () => import('@repo/ui/src/demos/message/default').then((m) => m.Default),
     grouped: () => import('@repo/ui/src/demos/message/grouped').then((m) => m.Grouped),
@@ -224,6 +254,11 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
   'navigation-menu': {
     badges: () => import('@repo/ui/src/demos/navigation-menu/badges').then((m) => m.Badges),
     default: () => import('@repo/ui/src/demos/navigation-menu/default').then((m) => m.Default),
+  },
+  'number-field': {
+    currency: () => import('@repo/ui/src/demos/number-field/currency').then((m) => m.Currency),
+    default: () => import('@repo/ui/src/demos/number-field/default').then((m) => m.Default),
+    percent: () => import('@repo/ui/src/demos/number-field/percent').then((m) => m.Percent),
   },
   pagination: {
     compact: () => import('@repo/ui/src/demos/pagination/compact').then((m) => m.Compact),
@@ -302,9 +337,18 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
     default: () => import('@repo/ui/src/demos/shimmer/default').then((m) => m.Default),
     sizes: () => import('@repo/ui/src/demos/shimmer/sizes').then((m) => m.Sizes),
   },
+  sidebar: {
+    default: () => import('@repo/ui/src/demos/sidebar/default').then((m) => m.Default),
+    icon: () => import('@repo/ui/src/demos/sidebar/icon').then((m) => m.Icon),
+  },
   skeleton: {
     card: () => import('@repo/ui/src/demos/skeleton/card').then((m) => m.Card),
     default: () => import('@repo/ui/src/demos/skeleton/default').then((m) => m.Default),
+  },
+  slider: {
+    default: () => import('@repo/ui/src/demos/slider/default').then((m) => m.Default),
+    range: () => import('@repo/ui/src/demos/slider/range').then((m) => m.Range),
+    vertical: () => import('@repo/ui/src/demos/slider/vertical').then((m) => m.Vertical),
   },
   sources: {
     default: () => import('@repo/ui/src/demos/sources/default').then((m) => m.Default),
@@ -376,9 +420,21 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
     variants: () => import('@repo/ui/src/demos/toast/variants').then((m) => m.Variants),
     'with-action': () => import('@repo/ui/src/demos/toast/with-action').then((m) => m.WithAction),
   },
+  toggle: {
+    default: () => import('@repo/ui/src/demos/toggle/default').then((m) => m.Default),
+    'with-text': () => import('@repo/ui/src/demos/toggle/with-text').then((m) => m.WithText),
+  },
+  'toggle-group': {
+    default: () => import('@repo/ui/src/demos/toggle-group/default').then((m) => m.Default),
+    multiple: () => import('@repo/ui/src/demos/toggle-group/multiple').then((m) => m.Multiple),
+    outline: () => import('@repo/ui/src/demos/toggle-group/outline').then((m) => m.Outline),
+  },
   tool: {
     default: () => import('@repo/ui/src/demos/tool/default').then((m) => m.Default),
     statuses: () => import('@repo/ui/src/demos/tool/statuses').then((m) => m.Statuses),
+  },
+  toolbar: {
+    default: () => import('@repo/ui/src/demos/toolbar/default').then((m) => m.Default),
   },
   tooltip: {
     default: () => import('@repo/ui/src/demos/tooltip/default').then((m) => m.Default),
