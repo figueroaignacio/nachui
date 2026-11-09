@@ -30,7 +30,7 @@ describe('Progress', () => {
   });
 
   it('lets aria-label override label', () => {
-    render(<Progress value={40} label="Upload" aria-label="Subida" />);
-    expect(screen.getByRole('progressbar', { name: 'Subida' })).toBeInTheDocument();
+    render(<Progress value={40} label="Upload" aria-label="Avatar upload" />);
+    expect(screen.getByRole('progressbar', { name: 'Avatar upload' })).toBeInTheDocument();
   });
 });
