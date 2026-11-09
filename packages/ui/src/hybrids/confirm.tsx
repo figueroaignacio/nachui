@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
+import { AlertDialog } from '../components/alert-dialog';
 import { Button } from '../components/button';
-import { Dialog } from '../components/dialog';
 import { Input } from '../components/input';
 import { cn } from '../lib/cn';
 import { useControllableState } from '../lib/use-controllable-state';
@@ -24,20 +24,17 @@ const DEFAULT_LABELS: ConfirmLabels = {
 };
 
 interface ConfirmContextValue {
-  open: boolean;
-  setOpen: (open: boolean) => void;
   title: React.ReactNode;
   description?: React.ReactNode;
   icon?: React.ReactNode;
   variant: ConfirmVariant;
   labels: ConfirmLabels;
-  pending: boolean;
   failed: boolean;
   requireText?: string;
   typed: string;
   setTyped: (value: string) => void;
   canConfirm: boolean;
-  confirm: () => void;
+  confirm: () => void | PromiseLike<unknown>;
   cancel: () => void;
 }
 
@@ -69,6 +66,9 @@ interface ConfirmProps {
   children?: React.ReactNode;
 }
 
+const isThenable = (value: unknown): value is PromiseLike<unknown> =>
+  typeof (value as PromiseLike<unknown> | undefined)?.then === 'function';
+
 const ConfirmRoot = ({
   title,
   description,
@@ -91,17 +91,8 @@ const ConfirmRoot = ({
     defaultValue: defaultOpen,
     onChange: onOpenChange,
   });
-  const [pending, setPending] = React.useState(false);
   const [failed, setFailed] = React.useState(false);
   const [typed, setTyped] = React.useState('');
-  const mounted = React.useRef(true);
-
-  React.useEffect(() => {
-    mounted.current = true;
-    return () => {
-      mounted.current = false;
-    };
-  }, []);
 
   const setOpen = React.useCallback(
     (next: boolean) => {
@@ -124,47 +115,29 @@ const ConfirmRoot = ({
     [customLabels, confirmText, cancelText],
   );
 
-  const canConfirm = !pending && (requireText === undefined || typed === requireText);
+  const canConfirm = requireText === undefined || typed === requireText;
 
-  const confirm = React.useCallback(() => {
-    if (!canConfirm) return;
+  const confirm = React.useCallback((): void | PromiseLike<unknown> => {
     setFailed(false);
     const result = onConfirm?.();
-    if (result && typeof (result as Promise<void>).then === 'function') {
-      setPending(true);
-      (result as Promise<void>).then(
-        () => {
-          if (!mounted.current) return;
-          setPending(false);
-          setOpen(false);
-        },
-        () => {
-          if (!mounted.current) return;
-          setPending(false);
-          setFailed(true);
-        },
-      );
-      return;
-    }
-    setOpen(false);
-  }, [canConfirm, onConfirm, setOpen]);
+    if (!isThenable(result)) return;
+    return result.then(undefined, (error: unknown) => {
+      setFailed(true);
+      throw error;
+    });
+  }, [onConfirm]);
 
   const cancel = React.useCallback(() => {
-    if (pending) return;
     onCancel?.();
-    setOpen(false);
-  }, [pending, onCancel, setOpen]);
+  }, [onCancel]);
 
   const value = React.useMemo<ConfirmContextValue>(
     () => ({
-      open,
-      setOpen,
       title,
       description,
       icon,
       variant,
       labels,
-      pending,
       failed,
       requireText,
       typed,
@@ -174,14 +147,11 @@ const ConfirmRoot = ({
       cancel,
     }),
     [
-      open,
-      setOpen,
       title,
       description,
       icon,
       variant,
       labels,
-      pending,
       failed,
       requireText,
       typed,
@@ -197,30 +167,23 @@ const ConfirmRoot = ({
 
   return (
     <ConfirmContext value={value}>
-      <Dialog
-        open={open}
-        onOpenChange={(next) => {
-          if (!next && pending) return;
-          if (!next) onCancel?.();
-          setOpen(next);
-        }}
-      >
+      <AlertDialog open={open} onOpenChange={setOpen}>
         {children}
         {!hasContent && <ConfirmContent className={className} />}
-      </Dialog>
+      </AlertDialog>
     </ConfirmContext>
   );
 };
 
 ConfirmRoot.displayName = 'Confirm';
 
-type ConfirmTriggerProps = React.ComponentProps<typeof Dialog.Trigger>;
+type ConfirmTriggerProps = React.ComponentProps<typeof AlertDialog.Trigger>;
 
 const ConfirmTrigger = ({
   ref,
   ...props
 }: ConfirmTriggerProps & { ref?: React.Ref<HTMLButtonElement> }) => {
-  return <Dialog.Trigger ref={ref} {...props} />;
+  return <AlertDialog.Trigger ref={ref} {...props} />;
 };
 
 ConfirmTrigger.displayName = 'ConfirmTrigger';
@@ -235,18 +198,13 @@ const ConfirmContent = ({
   children,
   ref,
 }: ConfirmContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  const { open, title, description, icon, variant, labels, failed, requireText, typed, setTyped } =
+  const { title, description, icon, variant, labels, failed, requireText, typed, setTyped } =
     useConfirmContext();
   const inputId = React.useId();
 
   return (
-    <Dialog.Content
-      ref={ref}
-      role="alertdialog"
-      data-variant={variant}
-      className={cn('max-w-md', className)}
-    >
-      <Dialog.Header className="text-start">
+    <AlertDialog.Content ref={ref} data-variant={variant} className={className}>
+      <AlertDialog.Header>
         {icon ? (
           <span
             aria-hidden="true"
@@ -260,13 +218,14 @@ const ConfirmContent = ({
             {icon}
           </span>
         ) : null}
-        <Dialog.Title>{title}</Dialog.Title>
-        {description ? <Dialog.Description>{description}</Dialog.Description> : null}
-      </Dialog.Header>
+        <AlertDialog.Title>{title}</AlertDialog.Title>
+        {description ? <AlertDialog.Description>{description}</AlertDialog.Description> : null}
+      </AlertDialog.Header>
       {requireText !== undefined ? (
         <Input
           id={inputId}
           data-confirm-input=""
+          data-autofocus=""
           label={labels.typeToConfirm(requireText)}
           value={typed}
           onChange={(event) => setTyped(event.target.value)}
@@ -276,8 +235,8 @@ const ConfirmContent = ({
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
               event.preventDefault();
-              const form = event.currentTarget.closest('[role="alertdialog"]');
-              form
+              const panel = event.currentTarget.closest('[role="alertdialog"]');
+              panel
                 ?.querySelector<HTMLButtonElement>('[data-confirm-action]:not(:disabled)')
                 ?.click();
             }
@@ -288,54 +247,16 @@ const ConfirmContent = ({
         {failed ? labels.error : null}
       </p>
       {children ?? (
-        <Dialog.Footer className="gap-2 sm:space-x-0">
+        <AlertDialog.Footer>
           <ConfirmCancel />
           <ConfirmAction />
-        </Dialog.Footer>
+        </AlertDialog.Footer>
       )}
-      <ConfirmFocus open={open} variant={variant} requireText={requireText !== undefined} />
-    </Dialog.Content>
+    </AlertDialog.Content>
   );
 };
 
 ConfirmContent.displayName = 'ConfirmContent';
-
-const ConfirmFocus = ({
-  open,
-  variant,
-  requireText,
-}: {
-  open: boolean;
-  variant: ConfirmVariant;
-  requireText: boolean;
-}) => {
-  const ref = React.useRef<HTMLSpanElement>(null);
-
-  React.useEffect(() => {
-    if (!open) return;
-    let inner = 0;
-    const outer = requestAnimationFrame(() => {
-      inner = requestAnimationFrame(() => {
-        const panel = ref.current?.closest<HTMLElement>('[role="alertdialog"]');
-        if (!panel) return;
-        const selector = requireText
-          ? '[data-confirm-input]'
-          : variant === 'destructive'
-            ? '[data-confirm-cancel]'
-            : '[data-confirm-action]';
-        panel.querySelector<HTMLElement>(selector)?.focus();
-      });
-    });
-    return () => {
-      cancelAnimationFrame(outer);
-      cancelAnimationFrame(inner);
-    };
-  }, [open, variant, requireText]);
-
-  return <span ref={ref} hidden />;
-};
-
-ConfirmFocus.displayName = 'ConfirmFocus';
 
 type ConfirmButtonProps = Omit<React.ComponentProps<typeof Button>, 'variant'>;
 
@@ -346,14 +267,12 @@ const ConfirmCancel = ({
   ref,
   ...props
 }: ConfirmButtonProps & { ref?: React.Ref<HTMLButtonElement> }) => {
-  const { labels, pending, cancel } = useConfirmContext();
+  const { labels, cancel } = useConfirmContext();
 
   return (
-    <Button
+    <AlertDialog.Cancel
       ref={ref}
-      variant="outline"
       data-confirm-cancel=""
-      disabled={pending}
       className={className}
       onClick={(event) => {
         onClick?.(event);
@@ -362,7 +281,7 @@ const ConfirmCancel = ({
       {...props}
     >
       {children ?? labels.cancel}
-    </Button>
+    </AlertDialog.Cancel>
   );
 };
 
@@ -372,27 +291,29 @@ const ConfirmAction = ({
   className,
   children,
   onClick,
+  disabled,
   ref,
   ...props
 }: ConfirmButtonProps & { ref?: React.Ref<HTMLButtonElement> }) => {
-  const { labels, pending, variant, canConfirm, confirm } = useConfirmContext();
+  const { labels, variant, canConfirm, confirm, requireText } = useConfirmContext();
 
   return (
-    <Button
+    <AlertDialog.Action
       ref={ref}
       variant={variant === 'destructive' ? 'destructive' : 'default'}
       data-confirm-action=""
-      loading={pending}
-      disabled={!canConfirm}
+      data-autofocus={variant === 'default' && requireText === undefined ? '' : undefined}
+      disabled={disabled || !canConfirm}
       className={className}
       onClick={(event) => {
         onClick?.(event);
-        if (!event.defaultPrevented) confirm();
+        if (event.defaultPrevented) return;
+        return confirm();
       }}
       {...props}
     >
       {children ?? labels.confirm}
-    </Button>
+    </AlertDialog.Action>
   );
 };
 

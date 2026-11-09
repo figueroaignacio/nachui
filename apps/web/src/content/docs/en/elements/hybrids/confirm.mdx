@@ -1,6 +1,6 @@
 ---
 title: Confirm
-description: The "are you sure" moment, in one piece. A Dialog that behaves as an alert, a cancel and an action button, an optional type-to-confirm guard, and a hook that turns it into a promise.
+description: The "are you sure" moment, in one piece. An Alert Dialog with a cancel and an action button, an optional type-to-confirm guard, and a hook that turns it into a promise.
 published: true
 date: 2026-09-22
 locale: en
@@ -32,7 +32,7 @@ import { Confirm } from '@/hybrids/confirm';
 </Confirm>
 ```
 
-With only a trigger as child the panel lays itself out: icon if you gave one, title, description, the text guard when `requireText` is set, then Cancel and the action in the footer. The panel has `role="alertdialog"`, so screen readers announce it as something that needs an answer, and Escape and the overlay count as cancel.
+With only a trigger as child the panel lays itself out: icon if you gave one, title, description, the text guard when `requireText` is set, then Cancel and the action in the footer. The panel has `role="alertdialog"`, so screen readers announce it as something that needs an answer, and Escape counts as cancel. A click on the backdrop does nothing, so nobody answers by accident.
 
 Pass a `Confirm.Content` to rearrange the footer or add something of yours between the description and the buttons.
 
@@ -41,10 +41,10 @@ Pass a `Confirm.Content` to rearrange the footer or add something of yours betwe
   <Confirm.Trigger>Sign out</Confirm.Trigger>
   <Confirm.Content>
     <p className="text-muted-foreground text-sm">Your other 3 sessions end now.</p>
-    <Dialog.Footer>
+    <AlertDialog.Footer>
       <Confirm.Cancel>Keep them</Confirm.Cancel>
       <Confirm.Action>Sign out</Confirm.Action>
-    </Dialog.Footer>
+    </AlertDialog.Footer>
   </Confirm.Content>
 </Confirm>
 ```
@@ -55,16 +55,16 @@ A hybrid is visible composition. Open `confirm.tsx` and these are the elements i
 
 ```tree
 Confirm
-├── Dialog
-│   ├── Confirm.Trigger   →  Dialog.Trigger
-│   └── Confirm.Content   →  Dialog.Content (role="alertdialog")
-│       ├── Dialog.Header
-│       │   ├── Dialog.Title
-│       │   └── Dialog.Description
+├── AlertDialog
+│   ├── Confirm.Trigger   →  AlertDialog.Trigger
+│   └── Confirm.Content   →  AlertDialog.Content
+│       ├── AlertDialog.Header
+│       │   ├── AlertDialog.Title
+│       │   └── AlertDialog.Description
 │       ├── Input            (only with requireText)
-│       └── Dialog.Footer
-│           ├── Confirm.Cancel  →  Button (outline)
-│           └── Confirm.Action  →  Button (default or destructive)
+│       └── AlertDialog.Footer
+│           ├── Confirm.Cancel  →  AlertDialog.Cancel
+│           └── Confirm.Action  →  AlertDialog.Action
 └── ConfirmProvider + useConfirm()
 ```
 
@@ -74,7 +74,7 @@ Confirm
 
 ## Async confirm
 
-Return a promise from `onConfirm` and the panel waits for it. The action shows the spinner, both buttons disable, Escape and the overlay stop closing it. It closes when the promise resolves and stays open, buttons back on, when it rejects, so the reader can try again or bail out.
+Return a promise from `onConfirm` and the panel waits for it. The action shows the spinner and stays focused, Cancel disables, and Escape stops closing it. It closes when the promise resolves and stays open, buttons back on, when it rejects, so the reader can try again or bail out.
 
 ```tsx
 <Confirm
@@ -94,7 +94,7 @@ Return a promise from `onConfirm` and the panel waits for it. The action shows t
 
 ## The hook
 
-Wrap the app, or the part of it that asks questions, in `ConfirmProvider`. Then `useConfirm()` gives you a function that opens the panel and resolves `true` on confirm and `false` on cancel, Escape or the overlay. Calls queue up, one panel at a time.
+Wrap the app, or the part of it that asks questions, in `ConfirmProvider`. Then `useConfirm()` gives you a function that opens the panel and resolves `true` on confirm and `false` on cancel or Escape. Calls queue up, one panel at a time.
 
 ```tsx
 const confirm = useConfirm();
@@ -129,7 +129,7 @@ async function remove(id: string) {
 | `defaultOpen`  | `boolean`                                            | `false`     | Open state when uncontrolled                             |
 | `onOpenChange` | `(open: boolean) => void`                            | -           | Called when the open state changes                       |
 | `onConfirm`    | `() => void \| Promise<void>`                        | -           | Called by the action; a promise keeps it pending         |
-| `onCancel`     | `() => void`                                         | -           | Called by cancel, Escape and the overlay                 |
+| `onCancel`     | `() => void`                                         | -           | Called by cancel and Escape                              |
 | `className`    | `string`                                             | -           | Classes for the default panel                            |
 | `children`     | `ReactNode`                                          | -           | A `Confirm.Trigger` and, optionally, a `Confirm.Content` |
 

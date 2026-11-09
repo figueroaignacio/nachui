@@ -48,14 +48,15 @@ describe('Confirm', () => {
     await waitFor(() => expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument());
   });
 
-  it('disables both buttons while an async onConfirm is pending', async () => {
+  it('blocks both buttons while an async onConfirm is pending', async () => {
     const deferred = Deferred();
     render(<Confirm title="Sure?" defaultOpen onConfirm={() => deferred.promise} />);
     const action = screen.getByRole('button', { name: 'Confirm' });
     const cancel = screen.getByRole('button', { name: 'Cancel' });
     await userEvent.click(action);
-    expect(action).toBeDisabled();
+    expect(action).toHaveAttribute('aria-disabled', 'true');
     expect(action).toHaveAttribute('aria-busy', 'true');
+    expect(action).toHaveFocus();
     expect(cancel).toBeDisabled();
     await act(async () => {
       deferred.resolve();
@@ -178,5 +179,15 @@ describe('useConfirm', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Ask' }));
     await userEvent.click(await screen.findByRole('button', { name: 'Cancel' }));
     await waitFor(() => expect(onResult).toHaveBeenCalledWith(false));
+  });
+
+  it('stays open when the backdrop is clicked, like any alert dialog', async () => {
+    const onOpenChange = vi.fn();
+    render(<Confirm title="Sure?" defaultOpen onOpenChange={onOpenChange} />);
+    const overlay = document.querySelector('[data-slot="alert-dialog-overlay"]');
+    expect(overlay).not.toBeNull();
+    await userEvent.click(overlay as Element);
+    expect(screen.getByRole('alertdialog')).toBeInTheDocument();
+    expect(onOpenChange).not.toHaveBeenCalled();
   });
 });

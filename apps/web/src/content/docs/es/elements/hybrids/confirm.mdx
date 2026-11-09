@@ -1,6 +1,6 @@
 ---
 title: Confirm
-description: El momento "¿estás seguro?", en una sola pieza. Un Dialog que se comporta como alerta, un botón de cancelar y uno de acción, un guardia opcional de escribir para confirmar, y un hook que lo convierte en una promesa.
+description: El momento "¿estás seguro?", en una sola pieza. Un Alert Dialog con un botón de cancelar y uno de acción, un guardia opcional de escribir para confirmar, y un hook que lo convierte en una promesa.
 published: true
 date: 2026-09-22
 locale: es
@@ -32,7 +32,7 @@ import { Confirm } from '@/hybrids/confirm';
 </Confirm>
 ```
 
-Con solo un trigger como hijo, el panel se arma solo: ícono si le pasaste uno, título, descripción, el guardia de texto cuando hay `requireText`, y abajo Cancelar y la acción. El panel tiene `role="alertdialog"`, así que los lectores de pantalla lo anuncian como algo que espera una respuesta, y Escape y el overlay cuentan como cancelar.
+Con solo un trigger como hijo, el panel se arma solo: ícono si le pasaste uno, título, descripción, el guardia de texto cuando hay `requireText`, y abajo Cancelar y la acción. El panel tiene `role="alertdialog"`, así que los lectores de pantalla lo anuncian como algo que espera una respuesta, y Escape cuenta como cancelar. Un click en el fondo no hace nada, así nadie contesta sin querer.
 
 Pasale un `Confirm.Content` para reordenar el footer o meter algo tuyo entre la descripción y los botones.
 
@@ -41,10 +41,10 @@ Pasale un `Confirm.Content` para reordenar el footer o meter algo tuyo entre la 
   <Confirm.Trigger>Cerrar sesión</Confirm.Trigger>
   <Confirm.Content>
     <p className="text-muted-foreground text-sm">Tus otras 3 sesiones terminan ahora.</p>
-    <Dialog.Footer>
+    <AlertDialog.Footer>
       <Confirm.Cancel>Dejarlas</Confirm.Cancel>
       <Confirm.Action>Cerrar sesión</Confirm.Action>
-    </Dialog.Footer>
+    </AlertDialog.Footer>
   </Confirm.Content>
 </Confirm>
 ```
@@ -55,16 +55,16 @@ Un hybrid es composición visible. Abrí `confirm.tsx` y estos son los elements 
 
 ```tree
 Confirm
-├── Dialog
-│   ├── Confirm.Trigger   →  Dialog.Trigger
-│   └── Confirm.Content   →  Dialog.Content (role="alertdialog")
-│       ├── Dialog.Header
-│       │   ├── Dialog.Title
-│       │   └── Dialog.Description
+├── AlertDialog
+│   ├── Confirm.Trigger   →  AlertDialog.Trigger
+│   └── Confirm.Content   →  AlertDialog.Content
+│       ├── AlertDialog.Header
+│       │   ├── AlertDialog.Title
+│       │   └── AlertDialog.Description
 │       ├── Input            (solo con requireText)
-│       └── Dialog.Footer
-│           ├── Confirm.Cancel  →  Button (outline)
-│           └── Confirm.Action  →  Button (default o destructive)
+│       └── AlertDialog.Footer
+│           ├── Confirm.Cancel  →  AlertDialog.Cancel
+│           └── Confirm.Action  →  AlertDialog.Action
 └── ConfirmProvider + useConfirm()
 ```
 
@@ -74,7 +74,7 @@ Confirm
 
 ## Confirmación asíncrona
 
-Devolvé una promesa desde `onConfirm` y el panel la espera. La acción muestra el spinner, los dos botones se deshabilitan, y Escape y el overlay dejan de cerrarlo. Se cierra cuando la promesa resuelve, y si rechaza se queda abierto con los botones de vuelta, para reintentar o salir.
+Devolvé una promesa desde `onConfirm` y el panel la espera. La acción muestra el spinner y conserva el foco, Cancelar se deshabilita, y Escape deja de cerrarlo. Se cierra cuando la promesa resuelve, y si rechaza se queda abierto con los botones de vuelta, para reintentar o salir.
 
 ```tsx
 <Confirm
@@ -94,7 +94,7 @@ Devolvé una promesa desde `onConfirm` y el panel la espera. La acción muestra 
 
 ## El hook
 
-Envolvé la app, o la parte que hace preguntas, en `ConfirmProvider`. Después `useConfirm()` te da una función que abre el panel y resuelve `true` al confirmar y `false` al cancelar, con Escape o con el overlay. Las llamadas se encolan, un panel a la vez.
+Envolvé la app, o la parte que hace preguntas, en `ConfirmProvider`. Después `useConfirm()` te da una función que abre el panel y resuelve `true` al confirmar y `false` al cancelar, o con Escape. Las llamadas se encolan, un panel a la vez.
 
 ```tsx
 const confirm = useConfirm();
@@ -129,7 +129,7 @@ async function remove(id: string) {
 | `defaultOpen`  | `boolean`                                            | `false`     | Estado abierto cuando no es controlado                      |
 | `onOpenChange` | `(open: boolean) => void`                            | -           | Se llama cuando cambia el estado abierto                    |
 | `onConfirm`    | `() => void \| Promise<void>`                        | -           | Lo llama la acción; una promesa lo deja pendiente           |
-| `onCancel`     | `() => void`                                         | -           | Lo llaman cancelar, Escape y el overlay                     |
+| `onCancel`     | `() => void`                                         | -           | Lo llaman cancelar y Escape                                 |
 | `className`    | `string`                                             | -           | Clases para el panel por defecto                            |
 | `children`     | `ReactNode`                                          | -           | Un `Confirm.Trigger` y, opcionalmente, un `Confirm.Content` |
 
