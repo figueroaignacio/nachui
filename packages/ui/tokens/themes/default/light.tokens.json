@@ -144,8 +144,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.556, 0, 0],
-          "hex": "#737373"
+          "components": [0.52, 0, 0],
+          "hex": "#696969"
         }
       },
       "muted-strong": {

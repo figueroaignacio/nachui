@@ -128,8 +128,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.541176, 0.705882, 0.972549],
-          "hex": "#8ab4f8"
+          "components": [0.682353, 0.796078, 0.980392],
+          "hex": "#aecbfa"
         }
       },
       "muted": {

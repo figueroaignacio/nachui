@@ -96,8 +96,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [1, 1, 1],
-          "hex": "#ffffff"
+          "components": [0.066667, 0.062745, 0.058824],
+          "hex": "#11100f"
         }
       },
       "secondary": {
@@ -128,8 +128,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [0.156863, 0.6, 0.960784],
-          "hex": "#2899f5"
+          "components": [0.623529, 0.815686, 1.0],
+          "hex": "#9fd0ff"
         }
       },
       "muted": {
@@ -221,8 +221,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
-          "components": [1, 1, 1],
-          "hex": "#ffffff"
+          "components": [0.066667, 0.062745, 0.058824],
+          "hex": "#11100f"
         }
       },
       "destructive-text": {

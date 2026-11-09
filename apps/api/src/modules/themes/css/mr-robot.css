@@ -20,7 +20,7 @@
   --accent: #1f1f1f;
   --accent-foreground: #00ff41;
   --muted: #1f1f1f;
-  --muted-foreground: #008f11;
+  --muted-foreground: #00c21d;
   --muted-strong: oklch(66.5% 0.187 143.2);
 
   --border: #008f11;
@@ -87,7 +87,7 @@
   --accent: #1f1f1f;
   --accent-foreground: #00ff41;
   --muted: #1f1f1f;
-  --muted-foreground: #008f11;
+  --muted-foreground: #00c21d;
   --muted-strong: oklch(66.5% 0.187 143.2);
 
   --border: #008f11;
