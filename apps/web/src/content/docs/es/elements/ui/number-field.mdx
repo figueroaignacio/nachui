@@ -1,0 +1,139 @@
+---
+title: Number Field
+description: Escribí un número o movelo de a pasos. Formato según el idioma, límites y soporte para formularios.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="number-field" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="number-field" />
+
+## Anatomía
+
+```tsx
+import { NumberField } from '@/components/number-field';
+```
+
+```tsx
+<NumberField defaultValue={1} min={1} max={99} aria-label="Cantidad">
+  <NumberField.Group>
+    <NumberField.Decrement />
+    <NumberField.Input />
+    <NumberField.Increment />
+  </NumberField.Group>
+</NumberField>
+```
+
+## Composición
+
+Usa la siguiente composición para construir un `NumberField`:
+
+```tree
+NumberField
+└── NumberField.Group
+    ├── NumberField.Decrement
+    ├── NumberField.Input
+    └── NumberField.Increment
+```
+
+`NumberField.Group` solo dibuja la caja alrededor de las partes. Sacalo, o cambiá de lugar los botones, cuando tu diseño necesite otra cosa.
+
+## Variantes
+
+### Predeterminado (Default)
+
+<ComponentPreview component="number-field" demo="default" />
+
+### Moneda (Currency)
+
+Pasá cualquier opción de `Intl.NumberFormat` en `format`. El campo muestra el valor formateado, acepta lo que la gente escribe y lo ajusta a `step` cuando sale del campo.
+
+<ComponentPreview component="number-field" demo="currency" />
+
+### Porcentaje (Percent)
+
+Con `style: 'percent'` el valor es una fracción, así que `0.15` se lee como 15%. Escribir `20` significa 20% y deja el valor en `0.2`. Este demo además activa `allowWheel`.
+
+<ComponentPreview component="number-field" demo="percent" />
+
+## Escritura y formato
+
+Mientras alguien escribe, el campo muestra exactamente lo que puso y `onValueChange` no se dispara. Al perder el foco o con `Enter`, el texto se interpreta con los separadores decimales y de miles de `locale`, se limita a `min` y `max`, se redondea a `step` y se vuelve a formatear. Si el texto no es un número, vuelve al último valor válido, y un campo vacío deja el valor en `null`.
+
+`locale` es `'en-US'` por defecto para que el servidor y el navegador rendericen el mismo texto. Pasá el idioma del usuario cuando lo sepas.
+
+## Rueda del mouse
+
+La rueda está apagada por defecto, porque scrollear la página por encima de un campo numérico tiene que mover la página, no cambiar un precio. Activá `allowWheel` para que la rueda mueva el valor, y aun así solo lo hace mientras el input tiene el foco.
+
+## Teclado
+
+| Tecla                  | Acción                                      |
+| ---------------------- | ------------------------------------------- |
+| `ArrowUp`, `ArrowDown` | Sube o baja un `step`                       |
+| `Shift` + flecha       | Se mueve un `largeStep`                     |
+| `PageUp`, `PageDown`   | Sube o baja un `largeStep`                  |
+| `Home`, `End`          | Salta a `min` o a `max`, si están definidos |
+| `Enter`                | Confirma lo que se escribió                 |
+
+Los botones quedan fuera del orden de tabulación: todo lo que hacen está en las flechas. Si mantenés apretado un botón sigue sumando, cada vez más rápido.
+
+## Accesibilidad
+
+- El input tiene `role="spinbutton"` con `aria-valuenow`, `aria-valuemin`, `aria-valuemax` y el valor formateado en `aria-valuetext`.
+- Nombralo con un `<label htmlFor>` que apunte al `id`, o con `aria-label` o `aria-labelledby` en la raíz. Todo eso termina en el input.
+- Los botones se llaman "Increase" y "Decrease". Pasales `aria-label` para decir más, como "Agregar un asiento".
+- En un límite, el botón correspondiente se deshabilita en lugar de desaparecer, así el diseño no salta.
+- `aria-invalid` en la raíz pone el borde en rojo. Apuntá `aria-describedby` al mensaje de error.
+
+## Referencia de API
+
+### NumberField
+
+| Prop            | Tipo                              | Por defecto | Descripción                                                      |
+| --------------- | --------------------------------- | ----------- | ---------------------------------------------------------------- |
+| `value`         | `number \| null`                  | -           | Valor controlado. `null` significa vacío                         |
+| `defaultValue`  | `number \| null`                  | `null`      | Valor inicial cuando no es controlado                            |
+| `onValueChange` | `(value: number \| null) => void` | -           | Se llama después de un paso o al confirmar el texto escrito      |
+| `min`           | `number`                          | -           | Valor mínimo                                                     |
+| `max`           | `number`                          | -           | Valor máximo                                                     |
+| `step`          | `number`                          | `1`         | Tamaño de cada paso. Lo que se escribe se redondea a él          |
+| `largeStep`     | `number`                          | `10`        | Cuánto mueven `PageUp`, `PageDown` y `Shift` con una flecha      |
+| `format`        | `Intl.NumberFormatOptions`        | -           | Cómo se muestra el valor                                         |
+| `locale`        | `string \| string[]`              | `'en-US'`   | Idioma usado para formatear e interpretar                        |
+| `allowWheel`    | `boolean`                         | `false`     | Deja que la rueda del mouse mueva el valor con el input enfocado |
+| `name`          | `string`                          | -           | Envía el número crudo con el formulario bajo este nombre         |
+| `form`          | `string`                          | -           | Id del formulario al que pertenece el input oculto               |
+| `required`      | `boolean`                         | `false`     | Bloquea el envío mientras el campo esté vacío                    |
+| `disabled`      | `boolean`                         | `false`     | Desactiva el input y los dos botones                             |
+| `readOnly`      | `boolean`                         | `false`     | Muestra el valor pero no deja cambiarlo                          |
+| `id`            | `string`                          | -           | Id del input, para `<label htmlFor>`                             |
+| `aria-invalid`  | `boolean`                         | -           | Marca el valor como inválido                                     |
+| `className`     | `string`                          | -           | Clases CSS adicionales del contenedor                            |
+
+`aria-label`, `aria-labelledby` y `aria-describedby` puestos en la raíz pasan al input.
+
+### NumberField.Input
+
+Acepta cualquier atributo de `input` salvo `value`, `type`, `min`, `max` y `step`, que vienen de la raíz.
+
+### NumberField.Increment, NumberField.Decrement
+
+Aceptan cualquier atributo de `button`. Los children reemplazan los íconos de más y menos.
+
+| Prop         | Tipo     | Por defecto                | Descripción            |
+| ------------ | -------- | -------------------------- | ---------------------- |
+| `aria-label` | `string` | `'Increase'`, `'Decrease'` | Nombre del botón       |
+| `className`  | `string` | -                          | Clases CSS adicionales |
+
+### NumberField.Group
+
+| Prop        | Tipo     | Por defecto | Descripción            |
+| ----------- | -------- | ----------- | ---------------------- |
+| `className` | `string` | -           | Clases CSS adicionales |

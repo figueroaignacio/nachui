@@ -1,0 +1,141 @@
+---
+title: Slider
+description: Elegí un valor o un rango arrastrando. Funciona con puntero, teclado y formularios.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="slider" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="slider" />
+
+## Anatomía
+
+```tsx
+import { Slider } from '@/components/slider';
+```
+
+```tsx
+<Slider defaultValue={[50]}>
+  <Slider.Track>
+    <Slider.Range />
+  </Slider.Track>
+  <Slider.Thumb aria-label="Volumen" />
+</Slider>
+```
+
+## Composición
+
+Usa la siguiente composición para construir un `Slider`:
+
+```tree
+Slider
+├── Slider.Track
+│   └── Slider.Range
+└── Slider.Thumb
+```
+
+El valor siempre es un array, con un número por thumb. Renderizá un `Slider.Thumb` por cada valor: dos valores y dos thumbs arman un rango. Cada thumb toma su índice según el orden, así que dejalos como hijos directos de `Slider`. Si envolvés uno en otro elemento, pasale `index` vos.
+
+## Variantes
+
+### Predeterminado (Default)
+
+<ComponentPreview component="slider" demo="default" />
+
+### Rango (Range)
+
+Dos valores dan dos thumbs. Nunca se cruzan, y `minStepsBetweenThumbs` deja un espacio mínimo entre ellos. Con `getAriaValueText` los lectores de pantalla escuchan "$180" en lugar de "180".
+
+<ComponentPreview component="slider" demo="range" />
+
+### Vertical
+
+Usá `orientation="vertical"` y dale una altura a la raíz con `className`. El mínimo queda abajo.
+
+<ComponentPreview component="slider" demo="vertical" />
+
+## Cambio y confirmación
+
+`onValueChange` se dispara en cada paso, incluido cada movimiento mientras arrastrás. Usalo para mantener la interfaz sincronizada.
+
+`onValueCommit` se dispara una sola vez, al soltar el puntero o después de que una tecla cambia el valor. Conviene cuando el cambio es caro, como guardar una preferencia o volver a pedir una lista: hacés un pedido por gesto en lugar de decenas.
+
+```tsx
+<Slider
+  value={volume}
+  onValueChange={setVolume}
+  onValueCommit={(value) => savePreference('volume', value[0])}
+>
+  ...
+</Slider>
+```
+
+## Teclado
+
+| Tecla                    | Acción                                            |
+| ------------------------ | ------------------------------------------------- |
+| `ArrowRight`, `ArrowUp`  | Sube un `step`                                    |
+| `ArrowLeft`, `ArrowDown` | Baja un `step`                                    |
+| `Shift` + flecha         | Se mueve un `largeStep`                           |
+| `PageUp`, `PageDown`     | Sube o baja un `largeStep`                        |
+| `Home`, `End`            | Salta a `min` o a `max`                           |
+| `Tab`                    | Pasa al siguiente thumb y después sale del slider |
+
+En diseños de derecha a izquierda las flechas horizontales se invierten, así que `ArrowLeft` va hacia el máximo, igual que se llena el track. `inverted` las vuelve a invertir para que coincidan.
+
+## Accesibilidad
+
+- Cada thumb tiene `role="slider"` con `aria-valuenow`, `aria-valuemin`, `aria-valuemax` y `aria-orientation`.
+- Nombrá cada thumb con `aria-label` o `aria-labelledby`. En un rango, decí qué extremo es, como "Precio mínimo".
+- Usá `getAriaValueText` cuando el número solo no alcanza, como monedas, decibeles o porcentajes.
+- Hacer clic en el track mueve ahí el thumb más cercano y lo enfoca, así que teclado y puntero terminan en el mismo lugar.
+- Cada thumb tiene un área táctil de al menos 44 por 44 píxeles, aunque se dibuje de 18.
+
+## Referencia de API
+
+### Slider
+
+| Prop                    | Tipo                                       | Por defecto    | Descripción                                                 |
+| ----------------------- | ------------------------------------------ | -------------- | ----------------------------------------------------------- |
+| `value`                 | `number[]`                                 | -              | Valor controlado, un número por thumb                       |
+| `defaultValue`          | `number[]`                                 | `[min]`        | Valor inicial cuando no es controlado                       |
+| `onValueChange`         | `(value: number[]) => void`                | -              | Se llama en cada cambio, también mientras arrastrás         |
+| `onValueCommit`         | `(value: number[]) => void`                | -              | Se llama al soltar el puntero o después de una tecla        |
+| `min`                   | `number`                                   | `0`            | Valor mínimo                                                |
+| `max`                   | `number`                                   | `100`          | Valor máximo                                                |
+| `step`                  | `number`                                   | `1`            | Tamaño de cada paso. Los valores se ajustan a él            |
+| `largeStep`             | `number`                                   | `10`           | Cuánto mueven `PageUp`, `PageDown` y `Shift` con una flecha |
+| `minStepsBetweenThumbs` | `number`                                   | `0`            | Espacio mínimo entre thumbs, contado en pasos               |
+| `orientation`           | `'horizontal' \| 'vertical'`               | `'horizontal'` | Dirección del track                                         |
+| `dir`                   | `'ltr' \| 'rtl'`                           | Heredado       | Dirección del texto. Si falta, usa la de la página          |
+| `inverted`              | `boolean`                                  | `false`        | Pone el mínimo en el otro extremo                           |
+| `disabled`              | `boolean`                                  | `false`        | Bloquea puntero y teclado                                   |
+| `name`                  | `string`                                   | -              | Envía un input oculto por thumb con este nombre             |
+| `form`                  | `string`                                   | -              | Id del formulario al que pertenecen los inputs ocultos      |
+| `getAriaValueText`      | `(value: number, index: number) => string` | -              | Texto que anuncian los lectores de pantalla para cada thumb |
+| `className`             | `string`                                   | -              | Clases CSS adicionales. En vertical, la altura va acá       |
+
+La raíz pone `data-orientation`, `data-disabled` y `data-dragging` para que puedas darle estilo a cada estado.
+
+### Slider.Thumb
+
+Acepta cualquier atributo de `span`, así que `aria-label` y `aria-labelledby` van acá.
+
+| Prop        | Tipo     | Por defecto    | Descripción                                                     |
+| ----------- | -------- | -------------- | --------------------------------------------------------------- |
+| `index`     | `number` | Según el orden | Qué valor controla este thumb. Solo hace falta si está envuelto |
+| `className` | `string` | -              | Clases CSS adicionales                                          |
+
+El thumb que se está arrastrando recibe `data-dragging`.
+
+### Slider.Track, Slider.Range
+
+| Prop        | Tipo     | Por defecto | Descripción            |
+| ----------- | -------- | ----------- | ---------------------- |
+| `className` | `string` | -           | Clases CSS adicionales |

@@ -1,0 +1,141 @@
+---
+title: Slider
+description: Pick a value or a range by dragging. Works with pointer, keyboard and forms.
+published: true
+date: 2026-11-09
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="slider" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="slider" />
+
+## Anatomy
+
+```tsx
+import { Slider } from '@/components/slider';
+```
+
+```tsx
+<Slider defaultValue={[50]}>
+  <Slider.Track>
+    <Slider.Range />
+  </Slider.Track>
+  <Slider.Thumb aria-label="Volume" />
+</Slider>
+```
+
+## Composition
+
+Use the following composition to build a `Slider`:
+
+```tree
+Slider
+├── Slider.Track
+│   └── Slider.Range
+└── Slider.Thumb
+```
+
+The value is always an array, with one number per thumb. Render one `Slider.Thumb` for each value: two values and two thumbs make a range. Thumbs pick up their index from their order, so keep them as direct children of `Slider`. If you wrap one in something else, pass `index` yourself.
+
+## Variants
+
+### Default
+
+<ComponentPreview component="slider" demo="default" />
+
+### Range
+
+Two values give you two thumbs. They never cross, and `minStepsBetweenThumbs` keeps a gap between them. `getAriaValueText` lets screen readers hear "$180" instead of "180".
+
+<ComponentPreview component="slider" demo="range" />
+
+### Vertical
+
+Set `orientation="vertical"` and give the root a height through `className`. The bottom is the minimum.
+
+<ComponentPreview component="slider" demo="vertical" />
+
+## Change and commit
+
+`onValueChange` fires on every step, including each move while dragging. Use it to keep the UI in sync.
+
+`onValueCommit` fires once, when the pointer is released or after a key changes the value. Reach for it when the change is expensive, like saving a setting or refetching a list, so you do one request per gesture instead of dozens.
+
+```tsx
+<Slider
+  value={volume}
+  onValueChange={setVolume}
+  onValueCommit={(value) => savePreference('volume', value[0])}
+>
+  ...
+</Slider>
+```
+
+## Keyboard
+
+| Key                      | Action                                         |
+| ------------------------ | ---------------------------------------------- |
+| `ArrowRight`, `ArrowUp`  | Increase by `step`                             |
+| `ArrowLeft`, `ArrowDown` | Decrease by `step`                             |
+| `Shift` + arrow          | Move by `largeStep`                            |
+| `PageUp`, `PageDown`     | Increase or decrease by `largeStep`            |
+| `Home`, `End`            | Jump to `min` or `max`                         |
+| `Tab`                    | Move to the next thumb, then out of the slider |
+
+In right to left layouts the horizontal arrows flip, so `ArrowLeft` moves toward the maximum, the same way the track fills. `inverted` flips them again to match.
+
+## Accessibility
+
+- Every thumb has `role="slider"` with `aria-valuenow`, `aria-valuemin`, `aria-valuemax` and `aria-orientation`.
+- Name each thumb with `aria-label` or `aria-labelledby`. In a range, say which end it is, like "Minimum price".
+- Use `getAriaValueText` when the bare number is not enough, such as currency, decibels or percentages.
+- Clicking the track moves the closest thumb there and focuses it, so keyboard users and pointer users end up in the same place.
+- Each thumb has a hit area of at least 44 by 44 pixels, even though it is drawn at 18.
+
+## API Reference
+
+### Slider
+
+| Prop                    | Type                                       | Default        | Description                                                    |
+| ----------------------- | ------------------------------------------ | -------------- | -------------------------------------------------------------- |
+| `value`                 | `number[]`                                 | -              | Controlled value, one number per thumb                         |
+| `defaultValue`          | `number[]`                                 | `[min]`        | Initial value when uncontrolled                                |
+| `onValueChange`         | `(value: number[]) => void`                | -              | Called on every change, including while dragging               |
+| `onValueCommit`         | `(value: number[]) => void`                | -              | Called when the pointer is released or after a key press       |
+| `min`                   | `number`                                   | `0`            | Lowest value                                                   |
+| `max`                   | `number`                                   | `100`          | Highest value                                                  |
+| `step`                  | `number`                                   | `1`            | Size of each step. Values snap to it                           |
+| `largeStep`             | `number`                                   | `10`           | Amount moved by `PageUp`, `PageDown` and `Shift` with an arrow |
+| `minStepsBetweenThumbs` | `number`                                   | `0`            | Minimum gap between thumbs, counted in steps                   |
+| `orientation`           | `'horizontal' \| 'vertical'`               | `'horizontal'` | Direction of the track                                         |
+| `dir`                   | `'ltr' \| 'rtl'`                           | Inherited      | Text direction. Falls back to the page                         |
+| `inverted`              | `boolean`                                  | `false`        | Puts the minimum at the other end                              |
+| `disabled`              | `boolean`                                  | `false`        | Blocks pointer and keyboard input                              |
+| `name`                  | `string`                                   | -              | Submits one hidden input per thumb under this name             |
+| `form`                  | `string`                                   | -              | Id of the form the hidden inputs belong to                     |
+| `getAriaValueText`      | `(value: number, index: number) => string` | -              | Text screen readers announce for each thumb                    |
+| `className`             | `string`                                   | -              | Additional CSS classes. Set the height here when vertical      |
+
+The root sets `data-orientation`, `data-disabled` and `data-dragging` so you can style each state.
+
+### Slider.Thumb
+
+Accepts every `span` attribute, so `aria-label` and `aria-labelledby` go here.
+
+| Prop        | Type     | Default    | Description                                               |
+| ----------- | -------- | ---------- | --------------------------------------------------------- |
+| `index`     | `number` | From order | Which value this thumb controls. Only needed when wrapped |
+| `className` | `string` | -          | Additional CSS classes                                    |
+
+The thumb being dragged gets `data-dragging`.
+
+### Slider.Track, Slider.Range
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
