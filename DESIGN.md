@@ -76,7 +76,7 @@ Info is deliberately neutral in dark mode. Light solids sit at the same lightnes
 
 ### Theming
 
-There are no built-in accent presets. To rebrand, redefine the tokens on `:root` and `.dark`. Components only read tokens, so nothing else needs to change. The theme block in the installation guide is a trimmed copy of `globals.css` and has to be kept in sync when a token is added or renamed.
+Tokens live in `packages/ui/tokens/themes/<theme>/{light,dark}.tokens.json` (DTCG format). `pnpm --filter @repo/ui tokens` writes the blocks in `globals.css`, the stylesheet of every theme served by the API and the theme block of the installation guide, and `pnpm checks` fails when any of them is stale. There are five presets (`nachui`, the one this site uses, plus `default`, `google`, `microsoft` and `mr-robot`); `/themes` previews them and builds a custom one. Components only read tokens, so a theme never touches component code. Every theme must keep text pairs at WCAG AA in both modes; `scripts/theme-contrast.test.ts` checks it.
 
 ## 3. Typography Rules
 

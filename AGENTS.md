@@ -35,6 +35,8 @@ pnpm test                                             # every workspace, CI styl
 pnpm --filter @repo/ui test                           # ui: vitest run
 pnpm --filter @repo/ui vitest run src/lib/cn.test.ts  # single file
 pnpm --filter @repo/ui vitest run src/components/button.test.tsx -t "name"  # single case
+pnpm --filter @repo/ui test:browser                   # *.browser.test.tsx in real Chromium (VITEST_BROWSERS=chromium,firefox,webkit)
+pnpm --filter @repo/ui test:visual                    # screenshot baselines in src/visual (test:visual:update to refresh)
 pnpm --filter api test                                # api: jest
 pnpm --filter api test:e2e                            # api: e2e config
 ```
@@ -68,9 +70,9 @@ DB workflow lives in `packages/db`: `db:generate`, `db:migrate`, `db:push`, `db:
 
 - Components in `packages/ui` must stay copy-paste ready and self-contained: runtime deps are limited to `clsx`, `tailwind-merge`, `motion`, `class-variance-authority` and `zod`. Icons are never a dependency: a primitive inlines the SVGs it needs as local components, and demos import from `packages/ui/src/icons/`. Never import docs/app data into a primitive; pass text and icons via props.
 - Components must work in any React 19 setup (Next.js, Vite, TanStack Start, React Router), not just Next. No `next/*` or framework imports, type-only imports use `import type` / `type X` (Vite's Rolldown build fails with `MISSING_EXPORT` otherwise), and no unused imports (Vite's default tsconfig rejects them). Cross-file imports stay relative (`../lib/cn`, `../components/button`): the installation guide tells users to mirror `src/{components,ai,hybrids,lib}` so pasted files work unchanged.
-- The theme tokens in `apps/web/src/content/docs/{en,es}/installation.mdx` are a trimmed copy of `packages/ui/src/css/globals.css`. Update them when you add or rename a token that components use.
+- Theme tokens have one source: `packages/ui/tokens/themes/<theme>/{light,dark}.tokens.json` (DTCG). Edit the JSON and run `pnpm --filter @repo/ui tokens`; it rewrites the token blocks in `globals.css`, the API theme stylesheets and the installation guide. Never edit those generated blocks by hand. `check:tokens` (part of `pnpm checks`) fails when they are stale, and `scripts/theme-contrast.test.ts` keeps every theme at WCAG AA.
 - In MDX, use the flat names for client compound components (`TabsList`, `TabsTrigger`, `TabsContent`). `Tabs.Content` is undefined in the server render. Don't indent JSX closing tags that follow a markdown list, or MDX nests them in the list item.
-- Shared catalog logic lives in `packages/ui/src/lib`: `use-controllable-state.ts` for every controlled/uncontrolled prop pair and `overlay.ts` for scroll lock, focus trap and layer checks. Reuse them instead of reimplementing; components import them relatively.
+- Shared catalog logic lives in `packages/ui/src/lib`: `use-controllable-state.ts` for every controlled/uncontrolled prop pair, `overlay.ts` for scroll lock, focus trap and layer checks, `floating.ts` for anchored positioning, `collection.ts` and `roving-focus.ts` for list and arrow key navigation, `direction.ts` for RTL, `form-control.ts` for hidden form inputs and `date.ts` for `YYYY-MM-DD` dates. Reuse them instead of reimplementing; components import them relatively. Use logical Tailwind classes (`ms`, `pe`, `start`, `end`); `check:logical` fails on physical ones.
 - Derive class strings with `cn(...)` (`packages/ui/src/lib`), never manual Tailwind string concatenation. Tailwind v4 has no config file; design tokens are CSS variables in `packages/ui/src/css/globals.css` (visual rules in `DESIGN.md`).
 - `'use client'` only when hooks or DOM APIs require it. MDX-rendered components must be deterministic (no random IDs, no `Date.now()` defaults).
 - Files: kebab-case components (`mobile-menu.tsx`), hooks in `packages/ui/src/hooks` prefixed `use`, tests colocated with `.test.ts(x)` suffix.
