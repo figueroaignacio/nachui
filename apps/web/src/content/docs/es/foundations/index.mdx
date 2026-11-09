@@ -1,0 +1,44 @@
+---
+title: Fundamentos
+description: Los principios y tokens sobre los que se construye cada componente de NachUI, del color y la tipografía al movimiento y las capas.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: es
+---
+
+Los fundamentos son las decisiones que están debajo de los componentes. Un botón, un diálogo y un toast se ven como parte de lo mismo porque salen del mismo conjunto chico de colores, la misma escala tipográfica, los mismos pasos de espaciado, el mismo radio y los mismos springs. Esta sección documenta ese conjunto con los valores reales que trae el catálogo.
+
+## Principios
+
+NachUI busca sentirse como una página impresa bien compuesta, no como un tablero de control. De ahí salen tres ideas.
+
+- **Editorial y calmo.** La interfaz tiene que ser lo bastante silenciosa como para que el contenido sea lo que más se escucha. Nada compite por atención si no la necesita.
+- **El color casi no aparece.** El modo claro usa neutros cálidos tipo papel, el oscuro usa grises puros, y el color primario es casi negro o casi blanco. El tono solo aparece en feedback (errores, advertencias, éxito, info) y en el resaltado de sintaxis.
+- **La jerarquía sale del contraste, la tipografía y el espacio.** Cuando algo tiene que destacar, probá con peso, tamaño, un primer plano más fuerte o más aire alrededor antes de recurrir a un color.
+
+Los dos modos se ajustan por separado en lugar de invertirse uno del otro, y todos los colores están escritos en OKLCH para que los pasos entre tokens se vean parejos.
+
+## Del token al componente
+
+Cada valor nace en un archivo de tokens y llega a tu markup en tres saltos. Acá está `muted-foreground`, el color de leyendas y texto secundario, en su recorrido.
+
+<TokenFlow locale="es" />
+
+1. Los tokens viven en `packages/ui/tokens/themes/<tema>/{light,dark}.tokens.json`, en el formato del [Design Tokens Community Group](https://www.designtokens.org/). Son la única fuente de verdad, y los mismos archivos se importan en Figma como variables.
+2. Un paso de build los escribe en `globals.css` como variables CSS sobre `:root` y `.dark`.
+3. `@theme inline` mapea cada variable a una utilidad de Tailwind, así `--muted-foreground` se convierte en `text-muted-foreground`, `bg-muted-foreground` y demás.
+4. Los componentes solo usan esas utilidades. Nunca hardcodean un color, una sombra ni un radio, y por eso un tema nuevo cambia todo el catálogo sin tocar un componente.
+
+Para cambiar los valores y adaptarlos a tu marca, leé [Tematización](/docs/concepts/theming).
+
+## Las páginas
+
+- [Color](/docs/foundations/color): la paleta completa en claro y oscuro, la convención de foreground y el contraste de cada par.
+- [Tipografía](/docs/foundations/typography): los cuatro roles tipográficos, la escala, los pesos y las reglas para componer texto.
+- [Espaciado](/docs/foundations/spacing): la escala de 4px, los pasos que usa el catálogo, las alturas de controles y las áreas táctiles.
+- [Radio](/docs/foundations/radius): un radio base, cinco pasos y la regla de anidado.
+- [Elevación](/docs/foundations/elevation): tres niveles de sombra y cuándo usar cada uno.
+- [Movimiento](/docs/foundations/motion): tres springs, profundidad de campo, respuesta al presionar y movimiento reducido.
+- [Capas](/docs/foundations/layers): el mapa de z-index y cómo se apilan los overlays.

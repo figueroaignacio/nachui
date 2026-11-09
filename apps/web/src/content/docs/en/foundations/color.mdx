@@ -1,0 +1,83 @@
+---
+title: Color
+description: The NachUI palette in light and dark mode, the foreground convention and the measured contrast of every text pair.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: en
+---
+
+Color in NachUI is mostly neutral. Light mode is built from warm paper grays with a faint tint (hue 75 to 85, very low chroma), so white never reads clinical. Dark mode uses pure grays with zero chroma, stepped so surfaces stack clearly on a near-black canvas. The only real hues are the four feedback colors and the syntax highlighting, which reuses them.
+
+Every value below is read straight from the `nachui` theme files, `light.tokens.json` and `dark.tokens.json`, so this page cannot drift from what the components ship.
+
+## Palette
+
+Tokens are grouped the same way as in the token files. Each row shows the CSS variable, the Tailwind utility you would usually reach for (every color token also gets the `bg-`, `text-`, `border-` and `ring-` forms), and the value in both modes.
+
+<ColorPalette />
+
+A few tokens have no Tailwind utility on purpose. `--grid-color` only feeds decorative grid overlays, and the `--code-*` syntax colors are read by the code block, not written in markup.
+
+## How the groups work
+
+**Surface** is the stacking order of the interface. In dark mode surfaces get lighter as they rise: background 14.5%, surface muted 18.2%, card 21.8%, popover 23.9%. That is why anything floating uses `bg-popover` and never `bg-background`: on a dark page a `bg-background` menu has no edge.
+
+**Interactive** covers fills for controls. `primary` is the near-black (or near-white) of main buttons and checked controls, `secondary` and `accent` are the quiet fills for secondary buttons and hover states, and `muted` is the highlight behind menu items, tracks and skeletons. `muted-foreground` is for captions and placeholders, and `muted-strong` is the softer body color for long reading text.
+
+**Structure** holds the lines. `border` is the default stroke, `border-interactive` is the stronger stroke fields take on hover and focus, `input` is the stroke of form fields and `ring` is the focus ring.
+
+**Feedback** has four hues, each with five tokens. More on that below.
+
+**Code** colors the code block surface and its syntax tokens, reusing the feedback hues so highlighting stays in the same family.
+
+## The foreground convention
+
+Every surface or fill has a matching `-foreground` token for the content that sits on it. The surface keeps the bare name and its content gets the suffix.
+
+```tsx
+<div className="bg-card text-card-foreground">
+  <button className="bg-primary text-primary-foreground">Confirm</button>
+</div>
+```
+
+If you use a fill, use its foreground with it. Keeping each pair legible is the theme's job, so a component that follows the pairing inherits that guarantee in every theme.
+
+## Feedback: solid, text and surface
+
+Each feedback hue (`destructive`, `warning`, `success`, `info`) comes as five tokens:
+
+| Token                | Use                                                        |
+| -------------------- | ---------------------------------------------------------- |
+| `--<hue>`            | Solid fill for buttons and badges that need to stand out   |
+| `--<hue>-foreground` | Text and icons on that solid fill                          |
+| `--<hue>-text`       | The hue tuned for text on a normal surface or its own tint |
+| `--<hue>-surface`    | Tinted background for callouts, banners and toasts         |
+| `--<hue>-border`     | Stroke that goes with the tinted surface                   |
+
+So why is there a `-text` token when the solid already exists? The solid is tuned to carry a light label on top of it, not to be read as text itself. In light mode every solid sits at the same 53% lightness, which keeps one state from shouting louder than another but leaves little room as text: `success` on `success-surface` only reaches 4.55:1. The `-text` tokens sit 5 points darker, which gives small text a real margin above AA (5.66:1 for the same pair). In dark mode the two match, because a light hue on a dark surface already has plenty of contrast.
+
+The rule is short: text and icons on a page or a tinted surface use `text-<hue>-text`, filled controls use `bg-<hue> text-<hue>-foreground`.
+
+```tsx
+<p className="text-destructive-text">This email is already taken.</p>
+<button className="bg-destructive text-destructive-foreground">Delete project</button>
+<div className="bg-warning-surface border-warning-border text-warning-text border">
+  Your trial ends in 3 days.
+</div>
+```
+
+Info is deliberately neutral in dark mode, since a saturated blue on near black reads louder than anything else on the page.
+
+## Contrast
+
+Each pair below is measured when the page is built, from the same token files, using the WCAG 2.1 contrast formula after converting OKLCH to sRGB. Text pairs need 4.5:1 for AA and 7:1 for AAA. Strokes and focus rings are non-text UI, so their bar is 3:1.
+
+<ContrastTable />
+
+`muted-foreground` on `muted` is the tightest text pair, and it still clears AA in both modes. If you change a token in your own theme, run the same check before shipping.
+
+## Customizing
+
+These are the values of the default `nachui` theme. To bring your own brand, redefine the variables on `:root` and `.dark`; components only read tokens, so nothing else changes. [Theming](/docs/concepts/theming) walks through it.

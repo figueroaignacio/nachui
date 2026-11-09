@@ -1,0 +1,83 @@
+---
+title: Color
+description: La paleta de NachUI en modo claro y oscuro, la convención de foreground y el contraste medido de cada par de texto.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: es
+---
+
+El color en NachUI es casi todo neutro. El modo claro se arma con grises cálidos tipo papel, con un tinte muy leve (tono entre 75 y 85, croma muy baja), para que el blanco nunca se vea clínico. El modo oscuro usa grises puros, con croma cero, escalonados para que las superficies se apilen con claridad sobre un fondo casi negro. Los únicos tonos de verdad son los cuatro colores de feedback y el resaltado de sintaxis, que los reutiliza.
+
+Todos los valores de abajo se leen directo de los archivos del tema `nachui`, `light.tokens.json` y `dark.tokens.json`, así que esta página no puede desfasarse de lo que usan los componentes.
+
+## Paleta
+
+Los tokens están agrupados igual que en los archivos de tokens. Cada fila muestra la variable CSS, la utilidad de Tailwind que normalmente vas a usar (todo token de color también tiene sus formas `bg-`, `text-`, `border-` y `ring-`) y el valor en los dos modos.
+
+<ColorPalette locale="es" />
+
+Algunos tokens no tienen utilidad de Tailwind a propósito. `--grid-color` solo alimenta las grillas decorativas, y los colores de sintaxis `--code-*` los lee el bloque de código, no se escriben en el markup.
+
+## Cómo funcionan los grupos
+
+**Surface** es el orden de apilado de la interfaz. En modo oscuro las superficies se aclaran a medida que suben: background 14.5%, surface muted 18.2%, card 21.8%, popover 23.9%. Por eso todo lo flotante usa `bg-popover` y nunca `bg-background`: en una página oscura, un menú con `bg-background` no tiene borde visible.
+
+**Interactive** cubre los rellenos de los controles. `primary` es el casi negro (o casi blanco) de los botones principales y los controles marcados, `secondary` y `accent` son los rellenos suaves de botones secundarios y estados hover, y `muted` es el resaltado detrás de los ítems de menú, los tracks y los skeletons. `muted-foreground` es para leyendas y placeholders, y `muted-strong` es el color de cuerpo más suave para textos largos.
+
+**Structure** tiene las líneas. `border` es el trazo por defecto, `border-interactive` es el trazo más fuerte que toman los campos en hover y foco, `input` es el trazo de los campos de formulario y `ring` es el anillo de foco.
+
+**Feedback** tiene cuatro tonos, cada uno con cinco tokens. Más sobre eso abajo.
+
+**Code** pinta la superficie del bloque de código y sus tokens de sintaxis, reutilizando los tonos de feedback para que el resaltado quede en la misma familia.
+
+## La convención de foreground
+
+Cada superficie o relleno tiene un token `-foreground` para el contenido que va encima. La superficie se queda con el nombre pelado y su contenido lleva el sufijo.
+
+```tsx
+<div className="bg-card text-card-foreground">
+  <button className="bg-primary text-primary-foreground">Confirmar</button>
+</div>
+```
+
+Si usás un relleno, usá su foreground con él. Mantener cada par legible es trabajo del tema, así que un componente que respeta el par hereda esa garantía en cualquier tema.
+
+## Feedback: sólido, texto y superficie
+
+Cada tono de feedback (`destructive`, `warning`, `success`, `info`) viene con cinco tokens:
+
+| Token                 | Uso                                                                |
+| --------------------- | ------------------------------------------------------------------ |
+| `--<tono>`            | Relleno sólido para botones y badges que tienen que destacar       |
+| `--<tono>-foreground` | Texto e íconos sobre ese relleno sólido                            |
+| `--<tono>-text`       | El tono ajustado para texto sobre una superficie normal o su tinte |
+| `--<tono>-surface`    | Fondo teñido para callouts, banners y toasts                       |
+| `--<tono>-border`     | El trazo que acompaña a la superficie teñida                       |
+
+¿Para qué existe un token `-text` si ya está el sólido? Porque el sólido está pensado para llevar un texto claro encima, no para leerse como texto. En modo claro todos los sólidos están en la misma luminosidad de 53%, lo que evita que un estado grite más que otro, pero deja poco margen como texto: `success` sobre `success-surface` llega apenas a 4.55:1. Los tokens `-text` están 5 puntos más oscuros, y eso le da al texto chico un margen real por encima de AA (5.66:1 para el mismo par). En modo oscuro los dos coinciden, porque un tono claro sobre una superficie oscura ya tiene contraste de sobra.
+
+La regla es corta: texto e íconos sobre la página o sobre una superficie teñida usan `text-<tono>-text`, los controles rellenos usan `bg-<tono> text-<tono>-foreground`.
+
+```tsx
+<p className="text-destructive-text">Ese email ya está en uso.</p>
+<button className="bg-destructive text-destructive-foreground">Eliminar proyecto</button>
+<div className="bg-warning-surface border-warning-border text-warning-text border">
+  Tu prueba termina en 3 días.
+</div>
+```
+
+Info es neutro a propósito en modo oscuro, porque un azul saturado sobre casi negro se lee más fuerte que cualquier otra cosa en la página.
+
+## Contraste
+
+Cada par de abajo se mide cuando se construye la página, desde los mismos archivos de tokens, con la fórmula de contraste de WCAG 2.1 después de convertir OKLCH a sRGB. Los pares de texto necesitan 4.5:1 para AA y 7:1 para AAA. Los trazos y anillos de foco son UI no textual, así que su mínimo es 3:1.
+
+<ContrastTable locale="es" />
+
+`muted-foreground` sobre `muted` es el par de texto más ajustado, y aun así pasa AA en los dos modos. Si cambiás un token en tu propio tema, corré el mismo chequeo antes de publicar.
+
+## Personalizar
+
+Estos son los valores del tema por defecto, `nachui`. Para llevar tu propia marca, redefiní las variables en `:root` y `.dark`; los componentes solo leen tokens, así que no cambia nada más. [Tematización](/docs/concepts/theming) explica el proceso.

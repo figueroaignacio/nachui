@@ -1,0 +1,93 @@
+---
+title: Movimiento
+description: Tres springs, profundidad de campo, asimetría entre entrada y salida, origen, respuesta al presionar y movimiento reducido en NachUI.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: es
+---
+
+Todas las animaciones de NachUI están hechas del mismo material: elásticas, un poco juguetonas, nunca desprolijas. Todo el vocabulario vive en un archivo, `lib/motion.ts`, al lado de `cn.ts`. Los componentes lo importan como `../lib/motion` y nunca definen sus propios springs, así el catálogo se mueve como si lo hubiera animado una sola mano.
+
+## Tres springs
+
+Hay tres springs y ninguno más. Los tres son subamortiguados a propósito: se pasan un poquito del objetivo y vuelven, y eso es lo que se percibe como amable. El rebote es chico y rápido, uno visible y listo.
+
+<SpringDemo locale="es" />
+
+```ts title="lib/motion.ts"
+export const springs = {
+  snappy: spring(550, 22, 0.6),
+  smooth: spring(380, 24, 0.8),
+  gentle: spring(200, 20, 1),
+};
+```
+
+| Spring   | Rigidez / amortiguación / masa | Uso                                     |
+| -------- | ------------------------------ | --------------------------------------- |
+| `snappy` | 550 / 22 / 0.6                 | Hover, press, toggles                   |
+| `smooth` | 380 / 24 / 0.8                 | Paneles, menús, colapsables             |
+| `gentle` | 200 / 20 / 1                   | Diálogos, drawers y superficies grandes |
+
+Los cambios de estado usan springs, nunca duraciones. Un spring se puede interrumpir: si un panel se cierra a mitad de su apertura, sigue desde donde está con la velocidad que traía. Las duraciones fijas quedan para la opacidad y los loops. Nada que el usuario esté esperando dura más de 0.3s.
+
+## Profundidad de campo
+
+Las cosas llegan entrando en foco y se van saliendo de él. Al entrar, un elemento arranca en `scale(0.85)` con `blur(6px)`, se pasa un poco del tamaño final y se acomoda. Al salir va a `scale(0.92)` con un `blur(4px)` más liviano. Es la firma de la librería, y se aplica en todo lo que aparece o desaparece.
+
+<DepthOfFieldDemo locale="es" />
+
+El blur solo aparece durante una transición. Nada queda borroso en reposo, y nunca se desenfoca un texto que alguien está leyendo.
+
+## Entra lento, sale rápido
+
+Las salidas son más rápidas que las entradas: duran más o menos un 60% de lo que dura una entrada. Lo que llega merece atención; lo que se va no tiene que estorbar. `floatingVariants` y `collapse` lo resuelven así: un spring para entrar, un tween corto para salir.
+
+```ts
+exit: {
+  opacity: 0,
+  scale: 0.92,
+  filter: 'blur(4px)',
+  transition: { duration: 0.12, ease: 'easeIn' },
+}
+```
+
+## Origen
+
+Todo lo que se abre desde un trigger se abre desde ese trigger. `floatingOrigin[side]` pone el `transform-origin` hacia él, y `floatingVariants[side]` hace que el elemento arranque unos píxeles más cerca. Tooltip, popover, hover card, dropdown y context menu comparten exactamente este comportamiento, así un menú debajo de un botón crece hacia abajo desde el botón y no desde su propio centro.
+
+```tsx
+<motion.div
+  variants={floatingVariants.bottom}
+  initial="hidden"
+  animate="visible"
+  exit="exit"
+  className={cn('bg-popover rounded-md shadow-md', floatingOrigin.bottom)}
+/>
+```
+
+## Presionar
+
+Los controles que se presionan se aplastan con `whileTap={tap}` y `springs.snappy`: `scale(0.94)` al presionar y un spring de vuelta que se pasa un poco. Acá es donde la librería más se parece a un juguete, y esa es la idea. Un control tiene que sentirse bien al presionarlo.
+
+<PressDemo locale="es" />
+
+## Movimiento reducido
+
+Cada componente animado chequea `useReducedMotion()` y cambia a `reveal`, un fundido corto de opacidad, o a `still`, que salta directo al final. El movimiento nunca se elimina del todo, así un cambio de estado se sigue viendo.
+
+```tsx
+const reduce = useReducedMotion();
+
+<motion.div variants={reduce ? reveal : floatingVariants.bottom} />;
+```
+
+Del lado de CSS, `prefers-reduced-motion: reduce` acorta todas las animaciones y transiciones de forma global. Activá el movimiento reducido en la configuración de tu sistema y las demos de esta página lo respetan.
+
+## No permitido
+
+- **Un rebote que no termina.** Un rebote es carácter; dos ya es temblequeo. Si un spring oscila visiblemente más de una vez, subile la amortiguación.
+- **Animar propiedades de layout.** Nada de `width`, `top` ni `left`. Solo `transform`, `opacity` y `filter`. `height` en los colapsables es la única excepción justificada.
+- **Stagger sin límite.** `cascade` es para listas de hasta diez ítems con 35ms entre cada uno. Una lista más larga tiene que aparecer como bloque.
+- **Springs nuevos dentro de un componente.** Si ninguno de los tres sirve, probablemente haya que repensar el movimiento, no sumar un cuarto spring.

@@ -1,0 +1,66 @@
+---
+title: Spacing
+description: The 4px spacing scale, the steps the catalog actually uses, control heights, page frame variables and touch targets.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: en
+---
+
+NachUI has no custom spacing tokens. It uses Tailwind's default scale, where every step is a multiple of 4px (`1` is `0.25rem`), and keeps to a handful of those steps so gaps and paddings repeat across components.
+
+## The scale
+
+The darker bars are the steps the catalog relies on. The rest are available, but a component rarely needs them.
+
+<SpacingScale />
+
+## Steps the catalog uses
+
+These come from the component source, not from a wish list. If you build your own pieces, matching them keeps your work in the same rhythm.
+
+| Where                                   | Classes                                  |
+| --------------------------------------- | ---------------------------------------- |
+| Icon and label inside a button or item  | `gap-2`                                  |
+| Label above a field, tight stacks       | `gap-1.5`                                |
+| Menu-like containers (dropdown, select) | `p-1`                                    |
+| Menu items                              | `px-2 py-1.5`                            |
+| Popover and hover card                  | `p-4`                                    |
+| Dialog and card                         | `p-6`                                    |
+| Controls                                | `h-8` (sm), `h-9` (default), `h-10` (lg) |
+
+`gap-2` is the most common gap in the catalog by a wide margin, followed by `gap-1` and `gap-3`. Larger gaps like `gap-6` mostly show up between sections, not inside a component.
+
+## Control heights
+
+Buttons, inputs, selects and toggles share the same three heights, so a row of mixed controls lines up without extra work.
+
+<ControlSizes />
+
+Icon buttons use `size-9`, the same as the default height, so they sit next to a text button without looking smaller.
+
+## Touch targets
+
+On touch screens a target should be at least 44px. Controls that are smaller on purpose, like a 16px radio or a 20px switch, keep their visual size and grow their hit area instead, using a pseudo-element and the `pointer-coarse:` variant:
+
+```tsx
+<span className="relative before:absolute before:-inset-2 before:content-[''] pointer-coarse:before:-inset-3.5">
+  <input type="radio" />
+</span>
+```
+
+The radio, switch, rating, resizable handle and attachment buttons do this, the checkbox pads its hit area with the same pseudo-element, and menu items add `pointer-coarse:py-2.5` so rows are easier to tap. A mouse user sees no difference; a finger gets room.
+
+## Page frame
+
+The page frame is the only spacing that is defined as CSS variables, because it changes with the viewport. It drives `.page-frame`, `.page-frame-outer`, `.rule-bleed` and `.bleed-x`.
+
+| Variable         | Base   | From 40rem | From 64rem | From 80rem |
+| ---------------- | ------ | ---------- | ---------- | ---------- |
+| `--frame-gutter` | `0`    | `1.5rem`   | `1.5rem`   | `2.5rem`   |
+| `--frame-pad`    | `1rem` | `1.5rem`   | `2rem`     | `2rem`     |
+
+`--frame-bleed` is always `calc(var(--frame-pad) + var(--frame-gutter))`.
+
+The gutter is the space outside the frame, the pad is the space inside it, and the bleed is their sum, which `.rule-bleed` and `.bleed-x` use to reach the frame edge from inside the content.

@@ -1,0 +1,70 @@
+---
+title: Tipografía
+description: Los cuatro roles tipográficos, la escala usada en el catálogo, los pesos y las reglas para componer texto en NachUI.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: es
+---
+
+La tipografía hace la mayor parte del trabajo en NachUI. Con el color en segundo plano, el tamaño, el peso y la familia son los que separan un título de una etiqueta y una etiqueta de una leyenda. El sistema mantiene el conjunto chico para que esas diferencias se sigan leyendo.
+
+## Roles tipográficos
+
+Hay cuatro roles, cada uno es una variable CSS que define la app. Los componentes solo nombran el rol, nunca una fuente, así que podés cambiar cualquiera sin tocar un componente.
+
+<TypeRoles locale="es" />
+
+| Rol     | Utilidad       | Variable         | Se usa para                                   |
+| ------- | -------------- | ---------------- | --------------------------------------------- |
+| Sans    | `font-sans`    | `--font-sans`    | Texto de cuerpo, etiquetas de UI, formularios |
+| Heading | `font-heading` | `--font-heading` | Todos los `h1` a `h6`                         |
+| Serif   | `font-serif`   | `--font-serif`   | Textos largos de lectura con `.prose-reading` |
+| Mono    | `font-mono`    | `--font-mono`    | Código, teclas, `.section-label`              |
+
+`--font-serif` es opcional. `.prose-reading` usa sans cuando no está definida, y eso es justo lo que hace este sitio: el rol serif apunta a Geist, la misma familia del cuerpo.
+
+En una app de Next.js definirías las variables con `next/font`; en cualquier otro setup, un `@font-face` y una variable en `:root` hacen lo mismo.
+
+```css
+:root {
+  --font-sans: 'Geist', system-ui, sans-serif;
+  --font-heading: 'Schibsted Grotesk', var(--font-sans);
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+}
+```
+
+## Escala tipográfica
+
+El catálogo usa la escala por defecto de Tailwind y ningún tamaño propio para el texto de los componentes. Cada paso trae su propio interlineado, que acá se muestra como tamaño sobre interlineado.
+
+<TypeScale locale="es" />
+
+Casi toda la interfaz vive en dos pasos: `text-sm` para botones, menús y campos, y `text-xs` para badges, leyendas y controles chicos. Los inputs usan `text-base` en pantallas chicas y bajan a `text-sm` desde `md`, porque iOS hace zoom en cualquier campo con texto de menos de 16px.
+
+`text-5xl` está en la escala para titulares de páginas de marketing. Ningún componente del catálogo lo usa.
+
+## Pesos
+
+Cuatro pesos cubren todo. Si un texto necesita destacar más de lo que permite `font-semibold`, seguramente le falta espacio o un paso más grande, no más peso.
+
+<FontWeights locale="es" />
+
+## Reglas
+
+- **Mayúscula solo al principio.** Botones, ítems de menú, títulos y etiquetas llevan mayúscula solo en la primera palabra: "Guardar cambios", no "Guardar Cambios". Se lee más tranquilo y es más fácil de traducir.
+- **Números tabulares para todo lo que cambia o se alinea.** Contadores, precios, temporizadores, columnas de tablas y paginación usan `tabular-nums`, así los dígitos tienen el mismo ancho y nada salta cuando cambia un valor.
+- **Renderizado antialiased.** El body define `antialiased`, para que el texto tenga el mismo peso en macOS y en otras plataformas.
+- **Sin espaciado entre letras en el cuerpo.** Los títulos pueden ajustarse con `tracking-tight`; el texto corrido queda en 0.
+- **Los textos largos usan `.prose-reading`.** Aplica el rol serif, `text-muted-strong`, 15px y un interlineado de 1.75, que para párrafos cansa menos la vista que el texto de interfaz.
+
+```tsx
+<p className="prose-reading">
+  Un párrafo largo de documentación o de un artículo se lee mejor acá que en la sans de la interfaz.
+</p>
+
+<span className="text-muted-foreground text-xs tabular-nums">1.284 de 3.000 solicitudes</span>
+```
+
+- **Las etiquetas chicas usan `.section-label`.** Es la etiqueta mono, de 11px y apagada que ves arriba de los grupos en esta página.

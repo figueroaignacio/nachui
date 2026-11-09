@@ -1,0 +1,66 @@
+---
+title: Espaciado
+description: La escala de espaciado de 4px, los pasos que usa el catálogo, las alturas de controles, las variables del marco de página y las áreas táctiles.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: es
+---
+
+NachUI no tiene tokens de espaciado propios. Usa la escala por defecto de Tailwind, donde cada paso es múltiplo de 4px (`1` es `0.25rem`), y se queda con un puñado de esos pasos para que los gaps y paddings se repitan entre componentes.
+
+## La escala
+
+Las barras más oscuras son los pasos en los que se apoya el catálogo. El resto está disponible, pero un componente rara vez lo necesita.
+
+<SpacingScale locale="es" />
+
+## Pasos que usa el catálogo
+
+Salen del código de los componentes, no de una lista de deseos. Si armás tus propias piezas, usar los mismos te mantiene en el mismo ritmo.
+
+| Dónde                                     | Clases                                   |
+| ----------------------------------------- | ---------------------------------------- |
+| Ícono y texto dentro de un botón o ítem   | `gap-2`                                  |
+| Label arriba de un campo, pilas ajustadas | `gap-1.5`                                |
+| Contenedores tipo menú (dropdown, select) | `p-1`                                    |
+| Ítems de menú                             | `px-2 py-1.5`                            |
+| Popover y hover card                      | `p-4`                                    |
+| Diálogo y card                            | `p-6`                                    |
+| Controles                                 | `h-8` (sm), `h-9` (default), `h-10` (lg) |
+
+`gap-2` es por lejos el gap más común del catálogo, seguido por `gap-1` y `gap-3`. Los gaps más grandes como `gap-6` aparecen sobre todo entre secciones, no dentro de un componente.
+
+## Alturas de controles
+
+Botones, inputs, selects y toggles comparten las mismas tres alturas, así una fila de controles mezclados queda alineada sin trabajo extra.
+
+<ControlSizes locale="es" />
+
+Los botones de ícono usan `size-9`, igual que la altura por defecto, así quedan al lado de un botón con texto sin verse más chicos.
+
+## Áreas táctiles
+
+En pantallas táctiles un objetivo debería medir al menos 44px. Los controles que son más chicos a propósito, como un radio de 16px o un switch de 20px, mantienen su tamaño visual y agrandan su área de toque, con un pseudo-elemento y la variante `pointer-coarse:`:
+
+```tsx
+<span className="relative before:absolute before:-inset-2 before:content-[''] pointer-coarse:before:-inset-3.5">
+  <input type="radio" />
+</span>
+```
+
+El radio, el switch, el rating, el handle de resizable y los botones de attachment hacen esto, el checkbox agranda su área con el mismo pseudo-elemento, y los ítems de menú suman `pointer-coarse:py-2.5` para que las filas sean más fáciles de tocar. Con mouse no cambia nada; con el dedo hay lugar.
+
+## Marco de página
+
+El marco de página es el único espaciado definido como variables CSS, porque cambia con el viewport. Maneja `.page-frame`, `.page-frame-outer`, `.rule-bleed` y `.bleed-x`.
+
+| Variable         | Base   | Desde 40rem | Desde 64rem | Desde 80rem |
+| ---------------- | ------ | ----------- | ----------- | ----------- |
+| `--frame-gutter` | `0`    | `1.5rem`    | `1.5rem`    | `2.5rem`    |
+| `--frame-pad`    | `1rem` | `1.5rem`    | `2rem`      | `2rem`      |
+
+`--frame-bleed` siempre es `calc(var(--frame-pad) + var(--frame-gutter))`.
+
+El gutter es el espacio afuera del marco, el pad es el espacio adentro, y el bleed es la suma de los dos, que `.rule-bleed` y `.bleed-x` usan para llegar al borde del marco desde dentro del contenido.

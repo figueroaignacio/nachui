@@ -1,0 +1,47 @@
+---
+title: Radius
+description: One base radius, five derived steps, what each step is for and the rule for nesting rounded elements.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: en
+---
+
+Corners in NachUI are moderate: round enough to feel friendly, square enough to stay calm. Every radius comes from a single token, `--radius`, which is `0.75rem` (12px) in the `nachui` theme. Change it and the whole scale moves together.
+
+## The scale
+
+Tailwind's radius utilities are derived from the base with fixed multipliers. The boxes below use the real utilities, so they follow the site's theme.
+
+<RadiusScale />
+
+| Utility       | Formula           | At 0.75rem | Use                                                   |
+| ------------- | ----------------- | ---------- | ----------------------------------------------------- |
+| `rounded-sm`  | `--radius * 0.5`  | 6px        | Items inside a surface: menu items, tab pill, tooltip |
+| `rounded-md`  | `--radius`        | 12px       | Controls, floating surfaces, toasts, callouts         |
+| `rounded-lg`  | `--radius * 1.33` | 16px       | Primary containers: cards, dialogs                    |
+| `rounded-xl`  | `--radius * 1.66` | 20px       | Composer shells such as the prompt input              |
+| `rounded-2xl` | `--radius * 2`    | 24px       | Drawers and other large sheets                        |
+
+```css
+@theme inline {
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.33);
+  --radius-xl: calc(var(--radius) * 1.66);
+  --radius-2xl: calc(var(--radius) * 2);
+}
+```
+
+Buttons use `rounded-md`, not a pill shape. `rounded-full` is kept for things that are round on purpose: avatars, status dots, icon-only round buttons and chips that are meant to read as pills.
+
+The checkbox is the one exception below the scale, at `--radius * 0.33` (4px). At 16px wide, `rounded-sm` would make it look like a radio.
+
+## Nesting
+
+An element inside another one always uses a smaller radius than its container. A menu (`rounded-md`) holds items with `rounded-sm`; a card (`rounded-lg`) holds controls with `rounded-md`. When the inner corner matches the outer one, the gap between them looks uneven and the inner element seems to bulge.
+
+<RadiusNesting />
+
+A quick way to check: if you can see the inner corner curve sitting at the same size as the outer one, step it down.

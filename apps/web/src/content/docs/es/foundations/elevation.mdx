@@ -1,0 +1,44 @@
+---
+title: Elevación
+description: Los tres niveles de sombra de NachUI en modo claro y oscuro, cuándo usar cada uno y por qué las cards no llevan sombra.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: es
+---
+
+La elevación le dice al lector qué está arriba de qué. NachUI se queda con tres niveles, definidos como tokens en los dos modos y mapeados a `shadow-sm`, `shadow-md` y `shadow-lg`. Cualquier otra cosa, como `shadow-xl`, `shadow-2xl` o una sombra arbitraria, queda afuera.
+
+## Los tres niveles
+
+Renderizados con los valores de los archivos de tokens, sobre los colores reales de background, card y popover de cada modo.
+
+<ElevationScale locale="es" />
+
+| Utilidad    | Uso                                                                                                         |
+| ----------- | ----------------------------------------------------------------------------------------------------------- |
+| `shadow-sm` | Controles en línea que quedan apenas por encima de su track, como la pastilla de tabs o el thumb del switch |
+| `shadow-md` | Superficies flotantes ancladas: popover, hover card, dropdown y context menu, select, toast                 |
+| `shadow-lg` | Superficies modales: diálogo, sheet, drawer                                                                 |
+
+La regla general: cuanto más lejos está algo de la página, y cuanto más tapa, más grande es su sombra. Algo anclado a un trigger lleva `md`; algo que ocupa la pantalla lleva `lg`.
+
+## Valores
+
+<ElevationValues locale="es" />
+
+Las sombras del modo claro están teñidas con el mismo tono cálido de los neutros y son suaves. Las del modo oscuro son negro puro y mucho más fuertes.
+
+## Las cards no llevan sombra
+
+Las cards y los demás contenedores que están en el flujo de la página no tienen sombra. Se separan con `bg-card` y un `border`, que en una página calma alcanza y mantiene a las sombras con significado: si algo proyecta una, está flotando.
+
+```tsx
+<div className="bg-card border-border rounded-lg border p-6">Plana, en el flujo</div>
+<div className="bg-popover border-border rounded-md border p-4 shadow-md">Flotante</div>
+```
+
+## Modo oscuro
+
+En una página oscura una sombra sola cuesta verla, así que el modo oscuro eleva una superficie de dos formas a la vez: un relleno más claro y una sombra más fuerte. Las superficies se aclaran a medida que suben (background 14.5%, surface muted 18.2%, card 21.8%, popover 23.9%), y por eso toda superficie flotante tiene que usar `bg-popover`. Un menú pintado con `bg-background` tendría el mismo color que la página de abajo y perdería su borde.

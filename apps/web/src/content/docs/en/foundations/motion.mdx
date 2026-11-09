@@ -1,0 +1,93 @@
+---
+title: Motion
+description: Three springs, depth of field, enter and exit asymmetry, origin, press feedback and reduced motion in NachUI.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: en
+---
+
+Every animation in NachUI is made of the same material: springy, a little playful, never sloppy. The whole vocabulary lives in one file, `lib/motion.ts`, next to `cn.ts`. Components import it as `../lib/motion` and never define their own springs, so the catalog moves with one hand.
+
+## Three springs
+
+There are three springs and no more. All three are underdamped on purpose: they overshoot the target a touch and settle back, which is what reads as friendly. The overshoot is small and quick, one visible bounce and done.
+
+<SpringDemo />
+
+```ts title="lib/motion.ts"
+export const springs = {
+  snappy: spring(550, 22, 0.6),
+  smooth: spring(380, 24, 0.8),
+  gentle: spring(200, 20, 1),
+};
+```
+
+| Spring   | Stiffness / damping / mass | Use                                 |
+| -------- | -------------------------- | ----------------------------------- |
+| `snappy` | 550 / 22 / 0.6             | Hover, press, toggles               |
+| `smooth` | 380 / 24 / 0.8             | Panels, menus, collapsibles         |
+| `gentle` | 200 / 20 / 1               | Dialogs, drawers and large surfaces |
+
+State changes use springs, never durations. A spring can be interrupted: if a panel closes halfway through opening, it continues from where it is with the speed it had. Fixed durations are only for opacity and for loops. Nothing the user is waiting on takes longer than 0.3s.
+
+## Depth of field
+
+Things arrive by popping into focus and leave by shrinking out of it. On entry an element starts at `scale(0.85)` with `blur(6px)`, springs a little past full size and settles. On exit it goes to `scale(0.92)` with a lighter `blur(4px)`. This is the signature of the library, and it applies everywhere something appears or disappears.
+
+<DepthOfFieldDemo />
+
+Blur only ever shows up during a transition. Nothing rests blurred, and text someone is reading is never blurred.
+
+## Enter slow, leave fast
+
+Exits are faster than entries, taking roughly 60% of the time an entry does. What arrives deserves attention; what leaves should get out of the way. `floatingVariants` and `collapse` encode this: a spring in, a short tween out.
+
+```ts
+exit: {
+  opacity: 0,
+  scale: 0.92,
+  filter: 'blur(4px)',
+  transition: { duration: 0.12, ease: 'easeIn' },
+}
+```
+
+## Origin
+
+Anything that opens from a trigger opens from that trigger. `floatingOrigin[side]` sets `transform-origin` toward it, and `floatingVariants[side]` starts the element a few pixels closer to it. Tooltip, popover, hover card, dropdown and context menu all share exactly this behavior, so a menu below a button grows down out of the button, not out of its own center.
+
+```tsx
+<motion.div
+  variants={floatingVariants.bottom}
+  initial="hidden"
+  animate="visible"
+  exit="exit"
+  className={cn('bg-popover rounded-md shadow-md', floatingOrigin.bottom)}
+/>
+```
+
+## Press
+
+Pressable controls squish with `whileTap={tap}` and `springs.snappy`: `scale(0.94)` on press and a spring back that overshoots. This is where the library feels most like a toy, and that is the point. A control should feel good to press.
+
+<PressDemo />
+
+## Reduced motion
+
+Every animated component checks `useReducedMotion()` and swaps to `reveal`, a short opacity fade, or to `still`, which jumps straight to the end. Motion is never removed entirely, so a state change is still visible.
+
+```tsx
+const reduce = useReducedMotion();
+
+<motion.div variants={reduce ? reveal : floatingVariants.bottom} />;
+```
+
+On the CSS side, `prefers-reduced-motion: reduce` shortens every CSS animation and transition globally. Turn on reduced motion in your system settings and the demos on this page follow along.
+
+## Not allowed
+
+- **A bounce that keeps going.** One overshoot is character; two is a wobble. If a spring visibly oscillates more than once, raise its damping.
+- **Animating layout properties.** No `width`, `top` or `left`. Only `transform`, `opacity` and `filter`. `height` on collapsibles is the one justified exception.
+- **Stagger without a cap.** `cascade` is for lists of up to ten items at 35ms apart. A longer list should appear as a block.
+- **New springs inside a component.** If none of the three fits, the motion probably needs rethinking, not a fourth spring.

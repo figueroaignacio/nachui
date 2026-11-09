@@ -1,0 +1,44 @@
+---
+title: Elevation
+description: The three shadow levels of NachUI in light and dark mode, when to use each one, and why cards stay flat.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: en
+---
+
+Elevation tells the reader what is sitting above what. NachUI keeps it to three levels, defined as tokens in both modes and mapped to `shadow-sm`, `shadow-md` and `shadow-lg`. Anything else, like `shadow-xl`, `shadow-2xl` or an arbitrary shadow, is off the table.
+
+## The three levels
+
+Rendered with the values from the token files, on the real background, card and popover colors of each mode.
+
+<ElevationScale />
+
+| Utility     | Use                                                                                             |
+| ----------- | ----------------------------------------------------------------------------------------------- |
+| `shadow-sm` | Inline controls that sit slightly above their track, like the active tab pill or a switch thumb |
+| `shadow-md` | Anchored floating surfaces: popover, hover card, dropdown and context menu, select, toast       |
+| `shadow-lg` | Modal surfaces: dialog, sheet, drawer                                                           |
+
+The rule of thumb: the further something is from the page, and the more it blocks, the bigger its shadow. Something anchored to a trigger gets `md`; something that takes over the screen gets `lg`.
+
+## Values
+
+<ElevationValues />
+
+Light mode shadows are tinted with the same warm hue as the neutrals and stay soft. Dark mode shadows are pure black and much stronger.
+
+## Cards stay flat
+
+Cards and other containers that sit in the flow of the page have no shadow. They are separated by `bg-card` and a `border`, which is enough on a calm page and keeps shadows meaningful: if something casts one, it is floating.
+
+```tsx
+<div className="bg-card border-border rounded-lg border p-6">Flat, in the flow</div>
+<div className="bg-popover border-border rounded-md border p-4 shadow-md">Floating</div>
+```
+
+## Dark mode
+
+On a dark page a shadow alone is hard to see, so dark mode lifts a surface in two ways at once: a lighter fill and a stronger shadow. The surfaces step up in lightness as they rise (background 14.5%, surface muted 18.2%, card 21.8%, popover 23.9%), which is why every floating surface must use `bg-popover`. A menu painted with `bg-background` would have the same color as the page under it and lose its edge.

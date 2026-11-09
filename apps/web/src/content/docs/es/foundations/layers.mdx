@@ -1,0 +1,57 @@
+---
+title: Capas
+description: El mapa de z-index de NachUI, desde el contenido elevado dentro de un componente hasta los overlays en portal y los toasts por encima de todo.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: es
+---
+
+NachUI usa muy pocos valores de z-index, y cada uno pertenece a una capa con una función clara. La mayoría de los problemas de apilado vienen de inventar un número nuevo para ganar una pelea; casi siempre la solución es poner el elemento en la capa correcta.
+
+## El mapa
+
+Todos los z-index del catálogo, de abajo hacia arriba.
+
+<LayerStack locale="es" />
+
+| Capa                        | Valor    | Quién la usa                                                                                                          |
+| --------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------- |
+| Flujo del documento         | `auto`   | Todo lo que no necesita superponerse                                                                                  |
+| Elevado en un componente    | `z-10`   | Pastilla de tabs, thumb del switch, puntos del timeline, input OTP, thumb del slider con foco, botón de scroll sticky |
+| Elevado, segundo paso       | `z-20`   | Texto del tab sobre su pastilla, borde de resize del sidebar                                                          |
+| Sticky y popups en el flujo | `z-50`   | Banner sticky, dock, panel del navigation menu, card de uso de contexto                                               |
+| Capas en portal             | `z-500`  | Dialog, alert dialog, sheet, drawer, popover, hover card, menús, select, combobox, tooltip                            |
+| Toasts                      | `z-9999` | El viewport del toaster                                                                                               |
+
+## Contenido elevado: z-10 y z-20
+
+Estos valores solo importan dentro de un componente. Arman un orden local chico, como el texto de un tab que tiene que quedar arriba de la pastilla animada que tiene atrás. Nunca compiten con nada fuera del componente, así que no los uses para arreglar una superposición a nivel página.
+
+## Sticky y popups en el flujo: z-50
+
+Algunos elementos quedan en el árbol normal del DOM pero tienen que flotar sobre el contenido de al lado: un banner sticky arriba de la página, el dock fijo, el panel del navigation menu, la card de contexto del prompt de IA. Van en `z-50`, lo bastante alto para tapar el contenido de la página y lo bastante bajo para quedar debajo de cualquier overlay.
+
+## Capas en portal: z-500
+
+Diálogos, sheets, drawers, popovers, menús, selects y tooltips se renderizan en `document.body` con un portal, y todos comparten `z-500`. No hay una escalera de valores entre ellos. Su orden sale de dos cosas:
+
+1. **El DOM.** Los portales se agregan al final de `body` cuando se abren, así que con el mismo z-index el último que se abrió queda arriba. Un select abierto dentro de un diálogo cae después del diálogo y se ve encima, sin ninguna clase extra.
+2. **`useLayer` en `lib/overlay.ts`.** Cada overlay abierto se registra en una pila compartida. Los componentes le preguntan a esa pila si son la capa de más arriba antes de manejar Escape, si son el modal de más arriba antes de atrapar el foco, y si un clic cayó dentro de una capa superior antes de tratarlo como clic afuera. Así es como apretar Escape en un menú dentro de un diálogo cierra el menú y deja el diálogo abierto.
+
+```tsx
+const layer = useLayer(open, true, contentRef);
+
+const onKeyDown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape' && layer.isTopmost()) close();
+};
+```
+
+Si armás tu propio overlay, renderizalo en un portal, dale `z-500` y registralo con `useLayer`. Se va a apilar bien con todo el catálogo.
+
+## Toasts: z-9999
+
+El viewport del toaster es el único elemento que tiene que quedar arriba de todo, incluso de un modal abierto. Un toast que confirma "Proyecto eliminado" tiene que verse aunque el diálogo de confirmación todavía esté animando su salida. Su viewport es `pointer-events-none`, así que esta capa tan alta nunca bloquea los clics sobre lo que tiene abajo; solo los toasts reciben eventos de puntero.
+
+Nada más debería usar `z-9999`. Si algo parece necesitarlo, probablemente pertenezca a la capa de portal.

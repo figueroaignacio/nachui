@@ -1,0 +1,70 @@
+---
+title: Typography
+description: The four font roles, the type scale used across the catalog, weights and the rules for setting text in NachUI.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: en
+---
+
+Type does most of the work in NachUI. With color held back, size, weight and the choice of family are what tell a title from a label and a label from a caption. The system keeps the set small so those differences stay readable.
+
+## Font roles
+
+There are four roles, each one a CSS variable the host app sets. Components only refer to the role, never to a font name, so you can swap any of them without touching a component.
+
+<TypeRoles />
+
+| Role    | Utility        | Variable         | Used for                                    |
+| ------- | -------------- | ---------------- | ------------------------------------------- |
+| Sans    | `font-sans`    | `--font-sans`    | Body text, UI labels, form elements         |
+| Heading | `font-heading` | `--font-heading` | Every `h1` to `h6`                          |
+| Serif   | `font-serif`   | `--font-serif`   | Long-form reading text via `.prose-reading` |
+| Mono    | `font-mono`    | `--font-mono`    | Code, keyboard keys, `.section-label`       |
+
+`--font-serif` is optional. `.prose-reading` falls back to sans when it is not set, which is exactly what this site does: the serif slot points at Geist, the same family as the body.
+
+In a Next.js app you would set the variables with `next/font`; in any other setup a plain `@font-face` and a variable on `:root` do the same job.
+
+```css
+:root {
+  --font-sans: 'Geist', system-ui, sans-serif;
+  --font-heading: 'Schibsted Grotesk', var(--font-sans);
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+}
+```
+
+## Type scale
+
+The catalog uses Tailwind's default scale and no custom sizes for component text. Each step comes with its own line height, listed here as font size over line height.
+
+<TypeScale />
+
+Most of the interface lives in two steps: `text-sm` for buttons, menus and fields, and `text-xs` for badges, captions and small controls. Inputs use `text-base` on small screens and drop to `text-sm` from `md` up, because iOS zooms into any field with text under 16px.
+
+`text-5xl` is on the scale for display headlines on marketing pages. No component in the catalog uses it.
+
+## Weights
+
+Four weights cover everything. If a piece of text needs to stand out more than `font-semibold` allows, it probably needs more space or a bigger step instead.
+
+<FontWeights />
+
+## Rules
+
+- **Sentence case everywhere.** Buttons, menu items, titles and labels capitalize the first word only: "Save changes", not "Save Changes". It reads calmer and is easier to translate.
+- **Tabular numbers for anything that changes or lines up.** Counters, prices, timers, table columns and pagination use `tabular-nums`, so digits keep the same width and nothing jumps when a value updates.
+- **Antialiased rendering.** The body sets `antialiased`, so text looks the same weight across macOS and other platforms.
+- **No letter spacing on body text.** Headings can tighten with `tracking-tight`; running text stays at 0.
+- **Long reading text uses `.prose-reading`.** It sets the serif role, `text-muted-strong`, 15px and a line height of 1.75, which is easier on the eye for paragraphs than UI text is.
+
+```tsx
+<p className="prose-reading">
+  A long paragraph of documentation or article text reads better here than in the UI sans.
+</p>
+
+<span className="text-muted-foreground text-xs tabular-nums">1,284 of 3,000 requests</span>
+```
+
+- **Small labels use `.section-label`.** It is the mono, 11px, muted label you see above groups on this page.

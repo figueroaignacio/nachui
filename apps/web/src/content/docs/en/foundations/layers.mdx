@@ -1,0 +1,57 @@
+---
+title: Layers
+description: The z-index map of NachUI, from content raised inside a component to overlays rendered in a portal and toasts on top of everything.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: en
+---
+
+NachUI uses very few z-index values, and each one belongs to a layer with a clear job. Most stacking problems come from inventing a new number to win a fight; the fix is almost always to put the element in the right layer instead.
+
+## The map
+
+Every z-index in the catalog, from the bottom up.
+
+<LayerStack />
+
+| Layer                     | Value    | Who uses it                                                                                  |
+| ------------------------- | -------- | -------------------------------------------------------------------------------------------- |
+| Document flow             | `auto`   | Everything that does not need to overlap                                                     |
+| Raised in a component     | `z-10`   | Tab pill, switch thumb, timeline dots, OTP input, focused slider thumb, sticky scroll button |
+| Raised, second step       | `z-20`   | Tab label above its pill, sidebar resize rail                                                |
+| Sticky and in-flow popups | `z-50`   | Sticky banner, dock, navigation menu panel, context usage card                               |
+| Portal layers             | `z-500`  | Dialog, alert dialog, sheet, drawer, popover, hover card, menus, select, combobox, tooltip   |
+| Toasts                    | `z-9999` | The toaster viewport                                                                         |
+
+## Raised content: z-10 and z-20
+
+These values only matter inside one component. They create a small local order, like a tab label that has to sit above the animated pill behind it. They never compete with anything outside the component, so do not reach for them to fix a page-level overlap.
+
+## Sticky and in-flow popups: z-50
+
+Some elements stay in the normal DOM tree but need to float above the content next to them: a sticky banner at the top of the page, the fixed dock, the panel of the navigation menu, the context card of the AI prompt. They sit at `z-50`, high enough to cover page content, low enough to stay under any overlay.
+
+## Portal layers: z-500
+
+Dialogs, sheets, drawers, popovers, menus, selects and tooltips render into `document.body` through a portal, and they all share `z-500`. There is no ladder of values between them. Their order comes from two things:
+
+1. **The DOM.** Portals append to the end of `body` when they open, so with equal z-index the one opened last paints on top. A select opened inside a dialog lands after the dialog and shows above it, with no extra class.
+2. **`useLayer` in `lib/overlay.ts`.** Every open overlay registers itself in a shared stack. Components ask that stack whether they are the topmost layer before handling Escape, whether they are the topmost modal before trapping focus, and whether a click landed inside a layer above them before treating it as an outside click. That is how pressing Escape in a menu inside a dialog closes the menu and leaves the dialog open.
+
+```tsx
+const layer = useLayer(open, true, contentRef);
+
+const onKeyDown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape' && layer.isTopmost()) close();
+};
+```
+
+If you build your own overlay, render it in a portal, give it `z-500` and register it with `useLayer`. It will stack correctly with everything in the catalog.
+
+## Toasts: z-9999
+
+The toaster viewport is the one element that must sit above everything, including an open modal. A toast that confirms "Project deleted" should be visible even while the confirmation dialog is still animating out. Its viewport is `pointer-events-none`, so this very high layer never blocks clicks on what is underneath; only the toasts themselves take pointer events.
+
+Nothing else should use `z-9999`. If something seems to need it, it probably belongs in the portal layer.

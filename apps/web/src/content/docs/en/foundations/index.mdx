@@ -1,0 +1,44 @@
+---
+title: Foundations
+description: The principles and tokens every NachUI component is built on, from color and type to motion and layers.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: en
+---
+
+Foundations are the decisions that sit underneath the components. A button, a dialog and a toast look like they belong together because they draw from the same small set of colors, the same type scale, the same spacing steps, the same radius and the same springs. This section documents that set, with the real values the catalog ships.
+
+## Principles
+
+NachUI aims to feel like a well set printed page rather than a dashboard. Three ideas follow from that.
+
+- **Editorial and calm.** Interfaces should be quiet enough that the content is the loudest thing on screen. Nothing competes for attention unless it needs it.
+- **Color is almost absent.** Light mode uses warm paper neutrals, dark mode uses pure grays, and the primary color is near black or near white. Hue only shows up for feedback (errors, warnings, success, info) and in syntax highlighting.
+- **Hierarchy comes from contrast, type and space.** When something needs to stand out, reach for weight, size, a stronger foreground or more room around it before you reach for a color.
+
+Both modes are tuned on their own instead of being inverted from each other, and every color is written in OKLCH so steps between tokens look even to the eye.
+
+## From token to component
+
+Every value starts in a token file and reaches your markup through three hops. Here is `muted-foreground`, the color of captions and secondary text, on its way through.
+
+<TokenFlow />
+
+1. The tokens live in `packages/ui/tokens/themes/<theme>/{light,dark}.tokens.json`, in the [Design Tokens Community Group](https://www.designtokens.org/) format. They are the single source of truth, and the same files import into Figma as variables.
+2. A build step writes them into `globals.css` as CSS variables on `:root` and `.dark`.
+3. `@theme inline` maps each variable to a Tailwind utility, so `--muted-foreground` becomes `text-muted-foreground`, `bg-muted-foreground` and so on.
+4. Components only use those utilities. They never hardcode a color, a shadow or a radius, which is why a new theme changes the whole catalog without touching a component.
+
+To change the values for your own brand, read [Theming](/docs/concepts/theming).
+
+## The pages
+
+- [Color](/docs/foundations/color): the full palette in light and dark, the foreground convention and a contrast check of every pair.
+- [Typography](/docs/foundations/typography): the four font roles, the type scale, weights and the rules for setting text.
+- [Spacing](/docs/foundations/spacing): the 4px scale, the steps the catalog actually uses, control heights and touch targets.
+- [Radius](/docs/foundations/radius): one base radius, five steps and the nesting rule.
+- [Elevation](/docs/foundations/elevation): three shadow levels and when each one applies.
+- [Motion](/docs/foundations/motion): three springs, depth of field, press feedback and reduced motion.
+- [Layers](/docs/foundations/layers): the z-index map and how overlays stack.

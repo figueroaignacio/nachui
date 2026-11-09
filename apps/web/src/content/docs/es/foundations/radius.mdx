@@ -1,0 +1,47 @@
+---
+title: Radio
+description: Un radio base, cinco pasos derivados, para qué sirve cada uno y la regla para anidar elementos redondeados.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: es
+---
+
+Las esquinas en NachUI son moderadas: lo bastante redondas para sentirse amables, lo bastante rectas para seguir calmas. Todos los radios salen de un solo token, `--radius`, que vale `0.75rem` (12px) en el tema `nachui`. Si lo cambiás, toda la escala se mueve junta.
+
+## La escala
+
+Las utilidades de radio de Tailwind se derivan de la base con multiplicadores fijos. Las cajas de abajo usan las utilidades reales, así que siguen el tema del sitio.
+
+<RadiusScale locale="es" />
+
+| Utilidad      | Fórmula           | Con 0.75rem | Uso                                                             |
+| ------------- | ----------------- | ----------- | --------------------------------------------------------------- |
+| `rounded-sm`  | `--radius * 0.5`  | 6px         | Ítems dentro de una superficie: menú, pastilla de tabs, tooltip |
+| `rounded-md`  | `--radius`        | 12px        | Controles, superficies flotantes, toasts, callouts              |
+| `rounded-lg`  | `--radius * 1.33` | 16px        | Contenedores principales: cards, diálogos                       |
+| `rounded-xl`  | `--radius * 1.66` | 20px        | Contenedores de redacción como el prompt input                  |
+| `rounded-2xl` | `--radius * 2`    | 24px        | Drawers y otros paneles grandes                                 |
+
+```css
+@theme inline {
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.33);
+  --radius-xl: calc(var(--radius) * 1.66);
+  --radius-2xl: calc(var(--radius) * 2);
+}
+```
+
+Los botones usan `rounded-md`, no forma de pastilla. `rounded-full` queda para lo que es redondo a propósito: avatares, puntos de estado, botones redondos de solo ícono y chips que tienen que leerse como pastillas.
+
+El checkbox es la única excepción por debajo de la escala, con `--radius * 0.33` (4px). Con 16px de ancho, `rounded-sm` lo haría parecer un radio.
+
+## Anidado
+
+Un elemento dentro de otro siempre usa un radio menor que su contenedor. Un menú (`rounded-md`) tiene ítems con `rounded-sm`; una card (`rounded-lg`) tiene controles con `rounded-md`. Cuando la esquina interior es igual a la exterior, el espacio entre las dos se ve desparejo y el elemento de adentro parece inflado.
+
+<RadiusNesting locale="es" />
+
+Una forma rápida de chequearlo: si ves que la curva de la esquina interior tiene el mismo tamaño que la de afuera, bajala un paso.
