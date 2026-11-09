@@ -198,7 +198,7 @@ const ChainOfThoughtHeader = ({
       {...props}
     >
       <RouteIcon size={15} className="shrink-0" />
-      <span className="min-w-0 flex-1 truncate text-left">{children}</span>
+      <span className="min-w-0 flex-1 truncate text-start">{children}</span>
       <motion.span
         aria-hidden="true"
         className="flex shrink-0"
@@ -280,7 +280,7 @@ const ChainOfThoughtStep = ({
       data-status={status}
       className={cn(
         'group/step relative flex gap-3 text-sm',
-        'before:bg-border before:absolute before:top-5 before:bottom-[-0.75rem] before:left-[9px] before:w-px before:content-[""]',
+        'before:bg-border before:absolute before:start-[9px] before:top-5 before:bottom-[-0.75rem] before:w-px before:content-[""]',
         'last:before:hidden',
         className,
       )}

@@ -183,7 +183,7 @@ const AccordionTrigger = ({
         whileTap={shouldReduceMotion ? undefined : tap}
         transition={springs.snappy}
         className={cn(
-          'group hover:text-muted-foreground ring-offset-background focus-visible:ring-ring flex w-full items-center justify-between rounded-sm py-3.5 text-left text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+          'group hover:text-muted-foreground ring-offset-background focus-visible:ring-ring flex w-full items-center justify-between rounded-sm py-3.5 text-start text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
           className,
         )}
       >

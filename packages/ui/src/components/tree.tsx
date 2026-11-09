@@ -536,7 +536,7 @@ const TreeItem = ({
               animate="open"
               exit={shouldReduceMotion ? undefined : 'closed'}
               variants={collapse}
-              className={cn('ml-3.5 overflow-hidden', showLines && 'border-border border-l')}
+              className={cn('ms-3.5 overflow-hidden', showLines && 'border-border border-s')}
               style={{ paddingLeft: Math.max(indent - 8, 4) }}
             >
               <DepthContext value={depth + 1}>{children}</DepthContext>

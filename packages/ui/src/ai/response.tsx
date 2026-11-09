@@ -31,11 +31,11 @@ const PROSE =
   '[&_h1]:mt-5 [&_h1]:mb-2 [&_h1]:text-base [&_h1]:font-semibold [&_h1]:tracking-tight ' +
   '[&_h2]:mt-5 [&_h2]:mb-2 [&_h2]:text-[15px] [&_h2]:font-semibold [&_h2]:tracking-tight ' +
   '[&_h3]:mt-4 [&_h3]:mb-1.5 [&_h3]:text-sm [&_h3]:font-medium ' +
-  '[&_ul]:mb-3 [&_ul]:ml-5 [&_ul]:list-disc [&_ul]:space-y-1 ' +
-  '[&_ol]:mb-3 [&_ol]:ml-5 [&_ol]:list-decimal [&_ol]:space-y-1 ' +
+  '[&_ul]:mb-3 [&_ul]:ms-5 [&_ul]:list-disc [&_ul]:space-y-1 ' +
+  '[&_ol]:mb-3 [&_ol]:ms-5 [&_ol]:list-decimal [&_ol]:space-y-1 ' +
   '[&_a]:underline [&_a]:underline-offset-4 ' +
   '[&_strong]:font-semibold ' +
-  '[&_blockquote]:border-border [&_blockquote]:text-muted-foreground [&_blockquote]:mb-3 [&_blockquote]:border-l-2 [&_blockquote]:pl-3 ' +
+  '[&_blockquote]:border-border [&_blockquote]:text-muted-foreground [&_blockquote]:mb-3 [&_blockquote]:border-s-2 [&_blockquote]:ps-3 ' +
   '[&_:not(pre)>code]:bg-secondary [&_:not(pre)>code]:rounded-sm [&_:not(pre)>code]:px-1 [&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-[0.85em]';
 
 const ResponseRoot = ({
@@ -86,7 +86,7 @@ const ResponseCaret = ({
       aria-hidden="true"
       data-response-caret
       className={cn(
-        'bg-foreground ml-0.5 inline-block h-[1em] w-[2px] translate-y-[0.15em] rounded-full align-baseline motion-safe:animate-pulse',
+        'bg-foreground ms-0.5 inline-block h-[1em] w-[2px] translate-y-[0.15em] rounded-full align-baseline motion-safe:animate-pulse',
         className,
       )}
       {...props}

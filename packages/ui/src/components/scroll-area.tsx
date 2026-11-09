@@ -314,8 +314,8 @@ const ScrollAreaBar = ({
       className={cn(
         'absolute flex touch-none transition-opacity duration-150 select-none data-[state=hidden]:pointer-events-none data-[state=hidden]:opacity-0',
         isVertical
-          ? 'top-0 right-0 h-full w-2.5 border-l border-l-transparent p-px'
-          : 'bottom-0 left-0 h-2.5 w-full flex-col border-t border-t-transparent p-px',
+          ? 'end-0 top-0 h-full w-2.5 border-s border-s-transparent p-px'
+          : 'start-0 bottom-0 h-2.5 w-full flex-col border-t border-t-transparent p-px',
         className,
       )}
       {...props}

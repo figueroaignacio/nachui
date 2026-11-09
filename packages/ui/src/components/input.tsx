@@ -94,7 +94,7 @@ const InputRoot = ({
       {description && <InputDescription id={descriptionId}>{description}</InputDescription>}
       <div className="relative">
         {leftIcon && (
-          <span className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 -translate-y-1/2">
+          <span className="text-muted-foreground pointer-events-none absolute start-3 top-1/2 -translate-y-1/2">
             {leftIcon}
           </span>
         )}
@@ -106,8 +106,8 @@ const InputRoot = ({
           className={cn(
             inputVariants({ size }),
             error && 'border-destructive focus-visible:border-destructive',
-            leftIcon && 'pl-9',
-            rightIcon && 'pr-9',
+            leftIcon && 'ps-9',
+            rightIcon && 'pe-9',
             className,
           )}
           aria-invalid={!!error}
@@ -115,7 +115,7 @@ const InputRoot = ({
           {...props}
         />
         {rightIcon && (
-          <span className="text-muted-foreground pointer-events-none absolute top-1/2 right-3 -translate-y-1/2">
+          <span className="text-muted-foreground pointer-events-none absolute end-3 top-1/2 -translate-y-1/2">
             {rightIcon}
           </span>
         )}

@@ -204,7 +204,7 @@ const ContextTrigger = ({
         if (!event.defaultPrevented) toggle();
       }}
       className={cn(
-        'border-border bg-background text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex h-8 items-center gap-1.5 rounded-full border pr-2.5 pl-1.5 text-xs tabular-nums transition-colors focus-visible:ring-2 focus-visible:outline-none',
+        'border-border bg-background text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex h-8 items-center gap-1.5 rounded-full border ps-1.5 pe-2.5 text-xs tabular-nums transition-colors focus-visible:ring-2 focus-visible:outline-none',
         className,
       )}
       {...props}
@@ -271,9 +271,9 @@ const ContextContent = ({
             side === 'bottom'
               ? 'top-full mt-2 before:bottom-full'
               : 'bottom-full mb-2 before:top-full',
-            align === 'start' && 'left-0',
+            align === 'start' && 'start-0',
             align === 'center' && 'left-1/2 -translate-x-1/2',
-            align === 'end' && 'right-0',
+            align === 'end' && 'end-0',
             className,
           )}
           {...props}

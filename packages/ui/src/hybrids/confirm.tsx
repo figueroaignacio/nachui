@@ -246,7 +246,7 @@ const ConfirmContent = ({
       data-variant={variant}
       className={cn('max-w-md', className)}
     >
-      <Dialog.Header className="text-left">
+      <Dialog.Header className="text-start">
         {icon ? (
           <span
             aria-hidden="true"

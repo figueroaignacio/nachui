@@ -198,7 +198,7 @@ const PaginationPrevious = ({
   return (
     <PaginationLink
       size={iconOnly ? 'icon' : 'default'}
-      className={cn('pl-2.5', iconOnly && 'pl-0', className)}
+      className={cn('ps-2.5', iconOnly && 'ps-0', className)}
       {...props}
     >
       <ChevronLeftIcon size={16} aria-hidden="true" />
@@ -218,7 +218,7 @@ const PaginationNext = ({
   return (
     <PaginationLink
       size={iconOnly ? 'icon' : 'default'}
-      className={cn('pr-2.5', iconOnly && 'pr-0', className)}
+      className={cn('pe-2.5', iconOnly && 'pe-0', className)}
       {...props}
     >
       {iconOnly ? <span className="sr-only">{children}</span> : <span>{children}</span>}

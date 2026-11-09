@@ -81,7 +81,7 @@ const TableHead = ({
     ref={ref}
     scope={scope}
     className={cn(
-      'border-border text-muted-foreground h-10 border-r px-3 py-4 text-left align-middle font-medium last:border-r-0 [&:has([role=checkbox])]:pr-0',
+      'border-border text-muted-foreground h-10 border-e px-3 py-4 text-start align-middle font-medium last:border-e-0 [&:has([role=checkbox])]:pr-0',
       className,
     )}
     {...props}
@@ -97,7 +97,7 @@ const TableCell = ({
   <td
     ref={ref}
     className={cn(
-      'border-border border-r px-3 py-4 align-middle last:border-r-0 [&:has([role=checkbox])]:pr-0',
+      'border-border border-e px-3 py-4 align-middle last:border-e-0 [&:has([role=checkbox])]:pr-0',
       className,
     )}
     {...props}

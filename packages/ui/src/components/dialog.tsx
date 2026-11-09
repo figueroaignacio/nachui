@@ -337,7 +337,7 @@ const DialogContent = ({
           >
             {children}
             {showClose && (
-              <DialogClose className="ring-offset-background focus-visible:ring-ring text-muted-foreground hover:text-foreground absolute top-2 right-2 rounded-sm p-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none">
+              <DialogClose className="ring-offset-background focus-visible:ring-ring text-muted-foreground hover:text-foreground absolute end-2 top-2 rounded-sm p-2 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none">
                 <XIcon className="h-4 w-4" size={16} />
                 <span className="sr-only">{closeLabel}</span>
               </DialogClose>
@@ -355,7 +355,7 @@ type DialogHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 const DialogHeader = ({ className, ...props }: DialogHeaderProps) => {
   return (
     <div
-      className={cn('flex flex-col space-y-1.5 text-center sm:text-left', className)}
+      className={cn('flex flex-col space-y-1.5 text-center sm:text-start', className)}
       {...props}
     />
   );

@@ -247,7 +247,7 @@ const TimelineIndicator = ({
       className={cn(
         'border-border bg-background absolute z-10 flex size-4 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 [&_svg]:size-3',
         'group-data-[completed]/item:border-primary group-data-[completed]/item:bg-primary group-data-[completed]/item:text-primary-foreground',
-        orientation === 'vertical' ? 'top-2.5 left-2' : 'top-2 left-2',
+        orientation === 'vertical' ? 'start-2 top-2.5' : 'start-2 top-2',
         className,
       )}
       {...props}
@@ -274,8 +274,8 @@ const TimelineSeparator = ({
         'bg-border absolute group-last/item:hidden',
         'group-data-[completed]/item:bg-primary',
         orientation === 'vertical'
-          ? 'top-2.5 -bottom-2.5 left-2 w-px -translate-x-1/2'
-          : 'top-2 -right-2 left-2 h-px -translate-y-1/2',
+          ? 'start-2 top-2.5 -bottom-2.5 w-px -translate-x-1/2'
+          : 'start-2 -end-2 top-2 h-px -translate-y-1/2',
         className,
       )}
       {...props}

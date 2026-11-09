@@ -43,7 +43,7 @@ function Progress({
         <motion.div
           className={cn(
             'bg-primary absolute inset-y-0 rounded-full',
-            shouldReduceMotion ? 'inset-x-0' : 'left-0 w-1/3',
+            shouldReduceMotion ? 'inset-x-0' : 'start-0 w-1/3',
           )}
           animate={shouldReduceMotion ? undefined : INDETERMINATE_ANIMATE}
           transition={shouldReduceMotion ? still : INDETERMINATE_TRANSITION}

@@ -246,7 +246,7 @@ const TaskTrigger = ({
       >
         <StatusIcon size={14} />
       </span>
-      <span className="min-w-0 flex-1 truncate text-left">
+      <span className="min-w-0 flex-1 truncate text-start">
         {children ?? title}
         <span className="sr-only">{`, ${statusLabel}`}</span>
       </span>
@@ -289,7 +289,7 @@ const TaskContent = ({
         >
           <div
             className={cn(
-              'border-border text-muted-foreground mt-2 ml-[6px] flex flex-col gap-2 border-l pt-1 pb-1 pl-4 text-sm',
+              'border-border text-muted-foreground ms-[6px] mt-2 flex flex-col gap-2 border-s ps-4 pt-1 pb-1 text-sm',
               className,
             )}
             {...props}

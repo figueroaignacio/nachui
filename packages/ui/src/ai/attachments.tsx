@@ -97,7 +97,7 @@ const attachmentItemVariants = cva(
     variants: {
       variant: {
         grid: 'w-40 gap-2 rounded-md p-2',
-        inline: 'h-9 shrink-0 gap-2 rounded-full py-1 pr-2 pl-1',
+        inline: 'h-9 shrink-0 gap-2 rounded-full py-1 pe-2 ps-1',
         list: 'w-full gap-3 rounded-md p-2',
       },
     },
@@ -326,8 +326,8 @@ const AttachmentRemove = ({
       className={cn(
         'border-border bg-background text-muted-foreground hover:text-foreground focus-visible:ring-ring relative flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors after:absolute after:-inset-2 focus-visible:ring-2 focus-visible:outline-none',
         variant === 'grid' &&
-          'absolute -top-2 -right-2 group-hover/attachment:opacity-100 focus-visible:opacity-100 [@media(hover:hover)_and_(pointer:fine)]:opacity-0',
-        variant === 'list' && 'ml-auto',
+          'absolute -end-2 -top-2 group-hover/attachment:opacity-100 focus-visible:opacity-100 [@media(hover:hover)_and_(pointer:fine)]:opacity-0',
+        variant === 'list' && 'ms-auto',
         className,
       )}
       {...props}

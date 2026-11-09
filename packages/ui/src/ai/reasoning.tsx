@@ -248,7 +248,7 @@ const ReasoningContent = ({
         >
           <div
             className={cn(
-              'border-border text-muted-foreground mt-1 ml-[7px] border-l pl-4 text-sm leading-relaxed',
+              'border-border text-muted-foreground ms-[7px] mt-1 border-s ps-4 text-sm leading-relaxed',
               className,
             )}
             {...props}

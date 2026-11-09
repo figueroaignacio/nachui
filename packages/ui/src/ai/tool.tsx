@@ -278,7 +278,7 @@ const ToolHeader = ({
         onClick?.(event);
       }}
       className={cn(
-        'text-foreground hover:bg-muted/60 focus-visible:ring-ring flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
+        'text-foreground hover:bg-muted/60 focus-visible:ring-ring flex w-full items-center gap-3 px-3 py-2.5 text-start transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
         className,
       )}
       {...props}

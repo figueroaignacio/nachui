@@ -153,7 +153,7 @@ const RatingRoot = ({
         {outline}
         <span
           data-slot="rating-fill"
-          className="text-warning absolute inset-y-0 left-0 overflow-hidden"
+          className="text-warning absolute inset-y-0 start-0 overflow-hidden"
           style={{ width: `${Math.min(Math.max(fill, 0), 1) * 100}%` }}
         >
           <span className={cn('block', RATING_SIZE_CLASSES[size])}>{filled}</span>

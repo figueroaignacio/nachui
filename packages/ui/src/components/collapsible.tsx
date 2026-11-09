@@ -247,18 +247,18 @@ const CollapsibleTrigger = ({
           aria-hidden="true"
           animate={{ rotate: isOpen ? 90 : 0 }}
           transition={shouldReduceMotion ? still : springs.snappy}
-          className="mr-2"
+          className="me-2"
         >
           {chevron}
         </motion.span>
       )}
-      <span className="flex-1 text-left">{children}</span>
+      <span className="flex-1 text-start">{children}</span>
       {showChevron && chevronPosition === 'right' && (
         <motion.span
           aria-hidden="true"
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={shouldReduceMotion ? still : springs.snappy}
-          className="ml-2"
+          className="ms-2"
         >
           {chevron}
         </motion.span>

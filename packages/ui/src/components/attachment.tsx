@@ -296,10 +296,10 @@ const AttachmentRoot = ({
         className={cn(
           'group/attachment border-border bg-card text-card-foreground relative overflow-hidden border transition-colors',
           'data-[status=error]:border-destructive/60 data-[status=uploading]:text-muted-foreground',
-          variant === 'row' && 'flex items-center gap-3 rounded-lg p-2.5 pr-2',
+          variant === 'row' && 'flex items-center gap-3 rounded-lg p-2.5 pe-2',
           variant === 'card' && 'flex w-40 flex-col rounded-xl',
           variant === 'chip' &&
-            'inline-flex h-8 max-w-60 items-center gap-1.5 rounded-full py-1 pr-1 pl-1.5',
+            'inline-flex h-8 max-w-60 items-center gap-1.5 rounded-full py-1 ps-1.5 pe-1',
           className,
         )}
         {...props}
@@ -458,7 +458,7 @@ const AttachmentActions = ({
       className={cn(
         'flex shrink-0 items-center gap-0.5',
         variant === 'card' &&
-          'absolute top-1.5 right-1.5 transition-opacity group-focus-within/attachment:opacity-100 group-hover/attachment:opacity-100 [@media(hover:hover)]:opacity-0',
+          'absolute end-1.5 top-1.5 transition-opacity group-focus-within/attachment:opacity-100 group-hover/attachment:opacity-100 [@media(hover:hover)]:opacity-0',
         className,
       )}
       {...props}

@@ -58,7 +58,7 @@ describe('Bubble', () => {
     );
     const reactions = screen.getByTestId('reactions');
     expect(reactions).toHaveClass('-top-3');
-    expect(reactions).toHaveClass('left-2');
+    expect(reactions).toHaveClass('start-2');
   });
 
   it('groups bubbles with alignment', () => {

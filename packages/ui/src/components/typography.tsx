@@ -12,7 +12,7 @@ export const typographyVariants = cva('text-foreground', {
       h5: 'scroll-m-20 text-base font-medium',
       h6: 'scroll-m-20 text-sm font-medium text-muted-foreground',
       p: 'leading-7 [&:not(:first-child)]:mt-6',
-      blockquote: 'mt-6 border-l border-border pl-5 font-serif italic text-muted-foreground',
+      blockquote: 'mt-6 border-s border-border ps-5 font-serif italic text-muted-foreground',
       lead: 'text-lg text-muted-foreground leading-relaxed',
       large: 'text-base font-medium',
       small: 'text-sm font-normal leading-none',
@@ -20,9 +20,9 @@ export const typographyVariants = cva('text-foreground', {
       code: 'relative rounded-none bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm',
     },
     align: {
-      left: 'text-left',
+      left: 'text-start',
       center: 'text-center',
-      right: 'text-right',
+      right: 'text-end',
       justify: 'text-justify',
     },
     weight: {

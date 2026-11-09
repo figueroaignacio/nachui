@@ -392,7 +392,7 @@ const PopoverPanel = ({
         <button
           type="button"
           onClick={close}
-          className="ring-offset-background focus-visible:ring-ring absolute top-1 right-1 rounded-md p-2 opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          className="ring-offset-background focus-visible:ring-ring absolute end-1 top-1 rounded-md p-2 opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           <XIcon className="h-4 w-4" size={16} />
           <span className="sr-only">{closeLabel}</span>

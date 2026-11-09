@@ -80,7 +80,7 @@ const TextareaCount = ({
 }: React.HTMLAttributes<HTMLSpanElement> & { ref?: React.Ref<HTMLSpanElement> }) => (
   <span
     ref={ref}
-    className={cn('text-muted-foreground ml-auto text-xs tabular-nums', className)}
+    className={cn('text-muted-foreground ms-auto text-xs tabular-nums', className)}
     {...props}
   />
 );

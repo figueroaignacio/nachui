@@ -38,8 +38,8 @@ const bubbleReactionsVariants = cva(
         bottom: '-bottom-3',
       },
       align: {
-        start: 'left-2',
-        end: 'right-2',
+        start: 'start-2',
+        end: 'end-2',
       },
     },
     defaultVariants: {

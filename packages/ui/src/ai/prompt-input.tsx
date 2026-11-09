@@ -563,7 +563,7 @@ const PromptInputAttachments = ({
         files.map((file, index) => (
           <span
             key={file.id}
-            className="border-border bg-secondary text-secondary-foreground flex h-8 max-w-48 items-center gap-1.5 rounded-full border py-1 pr-1 pl-2.5 text-xs"
+            className="border-border bg-secondary text-secondary-foreground flex h-8 max-w-48 items-center gap-1.5 rounded-full border py-1 ps-2.5 pe-1 text-xs"
           >
             <span className="truncate">{file.filename}</span>
             <button

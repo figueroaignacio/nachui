@@ -226,7 +226,7 @@ const CodeBlockCopyButton = ({
           );
         }}
         className={cn(
-          'bg-code/80 text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:ring-ring data-[copied]:text-success-text absolute top-2 right-2 inline-flex size-7 items-center justify-center rounded-md backdrop-blur-sm transition-opacity group-hover/code:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none data-[copied]:opacity-100 pointer-coarse:size-9 [@media(hover:hover)_and_(pointer:fine)]:opacity-0',
+          'bg-code/80 text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:ring-ring data-[copied]:text-success-text absolute end-2 top-2 inline-flex size-7 items-center justify-center rounded-md backdrop-blur-sm transition-opacity group-hover/code:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:outline-none data-[copied]:opacity-100 pointer-coarse:size-9 [@media(hover:hover)_and_(pointer:fine)]:opacity-0',
           className,
         )}
         {...props}
@@ -263,7 +263,7 @@ const CodeBlockLine = React.memo(function CodeBlockLine({
         <span
           aria-hidden="true"
           data-line-number
-          className="text-muted-foreground mr-4 inline-block shrink-0 text-right select-none"
+          className="text-muted-foreground me-4 inline-block shrink-0 text-end select-none"
           style={{ width: `${gutter}ch` }}
         >
           {index + 1}
