@@ -1,0 +1,85 @@
+---
+title: Formularios
+description: Cómo armar formularios con Form y Field. Labels visibles, descripción antes del error, cuándo validar, el resumen de errores, el foco, los botones y los campos opcionales.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: es
+---
+
+Un formulario es una conversación donde la otra persona habla casi todo el tiempo. Tu trabajo es preguntar con claridad, esperar a que termine y, cuando algo está mal, decirlo una vez, en el lugar correcto, con palabras que le sirvan para resolverlo. [Form](/docs/elements/ui/form) y [Field](/docs/elements/ui/field) ya resuelven casi toda la mecánica. Estas son las decisiones que te dejan a vos.
+
+Acá tenés un formulario que sigue todas las reglas de esta página. Envialo vacío, después corregí un campo y salí de él:
+
+<GuidelineExample caption="Los errores aparecen recién al enviar, el resumen linkea a cada campo, el foco salta al primer problema y los campos corregidos se limpian solos al salir.">
+  <FormWithSummary />
+</GuidelineExample>
+
+## Estructura
+
+- Una columna. La gente recorre un formulario de arriba hacia abajo, no de costado. Dos campos lado a lado solo funcionan cuando van juntos, como nombre y apellido o el vencimiento y el código de una tarjeta.
+- Envolvé el formulario en `Form` y cada campo en `Form.Field`. Usá `Field.Group` para el espaciado y `Field.Set` con un `Field.Legend` para controles relacionados, como un grupo de radios.
+- Pedí solo lo que necesitás ahora. Cada campo que sacás es uno que la persona no puede completar mal.
+
+## Los labels quedan visibles
+
+Todo control tiene un label visible arriba, con `Field.Label`. Un placeholder no es un label: desaparece en cuanto la persona empieza a escribir, suele ser demasiado tenue para leerse, y los lectores de pantalla lo tratan de forma despareja.
+
+<DoDont>
+  <Do caption="El label queda arriba del campo mientras la persona escribe. El placeholder solo sugiere el formato.">
+    <VisibleLabel />
+  </Do>
+  <Dont caption="El placeholder como único label. Cuando el campo ya tiene texto, nadie sabe para qué era.">
+    <PlaceholderAsLabel />
+  </Dont>
+</DoDont>
+
+## Descripción antes del error
+
+El orden dentro de un campo es label, control, descripción, error. La descripción es ayuda permanente: para qué sirve el campo, qué formato lleva. El error es temporal y va al final, así cuando aparece no empuja la ayuda fuera de lugar, y los lectores de pantalla leen la pista antes que el problema.
+
+Escribí descripciones que eviten errores, no que repitan el label. "Minúsculas, números y guiones" ahorra una vuelta. "Escribí el nombre del proyecto" debajo de un campo que se llama Nombre del proyecto, no.
+
+## Cuándo validar
+
+Validá cuando la persona dice que terminó, no mientras sigue escribiendo.
+
+1. **Al enviar.** Es el comportamiento por defecto de `Form`. Nadie ve un error en un campo que todavía no terminó.
+2. **Después, al salir del campo.** Tras un envío fallido, cada campo se vuelve a revisar cuando la persona sale de él, así los errores se limpian a medida que los corrige. `Form` lo hace por vos.
+3. **Nunca en cada tecla.** Decirle a alguien que su email es inválido después de escribir "a" es descortés e inútil. `validationMode="onChange"` existe para ayudas en vivo como un contador de caracteres, no para errores.
+
+No deshabilites el botón de enviar hasta que el formulario sea válido. Un botón deshabilitado no puede explicarse, y la persona queda adivinando qué campo es el problema. Dejala enviar y mostrale.
+
+## Resumen de errores y foco
+
+En cualquier formulario de más de unos pocos campos, poné `Form.ErrorSummary` arriba. Después de un envío fallido lista cada problema, y cada uno es un link que lleva el foco a su campo. Al mismo tiempo, el foco salta al primer campo inválido, así quien usa teclado o lector de pantalla cae justo en el problema.
+
+Los errores del servidor funcionan igual: pasalos a `errors`, por nombre de campo, y aparecen en el campo y en el resumen. Un campo pierde su error del servidor apenas la persona lo edita.
+
+Los mensajes en sí siguen la [guía de redacción](/docs/guidelines/writing#mensajes-de-error): qué salió mal y cómo arreglarlo, en los términos de la persona.
+
+## Botones
+
+Un formulario tiene una sola acción principal. Todo lo demás es secundario, outline o ghost.
+
+- El botón principal repite el propósito del formulario con un verbo y un objeto: "Crear proyecto", "Enviar invitaciones", "Guardar cambios". La persona tiene que saber qué pasa antes de hacer clic.
+- Cancelar va a la izquierda de la acción principal, ambos alineados al final, igual que en `Dialog.Footer` y `AlertDialog.Footer`. En pantallas angostas el footer se apila y la acción principal queda arriba. En layouts de derecha a izquierda el orden se invierte.
+- Usá `Form.Submit` para el botón principal. Muestra el estado de carga mientras corre la acción e ignora los clics extra, así nada se envía dos veces.
+
+<DoDont>
+  <Do caption="Una sola acción principal que dice qué pasa, con Cancelar como un botón outline más discreto a su izquierda.">
+    <FooterOneAction />
+  </Do>
+  <Dont caption="Dos botones principales que compiten, y un 'Aceptar' que no dice qué confirma.">
+    <FooterCompetingActions />
+  </Dont>
+</DoDont>
+
+## Obligatorios y opcionales
+
+Marcá la excepción, no la regla. La mayoría de los formularios piden cosas que necesitan, así que etiquetá los pocos campos opcionales con "(opcional)" y dejá los obligatorios sin marca. Si la mayoría son opcionales, invertilo y marcá los obligatorios con palabras.
+
+- Poné `required` en el control, no solo en el label. `Form` lo usa para validar y las tecnologías asistivas lo anuncian.
+- Evitá el asterisco rojo solo. Necesita una referencia para significar algo, y el color solo no le dice "obligatorio" a todo el mundo.
+- Si un campo es opcional, preguntate si hace falta que esté.

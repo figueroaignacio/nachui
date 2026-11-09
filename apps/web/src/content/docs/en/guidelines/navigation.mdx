@@ -1,0 +1,77 @@
+---
+title: Navigation
+description: Tabs, Navigation Menu, Sidebar, Breadcrumb, Pagination, Menubar and Dropdown Menu, and the line between taking the reader somewhere and doing something for them.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: en
+---
+
+Navigation moves the reader to another place. Actions change something where they are. The two often look alike, a list of words behind a button, but they are built differently, announced differently and expected to behave differently. Most navigation mistakes come from mixing them up.
+
+A quick test: if the item could be a link you open in a new tab, it is navigation. If it makes sense only on the current screen, it is an action.
+
+## Decision table
+
+| Component                                            | Moves the reader to                 | Changes the URL | Use it for                                       |
+| ---------------------------------------------------- | ----------------------------------- | --------------- | ------------------------------------------------ |
+| [Sidebar](/docs/elements/ui/sidebar)                 | The main sections of an app         | Yes             | The app shell of a dashboard or tool             |
+| [Navigation Menu](/docs/elements/ui/navigation-menu) | Top level pages and groups of links | Yes             | The header of a site, with panels of links       |
+| [Breadcrumb](/docs/elements/ui/breadcrumb)           | Any level above the current page    | Yes             | Deep hierarchies, three levels or more           |
+| [Pagination](/docs/elements/ui/pagination)           | Another page of the same list       | Yes, ideally    | Long lists where position matters                |
+| [Tabs](/docs/elements/ui/tabs)                       | Another view of the same thing      | Usually not     | Sections of one object, switched in place        |
+| [Dropdown Menu](/docs/elements/ui/dropdown-menu)     | Nowhere. It runs actions            | No              | Actions on one object: rename, duplicate, delete |
+| [Context Menu](/docs/elements/ui/context-menu)       | Nowhere. It runs actions            | No              | Shortcuts for actions that also exist elsewhere  |
+| [Menubar](/docs/elements/ui/menubar)                 | Nowhere. It runs commands           | No              | Desktop style apps: editors, design tools        |
+
+## Menus are for actions
+
+[Dropdown Menu](/docs/elements/ui/dropdown-menu), [Context Menu](/docs/elements/ui/context-menu) and [Menubar](/docs/elements/ui/menubar) render the WAI-ARIA menu pattern. A screen reader announces "menu" and each item as a command. Arrow keys move between items, typing jumps to them, and the menu closes after a pick. That is the right contract for "do something to this", and the wrong one for "take me there".
+
+<DoDont>
+  <Do caption="A menu of actions on one project, with the destructive one last and set apart.">
+    <DropdownForActions />
+  </Do>
+  <Dont caption="A menu of pages. The items are announced as commands, not links, there is no current page, and the reader cannot open one in a new tab. Use a Sidebar or a Navigation Menu.">
+    <DropdownForPages />
+  </Dont>
+</DoDont>
+
+- Group items and put destructive ones last, after a separator. Mark them with `variant="destructive"`.
+- Never make a [Context Menu](/docs/elements/ui/context-menu) the only way to reach an action. Right click and long press are invisible until someone thinks to try them.
+- A [Menubar](/docs/elements/ui/menubar) is for apps that feel like desktop software, with File, Edit and View. On a website it is out of place and most readers do not know how to use it.
+- The shortcut hints in menus are text. Wire the actual keyboard shortcuts yourself, or leave the hint out.
+
+## Tabs switch views in place
+
+[Tabs](/docs/elements/ui/tabs) show different views of the same thing on the same page: the overview, logs and settings of one deployment. The panels are all there, the URL usually stays the same, and switching is instant.
+
+<DoDont>
+  <Do caption="Three views of one deployment. The reader stays on the same object and moves between its parts.">
+    <TabsForViews />
+  </Do>
+  <Dont caption="Tabs as the main navigation of a site. The sections have no URL, cannot be shared or bookmarked, and Back leaves the site instead of going to the previous section.">
+    <TabsForSiteSections />
+  </Dont>
+</DoDont>
+
+If each view deserves its own URL, it is navigation. Render real links styled to look like tabs and mark the current one with `aria-current="page"`, instead of using the Tabs component.
+
+Keep tabs to one row. When they start wrapping or scrolling, there are too many, and some of them want to be pages.
+
+## Sidebar and Navigation Menu
+
+These are the two shells. A [Sidebar](/docs/elements/ui/sidebar) holds the main sections of an app the reader works in every day: it stays visible, shows where they are with `aria-current`, collapses to an icon rail and turns into a Sheet on small screens. A [Navigation Menu](/docs/elements/ui/navigation-menu) is the header of a site people visit: a row of top level links, some of which open a panel of more links on click.
+
+Use one primary shell per product. A sidebar and a header that both list the same sections make the reader wonder which one is the real one.
+
+## Breadcrumb and Pagination
+
+A [Breadcrumb](/docs/elements/ui/breadcrumb) shows where the current page sits in a hierarchy and lets the reader go up. It is not a history of where they came from.
+
+- Use it when the hierarchy is three levels deep or more. On a two level app it repeats what the sidebar already says.
+- The last item is the current page, rendered with `Breadcrumb.Page`, not a link.
+- Collapse the middle with `Breadcrumb.Ellipsis` when the trail gets long, never the first or last item.
+
+[Pagination](/docs/elements/ui/pagination) splits a long list into pages. It works best when the page lives in the URL (`?page=3`) so it survives a reload and can be shared. Prefer it over infinite scroll when people need to find their place again, compare results or reach the footer.

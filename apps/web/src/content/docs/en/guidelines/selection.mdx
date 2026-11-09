@@ -1,0 +1,85 @@
+---
+title: Selection
+description: Radio, Select, Combobox, Toggle Group, Checkbox, Switch, Slider and Number Field, by how many options there are, whether they are visible and when the choice takes effect.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: en
+---
+
+Picking a selection control comes down to four questions. How many options are there? Should the reader see all of them at once? Can they pick one or several? Does the choice apply right away, or when they submit? Answer those and the table below picks the component for you.
+
+## Decision table
+
+| Component                                      | Options                     | All visible    | Picks             | Takes effect               |
+| ---------------------------------------------- | --------------------------- | -------------- | ----------------- | -------------------------- |
+| [Switch](/docs/elements/ui/switch)             | One setting, on or off      | Yes            | On or off         | Immediately                |
+| [Checkbox](/docs/elements/ui/checkbox)         | One, or a short list        | Yes            | Any number        | When the form is submitted |
+| [Radio](/docs/elements/ui/radio)               | 2 to about 5                | Yes            | Exactly one       | When the form is submitted |
+| [Toggle Group](/docs/elements/ui/toggle-group) | 2 to about 5, short labels  | Yes            | One or several    | Immediately                |
+| [Select](/docs/elements/ui/select)             | About 5 to 15               | No, in a list  | One               | Either                     |
+| [Combobox](/docs/elements/ui/combobox)         | Many, or loaded as you type | No, filtered   | One or several    | Either                     |
+| [Slider](/docs/elements/ui/slider)             | A range of numbers          | The range, yes | A value or a span | Live while dragging        |
+| [Number Field](/docs/elements/ui/number-field) | An exact number             | Not applicable | One value         | On blur or Enter           |
+
+## Switch or Checkbox
+
+They both hold a yes or a no, and they promise different things. A Switch is a light switch: flip it and the setting changes now, no Save button involved. A Checkbox is a mark on a form: nothing happens until the reader submits.
+
+<DoDont>
+  <Do caption="A switch that applies the moment it is flipped, with a quiet confirmation that it was saved.">
+    <SwitchAppliesNow />
+  </Do>
+  <Dont caption="A switch that waits for a Save button. The reader flips it, believes it took effect and leaves. In a form like this, use a Checkbox.">
+    <SwitchWaitsForSave />
+  </Dont>
+</DoDont>
+
+- Use a single Checkbox for consent and agreement ("I accept the terms"). A switch there reads as a setting, not a promise.
+- If saving a switch can fail, put it back and say why. A switch that shows "on" when the server said no is worse than a slow one.
+- Label a switch with the setting, not the action: "Comment emails", not "Turn on comment emails". The state already says on or off.
+
+## Radio, Select or Combobox
+
+The trade is visibility against space. Radios show every option, which is exactly what you want when the reader has to compare them. A Select hides them behind a click, which saves room when the reader already knows what they want. A Combobox adds typing, which is the only sane way through a long list.
+
+<DoDont>
+  <Do caption="Three plans the reader has to compare, laid out as radios with the detail that tells them apart.">
+    <RadioPlans />
+  </Do>
+  <Dont caption="The same three plans behind a select. The reader opens it, sees names without prices, and has to guess.">
+    <SelectPlans />
+  </Dont>
+</DoDont>
+
+- Up to about five options, use radios. Past that, the list starts to push the rest of the form off screen.
+- From about five to fifteen, use a Select. The reader scans it, and it fits anywhere.
+- Past fifteen, or when the options come from a server, use a Combobox. Countries, people, repositories, tags. It filters as they type, ignores accents and case, and can create new items with `Combobox.Create`.
+- Select is single choice only. For several picks from a long list, use a Combobox with `multiple`. For several from a short list, use checkboxes.
+- Give a radio group a default when there is a sensible one. With no default, add `required` and expect the reader to skip it the first time.
+
+## Toggle Group
+
+A [Toggle Group](/docs/elements/ui/toggle-group) is a row of pressed buttons for choices that change the view right away: Day, Week, Month. Left, Center, Right. Bold, Italic. It is not a form control for data the reader submits; that is what radios and checkboxes are for.
+
+- `type="single"` with `required` behaves like a segmented control: there is always exactly one.
+- Icon-only items need an `aria-label`, and so does the group.
+- Keep labels to a word or two. If the options need explanations, they need radios.
+
+## Slider or Number Field
+
+A [Slider](/docs/elements/ui/slider) is for approximate values where the reader cares about position more than the exact number: volume, opacity, a price range in a filter. A [Number Field](/docs/elements/ui/number-field) is for exact values the reader already has in mind: seats, quantity, a price.
+
+<DoDont>
+  <Do caption="An exact count in a number field. The reader types 12 or steps to it, and the limits keep it between 1 and 500.">
+    <NumberFieldSeats />
+  </Do>
+  <Dont caption="An exact count on a slider from 1 to 500. Landing on 12 with a mouse takes several tries and on a phone it is close to impossible.">
+    <SliderSeats />
+  </Dont>
+</DoDont>
+
+- If a slider triggers something expensive, like a search or a save, do it in `onValueCommit`, not `onValueChange`. One request per gesture instead of dozens.
+- Show the current value next to a slider. Position alone is not a number.
+- For a range, name each thumb ("Minimum price", "Maximum price") and use `getAriaValueText` when the unit matters.

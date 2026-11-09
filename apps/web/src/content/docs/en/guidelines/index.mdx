@@ -1,0 +1,41 @@
+---
+title: Guidelines
+description: When to reach for which component, what good and bad use looks like, and how to write the words around them.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: en
+---
+
+The component pages tell you how each piece works. These pages tell you which piece to pick. Most interface problems are not a broken component, they are the right component in the wrong place: a form crammed into a popover, a validation error shown as a toast, a menu of links pretending to be a menu of actions.
+
+A library gives you parts. A design system also tells you how the parts fit together, so two people building two screens end up with the same answers. That is what this section is for.
+
+## What you will find
+
+- [Overlays](/docs/guidelines/overlays): Dialog, Alert Dialog, Sheet, Drawer, Popover, Hover Card and Tooltip. Which one blocks the page, which one needs an answer, and how much each can hold.
+- [Feedback](/docs/guidelines/feedback): Toast, Banner, Callout, field errors, Alert Dialog and Empty, sorted by urgency, how long they stay and how much of the app they speak for.
+- [Selection](/docs/guidelines/selection): Radio, Select, Combobox, Toggle Group, Checkbox, Switch, Slider and Number Field, by how many options there are and when the choice takes effect.
+- [Navigation](/docs/guidelines/navigation): Tabs, Navigation Menu, Sidebar, Breadcrumb, Pagination, Menubar and Dropdown Menu, and the line between going somewhere and doing something.
+- [Forms](/docs/guidelines/forms): labels, descriptions, errors, when to validate, where the buttons go and how to mark what is optional.
+- [Writing](/docs/guidelines/writing): the voice of the system, button labels, error messages, empty states, dates and numbers.
+
+## How to read them
+
+Each page starts with a decision table. Read it as a first filter, not a law: find the row that matches what you are building and you are usually done.
+
+Then come the examples. They are real NachUI components, not screenshots, so you can open the overlays, click the switches and submit the forms. Every pair has a verdict in words, not only in color:
+
+<DoDont>
+  <Do caption="A labelled pair, side by side, with the reason written underneath. The reason is the part to remember." />
+  <Dont caption="Copying the example without the reason. The same component can be right on one screen and wrong on the next." />
+</DoDont>
+
+Every rule comes with its reason. If a rule does not fit your case, the reason tells you whether you found an exception or a mistake. When you break one on purpose, write down why in the pull request so the next person does not have to guess.
+
+## What they are not
+
+They are not a list of what the components can do. A Popover can hold a ten field form and nothing in the code will stop you. The guidelines describe what works for the people using your product, which is a narrower set than what compiles.
+
+They also do not replace testing with real people. If a pattern from these pages confuses your users, believe the users and tell us about it.

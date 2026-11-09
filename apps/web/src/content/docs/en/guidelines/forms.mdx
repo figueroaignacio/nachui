@@ -1,0 +1,85 @@
+---
+title: Forms
+description: How to build forms with Form and Field. Visible labels, descriptions before errors, when to validate, the error summary, focus, buttons and optional fields.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: en
+---
+
+A form is a conversation where the reader does most of the talking. Your job is to ask clearly, wait until they are done, and when something is wrong, say so once, in the right place, in words they can act on. [Form](/docs/elements/ui/form) and [Field](/docs/elements/ui/field) already do most of the mechanics. These are the decisions they leave to you.
+
+Here is a form that follows every rule on this page. Submit it empty, then fix one field and leave it:
+
+<GuidelineExample caption="Errors appear only after submitting, the summary links to each field, focus jumps to the first problem, and fixed fields clear themselves on blur.">
+  <FormWithSummary />
+</GuidelineExample>
+
+## Structure
+
+- One column. Readers go down a form, not across it. Two fields side by side only work when they belong together, like first and last name or a card's expiry and CVC.
+- Wrap the form in `Form` and each input in `Form.Field`. Use `Field.Group` for spacing and `Field.Set` with a `Field.Legend` for related controls like a group of radios.
+- Ask only for what you need now. Every field you remove is one the reader cannot get wrong.
+
+## Labels stay visible
+
+Every control has a visible label above it, through `Field.Label`. A placeholder is not a label: it disappears the moment the reader starts typing, it is usually too faint to read, and screen readers treat it inconsistently.
+
+<DoDont>
+  <Do caption="The label stays above the field while the reader types. The placeholder only hints at the format.">
+    <VisibleLabel />
+  </Do>
+  <Dont caption="The placeholder as the only label. Once there is text in the field, nobody can tell what it was for.">
+    <PlaceholderAsLabel />
+  </Dont>
+</DoDont>
+
+## Description before error
+
+The order inside a field is label, control, description, error. The description is permanent help: what the field is for, what format it takes. The error is temporary and comes last, so when it appears it does not push the help out of the way, and screen readers read the hint before the problem.
+
+Write descriptions that prevent errors, not ones that repeat the label. "Lowercase letters, numbers and dashes" saves a round trip. "Enter your project name" under a field called Project name does not.
+
+## When to validate
+
+Validate when the reader says they are done, not while they are still typing.
+
+1. **On submit.** That is the default in `Form`. Nobody sees an error for a field they have not finished.
+2. **Then on blur.** After a failed submit, each field checks itself again when the reader leaves it, so errors clear as they get fixed. `Form` does this for you.
+3. **Never on every keystroke.** Telling someone their email is invalid after they typed "a" is rude and useless. `validationMode="onChange"` exists for live helpers like a character count, not for errors.
+
+Do not disable the submit button until the form is valid. A disabled button cannot explain itself, and the reader is left guessing which field is the problem. Let them submit and show them.
+
+## Error summary and focus
+
+On any form longer than a few fields, put `Form.ErrorSummary` at the top. After a failed submit it lists every problem, each one a link that moves focus to its field. At the same time, focus jumps to the first invalid field, so keyboard and screen reader users land right on the problem.
+
+Errors from the server work the same way: pass them to `errors`, keyed by field name, and they show up in the field and in the summary. A field drops its server error as soon as the reader edits it.
+
+The messages themselves follow the [writing guidelines](/docs/guidelines/writing#error-messages): what went wrong and how to fix it, in the reader's terms.
+
+## Buttons
+
+A form has one primary action. Everything else is secondary, outline or ghost.
+
+- The primary button repeats the purpose of the form with a verb and an object: "Create project", "Send invites", "Save changes". The reader should know what happens before they click.
+- Cancel goes to the left of the primary action, both aligned to the end, the same as `Dialog.Footer` and `AlertDialog.Footer`. On narrow screens the footer stacks and the primary action goes on top. In right to left layouts the order mirrors.
+- Use `Form.Submit` for the primary button. It shows the loading state while the action runs and ignores extra clicks, so nothing is submitted twice.
+
+<DoDont>
+  <Do caption="One primary action that names what happens, with Cancel as a quieter outline button to its left.">
+    <FooterOneAction />
+  </Do>
+  <Dont caption="Two primary buttons that compete, and an 'OK' that does not say what it confirms.">
+    <FooterCompetingActions />
+  </Dont>
+</DoDont>
+
+## Required and optional
+
+Mark the exception, not the rule. Most forms ask for things they need, so label the few optional fields with "(optional)" and leave the required ones plain. If most fields are optional, flip it and mark the required ones in words.
+
+- Put `required` on the control itself, not only in the label. `Form` uses it to validate and assistive tech reads it out.
+- Avoid a lone red asterisk. It needs a legend to mean anything, and color alone does not say "required" to everyone.
+- If a field is optional, ask whether it needs to be there at all.

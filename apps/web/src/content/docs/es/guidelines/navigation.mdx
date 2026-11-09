@@ -1,0 +1,77 @@
+---
+title: Navegación
+description: Tabs, Navigation Menu, Sidebar, Breadcrumb, Pagination, Menubar y Dropdown Menu, y la línea entre llevar a la persona a otro lugar y hacer algo por ella.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: es
+---
+
+La navegación lleva a la persona a otro lugar. Las acciones cambian algo donde está. Las dos suelen verse parecido, una lista de palabras detrás de un botón, pero se construyen distinto, se anuncian distinto y se espera que se comporten distinto. La mayoría de los errores de navegación vienen de mezclarlas.
+
+Una prueba rápida: si el elemento podría ser un link que abrís en otra pestaña, es navegación. Si solo tiene sentido en la pantalla actual, es una acción.
+
+## Tabla de decisión
+
+| Componente                                           | Lleva a                                 | Cambia la URL  | Usalo para                                              |
+| ---------------------------------------------------- | --------------------------------------- | -------------- | ------------------------------------------------------- |
+| [Sidebar](/docs/elements/ui/sidebar)                 | Las secciones principales de una app    | Sí             | La estructura de un dashboard o una herramienta         |
+| [Navigation Menu](/docs/elements/ui/navigation-menu) | Páginas principales y grupos de links   | Sí             | El header de un sitio, con paneles de links             |
+| [Breadcrumb](/docs/elements/ui/breadcrumb)           | Cualquier nivel por encima de la página | Sí             | Jerarquías profundas, de tres niveles o más             |
+| [Pagination](/docs/elements/ui/pagination)           | Otra página de la misma lista           | Sí, idealmente | Listas largas donde importa la posición                 |
+| [Tabs](/docs/elements/ui/tabs)                       | Otra vista de lo mismo                  | Normalmente no | Secciones de un mismo objeto, cambiadas en el lugar     |
+| [Dropdown Menu](/docs/elements/ui/dropdown-menu)     | A ningún lado. Ejecuta acciones         | No             | Acciones sobre un objeto: renombrar, duplicar, eliminar |
+| [Context Menu](/docs/elements/ui/context-menu)       | A ningún lado. Ejecuta acciones         | No             | Atajos de acciones que también existen en otro lugar    |
+| [Menubar](/docs/elements/ui/menubar)                 | A ningún lado. Ejecuta comandos         | No             | Apps tipo escritorio: editores, herramientas de diseño  |
+
+## Los menús son para acciones
+
+[Dropdown Menu](/docs/elements/ui/dropdown-menu), [Context Menu](/docs/elements/ui/context-menu) y [Menubar](/docs/elements/ui/menubar) implementan el patrón de menú de WAI-ARIA. Un lector de pantalla anuncia "menú" y cada elemento como un comando. Las flechas se mueven entre elementos, escribir salta a ellos y el menú se cierra al elegir. Ese es el contrato correcto para "hacé algo con esto", y el equivocado para "llevame ahí".
+
+<DoDont>
+  <Do caption="Un menú de acciones sobre un proyecto, con la destructiva al final y separada.">
+    <DropdownForActions />
+  </Do>
+  <Dont caption="Un menú de páginas. Los elementos se anuncian como comandos y no como links, no hay página actual, y la persona no puede abrir uno en otra pestaña. Usá un Sidebar o un Navigation Menu.">
+    <DropdownForPages />
+  </Dont>
+</DoDont>
+
+- Agrupá los elementos y dejá los destructivos al final, después de un separador. Marcalos con `variant="destructive"`.
+- Nunca hagas que un [Context Menu](/docs/elements/ui/context-menu) sea la única forma de llegar a una acción. El clic derecho y el toque largo son invisibles hasta que a alguien se le ocurre probarlos.
+- Un [Menubar](/docs/elements/ui/menubar) es para apps que se sienten como software de escritorio, con Archivo, Editar y Ver. En un sitio web queda fuera de lugar y la mayoría no sabe cómo usarlo.
+- Los atajos que muestran los menús son texto. Conectá los atajos de teclado reales vos, o sacá la pista.
+
+## Tabs cambian vistas en el lugar
+
+[Tabs](/docs/elements/ui/tabs) muestran vistas distintas de la misma cosa en la misma página: el resumen, los logs y la configuración de un deploy. Los paneles están todos ahí, la URL normalmente no cambia, y el cambio es instantáneo.
+
+<DoDont>
+  <Do caption="Tres vistas de un mismo deploy. La persona se queda en el mismo objeto y se mueve entre sus partes.">
+    <TabsForViews />
+  </Do>
+  <Dont caption="Tabs como navegación principal de un sitio. Las secciones no tienen URL, no se pueden compartir ni guardar, y Atrás te saca del sitio en vez de volver a la sección anterior.">
+    <TabsForSiteSections />
+  </Dont>
+</DoDont>
+
+Si cada vista merece su propia URL, es navegación. Renderizá links de verdad con estilo de tabs y marcá el actual con `aria-current="page"`, en vez de usar el componente Tabs.
+
+Mantené las tabs en una sola fila. Cuando empiezan a partirse en dos líneas o a scrollear, son demasiadas, y algunas quieren ser páginas.
+
+## Sidebar y Navigation Menu
+
+Son las dos estructuras principales. Un [Sidebar](/docs/elements/ui/sidebar) contiene las secciones de una app en la que la persona trabaja todos los días: siempre está visible, muestra dónde estás con `aria-current`, se colapsa a una barra de íconos y se vuelve un Sheet en pantallas chicas. Un [Navigation Menu](/docs/elements/ui/navigation-menu) es el header de un sitio que la gente visita: una fila de links principales, algunos de los cuales abren un panel con más links al hacer clic.
+
+Usá una sola estructura principal por producto. Un sidebar y un header que listan las mismas secciones hacen que la persona se pregunte cuál es la de verdad.
+
+## Breadcrumb y Pagination
+
+Un [Breadcrumb](/docs/elements/ui/breadcrumb) muestra dónde está la página actual dentro de una jerarquía y permite subir. No es un historial de por dónde vino la persona.
+
+- Usalo cuando la jerarquía tiene tres niveles o más. En una app de dos niveles repite lo que ya dice el sidebar.
+- El último elemento es la página actual, con `Breadcrumb.Page`, no un link.
+- Cuando el recorrido se hace largo, colapsá el medio con `Breadcrumb.Ellipsis`, nunca el primero ni el último.
+
+[Pagination](/docs/elements/ui/pagination) divide una lista larga en páginas. Funciona mejor cuando la página vive en la URL (`?page=3`), así sobrevive a un reload y se puede compartir. Preferila al scroll infinito cuando la gente necesita volver a encontrar su lugar, comparar resultados o llegar al footer.

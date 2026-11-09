@@ -1,0 +1,129 @@
+---
+title: Redacción
+description: Cómo hablan las interfaces de NachUI. Voz, mayúsculas, textos de botones, mensajes de error, estados vacíos, fechas y números, y texto que funciona para todo el mundo.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: es
+---
+
+Las palabras son parte de la interfaz. Un label claro ahorra un artículo de ayuda, un buen mensaje de error ahorra un ticket de soporte, y un botón ambiguo hace que un diseño cuidado parezca roto. Esta página es cómo escribe NachUI, en la documentación, en las demos y en los textos por defecto de los componentes. Usala también para los textos de tu producto.
+
+## Voz
+
+Directa, calma y humana. Escribí como lo explicaría una colega que sabe del tema, sentada al lado tuyo.
+
+- **Directa.** Empezá por lo que la persona necesita. "Tu tarjeta fue rechazada" antes de cualquier disculpa o contexto.
+- **Calma.** Incluso cuando algo se rompió. Sin signos de exclamación en los errores, sin mayúsculas para enfatizar, sin palabras alarmantes como "fatal" o "crítico" salvo que lo sea literalmente.
+- **Humana.** Hablale a la persona de vos, como el resto de la documentación en español. Nombrá las cosas como las nombra ella, no como las nombra la base de datos.
+
+Lo corto le gana a lo ingenioso. Los chistes envejecen mal y cansan la tercera vez que alguien los ve, y nadie quiere un juego de palabras en la pantalla que le acaba de hacer perder su trabajo.
+
+## Mayúscula solo al principio
+
+Títulos, botones, labels, elementos de menú y tabs llevan mayúscula solo en la primera palabra y en los nombres propios. "Crear proyecto", "Configuración de facturación", "Invitá a tu equipo". En español es la norma, y vale la pena cuidarla cuando traducís desde un original en inglés que Usa Mayúsculas En Cada Palabra.
+
+No pongas punto final en títulos, botones ni labels. Usalo en descripciones y en cualquier texto de más de una oración.
+
+## Los botones dicen qué pasa
+
+El texto de un botón es un verbo y un objeto: "Eliminar proyecto", "Enviar invitaciones", "Descargar factura". La persona tiene que poder predecir el resultado sin leer nada más de la pantalla, porque muchas veces no lo va a leer.
+
+<DoDont>
+  <Do caption="El título hace una pregunta concreta, la descripción dice qué se pierde y cada botón nombra su propio resultado.">
+    <SpecificButtons />
+  </Do>
+  <Dont caption="'¿Estás seguro?' con 'Aceptar'. ¿Seguro de qué? ¿Aceptar qué? La persona tiene que leer todo el diálogo para saberlo, y quien lee por arriba toca el botón equivocado.">
+    <GenericButtons />
+  </Dont>
+</DoDont>
+
+- Mantené el mismo verbo en todo el flujo. Si el botón de la página dice "Eliminar", el del diálogo también, no "Quitar" ni "Confirmar".
+- Un botón de cancelar puede decir lo que la persona conserva: "Conservar proyecto" es más claro que "Cancelar" cuando cancelar suena destructivo.
+- Los links dicen adónde llevan. "Leé la guía de facturación", no "Hacé clic acá" ni "Más información" suelto.
+- Usá el imperativo con voseo en las instrucciones ("Elegí un plan", "Escribí tu email"), y el infinitivo en los botones ("Guardar cambios", "Crear cuenta").
+
+## Mensajes de error
+
+Un buen mensaje de error responde dos preguntas: qué pasó y qué puede hacer la persona ahora. En ese orden, con sus palabras y sin culparla.
+
+<DoDont>
+  <Do caption="Dice qué está mal en los términos de la persona y le da dos caminos para seguir.">
+    <HelpfulError />
+  </Do>
+  <Dont caption="Un código de error disfrazado de mensaje. Es preciso para el servidor e inútil para quien tiene la tarjeta en la mano.">
+    <VagueError />
+  </Dont>
+</DoDont>
+
+- No culpes. "Esa contraseña es muy corta" en lugar de "Ingresaste una contraseña inválida".
+- Mostrá un ejemplo correcto cuando el problema es el formato: "Escribí un email como ana@northwind.dev".
+- Si la persona no lo puede resolver, decí quién puede o qué probar: "Probá de nuevo en unos minutos. Si sigue pasando, escribile a quien administra tu espacio de trabajo."
+- Los códigos de error van después de la explicación, si es que van, para la conversación con soporte.
+
+## Estados vacíos
+
+Un estado vacío dice qué va a aparecer ahí y qué puede hacer la persona para que pase. "Todavía no hay facturas. Las facturas aparecen después del primer pago." seguido del botón que lleva hasta ahí. Una búsqueda sin resultados dice qué se buscó y ofrece una salida: limpiar los filtros, revisar cómo se escribió, o crear lo que se estaba buscando. Hay ejemplos en [Feedback](/docs/guidelines/feedback#empty).
+
+## Números y fechas
+
+Formateá con `Intl`, nunca a mano. `Intl.DateTimeFormat` e `Intl.NumberFormat` saben que 12/03/26 es diciembre en un país y marzo en el siguiente, dónde va el separador de miles y de qué lado del número va la moneda. [Number Field](/docs/elements/ui/number-field), [Date Picker](/docs/elements/ui/date-picker) y [Calendar](/docs/elements/ui/calendar) aceptan un `locale` justamente por eso.
+
+<DoDont>
+  <Do caption="Fechas con el mes escrito, números agrupados y moneda formateada por Intl según el idioma de la persona.">
+    <IntlFormatted />
+  </Do>
+  <Dont caption="Textos armados a mano. 12/03/26 es ambiguo, 1240 cuesta leerlo de un vistazo y 24180.5 USD no es como nadie escribe plata.">
+    <HardcodedFormat />
+  </Dont>
+</DoDont>
+
+- Escribí el mes en las fechas que la gente lee. Usá fechas numéricas solo en tablas densas, y siempre con el mismo formato.
+- Usá tiempos relativos para lo reciente ("hace 2 horas") y la fecha completa cuando importa, como en un vencimiento. `Intl.RelativeTimeFormat` resuelve la redacción.
+- Usá números: "3 archivos", no "tres archivos". Se leen más rápido.
+- Formateá en el cliente con un locale y una zona horaria explícitos, o pasá los dos desde el servidor, para que los dos renders coincidan.
+
+## Puntuación y palabras que sobran
+
+- Sin rayas largas ni medias. Usá una coma, dos puntos, paréntesis o una oración nueva. Los rangos se escriben "de 9 a 18" o "de 2024 a 2026".
+- Sin signos de exclamación, salvo quizás una vez después de algo que la persona de verdad vaya a celebrar.
+- Sin relleno ni frases con olor a IA: "sin fricciones", "potenciá", "robusto", "de manera eficiente", "en el mundo actual", "es importante destacar", "sumergite", "llevá tu proyecto al siguiente nivel". Si una oración funciona sin una palabra, sacá la palabra.
+- Sin "por favor" en las instrucciones y sin "perdón" en errores de rutina. Guardá la disculpa para cuando de verdad le fallaste a la persona.
+- Sin jerga que la persona no trajo. "Iniciar sesión" en lugar de "autenticarse", "No se pudo guardar" en lugar de "Falló la persistencia".
+
+## En lugar de esto, escribí esto
+
+| En lugar de                                | Escribí                                                             |
+| ------------------------------------------ | ------------------------------------------------------------------- |
+| Aceptar                                    | Eliminar proyecto                                                   |
+| Enviar                                     | Crear cuenta                                                        |
+| ¿Estás seguro?                             | ¿Eliminar 3 archivos?                                               |
+| Entrada inválida                           | Escribí una fecha como 14/03/2026                                   |
+| Ocurrió un error                           | No se pudieron guardar los cambios. Revisá tu conexión y reintentá. |
+| Sin datos                                  | Todavía no hay facturas                                             |
+| Hacé clic acá                              | Leé la guía de facturación                                          |
+| ¡Guardado exitosamente!                    | Cambios guardados                                                   |
+| Por favor, ingrese su dirección de email   | Email                                                               |
+| Administrar Configuración Del Equipo       | Administrar configuración del equipo                                |
+| 11/09/26                                   | 9 de noviembre de 2026                                              |
+| Desbloqueá una colaboración sin fricciones | Invitá a tu equipo                                                  |
+
+## Texto que funciona para todo el mundo
+
+Hay personas que escuchan la interfaz en lugar de verla, otras que la agrandan al 200%, otras que no distinguen el rojo del verde. Escribí de forma que el significado sobreviva a todo eso.
+
+- **Las imágenes llevan texto `alt`** que dice qué muestra la imagen en ese contexto. Las decorativas llevan `alt=""` para que los lectores de pantalla las salteen.
+- **Los botones de solo ícono llevan un `aria-label`** que nombra la acción: "Eliminar comentario", no "Ícono de papelera". Los íconos del set de NachUI son `aria-hidden` por defecto.
+- **Nunca dependas solo del color.** Acompañalo con un ícono, una palabra o una forma.
+- **Nombrá las cosas de forma única.** Diez botones llamados "Editar" en una lista suenan idénticos en un lector de pantalla. "Editar factura 1042" no, aunque el texto visible siga siendo corto.
+- **Escribí links y botones que se entiendan fuera de contexto.** Quien usa lector de pantalla suele saltar por una lista de links o botones sin el texto de alrededor.
+
+<DoDont>
+  <Do caption="El estado está en palabras, acompañado de un ícono y un color. Funciona en escala de grises, para personas daltónicas y con lector de pantalla.">
+    <StatusWithText />
+  </Do>
+  <Dont caption="Tres puntos que solo cambian de color. Un lector de pantalla no dice nada, y para mucha gente dos de ellos se ven iguales.">
+    <StatusColorOnly />
+  </Dont>
+</DoDont>

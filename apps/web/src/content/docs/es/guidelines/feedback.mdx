@@ -1,0 +1,101 @@
+---
+title: Feedback
+description: Toast, Banner, Callout, errores de campo, Alert Dialog y Empty, ordenados por urgencia, por cuánto duran y por cuánto de la app representan.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: es
+---
+
+El feedback responde una de tres preguntas: ¿funcionó?, ¿algo anda mal?, ¿y ahora qué? El componente que elegís decide qué tan fuerte respondés, cuánto dura la respuesta y cuánto de la pantalla ocupa. Si acertás en esas tres cosas, escribir el mensaje se vuelve mucho más fácil.
+
+## Tabla de decisión
+
+| Componente                                     | Urgencia                             | Cuánto dura                               | Alcance                          | Interrumpe                                     |
+| ---------------------------------------------- | ------------------------------------ | ----------------------------------------- | -------------------------------- | ---------------------------------------------- |
+| [Toast](/docs/elements/ui/toast)               | Baja. El resultado de una acción     | 5 segundos, 10 si tiene acción            | Lo que la persona acaba de hacer | Solo errores y advertencias, se leen enseguida |
+| [Error de campo](/docs/elements/ui/field)      | Media. Impide enviar                 | Hasta que se corrige el valor             | Un campo                         | No                                             |
+| [Resumen de errores](/docs/elements/ui/form)   | Media. Varios problemas              | Hasta que se corrigen los campos          | Un formulario                    | Mueve el foco una vez                          |
+| [Callout](/docs/elements/ui/callout)           | Baja. Contexto que vale la pena leer | Siempre, es parte del contenido           | Una sección                      | No                                             |
+| [Banner](/docs/elements/ui/banner)             | Media a alta                         | Hasta que termina el estado o se descarta | Toda la app o la página          | No, salvo con `role="alert"`                   |
+| [Alert Dialog](/docs/elements/ui/alert-dialog) | Alta. Necesita una decisión          | Hasta que se responde                     | La tarea en curso                | Sí, es modal                                   |
+| [Empty](/docs/elements/ui/empty)               | Ninguna. No hay nada mal             | Mientras no haya nada para mostrar        | Una lista, una tabla, un panel   | No                                             |
+
+Dos pruebas rápidas resuelven la mayoría de los casos. Si el mensaje es sobre algo que la persona escribió, va al lado de lo que escribió. Si sigue siendo cierto después de que se va de la página, no va en un toast.
+
+## Toast
+
+Un [Toast](/docs/elements/ui/toast) confirma algo que la persona acaba de hacer y se corre del medio. "Invitación enviada", "Cambios guardados", "3 conversaciones archivadas". Se lee en una región en vivo, el temporizador se pausa con hover y foco, y con una acción queda 10 segundos en vez de 5.
+
+Igual desaparece. Todo lo que la persona tenga que resolver, o quiera leer dos veces, necesita un lugar que se quede.
+
+<DoDont>
+  <Do caption="Ofrecé Deshacer en el toast como atajo, mientras lo archivado sigue a un clic en Archivo.">
+    <UndoWithFallback />
+  </Do>
+  <Dont caption="Que el toast sea la única vuelta atrás de algo crítico. Si la persona mira para otro lado diez segundos, el proyecto se perdió para siempre. Preguntá antes con un Alert Dialog, o mantené una papelera de la que se pueda restaurar.">
+    <UndoOnlyInToast />
+  </Dont>
+</DoDont>
+
+- Un toast por acción. Tres toasts por un clic es ruido, y `maxToasts` va a empezar a descartarlos igual.
+- No avises con un toast lo que la pantalla ya muestra. Si la fila nueva aparece en la tabla, "Fila agregada" no suma nada.
+- Los errores en toasts son para fallas que la persona no puede corregir ahí mismo, como un error de red al guardar. Decí qué falló y qué probar.
+
+## Errores de un formulario
+
+Los errores de validación van al lado del campo que los causó, con `Field.Error`. Ahí es donde la persona está mirando, se quedan hasta que lo corrige, y el `aria-describedby` del campo apunta al mensaje para que los lectores de pantalla lo lean junto con el label.
+
+<DoDont>
+  <Do caption="Marcá el campo como inválido y poné el mensaje debajo. Dice qué está mal y muestra un ejemplo correcto.">
+    <InlineFieldError />
+  </Do>
+  <Dont caption="Avisar del problema en un toast. Desaparece en segundos, no dice qué campo es, y la persona tiene que salir a buscarlo.">
+    <ToastFieldError />
+  </Dont>
+</DoDont>
+
+En formularios largos, agregá `Form.ErrorSummary` arriba. Después de un envío fallido lista cada problema como un link a su campo, y el foco salta al primero inválido. Los detalles están en [Formularios](/docs/guidelines/forms).
+
+## Banner y Callout
+
+Un [Banner](/docs/elements/ui/banner) habla por toda la app o por toda la página: una prueba que termina en tres días, un espacio de trabajo en solo lectura, una caída del servicio, un problema de facturación. Se queda hasta que cambia el estado o la persona lo descarta. Ponelo arriba, por encima del layout, y de a uno por vez.
+
+Un [Callout](/docs/elements/ui/callout) habla por una sección. Vive dentro del contenido, al lado de lo que explica, y no se puede descartar porque es parte de la página.
+
+<DoDont>
+  <Do caption="Un banner para un estado que afecta todo lo que hace la persona, con cuándo termina y dónde leer más.">
+    <BannerAppWide />
+  </Do>
+  <Dont caption="Un banner para un tip sobre una tabla. Ocupa la app entera por un detalle local, y la gente aprende a cerrar banners sin leerlos.">
+    <BannerLocalTip />
+  </Dont>
+</DoDont>
+
+La versión local de ese mensaje es un Callout, justo arriba de la tabla:
+
+<GuidelineExample caption="Un callout de advertencia al lado de la acción de la que habla, así se lee en el momento en que importa.">
+  <CalloutInContext />
+</GuidelineExample>
+
+Los banners usan `role="region"` por defecto, que los lectores de pantalla listan pero no anuncian. Usá `role="alert"` solo cuando inyectás un banner porque acaba de pasar algo urgente, porque interrumpe lo que la persona esté haciendo.
+
+## Alert Dialog
+
+La opción más fuerte. Bloquea la página y espera una respuesta. Usalo cuando la persona está por perder algo que no puede recuperar, y para nada más. El razonamiento completo está en [Overlays](/docs/guidelines/overlays#dialog-o-alert-dialog).
+
+## Empty
+
+Un estado [Empty](/docs/elements/ui/empty) también es feedback: le dice a la persona que esa zona funciona y simplemente está vacía, y le dice qué hacer al respecto. Todo estado vacío necesita un próximo paso. En la primera visita es la acción que lo llena. Después de una búsqueda sin resultados, es una forma de limpiar o cambiar la búsqueda.
+
+<DoDont>
+  <Do caption="Decí qué va a aparecer acá, cuándo, y ofrecé la única acción que lleva hasta ahí.">
+    <EmptyWithNextStep />
+  </Do>
+  <Dont caption="Un callejón sin salida. 'Sin datos' no dice si algo se rompió, si está cargando o qué hacer ahora.">
+    <EmptyDeadEnd />
+  </Dont>
+</DoDont>
+
+Cargando no es vacío. Mostrá un skeleton o un spinner mientras llegan los datos, y mostrá el estado vacío solo cuando sabés que no hay nada.

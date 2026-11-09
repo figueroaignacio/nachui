@@ -1,0 +1,130 @@
+---
+title: Writing
+description: How NachUI interfaces talk. Voice, sentence case, button labels, error messages, empty states, dates and numbers, and text that works for everyone.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: en
+---
+
+Words are part of the interface. A clear label saves a help article, a good error message saves a support ticket, and a vague button makes a careful design feel broken. This page is how NachUI writes, in the docs, in the demos and in the defaults the components ship with. Use it for the copy in your product too.
+
+## Voice
+
+Direct, calm and human. Write the way a capable colleague would explain it across the desk.
+
+- **Direct.** Lead with what the reader needs. "Your card was declined" before any apology or background.
+- **Calm.** Even when something broke. No exclamation marks in errors, no capitals for emphasis, no alarm words like "fatal" or "critical" unless that is literally the case.
+- **Human.** Use "you" for the reader. Use contractions where they read naturally. Name things the way the reader names them, not the way the database does.
+
+Short beats clever. Jokes age badly and get old the third time someone sees them, and nobody wants a pun on the screen that just lost their work.
+
+## Sentence case
+
+Titles, buttons, labels, menu items and tabs use sentence case: capitalize the first word and proper nouns, nothing else. "Create project", "Billing settings", "Invite your team".
+
+Title Case Makes Every Word Fight For Attention. It is harder to read, and people apply it inconsistently. Sentence case has one rule and everyone follows it the same way.
+
+Leave the period off titles, buttons and labels. Use it in descriptions and any text with more than one sentence.
+
+## Buttons say what happens
+
+A button label is a verb and an object: "Delete project", "Send invites", "Download invoice". The reader should be able to predict the result without reading anything else on the screen, because often they will not.
+
+<DoDont>
+  <Do caption="The title asks a specific question, the description says what is lost, and each button names its own outcome.">
+    <SpecificButtons />
+  </Do>
+  <Dont caption="'Are you sure?' with 'OK'. Sure of what? OK to what? The reader has to read the whole dialog to know, and the ones who skim click the wrong one.">
+    <GenericButtons />
+  </Dont>
+</DoDont>
+
+- Keep the same verb through the flow. If the page button says "Delete", the dialog button says "Delete" too, not "Remove" or "Confirm".
+- A cancel button can say what the reader keeps: "Keep project" is clearer than "Cancel" when cancel itself sounds destructive.
+- Links say where they go. "Read the billing guide", not "Click here" or "Learn more" on its own.
+
+## Error messages
+
+A good error message answers two questions: what happened, and what can the reader do now. In that order, in their words, without blame.
+
+<DoDont>
+  <Do caption="Says what is wrong in the reader's terms and gives them two ways forward.">
+    <HelpfulError />
+  </Do>
+  <Dont caption="An error code dressed up as a message. It is accurate for the server and useless for the person holding the card.">
+    <VagueError />
+  </Dont>
+</DoDont>
+
+- Do not blame. "That password is too short" instead of "You entered an invalid password".
+- Show a correct example when the format is the problem: "Enter an email like ana@northwind.dev".
+- If the reader cannot fix it, say who can or what to try: "Try again in a few minutes. If it keeps happening, contact your workspace admin."
+- Error codes go after the explanation, if at all, for the support conversation.
+
+## Empty states
+
+An empty state says what will show up here and what the reader can do to make it happen. "No invoices yet. Invoices show up after your first payment." followed by the button that gets them there. A search with no results says what was searched and offers a way out: clear the filters, check the spelling, or create the thing they were looking for. There are examples in [Feedback](/docs/guidelines/feedback#empty).
+
+## Numbers and dates
+
+Format with `Intl`, never by hand. `Intl.DateTimeFormat` and `Intl.NumberFormat` know that 12/03/26 is December in one country and March in the next, where the thousands separator goes, and which side of the number the currency sits on. [Number Field](/docs/elements/ui/number-field), [Date Picker](/docs/elements/ui/date-picker) and [Calendar](/docs/elements/ui/calendar) all take a `locale` for this reason.
+
+<DoDont>
+  <Do caption="Dates spelled out, numbers grouped and currency formatted by Intl for the reader's locale.">
+    <IntlFormatted />
+  </Do>
+  <Dont caption="Hand built strings. 12/03/26 is ambiguous, 1240 is hard to scan and 24180.5 USD is not how anyone writes money.">
+    <HardcodedFormat />
+  </Dont>
+</DoDont>
+
+- Spell out the month in dates people read. Use numeric dates only in dense tables, and then the same format everywhere.
+- Say relative times for recent events ("2 hours ago") and the full date when it matters, like a deadline. `Intl.RelativeTimeFormat` handles the wording.
+- Use numerals: "3 files", not "three files". They are faster to scan.
+- Format on the client with an explicit locale and time zone, or pass both from the server, so the two renders agree.
+
+## Punctuation and words to skip
+
+- No em dashes or en dashes. Use a comma, a colon, parentheses or a new sentence. Ranges read as "9 to 5" or "2024 to 2026".
+- No exclamation marks, except maybe once after something the reader will genuinely celebrate.
+- No filler and no AI-sounding boilerplate: "seamless", "effortless", "leverage", "robust", "in today's fast-paced world", "it's important to note", "dive in", "unlock". If a sentence still works without a word, remove the word.
+- No "please" in instructions and no "sorry" in routine errors. Save the apology for when you actually let the reader down.
+- No jargon the reader did not bring. "Sign in" over "authenticate", "Couldn't save" over "Persistence failed".
+
+## Instead of this, write this
+
+| Instead of                      | Write                                                        |
+| ------------------------------- | ------------------------------------------------------------ |
+| OK                              | Delete project                                               |
+| Submit                          | Create account                                               |
+| Are you sure?                   | Delete 3 files?                                              |
+| Invalid input                   | Enter a date like 03/14/2026                                 |
+| An error occurred               | Couldn't save your changes. Check your connection and retry. |
+| No data                         | No invoices yet                                              |
+| Click here                      | Read the billing guide                                       |
+| Successfully saved!             | Changes saved                                                |
+| Please enter your email address | Email                                                        |
+| Manage Team Settings            | Manage team settings                                         |
+| 11/09/26                        | Nov 9, 2026                                                  |
+| Unlock seamless collaboration   | Invite your team                                             |
+
+## Text that works for everyone
+
+Some readers hear the interface instead of seeing it, some zoom it to 200%, some cannot tell red from green. Write so the meaning survives all of that.
+
+- **Images get `alt` text** that says what the image shows in context. Decorative images get `alt=""` so screen readers skip them.
+- **Icon-only buttons get an `aria-label`** that names the action: "Delete comment", not "Trash icon". Icons from the NachUI set are `aria-hidden` by default.
+- **Never rely on color alone.** Pair it with an icon, a word or a shape.
+- **Name things uniquely.** Ten buttons called "Edit" in a list sound identical to a screen reader. "Edit invoice 1042" does not, even if the visible text stays short.
+- **Write link and button text that makes sense out of context.** Screen reader users often jump through a list of links or buttons without the text around them.
+
+<DoDont>
+  <Do caption="The status is in words, backed by an icon and a color. It works in grayscale, for color blind readers and through a screen reader.">
+    <StatusWithText />
+  </Do>
+  <Dont caption="Three dots that differ only in color. A screen reader says nothing, and for many readers two of them look the same.">
+    <StatusColorOnly />
+  </Dont>
+</DoDont>

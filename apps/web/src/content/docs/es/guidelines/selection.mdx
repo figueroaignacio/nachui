@@ -1,0 +1,85 @@
+---
+title: Selección
+description: Radio, Select, Combobox, Toggle Group, Checkbox, Switch, Slider y Number Field, según cuántas opciones hay, si se ven todas y cuándo se aplica la elección.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: es
+---
+
+Elegir un control de selección se reduce a cuatro preguntas. ¿Cuántas opciones hay? ¿La persona tiene que verlas todas a la vez? ¿Puede elegir una o varias? ¿La elección se aplica en el momento o cuando envía el formulario? Respondelas y la tabla de abajo elige el componente por vos.
+
+## Tabla de decisión
+
+| Componente                                     | Opciones                             | Se ven todas     | Se elige            | Se aplica                      |
+| ---------------------------------------------- | ------------------------------------ | ---------------- | ------------------- | ------------------------------ |
+| [Switch](/docs/elements/ui/switch)             | Una opción, prendida o apagada       | Sí               | Sí o no             | En el momento                  |
+| [Checkbox](/docs/elements/ui/checkbox)         | Una, o una lista corta               | Sí               | Cualquier cantidad  | Al enviar el formulario        |
+| [Radio](/docs/elements/ui/radio)               | De 2 a unas 5                        | Sí               | Exactamente una     | Al enviar el formulario        |
+| [Toggle Group](/docs/elements/ui/toggle-group) | De 2 a unas 5, con textos cortos     | Sí               | Una o varias        | En el momento                  |
+| [Select](/docs/elements/ui/select)             | De unas 5 a 15                       | No, en una lista | Una                 | Cualquiera de las dos          |
+| [Combobox](/docs/elements/ui/combobox)         | Muchas, o cargadas mientras escribís | No, filtradas    | Una o varias        | Cualquiera de las dos          |
+| [Slider](/docs/elements/ui/slider)             | Un rango de números                  | El rango, sí     | Un valor o un tramo | En vivo mientras arrastrás     |
+| [Number Field](/docs/elements/ui/number-field) | Un número exacto                     | No aplica        | Un valor            | Al salir del campo o con Enter |
+
+## Switch o Checkbox
+
+Los dos guardan un sí o un no, y prometen cosas distintas. Un Switch es una llave de luz: lo movés y la opción cambia ya, sin botón de Guardar de por medio. Un Checkbox es una marca en un formulario: no pasa nada hasta que la persona lo envía.
+
+<DoDont>
+  <Do caption="Un switch que se aplica apenas lo movés, con una confirmación discreta de que se guardó.">
+    <SwitchAppliesNow />
+  </Do>
+  <Dont caption="Un switch que espera un botón de Guardar. La persona lo mueve, cree que ya se aplicó y se va. En un formulario así, usá un Checkbox.">
+    <SwitchWaitsForSave />
+  </Dont>
+</DoDont>
+
+- Para consentimientos y aceptaciones ("Acepto los términos"), usá un único Checkbox. Un switch ahí se lee como una configuración, no como un compromiso.
+- Si guardar un switch puede fallar, volvelo a su estado anterior y explicá por qué. Un switch que muestra "prendido" cuando el servidor dijo que no es peor que uno lento.
+- Nombrá un switch con la opción, no con la acción: "Emails de comentarios", no "Activar emails de comentarios". El estado ya dice si está prendido o apagado.
+
+## Radio, Select o Combobox
+
+Se cambia visibilidad por espacio. Los radios muestran todas las opciones, que es justo lo que querés cuando la persona tiene que compararlas. Un Select las esconde detrás de un clic, y ahorra lugar cuando la persona ya sabe lo que quiere. Un Combobox suma la posibilidad de escribir, que es la única forma razonable de recorrer una lista larga.
+
+<DoDont>
+  <Do caption="Tres planes que la persona tiene que comparar, como radios con el detalle que los diferencia.">
+    <RadioPlans />
+  </Do>
+  <Dont caption="Los mismos tres planes en un select. La persona lo abre, ve nombres sin precios y tiene que adivinar.">
+    <SelectPlans />
+  </Dont>
+</DoDont>
+
+- Hasta unas cinco opciones, usá radios. A partir de ahí, la lista empieza a empujar el resto del formulario fuera de la pantalla.
+- De unas cinco a quince, usá un Select. Se recorre con la vista y entra en cualquier lado.
+- Más de quince, o cuando las opciones vienen de un servidor, usá un Combobox. Países, personas, repositorios, etiquetas. Filtra mientras escribís, ignora acentos y mayúsculas, y puede crear elementos nuevos con `Combobox.Create`.
+- Select es de elección única. Para varias opciones de una lista larga, usá un Combobox con `multiple`. Para varias de una lista corta, usá checkboxes.
+- Dale un valor por defecto a un grupo de radios cuando hay uno razonable. Sin valor por defecto, agregá `required` y contá con que la persona lo saltee la primera vez.
+
+## Toggle Group
+
+Un [Toggle Group](/docs/elements/ui/toggle-group) es una fila de botones presionados para elecciones que cambian la vista en el momento: Día, Semana, Mes. Izquierda, Centro, Derecha. Negrita, Cursiva. No es un control de formulario para datos que se envían; para eso están los radios y los checkboxes.
+
+- `type="single"` con `required` se comporta como un control segmentado: siempre hay exactamente uno.
+- Los elementos de solo ícono necesitan un `aria-label`, y el grupo también.
+- Mantené los textos en una o dos palabras. Si las opciones necesitan explicación, necesitan radios.
+
+## Slider o Number Field
+
+Un [Slider](/docs/elements/ui/slider) es para valores aproximados, donde a la persona le importa más la posición que el número exacto: volumen, opacidad, un rango de precios en un filtro. Un [Number Field](/docs/elements/ui/number-field) es para valores exactos que la persona ya tiene en mente: licencias, cantidad, un precio.
+
+<DoDont>
+  <Do caption="Una cantidad exacta en un number field. La persona escribe 12 o llega con los botones, y los límites lo mantienen entre 1 y 500.">
+    <NumberFieldSeats />
+  </Do>
+  <Dont caption="Una cantidad exacta en un slider de 1 a 500. Caer en 12 con el mouse lleva varios intentos, y en un teléfono es casi imposible.">
+    <SliderSeats />
+  </Dont>
+</DoDont>
+
+- Si un slider dispara algo caro, como una búsqueda o un guardado, hacelo en `onValueCommit` y no en `onValueChange`. Una request por gesto en vez de decenas.
+- Mostrá el valor actual al lado de un slider. La posición sola no es un número.
+- En un rango, nombrá cada thumb ("Precio mínimo", "Precio máximo") y usá `getAriaValueText` cuando importa la unidad.

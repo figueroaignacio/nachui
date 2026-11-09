@@ -1,0 +1,101 @@
+---
+title: Feedback
+description: Toast, Banner, Callout, field errors, Alert Dialog and Empty, sorted by how urgent the message is, how long it stays and how much of the app it speaks for.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: en
+---
+
+Feedback answers one of three questions: did that work, is something wrong, and what now. The component you pick decides how loudly you answer, how long the answer stays and how much of the screen it claims. Get those three right and the wording gets much easier.
+
+## Decision table
+
+| Component                                      | Urgency                      | How long it stays                       | Scope                         | Interrupts                                    |
+| ---------------------------------------------- | ---------------------------- | --------------------------------------- | ----------------------------- | --------------------------------------------- |
+| [Toast](/docs/elements/ui/toast)               | Low. The result of an action | 5 seconds, 10 with an action            | The thing the reader just did | Only errors and warnings, read out right away |
+| [Field error](/docs/elements/ui/field)         | Medium. Blocks submitting    | Until the input is fixed                | One field                     | No                                            |
+| [Form error summary](/docs/elements/ui/form)   | Medium. Several problems     | Until the fields are fixed              | One form                      | Moves focus once                              |
+| [Callout](/docs/elements/ui/callout)           | Low. Context worth reading   | Always, it is part of the content       | One section                   | No                                            |
+| [Banner](/docs/elements/ui/banner)             | Medium to high               | Until the state ends or it is dismissed | The whole app or page         | No, unless `role="alert"`                     |
+| [Alert Dialog](/docs/elements/ui/alert-dialog) | High. Needs a decision       | Until answered                          | The task at hand              | Yes, it is modal                              |
+| [Empty](/docs/elements/ui/empty)               | None. Nothing is wrong       | While there is nothing to show          | A list, a table, a panel      | No                                            |
+
+Two quick tests sort most cases. If the message is about something the reader typed, it goes next to what they typed. If it is still true after they leave the page, it does not belong in a toast.
+
+## Toast
+
+A [Toast](/docs/elements/ui/toast) confirms something the reader just did and gets out of the way. "Invitation sent", "Changes saved", "3 conversations archived". It is read out through a live region, the timer pauses on hover and focus, and with an action it stays up for 10 seconds instead of 5.
+
+That still means it disappears. Anything the reader has to act on, or might want to read twice, needs a home that stays.
+
+<DoDont>
+  <Do caption="Offer Undo in the toast as a shortcut, while the archived items stay one click away in Archive.">
+    <UndoWithFallback />
+  </Do>
+  <Dont caption="Make the toast the only way back from something critical. If the reader looks away for ten seconds, the project is gone for good. Ask first with an Alert Dialog, or keep a trash they can restore from.">
+    <UndoOnlyInToast />
+  </Dont>
+</DoDont>
+
+- One toast per action. Three toasts for one click is noise, and `maxToasts` will start dropping them anyway.
+- Do not toast what the screen already shows. If the new row appears in the table, "Row added" says nothing new.
+- Errors in toasts are for failures the reader cannot fix in place, like a network error after saving. Say what failed and what to try next.
+
+## Errors from a form
+
+Validation errors go next to the field that caused them, through `Field.Error`. That is where the reader is looking, it stays until they fix it, and the field's `aria-describedby` points at it so screen readers read it with the label.
+
+<DoDont>
+  <Do caption="Mark the field invalid and put the message under it. It says what is wrong and shows a correct example.">
+    <InlineFieldError />
+  </Do>
+  <Dont caption="Report the problem in a toast. It vanishes in seconds, does not say which field, and the reader has to hunt for it.">
+    <ToastFieldError />
+  </Dont>
+</DoDont>
+
+On long forms, add `Form.ErrorSummary` at the top. After a failed submit it lists every problem as a link to its field and focus moves to the first invalid one. The details are in [Forms](/docs/guidelines/forms).
+
+## Banner and Callout
+
+A [Banner](/docs/elements/ui/banner) speaks for the whole app or the whole page: a trial that ends in three days, a workspace in read-only mode, an outage, a billing problem. It stays until the state changes or the reader dismisses it. Put it at the top, above the layout, and keep one at a time.
+
+A [Callout](/docs/elements/ui/callout) speaks for one section. It sits inside the content, next to what it explains, and it is not dismissible because it is part of the page.
+
+<DoDont>
+  <Do caption="A banner for a state that affects everything the reader does, with when it ends and where to read more.">
+    <BannerAppWide />
+  </Do>
+  <Dont caption="A banner for a tip about one table. It claims the whole app for a local detail, and readers learn to dismiss banners without reading them.">
+    <BannerLocalTip />
+  </Dont>
+</DoDont>
+
+The local version of that message is a Callout, placed right above the table:
+
+<GuidelineExample caption="A warning callout sits next to the action it is about, so it is read at the moment it matters.">
+  <CalloutInContext />
+</GuidelineExample>
+
+Banners default to `role="region"`, which screen readers list but do not announce. Use `role="alert"` only when you inject a banner because something urgent just happened, since it interrupts whatever the reader is doing.
+
+## Alert Dialog
+
+The loudest option. It blocks the page and waits for an answer. Use it when the reader is about to lose something they cannot get back, and for nothing else. The full reasoning is in [Overlays](/docs/guidelines/overlays#dialog-or-alert-dialog).
+
+## Empty
+
+An [Empty](/docs/elements/ui/empty) state is feedback too: it tells the reader the area works and is simply empty, and it tells them what to do about it. Every empty state needs a next step. On a first visit that is the action that fills it. After a search with no results, it is a way to clear or change the search.
+
+<DoDont>
+  <Do caption="Say what will show up here, when, and give the one action that gets them there.">
+    <EmptyWithNextStep />
+  </Do>
+  <Dont caption="A dead end. 'No data' does not say if something broke, if it is loading, or what to do next.">
+    <EmptyDeadEnd />
+  </Dont>
+</DoDont>
+
+Loading is not empty. Show a skeleton or a spinner while data is on its way, and only show the empty state once you know there is nothing.

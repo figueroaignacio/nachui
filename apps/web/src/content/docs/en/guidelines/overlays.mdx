@@ -1,0 +1,93 @@
+---
+title: Overlays
+description: Dialog, Alert Dialog, Sheet, Drawer, Popover, Hover Card and Tooltip. Which one blocks the page, which one needs an answer and how much each can hold.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: en
+---
+
+Every overlay puts something on top of the page, and every one of them costs the reader a little context. The question is never "can this go in an overlay" but "how much of the page am I willing to hide, and for how long". Pick the lightest one that does the job.
+
+## Decision table
+
+| Component                                      | Blocks the page                             | Needs an answer           | How much content                        | Opens on                     | On a phone               |
+| ---------------------------------------------- | ------------------------------------------- | ------------------------- | --------------------------------------- | ---------------------------- | ------------------------ |
+| [Alert Dialog](/docs/elements/ui/alert-dialog) | Yes. Backdrop clicks do nothing             | Yes, Cancel or the action | One question and two buttons            | Click                        | Fine, it is small        |
+| [Dialog](/docs/elements/ui/dialog)             | Yes. Escape, backdrop and close button exit | No                        | A short form or one focused task        | Click                        | Fine if it stays short   |
+| [Sheet](/docs/elements/ui/sheet)               | Yes, pinned to one edge                     | No                        | A lot: filters, edit forms, details     | Click                        | Prefer Drawer            |
+| [Drawer](/docs/elements/ui/drawer)             | Yes, dragged away to close                  | No                        | A list of actions or a short form       | Click                        | Its home                 |
+| [Popover](/docs/elements/ui/popover)           | No. Click outside or Tab away and it closes | No                        | A few controls                          | Click                        | Keep it narrow           |
+| [Hover Card](/docs/elements/ui/hover-card)     | No                                          | No                        | A preview: a profile, a link, a summary | Hover or focus, tap on touch | Treat it as a bonus      |
+| [Tooltip](/docs/elements/ui/tooltip)           | No                                          | No                        | One short line of plain text            | Hover or focus, long press   | Most people never see it |
+
+Read the first two columns together. If the reader has to answer before anything else happens, it is an Alert Dialog. If the page is blocked but they can walk away, it is a Dialog, Sheet or Drawer. If nothing is blocked, it is a Popover, Hover Card or Tooltip.
+
+## Dialog or Alert Dialog
+
+They look alike and behave differently on purpose. A [Dialog](/docs/elements/ui/dialog) is a place to do something: rename a file, invite a person, pick a few settings. It closes on Escape, on the backdrop and from the corner button, because leaving it costs nothing.
+
+An [Alert Dialog](/docs/elements/ui/alert-dialog) is a question. It has no close button and ignores the backdrop, so nobody answers by accident, and it puts focus on Cancel so a stray Enter never confirms. Save it for actions that destroy data or cannot be reversed. [Confirm](/docs/elements/hybrids/confirm) wraps that whole moment in one component, with an optional type-to-confirm guard for the worst cases.
+
+<DoDont>
+  <Do caption="Ask before something you cannot take back, and say exactly what goes away. The cancel button names what the reader keeps.">
+    <ConfirmIrreversible />
+  </Do>
+  <Dont caption="Ask about something reversible. If the description has to say 'you can restore it', the question was not needed. Archive it and offer Undo in a toast.">
+    <AlertDialogReversible />
+  </Dont>
+</DoDont>
+
+Asking too often is its own failure. People learn to click through confirmations without reading them, and then the one that matters gets clicked through too.
+
+## Dialog, Sheet or Drawer
+
+All three block the page. The difference is shape and how much fits.
+
+- **Dialog** for a single task with a clear end. If it needs to scroll, it probably wants to be a Sheet or a page.
+- **Sheet** for content that is long or that the reader works through while keeping the page in mind: filters for the list behind it, an edit form for the row they clicked, a details panel. The body scrolls and the footer stays put, so the actions are always in reach.
+- **Drawer** for touch. It floats, it has a handle and it is dragged away. On a phone, contextual actions for an item ("Share", "Duplicate", "Move to trash") belong in a bottom Drawer, where a thumb can reach them, rather than in a tiny menu or a centered Dialog.
+
+A common pattern is a Dialog on wide screens and a Drawer below a breakpoint, with the same content inside. The content does not need to know which one it is in.
+
+## Popover
+
+A [Popover](/docs/elements/ui/popover) does not block anything. Click outside and it closes, Tab past the last control and focus moves on with the page. That makes it great for small, quick edits and terrible for anything the reader might lose by accident.
+
+<DoDont>
+  <Do caption="One field and two buttons. If the reader clicks away, they lose a few characters at most.">
+    <PopoverShortTask />
+  </Do>
+  <Dont caption="A full form in a popover. One click outside throws the whole thing away, and it barely fits on a phone. Use a Dialog, or a Sheet if it keeps growing.">
+    <PopoverLongForm />
+  </Dont>
+</DoDont>
+
+A rough limit: if it has more than two fields, or anything the reader would be upset to lose, it is not a popover.
+
+## Tooltip and Hover Card
+
+A [Tooltip](/docs/elements/ui/tooltip) opens on hover and on keyboard focus, and on touch screens only after a long press, which most people never try. So treat everything in a tooltip as optional. If the reader needs it to finish the task, it goes on the page.
+
+- Give icon buttons a real `aria-label`. The tooltip can repeat it for sighted mouse users, but it is not the name.
+- Keep it to one short line of plain text. No links, no buttons: the tooltip disappears when the pointer leaves, so anything inside it is hard to reach.
+- Never put a tooltip on something that cannot receive focus or hover. A disabled button is the classic case.
+
+<DoDont>
+  <Do caption="Say why the button is disabled in visible text next to it, and point aria-describedby at that text.">
+    <DisabledReasonVisible />
+  </Do>
+  <Dont caption="Hide the reason in a tooltip on a disabled button. Disabled buttons take no focus and, in NachUI, no pointer events, so the tooltip never opens. Try hovering it.">
+    <DisabledReasonTooltip />
+  </Dont>
+</DoDont>
+
+A [Hover Card](/docs/elements/ui/hover-card) is a richer preview of what the trigger points to: a profile behind a mention, the page behind a link. It can hold links, since Tab moves into it. The rule is the same as for tooltips: the trigger has to make sense without it, because touch users only see it if they tap, and the tap also follows the link.
+
+## Quick rules
+
+- One overlay at a time. A dialog that opens a dialog is a sign the flow wants to be a page.
+- Every overlay that blocks the page needs a title, even if it is visually hidden. It is the first thing a screen reader announces.
+- Return focus to the trigger on close. NachUI overlays already do it when they close from the keyboard or their own buttons, so do not move focus elsewhere unless the trigger is gone.
+- Do not open overlays on page load. The reader did not ask for them, and they arrive before the page makes sense.

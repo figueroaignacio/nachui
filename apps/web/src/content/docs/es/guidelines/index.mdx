@@ -1,0 +1,41 @@
+---
+title: Guías
+description: Cuándo usar cada componente, cómo se ve un buen uso y uno malo, y cómo escribir los textos que los acompañan.
+published: true
+toc:
+  visible: true
+date: 2026-11-09
+locale: es
+---
+
+Las páginas de componentes te cuentan cómo funciona cada pieza. Estas páginas te cuentan cuál elegir. La mayoría de los problemas de una interfaz no son un componente roto, son el componente correcto en el lugar equivocado: un formulario metido en un popover, un error de validación mostrado en un toast, un menú de links haciéndose pasar por un menú de acciones.
+
+Una librería te da piezas. Un sistema de diseño además te dice cómo encajan, para que dos personas armando dos pantallas lleguen a las mismas respuestas. Para eso está esta sección.
+
+## Qué vas a encontrar
+
+- [Overlays](/docs/guidelines/overlays): Dialog, Alert Dialog, Sheet, Drawer, Popover, Hover Card y Tooltip. Cuál bloquea la página, cuál necesita una respuesta y cuánto entra en cada uno.
+- [Feedback](/docs/guidelines/feedback): Toast, Banner, Callout, errores de campo, Alert Dialog y Empty, ordenados por urgencia, por cuánto duran y por cuánto de la app representan.
+- [Selección](/docs/guidelines/selection): Radio, Select, Combobox, Toggle Group, Checkbox, Switch, Slider y Number Field, según cuántas opciones hay y cuándo se aplica la elección.
+- [Navegación](/docs/guidelines/navigation): Tabs, Navigation Menu, Sidebar, Breadcrumb, Pagination, Menubar y Dropdown Menu, y la línea entre ir a algún lado y hacer algo.
+- [Formularios](/docs/guidelines/forms): labels, descripciones, errores, cuándo validar, dónde van los botones y cómo marcar lo opcional.
+- [Redacción](/docs/guidelines/writing): la voz del sistema, textos de botones, mensajes de error, estados vacíos, fechas y números.
+
+## Cómo leerlas
+
+Cada página arranca con una tabla de decisión. Leela como un primer filtro, no como una ley: encontrá la fila que coincide con lo que estás armando y casi siempre ya está.
+
+Después vienen los ejemplos. Son componentes reales de NachUI, no capturas, así que podés abrir los overlays, tocar los switches y mandar los formularios. Cada par tiene el veredicto escrito, no solo en color:
+
+<DoDont>
+  <Do caption="Un par con etiqueta, lado a lado, con el motivo escrito abajo. El motivo es lo que tenés que recordar." />
+  <Dont caption="Copiar el ejemplo sin el motivo. El mismo componente puede estar bien en una pantalla y mal en la siguiente." />
+</DoDont>
+
+Cada regla viene con su porqué. Si una regla no encaja con tu caso, el porqué te dice si encontraste una excepción o un error. Cuando rompas una a propósito, anotá el motivo en el pull request para que la próxima persona no tenga que adivinar.
+
+## Qué no son
+
+No son una lista de lo que los componentes pueden hacer. Un Popover puede tener un formulario de diez campos y nada en el código te lo va a impedir. Las guías describen lo que funciona para la gente que usa tu producto, que es un conjunto más chico que lo que compila.
+
+Tampoco reemplazan probar con personas reales. Si un patrón de estas páginas confunde a tus usuarios, creele a los usuarios y contanos.
