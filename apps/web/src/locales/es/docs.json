@@ -12,8 +12,16 @@
       "title": "Secciones",
       "items": [
         {
-          "title": "Comenzando",
+          "title": "Empezar",
           "href": "/docs"
+        },
+        {
+          "title": "Fundamentos",
+          "href": "/docs/foundations"
+        },
+        {
+          "title": "Guías",
+          "href": "/docs/guidelines"
         },
         {
           "title": "Elementos AI",
@@ -60,6 +68,93 @@
         {
           "title": "Skills",
           "href": "/docs/concepts/skills"
+        }
+      ]
+    },
+    {
+      "id": "foundations",
+      "title": "Fundamentos",
+      "items": [
+        {
+          "title": "Introducción",
+          "href": "/docs/foundations",
+          "description": "Los principios del sistema y cómo llegan los tokens a los componentes."
+        },
+        {
+          "title": "Color",
+          "href": "/docs/foundations/color",
+          "description": "La paleta en claro y oscuro, la convención de foreground y el contraste."
+        },
+        {
+          "title": "Tipografía",
+          "href": "/docs/foundations/typography",
+          "description": "Roles tipográficos, la escala, los pesos y las reglas de texto."
+        },
+        {
+          "title": "Espaciado",
+          "href": "/docs/foundations/spacing",
+          "description": "La escala de 4px, las alturas de controles y las áreas táctiles."
+        },
+        {
+          "title": "Radio",
+          "href": "/docs/foundations/radius",
+          "description": "Un radio base, cinco pasos y la regla de anidado."
+        },
+        {
+          "title": "Elevación",
+          "href": "/docs/foundations/elevation",
+          "description": "Tres niveles de sombra y cuándo usar cada uno."
+        },
+        {
+          "title": "Movimiento",
+          "href": "/docs/foundations/motion",
+          "description": "Springs, profundidad de campo, respuesta al presionar y movimiento reducido."
+        },
+        {
+          "title": "Capas",
+          "href": "/docs/foundations/layers",
+          "description": "El mapa de z-index y cómo se apilan los overlays."
+        }
+      ]
+    },
+    {
+      "id": "guidelines",
+      "title": "Guías",
+      "items": [
+        {
+          "title": "Introducción",
+          "href": "/docs/guidelines",
+          "description": "Para qué son las guías y cómo leerlas."
+        },
+        {
+          "title": "Overlays",
+          "href": "/docs/guidelines/overlays",
+          "description": "Dialog, Alert Dialog, Sheet, Drawer, Popover, Hover Card o Tooltip, y cuándo va cada uno."
+        },
+        {
+          "title": "Feedback",
+          "href": "/docs/guidelines/feedback",
+          "description": "Toast, Banner, Callout, errores de campo y Empty, según urgencia, duración y alcance."
+        },
+        {
+          "title": "Selección",
+          "href": "/docs/guidelines/selection",
+          "description": "Radio, Select, Combobox, Checkbox, Switch, Slider y más, según opciones y momento."
+        },
+        {
+          "title": "Navegación",
+          "href": "/docs/guidelines/navigation",
+          "description": "Tabs, Sidebar, Breadcrumb, Pagination y menús, y por qué una acción no es navegación."
+        },
+        {
+          "title": "Formularios",
+          "href": "/docs/guidelines/forms",
+          "description": "Labels, errores, cuándo validar, botones y campos opcionales con Form y Field."
+        },
+        {
+          "title": "Redacción",
+          "href": "/docs/guidelines/writing",
+          "description": "Voz, textos de botones, mensajes de error, estados vacíos, fechas y números."
         }
       ]
     },

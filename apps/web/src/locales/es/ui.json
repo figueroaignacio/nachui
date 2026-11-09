@@ -40,6 +40,11 @@
         "title": "Iconos",
         "description": "Un set de iconos dibujado sobre la misma grilla que los componentes.",
         "href": "/icons"
+      },
+      {
+        "title": "Temas",
+        "description": "Presets y un editor para los tokens detrás de cada componente.",
+        "href": "/themes"
       }
     ]
   },
@@ -79,32 +84,16 @@
     "searchPlaceholder": "Buscar componentes, docs e iconos",
     "tabs": [
       {
-        "title": "Comenzando",
+        "title": "Empezar",
         "href": "/docs"
       },
       {
-        "title": "Componentes",
-        "href": "/docs/elements/ui"
+        "title": "Fundamentos",
+        "href": "/docs/foundations"
       },
       {
-        "title": "Layout",
-        "href": "/docs/elements/layout"
-      },
-      {
-        "title": "Elementos AI",
-        "href": "/docs/elements/ai"
-      },
-      {
-        "title": "Componentes",
-        "href": "/components"
-      },
-      {
-        "title": "Bloques",
-        "href": "/bricks/login"
-      },
-      {
-        "title": "Iconos",
-        "href": "/icons"
+        "title": "Temas",
+        "href": "/themes"
       }
     ]
   },

@@ -1,23 +1,18 @@
 {
   "home": {
-    "subheading1": "Nada de más, nada de menos: componentes de React para UI, IA y layout que copiás y son tuyos",
-    "headline1": "Nada de más",
-    "headline2": "Nada de menos",
-    "description": "Pocos colores, líneas finas, nada de decoración porque sí. Lo que queda se llevó las horas: anillos de foco, soporte de teclado, estados diseñados de verdad. Componentes de React que copiás a tu repo y son tuyos.",
+    "subheading1": "Un sistema de diseño de código abierto que es tuyo, listo para vos y tu agente",
+    "headline1": "Un sistema de diseño de código abierto que es tuyo,",
+    "headline2": "listo para vos y tu agente",
+    "description": "Tokens, componentes, patrones y temas para React. Se copian a tu repo como código plano, así vos y tu agente leen lo mismo.",
     "actions": [
       {
-        "label": "Copiá el primero",
+        "label": "Empezar",
         "href": "/docs",
         "variant": "default"
       },
       {
-        "label": "Componentes",
+        "label": "Ver componentes",
         "href": "/docs/elements/ui",
-        "variant": "outline"
-      },
-      {
-        "label": "Elementos AI",
-        "href": "/docs/elements/ai",
         "variant": "outline"
       }
     ]
@@ -175,5 +170,134 @@
     "size": "Tamaño",
     "stroke": "Trazo",
     "empty": "Ningún icono coincide con esa búsqueda."
+  },
+  "themes": {
+    "title": "Temas sobre un mismo contrato de tokens",
+    "subtitle": "Cinco presets que comparten los mismos tokens. Elegí uno, cambiá el radio, el color primario o el tinte de los grises y llevate el CSS o los tokens.",
+    "presetsHeading": "Presets",
+    "use": "Cargar {name} en el editor",
+    "selected": "En el editor",
+    "presets": {
+      "nachui": "El tema de este sitio. Grises cálidos de papel y un primario casi negro.",
+      "default": "Grises neutros y un primario azul. Un buen punto de partida.",
+      "google": "El azul de Google sobre blanco, con los colores de la marca en los estados de feedback.",
+      "microsoft": "Azul Fluent, superficies blanco cálido y esquinas ajustadas.",
+      "mr-robot": "Verde terminal sobre negro, un primario rojo y nada de redondeo."
+    },
+    "builder": {
+      "heading": "Editor",
+      "basedOn": "Basado en {name}",
+      "modified": "Modificado",
+      "reset": "Restablecer",
+      "radius": "Radio",
+      "primary": "Color primario",
+      "lightness": "Luminosidad",
+      "chroma": "Croma",
+      "hue": "Tono",
+      "neutral": "Tinte de los neutros",
+      "neutralHint": "Tono y croma de todos los grises. Los colores con saturación real conservan su valor.",
+      "modeNote": "Los colores cambian solo en modo {mode}. Cambiá el modo de la vista previa para editar el otro.",
+      "contrast": "Contraste",
+      "primaryPair": "Texto sobre primario",
+      "bodyPair": "Texto sobre el fondo",
+      "pass": "Cumple AA",
+      "fail": "No llega a AA"
+    },
+    "preview": {
+      "heading": "Vista previa",
+      "mode": "Modo de la vista previa",
+      "light": "Claro",
+      "dark": "Oscuro",
+      "regionLabel": "Componentes renderizados con el tema {name}",
+      "sample": {
+        "title": "Ajustes del espacio de trabajo",
+        "description": "Definí cómo trabaja tu equipo en Northwind.",
+        "tabs": {
+          "general": "General",
+          "members": "Miembros",
+          "billing": "Facturación",
+          "generalBody": "Nombre, avatar y los valores con los que arrancan los proyectos nuevos.",
+          "membersBody": "Doce personas, tres de ellas administradoras.",
+          "billingBody": "Plan Pro, se renueva el 1 de diciembre."
+        },
+        "profile": {
+          "title": "Perfil",
+          "description": "Así te ven las demás personas.",
+          "name": "Nombre visible",
+          "nameValue": "Ana Torres",
+          "email": "Email",
+          "emailValue": "ana@northwind.dev",
+          "emailError": "Esa dirección ya está en uso.",
+          "cancel": "Cancelar",
+          "save": "Guardar cambios"
+        },
+        "notifications": {
+          "title": "Notificaciones",
+          "updates": "Novedades del producto",
+          "digest": "Resumen semanal",
+          "mentions": "Avisame por email cuando alguien me mencione",
+          "frequency": "Frecuencia",
+          "instant": "Al momento",
+          "daily": "Una vez por día"
+        },
+        "usage": {
+          "title": "Uso",
+          "storage": "Almacenamiento",
+          "storageValue": "6,4 de 10 GB",
+          "limit": "Límite mensual",
+          "range": "Rango",
+          "day": "Día",
+          "week": "Semana",
+          "month": "Mes"
+        },
+        "buttons": {
+          "primary": "Publicar",
+          "secondary": "Vista previa",
+          "outline": "Compartir",
+          "ghost": "Cancelar",
+          "destructive": "Eliminar",
+          "link": "Saber más"
+        },
+        "badges": {
+          "live": "En vivo",
+          "draft": "Borrador",
+          "archived": "Archivado",
+          "passing": "Aprobado",
+          "pending": "Pendiente",
+          "failed": "Falló",
+          "beta": "Beta"
+        },
+        "callouts": {
+          "infoTitle": "Atención",
+          "info": "Los deploys se pausan durante la ventana de mantenimiento del domingo.",
+          "successTitle": "Backup terminado",
+          "success": "Las 14 bases de datos se copiaron a la región secundaria.",
+          "warningTitle": "Casi lleno",
+          "warning": "Usaste el 92% de tus minutos de build de este mes.",
+          "dangerTitle": "Falló el build",
+          "danger": "El paso de tests terminó con código 1 en main."
+        },
+        "menu": {
+          "label": "Superficie de menú",
+          "rename": "Renombrar",
+          "duplicate": "Duplicar",
+          "delete": "Eliminar"
+        }
+      }
+    },
+    "export": {
+      "heading": "Exportar",
+      "cli": "Instalar con el CLI",
+      "cliHint": "Correlo dentro de un proyecto y el CLI escribe este preset como tu hoja de estilos.",
+      "cliDirty": "El CLI instala los presets tal como están publicados. Cambiaste este, así que copiá el CSS o descargá los tokens.",
+      "css": "Hoja de estilos",
+      "cssHint": "El mismo archivo que escribe el CLI, con tus cambios. Pegalo como tu CSS global.",
+      "copyCss": "Copiar CSS",
+      "copied": "Copiado",
+      "tokens": "Tokens de diseño",
+      "tokensHint": "Archivos DTCG, uno por modo. Importá los dos como modos de una misma colección en Figma o Tokens Studio.",
+      "downloadLight": "Descargar claro",
+      "downloadDark": "Descargar oscuro"
+    }
   }
 }

@@ -40,6 +40,11 @@
         "title": "Icons",
         "description": "An icon set drawn on the same grid as the components.",
         "href": "/icons"
+      },
+      {
+        "title": "Themes",
+        "description": "Presets and a builder for the tokens behind every component.",
+        "href": "/themes"
       }
     ]
   },
@@ -83,28 +88,12 @@
         "href": "/docs"
       },
       {
-        "title": "Components",
-        "href": "/docs/elements/ui"
+        "title": "Foundations",
+        "href": "/docs/foundations"
       },
       {
-        "title": "Layout",
-        "href": "/docs/elements/layout"
-      },
-      {
-        "title": "AI Elements",
-        "href": "/docs/elements/ai"
-      },
-      {
-        "title": "Components",
-        "href": "/components"
-      },
-      {
-        "title": "Bricks",
-        "href": "/bricks/login"
-      },
-      {
-        "title": "Icons",
-        "href": "/icons"
+        "title": "Themes",
+        "href": "/themes"
       }
     ]
   },

@@ -1,23 +1,18 @@
 {
   "home": {
-    "subheading1": "Nothing extra, nothing missing: React components for UI, AI and layout that you copy and own",
-    "headline1": "Nothing extra",
-    "headline2": "Nothing missing",
-    "description": "Few colors, thin lines, no decoration for its own sake. What's left got the hours: focus rings, keyboard support, states that were actually designed. React components you copy into your repo and own.",
+    "subheading1": "An open source design system you own, ready for you and your agent",
+    "headline1": "An open source design system you own,",
+    "headline2": "ready for you and your agent",
+    "description": "Tokens, components, patterns and themes for React. Copied into your repo as plain source, so you and your agent read the same thing.",
     "actions": [
       {
-        "label": "Copy your first one",
+        "label": "Get started",
         "href": "/docs",
         "variant": "default"
       },
       {
-        "label": "Components",
+        "label": "Browse components",
         "href": "/docs/elements/ui",
-        "variant": "outline"
-      },
-      {
-        "label": "AI elements",
-        "href": "/docs/elements/ai",
         "variant": "outline"
       }
     ]
@@ -175,5 +170,134 @@
     "size": "Size",
     "stroke": "Stroke",
     "empty": "No icon matches that search."
+  },
+  "themes": {
+    "title": "Themes on one token contract",
+    "subtitle": "Five presets that share the same tokens. Pick one, change the radius, the primary color or the tint of the grays, then take the CSS or the tokens with you.",
+    "presetsHeading": "Presets",
+    "use": "Load {name} in the builder",
+    "selected": "In the builder",
+    "presets": {
+      "nachui": "The theme this site runs on. Warm paper grays and a near-black primary.",
+      "default": "Plain neutral grays with a blue primary. A clean place to start.",
+      "google": "Google blue on white, with the brand colors in the feedback states.",
+      "microsoft": "Fluent blue, warm off-white surfaces and tight corners.",
+      "mr-robot": "Terminal green on black, a red primary and no rounding at all."
+    },
+    "builder": {
+      "heading": "Builder",
+      "basedOn": "Based on {name}",
+      "modified": "Modified",
+      "reset": "Reset",
+      "radius": "Radius",
+      "primary": "Primary color",
+      "lightness": "Lightness",
+      "chroma": "Chroma",
+      "hue": "Hue",
+      "neutral": "Neutral tint",
+      "neutralHint": "Hue and chroma for every gray. Colors with real saturation keep their value.",
+      "modeNote": "Colors change in {mode} mode only. Switch the preview to edit the other one.",
+      "contrast": "Contrast",
+      "primaryPair": "Text on primary",
+      "bodyPair": "Text on background",
+      "pass": "Passes AA",
+      "fail": "Below AA"
+    },
+    "preview": {
+      "heading": "Preview",
+      "mode": "Preview mode",
+      "light": "Light",
+      "dark": "Dark",
+      "regionLabel": "Components rendered with the {name} theme",
+      "sample": {
+        "title": "Workspace settings",
+        "description": "Manage how your team works in Northwind.",
+        "tabs": {
+          "general": "General",
+          "members": "Members",
+          "billing": "Billing",
+          "generalBody": "Name, avatar and the defaults new projects start with.",
+          "membersBody": "Twelve people, three of them admins.",
+          "billingBody": "Pro plan, renews on December 1."
+        },
+        "profile": {
+          "title": "Profile",
+          "description": "This is how other people see you.",
+          "name": "Display name",
+          "nameValue": "Ana Torres",
+          "email": "Email",
+          "emailValue": "ana@northwind.dev",
+          "emailError": "That address is already taken.",
+          "cancel": "Cancel",
+          "save": "Save changes"
+        },
+        "notifications": {
+          "title": "Notifications",
+          "updates": "Product updates",
+          "digest": "Weekly digest",
+          "mentions": "Email me when someone mentions me",
+          "frequency": "Frequency",
+          "instant": "Right away",
+          "daily": "Once a day"
+        },
+        "usage": {
+          "title": "Usage",
+          "storage": "Storage",
+          "storageValue": "6.4 of 10 GB",
+          "limit": "Monthly limit",
+          "range": "Range",
+          "day": "Day",
+          "week": "Week",
+          "month": "Month"
+        },
+        "buttons": {
+          "primary": "Deploy",
+          "secondary": "Preview",
+          "outline": "Share",
+          "ghost": "Cancel",
+          "destructive": "Delete",
+          "link": "Learn more"
+        },
+        "badges": {
+          "live": "Live",
+          "draft": "Draft",
+          "archived": "Archived",
+          "passing": "Passing",
+          "pending": "Pending",
+          "failed": "Failed",
+          "beta": "Beta"
+        },
+        "callouts": {
+          "infoTitle": "Heads up",
+          "info": "Deploys pause during the maintenance window on Sunday.",
+          "successTitle": "Backup finished",
+          "success": "All 14 databases were copied to the secondary region.",
+          "warningTitle": "Almost full",
+          "warning": "You have used 92% of your build minutes this month.",
+          "dangerTitle": "Build failed",
+          "danger": "The test step exited with code 1 on main."
+        },
+        "menu": {
+          "label": "Menu surface",
+          "rename": "Rename",
+          "duplicate": "Duplicate",
+          "delete": "Delete"
+        }
+      }
+    },
+    "export": {
+      "heading": "Export",
+      "cli": "Install with the CLI",
+      "cliHint": "Run it inside a project and the CLI writes this preset as your stylesheet.",
+      "cliDirty": "The CLI installs presets as they are published. You changed this one, so copy the CSS or download the tokens instead.",
+      "css": "Stylesheet",
+      "cssHint": "The same file the CLI writes, with your changes. Paste it as your global CSS.",
+      "copyCss": "Copy CSS",
+      "copied": "Copied",
+      "tokens": "Design tokens",
+      "tokensHint": "DTCG files, one per mode. Import both as modes of one collection in Figma or Tokens Studio.",
+      "downloadLight": "Download light",
+      "downloadDark": "Download dark"
+    }
   }
 }

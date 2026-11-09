@@ -1,80 +1,91 @@
 ---
-title: Introduction
-description: Learn how to build, customize, and own your React design system with NachUI. The same source your team reads is the source your AI agents read.
+title: Getting started
+description: NachUI is an open source design system for React. Add it to your project, install your first component and point your agent at the docs.
 published: true
 toc:
   visible: true
-date: 2024-03-14
+date: 2026-11-09
 locale: 'en'
 ---
 
 ![NachUI](/nachui-logo-dark-bg.svg)
 
-## Build UIs. Keep Control.
+NachUI is an open source design system for React. Add it to your project and start building.
 
-NachUI is a design system toolkit, not a packaged component library. We give you the raw source code so you have complete control over your design primitives.
+It brings what a product team needs into one place: design tokens, more than 90 components for UI, AI and layout, guidelines for when to use each one, and themes you can make your own. Everything is copied into your repo as plain React and CSS, so you and the agent in your editor read the same source.
 
-Conventional UI libraries work until you need custom behavior. Then you're stuck writing hacky wrappers, overriding styles, and fighting `node_modules`. NachUI solves this by shipping the actual source code directly to your repository. You own the components, the design tokens, and the patterns. Customize them however you want, without limits.
+## Quick start with AI
 
-You are probably not the only one reading it. The agent in your editor needs the same information you do, and since nothing here gets compiled away, it works from the same plain React and CSS. The documentation is published for it too, through [llms.txt](/docs/concepts/llms-txt).
+Paste this into your AI coding tool and let it handle the setup:
 
-- **Full Ownership**: The component code is copied directly into your repository, giving you total freedom to refactor, debug, and customize it without waiting for upstream package updates.
-- **Open Code**: With no compiled files or black-box dependencies, you can audit, trace, and modify every line of CSS and React to match your security and performance standards.
-- **Unified Design**: Standardized design tokens ensure every component you copy shares the same typography, colors, and layout structure, keeping your UI consistent across pages.
-- **Compound Components**: Compose complex interfaces using modular dot-notation (like `<Card.Header>`), keeping your JSX readable and avoiding monolithic components cluttered with endless boolean flags.
-- **CLI Distribution**: Use our command-line utility to pull clean component source files into your project instantly, bypassing npm package management entirely.
-- **AI-Native**: Structured patterns and clean code allow AI coding assistants to easily read, extend, and refactor your components to match new requirements without breaking style integrity.
-- **Machine-Readable Docs**: An `llms.txt` index, raw markdown behind every page, a JSON catalog and installable agent skills, so your assistant learns the system from the source instead of guessing at it.
+```text
+Set up NachUI in this project. Read https://nachui.tech/llms.txt first.
+Run `npx nachui init --theme nachui --yes`, then `npx nachui add button card`.
+Render a Card with a Button on the home page to check that everything works.
+```
 
-## Code Ownership over npm Dependencies
+## Install
 
-Adding a NachUI component means the source code becomes yours. You work directly with clean, readable code that fits your exact requirements.
+Run `init` once. It asks for a theme, writes the tokens into your stylesheet, creates `nachui.json` and adds the `cn` helper.
 
-- Inspect, audit, and modify every single hook and style.
-- Change APIs or internal state structures without restrictions.
-- No vendor lock-in and no waiting for upstream PR merges.
+<Command command="pnpm dlx nachui init" />
 
-Work directly with the code you need.
+Pass `--theme` to skip the question, for example `--theme nachui` for the look of this site. Try the presets first in [Themes](/themes). If you would rather see every step, the [installation guide](/docs/installation) does the same thing by hand.
 
-## Compound Components
+## Add your first component
 
-Avoid monolithic components with endless boolean flags. Compose UI using semantic, interconnected elements.
+<Command command="pnpm dlx nachui add button" />
+
+The source lands in `src/components/button.tsx`, along with any helper it needs in `src/lib/`. Import it like any other file of yours:
 
 ```tsx
-// ❌ Monolithic (rigid, hard to override)
-<Card title="Hello" description="World" content="This is content" />
+import { Button } from '@/components/button';
 
-// ✅ Compound (flexible, readable)
+export function Hero() {
+  return <Button>Deploy</Button>;
+}
+```
+
+## What's in the system
+
+- **[Foundations](/docs/foundations)**: color, type, spacing, radius, elevation, motion and layers, all from one set of tokens.
+- **[Components](/docs/elements/ui)**: UI elements with keyboard support, dark mode and right to left built in.
+- **[AI elements](/docs/elements/ai)**: the pieces of a chat or an agent run, like messages, reasoning, tools and sources.
+- **[Layout](/docs/elements/layout)**: Stack, Grid, Container and the other primitives that place things on a page.
+- **[Guidelines](/docs/guidelines)**: when to use each component, and how to write the words around it.
+- **[Themes](/themes)**: five presets and a builder to make one yours.
+
+## Built for you and your agent
+
+Nothing is compiled away, so the agent in your editor reads the same React and CSS you do. The docs are published for it too:
+
+- **[llms.txt](/docs/concepts/llms-txt)** indexes every page in the format assistants expect.
+- **Raw markdown** comes back when you add `.md` to any docs URL.
+- **[The MCP server](/docs/concepts/mcp)** lets an agent search and read the docs on its own.
+- **[Skills](/docs/concepts/skills)** teach it the conventions of the system before it writes a line.
+
+Point your assistant at the index once and it stops inventing props that were never there.
+
+## Why copy instead of install
+
+A package hides the code and decides when it changes. Here the source is yours from the first paste: read it, change it, and keep the version that works for you. There is nothing to upgrade unless you want to.
+
+Components depend on five small libraries (`clsx`, `tailwind-merge`, `motion`, `class-variance-authority` and `zod`) and work in any React 19 setup, including Next.js, Vite, TanStack Start and React Router.
+
+## Composed, not configured
+
+Components are built from parts you arrange, like `Card.Header` and `Card.Content`, instead of one tag with a long list of props. You can put anything between the parts, and each part only takes the props it needs. [Compound components](/docs/concepts/compound-components) explains the pattern.
+
+```tsx
 <Card>
   <Card.Header>
-    <Card.Title>Hello</Card.Title>
-    <Card.Description>World</Card.Description>
+    <Card.Title>Invite a teammate</Card.Title>
+    <Card.Description>They get an email with a join link.</Card.Description>
   </Card.Header>
-  <Card.Content>
-    <p>This is content</p>
-  </Card.Content>
+  <Card.Content>...</Card.Content>
 </Card>
 ```
 
-**Benefits:**
-
-- **Zero Intrusions**: Inject wrappers or custom elements without `renderProps`.
-- **Clear Hierarchy**: JSX matches exact DOM structure.
-- **Focused Typings**: Sub-components have specific props. Clean TypeScript autocomplete.
-- **Implicit State**: Parent shares context with children automatically.
-
-## AI-Native by Design
-
-Because every component lives directly in your repository as plain React and CSS code, AI agents can read, extend, and refactor your design system just like any other file in your project. There are no black-box node_modules hiding the implementation. The clean, standardized patterns ensure your AI coding assistant can generate new views and variations that perfectly match your design system's rules without losing coherence.
-
-The components are only half of it. The documentation is published for agents as well:
-
-- **[llms.txt](/docs/concepts/llms-txt)** is an index of every page, in the format assistants expect.
-- **Raw markdown** comes from adding `.md` to any docs URL, which returns the source of that page.
-- **[Skills](/docs/concepts/skills)** are installable instructions that teach an agent the conventions of this project before it writes a line.
-
-Point Claude, Cursor or Windsurf at the index once and they stop inventing APIs that were never there.
-
-## Everything you need to know
+## Questions
 
 <DocsFaq />

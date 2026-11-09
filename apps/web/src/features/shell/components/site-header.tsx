@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { type ReactNode, useCallback, useState } from 'react';
 import { GitHubIcon } from '@/components/common/github-icon';
 import { LocaleSwitcher } from '@/components/common/locale-switcher';
 import { Logo } from '@/components/common/logo';
@@ -13,13 +13,25 @@ import { Link, usePathname } from '@/i18n/navigation';
 import { GITHUB_REPO_URL } from '@/lib/domains';
 import { isHiddenProductLink } from '@/lib/hidden-product-links';
 import { Kbd } from '@repo/ui/components/kbd';
+import { NavigationMenu } from '@repo/ui/components/navigation-menu';
+import { ImageIcon } from '@repo/ui/icons/image';
+import { LayoutGridIcon } from '@repo/ui/icons/layout-grid';
 import { MenuIcon } from '@repo/ui/icons/menu';
+import { PuzzleIcon } from '@repo/ui/icons/puzzle';
 import { SearchIcon } from '@repo/ui/icons/search';
 import { SparklesIcon } from '@repo/ui/icons/sparkles';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 
 type NavItem = { title: string; href: string };
+type ProductItem = NavItem & { description: string };
+
+const PRODUCT_ICONS: Record<string, ReactNode> = {
+  '/docs/elements/ui': <PuzzleIcon size={16} aria-hidden="true" />,
+  '/docs/elements/layout': <LayoutGridIcon size={16} aria-hidden="true" />,
+  '/docs/elements/ai': <SparklesIcon size={16} aria-hidden="true" />,
+  '/icons': <ImageIcon size={16} aria-hidden="true" />,
+};
 
 /** Docs tabs match on their full path; anything else matches its whole top-level section. */
 function tabRoot(href: string) {
@@ -50,7 +62,18 @@ export function SiteHeader() {
   const tabs = (t.raw('header.tabs') as NavItem[]).filter(
     (item) => !isHiddenProductLink(item.href),
   );
-  const activeTab = findActiveTab(tabs, pathname);
+  const productItems = (t.raw('elementsMenu.items') as ProductItem[]).filter(
+    (item) => item.href in PRODUCT_ICONS && !isHiddenProductLink(item.href),
+  );
+  const activeTab = findActiveTab([...tabs, ...productItems], pathname);
+  const productActive = productItems.some((item) => item.href === activeTab);
+  const tabClass = (active: boolean) =>
+    cn(
+      'focus-visible:ring-ring flex h-8 items-center rounded-md px-2.5 text-sm whitespace-nowrap focus-visible:ring-2 focus-visible:outline-none',
+      active
+        ? 'bg-muted text-foreground font-medium'
+        : 'text-muted-foreground hover:text-foreground',
+    );
 
   const iconButton =
     'text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring inline-flex size-11 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:outline-none';
@@ -69,26 +92,52 @@ export function SiteHeader() {
                 <Logo withText priority />
               </Link>
               <span className="bg-border h-5 w-px shrink-0" aria-hidden="true" />
-              <nav aria-label={t('header.sections')} className="flex items-center gap-0.5">
-                {tabs.map((tab) => {
-                  const active = tab.href === activeTab;
-                  return (
-                    <Link
-                      key={tab.href}
-                      href={tab.href}
-                      aria-current={active ? 'page' : undefined}
-                      className={cn(
-                        'focus-visible:ring-ring flex h-8 items-center rounded-md px-2.5 text-sm whitespace-nowrap focus-visible:ring-2 focus-visible:outline-none',
-                        active
-                          ? 'bg-muted text-foreground font-medium'
-                          : 'text-muted-foreground hover:text-foreground',
-                      )}
-                    >
-                      {tab.title}
-                    </Link>
-                  );
-                })}
-              </nav>
+              <NavigationMenu aria-label={t('header.sections')} className="gap-0.5">
+                {tabs.slice(0, 1).map((tab) => (
+                  <Link
+                    key={tab.href}
+                    href={tab.href}
+                    aria-current={tab.href === activeTab ? 'page' : undefined}
+                    className={tabClass(tab.href === activeTab)}
+                  >
+                    {tab.title}
+                  </Link>
+                ))}
+                <NavigationMenu.Item>
+                  <NavigationMenu.Trigger
+                    className={cn(
+                      'h-8 min-h-0 px-2.5 text-sm focus-visible:ring-offset-0',
+                      productActive && 'bg-muted text-foreground font-medium',
+                    )}
+                  >
+                    {t('elementsMenu.label')}
+                  </NavigationMenu.Trigger>
+                  <NavigationMenu.Content className="w-[26rem]">
+                    {productItems.map((item) => (
+                      <NavigationMenu.Link
+                        key={item.href}
+                        asChild
+                        title={item.title}
+                        description={item.description}
+                        icon={PRODUCT_ICONS[item.href]}
+                        aria-current={item.href === activeTab ? 'page' : undefined}
+                      >
+                        <Link href={item.href} />
+                      </NavigationMenu.Link>
+                    ))}
+                  </NavigationMenu.Content>
+                </NavigationMenu.Item>
+                {tabs.slice(1).map((tab) => (
+                  <Link
+                    key={tab.href}
+                    href={tab.href}
+                    aria-current={tab.href === activeTab ? 'page' : undefined}
+                    className={tabClass(tab.href === activeTab)}
+                  >
+                    {tab.title}
+                  </Link>
+                ))}
+              </NavigationMenu>
               <div className="ml-auto flex items-center gap-3">
                 <button
                   type="button"

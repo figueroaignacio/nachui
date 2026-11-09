@@ -1,80 +1,91 @@
 ---
-title: Introducción
-description: Aprende a construir, personalizar y adueñarte de tu sistema de diseño en React con NachUI. El mismo código que lee tu equipo es el que leen tus agentes de IA.
+title: Empezar
+description: NachUI es un sistema de diseño de código abierto para React. Sumalo a tu proyecto, instalá tu primer componente y apuntá tu agente a la documentación.
 published: true
 toc:
   visible: true
-date: 2024-03-14
+date: 2026-11-09
 locale: 'es'
 ---
 
 ![NachUI](/nachui-logo-dark-bg.svg)
 
-## Crea UIs. Mantén el Control.
+NachUI es un sistema de diseño de código abierto para React. Sumalo a tu proyecto y empezá a construir.
 
-NachUI es un kit de herramientas para sistemas de diseño, no una librería empaquetada. Te entregamos el código fuente real para que tengas control total de tus componentes.
+Junta en un solo lugar lo que necesita un equipo de producto: tokens de diseño, más de 90 componentes de UI, IA y layout, guías para saber cuándo usar cada uno y temas que podés hacer tuyos. Todo se copia a tu repo como React y CSS plano, así vos y el agente de tu editor leen el mismo código.
 
-Las librerías de componentes convencionales funcionan hasta que necesitas un comportamiento a medida. Ahí es cuando terminas escribiendo wrappers complejos, sobreescribiendo estilos y peleando con `node_modules`. NachUI soluciona esto enviando el código fuente real directo a tu repositorio. Eres el dueño de los componentes, los tokens de diseño y los patrones. Personalízalos como quieras, sin límites.
+## Empezar con IA
 
-Probablemente no seas el único que lo lee. El agente de tu editor necesita la misma información que vos y, como acá no hay nada compilado, trabaja sobre el mismo React y CSS plano. La documentación también se publica para él, a través de [llms.txt](/docs/concepts/llms-txt).
+Pegá esto en tu herramienta de IA y dejá que haga la configuración:
 
-- **Propiedad total**: El código de los componentes se copia directamente en tu repositorio, permitiéndote refactorizar, depurar y personalizar sin depender de actualizaciones de terceros.
-- **Código abierto**: Sin archivos compilados ni dependencias de caja negra; puedes auditar, rastrear y modificar cada línea de React y CSS de acuerdo a tus necesidades de seguridad y rendimiento.
-- **Diseño unificado**: Los tokens de diseño estandarizados garantizan que cada componente copiado comparta la misma tipografía, colores y estructura, manteniendo la consistencia visual en todo tu sitio.
-- **Componentes compuestos**: Construye interfaces complejas usando composición semántica (como `<Card.Header>`), evitando componentes monolíticos sobrecargados con infinidad de flags booleanos.
-- **Distribución vía CLI**: Utiliza nuestra herramienta de terminal para descargar el código limpio directamente a tu carpeta de componentes, omitiendo el gestor de paquetes de npm.
-- **Nativo para IA**: El código estructurado y con patrones consistentes permite que los asistentes de IA entiendan, extiendan y refactoricen tus componentes sin romper la coherencia del diseño.
-- **Documentación legible por máquinas**: Un índice `llms.txt`, markdown crudo detrás de cada página, un catálogo JSON y skills instalables, para que tu asistente aprenda el sistema desde la fuente en lugar de adivinarlo.
+```text
+Configurá NachUI en este proyecto. Primero leé https://nachui.tech/llms.txt.
+Corré `npx nachui init --theme nachui --yes` y después `npx nachui add button card`.
+Mostrá una Card con un Button en la página de inicio para comprobar que todo funciona.
+```
 
-## Propiedad del código sobre dependencias de npm
+## Instalar
 
-Agregar un componente NachUI significa que el código fuente pasa a ser tuyo. Trabajas directamente con código limpio y legible que se adapta a tus requisitos.
+Corré `init` una vez. Te pregunta qué tema querés, escribe los tokens en tu hoja de estilos, crea `nachui.json` y agrega el helper `cn`.
 
-- Inspecciona, audita y modifica cada hook y estilo.
-- Cambia las APIs o estructuras de estado interno sin restricciones.
-- Sin dependencias de terceros y sin esperar a que se aprueben PRs externos.
+<Command command="pnpm dlx nachui init" />
 
-Trabaja directamente con el código que necesitas.
+Con `--theme` te salteás la pregunta, por ejemplo `--theme nachui` para el look de este sitio. Antes podés probar los presets en [Temas](/themes). Si preferís ver cada paso, la [guía de instalación](/docs/installation) hace lo mismo a mano.
 
-## Compound Components
+## Sumar tu primer componente
 
-Evitá componentes monolíticos con infinitos flags booleanos. Componé tu UI usando elementos semánticos interconectados.
+<Command command="pnpm dlx nachui add button" />
+
+El código queda en `src/components/button.tsx`, junto con los helpers que necesite en `src/lib/`. Lo importás como cualquier otro archivo tuyo:
 
 ```tsx
-// ❌ Monolítico (rígido, difícil de extender)
-<Card title="Hola" description="Mundo" content="Este es el contenido" />
+import { Button } from '@/components/button';
 
-// ✅ Compound (flexible, legible)
+export function Hero() {
+  return <Button>Publicar</Button>;
+}
+```
+
+## Qué trae el sistema
+
+- **[Fundamentos](/docs/foundations)**: color, tipografía, espaciado, radios, elevación, movimiento y capas, todo desde un único set de tokens.
+- **[Componentes](/docs/elements/ui)**: elementos de UI con teclado, modo oscuro y derecha a izquierda incluidos.
+- **[Elementos de IA](/docs/elements/ai)**: las piezas de un chat o de la ejecución de un agente, como mensajes, razonamiento, herramientas y fuentes.
+- **[Layout](/docs/elements/layout)**: Stack, Grid, Container y las demás primitivas que ubican las cosas en la página.
+- **[Guías](/docs/guidelines)**: cuándo usar cada componente y cómo escribir el texto que lo acompaña.
+- **[Temas](/themes)**: cinco presets y un builder para hacer uno tuyo.
+
+## Hecho para vos y tu agente
+
+Nada se compila ni se esconde, así que el agente de tu editor lee el mismo React y el mismo CSS que vos. La documentación también se publica para él:
+
+- **[llms.txt](/docs/concepts/llms-txt)** indexa cada página en el formato que esperan los asistentes.
+- **El markdown crudo** aparece si le agregás `.md` a cualquier URL de la documentación.
+- **[El servidor MCP](/docs/concepts/mcp)** deja que un agente busque y lea la documentación por su cuenta.
+- **[Las skills](/docs/concepts/skills)** le enseñan las convenciones del sistema antes de que escriba una línea.
+
+Apuntá tu asistente al índice una vez y deja de inventar props que nunca existieron.
+
+## Por qué copiar en lugar de instalar
+
+Un paquete esconde el código y decide cuándo cambia. Acá el código es tuyo desde que lo pegás: lo leés, lo cambiás y te quedás con la versión que te sirve. No hay nada que actualizar salvo que quieras.
+
+Los componentes dependen de cinco librerías chicas (`clsx`, `tailwind-merge`, `motion`, `class-variance-authority` y `zod`) y funcionan en cualquier proyecto con React 19, como Next.js, Vite, TanStack Start o React Router.
+
+## Compuesto, no configurado
+
+Los componentes se arman con partes que ordenás vos, como `Card.Header` y `Card.Content`, en lugar de una sola etiqueta con una lista larga de props. Podés poner lo que quieras entre las partes, y cada una recibe solo las props que necesita. [Compound components](/docs/concepts/compound-components) explica el patrón.
+
+```tsx
 <Card>
   <Card.Header>
-    <Card.Title>Hola</Card.Title>
-    <Card.Description>Mundo</Card.Description>
+    <Card.Title>Invitar a alguien del equipo</Card.Title>
+    <Card.Description>Le llega un mail con un link para sumarse.</Card.Description>
   </Card.Header>
-  <Card.Content>
-    <p>Este es el contenido</p>
-  </Card.Content>
+  <Card.Content>...</Card.Content>
 </Card>
 ```
 
-**Beneficios:**
-
-- **Cero Intrusiones**: Inyectá wrappers o elementos custom sin `renderProps`.
-- **Jerarquía Clara**: El JSX coincide exacto con la estructura del DOM.
-- **Tipado Enfocado**: Sub-componentes tienen props específicas. Autocompletado limpio en TypeScript.
-- **Estado Implícito**: El padre comparte contexto con los hijos automáticamente.
-
-## Nativo para IA por Diseño
-
-Dado que cada componente vive directamente en tu repositorio como código plano de React y CSS, los asistentes de IA pueden leer, extender y refactorizar tu sistema de diseño como cualquier otro archivo de tu proyecto. No hay cajas negras en `node_modules` que oculten el funcionamiento interno. Los patrones limpios y estandarizados aseguran que tu asistente de IA pueda generar nuevas vistas y variaciones respetando las reglas de diseño sin perder coherencia.
-
-Los componentes son solo la mitad. La documentación también se publica para agentes:
-
-- **[llms.txt](/docs/concepts/llms-txt)** es un índice de todas las páginas, en el formato que los asistentes esperan.
-- **Markdown crudo** sale de agregar `.md` a cualquier URL de la documentación, que devuelve la fuente de esa página.
-- **[Skills](/docs/concepts/skills)** son instrucciones instalables que le enseñan a un agente las convenciones del proyecto antes de que escriba una línea.
-
-Apuntá Claude, Cursor o Windsurf al índice una sola vez y dejan de inventar APIs que nunca existieron.
-
-## Todo lo que necesitas saber
+## Preguntas
 
 <DocsFaq />
