@@ -1,0 +1,116 @@
+---
+title: Calendar
+description: A month grid for picking a day or a range, with full keyboard support and no date library.
+published: true
+date: 2026-11-09
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="calendar" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="calendar" />
+
+## Anatomy
+
+```tsx
+import { Calendar } from '@/components/calendar';
+```
+
+```tsx
+<Calendar defaultValue="2026-11-09" onValueChange={(date) => console.log(date)} />
+```
+
+Dates are plain strings in `YYYY-MM-DD` form, never `Date` objects. Every calculation runs on that string in UTC through `lib/date`, so a day never shifts because of the time zone of the server or the browser.
+
+## Composition
+
+`Calendar` is a single component. It renders this structure, and every part carries a `data-slot` you can target from CSS:
+
+```tree
+Calendar (data-slot="calendar")
+└── calendar-months
+    └── calendar-month
+        ├── calendar-header
+        │   ├── calendar-previous
+        │   ├── calendar-title
+        │   └── calendar-next
+        └── calendar-grid
+            ├── calendar-weekday
+            └── calendar-cell
+                └── calendar-day
+```
+
+Each day button exposes its state as data attributes: `data-selected`, `data-today`, `data-outside`, `data-disabled`, `data-range-start`, `data-range-end` and `data-range-middle`.
+
+## Variants
+
+### Default
+
+Month and weekday names come from `Intl`. Pass `locale` to pin a language, otherwise the browser's is used. The first day of the week follows the locale too, unless you set `weekStartsOn`.
+
+<ComponentPreview component="calendar" demo="default" />
+
+### Range
+
+With `mode="range"` the first click marks the start and the second one marks the end. If the second day is earlier, the two are swapped. Until the end is picked, hovering or focusing a day previews the range. `onValueChange` fires once, with the finished `{ start, end }`.
+
+<ComponentPreview component="calendar" demo="range" />
+
+### Disabled Dates
+
+Use `min` and `max` for hard limits and `isDateDisabled` for anything else. Disabled days can still receive focus so keyboard users keep their place, but they can't be picked.
+
+<ComponentPreview component="calendar" demo="disabled-dates" />
+
+## Keyboard
+
+| Key                            | Action                                         |
+| ------------------------------ | ---------------------------------------------- |
+| `Tab`                          | Moves into the grid, landing on a single day   |
+| `ArrowLeft`, `ArrowRight`      | Previous or next day, flipped in right to left |
+| `ArrowUp`, `ArrowDown`         | Same day in the previous or next week          |
+| `PageUp`, `PageDown`           | Same day in the previous or next month         |
+| `Shift` + `PageUp`, `PageDown` | Same day in the previous or next year          |
+| `Home`, `End`                  | First or last day of the week                  |
+| `Enter`, `Space`               | Picks the focused day                          |
+
+Moving focus onto a day from another month switches the visible month.
+
+## Accessibility
+
+- Each month is a `grid` named by its title. The title is a polite live region, so changing the month is announced.
+- Column headers show the short weekday and carry the full name in `abbr`.
+- Day buttons are labelled with the full date, for example "Monday, November 9, 2026". Today has `aria-current="date"`, and the selected cells have `aria-selected`.
+- Only one day is in the tab order at a time: the selected day, then today, then the first enabled day of the month.
+- Without a `today` prop, today is worked out on the client after hydration, so the server never renders a date that could be wrong. Pass `today` and `locale` when you need the exact same markup on both sides.
+
+## API Reference
+
+### Calendar
+
+Accepts every `div` attribute as well.
+
+| Prop                 | Type                                            | Default            | Description                                                     |
+| -------------------- | ----------------------------------------------- | ------------------ | --------------------------------------------------------------- |
+| `mode`               | `'single' \| 'range'`                           | `'single'`         | Pick one day or a range                                         |
+| `value`              | `PlainDate \| null` or `{ start, end } \| null` | -                  | Controlled value, its shape follows `mode`                      |
+| `defaultValue`       | `PlainDate \| null` or `{ start, end } \| null` | `null`             | Initial value when uncontrolled                                 |
+| `onValueChange`      | `(value) => void`                               | -                  | Called with the picked day, or with the finished range          |
+| `month`              | `PlainDate`                                     | -                  | Controlled visible month, any day inside it works               |
+| `defaultMonth`       | `PlainDate`                                     | -                  | Initial month. Falls back to the value, then to today           |
+| `onMonthChange`      | `(month: PlainDate) => void`                    | -                  | Called with the first day of the new month                      |
+| `numberOfMonths`     | `number`                                        | `1`                | Months shown side by side. Outside days are hidden when above 1 |
+| `min`, `max`         | `PlainDate`                                     | -                  | Earliest and latest day that can be picked or reached           |
+| `isDateDisabled`     | `(date: PlainDate) => boolean`                  | -                  | Disables any other day                                          |
+| `locale`             | `string`                                        | browser locale     | Locale for names, numbers and the first day of the week         |
+| `weekStartsOn`       | `0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6`               | from `locale`      | First column of the grid, 0 is Sunday                           |
+| `today`              | `PlainDate`                                     | the current date   | Overrides today, handy for tests and server rendering           |
+| `showOutsideDays`    | `boolean`                                       | `true`             | Shows the days of the previous and next month                   |
+| `dir`                | `'ltr' \| 'rtl'`                                | inherited          | Text direction, also flips the arrow keys                       |
+| `previousMonthLabel` | `string`                                        | `'Previous month'` | Accessible label of the previous button                         |
+| `nextMonthLabel`     | `string`                                        | `'Next month'`     | Accessible label of the next button                             |
+| `className`          | `string`                                        | -                  | Additional CSS classes for the root                             |

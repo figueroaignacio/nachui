@@ -1,0 +1,133 @@
+---
+title: Date Picker
+description: Un campo de formulario que abre un calendario en un popover, para un día o un rango.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="date-picker" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="date-picker" />
+
+El date picker está armado sobre `Calendar` y `Popover`, así que la CLI instala los dos junto con él.
+
+## Anatomía
+
+```tsx
+import { DatePicker } from '@/components/date-picker';
+```
+
+```tsx
+<DatePicker placeholder="Elegí un día" onValueChange={(date) => console.log(date)} />
+```
+
+Los valores son strings `YYYY-MM-DD`, igual que en `Calendar`.
+
+## Composición
+
+`DatePicker` es un solo componente. Renderiza un trigger con aspecto de campo y un popover con el calendario adentro:
+
+```tree
+DatePicker (data-slot="date-picker")
+├── date-picker-trigger
+│   └── date-picker-value
+└── date-picker-content
+    ├── date-picker-presets
+    │   └── date-picker-preset
+    ├── Calendar
+    └── date-picker-footer
+        ├── date-picker-today
+        └── date-picker-clear
+```
+
+## Variantes
+
+### Predeterminado (Default)
+
+El trigger muestra la fecha con `dateStyle: 'medium'` en el `locale` indicado. Al elegir un día el popover se cierra y el foco vuelve al trigger.
+
+<ComponentPreview component="date-picker" demo="default" />
+
+### Rango (Range)
+
+Con `mode="range"` el popover muestra dos meses y se cierra cuando se elige el fin. `presets` agrega una lista de atajos al lado del calendario y `showFooter` suma los botones Today y Clear.
+
+<ComponentPreview component="date-picker" demo="range" />
+
+El valor de un preset puede ser una función. Se ejecuta al hacer click en el preset, así los rangos relativos como "Next 14 days" siempre se calculan desde el día actual:
+
+```tsx
+<DatePicker
+  mode="range"
+  presets={[
+    { label: 'Next 14 days', value: () => ({ start: today(), end: addDays(today(), 13) }) },
+  ]}
+/>
+```
+
+El texto del rango usa `' - '` entre las dos fechas. Cambialo con `rangeSeparator`, por ejemplo `rangeSeparator=" al "`.
+
+## Formularios
+
+Definí `name` y el valor viaja con el formulario en inputs ocultos. Una fecha simple manda un valor. Un rango manda dos valores con el mismo nombre, primero el inicio:
+
+```ts
+const data = new FormData(form);
+data.get('deliveryDate');
+data.getAll('timeOff');
+```
+
+`required` bloquea el envío hasta que haya un valor, y resetear el formulario vuelve al `defaultValue`.
+
+## Teclado
+
+| Tecla                | Acción                                                           |
+| -------------------- | ---------------------------------------------------------------- |
+| `Enter`, `Espacio`   | En el trigger, abre el calendario                                |
+| Flechas              | Se mueve entre días, mirá [Calendar](/docs/elements/ui/calendar) |
+| `PageUp`, `PageDown` | Mes anterior o siguiente, con `Shift` un año                     |
+| `Enter`, `Espacio`   | Elige el día enfocado                                            |
+| `Escape`             | Cierra el popover y devuelve el foco al trigger                  |
+| `Tab`                | Recorre presets, calendario y footer, y después sale             |
+
+## Accesibilidad
+
+- El trigger tiene `aria-haspopup="dialog"` y `aria-expanded`. Nombralo con un `<label htmlFor>`, `aria-label` o `aria-labelledby`. Cuando tiene nombre, la fecha elegida queda como su descripción, así se lee después de la etiqueta.
+- El popover es un `dialog`. Dale un nombre con `dialogLabel`; si no, usa el nombre del trigger.
+- Al abrirse, el foco va directo al día seleccionado, o a hoy, o al primer día que se puede elegir.
+
+## Referencia de API
+
+### DatePicker
+
+También acepta estas props de [Calendar](/docs/elements/ui/calendar) y se las pasa: `min`, `max`, `isDateDisabled`, `locale`, `weekStartsOn`, `today`, `showOutsideDays`, `dir`, `previousMonthLabel` y `nextMonthLabel`. Cualquier otro atributo de `button`, como `id` o `aria-invalid`, va al trigger.
+
+| Prop                | Tipo                                           | Por defecto              | Descripción                                                |
+| ------------------- | ---------------------------------------------- | ------------------------ | ---------------------------------------------------------- |
+| `mode`              | `'single' \| 'range'`                          | `'single'`               | Elegir un día o un rango                                   |
+| `value`             | `PlainDate \| null` o `{ start, end } \| null` | -                        | Valor controlado                                           |
+| `defaultValue`      | `PlainDate \| null` o `{ start, end } \| null` | `null`                   | Valor inicial cuando no es controlado                      |
+| `onValueChange`     | `(value) => void`                              | -                        | Se llama con el valor nuevo, o con `null` después de Clear |
+| `placeholder`       | `string`                                       | -                        | Texto que se muestra mientras no hay valor                 |
+| `open`              | `boolean`                                      | -                        | Estado de apertura controlado                              |
+| `defaultOpen`       | `boolean`                                      | `false`                  | Estado de apertura inicial cuando no es controlado         |
+| `onOpenChange`      | `(open: boolean) => void`                      | -                        | Se llama cuando el popover se abre o se cierra             |
+| `closeOnSelect`     | `boolean`                                      | `true`                   | Cierra al elegir. En modo rango, al elegir el fin          |
+| `numberOfMonths`    | `number`                                       | `1`, o `2` en modo rango | Meses que se muestran en el popover                        |
+| `presets`           | `{ label: string; value: V \| (() => V) }[]`   | -                        | Atajos que se listan al lado del calendario                |
+| `showFooter`        | `boolean`                                      | `false`                  | Muestra los botones Today y Clear                          |
+| `todayLabel`        | `string`                                       | `'Today'`                | Texto del botón Today                                      |
+| `clearLabel`        | `string`                                       | `'Clear'`                | Texto del botón Clear                                      |
+| `rangeSeparator`    | `string`                                       | `' - '`                  | Va entre las dos fechas de un rango en el trigger          |
+| `dialogLabel`       | `string`                                       | -                        | Nombre accesible del popover                               |
+| `name`              | `string`                                       | -                        | Envía el valor con formularios mediante inputs ocultos     |
+| `required`          | `boolean`                                      | -                        | Bloquea el envío del formulario hasta que haya un valor    |
+| `disabled`          | `boolean`                                      | `false`                  | Deshabilita el trigger                                     |
+| `size`              | `'sm' \| 'default' \| 'lg'`                    | `'default'`              | Alto y padding del trigger                                 |
+| `calendarClassName` | `string`                                       | -                        | Clases CSS adicionales para el calendario                  |
+| `className`         | `string`                                       | -                        | Clases CSS adicionales para el trigger                     |

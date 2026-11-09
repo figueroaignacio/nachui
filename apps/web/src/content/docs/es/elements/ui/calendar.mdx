@@ -1,0 +1,116 @@
+---
+title: Calendar
+description: Una grilla mensual para elegir un día o un rango, con soporte completo de teclado y sin librerías de fechas.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="calendar" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="calendar" />
+
+## Anatomía
+
+```tsx
+import { Calendar } from '@/components/calendar';
+```
+
+```tsx
+<Calendar defaultValue="2026-11-09" onValueChange={(date) => console.log(date)} />
+```
+
+Las fechas son strings simples con formato `YYYY-MM-DD`, nunca objetos `Date`. Todos los cálculos se hacen sobre ese string en UTC con `lib/date`, así un día nunca se corre por la zona horaria del servidor o del navegador.
+
+## Composición
+
+`Calendar` es un solo componente. Renderiza esta estructura y cada parte tiene un `data-slot` que podés usar desde CSS:
+
+```tree
+Calendar (data-slot="calendar")
+└── calendar-months
+    └── calendar-month
+        ├── calendar-header
+        │   ├── calendar-previous
+        │   ├── calendar-title
+        │   └── calendar-next
+        └── calendar-grid
+            ├── calendar-weekday
+            └── calendar-cell
+                └── calendar-day
+```
+
+Cada botón de día expone su estado con atributos data: `data-selected`, `data-today`, `data-outside`, `data-disabled`, `data-range-start`, `data-range-end` y `data-range-middle`.
+
+## Variantes
+
+### Predeterminado (Default)
+
+Los nombres de meses y días salen de `Intl`. Pasá `locale` para fijar un idioma; si no, se usa el del navegador. El primer día de la semana también sigue al locale, salvo que definas `weekStartsOn`.
+
+<ComponentPreview component="calendar" demo="default" />
+
+### Rango (Range)
+
+Con `mode="range"` el primer click marca el inicio y el segundo marca el fin. Si el segundo día es anterior, se invierten. Mientras falta el fin, pasar el mouse o el foco por un día muestra una vista previa del rango. `onValueChange` se llama una sola vez, con el `{ start, end }` completo.
+
+<ComponentPreview component="calendar" demo="range" />
+
+### Fechas deshabilitadas (Disabled Dates)
+
+Usá `min` y `max` para los límites fijos e `isDateDisabled` para todo lo demás. Los días deshabilitados igual pueden recibir el foco, así quien usa el teclado no pierde su lugar, pero no se pueden elegir.
+
+<ComponentPreview component="calendar" demo="disabled-dates" />
+
+## Teclado
+
+| Tecla                          | Acción                                                     |
+| ------------------------------ | ---------------------------------------------------------- |
+| `Tab`                          | Entra a la grilla y cae en un único día                    |
+| `ArrowLeft`, `ArrowRight`      | Día anterior o siguiente, invertido en derecha a izquierda |
+| `ArrowUp`, `ArrowDown`         | El mismo día de la semana anterior o siguiente             |
+| `PageUp`, `PageDown`           | El mismo día del mes anterior o siguiente                  |
+| `Shift` + `PageUp`, `PageDown` | El mismo día del año anterior o siguiente                  |
+| `Home`, `End`                  | Primer o último día de la semana                           |
+| `Enter`, `Espacio`             | Elige el día enfocado                                      |
+
+Si el foco pasa a un día de otro mes, el calendario cambia al mes visible.
+
+## Accesibilidad
+
+- Cada mes es un `grid` nombrado por su título. El título es una región `aria-live="polite"`, así que el cambio de mes se anuncia.
+- Los encabezados de columna muestran el día abreviado y llevan el nombre completo en `abbr`.
+- Los botones de día tienen como etiqueta la fecha completa, por ejemplo "lunes, 9 de noviembre de 2026". Hoy lleva `aria-current="date"` y las celdas seleccionadas tienen `aria-selected`.
+- Hay un solo día en el orden de tabulación: el seleccionado, después hoy y si no el primer día habilitado del mes.
+- Sin la prop `today`, el día de hoy se calcula en el cliente después de la hidratación, así el servidor nunca renderiza una fecha que podría estar mal. Pasá `today` y `locale` cuando necesites exactamente el mismo markup en los dos lados.
+
+## Referencia de API
+
+### Calendar
+
+También acepta todos los atributos de `div`.
+
+| Prop                 | Tipo                                           | Por defecto        | Descripción                                                   |
+| -------------------- | ---------------------------------------------- | ------------------ | ------------------------------------------------------------- |
+| `mode`               | `'single' \| 'range'`                          | `'single'`         | Elegir un día o un rango                                      |
+| `value`              | `PlainDate \| null` o `{ start, end } \| null` | -                  | Valor controlado, su forma depende de `mode`                  |
+| `defaultValue`       | `PlainDate \| null` o `{ start, end } \| null` | `null`             | Valor inicial cuando no es controlado                         |
+| `onValueChange`      | `(value) => void`                              | -                  | Se llama con el día elegido o con el rango completo           |
+| `month`              | `PlainDate`                                    | -                  | Mes visible controlado, sirve cualquier día del mes           |
+| `defaultMonth`       | `PlainDate`                                    | -                  | Mes inicial. Si falta, usa el valor y después hoy             |
+| `onMonthChange`      | `(month: PlainDate) => void`                   | -                  | Se llama con el primer día del mes nuevo                      |
+| `numberOfMonths`     | `number`                                       | `1`                | Meses lado a lado. Con más de 1 se ocultan los días de afuera |
+| `min`, `max`         | `PlainDate`                                    | -                  | Primer y último día que se puede elegir o alcanzar            |
+| `isDateDisabled`     | `(date: PlainDate) => boolean`                 | -                  | Deshabilita cualquier otro día                                |
+| `locale`             | `string`                                       | el del navegador   | Locale para nombres, números y primer día de la semana        |
+| `weekStartsOn`       | `0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6`              | según `locale`     | Primera columna de la grilla, 0 es domingo                    |
+| `today`              | `PlainDate`                                    | la fecha actual    | Reemplaza el día de hoy, útil en tests y render en servidor   |
+| `showOutsideDays`    | `boolean`                                      | `true`             | Muestra los días del mes anterior y del siguiente             |
+| `dir`                | `'ltr' \| 'rtl'`                               | heredado           | Dirección del texto, también invierte las flechas             |
+| `previousMonthLabel` | `string`                                       | `'Previous month'` | Etiqueta accesible del botón anterior                         |
+| `nextMonthLabel`     | `string`                                       | `'Next month'`     | Etiqueta accesible del botón siguiente                        |
+| `className`          | `string`                                       | -                  | Clases CSS adicionales para la raíz                           |
