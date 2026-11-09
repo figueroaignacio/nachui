@@ -1,3 +1,4 @@
+/* global console, process */
 /**
  * Fails the build when the navigation links to something that does not exist.
  *
@@ -180,9 +181,41 @@ function collectDocsWithoutPublishedFlag() {
   return missing;
 }
 
+/**
+ * A frontmatter value with an unquoted ": " is not valid YAML. content-collections
+ * then drops the page without a word, and its URL turns into a 404 while every
+ * nav link still points at the file. That is how /docs/concepts/theming vanished
+ * after "NachUI \u2014 semantic tokens" was rewritten as "NachUI: semantic tokens".
+ */
+function collectUnquotedColons(problems) {
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(full);
+        continue;
+      }
+      if (!entry.name.endsWith('.mdx')) continue;
+      for (const line of readFrontmatter(full).split('\n')) {
+        const match = /^([A-Za-z_]+):\s+(.*)$/.exec(line);
+        if (!match) continue;
+        const value = match[2].trim();
+        if (/^['"[{|>]/.test(value)) continue;
+        if (/:\s/.test(value)) {
+          problems.push(
+            `${full.slice(APP_ROOT.length + 1)}: "${match[1]}" has an unquoted ": ", which breaks the YAML and drops the page. Wrap the value in quotes.`,
+          );
+        }
+      }
+    }
+  };
+  walk(DOCS_ROOT);
+}
+
 function main() {
   const brickSlugs = readBrickSlugs();
   const problems = [];
+  collectUnquotedColons(problems);
   const unchecked = [];
   let checked = 0;
 
