@@ -52,7 +52,7 @@ describe('Input', () => {
   it('renders description and error with proper aria-describedby', () => {
     render(<Input id="test" description="Helper text" error="Error text" />);
     const input = screen.getByRole('textbox');
-    expect(input).toHaveAttribute('aria-describedby', 'test-description test-error');
+    expect(input).toHaveAttribute('aria-describedby', 'test-input-description test-input-error');
     expect(screen.getByText('Helper text')).toBeInTheDocument();
     expect(screen.getByText('Error text')).toBeInTheDocument();
   });
@@ -84,14 +84,14 @@ describe('Input', () => {
 
   it('keeps the error live region mounted before the error arrives', async () => {
     const { container, rerender } = render(<Input id="field" label="Email" />);
-    const region = container.querySelector('#field-error');
+    const region = container.querySelector('#field-input-error');
     expect(region).toHaveAttribute('aria-live', 'polite');
     expect(region).toBeEmptyDOMElement();
     expect(region).toHaveClass('sr-only');
     expect(screen.getByLabelText('Email')).not.toHaveAttribute('aria-describedby');
 
     rerender(<Input id="field" label="Email" error="Enter a valid email" />);
-    expect(container.querySelector('#field-error')).toBe(region);
+    expect(container.querySelector('#field-input-error')).toBe(region);
     expect(region).toHaveTextContent('Enter a valid email');
     expect(region).toHaveClass('text-destructive-text');
     expect(screen.getByLabelText('Email')).toHaveAccessibleDescription('Enter a valid email');

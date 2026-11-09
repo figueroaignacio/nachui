@@ -80,8 +80,8 @@ const InputRoot = ({
 }: InputProps & { ref?: React.Ref<HTMLInputElement> }) => {
   const generatedId = React.useId();
   const inputId = id ?? generatedId;
-  const errorId = `${inputId}-error`;
-  const descriptionId = `${inputId}-description`;
+  const errorId = `${inputId}-input-error`;
+  const descriptionId = `${inputId}-input-description`;
 
   const describedBy =
     [description ? descriptionId : undefined, error ? errorId : undefined, ariaDescribedBy]
