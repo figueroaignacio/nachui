@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeFloatingPosition } from './floating';
+import { computeFloatingPosition, isAnchorHidden } from './floating';
 
 const viewport = { width: 400, height: 800 };
 const size = { width: 200, height: 100 };
@@ -59,5 +59,19 @@ describe('computeFloatingPosition', () => {
     });
 
     expect(position.availableHeight).toBe(800 - 132 - 8 - 8);
+  });
+});
+
+describe('isAnchorHidden', () => {
+  const viewport = { width: 800, height: 600 };
+
+  it('is false while any part of the anchor is on screen', () => {
+    expect(isAnchorHidden({ top: -10, bottom: 5, left: 10, right: 50 }, viewport)).toBe(false);
+  });
+
+  it('is true once the anchor scrolls out of any edge', () => {
+    expect(isAnchorHidden({ top: -40, bottom: -2, left: 10, right: 50 }, viewport)).toBe(true);
+    expect(isAnchorHidden({ top: 610, bottom: 640, left: 10, right: 50 }, viewport)).toBe(true);
+    expect(isAnchorHidden({ top: 10, bottom: 40, left: 820, right: 900 }, viewport)).toBe(true);
   });
 });

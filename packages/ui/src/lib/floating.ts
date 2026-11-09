@@ -30,6 +30,24 @@ interface FloatingPosition {
   availableHeight: number;
 }
 
+interface MeasuredPosition extends FloatingPosition {
+  anchorWidth: number;
+  anchorHeight: number;
+  anchorHidden: boolean;
+}
+
+export function isAnchorHidden(
+  anchor: Pick<DOMRect, 'top' | 'left' | 'right' | 'bottom'>,
+  viewport: { width: number; height: number },
+) {
+  return (
+    anchor.bottom <= 0 ||
+    anchor.right <= 0 ||
+    anchor.top >= viewport.height ||
+    anchor.left >= viewport.width
+  );
+}
+
 const OPPOSITE: Record<FloatingSide, FloatingSide> = {
   top: 'bottom',
   bottom: 'top',
@@ -120,7 +138,7 @@ export function useFloating({
   alignOffset = 0,
   padding = 8,
 }: UseFloatingOptions) {
-  const [position, setPosition] = React.useState<FloatingPosition | null>(null);
+  const [position, setPosition] = React.useState<MeasuredPosition | null>(null);
   const pointX = point?.x;
   const pointY = point?.y;
 
@@ -138,19 +156,28 @@ export function useFloating({
           ? { top: pointY, bottom: pointY, left: pointX, right: pointX, width: 0, height: 0 }
           : anchorRef?.current?.getBoundingClientRect();
       if (!anchor) return;
-      const next = computeFloatingPosition(
-        anchor,
-        { width: floating.offsetWidth, height: floating.offsetHeight },
-        viewportSize(),
-        { side, align, sideOffset, alignOffset, padding },
-      );
+      const viewport = viewportSize();
+      const next: MeasuredPosition = {
+        ...computeFloatingPosition(
+          anchor,
+          { width: floating.offsetWidth, height: floating.offsetHeight },
+          viewport,
+          { side, align, sideOffset, alignOffset, padding },
+        ),
+        anchorWidth: Math.round(anchor.width),
+        anchorHeight: Math.round(anchor.height),
+        anchorHidden: isAnchorHidden(anchor, viewport),
+      };
       setPosition((previous) =>
         previous &&
         previous.top === next.top &&
         previous.left === next.left &&
         previous.side === next.side &&
         previous.availableHeight === next.availableHeight &&
-        previous.availableWidth === next.availableWidth
+        previous.availableWidth === next.availableWidth &&
+        previous.anchorWidth === next.anchorWidth &&
+        previous.anchorHeight === next.anchorHeight &&
+        previous.anchorHidden === next.anchorHidden
           ? previous
           : next,
       );
@@ -185,11 +212,18 @@ export function useFloating({
         visibility: position ? undefined : 'hidden',
         '--available-width': position ? `${position.availableWidth}px` : undefined,
         '--available-height': position ? `${position.availableHeight}px` : undefined,
+        '--anchor-width': position ? `${position.anchorWidth}px` : undefined,
+        '--anchor-height': position ? `${position.anchorHeight}px` : undefined,
       }) as React.CSSProperties,
     [position],
   );
 
-  return { style, side: position?.side ?? side };
+  return {
+    style,
+    side: position?.side ?? side,
+    anchorHidden: position?.anchorHidden ?? false,
+    anchorWidth: position?.anchorWidth,
+  };
 }
 
 export function FloatingPortal({ children }: { children: React.ReactNode }) {
