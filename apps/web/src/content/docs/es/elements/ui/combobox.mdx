@@ -1,0 +1,246 @@
+---
+title: Combobox
+description: Un campo de texto con una lista de opciones filtrada. Selección simple o múltiple, elementos creables y búsqueda asíncrona.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="combobox" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="combobox" />
+
+## Anatomía
+
+```tsx
+import { Combobox } from '@/components/combobox';
+```
+
+```tsx
+<Combobox>
+  <Combobox.Input placeholder="Buscar framework" />
+  <Combobox.Content>
+    <Combobox.Empty>Sin resultados</Combobox.Empty>
+    <Combobox.Item value="next">Next.js</Combobox.Item>
+    <Combobox.Item value="astro">Astro</Combobox.Item>
+  </Combobox.Content>
+</Combobox>
+```
+
+## Composición
+
+Utiliza la siguiente composición para construir un `Combobox`:
+
+```tree
+Combobox
+├── Combobox.Input
+│   └── Combobox.Clear
+└── Combobox.Content
+    ├── Combobox.Empty
+    ├── Combobox.Group
+    │   ├── Combobox.Label
+    │   └── Combobox.Item
+    ├── Combobox.Separator
+    └── Combobox.Create
+```
+
+`Combobox.Input` renderiza el campo entero: el input de texto, los chips en modo múltiple, lo que le pases como children (por ejemplo `Combobox.Clear`) y el chevron. Cada elemento registra su texto y la lista se filtra con eso mientras escribís. El filtro por defecto busca en cualquier parte del texto e ignora mayúsculas y acentos, así que `cafe` encuentra "Café". Pasá el tuyo con `filter={(itemText, query) => boolean}`.
+
+Los grupos sin elementos que coincidan se ocultan solos, los separadores se ocultan mientras hay una búsqueda y `Combobox.Empty` aparece cuando nada coincide y no hay nada para crear.
+
+## Variantes
+
+### Predeterminado (Default)
+
+En modo simple el input muestra la etiqueta del elemento elegido. Escribir filtra la lista y, si salís sin elegir, el texto vuelve a la selección actual. Borrá el texto y salí para limpiar el valor.
+
+<ComponentPreview component="combobox" demo="default" />
+
+### Múltiple (Multiple)
+
+Pasá `multiple` y el valor pasa a ser un `string[]`. Los elementos elegidos aparecen como chips dentro del campo, la lista queda abierta después de cada elección y el texto se limpia para que sigas. Para quitar uno, hacé click de nuevo en el elemento, usá el botón del chip o apretá `Backspace` con el input vacío. Si queda texto sin elegir, se limpia cuando el input pierde el foco.
+
+<ComponentPreview component="combobox" demo="multiple" />
+
+### Creable (Creatable)
+
+`Combobox.Create` aparece cuando hay texto y ningún elemento coincide exactamente. Llama a `onCreate` con el texto sin espacios de más. Devolvé el valor del elemento nuevo y queda seleccionado en el momento.
+
+<ComponentPreview component="combobox" demo="creatable" />
+
+```tsx
+<Combobox.Create
+  onCreate={(name) => {
+    const value = toSlug(name);
+    setLabels((labels) => [...labels, { value, label: name }]);
+    return value;
+  }}
+>
+  {(query) => `Crear etiqueta "${query}"`}
+</Combobox.Create>
+```
+
+### Asíncrono (Async)
+
+Cuando los resultados vienen de un servidor, filtrá de tu lado. Poné `filter={false}` para que el combobox muestre todos los elementos que renderices, controlá `inputValue` para saber qué buscar y pasá `loading` mientras corre la request. La lista muestra una fila con spinner y `loadingLabel`, y cuando llegan los resultados una región `aria-live="polite"` anuncia cuántos hay, medio segundo después del último cambio, así los lectores de pantalla no se saturan con cada tecla.
+
+<ComponentPreview component="combobox" demo="async" />
+
+```tsx
+function AirportSearch() {
+  const [query, setQuery] = React.useState('');
+  const [results, setResults] = React.useState<Airport[]>([]);
+  const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    const controller = new AbortController();
+    fetch(`/api/airports?q=${encodeURIComponent(query)}`, { signal: controller.signal })
+      .then((response) => response.json())
+      .then((data: Airport[]) => {
+        setResults(data);
+        setLoading(false);
+      })
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, [query]);
+
+  return (
+    <Combobox
+      filter={false}
+      loading={loading}
+      loadingLabel="Buscando..."
+      resultsLabel={(count) => (count === 1 ? '1 resultado' : `${count} resultados`)}
+      inputValue={query}
+      onInputValueChange={(next) => {
+        setQuery(next);
+        setLoading(true);
+      }}
+    >
+      <Combobox.Input aria-label="Destino" placeholder="Ciudad o código de aeropuerto" />
+      <Combobox.Content>
+        <Combobox.Empty>No encontramos aeropuertos.</Combobox.Empty>
+        {results.map((airport) => (
+          <Combobox.Item key={airport.code} value={airport.code} textValue={airport.city}>
+            {airport.city}, {airport.country}
+          </Combobox.Item>
+        ))}
+      </Combobox.Content>
+    </Combobox>
+  );
+}
+```
+
+Las etiquetas de los elementos elegidos se recuerdan, así que un chip o el input siguen mostrando el texto correcto aunque ese elemento ya no esté en los resultados.
+
+## Teclado
+
+El foco nunca sale del input, así que estas teclas funcionan mientras escribís.
+
+| Tecla               | Acción                                                                               |
+| ------------------- | ------------------------------------------------------------------------------------ |
+| Escribir            | Abre la lista y la filtra                                                            |
+| `ArrowDown`         | Abre la lista, o pasa a la opción siguiente y vuelve al principio al llegar al final |
+| `ArrowUp`           | Abre la lista en la última opción, o pasa a la anterior                              |
+| `Alt` + `ArrowDown` | Abre la lista sin mover la opción activa                                             |
+| `Alt` + `ArrowUp`   | Cierra la lista                                                                      |
+| `Enter`             | Elige la opción activa. Si `Create` es la única opción, crea el texto                |
+| `Escape`            | Cierra la lista. Con la lista cerrada, limpia el texto, y el valor en modo simple    |
+| `Home`, `End`       | Mueven el cursor del texto. La lista queda donde está                                |
+| `Backspace`         | En modo múltiple, quita el último chip cuando el input está vacío                    |
+| `Tab`               | Cierra la lista y sigue al próximo elemento                                          |
+
+En modo simple, las flechas arrancan en la opción seleccionada cuando todavía no hay ninguna activa.
+
+## Accesibilidad
+
+El combobox sigue el patrón combobox de WAI-ARIA con un listbox emergente.
+
+- **El foco queda en el input.** La persona está escribiendo, y mover el foco a la lista le sacaría el cursor y rompería la escritura, la selección de texto y los métodos de entrada (IME). El input conserva el foco y señala la opción activa con `aria-activedescendant`, que los lectores de pantalla anuncian como si el foco se hubiera movido. Las opciones cancelan el `mousedown`, así que hacer click en una tampoco le saca el foco al input.
+- El input tiene `role="combobox"`, `aria-autocomplete="list"`, `aria-expanded` y, mientras está abierto, `aria-controls`. Cada opción tiene un id estable armado con `useId` y su valor, más `aria-selected`. En modo múltiple el listbox lleva `aria-multiselectable`.
+- Nombrá el input con `aria-label`, `aria-labelledby` o un `<label htmlFor>` que apunte a su `id`. El listbox usa ese mismo nombre.
+- Los botones para quitar chips se anuncian como "Remove" más la etiqueta y quedan fuera del orden de tabulación, porque `Backspace` cubre el caso del teclado. Cambiá el texto con `removeLabel` en `Combobox.Input`.
+- Una región `aria-live="polite"` anuncia la cantidad de resultados. Traducila con `resultsLabel` y `loadingLabel`.
+- `Combobox.Empty` y la fila de carga quedan fuera del listbox, así la lista solo contiene opciones y grupos.
+
+## Referencia de API
+
+### Combobox
+
+| Prop                 | Tipo                                                      | Por defecto                         | Descripción                                                                                       |
+| -------------------- | --------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `multiple`           | `boolean`                                                 | `false`                             | Permite elegir varios elementos. El valor pasa a ser un `string[]`                                |
+| `value`              | `string \| string[]`                                      | -                                   | Valor controlado. Es un `string[]` cuando hay `multiple`                                          |
+| `defaultValue`       | `string \| string[]`                                      | `''` o `[]`                         | Valor inicial cuando no es controlado                                                             |
+| `onValueChange`      | `(value: string \| string[]) => void`                     | -                                   | Se llama cuando cambia el valor, con el mismo tipo que `value`                                    |
+| `inputValue`         | `string`                                                  | -                                   | Texto controlado del input                                                                        |
+| `defaultInputValue`  | `string`                                                  | `''`                                | Texto inicial cuando no es controlado                                                             |
+| `onInputValueChange` | `(inputValue: string) => void`                            | -                                   | Se llama cuando cambia el texto, al escribir o después de elegir                                  |
+| `open`               | `boolean`                                                 | -                                   | Estado de apertura controlado                                                                     |
+| `defaultOpen`        | `boolean`                                                 | `false`                             | Estado de apertura inicial cuando no es controlado                                                |
+| `onOpenChange`       | `(open: boolean) => void`                                 | -                                   | Se llama cuando cambia el estado de apertura                                                      |
+| `filter`             | `((itemText: string, query: string) => boolean) \| false` | Contiene, sin mayúsculas ni acentos | Decide qué elementos coinciden. `false` muestra todos los elementos renderizados                  |
+| `openOnFocus`        | `boolean`                                                 | `true`                              | Abre la lista cuando el input recibe foco o un click                                              |
+| `loading`            | `boolean`                                                 | `false`                             | Muestra una fila con spinner arriba de la lista                                                   |
+| `loadingLabel`       | `string`                                                  | `'Searching...'`                    | Texto de la fila de carga, que también se anuncia                                                 |
+| `resultsLabel`       | `(count: number) => string`                               | -                                   | Texto que se anuncia con la cantidad de resultados                                                |
+| `disabled`           | `boolean`                                                 | `false`                             | Deshabilita el input y los chips                                                                  |
+| `name`               | `string`                                                  | -                                   | Renderiza inputs ocultos para que el valor se envíe con formularios, uno por elemento en múltiple |
+| `required`           | `boolean`                                                 | -                                   | Bloquea el envío del formulario hasta que se elija un valor                                       |
+| `form`               | `string`                                                  | -                                   | Id de un formulario fuera del combobox al que pertenece el valor                                  |
+| `className`          | `string`                                                  | -                                   | Clases CSS adicionales para el contenedor                                                         |
+
+### Combobox.Input
+
+Acepta todos los atributos de `input`, así que `id`, `aria-label`, `aria-invalid` y `autoFocus` van al input de texto.
+
+| Prop          | Tipo                        | Por defecto  | Descripción                                                               |
+| ------------- | --------------------------- | ------------ | ------------------------------------------------------------------------- |
+| `placeholder` | `string`                    | -            | Se muestra cuando está vacío. En modo múltiple se oculta cuando hay chips |
+| `removeLabel` | `(label: string) => string` | `Remove ...` | Nombre accesible de cada botón para quitar un chip                        |
+| `children`    | `ReactNode`                 | -            | Se renderiza al final del campo, antes del chevron                        |
+| `className`   | `string`                    | -            | Clases CSS adicionales para el campo                                      |
+
+### Combobox.Content
+
+| Prop         | Tipo     | Por defecto | Descripción                          |
+| ------------ | -------- | ----------- | ------------------------------------ |
+| `sideOffset` | `number` | `4`         | Separación entre el campo y la lista |
+| `className`  | `string` | -           | Clases CSS adicionales               |
+
+### Combobox.Item
+
+La opción activa recibe `data-highlighted`, así podés darle estilo además del `bg-muted` por defecto.
+
+| Prop        | Tipo      | Por defecto | Descripción                                                                         |
+| ----------- | --------- | ----------- | ----------------------------------------------------------------------------------- |
+| `value`     | `string`  | -           | Valor que se informa cuando se elige el elemento                                    |
+| `textValue` | `string`  | -           | Texto para filtrar, para el input y para los chips cuando los children no son texto |
+| `disabled`  | `boolean` | `false`     | Lo salta en la navegación por teclado y bloquea elegirlo                            |
+| `className` | `string`  | -           | Clases CSS adicionales                                                              |
+
+### Combobox.Create
+
+| Prop        | Tipo                                          | Por defecto        | Descripción                                                     |
+| ----------- | --------------------------------------------- | ------------------ | --------------------------------------------------------------- |
+| `onCreate`  | `(query: string) => string \| void`           | -                  | Se llama con el texto recortado. Devolvé un valor para elegirlo |
+| `children`  | `ReactNode \| ((query: string) => ReactNode)` | `Create "<query>"` | Texto de la opción                                              |
+| `className` | `string`                                      | -                  | Clases CSS adicionales                                          |
+
+### Combobox.Clear
+
+Solo se renderiza cuando hay texto o un valor para limpiar.
+
+| Prop        | Tipo     | Por defecto | Descripción                |
+| ----------- | -------- | ----------- | -------------------------- |
+| `label`     | `string` | `'Clear'`   | Nombre accesible del botón |
+| `className` | `string` | -           | Clases CSS adicionales     |
+
+### Combobox.Empty, Combobox.Group, Combobox.Label, Combobox.Separator
+
+| Prop        | Tipo     | Por defecto | Descripción            |
+| ----------- | -------- | ----------- | ---------------------- |
+| `className` | `string` | -           | Clases CSS adicionales |

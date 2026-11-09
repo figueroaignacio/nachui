@@ -1,0 +1,244 @@
+---
+title: Combobox
+description: A text input with a filtered list of options. Single or multiple picks, creatable items and async search.
+published: true
+date: 2026-11-09
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="combobox" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="combobox" />
+
+## Anatomy
+
+```tsx
+import { Combobox } from '@/components/combobox';
+```
+
+```tsx
+<Combobox>
+  <Combobox.Input placeholder="Search framework" />
+  <Combobox.Content>
+    <Combobox.Empty>No results</Combobox.Empty>
+    <Combobox.Item value="next">Next.js</Combobox.Item>
+    <Combobox.Item value="astro">Astro</Combobox.Item>
+  </Combobox.Content>
+</Combobox>
+```
+
+## Composition
+
+Use the following composition to build a `Combobox`:
+
+```tree
+Combobox
+├── Combobox.Input
+│   └── Combobox.Clear
+└── Combobox.Content
+    ├── Combobox.Empty
+    ├── Combobox.Group
+    │   ├── Combobox.Label
+    │   └── Combobox.Item
+    ├── Combobox.Separator
+    └── Combobox.Create
+```
+
+`Combobox.Input` renders the whole field: the text input, the chips in multiple mode, anything you pass as children (like `Combobox.Clear`) and the chevron. Each item registers its text, and the list filters on it as you type. The default filter matches anywhere in the text and ignores case and accents, so `cafe` finds "Café". Pass your own with `filter={(itemText, query) => boolean}`.
+
+Groups with no matching items hide themselves, separators hide while there is a query, and `Combobox.Empty` shows up when nothing matches and there is nothing to create.
+
+## Variants
+
+### Default
+
+In single mode the input shows the label of the picked item. Typing filters the list, and if you leave without picking, the text goes back to the current selection. Erase the text and leave to clear the value.
+
+<ComponentPreview component="combobox" demo="default" />
+
+### Multiple
+
+Pass `multiple` and the value becomes a `string[]`. Picked items show up as chips inside the field, the list stays open after each pick and the text clears so you can keep going. Click an item again to remove it, use the chip button, or press `Backspace` on an empty input. Leftover text clears when the input loses focus.
+
+<ComponentPreview component="combobox" demo="multiple" />
+
+### Creatable
+
+`Combobox.Create` shows up when there is text and no item matches it exactly. It calls `onCreate` with the trimmed text. Return the value of the new item and it gets selected right away.
+
+<ComponentPreview component="combobox" demo="creatable" />
+
+```tsx
+<Combobox.Create
+  onCreate={(name) => {
+    const value = toSlug(name);
+    setLabels((labels) => [...labels, { value, label: name }]);
+    return value;
+  }}
+>
+  {(query) => `Create label "${query}"`}
+</Combobox.Create>
+```
+
+### Async
+
+When the results come from a server, filter on your side. Set `filter={false}` so the combobox shows every item you render, control `inputValue` to know what to search for, and pass `loading` while the request runs. The list shows a spinner row with `loadingLabel`, and once the results land a polite live region announces how many there are, half a second after the last change so screen readers are not flooded on every keystroke.
+
+<ComponentPreview component="combobox" demo="async" />
+
+```tsx
+function AirportSearch() {
+  const [query, setQuery] = React.useState('');
+  const [results, setResults] = React.useState<Airport[]>([]);
+  const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    const controller = new AbortController();
+    fetch(`/api/airports?q=${encodeURIComponent(query)}`, { signal: controller.signal })
+      .then((response) => response.json())
+      .then((data: Airport[]) => {
+        setResults(data);
+        setLoading(false);
+      })
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, [query]);
+
+  return (
+    <Combobox
+      filter={false}
+      loading={loading}
+      inputValue={query}
+      onInputValueChange={(next) => {
+        setQuery(next);
+        setLoading(true);
+      }}
+    >
+      <Combobox.Input aria-label="Destination" placeholder="City or airport code" />
+      <Combobox.Content>
+        <Combobox.Empty>No airports found.</Combobox.Empty>
+        {results.map((airport) => (
+          <Combobox.Item key={airport.code} value={airport.code} textValue={airport.city}>
+            {airport.city}, {airport.country}
+          </Combobox.Item>
+        ))}
+      </Combobox.Content>
+    </Combobox>
+  );
+}
+```
+
+Labels of selected items are remembered, so a chip or the input keeps showing the right text after that item leaves the results.
+
+## Keyboard
+
+Focus never leaves the input, so these keys work while you type.
+
+| Key                 | Action                                                                               |
+| ------------------- | ------------------------------------------------------------------------------------ |
+| Typing              | Opens the list and filters it                                                        |
+| `ArrowDown`         | Opens the list, or moves to the next option and wraps at the end                     |
+| `ArrowUp`           | Opens the list at the last option, or moves to the previous one                      |
+| `Alt` + `ArrowDown` | Opens the list without moving the active option                                      |
+| `Alt` + `ArrowUp`   | Closes the list                                                                      |
+| `Enter`             | Picks the active option. When `Create` is the only option, creates the text          |
+| `Escape`            | Closes the list. With the list closed, clears the text, and the value in single mode |
+| `Home`, `End`       | Move the text cursor. The list stays where it is                                     |
+| `Backspace`         | In multiple mode, removes the last chip when the input is empty                      |
+| `Tab`               | Closes the list and moves on                                                         |
+
+In single mode the arrows start on the selected option when nothing is active yet.
+
+## Accessibility
+
+The combobox follows the WAI-ARIA combobox pattern with a listbox popup.
+
+- **Focus stays in the input.** The person is typing, so moving focus into the list would take their caret away and break typing, selection and IME input. The input keeps focus and points at the active option with `aria-activedescendant`, which screen readers announce as if focus had moved. Options cancel `mousedown`, so clicking one never blurs the input either.
+- The input has `role="combobox"`, `aria-autocomplete="list"`, `aria-expanded` and, while open, `aria-controls`. Every option has a stable id built from `useId` and its value, plus `aria-selected`. In multiple mode the listbox has `aria-multiselectable`.
+- Name the input with `aria-label`, `aria-labelledby` or a `<label htmlFor>` pointing at its `id`. The listbox reuses that name.
+- Chip remove buttons are labelled "Remove" plus the item label and stay out of the tab order, since `Backspace` covers the keyboard case. Change the text with `removeLabel` on `Combobox.Input`.
+- A polite live region announces the number of results. Translate it with `resultsLabel` and `loadingLabel`.
+- `Combobox.Empty` and the loading row sit outside the listbox, so the list only ever contains options and groups.
+
+## API Reference
+
+### Combobox
+
+| Prop                 | Type                                                      | Default                             | Description                                                                     |
+| -------------------- | --------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------- |
+| `multiple`           | `boolean`                                                 | `false`                             | Lets the user pick several items. The value becomes a `string[]`                |
+| `value`              | `string \| string[]`                                      | -                                   | Controlled value. A `string[]` when `multiple` is set                           |
+| `defaultValue`       | `string \| string[]`                                      | `''` or `[]`                        | Initial value when uncontrolled                                                 |
+| `onValueChange`      | `(value: string \| string[]) => void`                     | -                                   | Called when the value changes, with the same type as `value`                    |
+| `inputValue`         | `string`                                                  | -                                   | Controlled text of the input                                                    |
+| `defaultInputValue`  | `string`                                                  | `''`                                | Initial text when uncontrolled                                                  |
+| `onInputValueChange` | `(inputValue: string) => void`                            | -                                   | Called when the text changes, by typing or after a pick                         |
+| `open`               | `boolean`                                                 | -                                   | Controlled open state                                                           |
+| `defaultOpen`        | `boolean`                                                 | `false`                             | Initial open state when uncontrolled                                            |
+| `onOpenChange`       | `(open: boolean) => void`                                 | -                                   | Called when the open state changes                                              |
+| `filter`             | `((itemText: string, query: string) => boolean) \| false` | Contains, ignoring case and accents | Decides which items match. `false` shows every rendered item                    |
+| `openOnFocus`        | `boolean`                                                 | `true`                              | Opens the list when the input gets focus or a click                             |
+| `loading`            | `boolean`                                                 | `false`                             | Shows a spinner row at the top of the list                                      |
+| `loadingLabel`       | `string`                                                  | `'Searching...'`                    | Text of the loading row, also announced                                         |
+| `resultsLabel`       | `(count: number) => string`                               | -                                   | Text announced with the number of results                                       |
+| `disabled`           | `boolean`                                                 | `false`                             | Disables the input and the chips                                                |
+| `name`               | `string`                                                  | -                                   | Renders hidden inputs so the value submits with forms, one per item in multiple |
+| `required`           | `boolean`                                                 | -                                   | Blocks form submission until a value is picked                                  |
+| `form`               | `string`                                                  | -                                   | Id of a form outside the combobox that the value belongs to                     |
+| `className`          | `string`                                                  | -                                   | Additional CSS classes for the wrapper                                          |
+
+### Combobox.Input
+
+Accepts every `input` attribute, so `id`, `aria-label`, `aria-invalid` and `autoFocus` go to the text input.
+
+| Prop          | Type                        | Default      | Description                                                     |
+| ------------- | --------------------------- | ------------ | --------------------------------------------------------------- |
+| `placeholder` | `string`                    | -            | Shown while empty. Hidden in multiple mode once there are chips |
+| `removeLabel` | `(label: string) => string` | `Remove ...` | Accessible name of each chip remove button                      |
+| `children`    | `ReactNode`                 | -            | Rendered at the end of the field, before the chevron            |
+| `className`   | `string`                    | -            | Additional CSS classes for the field                            |
+
+### Combobox.Content
+
+| Prop         | Type     | Default | Description                        |
+| ------------ | -------- | ------- | ---------------------------------- |
+| `sideOffset` | `number` | `4`     | Gap between the field and the list |
+| `className`  | `string` | -       | Additional CSS classes             |
+
+### Combobox.Item
+
+The active option gets `data-highlighted`, so you can style it next to the default `bg-muted`.
+
+| Prop        | Type      | Default | Description                                                                   |
+| ----------- | --------- | ------- | ----------------------------------------------------------------------------- |
+| `value`     | `string`  | -       | Value reported when the item is picked                                        |
+| `textValue` | `string`  | -       | Text used for filtering, the input and chips when children are not plain text |
+| `disabled`  | `boolean` | `false` | Skips the item in keyboard navigation and blocks picking it                   |
+| `className` | `string`  | -       | Additional CSS classes                                                        |
+
+### Combobox.Create
+
+| Prop        | Type                                          | Default            | Description                                               |
+| ----------- | --------------------------------------------- | ------------------ | --------------------------------------------------------- |
+| `onCreate`  | `(query: string) => string \| void`           | -                  | Called with the trimmed text. Return a value to select it |
+| `children`  | `ReactNode \| ((query: string) => ReactNode)` | `Create "<query>"` | Text of the option                                        |
+| `className` | `string`                                      | -                  | Additional CSS classes                                    |
+
+### Combobox.Clear
+
+Only renders when there is text or a value to clear.
+
+| Prop        | Type     | Default   | Description                   |
+| ----------- | -------- | --------- | ----------------------------- |
+| `label`     | `string` | `'Clear'` | Accessible name of the button |
+| `className` | `string` | -         | Additional CSS classes        |
+
+### Combobox.Empty, Combobox.Group, Combobox.Label, Combobox.Separator
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
