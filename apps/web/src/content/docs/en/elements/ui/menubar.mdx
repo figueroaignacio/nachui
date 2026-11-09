@@ -1,0 +1,208 @@
+---
+title: Menubar
+description: A row of menus like the one at the top of a desktop app. One tab stop, full keyboard support.
+published: true
+date: 2026-11-09
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="menubar" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="menubar" />
+
+## Anatomy
+
+```tsx
+import { Menubar } from '@/components/menubar';
+```
+
+```tsx
+<Menubar aria-label="Editor">
+  <Menubar.Menu>
+    <Menubar.Trigger>File</Menubar.Trigger>
+    <Menubar.Content>
+      <Menubar.Item shortcut="⌘N">New file</Menubar.Item>
+      <Menubar.Separator />
+      <Menubar.Sub>
+        <Menubar.SubTrigger>Share</Menubar.SubTrigger>
+        <Menubar.SubContent>
+          <Menubar.Item>Copy link</Menubar.Item>
+        </Menubar.SubContent>
+      </Menubar.Sub>
+    </Menubar.Content>
+  </Menubar.Menu>
+</Menubar>
+```
+
+## Composition
+
+Use the following composition to build a `Menubar`:
+
+```tree
+Menubar
+└── Menubar.Menu
+    ├── Menubar.Trigger
+    └── Menubar.Content
+        ├── Menubar.Label
+        ├── Menubar.Item
+        ├── Menubar.Group
+        ├── Menubar.CheckboxItem
+        ├── Menubar.RadioGroup
+        │   └── Menubar.RadioItem
+        ├── Menubar.Sub
+        │   ├── Menubar.SubTrigger
+        │   └── Menubar.SubContent
+        └── Menubar.Separator
+```
+
+The menus look and behave like `DropdownMenu`: same surface, same items, same animation. Once a menu is open, moving the pointer over another trigger opens that one without a click, the way desktop menu bars work.
+
+## Variants
+
+### Default
+
+A text editor menu bar with shortcuts, a **Find** submenu, a checkbox to show the ruler and a radio group for the zoom level.
+
+<ComponentPreview component="menubar" demo="default" />
+
+### Controlled
+
+Pass `value` and `onValueChange` to know which menu is open. Give each `Menubar.Menu` a `value` so you can refer to it. An empty string means every menu is closed.
+
+```tsx
+const [open, setOpen] = React.useState('');
+
+<Menubar value={open} onValueChange={setOpen} aria-label="Editor">
+  <Menubar.Menu value="file">...</Menubar.Menu>
+  <Menubar.Menu value="edit">...</Menubar.Menu>
+</Menubar>;
+```
+
+## Keyboard
+
+| Key                           | Action                                                                  |
+| ----------------------------- | ----------------------------------------------------------------------- |
+| `ArrowLeft`, `ArrowRight`     | Move between triggers. With a menu open, open the neighbor menu instead |
+| `Home`, `End`                 | Jump to the first or last trigger                                       |
+| `ArrowDown`, `Enter`, `Space` | Open the menu and focus its first item                                  |
+| `ArrowUp`                     | Open the menu and focus its last item                                   |
+| `ArrowUp`, `ArrowDown`        | Move between items inside an open menu                                  |
+| `ArrowRight`                  | On a submenu trigger, open the submenu                                  |
+| `ArrowLeft`                   | Inside a submenu, close it and go back to its trigger                   |
+| Typing                        | Focus the next item whose label starts with it                          |
+| `Enter`, `Space`              | Run the focused item, or toggle it when it is a checkbox                |
+| `Escape`                      | Close the menu and return focus to its trigger                          |
+| `Tab`                         | Close every menu and move on to the next element on the page            |
+
+In right-to-left layouts, `ArrowLeft` and `ArrowRight` swap.
+
+## Accessibility
+
+- The bar has `role="menubar"` and each trigger is a `menuitem` with `aria-haspopup="menu"` and `aria-expanded`. Name the bar with `aria-label`.
+- Only one trigger is in the tab order at a time, so `Tab` enters and leaves the bar in one step.
+- Each open menu has `role="menu"` and is labelled by its trigger. Checkbox and radio items use `menuitemcheckbox` and `menuitemradio` with `aria-checked`.
+- Shortcuts are plain text. The menubar does not listen for them, so wire them up yourself if the app needs them.
+- The direction comes from `dir`, from a `DirectionProvider` or from the closest `dir` attribute, and submenus open towards the end of the line.
+
+## API Reference
+
+### Menubar
+
+Accepts every `div` attribute.
+
+| Prop            | Type                      | Default | Description                                           |
+| --------------- | ------------------------- | ------- | ----------------------------------------------------- |
+| `value`         | `string`                  | -       | Controlled open menu. An empty string closes them all |
+| `defaultValue`  | `string`                  | `''`    | Menu open on first render when uncontrolled           |
+| `onValueChange` | `(value: string) => void` | -       | Called when a menu opens or every menu closes         |
+| `dir`           | `'ltr' \| 'rtl'`          | -       | Reading direction for arrow keys and submenus         |
+| `loop`          | `boolean`                 | `true`  | Wrap around from the last trigger to the first        |
+| `className`     | `string`                  | -       | Additional CSS classes                                |
+
+### Menubar.Menu
+
+| Prop    | Type     | Default      | Description                                        |
+| ------- | -------- | ------------ | -------------------------------------------------- |
+| `value` | `string` | generated id | Identifies the menu in `value` and `onValueChange` |
+
+### Menubar.Trigger
+
+Accepts every `button` attribute.
+
+| Prop        | Type      | Default | Description                              |
+| ----------- | --------- | ------- | ---------------------------------------- |
+| `disabled`  | `boolean` | `false` | Skips the trigger in keyboard navigation |
+| `className` | `string`  | -       | Additional CSS classes                   |
+
+### Menubar.Content
+
+| Prop         | Type                           | Default   | Description                          |
+| ------------ | ------------------------------ | --------- | ------------------------------------ |
+| `align`      | `'start' \| 'center' \| 'end'` | `'start'` | Alignment against the trigger        |
+| `sideOffset` | `number`                       | `6`       | Gap between the trigger and the menu |
+| `className`  | `string`                       | -         | Additional CSS classes               |
+
+### Menubar.Item
+
+| Prop            | Type                         | Default     | Description                           |
+| --------------- | ---------------------------- | ----------- | ------------------------------------- |
+| `shortcut`      | `ReactNode`                  | -           | Hint shown at the end of the item     |
+| `onSelect`      | `() => void`                 | -           | Called when the item is picked        |
+| `disabled`      | `boolean`                    | `false`     | Skips the item and blocks selection   |
+| `variant`       | `'default' \| 'destructive'` | `'default'` | Visual style                          |
+| `closeOnSelect` | `boolean`                    | `true`      | Close the menu after picking the item |
+| `className`     | `string`                     | -           | Additional CSS classes                |
+
+### Menubar.CheckboxItem
+
+Keeps the menu open after a toggle, so people can switch several options in one go.
+
+| Prop              | Type                         | Default | Description                       |
+| ----------------- | ---------------------------- | ------- | --------------------------------- |
+| `checked`         | `boolean`                    | -       | Controlled checked state          |
+| `defaultChecked`  | `boolean`                    | `false` | Initial state when uncontrolled   |
+| `onCheckedChange` | `(checked: boolean) => void` | -       | Called with the new value         |
+| `shortcut`        | `ReactNode`                  | -       | Hint shown at the end of the item |
+| `closeOnSelect`   | `boolean`                    | `false` | Close the menu after toggling     |
+| `disabled`        | `boolean`                    | `false` | Disable the item                  |
+
+### Menubar.RadioGroup
+
+Accepts every `div` attribute, so give it an `aria-label` when it has no visible label.
+
+| Prop            | Type                      | Default | Description                          |
+| --------------- | ------------------------- | ------- | ------------------------------------ |
+| `value`         | `string`                  | -       | Controlled selected value            |
+| `defaultValue`  | `string`                  | `''`    | Initial value when uncontrolled      |
+| `onValueChange` | `(value: string) => void` | -       | Called when another option is picked |
+
+### Menubar.RadioItem
+
+| Prop            | Type        | Default | Description                       |
+| --------------- | ----------- | ------- | --------------------------------- |
+| `value`         | `string`    | -       | Value reported to the group       |
+| `shortcut`      | `ReactNode` | -       | Hint shown at the end of the item |
+| `closeOnSelect` | `boolean`   | `true`  | Close the menu after picking      |
+| `disabled`      | `boolean`   | `false` | Disable the item                  |
+
+### Menubar.Sub, Menubar.SubTrigger, Menubar.SubContent
+
+`Menubar.Sub` wraps a nested menu. It opens on hover, on click and with `ArrowRight`, and only one submenu per level stays open.
+
+| Prop         | Type      | Default | Description                                                |
+| ------------ | --------- | ------- | ---------------------------------------------------------- |
+| `disabled`   | `boolean` | `false` | `SubTrigger` only. Skips it and keeps the submenu closed   |
+| `sideOffset` | `number`  | `6`     | `SubContent` only. Gap between the submenu and its trigger |
+| `className`  | `string`  | -       | Additional CSS classes                                     |
+
+### Menubar.Group, Menubar.Label, Menubar.Separator, Menubar.Shortcut
+
+`Menubar.Shortcut` is the same hint the `shortcut` prop renders, for items with custom content.
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |
