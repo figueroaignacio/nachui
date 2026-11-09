@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { useTypeahead } from '../lib/collection';
 import { FloatingPortal, useFloating } from '../lib/floating';
 import { floatingVariants, reveal } from '../lib/motion';
 import { useLayer } from '../lib/overlay';
@@ -49,8 +50,6 @@ const CONTEXT_MENU_STYLE = { willChange: 'opacity, transform, filter' } as const
 
 const LONG_PRESS_MS = 500;
 const LONG_PRESS_TOLERANCE = 10;
-const TYPEAHEAD_RESET_MS = 500;
-
 const ContextMenuContext = React.createContext<ContextMenuContextValue | null>(null);
 
 const useContextMenuContext = (): ContextMenuContextValue => {
@@ -64,31 +63,6 @@ function getMenuItems(container: HTMLElement | null): HTMLElement[] {
   return Array.from(
     container.querySelectorAll<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])'),
   );
-}
-
-function useTypeahead() {
-  const bufferRef = React.useRef('');
-  const timerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
-  React.useEffect(() => () => clearTimeout(timerRef.current), []);
-
-  const isTyping = React.useCallback(() => bufferRef.current !== '', []);
-
-  const search = React.useCallback((key: string, items: HTMLElement[], current: number) => {
-    clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      bufferRef.current = '';
-    }, TYPEAHEAD_RESET_MS);
-    const buffer = bufferRef.current + key.toLowerCase();
-    bufferRef.current = buffer;
-    const repeated = Array.from(buffer).every((char) => char === buffer[0]);
-    const query = repeated ? buffer.charAt(0) : buffer;
-    const start = repeated ? current + 1 : Math.max(current, 0);
-    const ordered = [...items.slice(start), ...items.slice(0, start)];
-    return ordered.find((item) => item.textContent?.trim().toLowerCase().startsWith(query));
-  }, []);
-
-  return React.useMemo(() => ({ search, isTyping }), [search, isTyping]);
 }
 
 const ContextMenuRoot = ({
@@ -481,7 +455,7 @@ const ContextMenuShortcut = ({
   className?: string;
 }) => {
   return (
-    <span className={cn('text-muted-foreground ml-auto pl-6 text-xs tracking-widest', className)}>
+    <span className={cn('text-muted-foreground ms-auto ps-6 text-xs tracking-widest', className)}>
       {children}
     </span>
   );

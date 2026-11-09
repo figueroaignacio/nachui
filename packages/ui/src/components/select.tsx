@@ -4,6 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { useTypeahead } from '../lib/collection';
 import { FloatingPortal, useFloating } from '../lib/floating';
 import { floatingOrigin, springs, still } from '../lib/motion';
 import { useLayer } from '../lib/overlay';
@@ -127,7 +128,7 @@ interface SelectSeparatorProps {
 
 const selectTriggerVariants = cva(
   [
-    'border-input bg-transparent text-foreground flex w-full items-center justify-between gap-2 rounded-md border text-left transition-[color,box-shadow] outline-none',
+    'border-input bg-transparent text-foreground flex w-full items-center justify-between gap-2 rounded-md border text-start transition-[color,box-shadow] outline-none',
     'dark:bg-input/30 hover:border-border-interactive',
     'focus-visible:border-foreground/40 focus-visible:ring-foreground/10 focus-visible:ring-[1px]',
     'aria-invalid:border-destructive aria-invalid:ring-destructive/15 dark:aria-invalid:ring-destructive/30',
@@ -154,7 +155,6 @@ const ICON_VARIANTS = {
 } as const;
 
 const ICON_TRANSITION = springs.snappy;
-const TYPEAHEAD_RESET_MS = 500;
 const ICON_STYLE = { willChange: 'transform' } as const;
 const CONTENT_STYLE = { willChange: 'opacity, transform' } as const;
 
@@ -217,39 +217,6 @@ function useClickOutside(
     document.addEventListener('pointerdown', handlePointerDownOutside);
     return () => document.removeEventListener('pointerdown', handlePointerDownOutside);
   }, [ref, triggerRef, handler, enabled, isInsideUpperLayer]);
-}
-
-function useTypeahead() {
-  const bufferRef = React.useRef('');
-  const timerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
-  React.useEffect(() => () => clearTimeout(timerRef.current), []);
-
-  const isTyping = React.useCallback(() => bufferRef.current !== '', []);
-
-  const search = React.useCallback(
-    (
-      key: string,
-      options: HTMLElement[],
-      current: number,
-      labelOf: (option: HTMLElement) => string,
-    ) => {
-      clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => {
-        bufferRef.current = '';
-      }, TYPEAHEAD_RESET_MS);
-      const buffer = bufferRef.current + key.toLowerCase();
-      bufferRef.current = buffer;
-      const repeated = Array.from(buffer).every((char) => char === buffer[0]);
-      const query = repeated ? buffer.charAt(0) : buffer;
-      const start = repeated ? current + 1 : Math.max(current, 0);
-      const ordered = [...options.slice(start), ...options.slice(0, start)];
-      return ordered.find((option) => labelOf(option).toLowerCase().startsWith(query));
-    },
-    [],
-  );
-
-  return React.useMemo(() => ({ search, isTyping }), [search, isTyping]);
 }
 
 function getOptions(container: HTMLElement | null): HTMLElement[] {
@@ -386,7 +353,7 @@ const SelectRoot = ({
             disabled={disabled}
             onChange={noop}
             onFocus={() => triggerRef.current?.focus()}
-            className="pointer-events-none absolute bottom-0 left-0 h-px w-full opacity-0"
+            className="pointer-events-none absolute start-0 bottom-0 h-px w-full opacity-0"
           />
         )}
       </div>
@@ -691,7 +658,7 @@ const SelectItem = ({
       data-selected={isSelected}
       tabIndex={-1}
       className={cn(
-        'relative flex cursor-pointer items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-none select-none',
+        'relative flex cursor-pointer items-center gap-2 rounded-sm py-1.5 ps-2 pe-8 text-sm outline-none select-none',
         'transition-colors duration-150',
         'hover:bg-muted focus:bg-muted',
         disabled && 'pointer-events-none opacity-40',
@@ -700,7 +667,7 @@ const SelectItem = ({
     >
       <span className="flex-1 truncate">{children}</span>
       {isSelected && (
-        <span className="absolute right-2 flex items-center" aria-hidden="true">
+        <span className="absolute end-2 flex items-center" aria-hidden="true">
           <CheckIcon size={16} className="size-4" />
         </span>
       )}
