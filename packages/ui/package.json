@@ -15,7 +15,8 @@
     "./registry": "./src/lib/registry.ts",
     "./src/demos/*/*": "./src/demos/*/*.tsx",
     "./src/bricks/*/*": "./src/bricks/*/*.tsx",
-    "./src/*": "./src/*"
+    "./src/*": "./src/*",
+    "./tokens/*": "./tokens/*"
   },
   "typesVersions": {
     "*": {
