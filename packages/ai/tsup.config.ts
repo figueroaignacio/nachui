@@ -9,6 +9,7 @@ export default defineConfig({
     tools: 'src/tools/index.ts',
     studio: 'src/studio/index.ts',
     'studio-core': 'src/studio/core.ts',
+    'studio-paths': 'src/studio/paths.ts',
   },
   format: ['cjs', 'esm'],
   dts: true,

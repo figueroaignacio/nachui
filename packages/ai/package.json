@@ -40,6 +40,11 @@
       "types": "./dist/studio-core.d.ts",
       "import": "./dist/studio-core.js",
       "require": "./dist/studio-core.cjs"
+    },
+    "./studio-paths": {
+      "types": "./dist/studio-paths.d.ts",
+      "import": "./dist/studio-paths.js",
+      "require": "./dist/studio-paths.cjs"
     }
   },
   "scripts": {
