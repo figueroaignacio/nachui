@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { useControllableState } from '../lib/use-controllable-state';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -81,6 +82,31 @@ function ShareIcon(props: IconProps) {
   );
 }
 
+function EditIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M4 20h4L19 9l-4-4L4 16z" />
+      <path d="m14 6 4 4" />
+    </Icon>
+  );
+}
+
+function ChevronLeftIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="m15 6-6 6 6 6" />
+    </Icon>
+  );
+}
+
+function ChevronRightIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="m9 6 6 6-6 6" />
+    </Icon>
+  );
+}
+
 const ActionsIcons = {
   copy: CopyIcon,
   check: CheckIcon,
@@ -88,6 +114,7 @@ const ActionsIcons = {
   thumbsUp: ThumbsUpIcon,
   thumbsDown: ThumbsDownIcon,
   share: ShareIcon,
+  edit: EditIcon,
 };
 
 interface ActionsProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -105,6 +132,26 @@ interface ActionsCopyProps extends Omit<ActionsButtonProps, 'label' | 'children'
   copiedLabel?: string;
   failedLabel?: string;
   timeout?: number;
+}
+
+type ActionsFeedbackValue = 'up' | 'down' | null;
+
+interface ActionsFeedbackProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'defaultValue'> {
+  value?: ActionsFeedbackValue;
+  defaultValue?: ActionsFeedbackValue;
+  onValueChange?: (value: ActionsFeedbackValue) => void;
+  upLabel?: string;
+  downLabel?: string;
+}
+
+interface ActionsBranchProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'defaultValue'> {
+  count: number;
+  value?: number;
+  defaultValue?: number;
+  onValueChange?: (value: number) => void;
+  previousLabel?: string;
+  nextLabel?: string;
+  formatLabel?: (current: number, count: number) => string;
 }
 
 const ActionsRoot = ({
@@ -203,11 +250,117 @@ const ActionsCopy = ({
 
 ActionsCopy.displayName = 'ActionsCopy';
 
+const ActionsFeedback = ({
+  className,
+  value: controlledValue,
+  defaultValue = null,
+  onValueChange,
+  upLabel = 'Good response',
+  downLabel = 'Bad response',
+  ref,
+  ...props
+}: ActionsFeedbackProps & { ref?: React.Ref<HTMLDivElement> }) => {
+  const [value, setValue] = useControllableState<ActionsFeedbackValue>({
+    value: controlledValue,
+    defaultValue,
+    onChange: onValueChange,
+  });
+
+  return (
+    <div
+      ref={ref}
+      data-slot="actions-feedback"
+      className={cn('flex items-center gap-1', className)}
+      {...props}
+    >
+      <ActionsButton
+        label={upLabel}
+        active={value === 'up'}
+        onClick={() => setValue(value === 'up' ? null : 'up')}
+      >
+        <ThumbsUpIcon />
+      </ActionsButton>
+      <ActionsButton
+        label={downLabel}
+        active={value === 'down'}
+        onClick={() => setValue(value === 'down' ? null : 'down')}
+      >
+        <ThumbsDownIcon />
+      </ActionsButton>
+    </div>
+  );
+};
+
+ActionsFeedback.displayName = 'ActionsFeedback';
+
+const ActionsBranch = ({
+  className,
+  count,
+  value: controlledValue,
+  defaultValue,
+  onValueChange,
+  previousLabel = 'Previous version',
+  nextLabel = 'Next version',
+  formatLabel = (current, total) => `${current} / ${total}`,
+  ref,
+  ...props
+}: ActionsBranchProps & { ref?: React.Ref<HTMLDivElement> }) => {
+  const last = Math.max(count - 1, 0);
+  const [value, setValue] = useControllableState({
+    value: controlledValue,
+    defaultValue: defaultValue ?? last,
+    onChange: onValueChange,
+  });
+  const current = Math.min(Math.max(value, 0), last);
+
+  if (count < 2) return null;
+
+  return (
+    <div
+      ref={ref}
+      role="group"
+      aria-label={formatLabel(current + 1, count)}
+      data-slot="actions-branch"
+      className={cn('text-muted-foreground flex items-center', className)}
+      {...props}
+    >
+      <ActionsButton
+        label={previousLabel}
+        disabled={current === 0}
+        onClick={() => setValue(current - 1)}
+      >
+        <ChevronLeftIcon />
+      </ActionsButton>
+      <span aria-live="polite" className="min-w-9 text-center font-mono text-xs tabular-nums">
+        {formatLabel(current + 1, count)}
+      </span>
+      <ActionsButton
+        label={nextLabel}
+        disabled={current === last}
+        onClick={() => setValue(current + 1)}
+      >
+        <ChevronRightIcon />
+      </ActionsButton>
+    </div>
+  );
+};
+
+ActionsBranch.displayName = 'ActionsBranch';
+
 const Actions = Object.assign(ActionsRoot, {
   Button: ActionsButton,
   Copy: ActionsCopy,
+  Feedback: ActionsFeedback,
+  Branch: ActionsBranch,
   Icons: ActionsIcons,
 });
 
 export { Actions };
-export type { ActionsButtonProps, ActionsCopyProps, ActionsProps };
+export type {
+  ActionsBranchProps,
+  ActionsButtonProps,
+  ActionsCopyProps,
+  ActionsFeedbackProps,
+  ActionsFeedbackValue,
+  ActionsProps,
+};
