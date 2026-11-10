@@ -4,6 +4,7 @@
     "headline1": "An open source design system you own,",
     "headline2": "ready for you and your agent",
     "description": "Tokens, components, patterns and themes for React. Copied into your repo as plain source, so you and your agent read the same thing.",
+    "wallCta": "Browse the catalog",
     "actions": [
       {
         "label": "Get started",

@@ -1,58 +1,71 @@
-'use client';
+import { useTranslations } from 'next-intl';
 
-import dynamic from 'next/dynamic';
+import { HeroActions } from './hero-actions';
+import { PreviewAiComposer } from './preview-cards/preview-ai-composer';
+import { PreviewCheckpoints } from './preview-cards/preview-checkpoints';
+import { PreviewContributionHistory } from './preview-cards/preview-contribution-history';
+import { PreviewDateRange } from './preview-cards/preview-date-range';
+import { PreviewInviteTeam } from './preview-cards/preview-invite-team';
+import { PreviewKitchenSink } from './preview-cards/preview-kitchen-sink';
+import { PreviewModelPicker } from './preview-cards/preview-model-picker';
+import { PreviewNotificationPrefs } from './preview-cards/preview-notification-prefs';
+import { PreviewPaymentsNav } from './preview-cards/preview-payments-nav';
+import { PreviewPayoutThreshold } from './preview-cards/preview-payout-threshold';
+import { PreviewThinking } from './preview-cards/preview-thinking';
+import { PreviewToolApproval } from './preview-cards/preview-tool-approval';
+import { PreviewVerifyEmail } from './preview-cards/preview-verify-email';
 
-import { useMediaQuery } from '@/hooks/use-media-query';
-import { Skeleton } from '@repo/ui/components/skeleton';
-import { cn } from '@repo/ui/lib/cn';
+const COLUMNS = [
+  [
+    <PreviewKitchenSink key="kitchen-sink" />,
+    <PreviewPaymentsNav key="payments-nav" />,
+    <PreviewInviteTeam key="invite-team" />,
+  ],
+  [
+    <PreviewContributionHistory key="contribution" />,
+    <PreviewToolApproval key="tool-approval" />,
+    <PreviewDateRange key="date-range" />,
+  ],
+  [
+    <PreviewPayoutThreshold key="payout-threshold" />,
+    <PreviewModelPicker key="model-picker" />,
+    <PreviewCheckpoints key="checkpoints" />,
+  ],
+  [
+    <PreviewAiComposer key="ai-composer" />,
+    <PreviewNotificationPrefs key="notification-prefs" />,
+    <PreviewVerifyEmail key="verify-email" />,
+    <PreviewThinking key="thinking" />,
+  ],
+];
 
-export type WallDensity = { columns: number; cards: number };
-
-/*
- * At the desktop tilt the rotated plane overhangs the stage by several columns
- * on each side, so the full set stays at 10 x 6. The cards load in their own
- * chunk, and a phone only needs a lighter set.
+/**
+ * A flat wall of real components under the hero. Desktop shows it at full size;
+ * smaller screens keep the desktop layout and scale it down, so the columns run
+ * off the right edge. It is a showcase, so the whole thing is inert.
  */
-const FULL: WallDensity = { columns: 10, cards: 6 };
-const LIGHT: WallDensity = { columns: 6, cards: 4 };
-
-const SKELETON_HEIGHTS = ['h-56', 'h-72', 'h-44', 'h-64', 'h-52', 'h-80'];
-
-/** Static stand-in columns while the cards chunk loads, so the stage is never blank. */
-function WallSkeleton() {
-  return Array.from({ length: FULL.columns }, (_, column) => (
-    <div key={column} className="flex w-60 shrink-0 flex-col gap-3">
-      {Array.from({ length: 4 }, (_, row) => (
-        <Skeleton
-          key={row}
-          className={cn(
-            'rounded-xl',
-            SKELETON_HEIGHTS[(column * 5 + row * 7) % SKELETON_HEIGHTS.length],
-          )}
-        />
-      ))}
-    </div>
-  ));
-}
-
-const PreviewPlane = dynamic(() => import('./preview-wall-plane').then((m) => m.PreviewPlane), {
-  ssr: false,
-  loading: WallSkeleton,
-});
-
 export function PreviewWall() {
-  const density = useMediaQuery('(min-width: 40rem)') ? FULL : LIGHT;
+  const t = useTranslations('sections.home');
 
   return (
-    <div className="bleed-x relative mt-6 overflow-hidden md:mt-8">
+    <div className="bleed-x relative mt-12 overflow-hidden md:mt-16">
       <div
         aria-hidden="true"
         inert
-        className="preview-stage pointer-events-none relative mx-[calc(-1*var(--frame-bleed))] h-[34rem] overflow-hidden select-none md:h-[48rem] lg:h-[56rem]"
+        className="preview-stage pointer-events-none relative h-[30rem] select-none sm:h-[40rem] lg:h-[58rem]"
       >
-        <div className="preview-plane absolute top-12 left-1/2 flex -translate-x-1/2 items-start gap-3 md:top-16">
-          <PreviewPlane density={density} />
+        <div className="preview-grid grid grid-cols-4 items-start gap-4">
+          {COLUMNS.map((cards, column) => (
+            <div key={column} className="flex min-w-0 flex-col gap-4">
+              {cards}
+            </div>
+          ))}
         </div>
+      </div>
+      <div className="relative -mt-14 pb-2">
+        <HeroActions
+          actions={[{ href: '/docs/elements/ui', label: t('wallCta'), variant: 'outline' }]}
+        />
       </div>
     </div>
   );

@@ -4,6 +4,7 @@
     "headline1": "Un sistema de diseño de código abierto que es tuyo,",
     "headline2": "listo para vos y tu agente",
     "description": "Tokens, componentes, patrones y temas para React. Se copian a tu repo como código plano, así vos y tu agente leen lo mismo.",
+    "wallCta": "Explorar el catálogo",
     "actions": [
       {
         "label": "Empezar",

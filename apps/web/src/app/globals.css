@@ -203,37 +203,38 @@ body:has([data-chat-launcher]) footer {
 }
 
 /*
- * The hero wall: a still masonry of real component previews on a plane tilted
- * away from the reader, zoomed out so it reads as a wall seen from afar. It is
- * a backdrop you look at, so the whole thing is inert.
+ * The hero wall: a flat grid of real component previews that fades out at the
+ * bottom. Below desktop it keeps the desktop width and scales down from the
+ * start edge, so the columns run off the screen like a wall seen from afar.
  */
 .preview-stage {
-  mask-image:
-    linear-gradient(to bottom, transparent, black 24%, black 80%, transparent),
-    linear-gradient(to right, transparent, black 6%, black 94%, transparent);
-  mask-composite: intersect;
+  mask-image: linear-gradient(to bottom, black 62%, transparent);
 }
 
-.preview-plane * {
+.preview-grid * {
   animation: none;
 }
 
-.preview-plane {
-  --preview-scale: 0.45;
+.preview-grid {
+  width: 72rem;
+  transform: scale(0.5);
+  transform-origin: top left;
+}
 
-  transform: perspective(1200px) rotateX(52deg) rotateZ(-18deg) scale(var(--preview-scale));
-  transform-origin: 50% 0;
+[dir='rtl'] .preview-grid {
+  transform-origin: top right;
 }
 
 @media (min-width: 40rem) {
-  .preview-plane {
-    --preview-scale: 0.55;
+  .preview-grid {
+    transform: scale(0.68);
   }
 }
 
 @media (min-width: 64rem) {
-  .preview-plane {
-    --preview-scale: 0.68;
+  .preview-grid {
+    width: auto;
+    transform: none;
   }
 }
 
