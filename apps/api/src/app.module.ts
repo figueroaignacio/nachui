@@ -6,8 +6,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseHealth } from './common/health/database-health';
 import { validateEnv } from './config/env';
+import { AuthModule } from './modules/auth/auth.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { RegistryModule } from './modules/registry/registry.module';
+import { StudioModule } from './modules/studio/studio.module';
 import { ThemesModule } from './modules/themes/themes.module';
 
 @Module({
@@ -19,6 +21,8 @@ import { ThemesModule } from './modules/themes/themes.module';
     RegistryModule,
     ThemesModule,
     ChatModule,
+    AuthModule,
+    StudioModule,
   ],
   controllers: [AppController],
   providers: [AppService, DatabaseHealth, { provide: APP_GUARD, useClass: ThrottlerGuard }],
