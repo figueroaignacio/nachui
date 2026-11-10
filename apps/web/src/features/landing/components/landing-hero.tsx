@@ -8,8 +8,8 @@ export function LandingHero() {
 
   return (
     <>
-      <section className="w-full pt-16 md:pt-24">
-        <h1 className="font-heading text-foreground max-w-[24ch] text-[clamp(2.25rem,min(11vw,6vh),2.75rem)] leading-[1.05] font-bold tracking-[-0.035em] text-balance lg:text-[clamp(2.75rem,min(4.5vw,8vh),3.25rem)]">
+      <section className="flex w-full flex-col items-center pt-16 text-center md:pt-24">
+        <h1 className="font-heading text-foreground mx-auto max-w-[24ch] text-[clamp(2.25rem,min(11vw,6vh),2.75rem)] leading-[1.05] font-bold tracking-[-0.035em] text-balance lg:text-[clamp(2.75rem,min(4.5vw,8vh),3.25rem)]">
           <span className="sr-only">{t('subheading1')}</span>
           <span aria-hidden="true" className="block">
             {t('headline1')}
@@ -20,7 +20,7 @@ export function LandingHero() {
           </span>
         </h1>
 
-        <p className="text-muted-strong mt-6 max-w-[56ch] text-[15px] leading-relaxed md:text-[17px]">
+        <p className="text-muted-strong mx-auto mt-6 max-w-[56ch] text-[15px] leading-relaxed md:text-[17px]">
           {t('description')}
         </p>
 

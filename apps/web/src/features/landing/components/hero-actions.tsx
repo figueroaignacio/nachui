@@ -14,7 +14,7 @@ export interface HeroAction {
 /** The hero's call-to-action row. A client island because the button styles live in a client module. */
 export function HeroActions({ actions }: { actions: HeroAction[] }) {
   return (
-    <div className="mt-8 flex flex-wrap gap-2">
+    <div className="mt-8 flex flex-wrap justify-center gap-2">
       {actions.map((action) => (
         <Link
           key={action.href}
