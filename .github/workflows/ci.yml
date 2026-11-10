@@ -42,7 +42,7 @@ jobs:
         run: pnpm checks
 
       - name: Build
-        run: pnpm turbo run build --filter=web --filter=api
+        run: pnpm turbo run build --filter=web --filter=api --filter=studio
 
   browser:
     name: Browser tests (Chromium, Firefox, WebKit)
