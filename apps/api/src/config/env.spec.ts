@@ -1,4 +1,4 @@
-import { validateEnv } from './env';
+import { studioConfig, validateEnv } from './env';
 
 const valid = {
   POSTGRES_URL: 'postgres://user:pass@localhost:5432/nachui',
@@ -32,5 +32,45 @@ describe('validateEnv', () => {
   it('rejects malformed frontend URLs', () => {
     expect(() => validateEnv({ ...valid, FRONTEND_URLS: 'nachui.dev' })).toThrow('FRONTEND_URLS');
     expect(() => validateEnv({ ...valid, FRONTEND_URLS: ' , ' })).toThrow('FRONTEND_URLS');
+  });
+
+  it('leaves the Studio off when none of its variables are set', () => {
+    const env = validateEnv(valid);
+    expect(studioConfig(env)).toBeNull();
+    expect(env.STUDIO_DAILY_LIMIT).toBe(20);
+  });
+
+  it('builds the Studio config when all of its variables are set', () => {
+    const env = validateEnv({
+      ...valid,
+      STUDIO_URL: 'http://localhost:3002',
+      GITHUB_CLIENT_ID: 'id',
+      GITHUB_CLIENT_SECRET: 'secret',
+      STUDIO_SECRET: 'x'.repeat(32),
+      STUDIO_DAILY_LIMIT: '5',
+    });
+    expect(studioConfig(env)).toEqual({
+      apiUrl: 'http://localhost:3001',
+      studioUrl: 'http://localhost:3002',
+      githubClientId: 'id',
+      githubClientSecret: 'secret',
+      secret: 'x'.repeat(32),
+      dailyLimit: 5,
+    });
+  });
+
+  it('names the missing Studio variables when only some are set', () => {
+    expect(() => validateEnv({ ...valid, STUDIO_URL: 'http://localhost:3002' })).toThrow(
+      'GITHUB_CLIENT_ID',
+    );
+    expect(() =>
+      validateEnv({
+        ...valid,
+        STUDIO_URL: 'http://localhost:3002',
+        GITHUB_CLIENT_ID: 'id',
+        GITHUB_CLIENT_SECRET: 'secret',
+        STUDIO_SECRET: 'short',
+      }),
+    ).toThrow('STUDIO_SECRET');
   });
 });

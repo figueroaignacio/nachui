@@ -21,13 +21,15 @@ async function bootstrap() {
 
   const frontendUrls = configService.get('FRONTEND_URLS', { infer: true });
   const portfolioUrl = configService.get('PORTFOLIO_URL', { infer: true });
+  const studioUrl = configService.get('STUDIO_URL', { infer: true });
 
   app.enableCors({
-    origin: [...frontendUrls, portfolioUrl, 'http://localhost:3000'].filter(
+    origin: [...frontendUrls, portfolioUrl, studioUrl, 'http://localhost:3000'].filter(
       (origin): origin is string => Boolean(origin),
     ),
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   });
 
   app.setGlobalPrefix('api/v1');
