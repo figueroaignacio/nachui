@@ -74,7 +74,7 @@
     "@vitejs/plugin-react": "^6.0.2",
     "@vitest/browser-playwright": "4.1.8",
     "@vitest/coverage-v8": "^4.1.8",
-    "@vitest/ui": "4.1.8",
+    "@vitest/ui": "5.1.0",
     "axe-core": "^4.14.0",
     "jsdom": "^29.1.1",
     "playwright": "^1.65.0",
