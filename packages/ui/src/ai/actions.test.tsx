@@ -92,4 +92,38 @@ describe('Actions', () => {
       expect(screen.getByRole('button', { name: 'Copy' })).toBeInTheDocument();
     });
   });
+
+  it('toggles feedback and clears it on a second click', async () => {
+    const onValueChange = vi.fn();
+    render(<Actions.Feedback onValueChange={onValueChange} />);
+    const up = screen.getByRole('button', { name: 'Good response' });
+    const down = screen.getByRole('button', { name: 'Bad response' });
+    await userEvent.click(up);
+    expect(up).toHaveAttribute('aria-pressed', 'true');
+    expect(down).toHaveAttribute('aria-pressed', 'false');
+    await userEvent.click(down);
+    expect(onValueChange).toHaveBeenLastCalledWith('down');
+    await userEvent.click(down);
+    expect(onValueChange).toHaveBeenLastCalledWith(null);
+  });
+
+  it('steps through branches and stops at the ends', async () => {
+    const onValueChange = vi.fn();
+    const { container } = render(<Actions.Branch count={3} onValueChange={onValueChange} />);
+    const previous = screen.getByRole('button', { name: 'Previous version' });
+    const next = screen.getByRole('button', { name: 'Next version' });
+    expect(screen.getByRole('group', { name: '3 / 3' })).toBeInTheDocument();
+    expect(next).toBeDisabled();
+    await userEvent.click(previous);
+    expect(onValueChange).toHaveBeenLastCalledWith(1);
+    expect(screen.getByText('2 / 3')).toBeInTheDocument();
+    await userEvent.click(previous);
+    expect(previous).toBeDisabled();
+    await expectNoAxeViolations(container);
+  });
+
+  it('hides the branch control when there is only one version', () => {
+    render(<Actions.Branch count={1} />);
+    expect(screen.queryByRole('group')).not.toBeInTheDocument();
+  });
 });

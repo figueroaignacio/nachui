@@ -129,4 +129,37 @@ describe('Tool', () => {
     expect(screen.getByText('3 projects')).toBeInTheDocument();
     expect(screen.queryByText('ignored')).not.toBeInTheDocument();
   });
+
+  it('opens itself when it starts waiting for approval and marks the border', () => {
+    const { rerender, container } = render(
+      <Tool status="running">
+        <Tool.Header name="send_email" />
+        <Tool.Content>
+          <Tool.Output value="ok" />
+        </Tool.Content>
+      </Tool>,
+    );
+    expect(screen.queryByRole('region')).not.toBeInTheDocument();
+    rerender(
+      <Tool status="awaiting-approval">
+        <Tool.Header name="send_email" />
+        <Tool.Content>
+          <Tool.Output value="ok" />
+        </Tool.Content>
+      </Tool>,
+    );
+    expect(screen.getByRole('region')).toBeInTheDocument();
+    expect(container.firstElementChild).toHaveAttribute('data-status', 'awaiting-approval');
+    expect(screen.getByText('Waiting for approval')).toHaveClass('sr-only');
+  });
+
+  it('strikes through a denied call and names its status', () => {
+    render(
+      <Tool status="denied">
+        <Tool.Header name="delete_branch" />
+      </Tool>,
+    );
+    expect(screen.getByText('delete_branch')).toHaveClass('line-through');
+    expect(screen.getByText('Denied')).toHaveClass('sr-only');
+  });
 });
