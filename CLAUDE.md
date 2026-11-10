@@ -11,8 +11,9 @@ Note: `AGENTS.md` carries the same guidance for other agent tools (Codex, Cursor
 pnpm 9 + Turborepo monorepo, Node >= 18. Scope commands with `pnpm --filter <name>` instead of `cd`.
 
 - `apps/web` (filter: `web`): Next.js 16 App Router docs site. next-intl (`en`/`es` locales), MDX via @content-collections, Tailwind CSS v4.
-- `apps/api` (filter: `api`): NestJS server (default port 3001). Modules: `chat`, `rag`, `registry`, `themes`. Env is validated with zod at boot (`apps/api/.env.example`).
-- `packages/ui` (filter: `@repo/ui`): the component catalog itself. Only workspace with frontend tests (Vitest + React Testing Library).
+- `apps/api` (filter: `api`): NestJS server (default port 3001). Modules: `chat`, `rag`, `registry`, `themes`, plus `auth`, `github` and `studio` for NachUI Studio (off unless its env is set). Env is validated with zod at boot (`apps/api/.env.example`).
+- `apps/studio` (filter: `studio`): NachUI Studio, a Next.js app (port 3002) where a chat agent builds screens with NachUI only. Talks to the API with a session cookie; the preview runs in a sandboxed iframe. See `apps/studio/README.md`.
+- `packages/ui` (filter: `@repo/ui`): the component catalog itself, with most of the frontend tests (Vitest + React Testing Library).
 - `packages/ai` (filter: `@repo/ai`): Vercel AI SDK + Google Gemini agent, tools, prompts, and the RAG ingest pipeline.
 - `packages/db` (filter: `@repo/db`): Drizzle ORM + Postgres.
 - `packages/cli` (filter: `nachui`): the published `nachui` CLI (commander + clack).
@@ -26,6 +27,7 @@ pnpm dev / build / lint / test     # turbo fan-out across workspaces
 pnpm format                        # prettier + tailwind class sorting
 pnpm --filter web dev              # docs site dev server
 pnpm --filter api dev              # nest start --watch
+pnpm --filter studio dev           # NachUI Studio on :3002
 ```
 
 Tests:
