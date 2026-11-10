@@ -30,6 +30,11 @@
       "types": "./dist/tools/index.d.ts",
       "import": "./dist/tools/index.js",
       "require": "./dist/tools/index.cjs"
+    },
+    "./studio": {
+      "types": "./dist/studio.d.ts",
+      "import": "./dist/studio.js",
+      "require": "./dist/studio.cjs"
     }
   },
   "scripts": {
@@ -43,6 +48,7 @@
     "@ai-sdk/google": "^4.0.34",
     "@repo/db": "workspace:*",
     "ai": "^7.0.52",
+    "typescript": "^6.0.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -52,7 +58,6 @@
     "dotenv": "^17.4.2",
     "tsup": "^8.5.1",
     "tsx": "^4.22.4",
-    "typescript": "^6.0.3",
     "vitest": "^4.1.8"
   }
 }

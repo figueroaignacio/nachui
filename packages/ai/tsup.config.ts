@@ -7,6 +7,7 @@ export default defineConfig({
     prompts: 'src/prompts/system-prompt.ts',
     agent: 'src/agent.ts',
     tools: 'src/tools/index.ts',
+    studio: 'src/studio/index.ts',
   },
   format: ['cjs', 'esm'],
   dts: true,
