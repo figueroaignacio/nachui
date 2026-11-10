@@ -21,4 +21,4 @@ jobs:
             echo "::error::Set the KEEP_ALIVE_DATABASE_URL secret to the Supabase session pooler URL."
             exit 1
           fi
-          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -tAc 'select count(*) from components'
+          psql "${DATABASE_URL%%\?*}?sslmode=require" -v ON_ERROR_STOP=1 -tAc 'select count(*) from components'
