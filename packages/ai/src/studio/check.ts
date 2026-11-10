@@ -319,3 +319,21 @@ export async function checkProject(
     diagnostics: diagnostics.slice(0, MAX_DIAGNOSTICS),
   };
 }
+
+/** NachUI files the project imports directly, as `{ dir, name }`, without repeats. */
+export function projectCatalogImports(
+  files: StudioFiles,
+): Array<{ dir: CatalogDir; name: string }> {
+  const seen = new Map<string, { dir: CatalogDir; name: string }>();
+  for (const [path, code] of Object.entries(files)) {
+    for (const use of collectImports(parse(path, code))) {
+      const target = resolveImport(path, use.specifier);
+      if (target.kind === 'catalog') {
+        seen.set(`${target.dir}/${target.name}`, { dir: target.dir, name: target.name });
+      }
+    }
+  }
+  return [...seen.values()].sort((a, b) =>
+    `${a.dir}/${a.name}`.localeCompare(`${b.dir}/${b.name}`),
+  );
+}

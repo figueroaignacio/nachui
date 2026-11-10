@@ -1,5 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
-import { checkProject, collectExports, type CatalogSourceLookup } from './check.js';
+import {
+  checkProject,
+  collectExports,
+  projectCatalogImports,
+  type CatalogSourceLookup,
+} from './check.js';
 
 const CATALOG: Record<string, string> = {
   'components/card': `const CardRoot = () => null;
@@ -106,5 +111,20 @@ export default function A() { return null; }`,
     );
     expect(result.diagnostics.map((d) => d.line)).toEqual([1, 2, 3, 4]);
     expect(result.diagnostics.every((d) => d.rule === 'import')).toBe(true);
+  });
+});
+
+describe('projectCatalogImports', () => {
+  it('lists each NachUI file once, from every project file', () => {
+    expect(
+      projectCatalogImports({
+        'screens/billing.tsx': SCREEN,
+        'screens/billing/plan-card.tsx': PART,
+      }),
+    ).toEqual([
+      { dir: 'components', name: 'button' },
+      { dir: 'components', name: 'card' },
+      { dir: 'lib', name: 'cn' },
+    ]);
   });
 });

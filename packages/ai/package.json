@@ -35,6 +35,11 @@
       "types": "./dist/studio.d.ts",
       "import": "./dist/studio.js",
       "require": "./dist/studio.cjs"
+    },
+    "./studio-core": {
+      "types": "./dist/studio-core.d.ts",
+      "import": "./dist/studio-core.js",
+      "require": "./dist/studio-core.cjs"
     }
   },
   "scripts": {

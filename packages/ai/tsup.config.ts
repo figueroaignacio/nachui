@@ -8,6 +8,7 @@ export default defineConfig({
     agent: 'src/agent.ts',
     tools: 'src/tools/index.ts',
     studio: 'src/studio/index.ts',
+    'studio-core': 'src/studio/core.ts',
   },
   format: ['cjs', 'esm'],
   dts: true,
