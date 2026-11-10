@@ -196,6 +196,9 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
     horizontal: () => import('@repo/ui/src/demos/field/horizontal').then((m) => m.Horizontal),
     'with-error': () => import('@repo/ui/src/demos/field/with-error').then((m) => m.WithError),
   },
+  'file-tree': {
+    default: () => import('@repo/ui/src/demos/file-tree/default').then((m) => m.Default),
+  },
   'file-upload': {
     avatar: () => import('@repo/ui/src/demos/file-upload/avatar').then((m) => m.Avatar),
     compact: () => import('@repo/ui/src/demos/file-upload/compact').then((m) => m.Compact),
@@ -279,6 +282,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
     compact: () => import('@repo/ui/src/demos/pagination/compact').then((m) => m.Compact),
     default: () => import('@repo/ui/src/demos/pagination/default').then((m) => m.Default),
   },
+  plan: {
+    default: () => import('@repo/ui/src/demos/plan/default').then((m) => m.Default),
+    live: () => import('@repo/ui/src/demos/plan/live').then((m) => m.Live),
+  },
   popover: {
     default: () => import('@repo/ui/src/demos/popover/default').then((m) => m.Default),
   },
@@ -291,6 +298,9 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
     attachments: () => import('@repo/ui/src/demos/prompt-input/attachments').then((m) => m.Attachments),
     default: () => import('@repo/ui/src/demos/prompt-input/default').then((m) => m.Default),
     statuses: () => import('@repo/ui/src/demos/prompt-input/statuses').then((m) => m.Statuses),
+  },
+  queue: {
+    default: () => import('@repo/ui/src/demos/queue/default').then((m) => m.Default),
   },
   radio: {
     default: () => import('@repo/ui/src/demos/radio/default').then((m) => m.Default),
@@ -392,6 +402,12 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
   stack: {
     default: () => import('@repo/ui/src/demos/stack/default').then((m) => m.Default),
   },
+  'stack-trace': {
+    default: () => import('@repo/ui/src/demos/stack-trace/default').then((m) => m.Default),
+  },
+  subagent: {
+    default: () => import('@repo/ui/src/demos/subagent/default').then((m) => m.Default),
+  },
   suggestion: {
     default: () => import('@repo/ui/src/demos/suggestion/default').then((m) => m.Default),
     variants: () => import('@repo/ui/src/demos/suggestion/variants').then((m) => m.Variants),
@@ -414,6 +430,13 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
   task: {
     default: () => import('@repo/ui/src/demos/task/default').then((m) => m.Default),
     statuses: () => import('@repo/ui/src/demos/task/statuses').then((m) => m.Statuses),
+  },
+  terminal: {
+    default: () => import('@repo/ui/src/demos/terminal/default').then((m) => m.Default),
+    streaming: () => import('@repo/ui/src/demos/terminal/streaming').then((m) => m.Streaming),
+  },
+  'test-results': {
+    default: () => import('@repo/ui/src/demos/test-results/default').then((m) => m.Default),
   },
   textarea: {
     'auto-resize': () => import('@repo/ui/src/demos/textarea/auto-resize').then((m) => m.AutoResize),
