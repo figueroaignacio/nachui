@@ -44,7 +44,8 @@
         {
           "title": "Actions",
           "href": "/docs/elements/ai/actions",
-          "description": "The row of copy, retry and feedback buttons under an answer."
+          "description": "The row of copy, retry and feedback buttons under an answer.",
+          "badge": "updated"
         },
         {
           "title": "Attachments",
@@ -57,9 +58,21 @@
           "description": "The steps an agent walked through, with search results and images attached to each one."
         },
         {
+          "title": "Checkpoint",
+          "href": "/docs/elements/ai/checkpoint",
+          "description": "A point in the conversation to go back to, before the agent changed things.",
+          "badge": "new"
+        },
+        {
           "title": "Code Block",
           "href": "/docs/elements/ai/code-block",
           "description": "Code in an answer, with a copy button, line numbers and a collapse for long snippets."
+        },
+        {
+          "title": "Confirmation",
+          "href": "/docs/elements/ai/confirmation",
+          "description": "Ask the reader to approve or deny an action before the agent runs it.",
+          "badge": "new"
         },
         {
           "title": "Context",
@@ -70,6 +83,18 @@
           "title": "Conversation",
           "href": "/docs/elements/ai/conversation",
           "description": "The scrolling thread that keeps the newest message in view while it streams."
+        },
+        {
+          "title": "Inline Citation",
+          "href": "/docs/elements/ai/inline-citation",
+          "description": "A source inside the sentence it supports, one hover or tap away.",
+          "badge": "new"
+        },
+        {
+          "title": "Model Selector",
+          "href": "/docs/elements/ai/model-selector",
+          "description": "A compact menu to pick the model, or how hard it thinks, next to the prompt.",
+          "badge": "new"
         },
         {
           "title": "Prompt Input",
@@ -109,7 +134,8 @@
         {
           "title": "Tool",
           "href": "/docs/elements/ai/tool",
-          "description": "A tool call with its status, input and output, folded into a card."
+          "description": "A tool call with its status, input and output, folded into a card.",
+          "badge": "updated"
         }
       ]
     },

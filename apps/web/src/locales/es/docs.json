@@ -44,7 +44,8 @@
         {
           "title": "Actions",
           "href": "/docs/elements/ai/actions",
-          "description": "La fila de botones de copiar, reintentar y feedback debajo de una respuesta."
+          "description": "La fila de botones de copiar, reintentar y feedback debajo de una respuesta.",
+          "badge": "updated"
         },
         {
           "title": "Attachments",
@@ -57,9 +58,21 @@
           "description": "Los pasos que recorrió un agente, con resultados de búsqueda e imágenes en cada uno."
         },
         {
+          "title": "Checkpoint",
+          "href": "/docs/elements/ai/checkpoint",
+          "description": "Un punto de la conversación al que volver, antes de que el agente cambiara cosas.",
+          "badge": "new"
+        },
+        {
           "title": "Code Block",
           "href": "/docs/elements/ai/code-block",
           "description": "Código dentro de una respuesta, con botón de copiar, números de línea y plegado para snippets largos."
+        },
+        {
+          "title": "Confirmation",
+          "href": "/docs/elements/ai/confirmation",
+          "description": "Pedir que se apruebe o rechace una acción antes de que el agente la ejecute.",
+          "badge": "new"
         },
         {
           "title": "Context",
@@ -70,6 +83,18 @@
           "title": "Conversation",
           "href": "/docs/elements/ai/conversation",
           "description": "El hilo con scroll que mantiene a la vista el mensaje más nuevo mientras llega."
+        },
+        {
+          "title": "Inline Citation",
+          "href": "/docs/elements/ai/inline-citation",
+          "description": "Una fuente dentro de la oración que respalda, a un hover o un toque.",
+          "badge": "new"
+        },
+        {
+          "title": "Model Selector",
+          "href": "/docs/elements/ai/model-selector",
+          "description": "Un menú compacto para elegir el modelo, o cuánto piensa, al lado del prompt.",
+          "badge": "new"
         },
         {
           "title": "Prompt Input",
@@ -109,7 +134,8 @@
         {
           "title": "Tool",
           "href": "/docs/elements/ai/tool",
-          "description": "Una llamada a herramienta con su estado, entrada y salida, plegada en una tarjeta."
+          "description": "Una llamada a herramienta con su estado, entrada y salida, plegada en una tarjeta.",
+          "badge": "updated"
         }
       ]
     },
