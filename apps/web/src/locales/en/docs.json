@@ -16,14 +16,6 @@
           "href": "/docs"
         },
         {
-          "title": "Foundations",
-          "href": "/docs/foundations"
-        },
-        {
-          "title": "Guidelines",
-          "href": "/docs/guidelines"
-        },
-        {
           "title": "AI Elements",
           "href": "/docs/elements/ai"
         },
@@ -34,127 +26,14 @@
         {
           "title": "Layout",
           "href": "/docs/elements/layout"
-        }
-      ]
-    },
-    {
-      "id": "concepts",
-      "title": "Concepts",
-      "items": [
-        {
-          "title": "Installation",
-          "href": "/docs/installation"
         },
         {
-          "title": "Theming",
-          "href": "/docs/concepts/theming"
+          "title": "Foundations",
+          "href": "/docs/foundations"
         },
         {
-          "title": "Compound Components",
-          "href": "/docs/concepts/compound-components"
-        },
-        {
-          "title": "CLI",
-          "href": "/docs/concepts/cli"
-        },
-        {
-          "title": "MCP Server",
-          "href": "/docs/concepts/mcp"
-        },
-        {
-          "title": "llms.txt",
-          "href": "/docs/concepts/llms-txt"
-        },
-        {
-          "title": "Skills",
-          "href": "/docs/concepts/skills"
-        }
-      ]
-    },
-    {
-      "id": "foundations",
-      "title": "Foundations",
-      "items": [
-        {
-          "title": "Overview",
-          "href": "/docs/foundations",
-          "description": "Principles of the system and how tokens reach components."
-        },
-        {
-          "title": "Color",
-          "href": "/docs/foundations/color",
-          "description": "The palette in light and dark, the foreground convention and contrast."
-        },
-        {
-          "title": "Typography",
-          "href": "/docs/foundations/typography",
-          "description": "Font roles, the type scale, weights and text rules."
-        },
-        {
-          "title": "Spacing",
-          "href": "/docs/foundations/spacing",
-          "description": "The 4px scale, control heights and touch targets."
-        },
-        {
-          "title": "Radius",
-          "href": "/docs/foundations/radius",
-          "description": "One base radius, five steps and the nesting rule."
-        },
-        {
-          "title": "Elevation",
-          "href": "/docs/foundations/elevation",
-          "description": "Three shadow levels and when to use each."
-        },
-        {
-          "title": "Motion",
-          "href": "/docs/foundations/motion",
-          "description": "Springs, depth of field, press feedback and reduced motion."
-        },
-        {
-          "title": "Layers",
-          "href": "/docs/foundations/layers",
-          "description": "The z-index map and how overlays stack."
-        }
-      ]
-    },
-    {
-      "id": "guidelines",
-      "title": "Guidelines",
-      "items": [
-        {
-          "title": "Overview",
-          "href": "/docs/guidelines",
-          "description": "What the guidelines are for and how to read them."
-        },
-        {
-          "title": "Overlays",
-          "href": "/docs/guidelines/overlays",
-          "description": "Dialog, Alert Dialog, Sheet, Drawer, Popover, Hover Card or Tooltip, and when each one fits."
-        },
-        {
-          "title": "Feedback",
-          "href": "/docs/guidelines/feedback",
-          "description": "Toast, Banner, Callout, field errors and Empty, by urgency, persistence and scope."
-        },
-        {
-          "title": "Selection",
-          "href": "/docs/guidelines/selection",
-          "description": "Radio, Select, Combobox, Checkbox, Switch, Slider and more, by options and timing."
-        },
-        {
-          "title": "Navigation",
-          "href": "/docs/guidelines/navigation",
-          "description": "Tabs, Sidebar, Breadcrumb, Pagination and menus, and why actions are not navigation."
-        },
-        {
-          "title": "Forms",
-          "href": "/docs/guidelines/forms",
-          "description": "Labels, errors, when to validate, buttons and optional fields with Form and Field."
-        },
-        {
-          "title": "Writing",
-          "href": "/docs/guidelines/writing",
-          "description": "Voice, button labels, error messages, empty states, dates and numbers."
+          "title": "Guidelines",
+          "href": "/docs/guidelines"
         }
       ]
     },
@@ -662,6 +541,127 @@
           "title": "Settings Row",
           "href": "/docs/elements/hybrids/settings-row",
           "description": "Label and description on the left, a switch, select, input or action on the right."
+        }
+      ]
+    },
+    {
+      "id": "concepts",
+      "title": "Concepts",
+      "items": [
+        {
+          "title": "Installation",
+          "href": "/docs/installation"
+        },
+        {
+          "title": "Theming",
+          "href": "/docs/concepts/theming"
+        },
+        {
+          "title": "Compound Components",
+          "href": "/docs/concepts/compound-components"
+        },
+        {
+          "title": "CLI",
+          "href": "/docs/concepts/cli"
+        },
+        {
+          "title": "MCP Server",
+          "href": "/docs/concepts/mcp"
+        },
+        {
+          "title": "llms.txt",
+          "href": "/docs/concepts/llms-txt"
+        },
+        {
+          "title": "Skills",
+          "href": "/docs/concepts/skills"
+        }
+      ]
+    },
+    {
+      "id": "foundations",
+      "title": "Foundations",
+      "items": [
+        {
+          "title": "Overview",
+          "href": "/docs/foundations",
+          "description": "Principles of the system and how tokens reach components."
+        },
+        {
+          "title": "Color",
+          "href": "/docs/foundations/color",
+          "description": "The palette in light and dark, the foreground convention and contrast."
+        },
+        {
+          "title": "Typography",
+          "href": "/docs/foundations/typography",
+          "description": "Font roles, the type scale, weights and text rules."
+        },
+        {
+          "title": "Spacing",
+          "href": "/docs/foundations/spacing",
+          "description": "The 4px scale, control heights and touch targets."
+        },
+        {
+          "title": "Radius",
+          "href": "/docs/foundations/radius",
+          "description": "One base radius, five steps and the nesting rule."
+        },
+        {
+          "title": "Elevation",
+          "href": "/docs/foundations/elevation",
+          "description": "Three shadow levels and when to use each."
+        },
+        {
+          "title": "Motion",
+          "href": "/docs/foundations/motion",
+          "description": "Springs, depth of field, press feedback and reduced motion."
+        },
+        {
+          "title": "Layers",
+          "href": "/docs/foundations/layers",
+          "description": "The z-index map and how overlays stack."
+        }
+      ]
+    },
+    {
+      "id": "guidelines",
+      "title": "Guidelines",
+      "items": [
+        {
+          "title": "Overview",
+          "href": "/docs/guidelines",
+          "description": "What the guidelines are for and how to read them."
+        },
+        {
+          "title": "Overlays",
+          "href": "/docs/guidelines/overlays",
+          "description": "Dialog, Alert Dialog, Sheet, Drawer, Popover, Hover Card or Tooltip, and when each one fits."
+        },
+        {
+          "title": "Feedback",
+          "href": "/docs/guidelines/feedback",
+          "description": "Toast, Banner, Callout, field errors and Empty, by urgency, persistence and scope."
+        },
+        {
+          "title": "Selection",
+          "href": "/docs/guidelines/selection",
+          "description": "Radio, Select, Combobox, Checkbox, Switch, Slider and more, by options and timing."
+        },
+        {
+          "title": "Navigation",
+          "href": "/docs/guidelines/navigation",
+          "description": "Tabs, Sidebar, Breadcrumb, Pagination and menus, and why actions are not navigation."
+        },
+        {
+          "title": "Forms",
+          "href": "/docs/guidelines/forms",
+          "description": "Labels, errors, when to validate, buttons and optional fields with Form and Field."
+        },
+        {
+          "title": "Writing",
+          "href": "/docs/guidelines/writing",
+          "description": "Voice, button labels, error messages, empty states, dates and numbers."
         }
       ]
     }
