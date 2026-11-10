@@ -222,6 +222,7 @@ export const DEMO_REGISTRY = {
     multiple: 'packages/ui/src/demos/accordion/multiple.tsx',
   },
   actions: {
+    branches: 'packages/ui/src/demos/actions/branches.tsx',
     default: 'packages/ui/src/demos/actions/default.tsx',
     'with-message': 'packages/ui/src/demos/actions/with-message.tsx',
   },
@@ -323,6 +324,9 @@ export const DEMO_REGISTRY = {
     disabled: 'packages/ui/src/demos/checkbox/disabled.tsx',
     'with-label': 'packages/ui/src/demos/checkbox/with-label.tsx',
   },
+  checkpoint: {
+    default: 'packages/ui/src/demos/checkpoint/default.tsx',
+  },
   'code-block': {
     collapsible: 'packages/ui/src/demos/code-block/collapsible.tsx',
     default: 'packages/ui/src/demos/code-block/default.tsx',
@@ -349,6 +353,10 @@ export const DEMO_REGISTRY = {
     default: 'packages/ui/src/demos/confirm/default.tsx',
     hook: 'packages/ui/src/demos/confirm/hook.tsx',
     'with-text': 'packages/ui/src/demos/confirm/with-text.tsx',
+  },
+  confirmation: {
+    async: 'packages/ui/src/demos/confirmation/async.tsx',
+    default: 'packages/ui/src/demos/confirmation/default.tsx',
   },
   container: {
     default: 'packages/ui/src/demos/container/default.tsx',
@@ -433,6 +441,9 @@ export const DEMO_REGISTRY = {
     tones: 'packages/ui/src/demos/icon-tile/tones.tsx',
     variants: 'packages/ui/src/demos/icon-tile/variants.tsx',
   },
+  'inline-citation': {
+    default: 'packages/ui/src/demos/inline-citation/default.tsx',
+  },
   input: {
     default: 'packages/ui/src/demos/input/default.tsx',
     disabled: 'packages/ui/src/demos/input/disabled.tsx',
@@ -461,6 +472,10 @@ export const DEMO_REGISTRY = {
   message: {
     default: 'packages/ui/src/demos/message/default.tsx',
     grouped: 'packages/ui/src/demos/message/grouped.tsx',
+  },
+  'model-selector': {
+    default: 'packages/ui/src/demos/model-selector/default.tsx',
+    'in-prompt-input': 'packages/ui/src/demos/model-selector/in-prompt-input.tsx',
   },
   'navigation-menu': {
     badges: 'packages/ui/src/demos/navigation-menu/badges.tsx',
@@ -641,6 +656,7 @@ export const DEMO_REGISTRY = {
     outline: 'packages/ui/src/demos/toggle-group/outline.tsx',
   },
   tool: {
+    approval: 'packages/ui/src/demos/tool/approval.tsx',
     default: 'packages/ui/src/demos/tool/default.tsx',
     statuses: 'packages/ui/src/demos/tool/statuses.tsx',
   },

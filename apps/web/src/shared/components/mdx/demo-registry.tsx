@@ -11,6 +11,7 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
     multiple: () => import('@repo/ui/src/demos/accordion/multiple').then((m) => m.Multiple),
   },
   actions: {
+    branches: () => import('@repo/ui/src/demos/actions/branches').then((m) => m.Branches),
     default: () => import('@repo/ui/src/demos/actions/default').then((m) => m.Default),
     'with-message': () => import('@repo/ui/src/demos/actions/with-message').then((m) => m.WithMessage),
   },
@@ -112,6 +113,9 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
     disabled: () => import('@repo/ui/src/demos/checkbox/disabled').then((m) => m.Disabled),
     'with-label': () => import('@repo/ui/src/demos/checkbox/with-label').then((m) => m.WithLabel),
   },
+  checkpoint: {
+    default: () => import('@repo/ui/src/demos/checkpoint/default').then((m) => m.Default),
+  },
   'code-block': {
     collapsible: () => import('@repo/ui/src/demos/code-block/collapsible').then((m) => m.Collapsible),
     default: () => import('@repo/ui/src/demos/code-block/default').then((m) => m.Default),
@@ -138,6 +142,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
     default: () => import('@repo/ui/src/demos/confirm/default').then((m) => m.Default),
     hook: () => import('@repo/ui/src/demos/confirm/hook').then((m) => m.Hook),
     'with-text': () => import('@repo/ui/src/demos/confirm/with-text').then((m) => m.WithText),
+  },
+  confirmation: {
+    async: () => import('@repo/ui/src/demos/confirmation/async').then((m) => m.Async),
+    default: () => import('@repo/ui/src/demos/confirmation/default').then((m) => m.Default),
   },
   container: {
     default: () => import('@repo/ui/src/demos/container/default').then((m) => m.Default),
@@ -222,6 +230,9 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
     tones: () => import('@repo/ui/src/demos/icon-tile/tones').then((m) => m.Tones),
     variants: () => import('@repo/ui/src/demos/icon-tile/variants').then((m) => m.Variants),
   },
+  'inline-citation': {
+    default: () => import('@repo/ui/src/demos/inline-citation/default').then((m) => m.Default),
+  },
   input: {
     default: () => import('@repo/ui/src/demos/input/default').then((m) => m.Default),
     disabled: () => import('@repo/ui/src/demos/input/disabled').then((m) => m.Disabled),
@@ -250,6 +261,10 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
   message: {
     default: () => import('@repo/ui/src/demos/message/default').then((m) => m.Default),
     grouped: () => import('@repo/ui/src/demos/message/grouped').then((m) => m.Grouped),
+  },
+  'model-selector': {
+    default: () => import('@repo/ui/src/demos/model-selector/default').then((m) => m.Default),
+    'in-prompt-input': () => import('@repo/ui/src/demos/model-selector/in-prompt-input').then((m) => m.InPromptInput),
   },
   'navigation-menu': {
     badges: () => import('@repo/ui/src/demos/navigation-menu/badges').then((m) => m.Badges),
@@ -430,6 +445,7 @@ export const DEMO_COMPONENTS: Record<string, Record<string, DemoLoader>> = {
     outline: () => import('@repo/ui/src/demos/toggle-group/outline').then((m) => m.Outline),
   },
   tool: {
+    approval: () => import('@repo/ui/src/demos/tool/approval').then((m) => m.Approval),
     default: () => import('@repo/ui/src/demos/tool/default').then((m) => m.Default),
     statuses: () => import('@repo/ui/src/demos/tool/statuses').then((m) => m.Statuses),
   },
