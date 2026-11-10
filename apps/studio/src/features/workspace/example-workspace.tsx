@@ -1,0 +1,74 @@
+'use client';
+
+import { buttonVariants } from '@repo/ui/components/button';
+import * as React from 'react';
+import { GithubMark } from '@/features/shell/github-mark';
+import { signInUrl } from '@/lib/api';
+import { ChatThread } from './chat-thread';
+import { EXAMPLE_PROJECT } from './example-data';
+import { ExportDialog } from './export-dialog';
+import { WorkspaceHeader } from './workspace-header';
+import { WorkspaceLayout } from './workspace-layout';
+
+/** A finished project anyone can open without signing in, to see what the Studio makes. */
+export function ExampleWorkspace() {
+  const [exportOpen, setExportOpen] = React.useState(false);
+  const project = EXAMPLE_PROJECT;
+
+  return (
+    <>
+      <WorkspaceLayout
+        files={project.files}
+        busy={false}
+        header={
+          <WorkspaceHeader
+            name={project.name}
+            version={project.version}
+            versions={project.versions}
+            onExport={() => setExportOpen(true)}
+            end={
+              <a
+                href={signInUrl('/')}
+                className={buttonVariants({ variant: 'outline', size: 'sm' })}
+              >
+                <GithubMark size={14} />
+                Sign in
+              </a>
+            }
+          />
+        }
+        chat={
+          <>
+            <ChatThread
+              messages={project.messages}
+              versions={project.versions}
+              currentVersion={project.version}
+              running={false}
+              waiting={false}
+            />
+            <div className="border-border bg-surface-muted m-3 mt-0 flex flex-col gap-3 rounded-2xl border p-4">
+              <p className="text-muted-strong text-sm">
+                This is an example project. Sign in with GitHub to describe your own screens.
+              </p>
+              <a href={signInUrl('/')} className={buttonVariants({ size: 'sm' })}>
+                <GithubMark size={14} />
+                Continue with GitHub
+              </a>
+            </div>
+          </>
+        }
+      />
+      <ExportDialog
+        projectId={project.id}
+        projectName={project.name}
+        version={project.version}
+        files={project.files}
+        hasRepoAccess={false}
+        signedIn={false}
+        broken={null}
+        open={exportOpen}
+        onOpenChange={setExportOpen}
+      />
+    </>
+  );
+}
