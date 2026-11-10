@@ -85,6 +85,12 @@
           "description": "El hilo con scroll que mantiene a la vista el mensaje más nuevo mientras llega."
         },
         {
+          "title": "File Tree",
+          "href": "/docs/elements/ai/file-tree",
+          "description": "Los archivos que cambió un agente y qué le pasó a cada uno.",
+          "badge": "new"
+        },
+        {
           "title": "Inline Citation",
           "href": "/docs/elements/ai/inline-citation",
           "description": "Una fuente dentro de la oración que respalda, a un hover o un toque.",
@@ -97,9 +103,21 @@
           "badge": "new"
         },
         {
+          "title": "Plan",
+          "href": "/docs/elements/ai/plan",
+          "description": "Los pasos que piensa dar un agente y cuánto avanzó.",
+          "badge": "new"
+        },
+        {
           "title": "Prompt Input",
           "href": "/docs/elements/ai/prompt-input",
           "description": "El composer, con textarea que crece, adjuntos, barra de herramientas y un botón que conoce el stream."
+        },
+        {
+          "title": "Queue",
+          "href": "/docs/elements/ai/queue",
+          "description": "Lo que el agente tiene en fila y lo que ya hizo.",
+          "badge": "new"
         },
         {
           "title": "Reasoning",
@@ -122,6 +140,18 @@
           "description": "Las fuentes detrás de una respuesta, plegadas bajo un contador hasta que el lector las quiera."
         },
         {
+          "title": "Stack Trace",
+          "href": "/docs/elements/ai/stack-trace",
+          "description": "Un error con su pila de llamadas, primero el código de la app.",
+          "badge": "new"
+        },
+        {
+          "title": "Subagent",
+          "href": "/docs/elements/ai/subagent",
+          "description": "Trabajo que se le pasó a otro agente, plegado en una fila.",
+          "badge": "new"
+        },
+        {
           "title": "Suggestion",
           "href": "/docs/elements/ai/suggestion",
           "description": "Prompts de arranque en una fila que scrollea, a un clic de ser enviados."
@@ -130,6 +160,18 @@
           "title": "Task",
           "href": "/docs/elements/ai/task",
           "description": "Un paso plegable con estado, para mostrar qué hizo un agente y qué archivos tocó."
+        },
+        {
+          "title": "Terminal",
+          "href": "/docs/elements/ai/terminal",
+          "description": "Un comando y su salida, en vivo mientras llega.",
+          "badge": "new"
+        },
+        {
+          "title": "Test Results",
+          "href": "/docs/elements/ai/test-results",
+          "description": "Una corrida de tests de un vistazo, con las fallas primero.",
+          "badge": "new"
         },
         {
           "title": "Tool",

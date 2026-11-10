@@ -85,6 +85,12 @@
           "description": "The scrolling thread that keeps the newest message in view while it streams."
         },
         {
+          "title": "File Tree",
+          "href": "/docs/elements/ai/file-tree",
+          "description": "The files an agent changed, with what happened to each one.",
+          "badge": "new"
+        },
+        {
           "title": "Inline Citation",
           "href": "/docs/elements/ai/inline-citation",
           "description": "A source inside the sentence it supports, one hover or tap away.",
@@ -97,9 +103,21 @@
           "badge": "new"
         },
         {
+          "title": "Plan",
+          "href": "/docs/elements/ai/plan",
+          "description": "The steps an agent means to take and how far it got.",
+          "badge": "new"
+        },
+        {
           "title": "Prompt Input",
           "href": "/docs/elements/ai/prompt-input",
           "description": "The composer, with a growing textarea, attachments, a toolbar and a submit button that knows the stream."
+        },
+        {
+          "title": "Queue",
+          "href": "/docs/elements/ai/queue",
+          "description": "What is lined up for the agent and what it already did.",
+          "badge": "new"
         },
         {
           "title": "Reasoning",
@@ -122,6 +140,18 @@
           "description": "The citations behind an answer, folded under a count until the reader wants them."
         },
         {
+          "title": "Stack Trace",
+          "href": "/docs/elements/ai/stack-trace",
+          "description": "An error with its call stack, app frames first.",
+          "badge": "new"
+        },
+        {
+          "title": "Subagent",
+          "href": "/docs/elements/ai/subagent",
+          "description": "Work handed to another agent, folded into one row.",
+          "badge": "new"
+        },
+        {
           "title": "Suggestion",
           "href": "/docs/elements/ai/suggestion",
           "description": "Prompt starters in a row that scrolls, one click away from being sent."
@@ -130,6 +160,18 @@
           "title": "Task",
           "href": "/docs/elements/ai/task",
           "description": "A collapsible step with a status, for showing what an agent did and which files it touched."
+        },
+        {
+          "title": "Terminal",
+          "href": "/docs/elements/ai/terminal",
+          "description": "A command and its output, live while it streams.",
+          "badge": "new"
+        },
+        {
+          "title": "Test Results",
+          "href": "/docs/elements/ai/test-results",
+          "description": "A test run at a glance, failures open first.",
+          "badge": "new"
         },
         {
           "title": "Tool",
