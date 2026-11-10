@@ -34,15 +34,6 @@
   }
 }
 
-@layer utilities {
-  .break-words-safe {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    hyphens: auto;
-  }
-}
-
 /* --- Docked chat panel --------------------------------------------------- */
 /* On desktop the assistant docks to the right and pushes the page instead of
    covering it, so you can keep reading what you are asking about. */
@@ -103,29 +94,6 @@ body:has([data-chat-launcher]) footer {
       animation-timeline: view();
       animation-range: entry 0% entry 60%;
     }
-
-    .rule-draw {
-      transform-origin: left;
-      animation: rule-draw linear both;
-      animation-timeline: view();
-      animation-range: cover 0% cover 35%;
-    }
-
-    .assistant-frame {
-      view-timeline-name: --assistant-section;
-    }
-
-    .assistant-peek {
-      animation: assistant-peek linear both;
-      animation-timeline: --assistant-section;
-      animation-range: entry 25% entry 90%;
-    }
-
-    .scroll-parallax {
-      animation: scroll-parallax linear both;
-      animation-timeline: view();
-      animation-range: cover 0% cover 100%;
-    }
   }
 }
 
@@ -157,26 +125,6 @@ body:has([data-chat-launcher]) footer {
     opacity: 1;
     transform: translateY(0);
     filter: blur(0);
-  }
-}
-
-@keyframes rule-draw {
-  from {
-    transform: scaleX(0);
-  }
-
-  to {
-    transform: scaleX(1);
-  }
-}
-
-@keyframes scroll-parallax {
-  from {
-    transform: translateY(0);
-  }
-
-  to {
-    transform: translateY(2.5rem);
   }
 }
 
@@ -235,20 +183,6 @@ body:has([data-chat-launcher]) footer {
   .preview-grid {
     width: auto;
     transform: none;
-  }
-}
-
-.assistant-peek {
-  transform: translate(40%, 30%);
-}
-
-@keyframes assistant-peek {
-  from {
-    transform: translate(160%, 120%);
-  }
-
-  to {
-    transform: translate(40%, 30%);
   }
 }
 
