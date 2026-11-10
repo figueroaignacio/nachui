@@ -43,6 +43,13 @@
       "when": 1791930497301,
       "tag": "0005_doc_chunks_unique_chunk",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794345195911,
+      "tag": "0006_studio",
+      "breakpoints": true
     }
   ]
 }

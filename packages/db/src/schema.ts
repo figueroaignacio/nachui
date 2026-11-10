@@ -57,3 +57,92 @@ export const docChunks = pgTable(
 
 export type DocChunk = typeof docChunks.$inferSelect;
 export type NewDocChunk = typeof docChunks.$inferInsert;
+
+export const studioUsers = pgTable('studio_users', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  githubId: text('github_id').unique().notNull(),
+  login: text('login').notNull(),
+  name: text('name'),
+  avatarUrl: text('avatar_url'),
+  repoToken: text('repo_token'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export type StudioUser = typeof studioUsers.$inferSelect;
+
+export const studioSessions = pgTable(
+  'studio_sessions',
+  {
+    tokenHash: text('token_hash').primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => studioUsers.id, { onDelete: 'cascade' }),
+    expiresAt: timestamp('expires_at').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (table) => [index('studio_sessions_user_idx').on(table.userId)],
+);
+
+export type StudioSession = typeof studioSessions.$inferSelect;
+
+export type StudioFiles = Record<string, string>;
+
+export const studioProjects = pgTable(
+  'studio_projects',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => studioUsers.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    currentVersion: integer('current_version').default(0).notNull(),
+    lastError: text('last_error'),
+    pullRequestUrl: text('pull_request_url'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (table) => [index('studio_projects_user_idx').on(table.userId, table.updatedAt)],
+);
+
+export type StudioProject = typeof studioProjects.$inferSelect;
+
+export const studioVersions = pgTable(
+  'studio_versions',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    projectId: uuid('project_id')
+      .notNull()
+      .references(() => studioProjects.id, { onDelete: 'cascade' }),
+    number: integer('number').notNull(),
+    files: jsonb('files').$type<StudioFiles>().notNull(),
+    summary: text('summary'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (table) => [uniqueIndex('studio_versions_project_number').on(table.projectId, table.number)],
+);
+
+export type StudioVersion = typeof studioVersions.$inferSelect;
+
+export const studioThreads = pgTable('studio_threads', {
+  projectId: uuid('project_id')
+    .primaryKey()
+    .references(() => studioProjects.id, { onDelete: 'cascade' }),
+  messages: jsonb('messages').$type<unknown[]>().default([]).notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const studioUsage = pgTable(
+  'studio_usage',
+  {
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => studioUsers.id, { onDelete: 'cascade' }),
+    day: text('day').notNull(),
+    generations: integer('generations').default(0).notNull(),
+    tokens: integer('tokens').default(0).notNull(),
+  },
+  (table) => [uniqueIndex('studio_usage_user_day').on(table.userId, table.day)],
+);
+
+export type StudioUsage = typeof studioUsage.$inferSelect;
