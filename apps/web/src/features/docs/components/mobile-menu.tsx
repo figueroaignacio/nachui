@@ -217,9 +217,9 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
                         onClick={toggleMenu}
                         aria-current={isActive ? 'page' : undefined}
                         className={cn(
-                          'flex items-center gap-2 rounded-md px-2.5 py-2 text-sm transition-colors',
+                          'focus-visible:ring-ring flex items-center gap-2 rounded-md px-2.5 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
                           isActive
-                            ? 'bg-card text-foreground font-medium'
+                            ? 'bg-muted text-foreground font-medium'
                             : 'text-muted-foreground hover:text-foreground',
                         )}
                       >
@@ -248,9 +248,9 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
                         onClick={toggleMenu}
                         aria-current={isActive ? 'page' : undefined}
                         className={cn(
-                          'flex items-center gap-2 rounded-md px-2.5 py-2 text-sm transition-colors',
+                          'focus-visible:ring-ring flex items-center gap-2 rounded-md px-2.5 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
                           isActive
-                            ? 'bg-card text-foreground font-medium'
+                            ? 'bg-muted text-foreground font-medium'
                             : 'text-muted-foreground hover:text-foreground',
                         )}
                       >
@@ -282,9 +282,9 @@ export function MobileMenuPanel({ open: isMenuOpen, onClose }: MobileMenuPanelPr
                         onClick={toggleMenu}
                         aria-current={isActive ? 'page' : undefined}
                         className={cn(
-                          'flex items-center gap-2 rounded-md px-2.5 py-2 text-sm transition-colors',
+                          'focus-visible:ring-ring flex items-center gap-2 rounded-md px-2.5 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
                           isActive
-                            ? 'bg-card text-foreground font-medium'
+                            ? 'bg-muted text-foreground font-medium'
                             : 'text-muted-foreground hover:text-foreground',
                         )}
                       >

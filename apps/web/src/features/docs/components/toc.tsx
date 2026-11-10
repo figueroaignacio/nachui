@@ -91,9 +91,7 @@ export function Toc({ toc, footer }: TocPanelProps) {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
     >
-      <p className="text-muted-foreground mb-2 px-2 font-mono text-[11px] lowercase">
-        {t('label')}
-      </p>
+      <p className="text-muted-foreground mb-2 px-2.5 text-xs font-medium">{t('label')}</p>
 
       <Tree tree={toc} activeItem={activeHeading} />
 

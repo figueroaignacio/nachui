@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@repo/ui/lib/cn';
-import { AnimatePresence, motion } from 'motion/react';
+import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 
 export interface TocEntry {
@@ -75,29 +75,16 @@ export function Tree({ tree, level = 1, activeItem, onItemClick }: TreeProps) {
             <a
               href={item.url}
               onClick={() => onItemClick?.(item.url)}
+              aria-current={isActive ? 'location' : undefined}
               className={cn(
-                'group relative flex items-center gap-2.5 rounded-md px-2 py-1 text-xs leading-snug no-underline transition-colors duration-200 outline-none focus-visible:ring-1',
-                isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground/80',
-                level === 2 && 'text-[11px]',
+                'focus-visible:ring-ring flex items-center rounded-md px-2.5 py-1.5 text-[13px] leading-snug no-underline transition-colors focus-visible:ring-2 focus-visible:outline-none',
+                isActive
+                  ? 'bg-muted text-foreground font-medium'
+                  : 'text-muted-foreground hover:text-foreground',
+                level === 2 && 'text-xs',
               )}
             >
-              <span className="relative z-10 flex h-3.5 w-3.5 shrink-0 items-center justify-center">
-                <AnimatePresence mode="wait">
-                  {isActive ? (
-                    <motion.span
-                      key="active"
-                      className="bg-brand block"
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      exit={{ scale: 0, opacity: 0 }}
-                      transition={{ duration: 0.2, ease: 'backOut' }}
-                      style={{ width: level === 1 ? 6 : 4, height: level === 1 ? 6 : 4 }}
-                    />
-                  ) : null}
-                </AnimatePresence>
-              </span>
-
-              <span className="relative z-10 line-clamp-2">{item.title}</span>
+              <span className="line-clamp-2">{item.title}</span>
             </a>
 
             {item.items?.length ? (
