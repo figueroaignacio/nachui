@@ -40,7 +40,9 @@ Use the following composition to build `Actions`:
 
 ```tree
 Actions
+├── Actions.Branch
 ├── Actions.Copy
+├── Actions.Feedback
 └── Actions.Button
     └── Actions.Icons.*
 ```
@@ -51,13 +53,19 @@ Actions sit naturally in a `Message.Footer`. Keep them at the start of the row f
 
 <ComponentPreview component="actions" demo="with-message" />
 
+## Feedback and versions
+
+`Actions.Feedback` is the thumbs up and down pair: each button has `aria-pressed`, and a second click clears the rating. `Actions.Branch` steps through the versions of an answer after a retry, as "2 / 3" between a back and a forward button, and hides itself while there is only one. On the reader's own message, an `Actions.Button` with `Actions.Icons.edit` puts the text back in the composer.
+
+<ComponentPreview component="actions" demo="branches" />
+
 ## Copy
 
 `Actions.Copy` writes `text` to the clipboard and swaps to a check for a moment, with the label changing to "Copied". A hidden status region says "Copied" out loud as well, or "Copy failed" when the clipboard refuses. `label`, `copiedLabel`, `failedLabel` and `timeout` tune it.
 
 ## Icons
 
-`Actions.Icons` ships `copy`, `check`, `retry`, `thumbsUp`, `thumbsDown` and `share` as plain SVG components, so the common row needs no icon package. Any SVG works as a child.
+`Actions.Icons` ships `copy`, `check`, `retry`, `thumbsUp`, `thumbsDown`, `share` and `edit` as plain SVG components, so the common row needs no icon package. Any SVG works as a child.
 
 ## API Reference
 
@@ -87,3 +95,25 @@ Actions sit naturally in a `Message.Footer`. Keep them at the start of the row f
 | `failedLabel` | `string` | `'Copy failed'` | Announced when the clipboard write fails |
 | `timeout`     | `number` | `1500`          | Milliseconds before the label returns    |
 | `className`   | `string` | -               | Additional CSS classes                   |
+
+### Actions.Feedback
+
+| Prop            | Type                     | Default           | Description                         |
+| --------------- | ------------------------ | ----------------- | ----------------------------------- |
+| `value`         | `'up' \| 'down' \| null` | -                 | Controlled rating                   |
+| `defaultValue`  | `'up' \| 'down' \| null` | `null`            | Initial rating when uncontrolled    |
+| `onValueChange` | `(value) => void`        | -                 | Called with the new rating, or null |
+| `upLabel`       | `string`                 | `'Good response'` | Label of the first button           |
+| `downLabel`     | `string`                 | `'Bad response'`  | Label of the second button          |
+
+### Actions.Branch
+
+| Prop            | Type                                         | Default              | Description                             |
+| --------------- | -------------------------------------------- | -------------------- | --------------------------------------- |
+| `count`         | `number`                                     | -                    | How many versions exist; hidden below 2 |
+| `value`         | `number`                                     | -                    | Controlled index, from 0                |
+| `defaultValue`  | `number`                                     | `count - 1`          | Initial index; the latest by default    |
+| `onValueChange` | `(value: number) => void`                    | -                    | Called with the new index               |
+| `previousLabel` | `string`                                     | `'Previous version'` | Label of the back button                |
+| `nextLabel`     | `string`                                     | `'Next version'`     | Label of the forward button             |
+| `formatLabel`   | `(current: number, count: number) => string` | `"2 / 3"`            | Text between the buttons                |

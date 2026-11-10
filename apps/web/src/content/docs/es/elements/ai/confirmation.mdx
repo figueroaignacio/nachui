@@ -1,0 +1,86 @@
+---
+title: Confirmation
+description: Pedile al usuario que apruebe o rechace una acción antes de que el agente la ejecute.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="confirmation" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="confirmation" />
+
+## Anatomía
+
+```tsx
+import { Confirmation } from '@/ai/confirmation';
+```
+
+```tsx
+<Confirmation onStateChange={(state) => respond(state === 'approved')}>
+  <Confirmation.Title>¿Mandar el reporte semanal a todo el equipo?</Confirmation.Title>
+  <Confirmation.Description>Le llega a 14 personas.</Confirmation.Description>
+  <Confirmation.Actions>
+    <Confirmation.Deny />
+    <Confirmation.Approve>Mandar reporte</Confirmation.Approve>
+  </Confirmation.Actions>
+</Confirmation>
+```
+
+Usalo cuando un agente quiere hacer algo que el usuario tiene que decidir antes: mandar un mail, correr un comando, gastar plata, cambiar datos. Cuando responde, los botones desaparecen y queda una línea con lo que decidió, así la conversación guarda el registro.
+
+Funciona solo o adentro de un [Tool](/docs/elements/ai/tool) con `status="awaiting-approval"`.
+
+## Composición
+
+```tree
+Confirmation
+├── Confirmation.Title
+├── Confirmation.Description
+└── Confirmation.Actions
+    ├── Confirmation.Deny
+    └── Confirmation.Approve
+```
+
+## Aprobación async
+
+El `onClick` de `Confirmation.Approve` o `Confirmation.Deny` puede devolver una promesa. Mientras corre, el botón muestra un spinner, el otro se deshabilita y el grupo queda `aria-busy`. Si la promesa resuelve, cambia el estado; si rechaza, la confirmación sigue pendiente para que el usuario vuelva a intentar.
+
+<ComponentPreview component="confirmation" demo="async" />
+
+## Accesibilidad
+
+- La raíz es un `group` con el nombre de `Confirmation.Title` y la descripción de `Confirmation.Description`.
+- La línea del resultado es una región `status`: los lectores de pantalla anuncian "Approved" o "Denied" sin mover el foco.
+- Aprobar es el único botón relleno. Rechazar va primero en el orden de lectura, así un Enter de más en el primer foco no aprueba.
+
+## Referencia de API
+
+### Confirmation
+
+| Prop            | Tipo                                  | Default      | Descripción                                  |
+| --------------- | ------------------------------------- | ------------ | -------------------------------------------- |
+| `state`         | `'pending' \| 'approved' \| 'denied'` | -            | Estado controlado                            |
+| `defaultState`  | `'pending' \| 'approved' \| 'denied'` | `'pending'`  | Estado inicial sin control                   |
+| `onStateChange` | `(state: ConfirmationState) => void`  | -            | Se llama cuando el usuario aprueba o rechaza |
+| `approvedLabel` | `string`                              | `'Approved'` | Línea de resultado al aprobar                |
+| `deniedLabel`   | `string`                              | `'Denied'`   | Línea de resultado al rechazar               |
+| `className`     | `string`                              | -            | Clases CSS adicionales                       |
+
+### Confirmation.Approve, Confirmation.Deny
+
+Aceptan todas las props de [Button](/docs/elements/ui/button). Approve usa `variant="default"` y el texto "Approve"; Deny, `variant="outline"` y "Deny".
+
+| Prop      | Tipo                                      | Default | Descripción                                     |
+| --------- | ----------------------------------------- | ------- | ----------------------------------------------- |
+| `onClick` | `(event) => void \| PromiseLike<unknown>` | -       | Corre antes de cambiar el estado; puede esperar |
+
+### Confirmation.Title, Confirmation.Description, Confirmation.Actions
+
+| Prop        | Tipo     | Default | Descripción            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Clases CSS adicionales |

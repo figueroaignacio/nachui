@@ -1,0 +1,46 @@
+---
+title: Checkpoint
+description: A point in the conversation the reader can go back to, before the agent changed things.
+published: true
+date: 2026-11-09
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="checkpoint" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="checkpoint" />
+
+## Anatomy
+
+```tsx
+import { Checkpoint } from '@/ai/checkpoint';
+```
+
+```tsx
+<Checkpoint label="Before 12 files changed" onRestore={() => restore(checkpointId)} />
+```
+
+Place it between turns, right before the agent edits files or data. It is a quiet line across the thread with a label and a Restore link, so it marks the spot without competing with the messages. Without `onRestore` it is only a marker.
+
+Restoring is your app's job: `onRestore` tells you which point the reader picked. Confirm first when restoring throws away work that was done since.
+
+## Accessibility
+
+- The line is a `group` named by `label`, so screen readers announce where they are before the Restore button.
+- The decorative lines and the icon are hidden from assistive tech.
+
+## API Reference
+
+### Checkpoint
+
+| Prop           | Type         | Default        | Description                             |
+| -------------- | ------------ | -------------- | --------------------------------------- |
+| `label`        | `ReactNode`  | `'Checkpoint'` | What this point is                      |
+| `onRestore`    | `() => void` | -              | Shows the Restore button and handles it |
+| `restoreLabel` | `string`     | `'Restore'`    | Text of the button                      |
+| `icon`         | `ReactNode`  | flag           | Replaces the icon before the label      |
+| `className`    | `string`     | -              | Additional CSS classes                  |

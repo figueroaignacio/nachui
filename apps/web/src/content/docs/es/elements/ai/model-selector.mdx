@@ -1,0 +1,82 @@
+---
+title: Model Selector
+description: Un menú compacto para elegir el modelo, o cuánto piensa, al lado del prompt.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="model-selector" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="model-selector" />
+
+## Anatomía
+
+```tsx
+import { ModelSelector } from '@/ai/model-selector';
+```
+
+```tsx
+<ModelSelector value={model} onValueChange={setModel}>
+  <ModelSelector.Trigger aria-label="Modelo" />
+  <ModelSelector.Content>
+    <ModelSelector.Item value="pro" description="El mejor para problemas difíciles, más lento">
+      Pro
+    </ModelSelector.Item>
+    <ModelSelector.Item
+      value="lite"
+      description="El más rápido, para respuestas cortas"
+      badge="Nuevo"
+    >
+      Lite
+    </ModelSelector.Item>
+  </ModelSelector.Content>
+</ModelSelector>
+```
+
+Es un [Select](/docs/elements/ui/select) con un trigger discreto e ítems con descripción. El trigger muestra solo el nombre del modelo y la lista explica cada opción, así la elección es informada sin cargar el campo de texto. Para el esfuerzo o el nivel de razonamiento usá un segundo `ModelSelector`: es el mismo control con otras opciones.
+
+## Composición
+
+```tree
+ModelSelector
+├── ModelSelector.Trigger
+└── ModelSelector.Content
+    ├── ModelSelector.Group
+    │   ├── ModelSelector.Label
+    │   └── ModelSelector.Item
+    └── ModelSelector.Separator
+```
+
+## En el prompt input
+
+Ponelo en `PromptInput.Tools`, después del botón de adjuntar.
+
+<ComponentPreview component="model-selector" demo="in-prompt-input" />
+
+## Teclado
+
+Igual que Select: `Enter`, `Space` o las flechas abren la lista, las flechas se mueven, escribir salta a un modelo por nombre, `Enter` elige y `Escape` cierra y devuelve el foco al trigger.
+
+## Accesibilidad
+
+- Nombrá cada trigger con `aria-label` ("Modelo", "Esfuerzo"); su texto visible es el valor actual, no para qué sirve.
+- La descripción es parte del nombre accesible de la opción, así un lector de pantalla dice "Lite, el más rápido, para respuestas cortas".
+
+## Referencia de API
+
+`ModelSelector` acepta todas las props de [Select](/docs/elements/ui/select#referencia-de-api) (`value`, `defaultValue`, `onValueChange`, `open`, `name`, `disabled`). `ModelSelector.Trigger` acepta las props del trigger de Select y usa `size="sm"` por defecto.
+
+### ModelSelector.Item
+
+| Prop          | Tipo        | Default | Descripción                                      |
+| ------------- | ----------- | ------- | ------------------------------------------------ |
+| `value`       | `string`    | -       | Valor que se informa al elegir el modelo         |
+| `children`    | `string`    | -       | Nombre del modelo, también visible en el trigger |
+| `description` | `ReactNode` | -       | Una línea debajo del nombre                      |
+| `badge`       | `ReactNode` | -       | Etiqueta chica al lado del nombre, como "Nuevo"  |
+| `disabled`    | `boolean`   | `false` | Saltea el ítem y bloquea la selección            |

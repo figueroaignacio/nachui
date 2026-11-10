@@ -43,26 +43,33 @@ Tool
 ├── Tool.Header
 └── Tool.Content
     ├── Tool.Input
-    └── Tool.Output
+    ├── Tool.Output
+    └── Confirmation (with awaiting-approval)
 ```
 
 ## Statuses
 
-`status` lives on the root and drives the indicator in the header: `pending` waits with a dot, `running` spins, `complete` checks off and `error` flags. Pair `error` with `<Tool.Output error />` so the payload reads as the failure it is.
+`status` lives on the root and drives the indicator in the header: `pending` waits with a dot, `running` spins, `complete` checks off, `error` flags, and `awaiting-approval` and `denied` cover calls that need the reader's go-ahead. Pair `error` with `<Tool.Output error />` so the payload reads as the failure it is.
 
 <ComponentPreview component="tool" demo="statuses" />
+
+## Approval
+
+Some calls should not run until the reader says so. Set `status="awaiting-approval"`: the card opens on its own, its border turns to the warning tone and screen readers hear "Waiting for approval". Put a [Confirmation](/docs/elements/ai/confirmation) inside `Tool.Content` and move the status on with the answer: to `running` when approved, to `denied` when not. A denied call keeps its name struck through, so the thread shows what did not happen.
+
+<ComponentPreview component="tool" demo="approval" />
 
 ## API Reference
 
 ### Tool
 
-| Prop           | Type                                              | Default      | Description                        |
-| -------------- | ------------------------------------------------- | ------------ | ---------------------------------- |
-| `status`       | `'pending' \| 'running' \| 'complete' \| 'error'` | `'complete'` | State of the call                  |
-| `defaultOpen`  | `boolean`                                         | `false`      | Open state when uncontrolled       |
-| `open`         | `boolean`                                         | -            | Controlled open state              |
-| `onOpenChange` | `(open: boolean) => void`                         | -            | Called when the open state changes |
-| `className`    | `string`                                          | -            | Additional CSS classes             |
+| Prop           | Type                                                                                 | Default      | Description                        |
+| -------------- | ------------------------------------------------------------------------------------ | ------------ | ---------------------------------- |
+| `status`       | `'pending' \| 'awaiting-approval' \| 'running' \| 'complete' \| 'error' \| 'denied'` | `'complete'` | State of the call                  |
+| `defaultOpen`  | `boolean`                                                                            | `false`      | Open state when uncontrolled       |
+| `open`         | `boolean`                                                                            | -            | Controlled open state              |
+| `onOpenChange` | `(open: boolean) => void`                                                            | -            | Called when the open state changes |
+| `className`    | `string`                                                                             | -            | Additional CSS classes             |
 
 ### Tool.Header
 

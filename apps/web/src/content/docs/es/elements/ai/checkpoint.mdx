@@ -1,0 +1,46 @@
+---
+title: Checkpoint
+description: Un punto de la conversación al que el usuario puede volver, antes de que el agente cambiara cosas.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="checkpoint" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="checkpoint" />
+
+## Anatomía
+
+```tsx
+import { Checkpoint } from '@/ai/checkpoint';
+```
+
+```tsx
+<Checkpoint label="Antes de cambiar 12 archivos" onRestore={() => restore(checkpointId)} />
+```
+
+Ponelo entre turnos, justo antes de que el agente edite archivos o datos. Es una línea discreta que cruza la conversación con un texto y un link para restaurar, así marca el lugar sin competir con los mensajes. Sin `onRestore` es solo una marca.
+
+Restaurar le toca a tu app: `onRestore` te avisa qué punto eligió el usuario. Confirmá antes si restaurar tira trabajo hecho después.
+
+## Accesibilidad
+
+- La línea es un `group` con el nombre de `label`, así los lectores de pantalla anuncian dónde están antes del botón.
+- Las líneas decorativas y el ícono quedan ocultos para las tecnologías de asistencia.
+
+## Referencia de API
+
+### Checkpoint
+
+| Prop           | Tipo         | Default        | Descripción                                 |
+| -------------- | ------------ | -------------- | ------------------------------------------- |
+| `label`        | `ReactNode`  | `'Checkpoint'` | Qué es este punto                           |
+| `onRestore`    | `() => void` | -              | Muestra el botón para restaurar y lo maneja |
+| `restoreLabel` | `string`     | `'Restore'`    | Texto del botón                             |
+| `icon`         | `ReactNode`  | bandera        | Reemplaza el ícono antes del texto          |
+| `className`    | `string`     | -              | Clases CSS adicionales                      |

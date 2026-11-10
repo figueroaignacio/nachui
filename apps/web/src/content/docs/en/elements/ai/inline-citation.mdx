@@ -1,0 +1,54 @@
+---
+title: Inline Citation
+description: A source inside the sentence it supports, with the links one hover or tap away.
+published: true
+date: 2026-11-09
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="inline-citation" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="inline-citation" />
+
+## Anatomy
+
+```tsx
+import { InlineCitation } from '@/ai/inline-citation';
+```
+
+```tsx
+<p>
+  Round once, after tax,{' '}
+  <InlineCitation sources={sources}>and only when you display the amount</InlineCitation>.
+</p>
+```
+
+Each source is `{ url, title, description? }`. The chip shows the host of the first source and how many more there are ("docs.stripe.com +1"). Hovering, focusing or tapping it opens a card with every source as a link.
+
+Pass `children` to underline the exact words the sources back. Leave them out to place only the chip, at the end of a sentence. [Sources](/docs/elements/ai/sources) lists every link of an answer at the bottom; Inline Citation ties a link to one claim. Use both when an answer has many claims.
+
+## Keyboard
+
+`Tab` reaches the chip and opens the card. `Tab` again moves into its links. `Escape` closes it.
+
+## Accessibility
+
+- The chip is a real button named "docs.stripe.com +1, 2 sources", so it reads as more than a host name.
+- Links open in a new tab with `rel="noreferrer"`.
+- With no sources, it renders only the text, so a citation that failed to load never shows an empty chip.
+
+## API Reference
+
+### InlineCitation
+
+| Prop           | Type                        | Default           | Description                                    |
+| -------------- | --------------------------- | ----------------- | ---------------------------------------------- |
+| `sources`      | `InlineCitationSource[]`    | -                 | `{ url, title, description? }` for each source |
+| `children`     | `ReactNode`                 | -                 | The words the sources back, underlined         |
+| `label`        | `string`                    | host of the first | Replaces the chip text, for example `"1"`      |
+| `sourcesLabel` | `(count: number) => string` | `"2 sources"`     | Count read by screen readers                   |
+| `className`    | `string`                    | -                 | Additional CSS classes                         |

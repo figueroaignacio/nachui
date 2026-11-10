@@ -1,0 +1,54 @@
+---
+title: Inline Citation
+description: Una fuente dentro de la oración que respalda, con los links a un hover o un toque.
+published: true
+date: 2026-11-09
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="inline-citation" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="inline-citation" />
+
+## Anatomía
+
+```tsx
+import { InlineCitation } from '@/ai/inline-citation';
+```
+
+```tsx
+<p>
+  Redondeá una sola vez, después de impuestos,{' '}
+  <InlineCitation sources={sources}>y solo al mostrar el monto</InlineCitation>.
+</p>
+```
+
+Cada fuente es `{ url, title, description? }`. El chip muestra el dominio de la primera fuente y cuántas más hay ("docs.stripe.com +1"). Al pasar el mouse, enfocarlo o tocarlo se abre una tarjeta con todas las fuentes como links.
+
+Pasale `children` para subrayar las palabras exactas que respaldan las fuentes. Sin children, queda solo el chip, al final de una oración. [Sources](/docs/elements/ai/sources) lista todos los links de una respuesta al final; Inline Citation ata un link a una afirmación. Usá los dos cuando una respuesta tiene muchas afirmaciones.
+
+## Teclado
+
+`Tab` llega al chip y abre la tarjeta. Otro `Tab` entra a sus links. `Escape` la cierra.
+
+## Accesibilidad
+
+- El chip es un botón real con el nombre "docs.stripe.com +1, 2 sources", así se lee como algo más que un dominio.
+- Los links se abren en otra pestaña con `rel="noreferrer"`.
+- Sin fuentes, muestra solo el texto: una cita que no cargó nunca deja un chip vacío.
+
+## Referencia de API
+
+### InlineCitation
+
+| Prop           | Tipo                        | Default               | Descripción                                        |
+| -------------- | --------------------------- | --------------------- | -------------------------------------------------- |
+| `sources`      | `InlineCitationSource[]`    | -                     | `{ url, title, description? }` por cada fuente     |
+| `children`     | `ReactNode`                 | -                     | Las palabras que respaldan las fuentes, subrayadas |
+| `label`        | `string`                    | dominio de la primera | Reemplaza el texto del chip, por ejemplo `"1"`     |
+| `sourcesLabel` | `(count: number) => string` | `"2 sources"`         | Cantidad que leen los lectores de pantalla         |
+| `className`    | `string`                    | -                     | Clases CSS adicionales                             |

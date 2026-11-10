@@ -1,0 +1,86 @@
+---
+title: Confirmation
+description: Ask the reader to approve or deny an action before the agent runs it.
+published: true
+date: 2026-11-09
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="confirmation" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="confirmation" />
+
+## Anatomy
+
+```tsx
+import { Confirmation } from '@/ai/confirmation';
+```
+
+```tsx
+<Confirmation onStateChange={(state) => respond(state === 'approved')}>
+  <Confirmation.Title>Send the weekly report to the whole team?</Confirmation.Title>
+  <Confirmation.Description>It goes to 14 people.</Confirmation.Description>
+  <Confirmation.Actions>
+    <Confirmation.Deny />
+    <Confirmation.Approve>Send report</Confirmation.Approve>
+  </Confirmation.Actions>
+</Confirmation>
+```
+
+Use it when an agent wants to do something the reader should decide on first: send an email, run a command, spend money, change data. Once the reader answers, the buttons go away and a short line says what was decided, so the thread keeps a record of it.
+
+It works on its own or inside a [Tool](/docs/elements/ai/tool) with `status="awaiting-approval"`.
+
+## Composition
+
+```tree
+Confirmation
+├── Confirmation.Title
+├── Confirmation.Description
+└── Confirmation.Actions
+    ├── Confirmation.Deny
+    └── Confirmation.Approve
+```
+
+## Async approval
+
+`onClick` on `Confirmation.Approve` or `Confirmation.Deny` can return a promise. While it runs, the button shows a spinner, the other one is disabled and the group is `aria-busy`. When the promise resolves, the state changes; when it rejects, the confirmation stays pending so the reader can try again.
+
+<ComponentPreview component="confirmation" demo="async" />
+
+## Accessibility
+
+- The root is a `group` named by `Confirmation.Title` and described by `Confirmation.Description`.
+- The result line is a `status` region, so screen readers announce "Approved" or "Denied" without moving focus.
+- Approve is the only filled button. Deny comes first in reading order, so a stray Enter on the first focus does not approve.
+
+## API Reference
+
+### Confirmation
+
+| Prop            | Type                                  | Default      | Description                               |
+| --------------- | ------------------------------------- | ------------ | ----------------------------------------- |
+| `state`         | `'pending' \| 'approved' \| 'denied'` | -            | Controlled state                          |
+| `defaultState`  | `'pending' \| 'approved' \| 'denied'` | `'pending'`  | Initial state when uncontrolled           |
+| `onStateChange` | `(state: ConfirmationState) => void`  | -            | Called when the reader approves or denies |
+| `approvedLabel` | `string`                              | `'Approved'` | Result line after approving               |
+| `deniedLabel`   | `string`                              | `'Denied'`   | Result line after denying                 |
+| `className`     | `string`                              | -            | Additional CSS classes                    |
+
+### Confirmation.Approve, Confirmation.Deny
+
+Accept every [Button](/docs/elements/ui/button) prop. Approve defaults to `variant="default"` and the label "Approve"; Deny to `variant="outline"` and "Deny".
+
+| Prop      | Type                                      | Default | Description                             |
+| --------- | ----------------------------------------- | ------- | --------------------------------------- |
+| `onClick` | `(event) => void \| PromiseLike<unknown>` | -       | Runs before the state changes; may wait |
+
+### Confirmation.Title, Confirmation.Description, Confirmation.Actions
+
+| Prop        | Type     | Default | Description            |
+| ----------- | -------- | ------- | ---------------------- |
+| `className` | `string` | -       | Additional CSS classes |

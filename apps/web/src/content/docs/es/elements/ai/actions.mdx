@@ -40,7 +40,9 @@ Usá la siguiente composición para construir `Actions`:
 
 ```tree
 Actions
+├── Actions.Branch
 ├── Actions.Copy
+├── Actions.Feedback
 └── Actions.Button
     └── Actions.Icons.*
 ```
@@ -51,13 +53,19 @@ Las acciones van naturales en un `Message.Footer`. Dejalas al principio de la fi
 
 <ComponentPreview component="actions" demo="with-message" />
 
+## Feedback y versiones
+
+`Actions.Feedback` es el par de pulgares arriba y abajo: cada botón tiene `aria-pressed` y un segundo click borra la valoración. `Actions.Branch` recorre las versiones de una respuesta después de reintentar, como "2 / 3" entre un botón para atrás y otro para adelante, y se oculta mientras hay una sola. En el mensaje propio, un `Actions.Button` con `Actions.Icons.edit` devuelve el texto al campo para editarlo.
+
+<ComponentPreview component="actions" demo="branches" />
+
 ## Copiar
 
 `Actions.Copy` escribe `text` en el portapapeles y cambia a un tilde por un momento, con la etiqueta pasando a "Copied". Una región de estado oculta también lo dice en voz alta, o dice "Copy failed" cuando el portapapeles no deja. `label`, `copiedLabel`, `failedLabel` y `timeout` lo ajustan.
 
 ## Íconos
 
-`Actions.Icons` trae `copy`, `check`, `retry`, `thumbsUp`, `thumbsDown` y `share` como componentes SVG planos, así la fila típica no necesita ningún paquete de íconos. Cualquier SVG sirve como hijo.
+`Actions.Icons` trae `copy`, `check`, `retry`, `thumbsUp`, `thumbsDown`, `share` y `edit` como componentes SVG planos, así la fila típica no necesita ningún paquete de íconos. Cualquier SVG sirve como hijo.
 
 ## Referencia de API
 
@@ -87,3 +95,25 @@ Las acciones van naturales en un `Message.Footer`. Dejalas al principio de la fi
 | `failedLabel` | `string` | `'Copy failed'` | Se anuncia cuando falla la escritura al portapapeles |
 | `timeout`     | `number` | `1500`          | Milisegundos hasta que vuelve la etiqueta            |
 | `className`   | `string` | -               | Clases CSS adicionales                               |
+
+### Actions.Feedback
+
+| Prop            | Tipo                     | Default           | Descripción                              |
+| --------------- | ------------------------ | ----------------- | ---------------------------------------- |
+| `value`         | `'up' \| 'down' \| null` | -                 | Valoración controlada                    |
+| `defaultValue`  | `'up' \| 'down' \| null` | `null`            | Valoración inicial sin control           |
+| `onValueChange` | `(value) => void`        | -                 | Se llama con la nueva valoración, o null |
+| `upLabel`       | `string`                 | `'Good response'` | Etiqueta del primer botón                |
+| `downLabel`     | `string`                 | `'Bad response'`  | Etiqueta del segundo botón               |
+
+### Actions.Branch
+
+| Prop            | Tipo                                         | Default              | Descripción                                  |
+| --------------- | -------------------------------------------- | -------------------- | -------------------------------------------- |
+| `count`         | `number`                                     | -                    | Cuántas versiones hay; se oculta debajo de 2 |
+| `value`         | `number`                                     | -                    | Índice controlado, desde 0                   |
+| `defaultValue`  | `number`                                     | `count - 1`          | Índice inicial; la última por defecto        |
+| `onValueChange` | `(value: number) => void`                    | -                    | Se llama con el nuevo índice                 |
+| `previousLabel` | `string`                                     | `'Previous version'` | Etiqueta del botón para atrás                |
+| `nextLabel`     | `string`                                     | `'Next version'`     | Etiqueta del botón para adelante             |
+| `formatLabel`   | `(current: number, count: number) => string` | `"2 / 3"`            | Texto entre los botones                      |

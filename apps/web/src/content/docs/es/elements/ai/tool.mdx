@@ -43,26 +43,33 @@ Tool
 ├── Tool.Header
 └── Tool.Content
     ├── Tool.Input
-    └── Tool.Output
+    ├── Tool.Output
+    └── Confirmation (con awaiting-approval)
 ```
 
 ## Estados
 
-`status` va en la raíz y define el indicador del header: `pending` espera con un punto, `running` gira, `complete` tilda y `error` marca el problema. Combiná `error` con `<Tool.Output error />` para que el payload se lea como la falla que es.
+`status` va en la raíz y define el indicador del header: `pending` espera con un punto, `running` gira, `complete` tilda, `error` marca el problema, y `awaiting-approval` y `denied` cubren las llamadas que necesitan el visto bueno del usuario. Combiná `error` con `<Tool.Output error />` para que el payload se lea como la falla que es.
 
 <ComponentPreview component="tool" demo="statuses" />
+
+## Aprobación
+
+Algunas llamadas no deberían correr hasta que el usuario lo diga. Usá `status="awaiting-approval"`: la tarjeta se abre sola, el borde toma el tono de advertencia y los lectores de pantalla escuchan "Waiting for approval". Poné un [Confirmation](/docs/elements/ai/confirmation) adentro de `Tool.Content` y avanzá el estado con la respuesta: a `running` si aprueba, a `denied` si no. Una llamada rechazada deja su nombre tachado, así la conversación muestra lo que no pasó.
+
+<ComponentPreview component="tool" demo="approval" />
 
 ## Referencia de API
 
 ### Tool
 
-| Prop           | Type                                              | Default      | Description                          |
-| -------------- | ------------------------------------------------- | ------------ | ------------------------------------ |
-| `status`       | `'pending' \| 'running' \| 'complete' \| 'error'` | `'complete'` | Estado de la llamada                 |
-| `defaultOpen`  | `boolean`                                         | `false`      | Estado abierto cuando no se controla |
-| `open`         | `boolean`                                         | -            | Estado abierto controlado            |
-| `onOpenChange` | `(open: boolean) => void`                         | -            | Se llama al cambiar el estado        |
-| `className`    | `string`                                          | -            | Clases CSS adicionales               |
+| Prop           | Type                                                                                 | Default      | Description                          |
+| -------------- | ------------------------------------------------------------------------------------ | ------------ | ------------------------------------ |
+| `status`       | `'pending' \| 'awaiting-approval' \| 'running' \| 'complete' \| 'error' \| 'denied'` | `'complete'` | Estado de la llamada                 |
+| `defaultOpen`  | `boolean`                                                                            | `false`      | Estado abierto cuando no se controla |
+| `open`         | `boolean`                                                                            | -            | Estado abierto controlado            |
+| `onOpenChange` | `(open: boolean) => void`                                                            | -            | Se llama al cambiar el estado        |
+| `className`    | `string`                                                                             | -            | Clases CSS adicionales               |
 
 ### Tool.Header
 
