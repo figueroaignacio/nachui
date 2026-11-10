@@ -128,34 +128,83 @@ function DotIcon({ size = 24, ...props }: IconProps) {
   );
 }
 
+function ShieldIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z" />
+      <path d="M12 9v3" />
+      <path d="M12 15h.01" />
+    </svg>
+  );
+}
+
+function BanIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="m5.6 5.6 12.8 12.8" />
+    </svg>
+  );
+}
+
 const INSTANT_COLLAPSE: Variants = {
   closed: { height: 0, opacity: 0, transition: still },
   open: { height: 'auto', opacity: 1, transition: still },
 };
 
-type ToolStatus = 'pending' | 'running' | 'complete' | 'error';
+type ToolStatus = 'pending' | 'awaiting-approval' | 'running' | 'complete' | 'error' | 'denied';
 
 type ToolStatusLabels = Record<ToolStatus, string>;
 
 const DEFAULT_STATUS_LABELS: ToolStatusLabels = {
   pending: 'Pending',
+  'awaiting-approval': 'Waiting for approval',
   running: 'Running',
   complete: 'Completed',
   error: 'Failed',
+  denied: 'Denied',
 };
 
 const STATUS_ICON: Record<ToolStatus, React.ComponentType<IconProps>> = {
   pending: DotIcon,
+  'awaiting-approval': ShieldIcon,
   running: LoaderIcon,
   complete: CheckIcon,
   error: AlertIcon,
+  denied: BanIcon,
 };
 
 const STATUS_TONE: Record<ToolStatus, string> = {
   pending: 'text-muted-foreground',
+  'awaiting-approval': 'text-warning-text',
   running: 'text-foreground',
   complete: 'text-success-text',
   error: 'text-destructive-text',
+  denied: 'text-muted-foreground',
 };
 
 interface ToolContextValue {
@@ -226,6 +275,12 @@ const ToolRoot = ({
     onChange: onOpenChange,
   });
   const id = React.useId();
+  const previousStatus = React.useRef<ToolStatus | undefined>(undefined);
+
+  React.useEffect(() => {
+    if (status === 'awaiting-approval' && previousStatus.current !== status) setOpen(true);
+    previousStatus.current = status;
+  }, [status, setOpen]);
 
   const value = React.useMemo<ToolContextValue>(
     () => ({ open, setOpen, status, id }),
@@ -239,7 +294,7 @@ const ToolRoot = ({
         data-state={open ? 'open' : 'closed'}
         data-status={status}
         className={cn(
-          'border-border bg-card text-card-foreground w-full overflow-hidden rounded-lg border',
+          'border-border bg-card text-card-foreground data-[status=awaiting-approval]:border-warning-border w-full overflow-hidden rounded-lg border',
           className,
         )}
         {...props}
@@ -287,7 +342,14 @@ const ToolHeader = ({
         <WrenchIcon size={14} />
       </span>
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className="truncate font-mono text-xs">{name}</span>
+        <span
+          className={cn(
+            'truncate font-mono text-xs',
+            status === 'denied' && 'text-muted-foreground line-through',
+          )}
+        >
+          {name}
+        </span>
         {description ? (
           <span className="text-muted-foreground truncate text-xs">{description}</span>
         ) : null}
