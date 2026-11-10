@@ -8,8 +8,8 @@ import { DefaultChatTransport, type UIMessage } from 'ai';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import * as React from 'react';
-import { AccountMenu } from '@/features/shell/app-header';
 import { clearPendingPrompt, readPendingPrompt } from '@/features/shell/pending-prompt';
+import { useProjects } from '@/features/shell/projects-store';
 import { useSession } from '@/features/shell/session';
 import { chatUrl, studioApi } from '@/lib/api';
 import type { Project, StudioModel } from '@/lib/types';
@@ -19,13 +19,14 @@ import { Composer } from './composer';
 import { ExportDialog } from './export-dialog';
 import { liveFiles } from './live-files';
 import { useProject } from './use-project';
-import { WorkspaceHeader } from './workspace-header';
+import { ExportButton, WorkspaceHeader } from './workspace-header';
 import { WorkspaceLayout } from './workspace-layout';
 
 function Loaded({ project, reload }: { project: Project; reload: () => Promise<Project | null> }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, usage, refreshUsage } = useSession();
+  const { refresh: refreshProjects, setLiveId } = useProjects();
   const [pending] = React.useState(() =>
     project.messages.length === 0 ? readPendingPrompt(project.id) : null,
   );
@@ -56,10 +57,12 @@ function Loaded({ project, reload }: { project: Project; reload: () => Promise<P
     onFinish: () => {
       void reload();
       refreshUsage();
+      refreshProjects();
     },
     onError: () => {
       void reload();
       refreshUsage();
+      refreshProjects();
     },
   });
 
@@ -84,6 +87,10 @@ function Loaded({ project, reload }: { project: Project; reload: () => Promise<P
   }, [failure?.kind, project.id, router]);
 
   const running = status === 'submitted' || status === 'streaming';
+  React.useEffect(() => {
+    setLiveId(running ? project.id : null);
+    return () => setLiveId(null);
+  }, [project.id, running, setLiveId]);
   const files = React.useMemo(
     () => (running ? liveFiles(project.files, messages.at(-1)) : project.files),
     [messages, project.files, running],
@@ -105,7 +112,10 @@ function Loaded({ project, reload }: { project: Project; reload: () => Promise<P
             ? undefined
             : (report) => send(`The preview fails with this error. Fix it.\n\n${report}`)
         }
-        header={
+        actions={
+          <ExportButton onClick={() => setExportOpen(true)} disabled={project.version === 0} />
+        }
+        header={(end) => (
           <WorkspaceHeader
             name={name}
             version={project.version}
@@ -115,11 +125,9 @@ function Loaded({ project, reload }: { project: Project; reload: () => Promise<P
               await studioApi.rename(project.id, next).catch(() => setName(project.name));
             }}
             onRestore={running ? undefined : (version) => void restore(version)}
-            onExport={() => setExportOpen(true)}
-            exportDisabled={project.version === 0}
-            end={<AccountMenu />}
+            end={end}
           />
-        }
+        )}
         chat={
           <>
             <ChatThread
@@ -144,7 +152,7 @@ function Loaded({ project, reload }: { project: Project; reload: () => Promise<P
                 ) : null
               }
             />
-            <div className="p-3 pt-0">
+            <div className="flex flex-col gap-2 p-3 pt-0">
               <Composer
                 status={status === 'error' ? 'error' : status}
                 model={model}
@@ -158,6 +166,9 @@ function Loaded({ project, reload }: { project: Project; reload: () => Promise<P
                     : 'Ask for a change'
                 }
               />
+              <p className="text-muted-foreground text-center text-[11px]">
+                Only NachUI components. Checked before every version.
+              </p>
             </div>
           </>
         }
@@ -182,7 +193,7 @@ export function ProjectWorkspace({ id }: { id: string }) {
 
   if (error === 'not-found') {
     return (
-      <div className="flex min-h-dvh flex-col items-center justify-center gap-4 p-6 text-center">
+      <div className="flex h-full flex-col items-center justify-center gap-4 p-6 text-center">
         <p className="text-muted-strong text-sm">This project does not exist or is not yours.</p>
         <Link href="/projects" className={buttonVariants({ variant: 'outline', size: 'sm' })}>
           Back to projects
@@ -193,7 +204,7 @@ export function ProjectWorkspace({ id }: { id: string }) {
 
   if (error === 'failed' && !project) {
     return (
-      <div className="flex min-h-dvh items-center justify-center p-6">
+      <div className="flex h-full items-center justify-center p-6">
         <p role="alert" className="text-muted-foreground text-sm">
           Could not load the project. Refresh to try again.
         </p>
@@ -203,17 +214,23 @@ export function ProjectWorkspace({ id }: { id: string }) {
 
   if (!project) {
     return (
-      <div aria-busy="true" aria-label="Loading project" className="flex h-dvh flex-col">
-        <div className="border-border flex h-13 items-center gap-3 border-b px-4">
-          <Skeleton className="size-6.5 rounded-md" />
-          <Skeleton className="h-4 w-40" />
-        </div>
-        <div className="grid flex-1 lg:grid-cols-[440px_1fr]">
-          <div className="border-border flex flex-col gap-3 border-e p-4">
+      <div
+        aria-busy="true"
+        aria-label="Loading project"
+        className="grid h-full lg:grid-cols-[440px_1fr]"
+      >
+        <div className="border-border flex flex-col border-e">
+          <div className="border-border flex h-12 items-center gap-3 border-b px-3">
+            <Skeleton className="size-7 rounded-md" />
+            <Skeleton className="h-4 w-36" />
+          </div>
+          <div className="flex flex-col gap-3 p-4">
             <Skeleton className="ms-auto h-10 w-3/4 rounded-2xl" />
             <Skeleton className="h-28 rounded-lg" />
           </div>
-          <Skeleton className="m-5 hidden rounded-xl lg:block" />
+        </div>
+        <div className="bg-surface-muted hidden p-5 lg:block">
+          <Skeleton className="size-full rounded-xl" />
         </div>
       </div>
     );

@@ -7,7 +7,7 @@ import { signInUrl } from '@/lib/api';
 import { ChatThread } from './chat-thread';
 import { EXAMPLE_PROJECT } from './example-data';
 import { ExportDialog } from './export-dialog';
-import { WorkspaceHeader } from './workspace-header';
+import { ExportButton, WorkspaceHeader } from './workspace-header';
 import { WorkspaceLayout } from './workspace-layout';
 
 /** A finished project anyone can open without signing in, to see what the Studio makes. */
@@ -16,27 +16,30 @@ export function ExampleWorkspace() {
   const project = EXAMPLE_PROJECT;
 
   return (
-    <>
+    <div className="h-dvh">
       <WorkspaceLayout
         files={project.files}
         busy={false}
-        header={
+        actions={<ExportButton onClick={() => setExportOpen(true)} />}
+        header={(end) => (
           <WorkspaceHeader
             name={project.name}
             version={project.version}
             versions={project.versions}
-            onExport={() => setExportOpen(true)}
+            sidebar={false}
             end={
-              <a
-                href={signInUrl('/')}
-                className={buttonVariants({ variant: 'outline', size: 'sm' })}
-              >
-                <GithubMark size={14} />
-                Sign in
-              </a>
+              end ?? (
+                <a
+                  href={signInUrl('/')}
+                  className={buttonVariants({ variant: 'outline', size: 'sm' })}
+                >
+                  <GithubMark size={14} />
+                  Sign in
+                </a>
+              )
             }
           />
-        }
+        )}
         chat={
           <>
             <ChatThread
@@ -69,6 +72,6 @@ export function ExampleWorkspace() {
         open={exportOpen}
         onOpenChange={setExportOpen}
       />
-    </>
+    </div>
   );
 }

@@ -26,6 +26,7 @@ export function Composer({
     <PromptInput
       status={status}
       disabled={disabled}
+      className="bg-card shadow-lg"
       onSubmit={(message) => {
         const text = message.text.trim();
         if (text) onSend(text);

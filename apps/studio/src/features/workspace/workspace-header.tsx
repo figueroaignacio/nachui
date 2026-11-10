@@ -2,8 +2,9 @@
 
 import { Button } from '@repo/ui/components/button';
 import { DropdownMenu } from '@repo/ui/components/dropdown-menu';
+import { Sidebar } from '@repo/ui/components/sidebar';
 import { ChevronDownIcon } from '@repo/ui/icons/chevron-down';
-import { DownloadIcon } from '@repo/ui/icons/download';
+import { UploadIcon } from '@repo/ui/icons/upload';
 import Image from 'next/image';
 import Link from 'next/link';
 import * as React from 'react';
@@ -18,7 +19,7 @@ function ProjectName({ name, onRename }: { name: string; onRename?: (name: strin
     if (editing) inputRef.current?.select();
   }, [editing]);
 
-  if (!onRename) return <span className="truncate text-sm font-medium">{name}</span>;
+  if (!onRename) return <span className="min-w-0 truncate px-1 text-sm font-medium">{name}</span>;
 
   if (editing) {
     return (
@@ -54,7 +55,7 @@ function ProjectName({ name, onRename }: { name: string; onRename?: (name: strin
         setEditing(true);
       }}
       title="Rename"
-      className="hover:bg-muted focus-visible:ring-ring max-w-56 truncate rounded-md px-2 py-1 text-sm font-medium focus-visible:ring-2 focus-visible:outline-none"
+      className="hover:bg-muted focus-visible:ring-ring max-w-56 min-w-0 truncate rounded-md px-2 py-1 text-sm font-medium focus-visible:ring-2 focus-visible:outline-none"
     >
       {name}
     </button>
@@ -67,8 +68,7 @@ export function WorkspaceHeader({
   versions,
   onRename,
   onRestore,
-  onExport,
-  exportDisabled,
+  sidebar = true,
   end,
 }: {
   name: string;
@@ -76,22 +76,22 @@ export function WorkspaceHeader({
   versions: VersionSummary[];
   onRename?: (name: string) => void;
   onRestore?: (version: number) => void;
-  onExport: () => void;
-  exportDisabled?: boolean;
+  sidebar?: boolean;
   end?: React.ReactNode;
 }) {
   return (
-    <header className="border-border flex h-13 shrink-0 items-center gap-2 border-b px-3 sm:px-4">
-      <Link
-        href="/"
-        aria-label="Studio home"
-        className="focus-visible:ring-ring shrink-0 rounded-md focus-visible:ring-2 focus-visible:outline-none"
-      >
-        <Image src="/icon-192.png" alt="" width={26} height={26} className="rounded-md" />
-      </Link>
-      <span aria-hidden="true" className="text-border">
-        /
-      </span>
+    <header className="border-border flex h-12 shrink-0 items-center gap-1.5 border-b px-2 sm:px-3">
+      {sidebar ? (
+        <Sidebar.Trigger className="max-md:size-10" />
+      ) : (
+        <Link
+          href="/"
+          aria-label="Studio home"
+          className="focus-visible:ring-ring me-1 shrink-0 rounded-md focus-visible:ring-2 focus-visible:outline-none"
+        >
+          <Image src="/icon-192.png" alt="" width={24} height={24} className="rounded-md" />
+        </Link>
+      )}
       <ProjectName key={name} name={name} onRename={onRename} />
       {version > 0 ? (
         <DropdownMenu>
@@ -99,8 +99,8 @@ export function WorkspaceHeader({
             <Button
               variant="outline"
               size="sm"
-              className="h-7 gap-1 px-2 font-mono text-xs"
-              rightIcon={<ChevronDownIcon size={12} />}
+              className="h-6 shrink-0 gap-1 rounded-full px-2 font-mono text-[11px]"
+              rightIcon={<ChevronDownIcon size={11} />}
             >
               v{version}
             </Button>
@@ -128,16 +128,16 @@ export function WorkspaceHeader({
           </DropdownMenu.Content>
         </DropdownMenu>
       ) : null}
-      <span className="flex-1" />
-      <Button
-        size="sm"
-        onClick={onExport}
-        disabled={exportDisabled}
-        leftIcon={<DownloadIcon size={14} />}
-      >
-        Export
-      </Button>
+      <span className="min-w-2 flex-1" />
       {end}
     </header>
+  );
+}
+
+export function ExportButton({ onClick, disabled }: { onClick: () => void; disabled?: boolean }) {
+  return (
+    <Button size="sm" onClick={onClick} disabled={disabled} leftIcon={<UploadIcon size={14} />}>
+      Export
+    </Button>
   );
 }

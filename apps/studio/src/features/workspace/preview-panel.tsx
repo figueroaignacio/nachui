@@ -1,12 +1,14 @@
 'use client';
 
+import { Shimmer } from '@repo/ui/ai/shimmer';
 import { StackTrace } from '@repo/ui/ai/stack-trace';
 import { Button } from '@repo/ui/components/button';
-import { Spinner } from '@repo/ui/components/spinner';
+import { Skeleton } from '@repo/ui/components/skeleton';
 import { ToggleGroup } from '@repo/ui/components/toggle-group';
 import { RefreshIcon } from '@repo/ui/icons/refresh';
-import { cn } from '@repo/ui/lib/cn';
+import { AnimatePresence, motion } from 'motion/react';
 import * as React from 'react';
+import { landIn, useEntrance } from '@/features/shell/motion';
 import { usePreviewFrame, type PreviewError } from '../preview/use-preview-frame';
 import type { ProjectFiles } from '@/lib/types';
 import { DesktopIcon, PhoneIcon, TabletIcon } from './device-icons';
@@ -18,35 +20,51 @@ export function errorReport(error: PreviewError): string {
   return [`${error.name}: ${error.message}`, error.stack ?? ''].join('\n').trim();
 }
 
+function BuildingSkeleton({ label }: { label: string }) {
+  return (
+    <div aria-hidden="true" className="flex flex-col gap-4 p-8 sm:p-10">
+      <Skeleton className="h-7 w-44" />
+      <Skeleton className="h-3.5 w-72 max-w-full" />
+      <Skeleton className="mt-3 h-28 rounded-xl" />
+      <div className="grid grid-cols-2 gap-4">
+        <Skeleton className="h-24 rounded-xl" />
+        <Skeleton className="h-24 rounded-xl" />
+      </div>
+      <Skeleton className="h-36 rounded-xl" />
+      <Shimmer className="mx-auto mt-1 text-sm">{label}</Shimmer>
+    </div>
+  );
+}
+
 export function PreviewPanel({
   files,
   busy,
   onFix,
   hidden,
   toolbarStart,
+  actions,
 }: {
   files: ProjectFiles;
   busy: boolean;
   onFix?: (report: string) => void;
   hidden?: boolean;
   toolbarStart?: React.ReactNode;
+  actions?: React.ReactNode;
 }) {
   const [device, setDevice] = React.useState<Device>('desktop');
   const { frameRef, srcDoc, frameKey, status, error, reload, dismissError } =
     usePreviewFrame(files);
+  const land = useEntrance(landIn);
+  const [landed, setLanded] = React.useState(false);
+  if (status === 'rendered' && !landed) setLanded(true);
+
+  const working = busy || status === 'building' || status === 'loading';
+  const waitingForFirst = !landed && status !== 'empty' && status !== 'error';
 
   return (
     <section aria-label="Preview" hidden={hidden} className="flex min-h-0 flex-1 flex-col">
-      <div className="border-border flex h-11 shrink-0 items-center gap-3 border-b px-3">
+      <div className="border-border flex h-12 shrink-0 items-center gap-2 border-b px-3">
         {toolbarStart}
-        <span className="text-muted-foreground flex min-w-0 flex-1 items-center gap-2 text-xs">
-          {busy || status === 'building' || status === 'loading' ? (
-            <>
-              <Spinner size="sm" />
-              <span>{busy ? 'Updating as the agent writes' : 'Building the preview'}</span>
-            </>
-          ) : null}
-        </span>
         <ToggleGroup
           type="single"
           required
@@ -54,7 +72,7 @@ export function PreviewPanel({
           value={device}
           onValueChange={(value) => setDevice((value || 'desktop') as Device)}
           aria-label="Preview width"
-          className="hidden md:flex"
+          className="ms-1 hidden md:flex"
         >
           <ToggleGroup.Item value="desktop" aria-label="Desktop width">
             <DesktopIcon />
@@ -66,6 +84,13 @@ export function PreviewPanel({
             <PhoneIcon />
           </ToggleGroup.Item>
         </ToggleGroup>
+        <span aria-live="polite" className="flex min-w-0 flex-1 justify-center text-xs">
+          {working && landed ? (
+            <Shimmer className="truncate">
+              {busy ? 'Updating as the agent writes' : 'Building the preview'}
+            </Shimmer>
+          ) : null}
+        </span>
         <Button
           variant="ghost"
           size="icon"
@@ -75,12 +100,14 @@ export function PreviewPanel({
         >
           <RefreshIcon size={15} />
         </Button>
+        {actions}
       </div>
-      <div className="bg-surface-muted relative min-h-0 flex-1 overflow-auto p-3 sm:p-5">
-        <div
-          className={cn(
-            'border-border bg-background mx-auto h-full min-h-[480px] overflow-hidden rounded-xl border transition-[max-width] duration-300 motion-reduce:transition-none',
-          )}
+      <div className="bg-surface-muted studio-dots relative min-h-0 flex-1 overflow-auto p-3 sm:p-5">
+        <motion.div
+          initial={false}
+          animate={landed ? 'visible' : 'hidden'}
+          variants={land}
+          className="border-border bg-background mx-auto h-full min-h-[480px] overflow-hidden rounded-xl border shadow-lg transition-[max-width] duration-300 motion-reduce:transition-none"
           style={{ maxWidth: WIDTHS[device] }}
         >
           {srcDoc ? (
@@ -93,7 +120,26 @@ export function PreviewPanel({
               className="size-full border-0"
             />
           ) : null}
-        </div>
+        </motion.div>
+        <AnimatePresence>
+          {waitingForFirst ? (
+            <motion.div
+              key="building"
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.15 } }}
+              className="absolute inset-3 sm:inset-5"
+            >
+              <div
+                className="border-border bg-background mx-auto h-full overflow-hidden rounded-xl border"
+                style={{ maxWidth: WIDTHS[device] }}
+              >
+                <BuildingSkeleton
+                  label={busy ? 'Waiting for the first file' : 'Building preview'}
+                />
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
         {status === 'empty' && !busy ? (
           <div className="absolute inset-0 flex items-center justify-center p-6">
             <p className="text-muted-foreground max-w-xs text-center text-sm">

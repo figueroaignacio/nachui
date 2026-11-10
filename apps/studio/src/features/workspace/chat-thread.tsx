@@ -4,7 +4,9 @@ import { Checkpoint } from '@repo/ui/ai/checkpoint';
 import { Conversation } from '@repo/ui/ai/conversation';
 import { Shimmer } from '@repo/ui/ai/shimmer';
 import type { UIMessage } from 'ai';
+import { motion } from 'motion/react';
 import * as React from 'react';
+import { useEntrance } from '@/features/shell/motion';
 import type { VersionSummary } from '@/lib/types';
 import { AssistantMessage, UserMessage } from './message-parts';
 
@@ -30,6 +32,13 @@ export function ChatThread({
     [versions],
   );
   const lastId = messages.at(-1)?.id;
+  const entrance = useEntrance();
+  const [seen] = React.useState(() => new Set(messages.map((message) => message.id)));
+  const appear = (id: string) => ({
+    initial: seen.has(id) ? false : ('hidden' as const),
+    animate: 'visible' as const,
+    variants: entrance,
+  });
 
   return (
     <Conversation className="min-h-0 flex-1" label="Chat with the Studio">
@@ -40,12 +49,20 @@ export function ChatThread({
           </p>
         ) : null}
         {messages.map((message) => {
-          if (message.role === 'user') return <UserMessage key={message.id} message={message} />;
+          if (message.role === 'user') {
+            return (
+              <motion.div key={message.id} {...appear(message.id)}>
+                <UserMessage message={message} />
+              </motion.div>
+            );
+          }
           if (message.role !== 'assistant') return null;
           const version = byMessage.get(message.id);
           return (
             <React.Fragment key={message.id}>
-              <AssistantMessage message={message} streaming={running && message.id === lastId} />
+              <motion.div {...appear(message.id)}>
+                <AssistantMessage message={message} streaming={running && message.id === lastId} />
+              </motion.div>
               {version ? (
                 <Checkpoint
                   label={`v${version.number}${version.number === currentVersion ? ' · current' : ''}`}
@@ -59,7 +76,11 @@ export function ChatThread({
             </React.Fragment>
           );
         })}
-        {waiting ? <Shimmer className="text-sm">Reading the catalog</Shimmer> : null}
+        {waiting ? (
+          <motion.div initial="hidden" animate="visible" variants={entrance}>
+            <Shimmer className="text-sm font-medium">Thinking</Shimmer>
+          </motion.div>
+        ) : null}
         {footer}
       </Conversation.Content>
       <Conversation.ScrollButton />
