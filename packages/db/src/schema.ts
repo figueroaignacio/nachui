@@ -117,6 +117,7 @@ export const studioVersions = pgTable(
     number: integer('number').notNull(),
     files: jsonb('files').$type<StudioFiles>().notNull(),
     summary: text('summary'),
+    messageId: text('message_id'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
   },
   (table) => [uniqueIndex('studio_versions_project_number').on(table.projectId, table.number)],

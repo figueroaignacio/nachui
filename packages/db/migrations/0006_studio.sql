@@ -47,6 +47,7 @@ CREATE TABLE "studio_versions" (
 	"number" integer NOT NULL,
 	"files" jsonb NOT NULL,
 	"summary" text,
+	"message_id" text,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
