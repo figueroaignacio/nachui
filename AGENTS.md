@@ -66,6 +66,16 @@ Nav items in `apps/web/src/locales/{en,es}/docs.json` accept an optional `"badge
 
 DB workflow lives in `packages/db`: `db:generate`, `db:migrate`, `db:push`, `db:studio` (drizzle-kit).
 
+## Project skills
+
+Skills for this repo live in `.agents/skills/<name>/` (symlinked from `.claude/skills/`). Load the one that matches the task:
+
+- `nachui-frontend-engineering`: entry point to design, build or polish a component or docs page (canvas, build, look at it, UX review, report).
+- `nachui-component-authoring`: a component end to end: API, tests, demos, en/es docs, registry, CLI and checks.
+- `nachui-design-audit`: audit the catalog or the site against `DESIGN.md`, documented as a before/after Design artifact.
+- `nachui-design-tokens`: the DTCG token pipeline, theme presets, contrast and Figma.
+- `nachui-ai-readable-docs`: writing docs a person and an agent both read, and the `llms.txt`, `.md` and `/api/docs` surfaces.
+
 ## Conventions that matter here
 
 - Components in `packages/ui` must stay copy-paste ready and self-contained: runtime deps are limited to `clsx`, `tailwind-merge`, `motion`, `class-variance-authority` and `zod`. Icons are never a dependency: a primitive inlines the SVGs it needs as local components, and demos import from `packages/ui/src/icons/`. Never import docs/app data into a primitive; pass text and icons via props.
