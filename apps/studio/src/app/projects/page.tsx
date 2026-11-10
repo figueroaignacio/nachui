@@ -1,52 +1,95 @@
 'use client';
 
-import { Button } from '@repo/ui/components/button';
+import { Button, buttonVariants } from '@repo/ui/components/button';
 import { Empty } from '@repo/ui/components/empty';
 import { Input } from '@repo/ui/components/input';
 import { Skeleton } from '@repo/ui/components/skeleton';
+import { ToggleGroup } from '@repo/ui/components/toggle-group';
 import { FolderIcon } from '@repo/ui/icons/folder';
 import { PlusIcon } from '@repo/ui/icons/plus';
 import { SearchIcon } from '@repo/ui/icons/search';
-import { useRouter } from 'next/navigation';
+import { motion } from 'motion/react';
+import Link from 'next/link';
 import * as React from 'react';
-import { AppHeader } from '@/features/shell/app-header';
-import { PageSkeleton } from '@/features/shell/page-skeleton';
+import { AppShell, MobileBar } from '@/features/shell/app-shell';
+import { useEntrance } from '@/features/shell/motion';
 import { ProjectCard } from '@/features/shell/project-card';
-import { SessionProvider } from '@/features/shell/session';
-import { studioApi } from '@/lib/api';
+import { useProjects } from '@/features/shell/projects-store';
 import type { ProjectSummary } from '@/lib/types';
 
+type Filter = 'all' | 'pr' | 'broken';
+
+const FILTERS: Record<Filter, (project: ProjectSummary) => boolean> = {
+  all: () => true,
+  pr: (project) => project.pullRequestUrl !== null,
+  broken: (project) => project.lastError !== null,
+};
+
+function summary(projects: ProjectSummary[]): string {
+  const screens = `${projects.length} ${projects.length === 1 ? 'screen' : 'screens'}`;
+  const prs = projects.filter(FILTERS.pr).length;
+  if (prs === 0) return `${screens} built with NachUI.`;
+  return `${screens} built with NachUI. ${prs} sent as ${prs === 1 ? 'a pull request' : 'pull requests'}.`;
+}
+
 function Projects() {
-  const router = useRouter();
-  const [projects, setProjects] = React.useState<ProjectSummary[] | null>(null);
-  const [failed, setFailed] = React.useState(false);
+  const { projects, failed } = useProjects();
+  const entrance = useEntrance();
   const [query, setQuery] = React.useState('');
+  const [filter, setFilter] = React.useState<Filter>('all');
+  const searchRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
-    studioApi.projects().then(setProjects, () => setFailed(true));
+    if (new URLSearchParams(window.location.search).has('search')) searchRef.current?.focus();
   }, []);
 
   const visible = React.useMemo(() => {
     const value = query.trim().toLowerCase();
-    return (projects ?? []).filter((project) => project.name.toLowerCase().includes(value));
-  }, [projects, query]);
+    return (projects ?? [])
+      .filter(FILTERS[filter])
+      .filter((project) => project.name.toLowerCase().includes(value));
+  }, [filter, projects, query]);
 
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 sm:px-8">
+    <main className="mx-auto flex w-full max-w-6xl flex-col gap-7 px-4 py-8 sm:px-8 sm:py-10">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="flex flex-col gap-1.5">
+          <h1 className="font-heading text-3xl font-bold tracking-tight">Projects</h1>
+          <p className="text-muted-strong text-sm">
+            {projects && projects.length > 0
+              ? summary(projects)
+              : 'Every screen you build lands here.'}
+          </p>
+        </div>
+        <Link href="/" className={buttonVariants({ size: 'sm' })}>
+          <PlusIcon size={14} />
+          New project
+        </Link>
+      </div>
+
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="font-heading flex-1 text-3xl font-bold tracking-tight">Projects</h1>
         <Input
+          ref={searchRef}
           type="search"
           aria-label="Search projects"
           placeholder="Search projects"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           leftIcon={<SearchIcon size={14} />}
-          className="w-full sm:w-64"
+          className="w-full sm:w-72"
         />
-        <Button onClick={() => router.push('/')} leftIcon={<PlusIcon size={14} />}>
-          New project
-        </Button>
+        <ToggleGroup
+          type="single"
+          required
+          size="sm"
+          value={filter}
+          onValueChange={(value) => setFilter((value || 'all') as Filter)}
+          aria-label="Show"
+        >
+          <ToggleGroup.Item value="all">All</ToggleGroup.Item>
+          <ToggleGroup.Item value="pr">Pull requests</ToggleGroup.Item>
+          <ToggleGroup.Item value="broken">Needs a fix</ToggleGroup.Item>
+        </ToggleGroup>
       </div>
 
       {failed ? (
@@ -54,9 +97,13 @@ function Projects() {
           Could not load your projects. Refresh to try again.
         </p>
       ) : projects === null ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-busy="true">
+        <div
+          className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-5"
+          aria-busy="true"
+          aria-label="Loading projects"
+        >
           {Array.from({ length: 4 }, (_, index) => (
-            <Skeleton key={index} className="h-48 rounded-2xl" />
+            <Skeleton key={index} className="h-60 rounded-xl" />
           ))}
         </div>
       ) : projects.length === 0 ? (
@@ -71,19 +118,49 @@ function Projects() {
             </Empty.Description>
           </Empty.Header>
           <Empty.Content>
-            <Button size="sm" onClick={() => router.push('/')}>
+            <Link href="/" className={buttonVariants({ size: 'sm' })}>
               Start one
-            </Button>
+            </Link>
           </Empty.Content>
         </Empty>
       ) : visible.length === 0 ? (
-        <p className="text-muted-foreground text-sm">Nothing matches “{query}”.</p>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {visible.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
+        <div className="text-muted-foreground flex flex-col items-start gap-3 text-sm">
+          <p>Nothing matches{query.trim() ? ` “${query.trim()}”` : ' this filter'}.</p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setQuery('');
+              setFilter('all');
+            }}
+          >
+            Show everything
+          </Button>
         </div>
+      ) : (
+        <motion.ul
+          key={filter}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-5"
+        >
+          {visible.map((project, index) => (
+            <motion.li key={project.id} variants={entrance} custom={index}>
+              <ProjectCard project={project} />
+            </motion.li>
+          ))}
+          <motion.li variants={entrance} custom={visible.length}>
+            <Link
+              href="/"
+              className="border-border text-muted-strong hover:border-border-interactive hover:text-foreground focus-visible:ring-ring flex h-full min-h-56 flex-col items-center justify-center gap-3 rounded-xl border border-dashed text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none"
+            >
+              <span className="border-border grid size-11 place-items-center rounded-full border">
+                <PlusIcon size={18} />
+              </span>
+              Describe a new screen
+            </Link>
+          </motion.li>
+        </motion.ul>
       )}
     </main>
   );
@@ -91,11 +168,9 @@ function Projects() {
 
 export default function ProjectsPage() {
   return (
-    <SessionProvider fallback={<PageSkeleton />}>
-      <div className="flex min-h-dvh flex-col">
-        <AppHeader />
-        <Projects />
-      </div>
-    </SessionProvider>
+    <AppShell>
+      <MobileBar title="Projects" />
+      <Projects />
+    </AppShell>
   );
 }

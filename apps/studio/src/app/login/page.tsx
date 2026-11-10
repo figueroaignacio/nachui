@@ -37,11 +37,11 @@ export default async function LoginPage({
         <div className="flex max-w-md flex-col gap-7">
           <div className="flex flex-col gap-3">
             <h1 className="font-heading text-4xl leading-[1.05] font-bold tracking-tight text-balance sm:text-5xl">
-              Describe a screen. Get it in NachUI.
+              Screens you can ship, from a sentence.
             </h1>
             <p className="text-muted-strong text-base leading-relaxed">
-              Real components you can install, not a picture of an interface. Iterate in the chat,
-              then take it to your repo.
+              Studio builds with NachUI only, checks every import and opens a pull request with code
+              that is yours.
             </p>
           </div>
           {error ? (
@@ -84,7 +84,7 @@ export default async function LoginPage({
       </main>
       <aside
         aria-label="Product preview"
-        className="bg-surface-muted border-border hidden items-center justify-center border-s p-12 lg:flex"
+        className="bg-surface-muted border-border studio-dots m-3 hidden items-center justify-center rounded-3xl border p-12 lg:flex"
       >
         <LoginPreview />
       </aside>

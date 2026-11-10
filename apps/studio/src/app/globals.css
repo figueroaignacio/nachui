@@ -1,2 +1,110 @@
 @import '@repo/ui/globals.css';
 @source '../';
+
+@property --studio-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.studio-orbit {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--studio-angle),
+    transparent 0deg,
+    transparent 290deg,
+    var(--color-border-interactive) 335deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: studio-orbit 6s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes studio-orbit {
+  to {
+    --studio-angle: 360deg;
+  }
+}
+
+.studio-dots {
+  background-image: radial-gradient(var(--color-border) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.studio-cycle {
+  opacity: 0;
+  animation: studio-cycle 9s infinite both;
+}
+
+@keyframes studio-cycle {
+  0% {
+    opacity: 0;
+    filter: blur(6px);
+    transform: scale(0.92);
+  }
+  6% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1.01);
+  }
+  9%,
+  30% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+  35%,
+  100% {
+    opacity: 0;
+    filter: blur(4px);
+    transform: scale(0.95);
+  }
+}
+
+.studio-type {
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border-inline-end: 2px solid currentColor;
+  animation: studio-type 9s steps(36) infinite both;
+}
+
+@keyframes studio-type {
+  0% {
+    width: 0;
+  }
+  12%,
+  30% {
+    width: 100%;
+  }
+  33%,
+  100% {
+    width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-orbit {
+    animation: none;
+    opacity: 0;
+  }
+  .studio-cycle,
+  .studio-type {
+    animation: none;
+  }
+  .studio-cycle:first-child {
+    opacity: 1;
+  }
+  .studio-type {
+    width: auto;
+    border: 0;
+  }
+}

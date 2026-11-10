@@ -6,9 +6,9 @@ import { Button, buttonVariants } from '@repo/ui/components/button';
 import { cn } from '@repo/ui/lib/cn';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
-import { AppHeader, initials } from '@/features/shell/app-header';
-import { PageSkeleton } from '@/features/shell/page-skeleton';
-import { SessionProvider, useSession } from '@/features/shell/session';
+import { initials } from '@/features/shell/account-menu';
+import { AppShell, MobileBar } from '@/features/shell/app-shell';
+import { useSession } from '@/features/shell/session';
 import { connectReposUrl, studioApi } from '@/lib/api';
 
 function Row({
@@ -172,11 +172,9 @@ function Settings() {
 
 export default function SettingsPage() {
   return (
-    <SessionProvider fallback={<PageSkeleton />}>
-      <div className="flex min-h-dvh flex-col">
-        <AppHeader />
-        <Settings />
-      </div>
-    </SessionProvider>
+    <AppShell>
+      <MobileBar title="Settings" />
+      <Settings />
+    </AppShell>
   );
 }
