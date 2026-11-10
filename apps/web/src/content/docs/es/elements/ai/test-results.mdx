@@ -1,0 +1,105 @@
+---
+title: Test Results
+description: Una corrida de tests de un vistazo, con los números arriba y las fallas abiertas de entrada.
+published: true
+date: 2026-11-10
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="test-results" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="test-results" />
+
+## Anatomía
+
+```tsx
+import { TestResults } from '@/ai/test-results';
+```
+
+```tsx
+<TestResults summary={{ passed: 12, failed: 1, skipped: 1 }}>
+  <TestResults.Header duration="4.2s">src/checkout</TestResults.Header>
+  <TestResults.Summary />
+  <TestResults.Suites>
+    <TestResults.Suite name="total.test.ts" status="failed">
+      <TestResults.Test name="applies the discount before tax" status="failed">
+        <TestResults.Error>expected 107.09 to be 107.1</TestResults.Error>
+      </TestResults.Test>
+    </TestResults.Suite>
+  </TestResults.Suites>
+</TestResults>
+```
+
+Los números responden la primera pregunta, si pasó o no, antes de leer un solo nombre de test. Las suites que fallaron se abren solas y las que pasaron quedan cerradas, así lo primero que se ve es el error.
+
+Usalo cuando el agente corrió tests y tenés los resultados como datos. Para la salida cruda de la corrida, usá [Terminal](/docs/elements/ai/terminal).
+
+## Composición
+
+Usá la siguiente composición para construir `TestResults`:
+
+```tree
+TestResults
+├── TestResults.Header
+├── TestResults.Summary
+└── TestResults.Suites
+    └── TestResults.Suite
+        └── TestResults.Test
+            └── TestResults.Error
+```
+
+## Accesibilidad
+
+- Los números son una lista de descripciones, así el lector de pantalla une cada número con su etiqueta.
+- Suites y tests terminan con su estado en palabras ("total.test.ts, Failed"); los íconos solos no cargan significado.
+- La barra de color debajo de los números es decorativa y queda oculta para las tecnologías de asistencia.
+
+## Referencia de API
+
+### TestResults
+
+| Prop        | Tipo                                                   | Default | Descripción             |
+| ----------- | ------------------------------------------------------ | ------- | ----------------------- |
+| `summary`   | `{ passed: number; failed: number; skipped?: number }` | -       | Números para el resumen |
+| `className` | `string`                                               | -       | Clases CSS adicionales  |
+
+### TestResults.Header
+
+| Prop        | Tipo        | Default | Descripción                  |
+| ----------- | ----------- | ------- | ---------------------------- |
+| `duration`  | `ReactNode` | -       | Cuánto tardó la corrida      |
+| `children`  | `ReactNode` | -       | Qué corrió, como una carpeta |
+| `className` | `string`    | -       | Clases CSS adicionales       |
+
+### TestResults.Summary
+
+| Prop           | Tipo     | Default     | Descripción         |
+| -------------- | -------- | ----------- | ------------------- |
+| `passedLabel`  | `string` | `'Passed'`  | Etiqueta del número |
+| `failedLabel`  | `string` | `'Failed'`  | Etiqueta del número |
+| `skippedLabel` | `string` | `'Skipped'` | Etiqueta del número |
+
+### TestResults.Suite
+
+| Prop           | Tipo                                             | Default         | Descripción                                |
+| -------------- | ------------------------------------------------ | --------------- | ------------------------------------------ |
+| `name`         | `ReactNode`                                      | -               | En general el nombre del archivo           |
+| `status`       | `'passed' \| 'failed' \| 'skipped' \| 'running'` | `'passed'`      | Resultado de la suite                      |
+| `defaultOpen`  | `boolean`                                        | `true` si falló | Estado abierto cuando no se controla       |
+| `open`         | `boolean`                                        | -               | Estado abierto controlado                  |
+| `onOpenChange` | `(open: boolean) => void`                        | -               | Se llama al cambiar el estado              |
+| `statusLabels` | `Partial<Record<Status, string>>`                | -               | Etiquetas de lector de pantalla por estado |
+
+### TestResults.Test
+
+| Prop           | Tipo                                             | Default    | Descripción                                |
+| -------------- | ------------------------------------------------ | ---------- | ------------------------------------------ |
+| `name`         | `ReactNode`                                      | -          | Nombre del test                            |
+| `status`       | `'passed' \| 'failed' \| 'skipped' \| 'running'` | `'passed'` | Resultado del test                         |
+| `duration`     | `ReactNode`                                      | -          | Cuánto tardó                               |
+| `children`     | `ReactNode`                                      | -          | En general un `TestResults.Error`          |
+| `statusLabels` | `Partial<Record<Status, string>>`                | -          | Etiquetas de lector de pantalla por estado |

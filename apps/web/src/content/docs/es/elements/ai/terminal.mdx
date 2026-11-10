@@ -1,0 +1,97 @@
+---
+title: Terminal
+description: Un comando que corrió el agente y su salida, en vivo mientras llega y con el código de salida al terminar.
+published: true
+date: 2026-11-10
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="terminal" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="terminal" />
+
+## Anatomía
+
+```tsx
+import { Terminal } from '@/ai/terminal';
+```
+
+```tsx
+<Terminal command="pnpm test src/checkout" output={output} exitCode={1} duration="4.2s">
+  <Terminal.Header>
+    <Terminal.CopyButton />
+  </Terminal.Header>
+  <Terminal.Content />
+</Terminal>
+```
+
+El encabezado tiene el comando, el código de salida y cuánto tardó. Un código distinto de cero se pinta con el tono destructivo, así una corrida fallida se distingue en una conversación larga. Comparte el aspecto con [Code Block](/docs/elements/ai/code-block): uno es código para leer, el otro un comando que corrió.
+
+`output` es un string común. Pasale `renderLine` a `Terminal.Content` para colorear las líneas vos, por ejemplo para interpretar códigos ANSI.
+
+## Composición
+
+Usá la siguiente composición para construir una `Terminal`:
+
+```tree
+Terminal
+├── Terminal.Header
+│   └── Terminal.CopyButton
+└── Terminal.Content
+```
+
+## En vivo
+
+Poné `status="running"` y seguí sumando texto a `output`. Al final titila un cursor y la salida sigue la última línea, salvo que el usuario haya subido a mirar algo: ahí se queda quieta hasta que vuelva abajo. Cuando el proceso termina, pasá a `complete` con el `exitCode`.
+
+<ComponentPreview component="terminal" demo="streaming" />
+
+## Accesibilidad
+
+- La salida es una región enfocable con el nombre "Output of pnpm test", así se puede scrollear con el teclado.
+- Mientras corre está `aria-busy`. No anuncia cada línea, que inundaría al lector de pantalla; dice una sola vez "Command finished with exit code 1" al final. Traducilo con `finishedLabel`.
+- El botón de copiar confirma "Copied" con un mensaje de estado.
+
+## Referencia de API
+
+### Terminal
+
+| Prop        | Tipo                      | Default      | Descripción                      |
+| ----------- | ------------------------- | ------------ | -------------------------------- |
+| `command`   | `string`                  | -            | El comando que corrió            |
+| `output`    | `string`                  | `''`         | Todo lo que imprimió hasta ahora |
+| `status`    | `'running' \| 'complete'` | `'complete'` | Si sigue corriendo               |
+| `exitCode`  | `number`                  | -            | Se muestra al terminar           |
+| `duration`  | `ReactNode`               | -            | Cuánto tardó                     |
+| `className` | `string`                  | -            | Clases CSS adicionales           |
+
+### Terminal.Header
+
+| Prop           | Tipo                       | Default     | Descripción                    |
+| -------------- | -------------------------- | ----------- | ------------------------------ |
+| `runningLabel` | `string`                   | `'Running'` | Texto mientras corre           |
+| `exitLabel`    | `(code: number) => string` | `"exit 1"`  | Texto del código de salida     |
+| `children`     | `ReactNode`                | -           | Acciones al final, como copiar |
+| `className`    | `string`                   | -           | Clases CSS adicionales         |
+
+### Terminal.Content
+
+| Prop            | Tipo                                         | Default                 | Descripción                       |
+| --------------- | -------------------------------------------- | ----------------------- | --------------------------------- |
+| `label`         | `string`                                     | `"Output of <command>"` | Nombre accesible de la región     |
+| `renderLine`    | `(line: string, index: number) => ReactNode` | -                       | Dibuja cada línea a tu manera     |
+| `finishedLabel` | `(exitCode?: number) => string`              | `"Command finished..."` | Se anuncia al terminar la corrida |
+| `className`     | `string`                                     | -                       | Clases CSS adicionales            |
+
+### Terminal.CopyButton
+
+| Prop          | Tipo                       | Default         | Descripción                        |
+| ------------- | -------------------------- | --------------- | ---------------------------------- |
+| `copyLabel`   | `string`                   | `'Copy output'` | Nombre accesible                   |
+| `copiedLabel` | `string`                   | `'Copied'`      | Nombre y mensaje después de copiar |
+| `failedLabel` | `string`                   | `'Copy failed'` | Mensaje si falla la copia          |
+| `onCopied`    | `(output: string) => void` | -               | Se llama después de copiar         |

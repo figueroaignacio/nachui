@@ -1,0 +1,95 @@
+---
+title: Plan
+description: The steps an agent means to take, with the one it is on and how far it got.
+published: true
+date: 2026-11-10
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="plan" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="plan" />
+
+## Anatomy
+
+```tsx
+import { Plan } from '@/ai/plan';
+```
+
+```tsx
+<Plan>
+  <Plan.Header title="Fix the failing checkout test" completed={2} total={4} />
+  <Plan.Content>
+    <Plan.Step status="complete">Reproduce the failure</Plan.Step>
+    <Plan.Step status="active">Run the checkout suite</Plan.Step>
+    <Plan.Step>Open the pull request</Plan.Step>
+  </Plan.Content>
+</Plan>
+```
+
+Show it before the agent starts and keep it in sync while it works. The reader sees what is coming, which step is live and what got skipped, so a long run never feels like a black box.
+
+`completed` and `total` draw the count and a thin progress line under the header. Leave them out for a plan that is still being written.
+
+## Composition
+
+Use the following composition to build a `Plan`:
+
+```tree
+Plan
+├── Plan.Header
+└── Plan.Content
+    └── Plan.Step
+```
+
+## Live
+
+Move each step through `pending`, `active` and `complete` as the agent reports back. Mark a step `skipped` when the agent decides it is not needed, and `error` when it failed.
+
+<ComponentPreview component="plan" demo="live" />
+
+## Plan, Task or Queue
+
+- **Plan** is what the agent intends to do, in order, decided up front.
+- [Task](/docs/elements/ai/task) is one piece of work with its details, like the files it touched.
+- [Queue](/docs/elements/ai/queue) holds what the reader or the agent lined up for later.
+
+## Accessibility
+
+- The steps are an ordered list. The active one carries `aria-current="step"`.
+- Each step ends with its status for screen readers ("Run the checkout suite, In progress"), and the header reads "2 of 4 done" instead of "2/4".
+- The header is a button with `aria-expanded` that controls the list.
+
+## API Reference
+
+### Plan
+
+| Prop           | Type                      | Default | Description                        |
+| -------------- | ------------------------- | ------- | ---------------------------------- |
+| `defaultOpen`  | `boolean`                 | `true`  | Open state when uncontrolled       |
+| `open`         | `boolean`                 | -       | Controlled open state              |
+| `onOpenChange` | `(open: boolean) => void` | -       | Called when the open state changes |
+| `className`    | `string`                  | -       | Additional CSS classes             |
+
+### Plan.Header
+
+| Prop            | Type                                           | Default         | Description                     |
+| --------------- | ---------------------------------------------- | --------------- | ------------------------------- |
+| `title`         | `ReactNode`                                    | -               | What the plan is for            |
+| `completed`     | `number`                                       | -               | Steps done                      |
+| `total`         | `number`                                       | -               | Steps in the plan               |
+| `progressLabel` | `(completed: number, total: number) => string` | `"2 of 4 done"` | Progress read by screen readers |
+| `className`     | `string`                                       | -               | Additional CSS classes          |
+
+### Plan.Step
+
+| Prop           | Type                                                          | Default     | Description                          |
+| -------------- | ------------------------------------------------------------- | ----------- | ------------------------------------ |
+| `status`       | `'pending' \| 'active' \| 'complete' \| 'skipped' \| 'error'` | `'pending'` | Where the step is                    |
+| `description`  | `ReactNode`                                                   | -           | One line under the step              |
+| `statusLabels` | `Partial<Record<Status, string>>`                             | -           | Screen reader labels for each status |
+| `className`    | `string`                                                      | -           | Additional CSS classes               |

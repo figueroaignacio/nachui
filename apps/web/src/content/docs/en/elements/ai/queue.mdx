@@ -1,0 +1,107 @@
+---
+title: Queue
+description: What is lined up for the agent and what it already did, in sections the reader can fold.
+published: true
+date: 2026-11-10
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="queue" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="queue" />
+
+## Anatomy
+
+```tsx
+import { Queue } from '@/ai/queue';
+```
+
+```tsx
+<Queue>
+  <Queue.Section>
+    <Queue.SectionTrigger count={2}>Queued</Queue.SectionTrigger>
+    <Queue.List>
+      <Queue.Item
+        description="Once the checkout suite passes"
+        actions={
+          <Queue.ItemAction label="Remove" onClick={remove}>
+            <XIcon />
+          </Queue.ItemAction>
+        }
+      >
+        Open the pull request
+      </Queue.Item>
+    </Queue.List>
+  </Queue.Section>
+  <Queue.Section defaultOpen={false}>
+    <Queue.SectionTrigger count={1}>Done</Queue.SectionTrigger>
+    <Queue.List>
+      <Queue.Item done>Reproduce the failure</Queue.Item>
+    </Queue.List>
+  </Queue.Section>
+</Queue>
+```
+
+Use it for follow ups the reader typed while the agent was busy, or for work the agent lined up for later. Sections fold on their own, so a long history of done items stays out of the way.
+
+Item actions show on hover and on focus with a mouse, and stay visible on touch screens. Give each one a `label`: it becomes the button's accessible name and its tooltip.
+
+## Composition
+
+Use the following composition to build a `Queue`:
+
+```tree
+Queue
+└── Queue.Section
+    ├── Queue.SectionTrigger
+    └── Queue.List
+        └── Queue.Item
+            └── Queue.ItemAction (in actions)
+```
+
+## Accessibility
+
+- Each section trigger is a button with `aria-expanded` that controls its list.
+- Done items add "Done" for screen readers, since the check and the strike through are only visual.
+- Actions are real buttons and stay reachable with `Tab` even while hidden from the pointer.
+
+## API Reference
+
+### Queue.Section
+
+| Prop           | Type                      | Default | Description                        |
+| -------------- | ------------------------- | ------- | ---------------------------------- |
+| `defaultOpen`  | `boolean`                 | `true`  | Open state when uncontrolled       |
+| `open`         | `boolean`                 | -       | Controlled open state              |
+| `onOpenChange` | `(open: boolean) => void` | -       | Called when the open state changes |
+| `className`    | `string`                  | -       | Additional CSS classes             |
+
+### Queue.SectionTrigger
+
+| Prop        | Type        | Default | Description             |
+| ----------- | ----------- | ------- | ----------------------- |
+| `count`     | `number`    | -       | Number shown at the end |
+| `children`  | `ReactNode` | -       | Name of the section     |
+| `className` | `string`    | -       | Additional CSS classes  |
+
+### Queue.Item
+
+| Prop          | Type        | Default  | Description                              |
+| ------------- | ----------- | -------- | ---------------------------------------- |
+| `done`        | `boolean`   | `false`  | Checks the item off and strikes it out   |
+| `description` | `ReactNode` | -        | One line under the item                  |
+| `actions`     | `ReactNode` | -        | Buttons at the end, usually `ItemAction` |
+| `doneLabel`   | `string`    | `'Done'` | Read by screen readers on done items     |
+| `className`   | `string`    | -        | Additional CSS classes                   |
+
+### Queue.ItemAction
+
+| Prop        | Type        | Default | Description                 |
+| ----------- | ----------- | ------- | --------------------------- |
+| `label`     | `string`    | -       | Accessible name and tooltip |
+| `children`  | `ReactNode` | -       | The icon                    |
+| `className` | `string`    | -       | Additional CSS classes      |

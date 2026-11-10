@@ -1,0 +1,105 @@
+---
+title: Test Results
+description: A test run at a glance, with the counts on top and the failures open by default.
+published: true
+date: 2026-11-10
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="test-results" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="test-results" />
+
+## Anatomy
+
+```tsx
+import { TestResults } from '@/ai/test-results';
+```
+
+```tsx
+<TestResults summary={{ passed: 12, failed: 1, skipped: 1 }}>
+  <TestResults.Header duration="4.2s">src/checkout</TestResults.Header>
+  <TestResults.Summary />
+  <TestResults.Suites>
+    <TestResults.Suite name="total.test.ts" status="failed">
+      <TestResults.Test name="applies the discount before tax" status="failed">
+        <TestResults.Error>expected 107.09 to be 107.1</TestResults.Error>
+      </TestResults.Test>
+    </TestResults.Suite>
+  </TestResults.Suites>
+</TestResults>
+```
+
+The numbers answer the first question, did it pass, before the reader reads a single test name. Failed suites open by themselves and passing ones stay closed, so the error is the first thing in view.
+
+Use it when the agent ran tests and you have the results as data. For the raw output of the run, use [Terminal](/docs/elements/ai/terminal).
+
+## Composition
+
+Use the following composition to build `TestResults`:
+
+```tree
+TestResults
+├── TestResults.Header
+├── TestResults.Summary
+└── TestResults.Suites
+    └── TestResults.Suite
+        └── TestResults.Test
+            └── TestResults.Error
+```
+
+## Accessibility
+
+- The counts are a description list, so a screen reader pairs each number with its label.
+- Suites and tests end with their status in words ("total.test.ts, Failed"); the icons alone carry no meaning.
+- The colored bar under the counts is decorative and hidden from assistive tech.
+
+## API Reference
+
+### TestResults
+
+| Prop        | Type                                                   | Default | Description            |
+| ----------- | ------------------------------------------------------ | ------- | ---------------------- |
+| `summary`   | `{ passed: number; failed: number; skipped?: number }` | -       | Counts for the summary |
+| `className` | `string`                                               | -       | Additional CSS classes |
+
+### TestResults.Header
+
+| Prop        | Type        | Default | Description             |
+| ----------- | ----------- | ------- | ----------------------- |
+| `duration`  | `ReactNode` | -       | How long the run took   |
+| `children`  | `ReactNode` | -       | What ran, like a folder |
+| `className` | `string`    | -       | Additional CSS classes  |
+
+### TestResults.Summary
+
+| Prop           | Type     | Default     | Description        |
+| -------------- | -------- | ----------- | ------------------ |
+| `passedLabel`  | `string` | `'Passed'`  | Label of the count |
+| `failedLabel`  | `string` | `'Failed'`  | Label of the count |
+| `skippedLabel` | `string` | `'Skipped'` | Label of the count |
+
+### TestResults.Suite
+
+| Prop           | Type                                             | Default               | Description                          |
+| -------------- | ------------------------------------------------ | --------------------- | ------------------------------------ |
+| `name`         | `ReactNode`                                      | -                     | Usually the file name                |
+| `status`       | `'passed' \| 'failed' \| 'skipped' \| 'running'` | `'passed'`            | Result of the suite                  |
+| `defaultOpen`  | `boolean`                                        | `true` when it failed | Open state when uncontrolled         |
+| `open`         | `boolean`                                        | -                     | Controlled open state                |
+| `onOpenChange` | `(open: boolean) => void`                        | -                     | Called when the open state changes   |
+| `statusLabels` | `Partial<Record<Status, string>>`                | -                     | Screen reader labels for each status |
+
+### TestResults.Test
+
+| Prop           | Type                                             | Default    | Description                          |
+| -------------- | ------------------------------------------------ | ---------- | ------------------------------------ |
+| `name`         | `ReactNode`                                      | -          | Name of the test                     |
+| `status`       | `'passed' \| 'failed' \| 'skipped' \| 'running'` | `'passed'` | Result of the test                   |
+| `duration`     | `ReactNode`                                      | -          | How long it took                     |
+| `children`     | `ReactNode`                                      | -          | Usually a `TestResults.Error`        |
+| `statusLabels` | `Partial<Record<Status, string>>`                | -          | Screen reader labels for each status |

@@ -1,0 +1,90 @@
+---
+title: Subagent
+description: Trabajo que el agente le pasó a otro agente, plegado en una fila con lo que hizo y lo que devolvió.
+published: true
+date: 2026-11-10
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="subagent" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="subagent" />
+
+## Anatomía
+
+```tsx
+import { Subagent } from '@/ai/subagent';
+```
+
+```tsx
+<Subagent status="complete">
+  <Subagent.Header
+    name="code-explorer"
+    task="Encontrar dónde se aplica el descuento"
+    meta="2 tools · 9s"
+  />
+  <Subagent.Content>
+    <Tool>...</Tool>
+    <Subagent.Result>El descuento corre en applyDiscount, después de redondear.</Subagent.Result>
+  </Subagent.Content>
+</Subagent>
+```
+
+Un subagente puede hacer decenas de llamadas. En la conversación principal al usuario le alcanza con saber quién hizo qué y cómo terminó, así que se abre mientras corre y queda cerrado al terminar. Adentro va cualquier AI Element: [Tool](/docs/elements/ai/tool), [Terminal](/docs/elements/ai/terminal), incluso otro `Subagent`. La línea al costado muestra que todo pertenece a este.
+
+`Subagent.Result` es lo que le devolvió al agente principal. Suele ser lo único que vale la pena leer.
+
+## Composición
+
+Usá la siguiente composición para construir un `Subagent`:
+
+```tree
+Subagent
+├── Subagent.Header
+└── Subagent.Content
+    ├── Tool, Terminal o cualquier AI Element
+    └── Subagent.Result
+```
+
+## Estados
+
+`status` va en la raíz: `pending` está en fila, `running` gira, `complete` se tilda, `error` lo marca y `stopped` es una corrida que el usuario canceló. `meta` es texto libre para los números que tengas, como herramientas usadas o tiempo; se oculta debajo de 640px para que la tarea tenga lugar.
+
+## Accesibilidad
+
+- El encabezado es un botón con `aria-expanded` que controla el contenido, una región con su nombre.
+- El estado se lee en palabras al final del encabezado ("code-explorer, Find where the discount is applied, Done"). Traducilo con `statusLabels`.
+
+## Referencia de API
+
+### Subagent
+
+| Prop           | Tipo                                                           | Default               | Descripción                          |
+| -------------- | -------------------------------------------------------------- | --------------------- | ------------------------------------ |
+| `status`       | `'pending' \| 'running' \| 'complete' \| 'error' \| 'stopped'` | `'complete'`          | Estado de la corrida                 |
+| `defaultOpen`  | `boolean`                                                      | `true` mientras corre | Estado abierto cuando no se controla |
+| `open`         | `boolean`                                                      | -                     | Estado abierto controlado            |
+| `onOpenChange` | `(open: boolean) => void`                                      | -                     | Se llama al cambiar el estado        |
+| `className`    | `string`                                                       | -                     | Clases CSS adicionales               |
+
+### Subagent.Header
+
+| Prop           | Tipo                              | Default | Descripción                                |
+| -------------- | --------------------------------- | ------- | ------------------------------------------ |
+| `name`         | `string`                          | -       | Nombre del subagente                       |
+| `task`         | `ReactNode`                       | -       | Qué se le pidió                            |
+| `meta`         | `ReactNode`                       | -       | Números al final, como el tiempo           |
+| `statusLabels` | `Partial<Record<Status, string>>` | -       | Etiquetas de lector de pantalla por estado |
+| `className`    | `string`                          | -       | Clases CSS adicionales                     |
+
+### Subagent.Result
+
+| Prop        | Tipo        | Default      | Descripción                   |
+| ----------- | ----------- | ------------ | ----------------------------- |
+| `label`     | `string`    | `'Returned'` | Etiqueta arriba del resultado |
+| `children`  | `ReactNode` | -            | Lo que devolvió el subagente  |
+| `className` | `string`    | -            | Clases CSS adicionales        |

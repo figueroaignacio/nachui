@@ -1,0 +1,107 @@
+---
+title: Queue
+description: Lo que el agente tiene en fila y lo que ya hizo, en secciones que el usuario puede plegar.
+published: true
+date: 2026-11-10
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="queue" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="queue" />
+
+## Anatomía
+
+```tsx
+import { Queue } from '@/ai/queue';
+```
+
+```tsx
+<Queue>
+  <Queue.Section>
+    <Queue.SectionTrigger count={2}>En fila</Queue.SectionTrigger>
+    <Queue.List>
+      <Queue.Item
+        description="Cuando pase la suite de checkout"
+        actions={
+          <Queue.ItemAction label="Quitar" onClick={remove}>
+            <XIcon />
+          </Queue.ItemAction>
+        }
+      >
+        Abrir el pull request
+      </Queue.Item>
+    </Queue.List>
+  </Queue.Section>
+  <Queue.Section defaultOpen={false}>
+    <Queue.SectionTrigger count={1}>Hecho</Queue.SectionTrigger>
+    <Queue.List>
+      <Queue.Item done>Reproducir la falla</Queue.Item>
+    </Queue.List>
+  </Queue.Section>
+</Queue>
+```
+
+Usala para los pedidos que el usuario escribió mientras el agente estaba ocupado, o para trabajo que el agente dejó para después. Cada sección se pliega sola, así un historial largo de cosas hechas no estorba.
+
+Las acciones de cada ítem aparecen al pasar el mouse o al enfocarlas, y en pantallas táctiles quedan siempre visibles. Dale un `label` a cada una: es el nombre accesible del botón y su tooltip.
+
+## Composición
+
+Usá la siguiente composición para construir una `Queue`:
+
+```tree
+Queue
+└── Queue.Section
+    ├── Queue.SectionTrigger
+    └── Queue.List
+        └── Queue.Item
+            └── Queue.ItemAction (en actions)
+```
+
+## Accesibilidad
+
+- Cada trigger de sección es un botón con `aria-expanded` que controla su lista.
+- Los ítems hechos suman "Done" para los lectores de pantalla, porque el tilde y el tachado son solo visuales. Cambialo con `doneLabel`.
+- Las acciones son botones reales y se alcanzan con `Tab` aunque estén ocultas para el mouse.
+
+## Referencia de API
+
+### Queue.Section
+
+| Prop           | Tipo                      | Default | Descripción                          |
+| -------------- | ------------------------- | ------- | ------------------------------------ |
+| `defaultOpen`  | `boolean`                 | `true`  | Estado abierto cuando no se controla |
+| `open`         | `boolean`                 | -       | Estado abierto controlado            |
+| `onOpenChange` | `(open: boolean) => void` | -       | Se llama al cambiar el estado        |
+| `className`    | `string`                  | -       | Clases CSS adicionales               |
+
+### Queue.SectionTrigger
+
+| Prop        | Tipo        | Default | Descripción            |
+| ----------- | ----------- | ------- | ---------------------- |
+| `count`     | `number`    | -       | Número al final        |
+| `children`  | `ReactNode` | -       | Nombre de la sección   |
+| `className` | `string`    | -       | Clases CSS adicionales |
+
+### Queue.Item
+
+| Prop          | Tipo        | Default  | Descripción                                  |
+| ------------- | ----------- | -------- | -------------------------------------------- |
+| `done`        | `boolean`   | `false`  | Lo tilda y lo tacha                          |
+| `description` | `ReactNode` | -        | Una línea debajo del ítem                    |
+| `actions`     | `ReactNode` | -        | Botones al final, en general `ItemAction`    |
+| `doneLabel`   | `string`    | `'Done'` | Lo que leen los lectores en los ítems hechos |
+| `className`   | `string`    | -        | Clases CSS adicionales                       |
+
+### Queue.ItemAction
+
+| Prop        | Tipo        | Default | Descripción                |
+| ----------- | ----------- | ------- | -------------------------- |
+| `label`     | `string`    | -       | Nombre accesible y tooltip |
+| `children`  | `ReactNode` | -       | El ícono                   |
+| `className` | `string`    | -       | Clases CSS adicionales     |

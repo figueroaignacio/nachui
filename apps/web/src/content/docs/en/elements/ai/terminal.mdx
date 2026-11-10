@@ -1,0 +1,97 @@
+---
+title: Terminal
+description: A command the agent ran and its output, live while it streams and with the exit code when it ends.
+published: true
+date: 2026-11-10
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="terminal" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="terminal" />
+
+## Anatomy
+
+```tsx
+import { Terminal } from '@/ai/terminal';
+```
+
+```tsx
+<Terminal command="pnpm test src/checkout" output={output} exitCode={1} duration="4.2s">
+  <Terminal.Header>
+    <Terminal.CopyButton />
+  </Terminal.Header>
+  <Terminal.Content />
+</Terminal>
+```
+
+The header holds the command, the exit code and how long it took. A non zero exit turns the code to the destructive tone, so a failed run stands out in a long thread. It shares its look with [Code Block](/docs/elements/ai/code-block): one is code to read, the other is a command that ran.
+
+`output` is a plain string. Pass `renderLine` to `Terminal.Content` to color lines yourself, for example to parse ANSI codes.
+
+## Composition
+
+Use the following composition to build a `Terminal`:
+
+```tree
+Terminal
+├── Terminal.Header
+│   └── Terminal.CopyButton
+└── Terminal.Content
+```
+
+## Streaming
+
+Set `status="running"` and keep appending to `output`. A cursor blinks at the end and the output follows the newest line, unless the reader scrolled up to look at something: then it stays put until they scroll back to the bottom. Switch to `complete` with the `exitCode` when the process ends.
+
+<ComponentPreview component="terminal" demo="streaming" />
+
+## Accessibility
+
+- The output is a focusable region named "Output of pnpm test", so keyboard users can scroll it.
+- While running it is `aria-busy`. It does not announce each line, which would flood a screen reader; it says "Command finished with exit code 1" once at the end.
+- The copy button confirms "Copied" through a status message.
+
+## API Reference
+
+### Terminal
+
+| Prop        | Type                      | Default      | Description                  |
+| ----------- | ------------------------- | ------------ | ---------------------------- |
+| `command`   | `string`                  | -            | The command that ran         |
+| `output`    | `string`                  | `''`         | Everything it printed so far |
+| `status`    | `'running' \| 'complete'` | `'complete'` | Whether it is still running  |
+| `exitCode`  | `number`                  | -            | Shown once complete          |
+| `duration`  | `ReactNode`               | -            | How long it took             |
+| `className` | `string`                  | -            | Additional CSS classes       |
+
+### Terminal.Header
+
+| Prop           | Type                       | Default     | Description                   |
+| -------------- | -------------------------- | ----------- | ----------------------------- |
+| `runningLabel` | `string`                   | `'Running'` | Text while the command runs   |
+| `exitLabel`    | `(code: number) => string` | `"exit 1"`  | Text for the exit code        |
+| `children`     | `ReactNode`                | -           | Actions at the end, like copy |
+| `className`    | `string`                   | -           | Additional CSS classes        |
+
+### Terminal.Content
+
+| Prop            | Type                                         | Default                 | Description                   |
+| --------------- | -------------------------------------------- | ----------------------- | ----------------------------- |
+| `label`         | `string`                                     | `"Output of <command>"` | Accessible name of the region |
+| `renderLine`    | `(line: string, index: number) => ReactNode` | -                       | Renders each line yourself    |
+| `finishedLabel` | `(exitCode?: number) => string`              | `"Command finished..."` | Announced when the run ends   |
+| `className`     | `string`                                     | -                       | Additional CSS classes        |
+
+### Terminal.CopyButton
+
+| Prop          | Type                       | Default         | Description                    |
+| ------------- | -------------------------- | --------------- | ------------------------------ |
+| `copyLabel`   | `string`                   | `'Copy output'` | Accessible name                |
+| `copiedLabel` | `string`                   | `'Copied'`      | Name and message after copying |
+| `failedLabel` | `string`                   | `'Copy failed'` | Message when the copy fails    |
+| `onCopied`    | `(output: string) => void` | -               | Called after a successful copy |

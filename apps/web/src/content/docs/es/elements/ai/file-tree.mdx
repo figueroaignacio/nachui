@@ -1,0 +1,68 @@
+---
+title: File Tree
+description: Los archivos que cambió un agente, en un árbol con qué le pasó a cada uno y cuántas líneas se movieron.
+published: true
+date: 2026-11-10
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="file-tree" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="file-tree" />
+
+## Anatomía
+
+```tsx
+import { FileTree } from '@/ai/file-tree';
+```
+
+```tsx
+<FileTree
+  files={[
+    { path: 'src/checkout/total.ts', status: 'modified', additions: 12, deletions: 3 },
+    { path: 'src/checkout/round.ts', status: 'added', additions: 9 },
+  ]}
+  onFileSelect={(path) => openDiff(path)}
+/>
+```
+
+Pasale una lista plana de rutas y las carpetas se arman solas. Una carpeta con una sola carpeta adentro se pliega en una fila (`src/checkout`), como en las herramientas de code review, y las carpetas van antes que los archivos.
+
+Cada archivo muestra sus líneas agregadas y borradas y una letra con lo que le pasó: **A** agregado, **M** modificado, **D** borrado o **R** renombrado. El encabezado suma todo, así el tamaño del cambio se ve antes de abrir un archivo.
+
+Está hecho sobre [Tree](/docs/elements/ui/tree), así que trae el mismo soporte de teclado.
+
+## Teclado
+
+`↓` y `↑` se mueven entre filas, `→` abre una carpeta o entra en ella, `←` la cierra o vuelve a la carpeta padre, `Home` y `End` saltan a los extremos y `Enter` elige un archivo.
+
+## Accesibilidad
+
+- Es un `tree` con el nombre del título, y cada archivo es un `treeitem`.
+- Cada archivo se lee como "total.ts, Modified, 12 additions, 3 deletions"; la letra y los números con más y menos quedan ocultos porque solo tienen sentido a la vista. Traducí los textos con `statusLabels` y `changesLabel`.
+- Un archivo borrado queda tachado y anuncia "Deleted".
+
+## Referencia de API
+
+### FileTree
+
+| Prop               | Tipo                                               | Default                       | Descripción                                |
+| ------------------ | -------------------------------------------------- | ----------------------------- | ------------------------------------------ |
+| `files`            | `FileChange[]`                                     | -                             | Los archivos cambiados                     |
+| `title`            | `ReactNode`                                        | `'Files changed'`             | Texto del encabezado                       |
+| `label`            | `string`                                           | el título                     | Nombre accesible del árbol                 |
+| `selected`         | `string`                                           | -                             | Ruta elegida, controlada                   |
+| `defaultSelected`  | `string`                                           | -                             | Ruta elegida cuando no se controla         |
+| `onFileSelect`     | `(path: string) => void`                           | -                             | Se llama al elegir un archivo              |
+| `expanded`         | `string[]`                                         | -                             | Carpetas abiertas, controladas             |
+| `defaultExpanded`  | `string[]`                                         | todas las carpetas            | Carpetas abiertas cuando no se controla    |
+| `onExpandedChange` | `(expanded: string[]) => void`                     | -                             | Se llama al abrir o cerrar una carpeta     |
+| `statusLabels`     | `Partial<Record<Status, string>>`                  | -                             | Etiquetas de lector de pantalla por estado |
+| `changesLabel`     | `(additions: number, deletions: number) => string` | `"12 additions, 3 deletions"` | Cambios que leen los lectores              |
+| `className`        | `string`                                           | -                             | Clases CSS adicionales                     |
+
+`FileChange` es `{ path: string; status?: 'added' | 'modified' | 'deleted' | 'renamed'; additions?: number; deletions?: number }`.

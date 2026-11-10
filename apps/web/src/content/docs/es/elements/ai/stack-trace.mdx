@@ -1,0 +1,86 @@
+---
+title: Stack Trace
+description: Un error con su pila de llamadas, primero el código de la app y el ruido de las librerías plegado.
+published: true
+date: 2026-11-10
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="stack-trace" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="stack-trace" />
+
+## Anatomía
+
+```tsx
+import { StackTrace } from '@/ai/stack-trace';
+```
+
+```tsx
+<StackTrace stack={error.stack}>
+  <StackTrace.Header>
+    <StackTrace.CopyButton />
+  </StackTrace.Header>
+  <StackTrace.Frames onFrameSelect={(frame) => openFile(frame.file, frame.line)} />
+</StackTrace>
+```
+
+Pasale `stack` tal como viene de `error.stack`. Se separa en el nombre del error, el mensaje y un frame por línea, en el formato de Chrome, Node, Firefox y Safari. Si ya tenés los frames como datos, pasá `name`, `message` y `frames`.
+
+Los frames de `node_modules` y del runtime (`node:`, `internal/`) quedan detrás de un botón "Show 4 internal frames". Lo que queda es el código que el agente puede cambiar. Con `onFrameSelect`, cada frame de la app se vuelve un botón para saltar a esa línea.
+
+El parser se exporta como `parseStack` por si querés los frames en otro lado.
+
+## Composición
+
+Usá la siguiente composición para construir un `StackTrace`:
+
+```tree
+StackTrace
+├── StackTrace.Header
+│   └── StackTrace.CopyButton
+└── StackTrace.Frames
+```
+
+## Accesibilidad
+
+- Los frames son una lista ordenada con el nombre "Stack frames", así se anuncia el orden de las llamadas.
+- El botón de frames internos tiene `aria-expanded`.
+- Copiar deja en el portapapeles la pila original, sin tocar, y lo confirma con un mensaje de estado.
+
+## Referencia de API
+
+### StackTrace
+
+| Prop        | Tipo           | Default | Descripción                         |
+| ----------- | -------------- | ------- | ----------------------------------- |
+| `stack`     | `string`       | -       | El `error.stack` crudo              |
+| `name`      | `string`       | -       | Reemplaza el nombre leído           |
+| `message`   | `string`       | -       | Reemplaza el mensaje leído          |
+| `frames`    | `StackFrame[]` | -       | Frames como datos en vez de `stack` |
+| `className` | `string`       | -       | Clases CSS adicionales              |
+
+`StackFrame` es `{ fn?: string; file: string; line?: number; column?: number; internal?: boolean }`.
+
+### StackTrace.Frames
+
+| Prop                  | Tipo                          | Default                    | Descripción                               |
+| --------------------- | ----------------------------- | -------------------------- | ----------------------------------------- |
+| `onFrameSelect`       | `(frame: StackFrame) => void` | -                          | Convierte los frames de la app en botones |
+| `defaultShowInternal` | `boolean`                     | `false`                    | Muestra los frames internos de entrada    |
+| `showInternalLabel`   | `(count: number) => string`   | `"Show 4 internal frames"` | Texto del botón                           |
+| `hideInternalLabel`   | `string`                      | `'Hide internal frames'`   | Texto del botón abierto                   |
+| `label`               | `string`                      | `'Stack frames'`           | Nombre accesible de la lista              |
+
+### StackTrace.CopyButton
+
+| Prop          | Tipo                      | Default              | Descripción                        |
+| ------------- | ------------------------- | -------------------- | ---------------------------------- |
+| `copyLabel`   | `string`                  | `'Copy stack trace'` | Nombre accesible                   |
+| `copiedLabel` | `string`                  | `'Copied'`           | Nombre y mensaje después de copiar |
+| `failedLabel` | `string`                  | `'Copy failed'`      | Mensaje si falla la copia          |
+| `onCopied`    | `(stack: string) => void` | -                    | Se llama después de copiar         |

@@ -1,0 +1,90 @@
+---
+title: Subagent
+description: Work the agent handed to another agent, folded into one row with what it did and what it returned.
+published: true
+date: 2026-11-10
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="subagent" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="subagent" />
+
+## Anatomy
+
+```tsx
+import { Subagent } from '@/ai/subagent';
+```
+
+```tsx
+<Subagent status="complete">
+  <Subagent.Header
+    name="code-explorer"
+    task="Find where the discount is applied"
+    meta="2 tools · 9s"
+  />
+  <Subagent.Content>
+    <Tool>...</Tool>
+    <Subagent.Result>The discount runs in applyDiscount, after rounding.</Subagent.Result>
+  </Subagent.Content>
+</Subagent>
+```
+
+A subagent can make dozens of calls. In the main thread the reader mostly needs to know who did what and how it ended, so it opens while it runs and stays closed once it is done. Inside, put anything from AI Elements: [Tool](/docs/elements/ai/tool), [Terminal](/docs/elements/ai/terminal), even another `Subagent`. The line on the side shows that it all belongs to this one.
+
+`Subagent.Result` is what it handed back to the main agent. It is usually the one thing worth reading.
+
+## Composition
+
+Use the following composition to build a `Subagent`:
+
+```tree
+Subagent
+├── Subagent.Header
+└── Subagent.Content
+    ├── Tool, Terminal or any AI Element
+    └── Subagent.Result
+```
+
+## Statuses
+
+`status` goes on the root: `pending` is queued, `running` spins, `complete` checks off, `error` flags it and `stopped` covers a run the reader cancelled. `meta` is free text for the numbers you have, like tools used or time; it hides below 640px so the task keeps its room.
+
+## Accessibility
+
+- The header is a button with `aria-expanded` that controls the content, which is a region named after it.
+- The status is read in words at the end of the header ("code-explorer, Find where the discount is applied, Done").
+
+## API Reference
+
+### Subagent
+
+| Prop           | Type                                                           | Default              | Description                        |
+| -------------- | -------------------------------------------------------------- | -------------------- | ---------------------------------- |
+| `status`       | `'pending' \| 'running' \| 'complete' \| 'error' \| 'stopped'` | `'complete'`         | State of the run                   |
+| `defaultOpen`  | `boolean`                                                      | `true` while running | Open state when uncontrolled       |
+| `open`         | `boolean`                                                      | -                    | Controlled open state              |
+| `onOpenChange` | `(open: boolean) => void`                                      | -                    | Called when the open state changes |
+| `className`    | `string`                                                       | -                    | Additional CSS classes             |
+
+### Subagent.Header
+
+| Prop           | Type                              | Default | Description                          |
+| -------------- | --------------------------------- | ------- | ------------------------------------ |
+| `name`         | `string`                          | -       | Name of the subagent                 |
+| `task`         | `ReactNode`                       | -       | What it was asked to do              |
+| `meta`         | `ReactNode`                       | -       | Numbers at the end, like time        |
+| `statusLabels` | `Partial<Record<Status, string>>` | -       | Screen reader labels for each status |
+| `className`    | `string`                          | -       | Additional CSS classes               |
+
+### Subagent.Result
+
+| Prop        | Type        | Default      | Description                |
+| ----------- | ----------- | ------------ | -------------------------- |
+| `label`     | `string`    | `'Returned'` | Label above the result     |
+| `children`  | `ReactNode` | -            | What the subagent returned |
+| `className` | `string`    | -            | Additional CSS classes     |

@@ -1,0 +1,95 @@
+---
+title: Plan
+description: Los pasos que un agente piensa dar, con el que está haciendo y cuánto avanzó.
+published: true
+date: 2026-11-10
+locale: es
+toc:
+  visible: true
+---
+
+<ComponentPreview component="plan" demo="default" />
+
+## Instalación
+
+<ComponentInstallTabs component="plan" />
+
+## Anatomía
+
+```tsx
+import { Plan } from '@/ai/plan';
+```
+
+```tsx
+<Plan>
+  <Plan.Header title="Arreglar el test de checkout" completed={2} total={4} />
+  <Plan.Content>
+    <Plan.Step status="complete">Reproducir la falla</Plan.Step>
+    <Plan.Step status="active">Correr la suite de checkout</Plan.Step>
+    <Plan.Step>Abrir el pull request</Plan.Step>
+  </Plan.Content>
+</Plan>
+```
+
+Mostralo antes de que el agente arranque y mantenelo al día mientras trabaja. El usuario ve lo que viene, qué paso está en curso y qué se salteó, así una corrida larga nunca se siente como una caja negra.
+
+`completed` y `total` dibujan el conteo y una línea fina de progreso debajo del encabezado. Dejalos afuera si el plan todavía se está escribiendo.
+
+## Composición
+
+Usá la siguiente composición para construir un `Plan`:
+
+```tree
+Plan
+├── Plan.Header
+└── Plan.Content
+    └── Plan.Step
+```
+
+## En vivo
+
+Pasá cada paso por `pending`, `active` y `complete` a medida que el agente avisa. Marcá un paso como `skipped` cuando el agente decide que no hace falta, y como `error` cuando falló.
+
+<ComponentPreview component="plan" demo="live" />
+
+## Plan, Task o Queue
+
+- **Plan** es lo que el agente piensa hacer, en orden, decidido de antemano.
+- [Task](/docs/elements/ai/task) es un trabajo puntual con sus detalles, como los archivos que tocó.
+- [Queue](/docs/elements/ai/queue) guarda lo que el usuario o el agente dejaron para después.
+
+## Accesibilidad
+
+- Los pasos son una lista ordenada. El activo lleva `aria-current="step"`.
+- Cada paso termina con su estado para los lectores de pantalla ("Correr la suite de checkout, In progress"), y el encabezado se lee "2 of 4 done" en vez de "2/4". Traducí los textos con `statusLabels` y `progressLabel`.
+- El encabezado es un botón con `aria-expanded` que controla la lista.
+
+## Referencia de API
+
+### Plan
+
+| Prop           | Tipo                      | Default | Descripción                          |
+| -------------- | ------------------------- | ------- | ------------------------------------ |
+| `defaultOpen`  | `boolean`                 | `true`  | Estado abierto cuando no se controla |
+| `open`         | `boolean`                 | -       | Estado abierto controlado            |
+| `onOpenChange` | `(open: boolean) => void` | -       | Se llama al cambiar el estado        |
+| `className`    | `string`                  | -       | Clases CSS adicionales               |
+
+### Plan.Header
+
+| Prop            | Tipo                                           | Default         | Descripción                    |
+| --------------- | ---------------------------------------------- | --------------- | ------------------------------ |
+| `title`         | `ReactNode`                                    | -               | Para qué es el plan            |
+| `completed`     | `number`                                       | -               | Pasos hechos                   |
+| `total`         | `number`                                       | -               | Pasos del plan                 |
+| `progressLabel` | `(completed: number, total: number) => string` | `"2 of 4 done"` | Progreso que leen los lectores |
+| `className`     | `string`                                       | -               | Clases CSS adicionales         |
+
+### Plan.Step
+
+| Prop           | Tipo                                                          | Default     | Descripción                                |
+| -------------- | ------------------------------------------------------------- | ----------- | ------------------------------------------ |
+| `status`       | `'pending' \| 'active' \| 'complete' \| 'skipped' \| 'error'` | `'pending'` | En qué está el paso                        |
+| `description`  | `ReactNode`                                                   | -           | Una línea debajo del paso                  |
+| `statusLabels` | `Partial<Record<Status, string>>`                             | -           | Etiquetas de lector de pantalla por estado |
+| `className`    | `string`                                                      | -           | Clases CSS adicionales                     |

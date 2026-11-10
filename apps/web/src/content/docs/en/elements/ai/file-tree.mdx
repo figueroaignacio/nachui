@@ -1,0 +1,68 @@
+---
+title: File Tree
+description: The files an agent changed, as a tree with what happened to each one and how many lines moved.
+published: true
+date: 2026-11-10
+locale: en
+toc:
+  visible: true
+---
+
+<ComponentPreview component="file-tree" demo="default" />
+
+## Installation
+
+<ComponentInstallTabs component="file-tree" />
+
+## Anatomy
+
+```tsx
+import { FileTree } from '@/ai/file-tree';
+```
+
+```tsx
+<FileTree
+  files={[
+    { path: 'src/checkout/total.ts', status: 'modified', additions: 12, deletions: 3 },
+    { path: 'src/checkout/round.ts', status: 'added', additions: 9 },
+  ]}
+  onFileSelect={(path) => openDiff(path)}
+/>
+```
+
+Pass a flat list of paths and the folders are built for you. A folder with a single folder inside folds into one row (`src/checkout`), the way code review tools show it, and folders come before files.
+
+Each file shows its additions and deletions and a letter for what happened: **A**dded, **M**odified, **D**eleted or **R**enamed. The header adds them all up, so the size of the change is clear before anyone opens a file.
+
+It is built on [Tree](/docs/elements/ui/tree), so it brings the same keyboard support.
+
+## Keyboard
+
+`↓` and `↑` move between rows, `→` opens a folder or moves into it, `←` closes it or goes back to the parent, `Home` and `End` jump to the ends, and `Enter` picks a file.
+
+## Accessibility
+
+- It is a `tree` named after the title, with each file as a `treeitem`.
+- Each file is read as "total.ts, Modified, 12 additions, 3 deletions"; the letter and the plus and minus counts are hidden, since they only make sense visually.
+- A deleted file keeps its name struck through and announces "Deleted".
+
+## API Reference
+
+### FileTree
+
+| Prop               | Type                                               | Default                       | Description                          |
+| ------------------ | -------------------------------------------------- | ----------------------------- | ------------------------------------ |
+| `files`            | `FileChange[]`                                     | -                             | The changed files                    |
+| `title`            | `ReactNode`                                        | `'Files changed'`             | Text of the header                   |
+| `label`            | `string`                                           | the title                     | Accessible name of the tree          |
+| `selected`         | `string`                                           | -                             | Controlled selected path             |
+| `defaultSelected`  | `string`                                           | -                             | Selected path when uncontrolled      |
+| `onFileSelect`     | `(path: string) => void`                           | -                             | Called when a file is picked         |
+| `expanded`         | `string[]`                                         | -                             | Controlled open folders              |
+| `defaultExpanded`  | `string[]`                                         | every folder                  | Open folders when uncontrolled       |
+| `onExpandedChange` | `(expanded: string[]) => void`                     | -                             | Called when a folder opens or closes |
+| `statusLabels`     | `Partial<Record<Status, string>>`                  | -                             | Screen reader labels for each status |
+| `changesLabel`     | `(additions: number, deletions: number) => string` | `"12 additions, 3 deletions"` | Changes read by screen readers       |
+| `className`        | `string`                                           | -                             | Additional CSS classes               |
+
+`FileChange` is `{ path: string; status?: 'added' | 'modified' | 'deleted' | 'renamed'; additions?: number; deletions?: number }`.
