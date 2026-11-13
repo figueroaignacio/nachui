@@ -28,7 +28,10 @@ export function AppShell({
           <StudioSidebar />
           <Sidebar.Inset
             as="div"
-            className={cn('min-h-0', fixed ? 'overflow-hidden' : 'overflow-y-auto')}
+            className={cn(
+              'min-h-0 max-md:m-0 max-md:rounded-none max-md:border-0',
+              fixed ? 'overflow-hidden' : 'overflow-y-auto',
+            )}
           >
             {children}
           </Sidebar.Inset>

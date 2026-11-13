@@ -1,7 +1,6 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { buttonVariants } from '@repo/ui/components/button';
 import { Callout } from '@repo/ui/components/callout';
 import { Skeleton } from '@repo/ui/components/skeleton';
 import { DefaultChatTransport, type UIMessage } from 'ai';
@@ -9,6 +8,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import * as React from 'react';
 import { clearPendingPrompt, readPendingPrompt } from '@/features/shell/pending-prompt';
+import { pill } from '@/features/shell/pill';
 import { useProjects } from '@/features/shell/projects-store';
 import { useSession } from '@/features/shell/session';
 import { chatUrl, studioApi } from '@/lib/api';
@@ -195,7 +195,7 @@ export function ProjectWorkspace({ id }: { id: string }) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-4 p-6 text-center">
         <p className="text-muted-strong text-sm">This project does not exist or is not yours.</p>
-        <Link href="/projects" className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+        <Link href="/projects" className={pill({ variant: 'outline', size: 'sm' })}>
           Back to projects
         </Link>
       </div>
@@ -230,7 +230,7 @@ export function ProjectWorkspace({ id }: { id: string }) {
           </div>
         </div>
         <div className="bg-surface-muted hidden p-5 lg:block">
-          <Skeleton className="size-full rounded-xl" />
+          <Skeleton className="size-full rounded-lg" />
         </div>
       </div>
     );

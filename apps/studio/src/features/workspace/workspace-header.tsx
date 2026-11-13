@@ -41,7 +41,7 @@ function ProjectName({ name, onRename }: { name: string; onRename?: (name: strin
           onKeyDown={(event) => {
             if (event.key === 'Escape') setEditing(false);
           }}
-          className="border-input bg-card focus-visible:ring-ring h-8 w-56 rounded-md border px-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
+          className="border-input bg-card focus-visible:ring-ring h-8 w-56 rounded-full border px-3 text-sm focus-visible:ring-2 focus-visible:outline-none"
         />
       </form>
     );
@@ -55,7 +55,7 @@ function ProjectName({ name, onRename }: { name: string; onRename?: (name: strin
         setEditing(true);
       }}
       title="Rename"
-      className="hover:bg-muted focus-visible:ring-ring max-w-56 min-w-0 truncate rounded-md px-2 py-1 text-sm font-medium focus-visible:ring-2 focus-visible:outline-none"
+      className="hover:bg-muted focus-visible:ring-ring max-w-56 min-w-0 truncate rounded-full px-2.5 py-1 text-sm font-medium focus-visible:ring-2 focus-visible:outline-none"
     >
       {name}
     </button>
@@ -87,9 +87,9 @@ export function WorkspaceHeader({
         <Link
           href="/"
           aria-label="Studio home"
-          className="focus-visible:ring-ring me-1 shrink-0 rounded-md focus-visible:ring-2 focus-visible:outline-none"
+          className="focus-visible:ring-ring me-1 shrink-0 rounded-sm focus-visible:ring-2 focus-visible:outline-none"
         >
-          <Image src="/icon-192.png" alt="" width={24} height={24} className="rounded-md" />
+          <Image src="/icon-192.png" alt="" width={24} height={24} className="rounded-[8px]" />
         </Link>
       )}
       <ProjectName key={name} name={name} onRename={onRename} />

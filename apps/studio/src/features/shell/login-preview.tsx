@@ -10,7 +10,7 @@ const SCENES = [
 export function LoginPreview() {
   return (
     <div aria-hidden="true" className="flex w-full max-w-[520px] flex-col gap-4">
-      <div className="bg-muted relative ms-auto h-11 w-[300px] rounded-2xl rounded-ee-md px-4 py-3 text-sm">
+      <div className="bg-muted relative ms-auto h-11 w-[300px] rounded-xl rounded-ee-sm px-4 py-3 text-sm">
         {SCENES.map((scene, index) => (
           <span
             key={scene.prompt}
@@ -27,7 +27,7 @@ export function LoginPreview() {
         {SCENES.map((scene, index) => (
           <span
             key={scene.kind}
-            className="studio-cycle border-border bg-card absolute inset-0 overflow-hidden rounded-2xl border shadow-xl"
+            className="studio-cycle border-border bg-card absolute inset-0 overflow-hidden rounded-xl border shadow-xl"
             style={{ animationDelay: `${index * 3 + 0.6}s` }}
           >
             <span className="block h-1/2 w-1/2 origin-top-left scale-200">

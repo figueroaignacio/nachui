@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, buttonVariants } from '@repo/ui/components/button';
+import { Button } from '@repo/ui/components/button';
 import { Empty } from '@repo/ui/components/empty';
 import { Input } from '@repo/ui/components/input';
 import { Skeleton } from '@repo/ui/components/skeleton';
@@ -13,6 +13,7 @@ import Link from 'next/link';
 import * as React from 'react';
 import { AppShell, MobileBar } from '@/features/shell/app-shell';
 import { useEntrance } from '@/features/shell/motion';
+import { pill } from '@/features/shell/pill';
 import { ProjectCard } from '@/features/shell/project-card';
 import { useProjects } from '@/features/shell/projects-store';
 import type { ProjectSummary } from '@/lib/types';
@@ -61,7 +62,7 @@ function Projects() {
               : 'Every screen you build lands here.'}
           </p>
         </div>
-        <Link href="/" className={buttonVariants({ size: 'sm' })}>
+        <Link href="/" className={pill({ size: 'sm' })}>
           <PlusIcon size={14} />
           New project
         </Link>
@@ -85,10 +86,17 @@ function Projects() {
           value={filter}
           onValueChange={(value) => setFilter((value || 'all') as Filter)}
           aria-label="Show"
+          className="rounded-full"
         >
-          <ToggleGroup.Item value="all">All</ToggleGroup.Item>
-          <ToggleGroup.Item value="pr">Pull requests</ToggleGroup.Item>
-          <ToggleGroup.Item value="broken">Needs a fix</ToggleGroup.Item>
+          <ToggleGroup.Item value="all" className="rounded-full px-3">
+            All
+          </ToggleGroup.Item>
+          <ToggleGroup.Item value="pr" className="rounded-full px-3">
+            Pull requests
+          </ToggleGroup.Item>
+          <ToggleGroup.Item value="broken" className="rounded-full px-3">
+            Needs a fix
+          </ToggleGroup.Item>
         </ToggleGroup>
       </div>
 
@@ -103,7 +111,7 @@ function Projects() {
           aria-label="Loading projects"
         >
           {Array.from({ length: 4 }, (_, index) => (
-            <Skeleton key={index} className="h-60 rounded-xl" />
+            <Skeleton key={index} className="h-60 rounded-lg" />
           ))}
         </div>
       ) : projects.length === 0 ? (
@@ -118,7 +126,7 @@ function Projects() {
             </Empty.Description>
           </Empty.Header>
           <Empty.Content>
-            <Link href="/" className={buttonVariants({ size: 'sm' })}>
+            <Link href="/" className={pill({ size: 'sm' })}>
               Start one
             </Link>
           </Empty.Content>
@@ -152,7 +160,7 @@ function Projects() {
           <motion.li variants={entrance} custom={visible.length}>
             <Link
               href="/"
-              className="border-border text-muted-strong hover:border-border-interactive hover:text-foreground focus-visible:ring-ring flex h-full min-h-56 flex-col items-center justify-center gap-3 rounded-xl border border-dashed text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none"
+              className="border-border text-muted-strong hover:border-border-interactive hover:text-foreground focus-visible:ring-ring flex h-full min-h-56 flex-col items-center justify-center gap-3 rounded-lg border border-dashed text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none"
             >
               <span className="border-border grid size-11 place-items-center rounded-full border">
                 <PlusIcon size={18} />

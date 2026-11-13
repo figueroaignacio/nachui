@@ -29,8 +29,8 @@ export function AccountMenu({ compact = false }: { compact?: boolean }) {
           type="button"
           aria-label={`Account, ${label}`}
           className={cn(
-            'hover:bg-muted focus-visible:ring-ring flex w-full min-w-0 items-center gap-2.5 rounded-md text-start transition-colors focus-visible:ring-2 focus-visible:outline-none',
-            compact ? 'size-8 justify-center' : 'p-1.5',
+            'hover:bg-muted focus-visible:ring-ring flex w-full min-w-0 items-center gap-2.5 rounded-sm text-start transition-colors focus-visible:ring-2 focus-visible:outline-none',
+            compact ? 'size-8 justify-center rounded-full' : 'p-1.5',
           )}
         >
           <Avatar size="sm" className="shrink-0">

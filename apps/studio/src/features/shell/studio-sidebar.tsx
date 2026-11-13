@@ -20,7 +20,7 @@ function UsageCard() {
   if (!usage || usage.limit === 0) return null;
   const left = Math.max(usage.limit - usage.used, 0);
   return (
-    <div className="border-border bg-card flex flex-col gap-2 rounded-lg border px-3 py-2.5">
+    <div className="border-border bg-card flex flex-col gap-2 rounded-md border px-3 py-2.5">
       <div className="flex items-center justify-between text-xs">
         <span className="text-muted-foreground">Generations today</span>
         <span className="font-mono tabular-nums">
@@ -45,18 +45,18 @@ export function StudioSidebar() {
   const groups = React.useMemo(() => groupProjects(projects ?? []), [projects]);
 
   return (
-    <Sidebar collapsible="icon" label="Studio">
+    <Sidebar collapsible="icon" variant="inset" label="Studio">
       <Sidebar.Header className="h-14 flex-row items-center justify-between gap-2 px-3 py-0">
         {compact ? null : <Logo />}
         <Sidebar.Trigger />
       </Sidebar.Header>
 
-      <div className="flex flex-col gap-0.5 px-2 pb-2">
+      <Sidebar.Menu className="px-2 pb-2">
         <Sidebar.Item
           asChild
           icon={<PlusIcon />}
           tooltip="New project"
-          className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground mb-2 justify-center font-medium"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground mb-2 h-9 justify-center rounded-full font-medium"
         >
           <Link href="/">New project</Link>
         </Sidebar.Item>
@@ -71,7 +71,7 @@ export function StudioSidebar() {
         >
           <Link href="/projects">Projects</Link>
         </Sidebar.Item>
-      </div>
+      </Sidebar.Menu>
 
       <Sidebar.Content>
         {compact

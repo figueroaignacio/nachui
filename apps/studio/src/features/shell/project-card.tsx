@@ -32,10 +32,10 @@ export function ProjectCard({ project }: { project: ProjectSummary }) {
   return (
     <Link
       href={`/p/${project.id}`}
-      className="group border-border bg-card hover:border-border-interactive focus-visible:ring-ring flex h-full flex-col overflow-hidden rounded-xl border transition-[border-color,translate] duration-300 ease-[cubic-bezier(.34,1.56,.64,1)] hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:outline-none motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+      className="group border-border bg-card hover:border-border-interactive focus-visible:ring-ring flex h-full flex-col overflow-hidden rounded-lg border transition-[border-color,translate] duration-300 ease-[cubic-bezier(.34,1.56,.64,1)] hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:outline-none motion-reduce:transition-none motion-reduce:hover:translate-y-0"
     >
       <span aria-hidden="true" className="bg-surface-muted block aspect-[16/10] px-4 pt-4">
-        <span className="border-border bg-background block size-full origin-bottom overflow-hidden rounded-t-lg border border-b-0 transition-transform duration-500 ease-[cubic-bezier(.34,1.3,.64,1)] group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100">
+        <span className="border-border bg-background block size-full origin-bottom overflow-hidden rounded-t-md border border-b-0 transition-transform duration-500 ease-[cubic-bezier(.34,1.3,.64,1)] group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100">
           <TemplateThumb kind={thumbFor(project.id)} />
         </span>
       </span>

@@ -180,11 +180,11 @@ function Home() {
                 <button
                   type="button"
                   onClick={() => fill(template.prompt)}
-                  className="group focus-visible:ring-ring flex w-full flex-col gap-2.5 rounded-xl text-start focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:outline-none"
+                  className="group focus-visible:ring-ring flex w-full flex-col gap-2.5 rounded-lg text-start focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:outline-none"
                 >
                   <span
                     aria-hidden="true"
-                    className="border-border bg-card group-hover:border-border-interactive block aspect-[16/10] overflow-hidden rounded-xl border transition-[border-color,translate,scale] duration-300 ease-[cubic-bezier(.34,1.56,.64,1)] group-hover:-translate-y-1 group-hover:scale-[1.015] motion-reduce:transition-none motion-reduce:group-hover:translate-y-0 motion-reduce:group-hover:scale-100"
+                    className="border-border bg-card group-hover:border-border-interactive block aspect-[16/10] overflow-hidden rounded-lg border transition-[border-color,translate,scale] duration-300 ease-[cubic-bezier(.34,1.56,.64,1)] group-hover:-translate-y-1 group-hover:scale-[1.015] motion-reduce:transition-none motion-reduce:group-hover:translate-y-0 motion-reduce:group-hover:scale-100"
                   >
                     <TemplateThumb kind={template.kind} />
                   </span>

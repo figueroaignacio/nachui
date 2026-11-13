@@ -1,8 +1,8 @@
 'use client';
 
-import { buttonVariants } from '@repo/ui/components/button';
 import * as React from 'react';
 import { GithubMark } from '@/features/shell/github-mark';
+import { pill } from '@/features/shell/pill';
 import { signInUrl } from '@/lib/api';
 import { ChatThread } from './chat-thread';
 import { EXAMPLE_PROJECT } from './example-data';
@@ -29,10 +29,7 @@ export function ExampleWorkspace() {
             sidebar={false}
             end={
               end ?? (
-                <a
-                  href={signInUrl('/')}
-                  className={buttonVariants({ variant: 'outline', size: 'sm' })}
-                >
+                <a href={signInUrl('/')} className={pill({ variant: 'outline', size: 'sm' })}>
                   <GithubMark size={14} />
                   Sign in
                 </a>
@@ -49,11 +46,11 @@ export function ExampleWorkspace() {
               running={false}
               waiting={false}
             />
-            <div className="border-border bg-surface-muted m-3 mt-0 flex flex-col gap-3 rounded-2xl border p-4">
+            <div className="border-border bg-surface-muted m-3 mt-0 flex flex-col gap-3 rounded-xl border p-4">
               <p className="text-muted-strong text-sm">
                 This is an example project. Sign in with GitHub to describe your own screens.
               </p>
-              <a href={signInUrl('/')} className={buttonVariants({ size: 'sm' })}>
+              <a href={signInUrl('/')} className={pill({ size: 'sm' })}>
                 <GithubMark size={14} />
                 Continue with GitHub
               </a>

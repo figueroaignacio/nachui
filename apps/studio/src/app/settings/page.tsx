@@ -2,12 +2,13 @@
 
 import { AlertDialog } from '@repo/ui/components/alert-dialog';
 import { Avatar } from '@repo/ui/components/avatar';
-import { Button, buttonVariants } from '@repo/ui/components/button';
+import { Button } from '@repo/ui/components/button';
 import { cn } from '@repo/ui/lib/cn';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
 import { initials } from '@/features/shell/account-menu';
 import { AppShell, MobileBar } from '@/features/shell/app-shell';
+import { pill } from '@/features/shell/pill';
 import { useSession } from '@/features/shell/session';
 import { connectReposUrl, studioApi } from '@/lib/api';
 
@@ -42,7 +43,7 @@ function Settings() {
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-7 px-4 py-10 sm:px-8">
       <h1 className="font-heading text-3xl font-bold tracking-tight">Settings</h1>
 
-      <section aria-label="Account" className="border-border bg-card rounded-2xl border">
+      <section aria-label="Account" className="border-border bg-card rounded-lg border">
         <div className="flex items-center gap-4 px-5 py-4">
           <Avatar size="lg">
             {user.avatarUrl ? <Avatar.Image src={user.avatarUrl} alt="" /> : null}
@@ -60,7 +61,7 @@ function Settings() {
         </div>
       </section>
 
-      <section aria-labelledby="usage" className="border-border bg-card rounded-2xl border">
+      <section aria-labelledby="usage" className="border-border bg-card rounded-lg border">
         <Row title="Usage today" description="Resets at midnight UTC.">
           <div className="flex w-full flex-col gap-2 sm:w-72">
             <div className="flex justify-between text-sm">
@@ -92,7 +93,7 @@ function Settings() {
         </Row>
       </section>
 
-      <section aria-label="GitHub" className="border-border bg-card rounded-2xl border">
+      <section aria-label="GitHub" className="border-border bg-card rounded-lg border">
         <Row
           title="Repository access"
           description={
@@ -115,10 +116,7 @@ function Settings() {
               Disconnect
             </Button>
           ) : (
-            <a
-              href={connectReposUrl('/settings')}
-              className={buttonVariants({ variant: 'outline' })}
-            >
+            <a href={connectReposUrl('/settings')} className={pill({ variant: 'outline' })}>
               Connect GitHub
             </a>
           )}
@@ -127,7 +125,7 @@ function Settings() {
 
       <section
         aria-label="Delete account"
-        className="border-destructive-border bg-card rounded-2xl border"
+        className="border-destructive-border bg-card rounded-lg border"
       >
         <Row
           title="Delete account"

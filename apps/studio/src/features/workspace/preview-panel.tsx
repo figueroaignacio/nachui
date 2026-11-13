@@ -25,12 +25,12 @@ function BuildingSkeleton({ label }: { label: string }) {
     <div aria-hidden="true" className="flex flex-col gap-4 p-8 sm:p-10">
       <Skeleton className="h-7 w-44" />
       <Skeleton className="h-3.5 w-72 max-w-full" />
-      <Skeleton className="mt-3 h-28 rounded-xl" />
+      <Skeleton className="mt-3 h-28 rounded-lg" />
       <div className="grid grid-cols-2 gap-4">
-        <Skeleton className="h-24 rounded-xl" />
-        <Skeleton className="h-24 rounded-xl" />
+        <Skeleton className="h-24 rounded-lg" />
+        <Skeleton className="h-24 rounded-lg" />
       </div>
-      <Skeleton className="h-36 rounded-xl" />
+      <Skeleton className="h-36 rounded-lg" />
       <Shimmer className="mx-auto mt-1 text-sm">{label}</Shimmer>
     </div>
   );
@@ -72,15 +72,15 @@ export function PreviewPanel({
           value={device}
           onValueChange={(value) => setDevice((value || 'desktop') as Device)}
           aria-label="Preview width"
-          className="ms-1 hidden md:flex"
+          className="ms-1 hidden rounded-full md:flex"
         >
-          <ToggleGroup.Item value="desktop" aria-label="Desktop width">
+          <ToggleGroup.Item value="desktop" aria-label="Desktop width" className="rounded-full">
             <DesktopIcon />
           </ToggleGroup.Item>
-          <ToggleGroup.Item value="tablet" aria-label="Tablet width">
+          <ToggleGroup.Item value="tablet" aria-label="Tablet width" className="rounded-full">
             <TabletIcon />
           </ToggleGroup.Item>
-          <ToggleGroup.Item value="phone" aria-label="Phone width">
+          <ToggleGroup.Item value="phone" aria-label="Phone width" className="rounded-full">
             <PhoneIcon />
           </ToggleGroup.Item>
         </ToggleGroup>
@@ -107,7 +107,7 @@ export function PreviewPanel({
           initial={false}
           animate={landed ? 'visible' : 'hidden'}
           variants={land}
-          className="border-border bg-background mx-auto h-full min-h-[480px] overflow-hidden rounded-xl border shadow-lg transition-[max-width] duration-300 motion-reduce:transition-none"
+          className="border-border bg-background mx-auto h-full min-h-[480px] overflow-hidden rounded-lg border shadow-lg transition-[max-width] duration-300 motion-reduce:transition-none"
           style={{ maxWidth: WIDTHS[device] }}
         >
           {srcDoc ? (
@@ -130,7 +130,7 @@ export function PreviewPanel({
               className="absolute inset-3 sm:inset-5"
             >
               <div
-                className="border-border bg-background mx-auto h-full overflow-hidden rounded-xl border"
+                className="border-border bg-background mx-auto h-full overflow-hidden rounded-lg border"
                 style={{ maxWidth: WIDTHS[device] }}
               >
                 <BuildingSkeleton

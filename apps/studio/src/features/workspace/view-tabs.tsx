@@ -26,7 +26,7 @@ export function ViewTabs<T extends string>({
     <div
       role="group"
       aria-label={label}
-      className={cn('border-border bg-surface-muted flex rounded-lg border p-0.5', className)}
+      className={cn('border-border bg-surface-muted flex rounded-full border p-0.5', className)}
     >
       {options.map((option) => {
         const active = option.value === value;
@@ -37,7 +37,7 @@ export function ViewTabs<T extends string>({
             aria-pressed={active}
             onClick={() => onValueChange(option.value)}
             className={cn(
-              'focus-visible:ring-ring relative h-7 flex-1 rounded-md px-3 text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
+              'focus-visible:ring-ring relative h-7 flex-1 rounded-full px-3.5 text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
               active ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
             )}
           >
@@ -45,7 +45,7 @@ export function ViewTabs<T extends string>({
               <motion.span
                 layoutId={`${id}-indicator`}
                 transition={reduced ? still : springs.smooth}
-                className="bg-card border-border absolute inset-0 rounded-md border shadow-xs"
+                className="bg-card border-border absolute inset-0 rounded-full border shadow-xs"
               />
             ) : null}
             <span className="relative">{option.label}</span>

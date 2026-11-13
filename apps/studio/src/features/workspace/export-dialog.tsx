@@ -1,7 +1,7 @@
 'use client';
 
 import { CodeBlock } from '@repo/ui/ai/code-block';
-import { Button, buttonVariants } from '@repo/ui/components/button';
+import { Button } from '@repo/ui/components/button';
 import { Dialog } from '@repo/ui/components/dialog';
 import { Input } from '@repo/ui/components/input';
 import { Label } from '@repo/ui/components/label';
@@ -10,6 +10,7 @@ import { Tabs } from '@repo/ui/components/tabs';
 import { DownloadIcon } from '@repo/ui/icons/download';
 import * as React from 'react';
 import { GithubMark } from '@/features/shell/github-mark';
+import { pill } from '@/features/shell/pill';
 import { ApiError, connectReposUrl, studioApi } from '@/lib/api';
 import type { ProjectFiles, Repo } from '@/lib/types';
 import { installCommand } from './install-command';
@@ -63,7 +64,7 @@ function PullRequestTab({
         </p>
         <a
           href={connectReposUrl(`/p/${projectId}?export=pr`)}
-          className={buttonVariants({ variant: 'outline' })}
+          className={pill({ variant: 'outline' })}
         >
           <GithubMark size={16} />
           Connect GitHub
@@ -76,7 +77,7 @@ function PullRequestTab({
     return (
       <div className="flex flex-col gap-3 py-2">
         <p className="text-sm">The pull request is open.</p>
-        <a href={state.url} target="_blank" rel="noreferrer" className={buttonVariants()}>
+        <a href={state.url} target="_blank" rel="noreferrer" className={pill()}>
           Open on GitHub
         </a>
         {state.skipped.length > 0 ? (
