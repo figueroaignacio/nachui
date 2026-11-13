@@ -1,14 +1,6 @@
 @import '@repo/ui/globals.css';
 @source '../';
 
-@theme inline {
-  --radius-sm: 0.75rem;
-  --radius-md: 0.875rem;
-  --radius-lg: 1.5rem;
-  --radius-xl: 1.75rem;
-  --radius-2xl: 2rem;
-}
-
 [data-slot='button'] {
   border-radius: 9999px;
 }
