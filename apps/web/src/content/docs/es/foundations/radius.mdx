@@ -4,11 +4,11 @@ description: Un radio base, cinco pasos derivados, para qué sirve cada uno y la
 published: true
 toc:
   visible: true
-date: 2026-11-09
+date: 2026-11-13
 locale: es
 ---
 
-Las esquinas en NachUI son moderadas: lo bastante redondas para sentirse amables, lo bastante rectas para seguir calmas. Todos los radios salen de un solo token, `--radius`, que vale `0.75rem` (12px) en el tema `nachui`. Si lo cambiás, toda la escala se mueve junta.
+Las esquinas en NachUI son suaves: los controles se leen como pastillas y las superficies se curvan como el borde de un dispositivo. Todos los radios salen de un solo token, `--radius`, que vale `1.125rem` (18px) en el tema `nachui`. Si lo cambiás, toda la escala se mueve junta.
 
 ## La escala
 
@@ -16,17 +16,17 @@ Las utilidades de radio de Tailwind se derivan de la base con multiplicadores fi
 
 <RadiusScale locale="es" />
 
-| Utilidad      | Fórmula           | Con 0.75rem | Uso                                                             |
-| ------------- | ----------------- | ----------- | --------------------------------------------------------------- |
-| `rounded-sm`  | `--radius * 0.5`  | 6px         | Ítems dentro de una superficie: menú, pastilla de tabs, tooltip |
-| `rounded-md`  | `--radius`        | 12px        | Controles, superficies flotantes, toasts, callouts              |
-| `rounded-lg`  | `--radius * 1.33` | 16px        | Contenedores principales: cards, diálogos                       |
-| `rounded-xl`  | `--radius * 1.66` | 20px        | Contenedores de redacción como el prompt input                  |
-| `rounded-2xl` | `--radius * 2`    | 24px        | Drawers y otros paneles grandes                                 |
+| Utilidad      | Fórmula           | Con 1.125rem | Uso                                                             |
+| ------------- | ----------------- | ------------ | --------------------------------------------------------------- |
+| `rounded-sm`  | `--radius * 0.66` | 12px         | Ítems dentro de una superficie: menú, pastilla de tabs, tooltip |
+| `rounded-md`  | `--radius`        | 18px         | Controles, superficies flotantes, toasts, callouts              |
+| `rounded-lg`  | `--radius * 1.33` | 24px         | Contenedores principales: cards, diálogos                       |
+| `rounded-xl`  | `--radius * 1.66` | 30px         | Contenedores de redacción como el prompt input                  |
+| `rounded-2xl` | `--radius * 2`    | 36px         | Drawers y otros paneles grandes                                 |
 
 ```css
 @theme inline {
-  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-sm: calc(var(--radius) * 0.66);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) * 1.33);
   --radius-xl: calc(var(--radius) * 1.66);
@@ -34,9 +34,9 @@ Las utilidades de radio de Tailwind se derivan de la base con multiplicadores fi
 }
 ```
 
-Los botones usan `rounded-md`, no forma de pastilla. `rounded-full` queda para lo que es redondo a propósito: avatares, puntos de estado, botones redondos de solo ícono y chips que tienen que leerse como pastillas.
+Los botones, inputs y triggers de select usan `rounded-md`. Con la base de `nachui` eso es la mitad del alto de un control de 36px, así que se leen como pastillas; un tema con una base más chica, como `microsoft`, los deja más rectos sin tocar ningún componente. `rounded-full` queda para lo que es redondo en todos los temas: avatares, puntos de estado, botones redondos de solo ícono y chips.
 
-El checkbox es la única excepción por debajo de la escala, con `--radius * 0.33` (4px). Con 16px de ancho, `rounded-sm` lo haría parecer un radio.
+El checkbox es la única excepción por debajo de la escala, con `--radius * 0.33` (6px). Con 16px de ancho, `rounded-sm` lo haría parecer un radio.
 
 ## Anidado
 

@@ -4,11 +4,11 @@ description: One base radius, five derived steps, what each step is for and the 
 published: true
 toc:
   visible: true
-date: 2026-11-09
+date: 2026-11-13
 locale: en
 ---
 
-Corners in NachUI are moderate: round enough to feel friendly, square enough to stay calm. Every radius comes from a single token, `--radius`, which is `0.75rem` (12px) in the `nachui` theme. Change it and the whole scale moves together.
+Corners in NachUI are soft: controls read as pills and surfaces curve like the edge of a device. Every radius comes from a single token, `--radius`, which is `1.125rem` (18px) in the `nachui` theme. Change it and the whole scale moves together.
 
 ## The scale
 
@@ -16,17 +16,17 @@ Tailwind's radius utilities are derived from the base with fixed multipliers. Th
 
 <RadiusScale />
 
-| Utility       | Formula           | At 0.75rem | Use                                                   |
-| ------------- | ----------------- | ---------- | ----------------------------------------------------- |
-| `rounded-sm`  | `--radius * 0.5`  | 6px        | Items inside a surface: menu items, tab pill, tooltip |
-| `rounded-md`  | `--radius`        | 12px       | Controls, floating surfaces, toasts, callouts         |
-| `rounded-lg`  | `--radius * 1.33` | 16px       | Primary containers: cards, dialogs                    |
-| `rounded-xl`  | `--radius * 1.66` | 20px       | Composer shells such as the prompt input              |
-| `rounded-2xl` | `--radius * 2`    | 24px       | Drawers and other large sheets                        |
+| Utility       | Formula           | At 1.125rem | Use                                                   |
+| ------------- | ----------------- | ----------- | ----------------------------------------------------- |
+| `rounded-sm`  | `--radius * 0.66` | 12px        | Items inside a surface: menu items, tab pill, tooltip |
+| `rounded-md`  | `--radius`        | 18px        | Controls, floating surfaces, toasts, callouts         |
+| `rounded-lg`  | `--radius * 1.33` | 24px        | Primary containers: cards, dialogs                    |
+| `rounded-xl`  | `--radius * 1.66` | 30px        | Composer shells such as the prompt input              |
+| `rounded-2xl` | `--radius * 2`    | 36px        | Drawers and other large sheets                        |
 
 ```css
 @theme inline {
-  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-sm: calc(var(--radius) * 0.66);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) * 1.33);
   --radius-xl: calc(var(--radius) * 1.66);
@@ -34,9 +34,9 @@ Tailwind's radius utilities are derived from the base with fixed multipliers. Th
 }
 ```
 
-Buttons use `rounded-md`, not a pill shape. `rounded-full` is kept for things that are round on purpose: avatars, status dots, icon-only round buttons and chips that are meant to read as pills.
+Buttons, inputs and select triggers use `rounded-md`. At the `nachui` base that is half the height of a 36px control, so they read as pills; a theme with a smaller base, like `microsoft`, keeps them squarer without touching a component. `rounded-full` is kept for things that stay round in every theme: avatars, status dots, icon-only round buttons and chips.
 
-The checkbox is the one exception below the scale, at `--radius * 0.33` (4px). At 16px wide, `rounded-sm` would make it look like a radio.
+The checkbox is the one exception below the scale, at `--radius * 0.33` (6px). At 16px wide, `rounded-sm` would make it look like a radio.
 
 ## Nesting
 

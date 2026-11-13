@@ -167,19 +167,19 @@ One base token drives every corner in the system.
 
 ```css
 :root {
-  --radius: 1.5rem;
+  --radius: 1.125rem;
 }
 ```
 
 The scale derives from it, so changing the base reshapes the whole app proportionally:
 
-| Utility       | Derivation                      | With the default `1.5rem` |
-| ------------- | ------------------------------- | ------------------------- |
-| `rounded-sm`  | `calc(var(--radius) - 0.75rem)` | 12px                      |
-| `rounded-md`  | `calc(var(--radius) - 0.5rem)`  | 16px                      |
-| `rounded-lg`  | `var(--radius)`                 | 24px                      |
-| `rounded-xl`  | `calc(var(--radius) + 0.5rem)`  | 32px                      |
-| `rounded-2xl` | `calc(var(--radius) + 1rem)`    | 40px                      |
+| Utility       | Derivation                   | With the default `1.125rem` |
+| ------------- | ---------------------------- | --------------------------- |
+| `rounded-sm`  | `calc(var(--radius) * 0.66)` | 12px                        |
+| `rounded-md`  | `var(--radius)`              | 18px                        |
+| `rounded-lg`  | `calc(var(--radius) * 1.33)` | 24px                        |
+| `rounded-xl`  | `calc(var(--radius) * 1.66)` | 30px                        |
+| `rounded-2xl` | `calc(var(--radius) * 2)`    | 36px                        |
 
 For sharper corners across the board, lower the base:
 

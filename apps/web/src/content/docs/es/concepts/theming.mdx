@@ -167,19 +167,19 @@ Un solo token base gobierna todas las esquinas del sistema.
 
 ```css
 :root {
-  --radius: 1.5rem;
+  --radius: 1.125rem;
 }
 ```
 
 La escala se deriva de ahí, así que cambiar la base reforma toda la app de manera proporcional:
 
-| Utilidad      | Derivación                      | Con el `1.5rem` por defecto |
-| ------------- | ------------------------------- | --------------------------- |
-| `rounded-sm`  | `calc(var(--radius) - 0.75rem)` | 12px                        |
-| `rounded-md`  | `calc(var(--radius) - 0.5rem)`  | 16px                        |
-| `rounded-lg`  | `var(--radius)`                 | 24px                        |
-| `rounded-xl`  | `calc(var(--radius) + 0.5rem)`  | 32px                        |
-| `rounded-2xl` | `calc(var(--radius) + 1rem)`    | 40px                        |
+| Utilidad      | Derivación                   | Con el `1.125rem` por defecto |
+| ------------- | ---------------------------- | ----------------------------- |
+| `rounded-sm`  | `calc(var(--radius) * 0.66)` | 12px                          |
+| `rounded-md`  | `var(--radius)`              | 18px                          |
+| `rounded-lg`  | `calc(var(--radius) * 1.33)` | 24px                          |
+| `rounded-xl`  | `calc(var(--radius) * 1.66)` | 30px                          |
+| `rounded-2xl` | `calc(var(--radius) * 2)`    | 36px                          |
 
 Para esquinas más filosas en todos lados, bajá la base:
 

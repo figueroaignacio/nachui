@@ -14,7 +14,7 @@ NachUI is a **quiet, editorial minimalist** system. Color is mostly absent; hier
 - **Light mode**: warm paper neutrals. Every gray carries a faint warm tint, so white never reads clinical.
 - **Dark mode**: pure neutral grays, stepped so surfaces stack clearly on a near-black canvas.
 - **Primary**: near-black in light mode, near-white in dark mode. Accent color only shows up in feedback states and syntax highlighting.
-- **Radius**: moderate, from a single base of `0.75rem`.
+- **Radius**: soft, from a single base of `1.125rem`, so controls read as pills.
 - **Elevation**: soft, tokenized shadows in both modes.
 - **OKLCH everywhere**, so steps between tokens are perceptually even.
 
@@ -61,10 +61,10 @@ There are no accent presets. To rebrand, redefine the tokens on `:root` and `.da
 
 ## Styling Rules
 
-1. **Radius scale** (base `--radius: 0.75rem`):
-   - `rounded-sm` (6px): items inside a surface, such as menu items, the tab pill and tooltips. The checkbox uses `--radius * 0.33` so it never reads as a radio.
-   - `rounded-md` (12px): controls, floating surfaces, toasts and callouts.
-   - `rounded-lg` (16px): primary containers such as cards and dialogs.
+1. **Radius scale** (base `--radius: 1.125rem`):
+   - `rounded-sm` (12px): items inside a surface, such as menu items, the tab pill and tooltips. The checkbox uses `--radius * 0.33` so it never reads as a radio.
+   - `rounded-md` (18px): controls, floating surfaces, toasts and callouts. On a 36px control that is a pill.
+   - `rounded-lg` (24px): primary containers such as cards and dialogs.
    - `rounded-xl` and `rounded-2xl`: only for composer shells and drawers.
    - Nested elements always use a smaller radius than their container.
 2. **Elevation**: only `shadow-sm` (inline controls), `shadow-md` (anchored floating surfaces) and `shadow-lg` (dialogs, sheets, drawers). Never `shadow-xl`, `shadow-2xl` or arbitrary shadows. Cards stay flat with a border.
