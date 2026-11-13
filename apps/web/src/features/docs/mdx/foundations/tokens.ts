@@ -207,7 +207,7 @@ export function measurePairs(
 export function radiusScale(base: DtcgDimension, rootFontSize = 16) {
   const basePx = base.unit === 'rem' ? base.value * rootFontSize : base.value;
   const steps = [
-    { utility: 'rounded-sm', factor: 0.5 },
+    { utility: 'rounded-sm', factor: 0.66 },
     { utility: 'rounded-md', factor: 1 },
     { utility: 'rounded-lg', factor: 1.33 },
     { utility: 'rounded-xl', factor: 1.66 },

@@ -7,7 +7,7 @@ NachUI is a **quiet, editorial minimalist** system. Color is mostly absent; hier
 - **Warm paper neutrals** in light mode: every gray carries a faint warm tint (hue 75 to 85, very low chroma), so white never reads clinical
 - **Pure neutral grays** in dark mode (zero chroma), stepped so surfaces stack clearly on a near-black canvas
 - **Near-black primary** in light mode and near-white primary in dark mode. Accent color only shows up in feedback states and syntax highlighting
-- **Moderate corner radius** (base 0.75rem) with a small, fixed scale, described in section 4
+- **Soft, device-like corners** (base 1.125rem): controls read as pills and surfaces curve generously, with a small fixed scale described in section 4
 - **Soft, tokenized elevation** in both modes. Shadows are gentle in light mode and deeper in dark mode, where they do more of the work of separating surfaces
 - **OKLCH everywhere**, so steps between tokens are perceptually even
 
@@ -93,17 +93,19 @@ All text uses `antialiased` rendering.
 
 ### Radius Scale
 
-The base is `--radius: 0.75rem`. Tailwind's radius utilities are derived from it:
+The base is `--radius: 1.125rem`. Tailwind's radius utilities are derived from it:
 
 | Utility       | Value                    | Use                                                                         |
 | ------------- | ------------------------ | --------------------------------------------------------------------------- |
-| `rounded-sm`  | `--radius * 0.5` (6px)   | Items inside a surface: menu items, tab pill, tooltip                       |
-| `rounded-md`  | `--radius` (12px)        | Controls (button, input, select trigger), floating surfaces, toast, callout |
-| `rounded-lg`  | `--radius * 1.33` (16px) | Primary containers: card, dialog                                            |
-| `rounded-xl`  | `--radius * 1.66` (20px) | Composer-like shells such as the prompt input                               |
-| `rounded-2xl` | `--radius * 2` (24px)    | Drawer and similar large sheets                                             |
+| `rounded-sm`  | `--radius * 0.66` (12px) | Items inside a surface: menu items, tab pill, tooltip                       |
+| `rounded-md`  | `--radius` (18px)        | Controls (button, input, select trigger), floating surfaces, toast, callout |
+| `rounded-lg`  | `--radius * 1.33` (24px) | Primary containers: card, dialog                                            |
+| `rounded-xl`  | `--radius * 1.66` (30px) | Composer-like shells such as the prompt input                               |
+| `rounded-2xl` | `--radius * 2` (36px)    | Drawer and similar large sheets                                             |
 
-The checkbox sits below the scale at `--radius * 0.33` (4px): at 16px wide, `rounded-sm` would read as a radio.
+At this base `rounded-md` is half the height of a 36px control, so buttons, inputs and select triggers read as pills. Themes with a smaller base keep them squarer; components never hardcode the pill.
+
+The checkbox sits below the scale at `--radius * 0.33` (6px): at 16px wide, `rounded-sm` would read as a radio.
 
 `rounded-full` is for avatars, dots, icon buttons and pills that are pills on purpose (the context chip, attachment chips). Nested elements always use a smaller radius than the element that holds them.
 

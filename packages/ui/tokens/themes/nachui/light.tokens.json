@@ -531,9 +531,9 @@
   "radius": {
     "$type": "dimension",
     "$value": {
-      "value": 0.75,
+      "value": 1.125,
       "unit": "rem"
     },
-    "$description": "Base corner radius. The scale is sm 0.5x, md 1x, lg 1.33x, xl 1.66x and 2xl 2x."
+    "$description": "Base corner radius. The scale is sm 0.66x, md 1x, lg 1.33x, xl 1.66x and 2xl 2x."
   }
 }

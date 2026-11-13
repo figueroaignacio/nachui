@@ -174,7 +174,7 @@ function tailwindMapping(groups) {
     .filter(Boolean)
     .join('\n\n');
   const radius = [
-    '  --radius-sm: calc(var(--radius) * 0.5);',
+    '  --radius-sm: calc(var(--radius) * 0.66);',
     '  --radius-md: var(--radius);',
     '  --radius-lg: calc(var(--radius) * 1.33);',
     '  --radius-xl: calc(var(--radius) * 1.66);',

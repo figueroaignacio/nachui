@@ -100,8 +100,8 @@ describe('tailwindUtility', () => {
 
 describe('radiusScale', () => {
   it('derives every step from the base radius', () => {
-    expect(radiusScale({ value: 0.75, unit: 'rem' }).map((step) => step.px)).toEqual([
-      6, 12, 15.96, 19.92, 24,
+    expect(radiusScale({ value: 1.125, unit: 'rem' }).map((step) => step.px)).toEqual([
+      11.88, 18, 23.94, 29.88, 36,
     ]);
   });
 });

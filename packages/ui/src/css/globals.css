@@ -67,7 +67,7 @@
   --elevation-md: 0 4px 12px -4px oklch(25% 0.01 75 / 0.11);
   --elevation-lg: 0 12px 32px -12px oklch(25% 0.01 75 / 0.17);
 
-  --radius: 0.75rem;
+  --radius: 1.125rem;
 }
 
 .dark {
@@ -197,7 +197,7 @@
 
   --color-code: var(--code);
 
-  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-sm: calc(var(--radius) * 0.66);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) * 1.33);
   --radius-xl: calc(var(--radius) * 1.66);
