@@ -110,6 +110,7 @@ const ButtonRoot = ({
     <motion.button
       ref={ref}
       type={type}
+      data-slot="button"
       disabled={disabled}
       aria-disabled={loading && !disabled ? true : undefined}
       aria-busy={loading}

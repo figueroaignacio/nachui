@@ -41,6 +41,7 @@ describe('Button', () => {
     const button = screen.getByRole('button', { name: 'Click me' });
     expect(button).toBeInTheDocument();
     expect(button).not.toBeDisabled();
+    expect(button).toHaveAttribute('data-slot', 'button');
   });
 
   it('handles click events', async () => {
