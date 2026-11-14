@@ -4,7 +4,7 @@ import { cn } from '../lib/cn';
 import { assignRef } from '../lib/overlay';
 
 const bubbleVariants = cva(
-  'relative flex w-fit max-w-full flex-col rounded-xl text-sm transition-colors',
+  'relative flex w-fit max-w-full flex-col rounded-md text-sm transition-colors',
   {
     variants: {
       variant: {

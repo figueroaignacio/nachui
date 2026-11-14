@@ -3,7 +3,7 @@ import * as React from 'react';
 import { cn } from '../lib/cn';
 
 const emptyVariants = cva(
-  'flex w-full flex-col items-center justify-center gap-4 rounded-xl px-6 py-10 text-center',
+  'flex w-full flex-col items-center justify-center gap-4 rounded-lg px-6 py-10 text-center',
   {
     variants: {
       variant: {

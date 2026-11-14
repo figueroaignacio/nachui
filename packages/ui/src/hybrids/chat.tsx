@@ -399,7 +399,12 @@ const ChatAssistantMessage = ({ message, isLast }: { message: ChatMessage; isLas
               return <ChatText key={index} text={part.text} renderMarkdown={renderMarkdown} />;
             case 'code':
               return (
-                <CodeBlock key={index} code={part.code} language={part.language} className="my-3">
+                <CodeBlock
+                  key={index}
+                  code={part.code}
+                  language={part.language}
+                  className="my-3 rounded-md"
+                >
                   <CodeBlock.CopyButton />
                   <CodeBlock.Content />
                 </CodeBlock>
@@ -556,7 +561,13 @@ const ChatComposer = ({
 
   return (
     <div className="border-border shrink-0 border-t p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-      <PromptInput ref={ref} multiple onSubmit={handleSubmit} className={className} {...props}>
+      <PromptInput
+        ref={ref}
+        multiple
+        onSubmit={handleSubmit}
+        className={cn('rounded-md', className)}
+        {...props}
+      >
         {children ?? (
           <>
             <PromptInput.Header>

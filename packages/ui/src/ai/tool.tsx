@@ -401,7 +401,10 @@ const ToolContent = ({
           className="overflow-hidden"
         >
           <div
-            className={cn('border-border flex flex-col gap-3 border-t px-3 py-3', className)}
+            className={cn(
+              'border-border flex flex-col gap-3 border-t px-3 py-3 [&_[data-slot=confirmation]]:rounded-md',
+              className,
+            )}
             {...props}
           >
             {children}

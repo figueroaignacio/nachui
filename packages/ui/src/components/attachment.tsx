@@ -297,7 +297,7 @@ const AttachmentRoot = ({
           'group/attachment border-border bg-card text-card-foreground relative overflow-hidden border transition-colors',
           'data-[status=error]:border-destructive/60 data-[status=uploading]:text-muted-foreground',
           variant === 'row' && 'flex items-center gap-3 rounded-lg p-2.5 pe-2',
-          variant === 'card' && 'flex w-40 flex-col rounded-xl',
+          variant === 'card' && 'flex w-40 flex-col rounded-lg',
           variant === 'chip' &&
             'inline-flex h-8 max-w-60 items-center gap-1.5 rounded-full py-1 ps-1.5 pe-1',
           className,

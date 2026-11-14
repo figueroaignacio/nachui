@@ -540,7 +540,7 @@ const FileUploadDropzone = ({
       data-dragging={isDragging ? '' : undefined}
       data-disabled={disabled ? '' : undefined}
       className={cn(
-        'border-border bg-card text-muted-foreground flex min-h-40 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed p-6 text-center text-sm transition-colors outline-none',
+        'border-border bg-card text-muted-foreground flex min-h-40 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-6 text-center text-sm transition-colors outline-none',
         'hover:bg-muted/50 focus-visible:ring-ring ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2',
         'data-[dragging]:border-primary data-[dragging]:bg-primary/5 data-[disabled]:pointer-events-none data-[disabled]:opacity-40',
         '[&_svg]:size-6',
