@@ -34,7 +34,7 @@ function PaginationLink({
   return (
     <Link
       href={item.href}
-      className={`border-border hover:border-foreground group flex-1 rounded-xl border px-5 py-4 transition-colors ${isNext ? 'text-right' : ''}`}
+      className={`border-border hover:border-foreground group flex-1 rounded-lg border px-5 py-4 transition-colors ${isNext ? 'text-right' : ''}`}
     >
       <Stack gap="2">
         <span

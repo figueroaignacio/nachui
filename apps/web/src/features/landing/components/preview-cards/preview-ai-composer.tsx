@@ -14,7 +14,7 @@ export function PreviewAiComposer() {
         </Card.Description>
       </Card.Header>
       <Card.Content compact className="space-y-2.5">
-        <PromptInput>
+        <PromptInput className="rounded-md">
           <PromptInput.Body>
             <PromptInput.Textarea
               placeholder="Why does the build fail on CI but not locally?"

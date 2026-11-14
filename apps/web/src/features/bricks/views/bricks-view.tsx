@@ -17,13 +17,13 @@ export function BricksView() {
           <Link
             key={category.slug}
             href={`/bricks/${category.slug}`}
-            className="group border-border bg-background hover:bg-surface-muted hover:border-foreground/30 relative overflow-hidden rounded-xl border transition-all duration-300"
+            className="group border-border bg-background hover:bg-surface-muted hover:border-foreground/30 relative overflow-hidden rounded-lg border transition-all duration-300"
           >
             <Stack className="justify-between p-5">
               <Stack gap="4">
                 <IconTile
                   size="lg"
-                  className="bg-surface-muted rounded-xl text-lg font-bold shadow-sm"
+                  className="bg-surface-muted rounded-md text-lg font-bold shadow-sm"
                 >
                   {category.name.charAt(0)}
                 </IconTile>
