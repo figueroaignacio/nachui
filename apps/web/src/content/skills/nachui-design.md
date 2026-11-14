@@ -24,16 +24,16 @@ Never hardcode colors. Use the semantic tokens defined in `globals.css` and expo
 
 | Token                | Light Mode               | Dark Mode          | Role                                    |
 | :------------------- | :----------------------- | :----------------- | :-------------------------------------- |
-| `--background`       | `oklch(99.1% 0.003 85)`  | `oklch(14.5% 0 0)` | Page canvas                             |
+| `--background`       | `oklch(99.1% 0.003 85)`  | `oklch(10% 0 0)`   | Page canvas                             |
 | `--foreground`       | `oklch(14.5% 0.004 75)`  | `oklch(98.5% 0 0)` | Primary text                            |
-| `--card`             | `oklch(100% 0 0)`        | `oklch(21.8% 0 0)` | In-flow containers                      |
-| `--popover`          | `oklch(100% 0 0)`        | `oklch(23.9% 0 0)` | Every floating surface                  |
-| `--surface-muted`    | `oklch(96.5% 0.0045 85)` | `oklch(18.2% 0 0)` | Recessed areas and preview canvases     |
+| `--card`             | `oklch(100% 0 0)`        | `oklch(15.5% 0 0)` | In-flow containers                      |
+| `--popover`          | `oklch(100% 0 0)`        | `oklch(17.5% 0 0)` | Every floating surface                  |
+| `--surface-muted`    | `oklch(96.5% 0.0045 85)` | `oklch(13% 0 0)`   | Recessed areas and preview canvases     |
 | `--primary`          | `oklch(20.5% 0.005 75)`  | `oklch(98.5% 0 0)` | Main buttons, checked controls          |
-| `--muted`            | `oklch(94.2% 0.005 85)`  | `oklch(26.9% 0 0)` | Menu item highlight, tracks, skeletons  |
+| `--muted`            | `oklch(94.2% 0.005 85)`  | `oklch(21% 0 0)`   | Menu item highlight, tracks, skeletons  |
 | `--muted-foreground` | `oklch(52% 0.0065 75)`   | `oklch(71.5% 0 0)` | Captions, placeholders, secondary text  |
-| `--border`           | `oklch(91.5% 0.0055 85)` | `oklch(26.9% 0 0)` | Default stroke                          |
-| `--input`            | `oklch(87% 0.0065 85)`   | `oklch(34.8% 0 0)` | Field strokes                           |
+| `--border`           | `oklch(91.5% 0.0055 85)` | `oklch(22% 0 0)`   | Default stroke                          |
+| `--input`            | `oklch(87% 0.0065 85)`   | `oklch(29% 0 0)`   | Field strokes                           |
 | `--ring`             | `oklch(65% 0.0065 75)`   | `oklch(98.5% 0 0)` | Focus rings                             |
 | `--inverse`          | `oklch(14.5% 0.004 75)`  | `oklch(98.5% 0 0)` | High contrast fills that flip with mode |
 

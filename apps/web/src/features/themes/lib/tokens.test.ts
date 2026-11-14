@@ -101,7 +101,7 @@ describe('modeVariables', () => {
   it('keeps the light radius in dark mode', () => {
     const variables = modeVariables(preset('nachui').tokens, 'dark');
     expect(variables['--radius']).toBe('1.125rem');
-    expect(variables['--background']).toBe('oklch(14.5% 0 0)');
+    expect(variables['--background']).toBe('oklch(10% 0 0)');
   });
 });
 

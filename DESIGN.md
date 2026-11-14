@@ -21,15 +21,15 @@ All tokens live in `packages/ui/src/css/globals.css` as CSS variables on `:root`
 
 | Token             | Light Mode                    | Dark Mode              | Role                                                                 |
 | ----------------- | ----------------------------- | ---------------------- | -------------------------------------------------------------------- |
-| **Background**    | `oklch(99.1% 0.003 85)`       | `oklch(14.5% 0 0)`     | Page canvas                                                          |
+| **Background**    | `oklch(99.1% 0.003 85)`       | `oklch(10% 0 0)`       | Page canvas                                                          |
 | **Foreground**    | `oklch(14.5% 0.004 75)`       | `oklch(98.5% 0 0)`     | Primary text, headings                                               |
-| **Card**          | `oklch(100% 0 0)`             | `oklch(21.8% 0 0)`     | Primary containers that sit on the canvas                            |
-| **Popover**       | `oklch(100% 0 0)`             | `oklch(23.9% 0 0)`     | Every floating surface: menus, popovers, toasts                      |
-| **Surface Muted** | `oklch(96.5% 0.0045 85)`      | `oklch(18.2% 0 0)`     | Recessed areas, preview canvases, the `bg-hatch` fill                |
+| **Card**          | `oklch(100% 0 0)`             | `oklch(15.5% 0 0)`     | Primary containers that sit on the canvas                            |
+| **Popover**       | `oklch(100% 0 0)`             | `oklch(17.5% 0 0)`     | Every floating surface: menus, popovers, toasts                      |
+| **Surface Muted** | `oklch(96.5% 0.0045 85)`      | `oklch(13% 0 0)`       | Recessed areas, preview canvases, the `bg-hatch` fill                |
 | **Inverse**       | `oklch(14.5% 0.004 75)`       | `oklch(98.5% 0 0)`     | High contrast fills that flip with the mode, like the default banner |
 | **Overlay**       | `oklch(14.5% 0.004 75 / 0.5)` | `oklch(0% 0 0 / 0.72)` | Backdrop behind dialogs, sheets and drawers                          |
 
-Each surface has a matching `*-foreground` token for text on it. In dark mode the surfaces step up in lightness: background 14.5%, surface muted 18.2%, card 21.8%, popover 23.9%. That ordering is why floating surfaces must use `bg-popover` and never `bg-background`: on a dark page a `bg-background` menu has no edge.
+Each surface has a matching `*-foreground` token for text on it. In dark mode the surfaces step up in lightness: background 10%, surface muted 13%, card 15.5%, popover 17.5%. That ordering is why floating surfaces must use `bg-popover` and never `bg-background`: on a dark page a `bg-background` menu has no edge.
 
 ### Interactive Colors
 
@@ -37,9 +37,9 @@ Each surface has a matching `*-foreground` token for text on it. In dark mode th
 | ---------------------- | ------------------------ | ------------------ | ------------------------------------------ |
 | **Primary**            | `oklch(20.5% 0.005 75)`  | `oklch(98.5% 0 0)` | Main buttons, checked controls             |
 | **Primary Foreground** | `oklch(98.5% 0.002 85)`  | `oklch(14.5% 0 0)` | Text on primary                            |
-| **Secondary**          | `oklch(96% 0.0045 85)`   | `oklch(26.9% 0 0)` | Secondary buttons, chips                   |
-| **Accent**             | `oklch(96.8% 0.0045 85)` | `oklch(26.9% 0 0)` | Subtle hover and selected backgrounds      |
-| **Muted**              | `oklch(94.2% 0.005 85)`  | `oklch(26.9% 0 0)` | Item highlight in menus, tracks, skeletons |
+| **Secondary**          | `oklch(96% 0.0045 85)`   | `oklch(21% 0 0)`   | Secondary buttons, chips                   |
+| **Accent**             | `oklch(96.8% 0.0045 85)` | `oklch(21% 0 0)`   | Subtle hover and selected backgrounds      |
+| **Muted**              | `oklch(94.2% 0.005 85)`  | `oklch(21% 0 0)`   | Item highlight in menus, tracks, skeletons |
 | **Muted Foreground**   | `oklch(52% 0.0065 75)`   | `oklch(71.5% 0 0)` | Captions, placeholders, secondary text     |
 | **Muted Strong**       | `oklch(37% 0.006 75)`    | `oklch(87% 0 0)`   | Long-form reading text                     |
 
@@ -47,11 +47,11 @@ Each surface has a matching `*-foreground` token for text on it. In dark mode th
 
 | Token                  | Light Mode               | Dark Mode          | Role                                                        |
 | ---------------------- | ------------------------ | ------------------ | ----------------------------------------------------------- |
-| **Border**             | `oklch(91.5% 0.0055 85)` | `oklch(26.9% 0 0)` | Default stroke on surfaces and dividers                     |
+| **Border**             | `oklch(91.5% 0.0055 85)` | `oklch(22% 0 0)`   | Default stroke on surfaces and dividers                     |
 | **Border Interactive** | `oklch(65% 0.0065 75)`   | `oklch(51% 0 0)`   | Hover and focus-within stroke on fields, scrollbar thumb    |
-| **Input**              | `oklch(87% 0.0065 85)`   | `oklch(34.8% 0 0)` | Field strokes; `dark:bg-input/30` tints fields in dark mode |
+| **Input**              | `oklch(87% 0.0065 85)`   | `oklch(29% 0 0)`   | Field strokes; `dark:bg-input/30` tints fields in dark mode |
 | **Ring**               | `oklch(65% 0.0065 75)`   | `oklch(98.5% 0 0)` | Focus rings                                                 |
-| **Rule**               | `oklch(91.5% 0.0055 85)` | `oklch(26.9% 0 0)` | Editorial hairlines (`section-rule`, `rule-bleed`)          |
+| **Rule**               | `oklch(91.5% 0.0055 85)` | `oklch(22% 0 0)`   | Editorial hairlines (`section-rule`, `rule-bleed`)          |
 
 ### Feedback Colors
 
