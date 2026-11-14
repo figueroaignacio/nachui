@@ -11,6 +11,11 @@
  *   pnpm registry:migrate-slugs                    print the plan, change nothing
  *   pnpm registry:migrate-slugs --apply            qualify the slugs
  *   pnpm registry:migrate-slugs --revert --apply   strip them back to bare names
+ *   pnpm registry:migrate-slugs --apply --prune    also delete bare rows with no component on disk
+ *
+ * A bare row whose qualified slug already exists (the sync wrote it) is a
+ * duplicate: renaming it would break the unique slug, and the API resolves the
+ * bare name to the qualified row first, so it is deleted instead.
  *
  * Order matters when deploying: an API that only does an exact slug lookup
  * cannot serve `button` once the row is `ui/button`, so it has to ship the
@@ -22,11 +27,12 @@
  * skipped, so an interrupted run finishes by re-running.
  */
 
-import { components, db, eq, type ComponentFamily } from '@repo/db';
+import { components, db, eq, inArray, type ComponentFamily } from '@repo/db';
 import { COMPONENT_FAMILY } from '../packages/ui/src/lib/registry';
 
 const APPLY = process.argv.includes('--apply');
 const REVERT = process.argv.includes('--revert');
+const PRUNE = process.argv.includes('--prune');
 
 type Plan = {
   id: string;
@@ -42,7 +48,9 @@ async function main() {
 
   const plan: Plan[] = [];
   const skipped: string[] = [];
-  const unknown: string[] = [];
+  const unknown: Array<{ id: string; slug: string }> = [];
+  const duplicates: Array<{ id: string; slug: string }> = [];
+  const existing = new Set(rows.map((row) => row.slug));
 
   for (const row of rows) {
     const qualified = row.slug.includes('/');
@@ -78,7 +86,12 @@ async function main() {
     // guessed family would invent a component that does not exist, so it is
     // reported instead.
     if (!family) {
-      unknown.push(row.slug);
+      unknown.push({ id: row.id, slug: row.slug });
+      continue;
+    }
+
+    if (existing.has(`${family}/${row.slug}`)) {
+      duplicates.push({ id: row.id, slug: row.slug });
       continue;
     }
 
@@ -96,17 +109,29 @@ async function main() {
   }
 
   if (unknown.length > 0) {
-    console.log('No component on disk for these slugs, leaving them alone:');
-    for (const slug of unknown) console.log(`  ${slug}`);
-    console.log('  Decide whether they are stale rows to delete.\n');
+    console.log(
+      PRUNE
+        ? 'No component on disk for these slugs, deleting them:'
+        : 'No component on disk for these slugs, leaving them alone (pass --prune to delete):',
+    );
+    for (const row of unknown) console.log(`  ${row.slug}`);
+    console.log('');
   }
 
-  if (plan.length === 0) {
+  if (duplicates.length > 0) {
+    console.log('Already synced under a qualified slug, deleting the bare duplicate:');
+    for (const row of duplicates) console.log(`  ${row.slug}`);
+    console.log('');
+  }
+
+  const deletions = [...duplicates, ...(PRUNE ? unknown : [])];
+
+  if (plan.length === 0 && deletions.length === 0) {
     console.log('Nothing to do.');
     return;
   }
 
-  console.log(`${plan.length} rows to rewrite:\n`);
+  if (plan.length > 0) console.log(`${plan.length} rows to rewrite:\n`);
   for (const entry of plan) {
     const typeChange =
       entry.toType && entry.fromType !== entry.toType
@@ -134,7 +159,16 @@ async function main() {
     done++;
   }
 
-  console.log(`Applied ${done} updates.`);
+  if (deletions.length > 0) {
+    await db.delete(components).where(
+      inArray(
+        components.id,
+        deletions.map((row) => row.id),
+      ),
+    );
+  }
+
+  console.log(`Applied ${done} updates and ${deletions.length} deletions.`);
 }
 
 main()
