@@ -100,14 +100,20 @@ The base is `--radius: 1.125rem`. Tailwind's radius utilities are derived from i
 | `rounded-sm`  | `--radius * 0.66` (12px) | Items inside a surface: menu items, tab pill, tooltip                       |
 | `rounded-md`  | `--radius` (18px)        | Controls (button, input, select trigger), floating surfaces, toast, callout |
 | `rounded-lg`  | `--radius * 1.33` (24px) | Primary containers: card, dialog                                            |
-| `rounded-xl`  | `--radius * 1.66` (30px) | Composer-like shells such as the prompt input                               |
+| `rounded-xl`  | `--radius * 1.66` (30px) | Outermost shells only: a standalone prompt input, the frame                 |
 | `rounded-2xl` | `--radius * 2` (36px)    | Drawer and similar large sheets                                             |
 
 At this base `rounded-md` is half the height of a 36px control, so buttons, inputs and select triggers read as pills. Themes with a smaller base keep them squarer; components never hardcode the pill.
 
 The checkbox sits below the scale at `--radius * 0.33` (6px): at 16px wide, `rounded-sm` would read as a radio.
 
-`rounded-full` is for avatars, dots, icon buttons and pills that are pills on purpose (the context chip, attachment chips). Nested elements always use a smaller radius than the element that holds them.
+`rounded-full` is for avatars, dots, icon buttons and pills that are pills on purpose (the context chip, attachment chips). Nested elements are never rounder than the element that holds them. How much smaller depends on the gap between the two edges:
+
+- Gap of 8px or less: outer radius minus the gap, so the curves run parallel. The frame is `rounded-xl` with `p-1.5` and its panels are `rounded-lg` (30 − 6 = 24).
+- Gap smaller than the outer radius: one step down the scale. A prompt input docked in a card or a chat panel is `rounded-md`; a confirmation inside a tool card is `rounded-md`.
+- Gap equal to or larger than the outer radius: the corners no longer read together, so the inner element may repeat the step, never go above it. A card in the docs preview stage stays `rounded-lg`.
+
+`rounded-xl` never sits inside a card. `rounded-full` is exempt from the rule.
 
 ### Elevation Scale
 

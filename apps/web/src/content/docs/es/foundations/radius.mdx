@@ -21,7 +21,7 @@ Las utilidades de radio de Tailwind se derivan de la base con multiplicadores fi
 | `rounded-sm`  | `--radius * 0.66` | 12px         | Ítems dentro de una superficie: menú, pastilla de tabs, tooltip |
 | `rounded-md`  | `--radius`        | 18px         | Controles, superficies flotantes, toasts, callouts              |
 | `rounded-lg`  | `--radius * 1.33` | 24px         | Contenedores principales: cards, diálogos                       |
-| `rounded-xl`  | `--radius * 1.66` | 30px         | Contenedores de redacción como el prompt input                  |
+| `rounded-xl`  | `--radius * 1.66` | 30px         | Solo la pieza más externa: un prompt input suelto, el frame     |
 | `rounded-2xl` | `--radius * 2`    | 36px         | Drawers y otros paneles grandes                                 |
 
 ```css
@@ -41,6 +41,14 @@ El checkbox es la única excepción por debajo de la escala, con `--radius * 0.3
 ## Anidado
 
 Un elemento dentro de otro siempre usa un radio menor que su contenedor. Un menú (`rounded-md`) tiene ítems con `rounded-sm`; una card (`rounded-lg`) tiene controles con `rounded-md`. Cuando la esquina interior es igual a la exterior, el espacio entre las dos se ve desparejo y el elemento de adentro parece inflado.
+
+Cuánto más chico depende del espacio entre los dos bordes:
+
+- **8px o menos**: restale el espacio al radio de afuera, así las dos curvas quedan paralelas. Un frame (`rounded-xl`, 30px) con `p-1.5` tiene paneles con `rounded-lg` (24px).
+- **Menos que el radio de afuera**: bajá un paso. Un prompt input dentro de una card o de un panel de chat usa `rounded-md`.
+- **Igual o más que el radio de afuera**: las esquinas ya no se leen juntas, así que el de adentro puede repetir el paso pero nunca subirlo.
+
+`rounded-xl` es solo para la pieza más externa y nunca va dentro de una card. `rounded-full` queda afuera de la regla.
 
 <RadiusNesting locale="es" />
 

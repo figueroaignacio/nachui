@@ -8,14 +8,14 @@ const radiusCopy = {
     'rounded-sm': 'Menu items, tab pill, tooltip',
     'rounded-md': 'Buttons, inputs, popovers, toasts',
     'rounded-lg': 'Cards, dialogs',
-    'rounded-xl': 'Prompt input and other composer shells',
+    'rounded-xl': 'Outermost shells: a standalone prompt input, the frame',
     'rounded-2xl': 'Drawers and large sheets',
   },
   es: {
     'rounded-sm': 'Ítems de menú, pastilla de tabs, tooltip',
     'rounded-md': 'Botones, inputs, popovers, toasts',
     'rounded-lg': 'Cards, diálogos',
-    'rounded-xl': 'Prompt input y otros contenedores de redacción',
+    'rounded-xl': 'Solo la pieza más externa: un prompt input suelto, el frame',
     'rounded-2xl': 'Drawers y paneles grandes',
   },
 } as const;

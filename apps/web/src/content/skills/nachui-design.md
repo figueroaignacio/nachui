@@ -65,8 +65,8 @@ There are no accent presets. To rebrand, redefine the tokens on `:root` and `.da
    - `rounded-sm` (12px): items inside a surface, such as menu items, the tab pill and tooltips. The checkbox uses `--radius * 0.33` so it never reads as a radio.
    - `rounded-md` (18px): controls, floating surfaces, toasts and callouts. On a 36px control that is a pill.
    - `rounded-lg` (24px): primary containers such as cards and dialogs.
-   - `rounded-xl` and `rounded-2xl`: only for composer shells and drawers.
-   - Nested elements always use a smaller radius than their container.
+   - `rounded-xl` and `rounded-2xl`: only for the outermost shell (a standalone prompt input, the frame) and drawers. Never inside a card.
+   - Nested elements are never rounder than their container. Gap of 8px or less: outer radius minus the gap. Gap under the outer radius: one step down (a prompt input inside a card is `rounded-md`). Gap at or above the outer radius: the same step is fine, never a bigger one. `rounded-full` is exempt.
 2. **Elevation**: only `shadow-sm` (inline controls), `shadow-md` (anchored floating surfaces) and `shadow-lg` (dialogs, sheets, drawers). Never `shadow-xl`, `shadow-2xl` or arbitrary shadows. Cards stay flat with a border.
 3. **Floating surfaces** share one recipe: `bg-popover text-popover-foreground border border-border rounded-md shadow-md`. Menus use `p-1` with items `rounded-sm px-2 py-1.5 gap-2 text-sm` and a `bg-muted` highlight. Popovers and hover cards use `p-4`.
 4. **Focus**: `focus-visible:ring-2 ring-ring` with `ring-offset-2`, and always `ring-offset-background` next to any offset so dark mode doesn't show a white halo.
