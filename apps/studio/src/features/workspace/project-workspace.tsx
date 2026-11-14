@@ -225,7 +225,7 @@ export function ProjectWorkspace({ id }: { id: string }) {
             <Skeleton className="h-4 w-36" />
           </div>
           <div className="flex flex-col gap-3 p-4">
-            <Skeleton className="ms-auto h-10 w-3/4 rounded-2xl" />
+            <Skeleton className="ms-auto h-10 w-3/4 rounded-md" />
             <Skeleton className="h-28 rounded-lg" />
           </div>
         </div>

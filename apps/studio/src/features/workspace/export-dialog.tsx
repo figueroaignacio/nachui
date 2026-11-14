@@ -238,7 +238,7 @@ export function ExportDialog({
             )}
             <p className="text-muted-strong text-sm">
               2. Copy the screen into{' '}
-              <code className="bg-muted rounded px-1 font-mono text-xs">src/screens/</code>, from
+              <code className="bg-muted rounded-sm px-1 font-mono text-xs">src/screens/</code>, from
               the Files tab.
             </p>
           </Tabs.Content>

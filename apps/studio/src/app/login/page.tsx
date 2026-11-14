@@ -84,7 +84,7 @@ export default async function LoginPage({
       </main>
       <aside
         aria-label="Product preview"
-        className="bg-surface-muted border-border studio-dots m-3 hidden items-center justify-center rounded-3xl border p-12 lg:flex"
+        className="bg-surface-muted border-border studio-dots m-3 hidden items-center justify-center rounded-2xl border p-12 lg:flex"
       >
         <LoginPreview />
       </aside>

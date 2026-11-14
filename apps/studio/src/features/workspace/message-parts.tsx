@@ -51,7 +51,7 @@ function Paragraphs({ text }: { text: string }) {
             piece.startsWith('`') && piece.endsWith('`') && piece.length > 2 ? (
               <code
                 key={pieceIndex}
-                className="bg-muted rounded px-1 py-0.5 font-mono text-[0.85em]"
+                className="bg-muted rounded-sm px-1 py-0.5 font-mono text-[0.85em]"
               >
                 {piece.slice(1, -1)}
               </code>

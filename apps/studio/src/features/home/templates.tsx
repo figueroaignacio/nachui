@@ -27,7 +27,7 @@ export const TEMPLATES: Template[] = [
 ];
 
 const line = 'bg-input block rounded-sm';
-const box = 'border-border block rounded-md border';
+const box = 'border-border block rounded-sm border';
 
 export function TemplateThumb({ kind }: { kind: Thumb }) {
   if (kind === 'dashboard') {
@@ -58,7 +58,7 @@ export function TemplateThumb({ kind }: { kind: Thumb }) {
           <span
             key={index}
             className={cn(
-              'flex flex-col gap-1.5 rounded-md p-2',
+              'flex flex-col gap-1.5 rounded-sm p-2',
               featured ? 'bg-foreground' : 'border-border border',
             )}
           >
@@ -99,10 +99,10 @@ export function TemplateThumb({ kind }: { kind: Thumb }) {
   }
   return (
     <span className="grid size-full place-items-center">
-      <span className="border-border bg-card flex w-1/2 flex-col gap-1.5 rounded-lg border p-3">
+      <span className="border-border bg-card flex w-1/2 flex-col gap-1.5 rounded-md border p-3">
         <span className={cn(line, 'bg-foreground mx-auto mb-1 h-2 w-1/2')} />
         <span className={cn(box, 'h-3.5')} />
-        <span className="bg-foreground block h-3.5 rounded-md" />
+        <span className="bg-foreground block h-3.5 rounded-sm" />
         <span className={cn(box, 'h-3.5')} />
       </span>
     </span>

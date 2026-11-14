@@ -9,7 +9,7 @@ export function PageSkeleton() {
       </div>
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-6 pt-32">
         <Skeleton className="mx-auto h-9 w-80" />
-        <Skeleton className="h-32 w-full rounded-2xl" />
+        <Skeleton className="h-32 w-full rounded-xl" />
       </div>
     </div>
   );
