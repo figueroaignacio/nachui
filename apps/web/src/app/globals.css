@@ -358,13 +358,15 @@ body:has([data-chat-launcher]) footer {
 }
 
 :root {
-  --brand: oklch(62% 0.13 70);
+  --brand: oklch(60% 0.115 232);
   --brand-foreground: oklch(98.5% 0.002 85);
+  --brand-text: oklch(50% 0.11 234);
 }
 
 @theme inline {
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
+  --color-brand-text: var(--brand-text);
 }
 
 .dark {
@@ -381,8 +383,9 @@ body:has([data-chat-launcher]) footer {
   --code: oklch(11.5% 0.0057 75);
   --info-surface: oklch(14% 0.0054 75);
 
-  --brand: oklch(78% 0.12 75);
+  --brand: oklch(80% 0.1 228);
   --brand-foreground: oklch(14.5% 0 0);
+  --brand-text: oklch(80% 0.1 228);
 }
 
 /* Dark background explorations: activate one with data-ink on <html>. Temporary. */
