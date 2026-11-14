@@ -26,7 +26,7 @@ const FEATURES = [
 
 export function FeatureList() {
   return (
-    <ul className="border-border bg-card m-0 flex w-full max-w-sm list-none flex-col divide-y rounded-xl border p-0">
+    <ul className="border-border bg-card m-0 flex w-full max-w-sm list-none flex-col divide-y rounded-lg border p-0">
       {FEATURES.map((feature) => (
         <li key={feature.title} className="border-border flex items-start gap-3 p-4">
           <IconTile variant="soft" tone={feature.tone}>

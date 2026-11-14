@@ -4,7 +4,7 @@ const rows = ['first', 'second'];
 
 export function Default() {
   return (
-    <div className="border-border bg-card w-full max-w-md rounded-xl border p-4">
+    <div className="border-border bg-card w-full max-w-md rounded-lg border p-4">
       <div className="mb-4 flex items-center justify-between">
         <p className="text-sm font-medium">Members</p>
         <Skeleton className="h-4 w-16" />

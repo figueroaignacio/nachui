@@ -31,7 +31,7 @@ export function ServerErrors() {
     <Form
       action={formAction}
       errors={state.errors}
-      className="border-border bg-card w-full max-w-sm gap-5 rounded-xl border p-6"
+      className="border-border bg-card w-full max-w-sm gap-5 rounded-lg border p-6"
     >
       <Form.ErrorSummary title="We could not create your account" />
       <Form.Field name="email">

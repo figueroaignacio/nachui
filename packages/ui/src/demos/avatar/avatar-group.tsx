@@ -10,7 +10,7 @@ const reviewers = [
 
 export function AvatarGroup() {
   return (
-    <div className="border-border bg-card w-full max-w-sm rounded-xl border p-4">
+    <div className="border-border bg-card w-full max-w-sm rounded-lg border p-4">
       <p className="text-sm font-medium">Fix cart totals on partial refunds</p>
       <p className="text-muted-foreground mt-1 text-xs">#412 opened 3 days ago by lucia</p>
       <div className="mt-4 flex items-center gap-3">

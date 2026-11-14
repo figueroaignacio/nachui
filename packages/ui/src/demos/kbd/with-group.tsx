@@ -28,7 +28,7 @@ const shortcuts: Shortcut[] = [
 
 export function WithGroup() {
   return (
-    <Stack gap="4" className="border-border bg-card w-full max-w-md rounded-xl border p-4">
+    <Stack gap="4" className="border-border bg-card w-full max-w-md rounded-lg border p-4">
       <p className="text-sm font-medium">Keyboard shortcuts</p>
       <Stack gap="3">
         {shortcuts.map((shortcut) => (

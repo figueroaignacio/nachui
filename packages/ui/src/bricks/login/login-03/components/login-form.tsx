@@ -52,7 +52,7 @@ function GoogleIcon() {
 
 export function Login03() {
   return (
-    <Card className="w-full flex-row overflow-hidden rounded-xl shadow-sm">
+    <Card className="w-full flex-row overflow-hidden shadow-sm">
       <div className="bg-muted/30 hidden w-1/2 flex-col justify-between p-10 lg:flex">
         <div className="text-foreground text-lg font-bold tracking-tight">NachUI</div>
         <div className="space-y-3">

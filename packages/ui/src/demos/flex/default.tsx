@@ -12,7 +12,7 @@ export function Default() {
       align="center"
       justify="between"
       gap="3"
-      className="border-border bg-card w-full max-w-lg rounded-xl border p-4 sm:gap-4"
+      className="border-border bg-card w-full max-w-lg rounded-lg border p-4 sm:gap-4"
     >
       <Flex align="center" gap="3" className="min-w-0 flex-1">
         <Avatar className="shrink-0">

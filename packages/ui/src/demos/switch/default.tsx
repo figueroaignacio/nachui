@@ -8,7 +8,7 @@ const settings = [
 
 export function Default() {
   return (
-    <div className="border-border bg-card w-full max-w-md rounded-xl border">
+    <div className="border-border bg-card w-full max-w-md rounded-lg border">
       {settings.map((setting) => (
         <div
           key={setting.id}

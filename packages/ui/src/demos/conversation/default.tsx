@@ -29,7 +29,7 @@ const THREAD = [
 
 export function Default() {
   return (
-    <div className="border-border h-72 w-full max-w-md overflow-hidden rounded-xl border">
+    <div className="border-border h-72 w-full max-w-md overflow-hidden rounded-lg border">
       <Conversation className="h-full">
         <Conversation.Content>
           {THREAD.map((message, index) => (

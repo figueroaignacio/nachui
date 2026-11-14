@@ -26,7 +26,7 @@ const notifications = [
 
 export function Default() {
   return (
-    <Stack gap="5" className="border-border bg-card w-full max-w-md rounded-xl border p-5">
+    <Stack gap="5" className="border-border bg-card w-full max-w-md rounded-lg border p-5">
       {notifications.map((notification) => (
         <Flex key={notification.title} gap="3" align="start">
           <span

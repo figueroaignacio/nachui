@@ -9,7 +9,7 @@ const features = [
 
 export function Default() {
   return (
-    <Section size="sm" background="card" className="w-full max-w-2xl rounded-xl">
+    <Section size="sm" background="card" className="w-full max-w-2xl rounded-lg">
       <Section.Header>
         <Section.Eyebrow>Platform</Section.Eyebrow>
         <Section.Title>Ship from a pull request</Section.Title>

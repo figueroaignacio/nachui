@@ -13,7 +13,7 @@ const members = [
 
 export function Secondary() {
   return (
-    <Stack gap="4" className="border-border bg-card w-full max-w-md rounded-xl border p-4">
+    <Stack gap="4" className="border-border bg-card w-full max-w-md rounded-lg border p-4">
       {members.map((member) => (
         <Flex key={member.email} align="center" justify="between" gap="4">
           <Flex align="center" gap="3" className="min-w-0">

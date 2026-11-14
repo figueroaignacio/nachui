@@ -12,7 +12,7 @@ export function Default() {
     <Flex
       align="center"
       gap="2"
-      className="border-border bg-card w-full max-w-md rounded-xl border px-3 py-2"
+      className="border-border bg-card w-full max-w-md rounded-lg border px-3 py-2"
     >
       <span className="px-2 text-sm font-semibold">Northwind</span>
       <Spacer />

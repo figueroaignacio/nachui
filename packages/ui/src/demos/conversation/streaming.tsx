@@ -48,7 +48,7 @@ export function Streaming() {
           Clear
         </button>
       </div>
-      <div className="border-border h-64 w-full overflow-hidden rounded-xl border">
+      <div className="border-border h-64 w-full overflow-hidden rounded-lg border">
         <Conversation className="h-full">
           {messages.length === 0 ? (
             <Conversation.Empty>

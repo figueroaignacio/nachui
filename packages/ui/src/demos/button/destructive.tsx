@@ -6,7 +6,7 @@ export function Destructive() {
   return (
     <Stack
       gap="3"
-      className="border-destructive-border bg-destructive-surface w-full max-w-sm rounded-xl border p-4"
+      className="border-destructive-border bg-destructive-surface w-full max-w-sm rounded-lg border p-4"
     >
       <div>
         <p className="text-destructive-text text-sm font-medium">Delete billing account</p>

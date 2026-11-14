@@ -40,7 +40,7 @@ const DEPLOYS = [
 
 export function Deployments() {
   return (
-    <div className="border-border bg-card w-full max-w-md rounded-xl border p-5">
+    <div className="border-border bg-card w-full max-w-md rounded-lg border p-5">
       <p className="mb-4 text-sm font-medium">Deployments</p>
       <Timeline value={1}>
         {DEPLOYS.map((deploy) => (

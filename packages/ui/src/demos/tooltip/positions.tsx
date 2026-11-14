@@ -35,7 +35,7 @@ const actions = [
 
 export function Positions() {
   return (
-    <div className="border-border bg-card flex flex-col items-center gap-10 rounded-xl border px-6 py-4 md:flex-row">
+    <div className="border-border bg-card flex flex-col items-center gap-10 rounded-lg border px-6 py-4 md:flex-row">
       {actions.map((action) => (
         <Tooltip key={action.side}>
           <Tooltip.Trigger asChild>

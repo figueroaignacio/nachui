@@ -5,7 +5,7 @@ import { InfoIcon } from '../../icons/info';
 
 export function Default() {
   return (
-    <div className="border-border bg-card w-full max-w-xs rounded-xl border p-4">
+    <div className="border-border bg-card w-full max-w-xs rounded-lg border p-4">
       <div className="flex items-center gap-1.5">
         <p className="text-muted-foreground text-xs">Net MRR</p>
         <Tooltip>

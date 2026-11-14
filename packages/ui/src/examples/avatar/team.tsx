@@ -11,7 +11,7 @@ const members = [
 
 export function Team() {
   return (
-    <div className="border-border bg-card w-full max-w-sm rounded-xl border">
+    <div className="border-border bg-card w-full max-w-sm rounded-lg border">
       <div className="border-border flex items-center justify-between border-b px-4 py-3">
         <span className="text-sm font-medium">Team</span>
         <Avatar.Group>

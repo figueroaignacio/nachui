@@ -7,7 +7,7 @@ import { Textarea } from '../../components/textarea';
 
 export function Default() {
   return (
-    <form className="border-border bg-card w-full max-w-sm rounded-xl border p-6">
+    <form className="border-border bg-card w-full max-w-sm rounded-lg border p-6">
       <Field.Group>
         <Field>
           <Field.Label>Project name</Field.Label>

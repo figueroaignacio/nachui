@@ -3,7 +3,7 @@ import { Separator } from '../../components/separator';
 
 export function WithLabel() {
   return (
-    <div className="border-border bg-card w-full max-w-sm space-y-4 rounded-xl border p-6">
+    <div className="border-border bg-card w-full max-w-sm space-y-4 rounded-lg border p-6">
       <div>
         <h4 className="text-sm font-medium">Sign in to Acme Studio</h4>
         <p className="text-muted-foreground text-sm">Use the account your team invited.</p>

@@ -19,7 +19,7 @@ const variants = {
 
 export function WithIcon() {
   return (
-    <Stack gap="4" className="border-border bg-card w-full max-w-md rounded-xl border p-4">
+    <Stack gap="4" className="border-border bg-card w-full max-w-md rounded-lg border p-4">
       {checks.map((check) => (
         <Flex key={check.name} align="center" justify="between" gap="4">
           <div className="min-w-0">

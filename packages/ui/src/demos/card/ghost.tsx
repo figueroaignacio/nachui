@@ -8,7 +8,7 @@ const channels = [
 
 export function Ghost() {
   return (
-    <div className="border-border bg-card w-full max-w-sm rounded-xl border p-2">
+    <div className="border-border bg-card w-full max-w-sm rounded-lg border p-2">
       <Card variant="ghost">
         <Card.Header>
           <Card.Title>Notifications</Card.Title>

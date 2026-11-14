@@ -48,7 +48,7 @@ const settings: {
 
 export function Variants() {
   return (
-    <div className="border-border bg-card divide-border w-full max-w-md divide-y rounded-xl border">
+    <div className="border-border bg-card divide-border w-full max-w-md divide-y rounded-lg border">
       {settings.map((setting) => (
         <Flex key={setting.title} align="center" justify="between" gap="4" className="p-4">
           <div className="min-w-0">

@@ -7,7 +7,7 @@ export function Default() {
       align="center"
       justify="between"
       gap="4"
-      className="border-border bg-card w-full max-w-sm rounded-xl border p-4"
+      className="border-border bg-card w-full max-w-sm rounded-lg border p-4"
     >
       <div className="min-w-0">
         <p className="text-sm font-medium">Workspace name</p>

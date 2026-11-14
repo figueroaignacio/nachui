@@ -11,7 +11,7 @@ const advanced = [
 
 export function Default() {
   return (
-    <div className="border-border bg-card w-full max-w-md space-y-4 rounded-xl border p-4">
+    <div className="border-border bg-card w-full max-w-md space-y-4 rounded-lg border p-4">
       <div>
         <p className="text-sm font-medium">Build settings</p>
         <p className="text-muted-foreground text-xs">

@@ -7,7 +7,7 @@ import { FileUpIcon } from '../../icons/file-up';
 export function Documents() {
   return (
     <FileUpload
-      className="border-border bg-card max-w-md rounded-xl border p-5"
+      className="border-border bg-card max-w-md rounded-lg border p-5"
       multiple
       maxFiles={3}
       maxSize={10 * 1024 * 1024}

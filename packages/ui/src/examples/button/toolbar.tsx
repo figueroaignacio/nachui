@@ -7,7 +7,7 @@ import { TrashIcon } from '../../icons/trash';
 
 export function Toolbar() {
   return (
-    <div className="border-border bg-card flex w-full max-w-lg flex-wrap items-center gap-2 rounded-xl border p-2">
+    <div className="border-border bg-card flex w-full max-w-lg flex-wrap items-center gap-2 rounded-lg border p-2">
       <Button size="sm" variant="ghost" leftIcon={<PencilIcon size={16} />}>
         Edit
       </Button>

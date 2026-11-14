@@ -7,7 +7,7 @@ export function Default() {
     <Split
       ratio="1/3"
       collapse="sm"
-      className="border-border bg-card w-full max-w-lg rounded-xl border p-4"
+      className="border-border bg-card w-full max-w-lg rounded-lg border p-4"
     >
       <nav aria-label="Settings" className="flex flex-col gap-1">
         {links.map((link, index) => (

@@ -17,7 +17,7 @@ export function Chips() {
   const [files, setFiles] = React.useState(initial);
 
   return (
-    <div className="border-border bg-card flex w-full max-w-md flex-col gap-3 rounded-xl border p-3">
+    <div className="border-border bg-card flex w-full max-w-md flex-col gap-3 rounded-lg border p-3">
       <Textarea
         aria-label="Message"
         placeholder="Write a message to the payments team"

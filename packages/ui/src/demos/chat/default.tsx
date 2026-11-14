@@ -62,7 +62,7 @@ const THREAD: ChatMessage[] = [
 
 export function Default() {
   return (
-    <div className="border-border h-[28rem] w-full max-w-2xl overflow-hidden rounded-xl border">
+    <div className="border-border h-[28rem] w-full max-w-2xl overflow-hidden rounded-lg border">
       <Chat
         messages={THREAD}
         onSend={() => {}}

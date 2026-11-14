@@ -8,7 +8,7 @@ export function Ghost() {
       align="center"
       justify="between"
       gap="2"
-      className="border-border bg-card w-full max-w-md rounded-xl border p-2 pl-4"
+      className="border-border bg-card w-full max-w-md rounded-lg border p-2 pl-4"
     >
       <div className="min-w-0">
         <p className="truncate text-sm font-medium">q3-roadmap.md</p>

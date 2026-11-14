@@ -11,7 +11,7 @@ const jobs = [
 
 export function Variants() {
   return (
-    <div className="border-border bg-card divide-border w-full max-w-md divide-y rounded-xl border">
+    <div className="border-border bg-card divide-border w-full max-w-md divide-y rounded-lg border">
       {jobs.map((job) => (
         <div key={job.variant} className="flex items-center gap-3 px-4 py-3">
           <Spinner size="sm" variant={job.variant} />

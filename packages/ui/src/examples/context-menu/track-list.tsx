@@ -14,7 +14,7 @@ const tracks = [
 
 export function TrackList() {
   return (
-    <div className="border-border bg-card w-full max-w-sm divide-y rounded-xl border">
+    <div className="border-border bg-card w-full max-w-sm divide-y rounded-lg border">
       {tracks.map((track, index) => (
         <ContextMenu key={track.title}>
           <ContextMenu.Trigger className="hover:bg-muted flex cursor-default items-center justify-between gap-3 px-4 py-3 transition-colors first:rounded-t-xl last:rounded-b-xl">

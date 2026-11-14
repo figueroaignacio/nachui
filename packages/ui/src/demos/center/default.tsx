@@ -6,7 +6,7 @@ export function Default() {
   return (
     <Center
       text
-      className="border-border bg-card h-56 w-full max-w-md flex-col gap-3 rounded-xl border"
+      className="border-border bg-card h-56 w-full max-w-md flex-col gap-3 rounded-lg border"
     >
       <span className="bg-muted text-muted-foreground flex size-10 items-center justify-center rounded-full">
         <InboxIcon size={20} />

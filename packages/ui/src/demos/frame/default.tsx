@@ -16,7 +16,7 @@ export function Default() {
             <span className="text-sm font-medium">Pro plan</span>
             <Badge variant="success">Active</Badge>
           </div>
-          <Card variant="outline">
+          <Card variant="outline" className="rounded-md">
             <Card.Header compact>
               <Card.Title>Monthly usage</Card.Title>
               <Card.Description>4,210 of 10,000 requests</Card.Description>

@@ -39,7 +39,7 @@ export function Sizes() {
           align="center"
           justify="between"
           gap="4"
-          className="border-border bg-card rounded-xl border p-4"
+          className="border-border bg-card rounded-lg border p-4"
         >
           <div className="min-w-0">
             <p className="text-muted-foreground text-[11px]">{row.place}</p>

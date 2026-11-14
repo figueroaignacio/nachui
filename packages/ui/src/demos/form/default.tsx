@@ -31,7 +31,7 @@ export function Default() {
     <Form
       schema={schema}
       onSubmit={(data) => setAccount(data)}
-      className="border-border bg-card w-full max-w-sm gap-5 rounded-xl border p-6"
+      className="border-border bg-card w-full max-w-sm gap-5 rounded-lg border p-6"
     >
       <Form.ErrorSummary title="Check these fields" />
       <Form.Field name="name">
