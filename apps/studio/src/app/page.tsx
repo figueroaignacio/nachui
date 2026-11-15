@@ -85,7 +85,7 @@ function Home() {
           <motion.h1
             variants={entrance}
             custom={1}
-            className="font-heading text-center text-4xl leading-[1.05] font-bold tracking-tight text-balance sm:text-5xl"
+            className="font-heading text-center text-4xl leading-[1.05] font-light tracking-tight text-balance sm:text-5xl"
           >
             What should we build?
           </motion.h1>
@@ -162,7 +162,7 @@ function Home() {
 
         <section aria-labelledby="templates" className="mt-[12vh] w-full max-w-5xl">
           <div className="mb-4 flex items-baseline justify-between">
-            <h2 id="templates" className="font-heading text-lg font-semibold">
+            <h2 id="templates" className="font-heading text-lg font-normal">
               Start from a screen
             </h2>
             <span className="text-muted-foreground text-xs">

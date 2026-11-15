@@ -41,7 +41,7 @@ function Settings() {
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-7 px-4 py-10 sm:px-8">
-      <h1 className="font-heading text-3xl font-bold tracking-tight">Settings</h1>
+      <h1 className="font-heading text-3xl font-light tracking-tight">Settings</h1>
 
       <section aria-label="Account" className="border-border bg-card rounded-lg border">
         <div className="flex items-center gap-4 px-5 py-4">

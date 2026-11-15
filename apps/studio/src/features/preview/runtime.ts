@@ -96,8 +96,8 @@ export function previewDocument(css: string, dark: boolean): string {
 <style type="text/tailwindcss">${css.replace(/<\/style/gi, '<\\/style')}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Schibsted+Grotesk:wght@500;600;700&display=swap">
-<style>html{--font-sans:'Geist',ui-sans-serif,system-ui,sans-serif;--font-heading:'Schibsted Grotesk','Geist',ui-sans-serif,sans-serif;--font-serif:'Geist',ui-serif,serif;--font-mono:'Geist Mono',ui-monospace,monospace;}html,body{margin:0;min-height:100%;}</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@200..700&family=DM+Mono:wght@300;400;500&display=swap">
+<style>html{--font-sans:'Hanken Grotesk',ui-sans-serif,system-ui,sans-serif;--font-heading:'Hanken Grotesk',ui-sans-serif,system-ui,sans-serif;--font-serif:'Hanken Grotesk',ui-sans-serif,sans-serif;--font-mono:'DM Mono',ui-monospace,monospace;}html,body{margin:0;min-height:100%;}</style>
 </head>
 <body class="bg-background text-foreground antialiased">
 <div id="root"></div>

@@ -1,14 +1,19 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono, Schibsted_Grotesk } from 'next/font/google';
+import { DM_Mono, Hanken_Grotesk } from 'next/font/google';
 
-const fontSans = Geist({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
-const fontHeading = Schibsted_Grotesk({
+const fontSans = Hanken_Grotesk({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
+const fontHeading = Hanken_Grotesk({
   subsets: ['latin'],
   variable: '--font-heading',
   display: 'swap',
 });
-const fontMono = Geist_Mono({ subsets: ['latin'], variable: '--font-mono', display: 'swap' });
+const fontMono = DM_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
+  weight: ['300', '400', '500'],
+});
 
 export const metadata: Metadata = {
   title: { default: 'NachUI Studio', template: '%s · NachUI Studio' },

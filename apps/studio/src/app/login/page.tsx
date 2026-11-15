@@ -36,7 +36,7 @@ export default async function LoginPage({
         <Logo label="NachUI Studio" />
         <div className="flex max-w-md flex-col gap-7">
           <div className="flex flex-col gap-3">
-            <h1 className="font-heading text-4xl leading-[1.05] font-bold tracking-tight text-balance sm:text-5xl">
+            <h1 className="font-heading text-4xl leading-[1.05] font-light tracking-tight text-balance sm:text-5xl">
               Screens you can ship, from a sentence.
             </h1>
             <p className="text-muted-strong text-base leading-relaxed">
