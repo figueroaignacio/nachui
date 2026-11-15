@@ -312,7 +312,8 @@ const TabsTrigger = ({
             'absolute inset-0 z-10',
             finalVariant === 'underline'
               ? 'bg-foreground top-auto bottom-0 h-[1.5px]'
-              : 'bg-background dark:bg-input border-border/30 rounded-sm border shadow-sm',
+              : 'bg-background dark:bg-input border-border/30 border shadow-sm',
+            finalVariant === 'ghost' ? 'rounded-md' : 'rounded-[calc(var(--radius-md)-3px)]',
           )}
           transition={shouldReduceMotion ? still : springs.smooth}
         />

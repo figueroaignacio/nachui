@@ -35,7 +35,7 @@ const toggleGroupVariants = cva('inline-flex w-fit', {
 const toggleGroupItemVariants = cva('', {
   variants: {
     variant: {
-      default: 'rounded-sm',
+      default: 'rounded-[calc(var(--radius-md)-3px)]',
       outline: 'rounded-none border-input focus-visible:z-10',
     },
     orientation: {
