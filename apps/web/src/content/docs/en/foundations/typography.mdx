@@ -23,15 +23,15 @@ There are four roles, each one a CSS variable the host app sets. Components only
 | Serif   | `font-serif`   | `--font-serif`   | Long-form reading text via `.prose-reading` |
 | Mono    | `font-mono`    | `--font-mono`    | Code, keyboard keys, `.section-label`       |
 
-`--font-serif` is optional. `.prose-reading` falls back to sans when it is not set, which is exactly what this site does: the serif slot points at Geist, the same family as the body.
+`--font-serif` is optional. `.prose-reading` falls back to sans when it is not set, which is exactly what this site does: the serif slot points at Hanken Grotesk, the same family as the body.
 
 In a Next.js app you would set the variables with `next/font`; in any other setup a plain `@font-face` and a variable on `:root` do the same job.
 
 ```css
 :root {
-  --font-sans: 'Geist', system-ui, sans-serif;
-  --font-heading: 'Schibsted Grotesk', var(--font-sans);
-  --font-mono: 'Geist Mono', ui-monospace, monospace;
+  --font-sans: 'Hanken Grotesk', system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+  --font-mono: 'DM Mono', ui-monospace, monospace;
 }
 ```
 

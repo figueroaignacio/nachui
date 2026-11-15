@@ -23,15 +23,15 @@ Hay cuatro roles, cada uno es una variable CSS que define la app. Los componente
 | Serif   | `font-serif`   | `--font-serif`   | Textos largos de lectura con `.prose-reading` |
 | Mono    | `font-mono`    | `--font-mono`    | Código, teclas, `.section-label`              |
 
-`--font-serif` es opcional. `.prose-reading` usa sans cuando no está definida, y eso es justo lo que hace este sitio: el rol serif apunta a Geist, la misma familia del cuerpo.
+`--font-serif` es opcional. `.prose-reading` usa sans cuando no está definida, y eso es justo lo que hace este sitio: el rol serif apunta a Hanken Grotesk, la misma familia del cuerpo.
 
 En una app de Next.js definirías las variables con `next/font`; en cualquier otro setup, un `@font-face` y una variable en `:root` hacen lo mismo.
 
 ```css
 :root {
-  --font-sans: 'Geist', system-ui, sans-serif;
-  --font-heading: 'Schibsted Grotesk', var(--font-sans);
-  --font-mono: 'Geist Mono', ui-monospace, monospace;
+  --font-sans: 'Hanken Grotesk', system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+  --font-mono: 'DM Mono', ui-monospace, monospace;
 }
 ```
 

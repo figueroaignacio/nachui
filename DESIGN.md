@@ -87,6 +87,13 @@ Four font roles, all set by the host app through CSS variables:
 - **Serif** `var(--font-serif)`: long-form reading text through `.prose-reading` (falls back to sans).
 - **Mono** `var(--font-mono)`: code and the small `.section-label`.
 
+This site sets Sans, Heading and Serif to Hanken Grotesk and Mono to DM Mono. Headings carry the lightness, not the size:
+
+- Page titles (`h1`, the landing hero, Studio screens): `font-light`, and `font-extralight` from 48px up. Tight tracking, around `-0.03em`.
+- Section headings (`h2`): `font-normal`.
+- Small headings (`h3` to `h5`) and card or dialog titles: `font-medium`.
+- Body text stays at `font-normal`; nothing under 16px goes below it.
+
 All text uses `antialiased` rendering.
 
 ## 4. Component Stylings

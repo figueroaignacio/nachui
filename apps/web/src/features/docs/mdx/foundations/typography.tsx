@@ -7,25 +7,25 @@ const roles = [
     key: 'sans',
     className: 'font-sans',
     variable: '--font-sans',
-    family: 'Geist',
+    family: 'Hanken Grotesk',
   },
   {
     key: 'heading',
     className: 'font-heading',
     variable: '--font-heading',
-    family: 'Schibsted Grotesk',
+    family: 'Hanken Grotesk',
   },
   {
     key: 'serif',
     className: 'font-serif',
     variable: '--font-serif',
-    family: 'Geist',
+    family: 'Hanken Grotesk',
   },
   {
     key: 'mono',
     className: 'font-mono',
     variable: '--font-mono',
-    family: 'Geist Mono',
+    family: 'DM Mono',
   },
 ] as const;
 

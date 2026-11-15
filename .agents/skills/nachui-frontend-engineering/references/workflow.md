@@ -8,7 +8,7 @@
 ## 2. Canvases
 
 - Use the Artifact tool with `action: "quickstart"` and `intent: "design"`, then follow its instructions. Boards at 1440 (desk) and 390 (phone).
-- 2 or 3 directions named A, B, C, each a real alternative, all drawn with NachUI's real tokens, fonts (Geist, Schibsted Grotesk, Geist Mono) and radius scale. Wait for the pick; never build two.
+- 2 or 3 directions named A, B, C, each a real alternative, all drawn with NachUI's real tokens, fonts (Hanken Grotesk, DM Mono) and radius scale. Wait for the pick; never build two.
 - Never verify a canvas by rendering it; check its source.
 
 ## 3. Build
