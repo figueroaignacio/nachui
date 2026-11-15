@@ -31,11 +31,10 @@ export function ChatError({ code, onRetry }: ChatErrorProps) {
         <p>{t(`${key}.body`)}</p>
         {canRetry && (
           <Button
-            variant="link"
             size="sm"
             onClick={onRetry}
             leftIcon={<RefreshIcon size={13} aria-hidden="true" />}
-            className="text-foreground/80 hover:text-foreground mt-3 underline"
+            className="mt-3"
           >
             {t('retry')}
           </Button>

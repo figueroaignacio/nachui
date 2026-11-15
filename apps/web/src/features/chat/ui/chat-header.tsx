@@ -1,129 +1,113 @@
 'use client';
 
-import { Shimmer } from '@repo/ui/ai/shimmer';
 import { Button } from '@repo/ui/components/button';
 import { Tooltip } from '@repo/ui/components/tooltip';
 import { Typography } from '@repo/ui/components/typography';
-import { CheckIcon } from '@repo/ui/icons/check';
 import { MessagePlusIcon } from '@repo/ui/icons/message-plus';
+import { TrashIcon } from '@repo/ui/icons/trash';
 import { XIcon } from '@repo/ui/icons/x';
-import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import type { ToolName } from '../hooks/use-chat';
-import { AiAvatar } from './ai-avatar';
+import { useCallback, useEffect, useRef } from 'react';
+
+const CONFIRM_TIMEOUT = 3000;
 
 interface ChatHeaderProps {
   onClose?: () => void;
   onReset?: () => void;
-  isLoading?: boolean;
-  isStreaming?: boolean;
-  activeTool?: ToolName | null;
+  canReset?: boolean;
+  /** The first click on «new chat» asks for a second one before clearing. */
+  confirming: boolean;
+  onConfirmingChange: (confirming: boolean) => void;
 }
 
 export function ChatHeader({
   onClose,
   onReset,
-  isLoading = false,
-  isStreaming = false,
-  activeTool = null,
+  canReset = true,
+  confirming,
+  onConfirmingChange,
 }: ChatHeaderProps) {
-  const t = useTranslations('components.chat.header');
-  const tMessages = useTranslations('components.chat.messages');
-  const [confirming, setConfirming] = useState(false);
+  const t = useTranslations('components.chat');
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const isBusy = isLoading || activeTool !== null;
-  const status = activeTool
-    ? tMessages(`tools.${activeTool}`)
-    : isStreaming
-      ? tMessages('writing')
-      : isBusy
-        ? tMessages('thinking')
-        : null;
-
-  const clearResetTimeout = useCallback(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
-  }, []);
+  const cancel = useCallback(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = null;
+    onConfirmingChange(false);
+  }, [onConfirmingChange]);
 
   useEffect(() => {
-    return () => clearResetTimeout();
-  }, [clearResetTimeout]);
-
-  const handleResetClick = useCallback(() => {
-    if (confirming) {
-      clearResetTimeout();
-      setConfirming(false);
-      onReset?.();
-    } else {
-      setConfirming(true);
-      timeoutRef.current = setTimeout(() => {
-        setConfirming(false);
-      }, 2500);
-    }
-  }, [confirming, clearResetTimeout, onReset]);
+    if (!confirming) return;
+    timeoutRef.current = setTimeout(cancel, CONFIRM_TIMEOUT);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      event.stopPropagation();
+      cancel();
+    };
+    document.addEventListener('keydown', onKeyDown, true);
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      document.removeEventListener('keydown', onKeyDown, true);
+    };
+  }, [confirming, cancel]);
 
   if (!onClose) return null;
 
   return (
-    <header className="backdrop-blur-md">
-      <div className="flex h-14 items-center justify-between gap-3 px-4">
-        <div className="flex min-w-0 items-center gap-2.5">
-          <AiAvatar size="md" busy={isBusy} />
-          <p aria-live="polite" className="min-w-0 truncate text-xs">
-            {status && (
-              <Shimmer as="span" className="font-normal">
-                {`${status}…`}
-              </Shimmer>
-            )}
-          </p>
-        </div>
+    <header className="border-rule border-b">
+      <div className="flex h-14 items-center justify-between gap-3 ps-5 pe-3">
+        <p className="min-w-0 truncate text-sm font-medium">{t('label')}</p>
         <div className="flex shrink-0 items-center gap-1">
-          {onReset && (
-            <Tooltip>
-              <Tooltip.Trigger asChild>
-                <Button
-                  onClick={handleResetClick}
-                  size="icon"
-                  variant="ghost"
-                  className={cn(
-                    'size-8 rounded-md transition-colors duration-200',
-                    confirming && 'bg-destructive/10 text-destructive hover:bg-destructive/20',
-                  )}
-                  aria-label={confirming ? t('confirmReset') : t('reset')}
-                >
-                  {confirming ? (
-                    <CheckIcon size={15} className="scale-110 transition-transform duration-200" />
-                  ) : (
-                    <MessagePlusIcon size={15} className="transition-transform duration-200" />
-                  )}
-                </Button>
-              </Tooltip.Trigger>
-              <Tooltip.Content side="bottom">
-                <Typography variant="small" className="text-secondary">
-                  {confirming ? t('confirmReset') : t('reset')}
-                </Typography>
-              </Tooltip.Content>
-            </Tooltip>
-          )}
+          {onReset &&
+            (confirming ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  cancel();
+                  onReset();
+                }}
+                leftIcon={<TrashIcon size={13} aria-hidden="true" />}
+                className="border-destructive-border bg-destructive-surface text-destructive-text hover:bg-destructive-surface/80 h-8 px-3 max-md:h-11"
+              >
+                {t('header.clear')}
+              </Button>
+            ) : (
+              <Tooltip>
+                <Tooltip.Trigger asChild>
+                  <Button
+                    onClick={() => onConfirmingChange(true)}
+                    size="icon"
+                    variant="ghost"
+                    disabled={!canReset}
+                    className="size-8 max-md:size-11"
+                    aria-label={t('header.reset')}
+                  >
+                    <MessagePlusIcon size={15} />
+                  </Button>
+                </Tooltip.Trigger>
+                <Tooltip.Content side="bottom">
+                  <Typography variant="small" className="text-secondary">
+                    {t('header.reset')}
+                  </Typography>
+                </Tooltip.Content>
+              </Tooltip>
+            ))}
           <Tooltip>
             <Tooltip.Trigger asChild>
               <Button
                 onClick={onClose}
                 size="icon"
                 variant="ghost"
-                className="size-8 rounded-md transition-colors"
-                aria-label={t('close')}
+                className="size-8 max-md:size-11"
+                aria-label={t('header.close')}
               >
                 <XIcon size={15} />
               </Button>
             </Tooltip.Trigger>
             <Tooltip.Content side="bottom">
               <Typography variant="small" className="text-secondary">
-                {t('close')}
+                {t('header.close')}
               </Typography>
             </Tooltip.Content>
           </Tooltip>

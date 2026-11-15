@@ -27,10 +27,29 @@ export interface SearchResultItem {
   badge?: DocBadge;
 }
 
+export interface ChatSourcePage {
+  title: string;
+  slug: string;
+}
+
+/** One tool call of an assistant turn, as the chat shows it. */
+export interface ChatStep {
+  id: string;
+  tool: 'searchKnowledgeBase' | 'getComponentCode';
+  status: 'active' | 'complete' | 'error';
+  /** The search query or the component name the call was made with. */
+  detail?: string;
+  pages?: ChatSourcePage[];
+}
+
 export interface Message {
   id?: string;
   role: 'system' | 'user' | 'assistant';
   content: string;
   quote?: string;
   timestamp?: string | number;
+  steps?: ChatStep[];
+  sources?: ChatSourcePage[];
+  /** Seconds between sending the question and the first word of the answer. */
+  thoughtSeconds?: number;
 }

@@ -31,7 +31,9 @@
     "ask": "Preguntar a la IA",
     "label": "Asistente",
     "input": {
-      "placeholder": "Escribe un mensaje..."
+      "placeholder": "Preguntá lo que quieras sobre los docs...",
+      "followUp": "Seguí preguntando...",
+      "hint": "Seleccioná texto de la página para sumarlo acá"
     },
     "launcher": {
       "placeholder": "Haz una pregunta...",
@@ -45,20 +47,33 @@
     },
     "messages": {
       "thinking": "Pensando",
-      "writing": "Escribiendo",
-      "reasoning": "Proceso de pensamiento",
       "tools": {
         "searchKnowledgeBase": "Buscando en la documentación",
         "getComponentCode": "Leyendo el código del componente"
       },
       "copy": "Copiar",
-      "explainLabel": "Explicar esta página"
+      "explainLabel": "Explicar esta página",
+      "working": "Trabajando",
+      "thoughtFor": "Pensó {seconds}s",
+      "steps": "{count, plural, one {# paso} other {# pasos}}",
+      "toolsDone": {
+        "searchKnowledgeBase": "Buscó en los docs",
+        "getComponentCode": "Leyó el código del componente"
+      },
+      "toolsError": {
+        "searchKnowledgeBase": "La búsqueda falló",
+        "getComponentCode": "No pudo leer el código"
+      },
+      "sources": "{count, plural, one {Usó # fuente} other {Usó # fuentes}}",
+      "copied": "Copiado",
+      "regenerate": "Regenerar",
+      "stopped": "Detuviste esta respuesta"
     },
     "errors": {
       "retry": "Reintentar",
       "offline": {
         "title": "Sin conexión",
-        "body": "Tu dispositivo parece estar sin internet. Revisá la conexión y probá de nuevo."
+        "body": "Tu dispositivo parece estar sin conexión. Lo reintenta solo cuando vuelva la conexión."
       },
       "rate_limit": {
         "title": "Demasiadas preguntas",
@@ -70,7 +85,7 @@
       },
       "timeout": {
         "title": "Tardó demasiado",
-        "body": "La respuesta no llegó a tiempo. Reintentar suele alcanzar."
+        "body": "La respuesta no llegó a tiempo. Tu pregunta sigue acá, así que volver a intentar suele funcionar."
       },
       "upstream": {
         "title": "No se pudo contactar al asistente",
@@ -82,8 +97,8 @@
       }
     },
     "suggestions": {
-      "title": "Prueba con:",
-      "subtitle": "Haz clic en cualquier sugerencia para comenzar",
+      "title": "Preguntá sobre NachUI",
+      "subtitle": "Las respuestas salen de los docs y del código de los componentes, con las páginas que usaron.",
       "howWorks": "¿Cómo funciona NachUI?",
       "technologies": "¿Qué tecnologías soporta?",
       "features": "¿Cuáles son las características principales?",
@@ -92,7 +107,7 @@
     "header": {
       "reset": "Nuevo chat",
       "close": "Cerrar",
-      "confirmReset": "Confirmar nuevo chat"
+      "clear": "Borrar este chat"
     },
     "resize": "Cambiar el ancho del chat"
   },

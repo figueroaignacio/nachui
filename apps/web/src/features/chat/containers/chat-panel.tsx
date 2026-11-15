@@ -16,7 +16,7 @@ export function ChatPanel() {
     messages,
     isLoading,
     isStreaming,
-    activeTool,
+    wasStopped,
     errorCode,
     sendMessage,
     handleSuggestionClick,
@@ -32,7 +32,7 @@ export function ChatPanel() {
       messages: s.messages,
       isLoading: s.isLoading,
       isStreaming: s.isStreaming,
-      activeTool: s.activeTool,
+      wasStopped: s.wasStopped,
       errorCode: s.errorCode,
       sendMessage: s.sendMessage,
       handleSuggestionClick: s.handleSuggestionClick,
@@ -69,7 +69,7 @@ export function ChatPanel() {
       messages={messages}
       isLoading={isLoading}
       isStreaming={isStreaming}
-      activeTool={activeTool}
+      wasStopped={wasStopped}
       errorCode={errorCode}
       messagesEndRef={messagesEndRef}
       onSubmit={submit}

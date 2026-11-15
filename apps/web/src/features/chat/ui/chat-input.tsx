@@ -6,7 +6,7 @@ import { ChatAttachment } from './chat-attachment';
 
 interface ChatInputProps {
   isLoading: boolean;
-  isStreaming: boolean;
+  hasMessages: boolean;
   attachment: string | null;
   onRemoveAttachment: () => void;
   onSubmit: (text: string) => void;
@@ -14,20 +14,20 @@ interface ChatInputProps {
 }
 
 export function ChatInput(props: ChatInputProps) {
-  const { isLoading, isStreaming, attachment, onRemoveAttachment, onSubmit, onStop } = props;
+  const { isLoading, hasMessages, attachment, onRemoveAttachment, onSubmit, onStop } = props;
   const t = useTranslations('components.chat');
 
-  const status = isStreaming ? 'streaming' : isLoading ? 'submitted' : 'ready';
+  const placeholder = hasMessages ? t('input.followUp') : t('input.placeholder');
 
   return (
-    <div className="relative z-10 w-full px-4 pb-4">
+    <div className="relative z-10 w-full px-4 pb-4 max-md:px-3 max-md:pb-[max(0.75rem,env(safe-area-inset-bottom))]">
       <PromptInput
         clearOnSubmit={!isLoading}
         onSubmit={(message) => {
           if (isLoading) return;
           onSubmit(message.text);
         }}
-        className="border-rule focus-within:border-foreground/25 rounded-2xl"
+        className="border-input focus-within:border-border-interactive rounded-md"
       >
         {attachment && (
           <PromptInput.Header>
@@ -38,21 +38,23 @@ export function ChatInput(props: ChatInputProps) {
           <PromptInput.Textarea
             data-autofocus
             maxRows={5}
-            placeholder={t('input.placeholder')}
-            aria-label={t('input.placeholder')}
+            placeholder={placeholder}
+            aria-label={placeholder}
           />
         </PromptInput.Body>
-        <PromptInput.Footer className="justify-end">
+        <PromptInput.Footer
+          className={hasMessages ? 'justify-end' : 'justify-end md:justify-between'}
+        >
+          {!hasMessages && (
+            <span className="text-muted-foreground min-w-0 truncate ps-1 text-xs max-md:hidden">
+              {t('input.hint')}
+            </span>
+          )}
           <PromptInput.Submit
-            status={status}
-            label={status === 'streaming' ? t('launcher.stop') : t('launcher.send')}
-            disabled={status === 'submitted'}
-            className="size-7"
-            onClick={(event) => {
-              if (status !== 'streaming') return;
-              event.preventDefault();
-              onStop();
-            }}
+            status={isLoading ? 'streaming' : 'ready'}
+            label={isLoading ? t('launcher.stop') : t('launcher.send')}
+            className="size-7 max-md:size-9"
+            onStop={onStop}
           />
         </PromptInput.Footer>
       </PromptInput>

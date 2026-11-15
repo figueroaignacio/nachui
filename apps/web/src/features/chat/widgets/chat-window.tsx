@@ -3,8 +3,8 @@ import type { Message } from '@/lib/definitions';
 import { AnimatePresence, motion, useReducedMotion, type Transition } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Resizable } from '@repo/ui/components/resizable';
-import { useRef } from 'react';
-import type { ToolName } from '../hooks/use-chat';
+import { cn } from '@repo/ui/lib/cn';
+import { useRef, useState } from 'react';
 import { useChatResize } from '../hooks/use-chat-resize';
 import type { ChatErrorCode } from '../lib/chat-error';
 import { ChatHeader } from '../ui/chat-header';
@@ -16,7 +16,7 @@ interface ChatWindowProps {
   messages: Message[];
   isLoading: boolean;
   isStreaming: boolean;
-  activeTool: ToolName | null;
+  wasStopped: boolean;
   errorCode: ChatErrorCode | null;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
   attachment: string | null;
@@ -52,7 +52,7 @@ export function ChatWindow(props: ChatWindowProps) {
     messages,
     isLoading,
     isStreaming,
-    activeTool,
+    wasStopped,
     errorCode,
     messagesEndRef,
     attachment,
@@ -70,6 +70,7 @@ export function ChatWindow(props: ChatWindowProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const t = useTranslations('components.chat');
   const resize = useChatResize();
+  const [confirmingReset, setConfirmingReset] = useState(false);
 
   useDialogBehavior({ open: isOpen, onClose, ref: panelRef, trap: isModal });
 
@@ -78,16 +79,21 @@ export function ChatWindow(props: ChatWindowProps) {
       <ChatHeader
         onClose={onClose}
         onReset={onReset}
-        isLoading={isLoading}
-        isStreaming={isStreaming}
-        activeTool={activeTool}
+        canReset={messages.length > 0 || errorCode !== null}
+        confirming={confirmingReset}
+        onConfirmingChange={setConfirmingReset}
       />
-      <div className="flex-1 overflow-y-auto">
+      <div
+        className={cn(
+          'flex min-h-0 flex-1 flex-col transition-opacity duration-150',
+          confirmingReset && 'opacity-45',
+        )}
+      >
         <ChatMessages
           messages={messages}
           isLoading={isLoading}
           isStreaming={isStreaming}
-          activeTool={activeTool}
+          wasStopped={wasStopped}
           errorCode={errorCode}
           endRef={messagesEndRef}
           onSuggestionClick={onSuggestionClick}
@@ -96,7 +102,7 @@ export function ChatWindow(props: ChatWindowProps) {
       </div>
       <ChatInput
         isLoading={isLoading}
-        isStreaming={isStreaming}
+        hasMessages={messages.length > 0}
         attachment={attachment}
         onRemoveAttachment={onRemoveAttachment}
         onSubmit={onSubmit}

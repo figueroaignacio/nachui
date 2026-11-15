@@ -31,7 +31,9 @@
     "ask": "Ask AI",
     "label": "Assistant",
     "input": {
-      "placeholder": "Type a message..."
+      "placeholder": "Ask anything about the docs...",
+      "followUp": "Ask a follow-up...",
+      "hint": "Select text on the page to add it here"
     },
     "launcher": {
       "placeholder": "Ask a question...",
@@ -45,20 +47,33 @@
     },
     "messages": {
       "thinking": "Thinking",
-      "writing": "Writing",
-      "reasoning": "Thought process",
       "tools": {
         "searchKnowledgeBase": "Searching the docs",
         "getComponentCode": "Reading the component source"
       },
       "copy": "Copy",
-      "explainLabel": "Explain this page"
+      "explainLabel": "Explain this page",
+      "working": "Working",
+      "thoughtFor": "Thought for {seconds}s",
+      "steps": "{count, plural, one {# step} other {# steps}}",
+      "toolsDone": {
+        "searchKnowledgeBase": "Searched the docs",
+        "getComponentCode": "Read the component source"
+      },
+      "toolsError": {
+        "searchKnowledgeBase": "The search failed",
+        "getComponentCode": "Could not read the source"
+      },
+      "sources": "{count, plural, one {Used # source} other {Used # sources}}",
+      "copied": "Copied",
+      "regenerate": "Regenerate",
+      "stopped": "You stopped this answer"
     },
     "errors": {
       "retry": "Try again",
       "offline": {
         "title": "No connection",
-        "body": "Your device looks offline. Check the connection and try again."
+        "body": "Your device looks offline. It retries on its own when the connection comes back."
       },
       "rate_limit": {
         "title": "Too many questions",
@@ -70,7 +85,7 @@
       },
       "timeout": {
         "title": "Took too long",
-        "body": "The answer did not arrive in time. Trying again usually works."
+        "body": "The answer did not arrive in time. Your question is still here, so trying again usually works."
       },
       "upstream": {
         "title": "Assistant unreachable",
@@ -82,8 +97,8 @@
       }
     },
     "suggestions": {
-      "title": "Try asking:",
-      "subtitle": "Click on any suggestion to get started",
+      "title": "Ask about NachUI",
+      "subtitle": "Answers come from the docs and the component source, with the pages they used.",
       "howWorks": "How does NachUI work?",
       "technologies": "What technologies does it support?",
       "features": "What are the main features?",
@@ -92,7 +107,7 @@
     "header": {
       "reset": "New chat",
       "close": "Close",
-      "confirmReset": "Confirm new chat"
+      "clear": "Clear this chat"
     },
     "resize": "Resize chat"
   },

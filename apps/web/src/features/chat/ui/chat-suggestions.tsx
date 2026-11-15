@@ -14,12 +14,15 @@ export function ChatSuggestions({ onSuggestionClick }: ChatSuggestionsProps) {
   const suggestions = [t('howWorks'), t('technologies'), t('features'), t('getStarted')];
 
   return (
-    <div className="chat-welcome flex flex-col justify-center gap-4 py-4">
+    <div className="chat-welcome flex flex-col gap-5">
       <div className="chat-welcome-item" style={{ '--cascade-i': 0 } as React.CSSProperties}>
-        <Typography variant="h3" className="text-foreground mb-1 text-sm font-semibold">
+        <Typography
+          variant="h3"
+          className="text-foreground mb-1.5 text-lg font-medium tracking-[-0.01em]"
+        >
           {t('title')}
         </Typography>
-        <Typography variant="p" className="text-muted-foreground text-xs">
+        <Typography variant="p" className="text-muted-foreground text-sm leading-relaxed">
           {t('subtitle')}
         </Typography>
       </div>

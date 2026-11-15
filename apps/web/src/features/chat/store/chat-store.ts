@@ -26,6 +26,8 @@ interface ChatStore {
   isStreaming: boolean;
   activeTool: ToolName | null;
   errorCode: ChatErrorCode | null;
+  /** The last answer was cut short with the stop button. */
+  wasStopped: boolean;
 
   attachment: string | null;
   setAttachment: (text: string | null) => void;
@@ -62,6 +64,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   isStreaming: false,
   activeTool: null,
   errorCode: null,
+  wasStopped: false,
 
   attachment: null,
   setAttachment: (attachment) => set({ attachment }),
