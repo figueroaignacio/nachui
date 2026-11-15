@@ -38,14 +38,14 @@ export function GalleryBrowser() {
       <section className="pt-6 pb-6 sm:pt-8">
         <p className="text-muted-foreground font-mono text-xs">{t('eyebrow')}</p>
         <div className="mt-2 flex flex-wrap items-center gap-3">
-          <h1 className="font-heading text-foreground text-2xl leading-tight font-light tracking-tight md:text-3xl">
+          <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-light tracking-[-0.03em] lg:text-4xl">
             {t('title')}
           </h1>
           <Badge variant="outline" className="font-mono text-xs tabular-nums">
             {total}
           </Badge>
         </div>
-        <p className="text-muted-strong mt-2 max-w-xl text-sm leading-relaxed">
+        <p className="text-muted-strong mt-3 max-w-xl text-lg leading-relaxed md:text-xl">
           {t('description', { count: total })}
         </p>
         <div className="mt-4 max-w-xs">
@@ -83,7 +83,7 @@ export function GalleryBrowser() {
                   <ArrowUpRightIcon size={12} />
                 </span>
               </Link>
-              <span className="text-muted-foreground shrink-0 font-mono text-[11px] whitespace-nowrap">
+              <span className="text-muted-foreground shrink-0 font-mono text-xs whitespace-nowrap">
                 {t('examples', { count: examples.length })}
               </span>
             </Frame.Footer>

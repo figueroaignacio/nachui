@@ -32,11 +32,13 @@ export function GalleryComponentView({ slug }: { slug: string }) {
         </Link>
         <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-2xl">
-            <h1 className="font-heading text-foreground text-2xl leading-tight font-light tracking-tight md:text-3xl">
+            <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-light tracking-[-0.03em] lg:text-4xl">
               {title}
             </h1>
             {doc?.description && (
-              <p className="text-muted-strong mt-2 text-sm leading-relaxed">{doc.description}</p>
+              <p className="text-muted-strong mt-3 text-lg leading-relaxed md:text-xl">
+                {doc.description}
+              </p>
             )}
           </div>
           <Link
@@ -54,7 +56,7 @@ export function GalleryComponentView({ slug }: { slug: string }) {
           <Frame key={name} spacing="sm" className="h-full">
             <Frame.Header className="flex-row items-center justify-between px-2.5 py-1.5">
               <Frame.Title as="h2">{label}</Frame.Title>
-              <span className="text-muted-foreground font-mono text-[11px]">
+              <span className="text-muted-foreground font-mono text-xs">
                 {slug}/{name}
               </span>
             </Frame.Header>

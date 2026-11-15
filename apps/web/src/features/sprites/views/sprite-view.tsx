@@ -54,16 +54,16 @@ export async function SpriteView({ id }: { id: string }) {
         <div className="border-border bg-surface-muted mt-6 flex flex-wrap items-end gap-8 rounded-lg border px-7 pt-7 pb-6">
           <Sprite seed={member.seed} parts={member.parts} state="loop" size={132} />
           <div className="flex-1 pb-1">
-            <h1 className="font-serif text-[clamp(1.5rem,4vw,2rem)] leading-tight tracking-tight">
+            <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-light tracking-[-0.03em] lg:text-4xl">
               {t(`cast.${member.id}.name`)}
             </h1>
-            <p className="text-muted-foreground mt-1 text-sm">{t(`cast.${member.id}.note`)}</p>
+            <p className="text-muted-strong mt-2 text-lg leading-relaxed md:text-xl">
+              {t(`cast.${member.id}.note`)}
+            </p>
           </div>
         </div>
 
-        <h2 className="text-muted-foreground mt-12 mb-4 font-mono text-[0.68rem]">
-          {t('statesTitle')}
-        </h2>
+        <h2 className="text-muted-foreground mt-12 mb-4 font-mono text-xs">{t('statesTitle')}</h2>
         <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {STATES.map((state) => (
             <li key={state} className="border-border bg-card overflow-hidden rounded-lg border">
@@ -80,10 +80,8 @@ export async function SpriteView({ id }: { id: string }) {
           ))}
         </ul>
 
-        <h2 className="text-muted-foreground mt-12 mb-4 font-mono text-[0.68rem]">
-          {t('recipeTitle')}
-        </h2>
-        <dl className="border-border divide-border divide-y overflow-hidden rounded-lg border font-mono text-[0.8rem]">
+        <h2 className="text-muted-foreground mt-12 mb-4 font-mono text-xs">{t('recipeTitle')}</h2>
+        <dl className="border-border divide-border divide-y overflow-hidden rounded-lg border font-mono text-xs">
           <div className="flex gap-4 px-4 py-2.5">
             <dt className="text-muted-foreground w-28 shrink-0">seed</dt>
             <dd>{member.seed}</dd>
@@ -105,12 +103,10 @@ export async function SpriteView({ id }: { id: string }) {
           ))}
         </dl>
 
-        <h2 className="text-muted-foreground mt-12 mb-4 font-mono text-[0.68rem]">
-          {t('codeTitle')}
-        </h2>
+        <h2 className="text-muted-foreground mt-12 mb-4 font-mono text-xs">{t('codeTitle')}</h2>
         <Frame spacing="sm">
           <Frame.Header className="flex-row items-center justify-between py-1 pr-1 pl-3">
-            <Frame.Title className="text-muted-foreground font-mono text-[0.68rem] font-normal">
+            <Frame.Title className="text-muted-foreground font-mono text-xs font-normal">
               {'<Sprite />'}
             </Frame.Title>
             <CopyButton value={snippet} />

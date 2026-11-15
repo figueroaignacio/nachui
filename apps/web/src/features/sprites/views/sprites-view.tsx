@@ -10,11 +10,11 @@ export async function SpritesView() {
   return (
     <section className="px-6 py-24">
       <div className="mx-auto max-w-3xl">
-        <p className="text-muted-foreground mb-1 font-mono text-[0.68rem]">{t('eyebrow')}</p>
-        <h1 className="font-serif text-[clamp(1.6rem,4vw,2.2rem)] leading-tight tracking-tight">
+        <p className="text-muted-foreground mb-1 font-mono text-xs">{t('eyebrow')}</p>
+        <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-light tracking-[-0.03em] lg:text-4xl">
           {t('title')}
         </h1>
-        <p className="text-muted-foreground mt-3 max-w-xl text-sm leading-relaxed">
+        <p className="text-muted-strong mt-3 max-w-xl text-lg leading-relaxed md:text-xl">
           {t('subtitle')}
         </p>
 
@@ -32,7 +32,7 @@ export async function SpritesView() {
                 </span>
                 <span className="block px-3 py-3">
                   <span className="block text-sm font-medium">{t(`cast.${member.id}.name`)}</span>
-                  <span className="text-muted-foreground block font-mono text-[0.68rem]">
+                  <span className="text-muted-foreground block font-mono text-xs">
                     {member.seed}
                   </span>
                 </span>
