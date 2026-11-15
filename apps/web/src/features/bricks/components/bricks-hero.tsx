@@ -12,7 +12,7 @@ export function BricksHero({ activeSlug }: BricksHeroProps) {
   return (
     <section className="bg-background relative pt-8 pb-0 sm:pt-12">
       <div className="max-w-2xl pb-6">
-        <h1 className="font-heading text-foreground text-2xl leading-tight font-semibold tracking-tight md:text-3xl">
+        <h1 className="font-heading text-foreground text-2xl leading-tight font-light tracking-tight md:text-3xl">
           {t('title')}
         </h1>
         <p className="text-muted-strong mt-2 text-sm leading-relaxed">{t('description')}</p>

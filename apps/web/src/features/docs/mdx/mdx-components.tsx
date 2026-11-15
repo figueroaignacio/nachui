@@ -39,11 +39,11 @@ import { guidelinesComponents } from './guidelines';
 // Tight, quiet scale: headings carry the hierarchy through weight and spacing
 // rather than size jumps or rules, so a page reads as one column of text.
 const headingStyles = {
-  h1: 'font-heading mt-2 scroll-m-20 text-[1.75rem] font-semibold leading-tight tracking-tight text-foreground',
-  h2: 'font-heading mt-16 mb-5 scroll-m-20 text-xl leading-tight font-semibold tracking-[-0.025em] first:mt-0 text-foreground',
-  h3: 'font-heading mt-10 mb-3 scroll-m-20 text-base font-bold tracking-[-0.02em] text-foreground',
-  h4: 'font-heading mt-8 mb-2 scroll-m-20 text-[15px] font-semibold tracking-tight text-foreground/90',
-  h5: 'font-heading mt-6 scroll-m-20 text-[15px] font-semibold text-foreground/90',
+  h1: 'font-heading mt-2 scroll-m-20 text-[1.75rem] font-light leading-tight tracking-tight text-foreground',
+  h2: 'font-heading mt-16 mb-5 scroll-m-20 text-xl leading-tight font-normal tracking-[-0.025em] first:mt-0 text-foreground',
+  h3: 'font-heading mt-10 mb-3 scroll-m-20 text-base font-medium tracking-[-0.02em] text-foreground',
+  h4: 'font-heading mt-8 mb-2 scroll-m-20 text-[15px] font-medium tracking-tight text-foreground/90',
+  h5: 'font-heading mt-6 scroll-m-20 text-[15px] font-medium text-foreground/90',
   h6: 'font-heading mt-6 scroll-m-20 text-xs font-medium text-muted-foreground',
 } as const;
 

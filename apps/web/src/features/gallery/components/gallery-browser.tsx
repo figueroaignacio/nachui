@@ -38,7 +38,7 @@ export function GalleryBrowser() {
       <section className="pt-6 pb-6 sm:pt-8">
         <p className="text-muted-foreground font-mono text-xs">{t('eyebrow')}</p>
         <div className="mt-2 flex flex-wrap items-center gap-3">
-          <h1 className="font-heading text-foreground text-2xl leading-tight font-semibold tracking-tight md:text-3xl">
+          <h1 className="font-heading text-foreground text-2xl leading-tight font-light tracking-tight md:text-3xl">
             {t('title')}
           </h1>
           <Badge variant="outline" className="font-mono text-xs tabular-nums">

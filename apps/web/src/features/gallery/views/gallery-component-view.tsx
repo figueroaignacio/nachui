@@ -32,7 +32,7 @@ export function GalleryComponentView({ slug }: { slug: string }) {
         </Link>
         <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-2xl">
-            <h1 className="font-heading text-foreground text-2xl leading-tight font-semibold tracking-tight md:text-3xl">
+            <h1 className="font-heading text-foreground text-2xl leading-tight font-light tracking-tight md:text-3xl">
               {title}
             </h1>
             {doc?.description && (

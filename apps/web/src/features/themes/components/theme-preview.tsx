@@ -220,7 +220,7 @@ export function ThemePreview({ theme, label, mode, onModeChange }: ThemePreviewP
       >
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-1">
-            <p className="font-heading text-lg font-semibold tracking-tight">{tSample('title')}</p>
+            <p className="font-heading text-lg font-medium tracking-tight">{tSample('title')}</p>
             <p className="text-muted-foreground text-sm">{tSample('description')}</p>
           </div>
 

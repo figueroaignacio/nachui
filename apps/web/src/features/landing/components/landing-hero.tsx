@@ -9,7 +9,7 @@ export function LandingHero() {
   return (
     <>
       <section className="flex w-full flex-col items-center pt-12 text-center md:pt-24">
-        <h1 className="font-heading text-foreground mx-auto max-w-[24ch] text-[clamp(1.75rem,7.5vw,2.25rem)] leading-[1.08] font-bold tracking-[-0.035em] text-balance lg:text-[clamp(2.75rem,min(4.5vw,8vh),3.25rem)]">
+        <h1 className="font-heading text-foreground mx-auto max-w-[24ch] text-[clamp(1.75rem,7.5vw,2.25rem)] leading-[1.08] font-extralight tracking-[-0.035em] text-balance lg:text-[clamp(2.75rem,min(4.5vw,8vh),3.25rem)]">
           <span className="sr-only">{t('subheading1')}</span>
           <span aria-hidden="true" className="block">
             {t('headline1')}
