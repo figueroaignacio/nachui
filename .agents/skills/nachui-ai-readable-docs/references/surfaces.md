@@ -10,7 +10,7 @@ All of them read the `docs` collection built by content-collections from `apps/w
 | JSON catalog | `/api/docs` | `src/app/api/docs/route.ts` | slug, locale, title, description, raw |
 | Docs assistant | chat in the site | `packages/ai` ingest into Postgres, answered by `apps/api` (`chat`, `rag`) | `/api/docs` at ingest time |
 | MCP server | `npx -y nachui-mcp` | published separately, documented in `concepts/mcp.mdx` | the registry and the docs |
-| Skills | `/docs/concepts/skills` | `src/content/skills/nachui-*.md` | synced from the ui-skills repo |
+| Skills | `/docs/concepts/skills` | `.agents/skills/nachui-*/SKILL.md` (frontmatter only) | the repo itself, installed with `npx skills add figueroaignacio/nachui --skill <name>` |
 
 ## Writing for both readers
 

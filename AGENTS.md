@@ -70,7 +70,7 @@ DB workflow lives in `packages/db`: `db:generate`, `db:migrate`, `db:push`, `db:
 
 ## Project skills
 
-Skills for this repo live in `.agents/skills/<name>/` (symlinked from `.claude/skills/`). Load the one that matches the task:
+Skills for this repo live in `.agents/skills/<name>/` (symlinked from `.claude/skills/`). `/docs/concepts/skills` lists every `nachui-*` one straight from there (install: `npx skills add figueroaignacio/nachui --skill <name>`), so keep each `description` as `Trigger: ... .` followed by one plain sentence. Load the one that matches the task:
 
 - `nachui-frontend-engineering`: entry point to design, build or polish a component or docs page (canvas, build, look at it, UX review, report).
 - `nachui-component-authoring`: a component end to end: API, tests, demos, en/es docs, registry, CLI and checks.

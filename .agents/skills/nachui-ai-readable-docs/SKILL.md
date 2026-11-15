@@ -19,7 +19,7 @@ Load when writing or editing anything under `apps/web/src/content/docs/`, adding
 - Frontmatter: `title`, `description`, `published: true`, `date`, `locale`, `toc`. Quote any value that contains `: `; an unquoted one drops the page without a warning.
 - No em or en dashes, no AI boilerplate, sentence case headings.
 - A new top-level docs section is listed in `src/app/llms.txt/route.ts` in the same change.
-- `apps/web/src/content/skills/nachui-*.md` are synced from github.com/figueroaignacio/ui-skills; edit them there, not here.
+- `/docs/concepts/skills` lists `.agents/skills/nachui-*/SKILL.md` straight from the repo. A new or renamed skill shows up on its own; its `description` keeps the `Trigger: ...` sentence first, and the page shows only the sentence after it.
 
 ## Decision Gates
 
