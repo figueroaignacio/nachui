@@ -1,6 +1,7 @@
 import type { DocSection } from '@/lib/definitions';
 import { BookIcon } from '@repo/ui/icons/book';
 import { GridIcon } from '@repo/ui/icons/grid';
+import { ImageIcon } from '@repo/ui/icons/image';
 import { LayersIcon } from '@repo/ui/icons/layers';
 import { LayoutIcon } from '@repo/ui/icons/layout';
 import { LayoutGridIcon } from '@repo/ui/icons/layout-grid';
@@ -24,6 +25,7 @@ const ICON_BY_HREF: Record<string, SectionIcon> = {
   '/docs/elements/layout/': LayoutIcon,
   '/docs/elements/ai/': WandIcon,
   '/docs/elements/hybrids/': LayersIcon,
+  '/docs/elements/icons': ImageIcon,
 };
 
 function iconOf(section: DocSection): SectionIcon {

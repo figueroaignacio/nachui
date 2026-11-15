@@ -154,9 +154,9 @@
     "noResults": "Nada coincide con esa búsqueda."
   },
   "icons": {
-    "title": "Iconos dibujados para el sistema",
-    "subtitle": "Un set dibujado sobre la misma grilla que los componentes: 24 por 24, trazo de 1.5, terminaciones redondas y currentColor en todo. Es opcional, porque cada componente recibe cualquier icono por props.",
-    "search": "Buscar iconos por nombre o etiqueta",
+    "title": "Íconos dibujados para el sistema",
+    "subtitle": "Un set dibujado sobre la misma grilla que los componentes: 24 por 24, trazo de 1.5, terminaciones redondas y currentColor en todo. Es opcional, porque cada componente recibe cualquier ícono por props.",
+    "search": "Buscar íconos por nombre o etiqueta",
     "filter": "Categoría",
     "all": "Todos",
     "categories": {
@@ -170,7 +170,15 @@
     },
     "size": "Tamaño",
     "stroke": "Trazo",
-    "empty": "Ningún icono coincide con esa búsqueda."
+    "empty": "Ningún ícono coincide con esa búsqueda.",
+    "filters": "Filtros",
+    "install": "Instalar",
+    "use": "Usar",
+    "copyJsx": "Copiar JSX",
+    "copySvg": "Copiar SVG",
+    "copied": "Copiado",
+    "related": "Más en {category}",
+    "count": "{count, plural, one {# ícono} other {# íconos}}"
   },
   "themes": {
     "title": "Temas sobre un mismo contrato de tokens",

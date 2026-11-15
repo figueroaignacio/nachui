@@ -235,7 +235,7 @@ NachUI ships its own icon set in `packages/ui/src/icons`, one self-contained Rea
 - No comments in the file: the source is shown verbatim on the catalog page and installed by the CLI as `icons/<name>`.
 - Variants come as sibling files (`search-filled.tsx`), never as a `variant` prop, so each file stays a single drawing.
 
-The test in `packages/ui/src/icons/icons.test.tsx` enforces the contract, and `apps/web/src/features/icons/lib/icons.ts` holds the category and tags of every icon for the `/icons` catalog.
+The test in `packages/ui/src/icons/icons.test.tsx` enforces the contract, and `apps/web/src/features/icons/lib/icons.ts` holds the category and tags of every icon for the Icons docs page (`/docs/elements/icons`).
 
 ## 7. Motion
 

@@ -1,3 +1,4 @@
+import { IconCatalog } from '@/features/icons/components/icon-catalog';
 import { DocsFaq } from '../components/docs-faq';
 import { Callout } from '@repo/ui/components/callout';
 import { Steps } from '@repo/ui/components/steps';
@@ -214,6 +215,7 @@ function Image({ className, alt, src, ...props }: React.ImgHTMLAttributes<HTMLIm
 }
 
 export const mdxComponents = {
+  IconCatalog,
   h1: H1,
   h2: H2,
   h3: H3,

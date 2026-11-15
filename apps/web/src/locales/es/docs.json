@@ -613,6 +613,18 @@
       ]
     },
     {
+      "id": "icons",
+      "title": "Íconos",
+      "items": [
+        {
+          "title": "Todos los íconos",
+          "href": "/docs/elements/icons",
+          "description": "Buscá, filtrá y copiá cada ícono del set.",
+          "badge": "new"
+        }
+      ]
+    },
+    {
       "id": "concepts",
       "title": "Conceptos",
       "items": [

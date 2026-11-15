@@ -30,7 +30,7 @@ const PRODUCT_ICONS: Record<string, ReactNode> = {
   '/docs/elements/ui': <PuzzleIcon size={16} aria-hidden="true" />,
   '/docs/elements/layout': <LayoutGridIcon size={16} aria-hidden="true" />,
   '/docs/elements/ai': <SparklesIcon size={16} aria-hidden="true" />,
-  '/icons': <ImageIcon size={16} aria-hidden="true" />,
+  '/docs/elements/icons': <ImageIcon size={16} aria-hidden="true" />,
 };
 
 /** Docs tabs match on their full path; anything else matches its whole top-level section. */

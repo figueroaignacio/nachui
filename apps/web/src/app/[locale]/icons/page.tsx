@@ -1,39 +1,18 @@
-import { IconsView } from '@/features/icons/views/icons-view';
-import { buildAlternates, getAbsoluteUrl } from '@/lib/domains';
 import type { Locale } from '@/lib/constants';
-import type { Metadata } from 'next';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { permanentRedirect } from 'next/navigation';
 
 type PageProps = {
   params: Promise<{ locale: Locale }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export default async function IconsPage({ params }: PageProps) {
+/** Icons moved into the docs; old links keep their search and category. */
+export default async function IconsPage({ params, searchParams }: PageProps) {
   const { locale } = await params;
-  setRequestLocale(locale);
-
-  return <IconsView />;
-}
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'sections.icons' });
-  const canonicalUrl = getAbsoluteUrl(locale, '/icons');
-
-  return {
-    title: t('title'),
-    description: t('subtitle'),
-    openGraph: {
-      title: `${t('title')} · NachUI`,
-      description: t('subtitle'),
-      type: 'website',
-      locale,
-      url: canonicalUrl,
-      siteName: 'NachUI',
-    },
-    alternates: {
-      canonical: canonicalUrl,
-      languages: buildAlternates('/icons'),
-    },
-  };
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(await searchParams)) {
+    if (typeof value === 'string') query.set(key, value);
+  }
+  const suffix = query.size > 0 ? `?${query.toString()}` : '';
+  permanentRedirect(`/${locale}/docs/elements/icons${suffix}`);
 }

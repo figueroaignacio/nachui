@@ -613,6 +613,18 @@
       ]
     },
     {
+      "id": "icons",
+      "title": "Icons",
+      "items": [
+        {
+          "title": "All icons",
+          "href": "/docs/elements/icons",
+          "description": "Search, filter and copy every icon in the set.",
+          "badge": "new"
+        }
+      ]
+    },
+    {
       "id": "concepts",
       "title": "Concepts",
       "items": [

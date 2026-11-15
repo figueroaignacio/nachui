@@ -170,7 +170,15 @@
     },
     "size": "Size",
     "stroke": "Stroke",
-    "empty": "No icon matches that search."
+    "empty": "No icon matches that search.",
+    "filters": "Filters",
+    "install": "Install",
+    "use": "Use",
+    "copyJsx": "Copy JSX",
+    "copySvg": "Copy SVG",
+    "copied": "Copied",
+    "related": "More in {category}",
+    "count": "{count, plural, one {# icon} other {# icons}}"
   },
   "themes": {
     "title": "Themes on one token contract",

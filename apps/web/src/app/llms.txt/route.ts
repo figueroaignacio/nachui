@@ -29,7 +29,7 @@ export async function GET() {
     return (
       `## Icons\n\n` +
       `An optional icon set drawn on a 24x24 grid with a 1.5 stroke. Each icon is one self-contained React component; ` +
-      `install with \`npx nachui add icons/<name>\` or copy it from ${SITE_URL}/en/icons.\n\n` +
+      `install with \`npx nachui add icons/<name>\` or copy it from ${SITE_URL}/en/docs/elements/icons.\n\n` +
       `Available: ${names}.`
     );
   };
