@@ -62,7 +62,7 @@ export function GallerySidebar() {
               className={linkClassName(isIndex)}
             >
               <span className="flex-1">{t('back')}</span>
-              <span className="text-muted-foreground font-mono text-[11px] tabular-nums">
+              <span className="text-muted-foreground font-mono text-xs tabular-nums">
                 {countGalleryExamples()}
               </span>
             </Link>
@@ -79,7 +79,7 @@ export function GallerySidebar() {
                 >
                   <span className="flex-1 truncate">{entry.title}</span>
                   <NavBadge badge={entry.badge} />
-                  <span className="text-muted-foreground font-mono text-[11px] tabular-nums">
+                  <span className="text-muted-foreground font-mono text-xs tabular-nums">
                     {entry.count}
                   </span>
                 </Link>

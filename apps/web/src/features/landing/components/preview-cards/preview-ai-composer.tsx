@@ -29,7 +29,7 @@ export function PreviewAiComposer() {
             <PromptInput.Submit />
           </PromptInput.Footer>
         </PromptInput>
-        <p className="text-muted-foreground flex items-center gap-1.5 text-[10px]">
+        <p className="text-muted-foreground flex items-center gap-1.5 text-xs">
           <Kbd size="sm">⏎</Kbd> to send, <Kbd size="sm">⇧⏎</Kbd> for a new line
         </p>
       </Card.Content>

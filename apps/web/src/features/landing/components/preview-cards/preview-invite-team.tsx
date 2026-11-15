@@ -38,11 +38,11 @@ export function PreviewInviteTeam() {
           <Avatar.Group>
             {members.map((initials) => (
               <Avatar key={initials} size="sm">
-                <Avatar.Fallback className="text-[10px]">{initials}</Avatar.Fallback>
+                <Avatar.Fallback className="text-xs">{initials}</Avatar.Fallback>
               </Avatar>
             ))}
           </Avatar.Group>
-          <span className="text-muted-foreground text-[11px]">4 of 10 seats used</span>
+          <span className="text-muted-foreground text-xs">4 of 10 seats used</span>
         </div>
       </Card.Content>
       <Card.Footer compact className="mt-2">

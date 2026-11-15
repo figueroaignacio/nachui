@@ -44,7 +44,7 @@ export function SpacingScale({ locale = 'en' }: { locale?: Locale }) {
             className="grid grid-cols-[3.5rem_5.5rem_1fr] items-center gap-3 px-4 py-2.5 sm:grid-cols-[4rem_6rem_9rem_1fr]"
           >
             <span className="text-foreground font-mono text-[13px] font-medium">{value}</span>
-            <span className="text-muted-foreground font-mono text-[11px] tabular-nums">
+            <span className="text-muted-foreground font-mono text-xs tabular-nums">
               {step.rem} · {step.px}px
             </span>
             <span className="flex h-3 items-center">
@@ -93,7 +93,7 @@ export function ControlSizes({ locale = 'en' }: { locale?: Locale }) {
           >
             {t.label}
           </span>
-          <span className="text-muted-foreground font-mono text-[11px] tabular-nums">
+          <span className="text-muted-foreground font-mono text-xs tabular-nums">
             {control.utility} · {control.px}px · {control.size}
           </span>
         </div>
@@ -106,7 +106,7 @@ export function ControlSizes({ locale = 'en' }: { locale?: Locale }) {
           />
           <span className="bg-foreground size-4 rounded-[4px]" aria-hidden="true" />
         </span>
-        <span className="text-muted-foreground font-mono text-[11px]">
+        <span className="text-muted-foreground font-mono text-xs">
           {t.target} · 44px
           <span className="sr-only"> {t.targetNote}</span>
         </span>

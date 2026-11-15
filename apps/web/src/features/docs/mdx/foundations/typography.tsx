@@ -89,8 +89,8 @@ export function TypeRoles({ locale = 'en' }: { locale?: Locale }) {
           <div key={role.key} className="grid gap-3 p-5 sm:grid-cols-[10rem_1fr] sm:gap-6">
             <div className="min-w-0 space-y-1">
               <div className="text-foreground text-sm font-medium">{text.title}</div>
-              <div className="text-muted-foreground font-mono text-[11px]">{role.className}</div>
-              <div className="text-muted-foreground font-mono text-[11px]">{role.variable}</div>
+              <div className="text-muted-foreground font-mono text-xs">{role.className}</div>
+              <div className="text-muted-foreground font-mono text-xs">{role.variable}</div>
             </div>
             <div className="min-w-0 space-y-2">
               <p
@@ -170,10 +170,10 @@ export function TypeScale({ locale = 'en' }: { locale?: Locale }) {
         <div key={step.utility} className="grid gap-2 px-5 py-4 sm:grid-cols-[10rem_1fr] sm:gap-6">
           <div className="min-w-0 space-y-0.5">
             <div className="text-foreground font-mono text-[13px] font-medium">{step.utility}</div>
-            <div className="text-muted-foreground font-mono text-[11px] tabular-nums">
+            <div className="text-muted-foreground font-mono text-xs tabular-nums">
               {step.px}px / {step.lpx}px
             </div>
-            <div className="text-muted-foreground font-mono text-[11px] tabular-nums">
+            <div className="text-muted-foreground font-mono text-xs tabular-nums">
               {step.size} / {step.leading}
             </div>
           </div>

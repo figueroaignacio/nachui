@@ -69,7 +69,7 @@ export function SpringDemo({ locale = 'en' }: { locale?: Locale }) {
               <div className="text-foreground font-mono text-[13px] font-medium">
                 springs.{spring.name}
               </div>
-              <div className="text-muted-foreground font-mono text-[11px] tabular-nums">
+              <div className="text-muted-foreground font-mono text-xs tabular-nums">
                 {spring.values}
               </div>
               <div className="text-muted-foreground text-xs">{t.uses[spring.name]}</div>
@@ -96,7 +96,7 @@ export function SpringDemo({ locale = 'en' }: { locale?: Locale }) {
         ))}
       </div>
       <div className="border-border bg-surface-muted flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3">
-        <span className="text-muted-foreground font-mono text-[11px]">{t.legend}</span>
+        <span className="text-muted-foreground font-mono text-xs">{t.legend}</span>
         <Button variant="secondary" size="sm" onClick={toggleAll}>
           {t.all}
         </Button>
@@ -171,7 +171,7 @@ export function PressDemo({ locale = 'en' }: { locale?: Locale }) {
       >
         {t.label}
       </motion.button>
-      <span className="text-muted-foreground font-mono text-[11px]">{t.note}</span>
+      <span className="text-muted-foreground font-mono text-xs">{t.note}</span>
     </div>
   );
 }

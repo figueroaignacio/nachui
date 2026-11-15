@@ -36,7 +36,7 @@ export function ExportPanel({ preset, theme, css, dirty }: ExportPanelProps) {
 
   return (
     <section aria-labelledby="themes-export" className="flex flex-col gap-4">
-      <h2 id="themes-export" className="section-label">
+      <h2 id="themes-export" className="text-lg font-medium tracking-[-0.01em]">
         {t('heading')}
       </h2>
 

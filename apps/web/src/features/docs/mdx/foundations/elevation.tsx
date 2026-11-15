@@ -40,10 +40,7 @@ function Panel({ mode, locale }: { mode: 'light' | 'dark'; locale: Locale }) {
       className="rounded-lg border p-5"
       style={{ backgroundColor: css(colors.background), borderColor: css(colors.border) }}
     >
-      <div
-        className="mb-5 font-mono text-[11px]"
-        style={{ color: css(colors['muted-foreground']) }}
-      >
+      <div className="mb-5 font-mono text-xs" style={{ color: css(colors['muted-foreground']) }}>
         {mode === 'light' ? t.light : t.dark}
       </div>
       <div className="grid grid-cols-2 gap-5">
@@ -54,7 +51,7 @@ function Panel({ mode, locale }: { mode: 'light' | 'dark'; locale: Locale }) {
           <span className="font-mono text-xs font-medium" style={{ color: css(colors.foreground) }}>
             {t.flat}
           </span>
-          <span className="text-[11px]" style={{ color: css(colors['muted-foreground']) }}>
+          <span className="text-xs" style={{ color: css(colors['muted-foreground']) }}>
             {t.flatNote}
           </span>
         </div>
@@ -76,7 +73,7 @@ function Panel({ mode, locale }: { mode: 'light' | 'dark'; locale: Locale }) {
               >
                 shadow-{level}
               </span>
-              <span className="text-[11px]" style={{ color: css(colors['muted-foreground']) }}>
+              <span className="text-xs" style={{ color: css(colors['muted-foreground']) }}>
                 {t.uses[level]}
               </span>
             </div>
@@ -108,7 +105,7 @@ export function ElevationValues({ locale = 'en' }: { locale?: Locale }) {
             <span className="text-foreground font-mono text-[13px] font-medium">
               --elevation-{level}
             </span>
-            <div className="text-muted-foreground min-w-0 space-y-0.5 font-mono text-[11px] [overflow-wrap:anywhere]">
+            <div className="text-muted-foreground min-w-0 space-y-0.5 font-mono text-xs [overflow-wrap:anywhere]">
               <div>
                 <span className="text-foreground/70">{t.light}</span>{' '}
                 {light ? formatShadow(light) : null}

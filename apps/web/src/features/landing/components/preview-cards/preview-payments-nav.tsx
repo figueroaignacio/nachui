@@ -44,7 +44,7 @@ export function PreviewPaymentsNav() {
           >
             <div>
               <div className="text-foreground text-xs font-semibold">{action.title}</div>
-              <div className="text-muted-foreground mt-0.5 text-[11px]">{action.description}</div>
+              <div className="text-muted-foreground mt-0.5 text-xs">{action.description}</div>
             </div>
             <span className="text-muted-foreground text-xs" aria-hidden="true">
               ›

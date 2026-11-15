@@ -188,7 +188,7 @@ export function ThemePreview({ theme, label, mode, onModeChange }: ThemePreviewP
   return (
     <section aria-labelledby="themes-preview" className="flex min-w-0 flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
-        <h2 id="themes-preview" className="section-label">
+        <h2 id="themes-preview" className="text-lg font-medium tracking-[-0.01em]">
           {t('heading')}
         </h2>
         <ToggleGroup

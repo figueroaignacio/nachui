@@ -81,7 +81,7 @@ export function LayerStack({ locale = 'en' }: { locale?: Locale }) {
                 <div className="text-foreground text-sm font-medium">{text.title}</div>
                 <div className="text-muted-foreground text-xs leading-relaxed">{text.examples}</div>
               </div>
-              <code className="text-foreground bg-muted shrink-0 rounded-sm px-1.5 py-0.5 font-mono text-[11px]">
+              <code className="text-foreground bg-muted shrink-0 rounded-sm px-1.5 py-0.5 font-mono text-xs">
                 {layer.z}
               </code>
             </li>

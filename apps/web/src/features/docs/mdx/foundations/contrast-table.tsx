@@ -97,7 +97,7 @@ export function ContrastTable({ locale = 'en' }: { locale?: Locale }) {
             <tr key={`${pair.fg}/${pair.bg}`}>
               <th scope="row" className="px-4 py-2.5 text-start align-middle font-normal">
                 <span className="text-foreground block font-mono text-xs">{pair.fg}</span>
-                <span className="text-muted-foreground block font-mono text-[11px]">
+                <span className="text-muted-foreground block font-mono text-xs">
                   {t.on} {pair.bg}
                   {pair.kind === 'ui' ? ` (${t.ui})` : null}
                 </span>

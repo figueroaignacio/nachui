@@ -28,7 +28,7 @@ export function PresetGrid({ presets, selected, onSelect }: PresetGridProps) {
 
   return (
     <section aria-labelledby="themes-presets">
-      <h2 id="themes-presets" className="section-label">
+      <h2 id="themes-presets" className="text-lg font-medium tracking-[-0.01em]">
         {t('presetsHeading')}
       </h2>
       <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
@@ -76,9 +76,7 @@ export function PresetGrid({ presets, selected, onSelect }: PresetGridProps) {
                     </button>
                   </h3>
                   {active && (
-                    <span className="text-muted-foreground font-mono text-[10px]">
-                      {t('selected')}
-                    </span>
+                    <span className="text-muted-foreground font-mono text-xs">{t('selected')}</span>
                   )}
                 </div>
                 <p className="text-muted-foreground text-xs leading-relaxed">

@@ -43,7 +43,7 @@ export function RadiusScale({ locale = 'en' }: { locale?: Locale }) {
           </div>
           <div className="space-y-0.5">
             <div className="text-foreground font-mono text-[13px] font-medium">{step.utility}</div>
-            <div className="text-muted-foreground font-mono text-[11px] tabular-nums">
+            <div className="text-muted-foreground font-mono text-xs tabular-nums">
               {step.factor}x · {Math.round(step.px)}px
             </div>
             <p className="text-muted-foreground text-xs leading-relaxed">{t[step.utility]}</p>

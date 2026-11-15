@@ -17,7 +17,7 @@ export function PreviewToolApproval() {
             </span>
             <span className="text-foreground font-mono text-xs font-medium">run_migration</span>
           </div>
-          <Badge variant="warning" className="text-[10px]">
+          <Badge variant="warning" className="text-xs">
             Needs approval
           </Badge>
         </div>
@@ -27,7 +27,7 @@ export function PreviewToolApproval() {
           <Confirmation.Title className="text-xs">
             Run this migration on staging?
           </Confirmation.Title>
-          <pre className="bg-surface-muted border-border text-muted-strong overflow-hidden rounded-md border px-3 py-2.5 font-mono text-[11px] leading-relaxed">
+          <pre className="bg-surface-muted border-border text-muted-strong overflow-hidden rounded-md border px-3 py-2.5 font-mono text-xs leading-relaxed">
             <span className="text-code-keyword">ALTER TABLE</span> invoices{'\n'}
             {'  '}
             <span className="text-code-keyword">ADD COLUMN</span> due_at{' '}

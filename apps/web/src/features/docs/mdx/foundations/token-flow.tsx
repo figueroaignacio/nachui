@@ -34,12 +34,12 @@ export function TokenFlow({ locale = 'en' }: { locale?: Locale }) {
         <li key={step.label} className="grid gap-2 px-4 py-3.5 sm:grid-cols-[11rem_1fr] sm:gap-6">
           <div className="min-w-0">
             <div className="text-foreground flex items-baseline gap-2 text-sm font-medium">
-              <span className="text-muted-foreground font-mono text-[11px] tabular-nums">
+              <span className="text-muted-foreground font-mono text-xs tabular-nums">
                 0{index + 1}
               </span>
               {step.label}
             </div>
-            <div className="text-muted-foreground mt-0.5 font-mono text-[11px] [overflow-wrap:anywhere]">
+            <div className="text-muted-foreground mt-0.5 font-mono text-xs [overflow-wrap:anywhere]">
               {step.where}
             </div>
           </div>

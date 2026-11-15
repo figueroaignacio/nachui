@@ -19,7 +19,7 @@ export function NavBadge({ badge, className }: { badge?: DocBadge; className?: s
   if (!badge || !(badge in variantByBadge)) return null;
 
   return (
-    <Badge variant={variantByBadge[badge]} className={cn('px-1.5 py-px text-[10px]', className)}>
+    <Badge variant={variantByBadge[badge]} className={cn('px-1.5 py-px text-xs', className)}>
       {t(badge)}
     </Badge>
   );

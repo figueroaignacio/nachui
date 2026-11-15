@@ -24,7 +24,7 @@ export function PreviewVerifyEmail() {
             <InputOTP.Slot index={5} className="h-10 w-9 text-base" />
           </InputOTP.Group>
         </InputOTP>
-        <p className="text-muted-foreground text-[11px]">
+        <p className="text-muted-foreground text-xs">
           Did not get it? <span className="text-foreground font-medium">Resend in 0:24</span>
         </p>
       </Card.Content>

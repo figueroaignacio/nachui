@@ -16,7 +16,7 @@ export function PreviewCheckpoints() {
       <Card.Header compact>
         <div className="flex items-center justify-between gap-2">
           <Card.Title className="text-sm font-semibold">Checkpoints</Card.Title>
-          <span className="text-muted-foreground text-[11px]">3 saved</span>
+          <span className="text-muted-foreground text-xs">3 saved</span>
         </div>
       </Card.Header>
       <Card.Content compact>
@@ -31,14 +31,14 @@ export function PreviewCheckpoints() {
               />
               <div className="min-w-0 flex-1">
                 <div className="text-foreground text-xs font-medium">{checkpoint.title}</div>
-                <div className="text-muted-foreground mt-0.5 text-[11px]">{checkpoint.meta}</div>
+                <div className="text-muted-foreground mt-0.5 text-xs">{checkpoint.meta}</div>
               </div>
               {checkpoint.current ? (
-                <Badge variant="secondary" className="text-[10px]">
+                <Badge variant="secondary" className="text-xs">
                   Current
                 </Badge>
               ) : index === 1 ? (
-                <Button size="sm" variant="outline" className="h-7 gap-1.5 px-2 text-[11px]">
+                <Button size="sm" variant="outline" className="h-7 gap-1.5 px-2 text-xs">
                   <HistoryIcon size={12} />
                   Restore
                 </Button>

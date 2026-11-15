@@ -33,7 +33,7 @@ export function PreviewPayoutThreshold() {
             <span className="text-foreground text-lg font-bold tracking-tight">$2,500.00</span>
           </div>
           <Progress value={25} aria-label="Minimum payout amount" />
-          <div className="text-muted-foreground flex justify-between text-[10px]">
+          <div className="text-muted-foreground flex justify-between text-xs">
             <span>$50 (MIN)</span>
             <span>$10,000 (MAX)</span>
           </div>

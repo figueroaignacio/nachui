@@ -113,7 +113,7 @@ export function BuilderPanel({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
-          <h2 id="themes-builder" className="section-label">
+          <h2 id="themes-builder" className="text-lg font-medium tracking-[-0.01em]">
             {t('builder.heading')}
           </h2>
           <p className="text-foreground flex items-center gap-2 text-sm font-medium">
@@ -144,7 +144,7 @@ export function BuilderPanel({
             style={{ background: formatColor(primaryColor), color: formatColor(primaryForeground) }}
           >
             <span className="text-sm font-medium">Aa</span>
-            <span className="font-mono text-[11px]">{formatColor(primaryColor)}</span>
+            <span className="font-mono text-xs">{formatColor(primaryColor)}</span>
           </div>
         )}
         <SliderField

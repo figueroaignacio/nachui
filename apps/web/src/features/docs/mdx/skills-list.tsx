@@ -37,7 +37,7 @@ export function SkillsList() {
             <p className="text-muted-foreground mt-1.5 text-[13px] leading-relaxed">
               {skill.summary}
             </p>
-            <Command command={command} className="text-muted-strong mt-3 px-3 py-2 text-[11px]" />
+            <Command command={command} className="text-muted-strong mt-3 px-3 py-2 text-xs" />
           </div>
         );
       })}

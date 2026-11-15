@@ -13,7 +13,7 @@ export function PreviewModelPicker() {
   return (
     <Card className="p-1.5">
       <Input size="sm" placeholder="Search models" aria-label="Search models" />
-      <p className="text-muted-foreground px-2.5 pt-3 pb-1 font-mono text-[10px]">Recommended</p>
+      <p className="text-muted-foreground px-2.5 pt-3 pb-1 font-mono text-xs">Recommended</p>
       <ul className="space-y-0.5">
         {models.map((model) => (
           <li
@@ -25,9 +25,9 @@ export function PreviewModelPicker() {
           >
             <div className="min-w-0 flex-1">
               <div className="text-foreground text-xs font-medium">{model.name}</div>
-              <div className="text-muted-foreground text-[11px]">{model.description}</div>
+              <div className="text-muted-foreground text-xs">{model.description}</div>
             </div>
-            <span className="text-muted-foreground font-mono text-[10px]">{model.context}</span>
+            <span className="text-muted-foreground font-mono text-xs">{model.context}</span>
             <CheckIcon size={14} className={cn('mt-px', !model.selected && 'invisible')} />
           </li>
         ))}

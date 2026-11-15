@@ -40,7 +40,7 @@ export function PreviewNotificationPrefs() {
             <Checkbox defaultChecked={pref.checked} aria-label={pref.title} className="mt-0.5" />
             <div>
               <div className="text-foreground text-xs font-semibold">{pref.title}</div>
-              <div className="text-muted-foreground mt-0.5 text-[11px]">{pref.description}</div>
+              <div className="text-muted-foreground mt-0.5 text-xs">{pref.description}</div>
             </div>
           </div>
         ))}

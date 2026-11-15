@@ -179,9 +179,7 @@ export function CodeBlock({
   return (
     <Frame spacing="sm" className={className}>
       <Frame.Header className="min-h-0 flex-row items-center justify-between gap-3 py-1 pr-1 pl-3">
-        <span className="text-muted-foreground min-w-0 truncate font-mono text-[11px]">
-          {title}
-        </span>
+        <span className="text-muted-foreground min-w-0 truncate font-mono text-xs">{title}</span>
         <CopyButton value={codeString} className="rounded-md p-1.5" />
       </Frame.Header>
       <Frame.Panel className="bg-code border-border p-0">{block}</Frame.Panel>

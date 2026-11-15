@@ -41,7 +41,7 @@ function Segmented<T extends number>({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-muted-foreground font-mono text-[0.68rem]">{label}</span>
+      <span className="text-muted-foreground font-mono text-xs">{label}</span>
       <div
         role="group"
         aria-label={label}
@@ -89,7 +89,7 @@ function IconDetail({ icon, onClose }: { icon: CatalogIcon | null; onClose: () =
                 <div className="min-w-0">
                   <Drawer.Title className="font-mono text-base">{icon.name}</Drawer.Title>
                   <Drawer.Description className="mt-1 flex flex-wrap items-center gap-1.5">
-                    <Badge variant="outline" className="text-[10px]">
+                    <Badge variant="outline" className="text-xs">
                       {t(`categories.${icon.category}`)}
                     </Badge>
                     <span className="text-muted-foreground text-xs">{icon.componentName}</span>
@@ -210,12 +210,10 @@ export function IconsBrowser({ icons }: { icons: CatalogIcon[] }) {
         grouped.map((group) => (
           <section key={group.key} aria-labelledby={`icons-${group.key}`}>
             <div className="mb-3 flex items-baseline gap-2">
-              <h2 id={`icons-${group.key}`} className="text-sm font-medium">
+              <h2 id={`icons-${group.key}`} className="text-lg font-medium tracking-[-0.01em]">
                 {t(`categories.${group.key}`)}
               </h2>
-              <span className="text-muted-foreground font-mono text-[0.68rem]">
-                {group.icons.length}
-              </span>
+              <span className="text-muted-foreground font-mono text-xs">{group.icons.length}</span>
             </div>
             <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
               {group.icons.map((icon) => {
@@ -232,7 +230,7 @@ export function IconsBrowser({ icons }: { icons: CatalogIcon[] }) {
                       <span className="text-foreground flex h-9 items-center justify-center">
                         <Component size={size} strokeWidth={stroke} />
                       </span>
-                      <span className="text-muted-foreground group-hover:text-foreground w-full truncate px-2 font-mono text-[0.62rem]">
+                      <span className="text-muted-foreground group-hover:text-foreground w-full truncate px-2 font-mono text-xs">
                         {icon.name}
                       </span>
                     </button>

@@ -54,7 +54,7 @@ function Swatch({ mode, value }: { mode: Mode; value: DtcgColor }) {
           borderColor: page.input ? formatColor(page.input) : undefined,
         }}
       />
-      <span className="flex min-w-0 flex-col font-mono text-[11px] leading-snug">
+      <span className="flex min-w-0 flex-col font-mono text-xs leading-snug">
         <span
           className="[overflow-wrap:anywhere]"
           style={{ color: page.foreground ? formatColor(page.foreground) : undefined }}
@@ -88,7 +88,7 @@ export function ColorPalette({ locale = 'en' }: { locale?: Locale }) {
             <span className="section-label">
               {t.groups[group as keyof typeof t.groups] ?? group}
             </span>
-            <span className="text-muted-foreground grid grid-cols-2 gap-2 font-mono text-[11px] sm:col-span-2">
+            <span className="text-muted-foreground grid grid-cols-2 gap-2 font-mono text-xs sm:col-span-2">
               <span>{t.light}</span>
               <span>{t.dark}</span>
             </span>
@@ -108,7 +108,7 @@ export function ColorPalette({ locale = 'en' }: { locale?: Locale }) {
                     </div>
                     <div
                       className={cn(
-                        'truncate font-mono text-[11px]',
+                        'truncate font-mono text-xs',
                         utility ? 'text-muted-foreground' : 'text-muted-foreground/70 italic',
                       )}
                     >

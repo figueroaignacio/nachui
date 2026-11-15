@@ -103,20 +103,20 @@ export function Searcher({ open: isOpen, onOpenChange }: SearcherProps) {
               <Kbd size="sm" variant="outline">
                 <ChevronUpIcon size={9} aria-hidden="true" />
               </Kbd>
-              <span className="text-muted-foreground/50 text-[10px]">navigate</span>
+              <span className="text-muted-foreground/50 text-xs">navigate</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Kbd size="sm" variant="outline">
                 <CornerDownLeftIcon size={9} aria-hidden="true" />
               </Kbd>
-              <span className="text-muted-foreground/50 text-[10px]">{t('select')}</span>
+              <span className="text-muted-foreground/50 text-xs">{t('select')}</span>
             </div>
           </div>
           <div className="flex items-center gap-1.5">
-            <Kbd size="sm" variant="outline" className="text-[9px]">
+            <Kbd size="sm" variant="outline">
               esc
             </Kbd>
-            <span className="text-muted-foreground/50 text-[10px]">{t('exit')}</span>
+            <span className="text-muted-foreground/50 text-xs">{t('exit')}</span>
           </div>
         </div>
       </Dialog.Content>
