@@ -83,7 +83,7 @@ export function LandingInstall() {
         <div className="min-w-0 lg:flex-1">
           <Frame spacing="sm">
             <Frame.Header className="flex-row items-center justify-between gap-4 py-1 pr-1 pl-3">
-              <Frame.Title className="text-muted-foreground font-mono text-[11px] font-normal">
+              <Frame.Title className="text-muted-foreground font-mono text-xs font-normal">
                 {t('configFile')}
               </Frame.Title>
               <CopyButton
@@ -92,7 +92,7 @@ export function LandingInstall() {
               />
             </Frame.Header>
             <Frame.Panel className="overflow-x-auto sm:p-5">
-              <pre className="font-mono text-[12px] leading-[1.8]">
+              <pre className="font-mono text-[13px] leading-[1.7]">
                 <code>
                   {config.split('\n').map((line, index) => (
                     <ConfigLine key={index} line={line} />
@@ -114,7 +114,7 @@ export function LandingInstall() {
               </li>
             ))}
           </ul>
-          <p className="text-muted-foreground mt-5 font-mono text-[11px] leading-relaxed">
+          <p className="text-muted-foreground mt-5 font-mono text-xs leading-relaxed">
             {t('outputNote')}
           </p>
         </div>

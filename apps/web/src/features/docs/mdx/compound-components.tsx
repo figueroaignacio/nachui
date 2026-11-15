@@ -1,9 +1,12 @@
 'use client';
 
+import type * as React from 'react';
+
 import { Accordion } from '@repo/ui/components/accordion';
 import { Tree } from '@repo/ui/components/tree';
 import { Table } from '@repo/ui/components/table';
 import { Tabs } from '@repo/ui/components/tabs';
+import { cn } from '@repo/ui/lib/cn';
 
 export const MdxTabs = Tabs;
 export const MdxTabsContent = Tabs.Content;
@@ -15,7 +18,9 @@ export const MdxAccordionItem = Accordion.Item;
 export const MdxAccordionTrigger = Accordion.Trigger;
 export const MdxAccordionContent = Accordion.Content;
 
-export const MdxTable = Table;
+export function MdxTable({ className, ...props }: React.ComponentProps<typeof Table>) {
+  return <Table className={cn('text-sm [&_code]:whitespace-nowrap!', className)} {...props} />;
+}
 export const MdxTableHeader = Table.Header;
 export const MdxTableBody = Table.Body;
 export const MdxTableRow = Table.Row;

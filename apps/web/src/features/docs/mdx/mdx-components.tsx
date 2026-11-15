@@ -39,11 +39,11 @@ import { guidelinesComponents } from './guidelines';
 // Tight, quiet scale: headings carry the hierarchy through weight and spacing
 // rather than size jumps or rules, so a page reads as one column of text.
 const headingStyles = {
-  h1: 'font-heading mt-2 scroll-m-20 text-[1.75rem] font-light leading-tight tracking-tight text-foreground',
-  h2: 'font-heading mt-16 mb-5 scroll-m-20 text-xl leading-tight font-normal tracking-[-0.025em] first:mt-0 text-foreground',
-  h3: 'font-heading mt-10 mb-3 scroll-m-20 text-base font-medium tracking-[-0.02em] text-foreground',
-  h4: 'font-heading mt-8 mb-2 scroll-m-20 text-[15px] font-medium tracking-tight text-foreground/90',
-  h5: 'font-heading mt-6 scroll-m-20 text-[15px] font-medium text-foreground/90',
+  h1: 'font-heading mt-2 scroll-m-20 text-3xl font-light leading-[1.1] tracking-[-0.03em] text-foreground lg:text-4xl',
+  h2: 'font-heading mt-16 mb-5 scroll-m-20 text-xl leading-tight font-normal tracking-[-0.025em] first:mt-0 text-foreground md:text-2xl',
+  h3: 'font-heading mt-10 mb-3 scroll-m-20 text-lg font-medium tracking-[-0.02em] text-foreground',
+  h4: 'font-heading mt-8 mb-2 scroll-m-20 text-base font-medium tracking-tight text-foreground/90 md:text-[17px]',
+  h5: 'font-heading mt-6 scroll-m-20 text-base font-medium text-foreground/90 md:text-[17px]',
   h6: 'font-heading mt-6 scroll-m-20 text-xs font-medium text-muted-foreground',
 } as const;
 
@@ -64,7 +64,7 @@ function Paragraph({ className, ...props }: React.HTMLAttributes<HTMLDivElement>
   return (
     <div
       className={cn(
-        'text-foreground/80 font-serif text-[17px] leading-[1.75]',
+        'text-foreground/80 font-serif text-base leading-[1.75] md:text-[17px]',
         'not-first:mt-4',
         className,
       )}
@@ -114,7 +114,7 @@ function ListItem({ className, ...props }: React.HTMLAttributes<HTMLLIElement>) 
   return (
     <li
       className={cn(
-        'text-foreground/80 pl-1 font-serif text-[17px] leading-[1.7]',
+        'text-foreground/80 pl-1 font-serif text-base leading-[1.7] md:text-[17px]',
         '[&>ol]:my-1.5 [&>ul]:my-1.5',
         className,
       )}
