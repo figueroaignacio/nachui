@@ -1,10 +1,10 @@
 import { NavBadge } from '@/components/common/nav-badge';
-import { AiAvatar } from '@/features/chat/ui/ai-avatar';
 import { Link } from '@/i18n/navigation';
 import type { DocBadge, DocSection, SearchResultItem } from '@/lib/definitions';
 import { Dialog } from '@repo/ui/components/dialog';
 import { Empty } from '@repo/ui/components/empty';
 import { Separator } from '@repo/ui/components/separator';
+import { SearchIcon } from '@repo/ui/icons/search';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef } from 'react';
@@ -99,7 +99,7 @@ export function SearchResults({
       <Empty className="gap-2 py-12">
         <Empty.Header className="gap-2">
           <Empty.Media className="mb-0">
-            <AiAvatar size="lg" />
+            <SearchIcon size={20} aria-hidden="true" className="text-muted-foreground" />
           </Empty.Media>
           <Empty.Title className="text-muted-foreground/60 text-sm font-normal">
             {t('noResults')}

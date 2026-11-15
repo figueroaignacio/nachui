@@ -2,7 +2,6 @@
 
 import { GitHubIcon } from '@/components/common/github-icon';
 import { useChatStore } from '@/features/chat/store/chat-store';
-import { AiAvatar } from '@/features/chat/ui/ai-avatar';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { getDocEditUrl } from '@/lib/domains';
 import { Button } from '@repo/ui/components/button';
@@ -116,7 +115,7 @@ export function DocActions({
         size="sm"
         className="h-8 gap-2 rounded-l-md border-r-0 px-4"
         onClick={handleExplain}
-        leftIcon={<AiAvatar size="sm" />}
+        leftIcon={<SparklesIcon size={14} aria-hidden="true" />}
       >
         <span>{t('explainButton.label')}</span>
       </Button>
