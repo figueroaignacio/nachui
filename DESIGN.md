@@ -94,6 +94,23 @@ This site sets Sans, Heading and Serif to Hanken Grotesk and Mono to DM Mono. He
 - Small headings (`h3` to `h5`) and card or dialog titles: `font-medium`.
 - Body text stays at `font-normal`; nothing under 16px goes below it.
 
+Every role has one size per width on the site, shared by every page (phone 390 / tablet 768 / desktop 1440):
+
+| Role                             | 390              | 768 | 1440 | Classes                                     |
+| -------------------------------- | ---------------- | --- | ---- | ------------------------------------------- |
+| Landing hero                     | 36               | 48  | 52   | `text-4xl md:text-5xl lg:text-[3.25rem]`    |
+| Page title                       | 30               | 30  | 36   | `text-3xl leading-[1.1] lg:text-4xl`        |
+| Page intro                       | 18               | 20  | 20   | `text-lg md:text-xl text-muted-strong`      |
+| Docs `h2`                        | 20               | 24  | 24   | `text-xl md:text-2xl`                       |
+| Docs `h3`, catalog section title | 18               | 18  | 18   | `text-lg font-medium`                       |
+| Reading text                     | 16               | 17  | 17   | `text-base md:text-[17px]`                  |
+| Controls and tables              | 16 (inputs) / 14 | 14  | 14   | `text-sm`, inputs `text-base md:text-sm`    |
+| Code block                       | 13               | 13  | 13   | `text-[13px]`; inline code `text-[0.875em]` |
+| Metadata and badges              | 12               | 12  | 12   | `text-xs`                                   |
+| Section label                    | 11               | 11  | 11   | `.section-label`                            |
+
+Nothing goes below 11px, no text size depends on `vh`, and a role never gets a one-off size on a single page.
+
 All text uses `antialiased` rendering.
 
 ## 4. Component Stylings

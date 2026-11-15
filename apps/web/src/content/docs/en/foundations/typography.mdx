@@ -45,6 +45,23 @@ Most of the interface lives in two steps: `text-sm` for buttons, menus and field
 
 `text-5xl` is on the scale for display headlines on marketing pages. No component in the catalog uses it.
 
+## Site scale
+
+The docs site has one size per role and width, shared by every page. The catalog keeps the Tailwind steps above; these are the sizes the pages around it use.
+
+| Role                   | Phone | Tablet | Desktop | Classes                    |
+| ---------------------- | ----- | ------ | ------- | -------------------------- |
+| Page title             | 30    | 30     | 36      | `text-3xl lg:text-4xl`     |
+| Page intro             | 18    | 20     | 20      | `text-lg md:text-xl`       |
+| Section heading (`h2`) | 20    | 24     | 24      | `text-xl md:text-2xl`      |
+| Subheading (`h3`)      | 18    | 18     | 18      | `text-lg`                  |
+| Reading text           | 16    | 17     | 17      | `text-base md:text-[17px]` |
+| Tables                 | 14    | 14     | 14      | `text-sm`                  |
+| Code block             | 13    | 13     | 13      | `text-[13px]`              |
+| Metadata               | 12    | 12     | 12      | `text-xs`                  |
+
+Inline code is sized in `em` (`text-[0.875em]`), so it follows whatever text it sits in. Nothing goes below 11px, and no size depends on the window height.
+
 ## Weights
 
 Four weights cover everything. If a piece of text needs to stand out more than `font-semibold` allows, it probably needs more space or a bigger step instead.

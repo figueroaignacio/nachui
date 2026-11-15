@@ -45,6 +45,23 @@ Casi toda la interfaz vive en dos pasos: `text-sm` para botones, menús y campos
 
 `text-5xl` está en la escala para titulares de páginas de marketing. Ningún componente del catálogo lo usa.
 
+## Escala del sitio
+
+El sitio de docs tiene un tamaño por rol y por ancho, igual en todas las páginas. El catálogo sigue con los pasos de Tailwind de arriba; estos son los tamaños de las páginas que lo rodean.
+
+| Rol                      | Teléfono | Tablet | Escritorio | Clases                     |
+| ------------------------ | -------- | ------ | ---------- | -------------------------- |
+| Título de página         | 30       | 30     | 36         | `text-3xl lg:text-4xl`     |
+| Intro de página          | 18       | 20     | 20         | `text-lg md:text-xl`       |
+| Título de sección (`h2`) | 20       | 24     | 24         | `text-xl md:text-2xl`      |
+| Subtítulo (`h3`)         | 18       | 18     | 18         | `text-lg`                  |
+| Texto de lectura         | 16       | 17     | 17         | `text-base md:text-[17px]` |
+| Tablas                   | 14       | 14     | 14         | `text-sm`                  |
+| Bloque de código         | 13       | 13     | 13         | `text-[13px]`              |
+| Metadatos                | 12       | 12     | 12         | `text-xs`                  |
+
+El código inline se mide en `em` (`text-[0.875em]`), así acompaña al texto en el que está. Nada baja de 11px y ningún tamaño depende de la altura de la ventana.
+
 ## Pesos
 
 Cuatro pesos cubren todo. Si un texto necesita destacar más de lo que permite `font-semibold`, seguramente le falta espacio o un paso más grande, no más peso.
