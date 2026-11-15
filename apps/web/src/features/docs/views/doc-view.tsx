@@ -10,6 +10,7 @@ import { Callout } from '@repo/ui/components/callout';
 import { Stack } from '@repo/ui/layout/stack';
 import { COMPONENT_REGISTRY } from '@repo/ui/registry';
 import { Container } from '@repo/ui/src/layout/container';
+import { cn } from '@repo/ui/lib/cn';
 import type { Doc } from 'content-collections';
 import { useTranslations } from 'next-intl';
 import { MDXContent } from '../mdx/mdx-content';
@@ -29,6 +30,7 @@ export function DocView({ doc }: DocViewProps) {
   const componentPath =
     COMPONENT_REGISTRY[doc.slugAsParams.split('/').at(-1) as keyof typeof COMPONENT_REGISTRY];
   const sourceUrl = componentPath ? `${GITHUB_REPO_URL}/blob/main/${componentPath}` : undefined;
+  const isWide = doc.layout === 'wide';
 
   const techArticleSchema = {
     '@context': 'https://schema.org',
@@ -53,7 +55,7 @@ export function DocView({ doc }: DocViewProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(techArticleSchema) }}
       />
-      <Container size="md" className="px-0">
+      <Container size={isWide ? 'fluid' : 'md'} className={cn('px-0', isWide && 'xl:col-span-2')}>
         <Stack as="article" className="@container w-full min-w-0">
           <div className="mt-4 mb-10">
             <div>
@@ -70,7 +72,7 @@ export function DocView({ doc }: DocViewProps) {
                 </p>
               )}
               <NavBadge badge={badge} className="mt-4" />
-              <div className="mt-6 xl:hidden">
+              <div className={cn('mt-6', !isWide && 'xl:hidden')}>
                 <DocActions
                   page={doc.title}
                   url={docUrl}
@@ -94,21 +96,23 @@ export function DocView({ doc }: DocViewProps) {
           <DocsPagination currentPath={currentPath} />
         </Stack>
       </Container>
-      <div data-doc-toc className="hidden xl:block">
-        <Toc
-          toc={tocContent}
-          footer={
-            <DocActions
-              layout="rail"
-              page={doc.title}
-              url={docUrl}
-              filePath={doc.sourceFilePath}
-              rawPath={`/${doc.locale || 'en'}${currentPath}.md`}
-              sourceUrl={sourceUrl}
-            />
-          }
-        />
-      </div>
+      {!isWide && (
+        <div data-doc-toc className="hidden xl:block">
+          <Toc
+            toc={tocContent}
+            footer={
+              <DocActions
+                layout="rail"
+                page={doc.title}
+                url={docUrl}
+                filePath={doc.sourceFilePath}
+                rawPath={`/${doc.locale || 'en'}${currentPath}.md`}
+                sourceUrl={sourceUrl}
+              />
+            }
+          />
+        </div>
+      )}
     </>
   );
 }

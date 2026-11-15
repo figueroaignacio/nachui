@@ -94,6 +94,9 @@ const docs = defineCollection({
         visible: z.boolean().default(true),
       })
       .default({ visible: true }),
+    // `wide` drops the table of contents and gives the page its column, for
+    // catalog pages like Icons whose body is one interactive browser.
+    layout: z.enum(['default', 'wide']).default('default'),
   }),
   transform: async (document, context) => {
     const body = await compileMDX(context, document, {
