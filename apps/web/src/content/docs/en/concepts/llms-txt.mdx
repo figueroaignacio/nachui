@@ -95,10 +95,10 @@ You do not have to copy URLs around. The toolbar under every title does it for y
 
 ## Agent skills
 
-The markdown files describe the system. [Skills](/docs/concepts/skills) go a step further and teach an agent how to work inside it: how to add a component, how to compose the APIs, how to use the CLI, how to write docs that look like the rest of them.
+The markdown files describe the system. [Skills](/docs/concepts/skills) go a step further and teach an agent how to work inside it: how to add a component, how to change a token, how to audit the design, how to write docs that look like the rest of them.
 
 <div className="my-12">
-  <Command command="npx skills add github:figueroaignacio/ui-skills/skills/nachui-usage" />
+  <Command command="npx skills add figueroaignacio/nachui --skill nachui-component-authoring" />
 </div>
 
 Each skill declares when it should trigger, so the agent picks the right one on its own. The full set is documented under [Skills](/docs/concepts/skills).

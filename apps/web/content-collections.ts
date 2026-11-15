@@ -119,19 +119,20 @@ const docs = defineCollection({
 
 const skills = defineCollection({
   name: 'skills',
-  directory: 'src/content/skills',
-  include: 'nachui-*.md',
+  directory: '../../.agents/skills',
+  include: 'nachui-*/SKILL.md',
   schema: z.object({
     name: z.string(),
     description: z.string(),
     content: z.string(),
   }),
-  // Skills are documented as a list on /docs/concepts/skills, not as pages of
-  // their own, so only the frontmatter is needed. The bodies live in
-  // figueroaignacio/ui-skills and are never rendered here.
+  // The skills listed on /docs/concepts/skills are the ones the repo itself
+  // uses, read straight from .agents/skills. Only the frontmatter is needed:
+  // the trigger keywords are for agents, the sentence after them is for people.
   transform: (document) => ({
     ...document,
-    slug: document._meta.path,
+    slug: document.name,
+    summary: document.description.replace(/^Trigger:.*?\.\s+(?=[A-Z])/, ''),
   }),
 });
 

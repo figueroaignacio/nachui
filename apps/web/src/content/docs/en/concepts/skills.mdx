@@ -1,6 +1,6 @@
 ---
 title: Skills
-description: Installable instructions that teach an AI assistant how NachUI components are built, composed and documented, so the code it writes looks like the rest of your project.
+description: The skills we use to build NachUI, installable in your project so an AI assistant designs, builds, audits and documents components the way this repo does.
 published: true
 toc:
   visible: true
@@ -10,33 +10,37 @@ locale: en
 
 An assistant that can read your components still does not know your conventions. It cannot tell from a single file that a `Card` is composed with dot notation, that variants belong in a CVA config declared outside the component, or that colors always go through a token instead of a hex value. It will guess, and the guess will look almost right.
 
-Skills close that gap. Each one is a markdown file you install into your project, describing how a specific part of NachUI is meant to be worked on. The assistant loads the one that matches what you are doing.
+Skills close that gap. Each one is a markdown file, with reference pages next to it, describing how a specific part of NachUI is worked on. The assistant loads the one that matches what you are doing.
+
+The ones listed here are the skills we actually use to build NachUI. They are read straight from `.agents/skills` in the repository, so this page always shows the set we work with today.
 
 ## Install
 
-Every skill installs on its own with the [skills](https://skills.sh) CLI:
+Every skill installs on its own with the [skills](https://skills.sh) CLI, straight from the NachUI repository:
 
 <div className="my-8">
-  <Command command="npx skills add github:figueroaignacio/ui-skills/skills/nachui-usage" />
+  <Command command="npx skills add figueroaignacio/nachui --skill nachui-frontend-engineering" />
 </div>
 
-The file lands in `.agents/skills/<name>/SKILL.md` inside your project and gets recorded in `skills-lock.json`, so it is committed with everything else and your whole team gets the same instructions.
+The skill lands in `.agents/skills/<name>/` inside your project and gets recorded in `skills-lock.json`, so it is committed with everything else and your whole team gets the same instructions. `npx skills add figueroaignacio/nachui --list` shows the whole set without installing anything.
 
 ## Available skills
 
 <SkillsList />
 
-They are synced from [github.com/figueroaignacio/ui-skills](https://github.com/figueroaignacio/ui-skills), which is where you edit them.
+Each one links to its source in [.agents/skills](https://github.com/figueroaignacio/nachui/tree/main/.agents/skills), which is where they are edited.
 
 ## Which one you want
 
-Three skills, one job each. Most projects want the first, and the other two once the assistant starts touching the visual side.
+Five skills, one job each. Start with **nachui-frontend-engineering**; it sends the assistant to the others when the work calls for them.
 
-- **nachui-usage** is the one to install if you build with NachUI. Import paths, which primitive to reach for, how the pieces compose, what the CLI puts where.
-- **nachui-compound-components** teaches the dot notation pattern: `Dialog.Trigger`, `Card.Header`, the shared context behind them, and how to extend a component with a new part without breaking its types.
-- **nachui-design** carries the tokens, the spacing and typography rules and the dark mode contract, so an assistant stops inventing hex values and arbitrary sizes.
+- **nachui-frontend-engineering** is the entry point for any UI work: look at the real thing first, build with the library's rules, then review it before calling it done.
+- **nachui-component-authoring** takes a component from its API to the catalog: variants, tokens, tests, demos, docs in both locales, the registry and the CLI.
+- **nachui-design-tokens** covers the token pipeline, from the DTCG files to every stylesheet, with the contrast checks that keep each theme readable.
+- **nachui-design-audit** finds drift against the design rules (radius, spacing, focus, dark mode) with real captures and ranks it before anything changes.
+- **nachui-ai-readable-docs** writes docs that a person and an agent read the same way, and explains where each page is served as markdown.
 
-They are written for people consuming the library. The skills we use to develop NachUI itself live in the same repository but are not listed here, because they assume the monorepo and would only get in the way of your project.
+They are written for the NachUI repository, so they name its files (`DESIGN.md`, `packages/ui`, the registry scripts). In your own project they work best as a starting point: install the one you need and point those paths at your own.
 
 ## How they work
 
@@ -44,12 +48,12 @@ Every skill declares in its frontmatter when it should be used:
 
 ```markdown
 ---
-name: 'nachui-compound-components'
-description: 'Use when building, extending, or consuming compound components.'
+name: nachui-design-tokens
+description: 'Trigger: change a color, radius or shadow token, add or fix a theme preset, contrast, DTCG, Figma variables. The NachUI token pipeline from the DTCG JSON to every stylesheet, with its checks.'
 ---
 ```
 
-The assistant reads those descriptions, matches them against what you asked for, and pulls in the relevant file before it starts writing. You do not have to name the skill yourself, though nothing stops you from doing it.
+The `Trigger:` part lists the words that should wake it up, and the sentence after it says what it does. The assistant reads those descriptions, matches them against what you asked for, and pulls in the relevant file before it starts writing. You do not have to name the skill yourself, though nothing stops you from doing it.
 
 <Callout variant="info" className="mt-4">
   <Callout.Title>Skills and llms.txt do different jobs</Callout.Title>
@@ -63,5 +67,5 @@ The assistant reads those descriptions, matches them against what you asked for,
 ## Related
 
 - [llms.txt](/docs/concepts/llms-txt) for pointing an agent at the docs themselves.
-- [Compound Components](/docs/concepts/compound-components) for the pattern the skill enforces.
+- [Theming](/docs/concepts/theming) for the tokens `nachui-design-tokens` works on.
 - [CLI](/docs/concepts/cli) for the commands that put components in your project.

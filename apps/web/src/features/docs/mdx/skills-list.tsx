@@ -1,14 +1,14 @@
 import { ContentRepository } from '@/lib/content-repository';
 import { Command } from '@repo/ui/components/command';
 
-const SKILLS_REPO = 'https://github.com/figueroaignacio/ui-skills';
+const REPO = 'figueroaignacio/nachui';
 
 function installCommand(slug: string) {
-  return `npx skills add github:figueroaignacio/ui-skills/skills/${slug}`;
+  return `npx skills add ${REPO} --skill ${slug}`;
 }
 
 function sourceUrl(slug: string) {
-  return `${SKILLS_REPO}/blob/main/skills/${slug}/SKILL.md`;
+  return `https://github.com/${REPO}/blob/main/.agents/skills/${slug}/SKILL.md`;
 }
 
 export function SkillsList() {
@@ -35,7 +35,7 @@ export function SkillsList() {
               </a>
             </div>
             <p className="text-muted-foreground mt-1.5 text-[13px] leading-relaxed">
-              {skill.description}
+              {skill.summary}
             </p>
             <Command command={command} className="text-muted-strong mt-3 px-3 py-2 text-[11px]" />
           </div>
