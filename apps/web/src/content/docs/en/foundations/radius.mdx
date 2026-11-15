@@ -16,13 +16,13 @@ Tailwind's radius utilities are derived from the base with fixed multipliers. Th
 
 <RadiusScale />
 
-| Utility       | Formula           | At 1.125rem | Use                                                   |
-| ------------- | ----------------- | ----------- | ----------------------------------------------------- |
-| `rounded-sm`  | `--radius * 0.66` | 12px        | Items inside a surface: menu items, tab pill, tooltip |
-| `rounded-md`  | `--radius`        | 18px        | Controls, floating surfaces, toasts, callouts         |
-| `rounded-lg`  | `--radius * 1.33` | 24px        | Primary containers: cards, dialogs                    |
-| `rounded-xl`  | `--radius * 1.66` | 30px        | Outermost shells: a standalone prompt input, frame    |
-| `rounded-2xl` | `--radius * 2`    | 36px        | Drawers and other large sheets                        |
+| Utility       | Formula           | At 1.125rem | Use                                                |
+| ------------- | ----------------- | ----------- | -------------------------------------------------- |
+| `rounded-sm`  | `--radius * 0.66` | 12px        | Items inside a surface: menu items, tooltip        |
+| `rounded-md`  | `--radius`        | 18px        | Controls, floating surfaces, toasts, callouts      |
+| `rounded-lg`  | `--radius * 1.33` | 24px        | Primary containers: cards, dialogs                 |
+| `rounded-xl`  | `--radius * 1.66` | 30px        | Outermost shells: a standalone prompt input, frame |
+| `rounded-2xl` | `--radius * 2`    | 36px        | Drawers and other large sheets                     |
 
 ```css
 @theme inline {
@@ -44,7 +44,7 @@ An element inside another one always uses a smaller radius than its container. A
 
 How much smaller depends on the gap between the two edges:
 
-- **8px or less**: subtract the gap from the outer radius, so both curves run parallel. A frame (`rounded-xl`, 30px) with `p-1.5` holds panels with `rounded-lg` (24px).
+- **8px or less**: subtract the gap from the outer radius, so both curves run parallel. A frame (`rounded-xl`, 30px) with `p-1.5` holds panels with `rounded-lg` (24px), and the active tab sits 3px inside its list, so it uses `calc(var(--radius-md) - 3px)`.
 - **Less than the outer radius**: go one step down. A prompt input docked in a card or a chat panel uses `rounded-md`.
 - **Equal to or more than the outer radius**: the corners no longer read together, so the inner element can repeat the step but never go above it.
 

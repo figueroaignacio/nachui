@@ -5,14 +5,14 @@ import { radiusScale } from './tokens';
 
 const radiusCopy = {
   en: {
-    'rounded-sm': 'Menu items, tab pill, tooltip',
+    'rounded-sm': 'Menu items, tooltip',
     'rounded-md': 'Buttons, inputs, popovers, toasts',
     'rounded-lg': 'Cards, dialogs',
     'rounded-xl': 'Outermost shells: a standalone prompt input, the frame',
     'rounded-2xl': 'Drawers and large sheets',
   },
   es: {
-    'rounded-sm': 'Ítems de menú, pastilla de tabs, tooltip',
+    'rounded-sm': 'Ítems de menú, tooltip',
     'rounded-md': 'Botones, inputs, popovers, toasts',
     'rounded-lg': 'Cards, diálogos',
     'rounded-xl': 'Solo la pieza más externa: un prompt input suelto, el frame',
