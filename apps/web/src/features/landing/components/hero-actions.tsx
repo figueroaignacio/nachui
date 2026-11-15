@@ -19,10 +19,7 @@ export function HeroActions({ actions }: { actions: HeroAction[] }) {
         <Link
           key={action.href}
           href={action.href}
-          className={cn(
-            buttonVariants({ variant: action.variant }),
-            'h-9 rounded-[10px] px-3 font-mono text-xs',
-          )}
+          className={cn(buttonVariants({ variant: action.variant }), 'h-9 px-3 font-mono text-xs')}
         >
           {action.label}
           {action.variant === 'default' && <ArrowRightIcon size={13} aria-hidden="true" />}

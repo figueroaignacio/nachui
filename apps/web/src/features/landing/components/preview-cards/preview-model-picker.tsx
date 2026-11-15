@@ -19,7 +19,7 @@ export function PreviewModelPicker() {
           <li
             key={model.name}
             className={cn(
-              'flex items-start gap-2 rounded-sm px-2.5 py-2',
+              'flex items-start gap-2 rounded-md px-2.5 py-2',
               model.selected && 'bg-muted',
             )}
           >

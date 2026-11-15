@@ -159,7 +159,7 @@ export function CodeBlock({
       {!framed && (
         <CopyButton
           value={codeString}
-          className="bg-code/80 absolute top-2.5 right-2.5 z-20 rounded-sm p-1.5 backdrop-blur-sm"
+          className="bg-code/80 absolute top-2.5 right-2.5 z-20 rounded-md p-1.5 backdrop-blur-sm"
         />
       )}
       {collapsible ? (
@@ -182,7 +182,7 @@ export function CodeBlock({
         <span className="text-muted-foreground min-w-0 truncate font-mono text-[11px]">
           {title}
         </span>
-        <CopyButton value={codeString} className="rounded-sm p-1.5" />
+        <CopyButton value={codeString} className="rounded-md p-1.5" />
       </Frame.Header>
       <Frame.Panel className="bg-code border-border p-0">{block}</Frame.Panel>
     </Frame>
