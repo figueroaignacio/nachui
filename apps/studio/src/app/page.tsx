@@ -85,7 +85,7 @@ function Home() {
           <motion.h1
             variants={entrance}
             custom={1}
-            className="font-heading text-center text-4xl leading-[1.05] font-light tracking-tight text-balance sm:text-5xl"
+            className="font-heading text-center text-4xl leading-[1.05] font-semibold tracking-tight text-balance sm:text-5xl"
           >
             What should we build?
           </motion.h1>

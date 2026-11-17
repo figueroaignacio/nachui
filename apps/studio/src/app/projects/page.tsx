@@ -55,7 +55,7 @@ function Projects() {
     <main className="mx-auto flex w-full max-w-6xl flex-col gap-7 px-4 py-8 sm:px-8 sm:py-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1.5">
-          <h1 className="font-heading text-3xl font-light tracking-tight">Projects</h1>
+          <h1 className="font-heading text-3xl font-semibold tracking-tight">Projects</h1>
           <p className="text-muted-strong text-sm">
             {projects && projects.length > 0
               ? summary(projects)
