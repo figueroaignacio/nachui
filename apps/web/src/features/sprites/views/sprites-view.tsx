@@ -11,7 +11,7 @@ export async function SpritesView() {
     <section className="px-6 py-24">
       <div className="mx-auto max-w-3xl">
         <p className="text-muted-foreground mb-1 font-mono text-xs">{t('eyebrow')}</p>
-        <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-light tracking-[-0.03em] lg:text-4xl">
+        <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-semibold tracking-[-0.03em] lg:text-4xl">
           {t('title')}
         </h1>
         <p className="text-muted-strong mt-3 max-w-xl text-lg leading-relaxed md:text-xl">

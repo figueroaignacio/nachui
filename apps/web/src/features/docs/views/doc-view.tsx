@@ -59,7 +59,7 @@ export function DocView({ doc }: DocViewProps) {
         <Stack as="article" className="@container w-full min-w-0">
           <div className="mt-4 mb-10">
             <div>
-              <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-light tracking-[-0.03em] break-words lg:text-4xl">
+              <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-semibold tracking-[-0.03em] break-words lg:text-4xl">
                 {doc.title}
                 <span
                   aria-hidden="true"

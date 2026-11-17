@@ -40,7 +40,7 @@ import { guidelinesComponents } from './guidelines';
 // Tight, quiet scale: headings carry the hierarchy through weight and spacing
 // rather than size jumps or rules, so a page reads as one column of text.
 const headingStyles = {
-  h1: 'font-heading mt-2 scroll-m-20 text-3xl font-light leading-[1.1] tracking-[-0.03em] text-foreground lg:text-4xl',
+  h1: 'font-heading mt-2 scroll-m-20 text-3xl font-semibold leading-[1.1] tracking-[-0.03em] text-foreground lg:text-4xl',
   h2: 'font-heading mt-16 mb-5 scroll-m-20 text-xl leading-tight font-normal tracking-[-0.025em] first:mt-0 text-foreground md:text-2xl',
   h3: 'font-heading mt-10 mb-3 scroll-m-20 text-lg font-medium tracking-[-0.02em] text-foreground',
   h4: 'font-heading mt-8 mb-2 scroll-m-20 text-base font-medium tracking-tight text-foreground/90 md:text-[17px]',
@@ -78,8 +78,8 @@ function Link({ className, children, ...props }: React.AnchorHTMLAttributes<HTML
   return (
     <a
       className={cn(
-        'text-primary decoration-primary/30 font-medium underline underline-offset-[5px]',
-        'hover:decoration-primary/80 transition-all duration-200',
+        'text-brand-text decoration-brand-line font-medium underline decoration-2 underline-offset-[5px]',
+        'hover:decoration-brand transition-all duration-200',
         'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
         className,
       )}

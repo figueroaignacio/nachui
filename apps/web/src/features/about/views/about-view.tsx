@@ -65,7 +65,7 @@ export async function AboutView() {
             </div>
             <div className="pt-1">
               <p className="text-muted-foreground mb-1 font-mono text-xs">About the author</p>
-              <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-light tracking-[-0.03em] lg:text-4xl">
+              <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-semibold tracking-[-0.03em] lg:text-4xl">
                 Ignacio Figueroa
               </h1>
               <p className="text-muted-strong mt-2 text-lg leading-relaxed md:text-xl">

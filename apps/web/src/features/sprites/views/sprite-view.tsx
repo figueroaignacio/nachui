@@ -54,7 +54,7 @@ export async function SpriteView({ id }: { id: string }) {
         <div className="border-border bg-surface-muted mt-6 flex flex-wrap items-end gap-8 rounded-lg border px-7 pt-7 pb-6">
           <Sprite seed={member.seed} parts={member.parts} state="loop" size={132} />
           <div className="flex-1 pb-1">
-            <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-light tracking-[-0.03em] lg:text-4xl">
+            <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-semibold tracking-[-0.03em] lg:text-4xl">
               {t(`cast.${member.id}.name`)}
             </h1>
             <p className="text-muted-strong mt-2 text-lg leading-relaxed md:text-xl">

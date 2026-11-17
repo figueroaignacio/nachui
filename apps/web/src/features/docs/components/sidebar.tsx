@@ -178,7 +178,7 @@ export function Sidebar({ previews = {} }: SidebarProps) {
         >
           {docsNavigation.map((section: DocSection) => (
             <div key={section.id} data-section={section.id} className="mb-6 last:mb-0">
-              <p className="text-muted-foreground px-2.5 text-xs font-medium">{section.title}</p>
+              <p className="text-brand-text px-2.5 text-xs font-medium">{section.title}</p>
               <ul className="mt-2">
                 {section.items.map((item: DocItem) => {
                   const isActive = pathname === item.href;
@@ -201,10 +201,16 @@ export function Sidebar({ previews = {} }: SidebarProps) {
                         className={cn(
                           'focus-visible:ring-ring flex h-8 items-center gap-2 rounded-md px-2.5 text-[13px] transition-colors focus-visible:ring-2 focus-visible:outline-none',
                           isActive
-                            ? 'bg-muted text-foreground font-medium'
+                            ? 'bg-brand-soft text-brand-text font-medium'
                             : 'text-muted-foreground hover:text-foreground',
                         )}
                       >
+                        {isActive && (
+                          <span
+                            aria-hidden="true"
+                            className="bg-brand size-1.5 shrink-0 rounded-full"
+                          />
+                        )}
                         {item.title}
                         <NavBadge badge={item.badge} />
                       </Link>

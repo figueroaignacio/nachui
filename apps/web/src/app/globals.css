@@ -151,38 +151,288 @@ body:has([data-chat-launcher]) footer {
 }
 
 /*
- * The hero wall: a flat grid of real component previews that fades out at the
- * bottom. Below desktop it keeps the desktop width and scales down from the
- * start edge, so the columns run off the screen like a wall seen from afar.
+ * The hero stage: the copy sits in the middle and real component previews
+ * float around it. Every card is placed from the stage centre (--x, --y),
+ * tilted (--r) and scaled (--s). Phones show four cards peeking in from the
+ * top and bottom; desktop spreads ten around the copy and the rest only
+ * show on very wide screens.
+ * On load the copy sharpens in line by line while the cards fly in from
+ * outside the stage and come into focus, then they keep a slow float.
  */
-.preview-stage {
-  mask-image: linear-gradient(to bottom, black 62%, transparent);
+.hero-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: max(calc(100svh - var(--site-header-height)), 44rem);
+  overflow: clip;
 }
 
-.preview-grid * {
+.hero-orbit {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hero-orbit-card {
+  position: absolute;
+  top: var(--y);
+  inset-inline-start: calc(50% + var(--x));
+  display: none;
+  width: 19.5rem;
+  margin-inline-start: -9.75rem;
+  translate: 0 -50%;
+  rotate: var(--r);
+  scale: var(--s, 0.55);
+  --fx: calc(var(--x) * 0.8 * var(--flip, 1));
+  --fr: calc(var(--r) * -2);
+  animation:
+    hero-enter 1100ms cubic-bezier(0.22, 1.2, 0.36, 1) var(--e, 0ms) both,
+    hero-float var(--fd, 7s) ease-in-out calc(var(--e, 0ms) + 1100ms) infinite;
+}
+
+[dir='rtl'] .hero-orbit-card {
+  --flip: -1;
+}
+
+.hero-rise {
+  animation: hero-rise 900ms cubic-bezier(0.2, 0.7, 0.2, 1) var(--e, 0ms) both;
+}
+
+.hero-orbit-card > * {
+  box-shadow: var(--elevation-lg);
+}
+
+.hero-orbit-card * {
   animation: none;
 }
 
-.preview-grid {
-  width: 72rem;
-  transform: scale(0.5);
-  transform-origin: top left;
+.orbit-stay {
+  display: block;
+  --x: -6.5rem;
+  --y: calc((100% - 26rem) / 2 - 6.5rem);
+  --r: -5deg;
+  --fy: -10rem;
 }
 
-[dir='rtl'] .preview-grid {
-  transform-origin: top right;
+.orbit-chat {
+  display: block;
+  --x: 6.5rem;
+  --y: calc((100% - 26rem) / 2 - 7.5rem);
+  --r: 4deg;
+  --fy: -10rem;
+}
+
+.orbit-summary {
+  display: block;
+  --x: -6rem;
+  --y: calc((100% + 26rem) / 2 + 7.5rem);
+  --r: 3deg;
+  --fy: 10rem;
+}
+
+.orbit-date {
+  display: block;
+  --x: 6.5rem;
+  --y: calc((100% + 26rem) / 2 + 7.5rem);
+  --r: -3deg;
+  --fy: 10rem;
 }
 
 @media (min-width: 40rem) {
-  .preview-grid {
-    transform: scale(0.68);
+  .hero-orbit-card {
+    --s: 0.68;
+  }
+
+  .orbit-stay {
+    --x: -14rem;
+    --y: calc((100% - 23rem) / 2 - 8rem);
+  }
+
+  .orbit-chat {
+    --x: 14rem;
+    --y: calc((100% - 23rem) / 2 - 8rem);
+  }
+
+  .orbit-summary {
+    --x: -13rem;
+    --y: calc((100% + 23rem) / 2 + 8rem);
+  }
+
+  .orbit-date {
+    --x: 14rem;
+    --y: calc((100% + 23rem) / 2 + 8rem);
   }
 }
 
 @media (min-width: 64rem) {
-  .preview-grid {
-    width: auto;
+  .hero-orbit-card {
+    display: block;
+    --s: 0.72;
+  }
+
+  .orbit-stay {
+    --x: -35rem;
+    --y: 22%;
+    --r: -5deg;
+    --fy: -6rem;
+  }
+
+  .orbit-summary {
+    --x: -37rem;
+    --y: 58%;
+    --r: 4deg;
+    --fy: 2rem;
+  }
+
+  .orbit-guests {
+    --x: -33rem;
+    --y: 92%;
+    --r: -3deg;
+    --fy: 12rem;
+  }
+
+  .orbit-chat {
+    --x: 34rem;
+    --y: 20%;
+    --r: 4deg;
+    --fy: -8rem;
+  }
+
+  .orbit-date {
+    --x: 36rem;
+    --y: 56%;
+    --r: -4deg;
+    --fy: 0rem;
+  }
+
+  .orbit-total {
+    --x: 33rem;
+    --y: 94%;
+    --r: 3deg;
+    --fy: 10rem;
+  }
+
+  .orbit-filter {
+    --x: -13rem;
+    --y: 10%;
+    --r: -3deg;
+    --fy: -14rem;
+  }
+
+  .orbit-suggestions {
+    --x: 14rem;
+    --y: 10%;
+    --r: 3deg;
+    --fy: -14rem;
+  }
+
+  .orbit-variations {
+    --x: -12rem;
+    --y: 99%;
+    --r: 2deg;
+    --fy: 14rem;
+  }
+
+  .orbit-profile {
+    --x: 13rem;
+    --y: 98%;
+    --r: -2deg;
+    --fy: 14rem;
+  }
+
+  .orbit-thinking {
+    --x: -55rem;
+    --y: 12%;
+    --r: 3deg;
+    --fy: -8rem;
+  }
+
+  .orbit-aiplan {
+    --x: -56rem;
+    --y: 50%;
+    --r: -3deg;
+    --fy: 0rem;
+  }
+
+  .orbit-review {
+    --x: -53rem;
+    --y: 84%;
+    --r: 4deg;
+    --fy: 10rem;
+  }
+
+  .orbit-composer {
+    --x: 55rem;
+    --y: 10%;
+    --r: -3deg;
+    --fy: -8rem;
+  }
+
+  .orbit-model {
+    --x: 56rem;
+    --y: 40%;
+    --r: 3deg;
+    --fy: 0rem;
+  }
+
+  .orbit-upload {
+    --x: 54rem;
+    --y: 68%;
+    --r: -4deg;
+    --fy: 4rem;
+  }
+}
+
+@keyframes hero-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translate(var(--fx), var(--fy, 0rem)) scale(0.8) rotate(var(--fr));
+  }
+
+  60% {
+    opacity: 1;
+    filter: blur(0);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
     transform: none;
+  }
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-orbit-card,
+  .hero-rise {
+    animation: none;
   }
 }
 
@@ -206,20 +456,29 @@ body:has([data-chat-launcher]) footer {
 
 :root {
   --brand: oklch(60% 0.115 232);
-  --brand-foreground: oklch(98.5% 0.002 85);
-  --brand-text: oklch(50% 0.11 234);
+  --brand-text: oklch(45% 0.11 236);
+  --brand-soft: oklch(95% 0.03 228);
+  --brand-line: oklch(86% 0.06 228);
+  --brand-highlight: oklch(80% 0.1 228);
+  --brand-highlight-foreground: oklch(20% 0.035 240);
 }
 
 @theme inline {
   --color-brand: var(--brand);
-  --color-brand-foreground: var(--brand-foreground);
   --color-brand-text: var(--brand-text);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-line: var(--brand-line);
+  --color-brand-highlight: var(--brand-highlight);
+  --color-brand-highlight-foreground: var(--brand-highlight-foreground);
 }
 
 .dark {
   --brand: oklch(80% 0.1 228);
-  --brand-foreground: oklch(14.5% 0 0);
-  --brand-text: oklch(80% 0.1 228);
+  --brand-text: oklch(84% 0.09 228);
+  --brand-soft: oklch(29% 0.045 232);
+  --brand-line: oklch(40% 0.06 232);
+  --brand-highlight: oklch(80% 0.1 228);
+  --brand-highlight-foreground: oklch(20% 0.035 240);
 }
 
 /* One fixed row on every screen. Sticky rails read this to sit right under it. */

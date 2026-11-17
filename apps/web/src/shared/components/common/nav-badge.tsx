@@ -4,7 +4,7 @@ import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 
 const variantByBadge = {
-  new: 'success',
+  new: 'info',
   updated: 'warning',
 } as const;
 

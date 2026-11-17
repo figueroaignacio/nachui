@@ -79,7 +79,7 @@ export function Tree({ tree, level = 1, activeItem, onItemClick }: TreeProps) {
               className={cn(
                 'focus-visible:ring-ring flex items-center rounded-md px-2.5 py-1.5 text-[13px] leading-snug no-underline transition-colors focus-visible:ring-2 focus-visible:outline-none',
                 isActive
-                  ? 'bg-muted text-foreground font-medium'
+                  ? 'bg-brand-soft text-brand-text font-medium'
                   : 'text-muted-foreground hover:text-foreground',
                 level === 2 && 'text-xs',
               )}

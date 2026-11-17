@@ -71,7 +71,7 @@ export function SiteHeader() {
     cn(
       'focus-visible:ring-ring flex h-8 items-center rounded-md px-2.5 text-sm whitespace-nowrap focus-visible:ring-2 focus-visible:outline-none',
       active
-        ? 'bg-muted text-foreground font-medium'
+        ? 'bg-brand-soft text-brand-text font-medium'
         : 'text-muted-foreground hover:text-foreground',
     );
 
@@ -107,7 +107,7 @@ export function SiteHeader() {
                   <NavigationMenu.Trigger
                     className={cn(
                       'h-8 min-h-0 px-2.5 text-sm focus-visible:ring-offset-0',
-                      productActive && 'bg-muted text-foreground font-medium',
+                      productActive && 'bg-brand-soft text-brand-text font-medium',
                     )}
                   >
                     {t('elementsMenu.label')}
@@ -152,8 +152,12 @@ export function SiteHeader() {
                     {t('header.searchPlaceholder')}
                   </span>
                   <span className="flex items-center gap-0.5" aria-hidden="true">
-                    <Kbd size="sm">{modKey}</Kbd>
-                    <Kbd size="sm">K</Kbd>
+                    <Kbd size="sm" className="bg-brand-soft text-brand-text border-brand-line">
+                      {modKey}
+                    </Kbd>
+                    <Kbd size="sm" className="bg-brand-soft text-brand-text border-brand-line">
+                      K
+                    </Kbd>
                   </span>
                 </button>
                 <button
@@ -198,8 +202,12 @@ export function SiteHeader() {
                   <SearchIcon size={14} aria-hidden="true" />
                   <span className="flex-1 truncate text-left">{t('header.searchPlaceholder')}</span>
                   <span className="flex items-center gap-0.5" aria-hidden="true">
-                    <Kbd size="sm">{modKey}</Kbd>
-                    <Kbd size="sm">K</Kbd>
+                    <Kbd size="sm" className="bg-brand-soft text-brand-text border-brand-line">
+                      {modKey}
+                    </Kbd>
+                    <Kbd size="sm" className="bg-brand-soft text-brand-text border-brand-line">
+                      K
+                    </Kbd>
                   </span>
                 </button>
               </div>

@@ -34,7 +34,7 @@ function PaginationLink({
   return (
     <Link
       href={item.href}
-      className={`border-border hover:border-foreground group flex-1 rounded-lg border px-5 py-4 transition-colors ${isNext ? 'text-right' : ''}`}
+      className={`border-border hover:border-brand group flex-1 rounded-lg border px-5 py-4 transition-colors ${isNext ? 'text-right' : ''}`}
     >
       <Stack gap="2">
         <span
@@ -44,7 +44,7 @@ function PaginationLink({
           {label}
           {isNext && <Icon className="h-4 w-4" />}
         </span>
-        <span className="font-heading group-hover:text-brand-text text-lg leading-none font-light tracking-[-0.04em] transition-colors">
+        <span className="font-heading group-hover:text-brand-text text-lg leading-none font-medium tracking-[-0.04em] transition-colors">
           {item.title}
         </span>
       </Stack>
