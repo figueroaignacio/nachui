@@ -7,25 +7,25 @@ export function PreviewThinking() {
   return (
     <Card>
       <Card.Header compact>
-        <Card.Title className="text-sm font-semibold">Why this answer</Card.Title>
-        <Card.Description className="text-xs">Every source the agent opened.</Card.Description>
+        <Card.Title className="text-sm font-semibold">How it got here</Card.Title>
+        <Card.Description className="text-xs">Every step the assistant took.</Card.Description>
       </Card.Header>
       <Card.Content compact>
         <ChainOfThought defaultOpen>
           <ChainOfThought.Header>Chain of thought</ChainOfThought.Header>
           <ChainOfThought.Content>
             <ChainOfThought.Step
-              label="Parsed the question"
-              description="Wants a dark mode toggle with no flash on first paint."
+              label="Read your dates and budget"
+              description="Four nights in November, up to $160 a night."
               status="complete"
             />
-            <ChainOfThought.Step label="Searched the docs" status="complete">
+            <ChainOfThought.Step label="Compared 12 stays" status="complete">
               <ChainOfThought.SearchResults>
-                <ChainOfThought.SearchResult>concepts/dark-mode</ChainOfThought.SearchResult>
-                <ChainOfThought.SearchResult>concepts/theming</ChainOfThought.SearchResult>
+                <ChainOfThought.SearchResult>Lakeside cabin</ChainOfThought.SearchResult>
+                <ChainOfThought.SearchResult>Forest loft</ChainOfThought.SearchResult>
               </ChainOfThought.SearchResults>
             </ChainOfThought.Step>
-            <ChainOfThought.Step label="Drafting the snippet" status="active" />
+            <ChainOfThought.Step label="Ordering the days" status="active" />
           </ChainOfThought.Content>
         </ChainOfThought>
       </Card.Content>

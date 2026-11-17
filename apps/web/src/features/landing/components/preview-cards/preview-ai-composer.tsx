@@ -8,16 +8,16 @@ export function PreviewAiComposer() {
   return (
     <Card>
       <Card.Header compact>
-        <Card.Title className="text-sm font-semibold">Ask the codebase</Card.Title>
+        <Card.Title className="text-sm font-semibold">Plan your trip</Card.Title>
         <Card.Description className="text-xs">
-          Drop a file or paste a stack trace to give it context.
+          Add a photo or a link to give it context.
         </Card.Description>
       </Card.Header>
       <Card.Content compact className="space-y-2.5">
         <PromptInput className="rounded-md">
           <PromptInput.Body>
             <PromptInput.Textarea
-              placeholder="Why does the build fail on CI but not locally?"
+              placeholder="Three days by the lake, on a budget"
               className="text-xs"
             />
           </PromptInput.Body>
