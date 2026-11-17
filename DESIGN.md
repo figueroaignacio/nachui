@@ -2,11 +2,11 @@
 
 ## 1. Visual Theme & Atmosphere
 
-NachUI is a **quiet, editorial minimalist** system. Color is mostly absent; hierarchy comes from contrast, type and spacing.
+NachUI is a **quiet, soft minimalist** system. Sky blue carries the actions and the brand; the neutrals are pure gray, and hierarchy comes from contrast, type and spacing.
 
-- **Warm paper neutrals** in light mode: every gray carries a faint warm tint (hue 75 to 85, very low chroma), so white never reads clinical
+- **Pure light grays** in light mode: a soft gray canvas (zero chroma) with white cards on top
 - **Pure neutral grays** in dark mode (zero chroma), stepped so surfaces stack clearly on a near-black canvas
-- **Near-black primary** in light mode and near-white primary in dark mode. Accent color only shows up in feedback states and syntax highlighting
+- **Sky blue primary**: a deep sky blue with white text in light mode and a pastel sky blue with dark text in dark mode. Everything around it stays pure gray, so the sky blue is the only brand color
 - **Soft, device-like corners** (base 1.125rem): controls read as pills and surfaces curve generously, with a small fixed scale described in section 4
 - **Soft, tokenized elevation** in both modes. Shadows are gentle in light mode and deeper in dark mode, where they do more of the work of separating surfaces
 - **OKLCH everywhere**, so steps between tokens are perceptually even
@@ -19,39 +19,39 @@ All tokens live in `packages/ui/src/css/globals.css` as CSS variables on `:root`
 
 ### Surfaces
 
-| Token             | Light Mode                    | Dark Mode              | Role                                                                 |
-| ----------------- | ----------------------------- | ---------------------- | -------------------------------------------------------------------- |
-| **Background**    | `oklch(99.1% 0.003 85)`       | `oklch(10% 0 0)`       | Page canvas                                                          |
-| **Foreground**    | `oklch(14.5% 0.004 75)`       | `oklch(98.5% 0 0)`     | Primary text, headings                                               |
-| **Card**          | `oklch(100% 0 0)`             | `oklch(15.5% 0 0)`     | Primary containers that sit on the canvas                            |
-| **Popover**       | `oklch(100% 0 0)`             | `oklch(17.5% 0 0)`     | Every floating surface: menus, popovers, toasts                      |
-| **Surface Muted** | `oklch(96.5% 0.0045 85)`      | `oklch(13% 0 0)`       | Recessed areas, preview canvases, the `bg-hatch` fill                |
-| **Inverse**       | `oklch(14.5% 0.004 75)`       | `oklch(98.5% 0 0)`     | High contrast fills that flip with the mode, like the default banner |
-| **Overlay**       | `oklch(14.5% 0.004 75 / 0.5)` | `oklch(0% 0 0 / 0.72)` | Backdrop behind dialogs, sheets and drawers                          |
+| Token             | Light Mode             | Dark Mode              | Role                                                                 |
+| ----------------- | ---------------------- | ---------------------- | -------------------------------------------------------------------- |
+| **Background**    | `oklch(97% 0 0)`       | `oklch(15% 0 0)`       | Page canvas                                                          |
+| **Foreground**    | `oklch(19% 0 0)`       | `oklch(97% 0 0)`       | Primary text, headings                                               |
+| **Card**          | `oklch(100% 0 0)`      | `oklch(19.5% 0 0)`     | Primary containers that sit on the canvas                            |
+| **Popover**       | `oklch(100% 0 0)`      | `oklch(21.5% 0 0)`     | Every floating surface: menus, popovers, toasts                      |
+| **Surface Muted** | `oklch(93.5% 0 0)`     | `oklch(17% 0 0)`       | Recessed areas, preview canvases, the `bg-hatch` fill                |
+| **Inverse**       | `oklch(19% 0 0)`       | `oklch(97% 0 0)`       | High contrast fills that flip with the mode, like the default banner |
+| **Overlay**       | `oklch(19% 0 0 / 0.5)` | `oklch(0% 0 0 / 0.72)` | Backdrop behind dialogs, sheets and drawers                          |
 
-Each surface has a matching `*-foreground` token for text on it. In dark mode the surfaces step up in lightness: background 10%, surface muted 13%, card 15.5%, popover 17.5%. That ordering is why floating surfaces must use `bg-popover` and never `bg-background`: on a dark page a `bg-background` menu has no edge.
+Each surface has a matching `*-foreground` token for text on it. In dark mode the surfaces step up in lightness: background 15%, surface muted 17%, card 19.5%, popover 21.5%. That ordering is why floating surfaces must use `bg-popover` and never `bg-background`: on a dark page a `bg-background` menu has no edge.
 
 ### Interactive Colors
 
-| Token                  | Light Mode               | Dark Mode          | Role                                       |
-| ---------------------- | ------------------------ | ------------------ | ------------------------------------------ |
-| **Primary**            | `oklch(20.5% 0.005 75)`  | `oklch(98.5% 0 0)` | Main buttons, checked controls             |
-| **Primary Foreground** | `oklch(98.5% 0.002 85)`  | `oklch(14.5% 0 0)` | Text on primary                            |
-| **Secondary**          | `oklch(96% 0.0045 85)`   | `oklch(21% 0 0)`   | Secondary buttons, chips                   |
-| **Accent**             | `oklch(96.8% 0.0045 85)` | `oklch(21% 0 0)`   | Subtle hover and selected backgrounds      |
-| **Muted**              | `oklch(94.2% 0.005 85)`  | `oklch(21% 0 0)`   | Item highlight in menus, tracks, skeletons |
-| **Muted Foreground**   | `oklch(52% 0.0065 75)`   | `oklch(71.5% 0 0)` | Captions, placeholders, secondary text     |
-| **Muted Strong**       | `oklch(37% 0.006 75)`    | `oklch(87% 0 0)`   | Long-form reading text                     |
+| Token                  | Light Mode             | Dark Mode              | Role                                       |
+| ---------------------- | ---------------------- | ---------------------- | ------------------------------------------ |
+| **Primary**            | `oklch(52% 0.115 234)` | `oklch(82% 0.095 230)` | Main buttons, checked controls             |
+| **Primary Foreground** | `oklch(99% 0.003 230)` | `oklch(22% 0.04 232)`  | Text on primary                            |
+| **Secondary**          | `oklch(93% 0 0)`       | `oklch(25% 0 0)`       | Secondary buttons, chips                   |
+| **Accent**             | `oklch(94.5% 0 0)`     | `oklch(25% 0 0)`       | Subtle hover and selected backgrounds      |
+| **Muted**              | `oklch(92% 0 0)`       | `oklch(25% 0 0)`       | Item highlight in menus, tracks, skeletons |
+| **Muted Foreground**   | `oklch(46% 0 0)`       | `oklch(76% 0 0)`       | Captions, placeholders, secondary text     |
+| **Muted Strong**       | `oklch(36% 0 0)`       | `oklch(87% 0 0)`       | Long-form reading text                     |
 
 ### Lines and Focus
 
-| Token                  | Light Mode               | Dark Mode          | Role                                                        |
-| ---------------------- | ------------------------ | ------------------ | ----------------------------------------------------------- |
-| **Border**             | `oklch(91.5% 0.0055 85)` | `oklch(22% 0 0)`   | Default stroke on surfaces and dividers                     |
-| **Border Interactive** | `oklch(65% 0.0065 75)`   | `oklch(51% 0 0)`   | Hover and focus-within stroke on fields, scrollbar thumb    |
-| **Input**              | `oklch(87% 0.0065 85)`   | `oklch(29% 0 0)`   | Field strokes; `dark:bg-input/30` tints fields in dark mode |
-| **Ring**               | `oklch(65% 0.0065 75)`   | `oklch(98.5% 0 0)` | Focus rings                                                 |
-| **Rule**               | `oklch(91.5% 0.0055 85)` | `oklch(22% 0 0)`   | Editorial hairlines (`section-rule`, `rule-bleed`)          |
+| Token                  | Light Mode             | Dark Mode              | Role                                                        |
+| ---------------------- | ---------------------- | ---------------------- | ----------------------------------------------------------- |
+| **Border**             | `oklch(87% 0 0)`       | `oklch(28% 0 0)`       | Default stroke on surfaces and dividers                     |
+| **Border Interactive** | `oklch(60% 0 0)`       | `oklch(55% 0 0)`       | Hover and focus-within stroke on fields, scrollbar thumb    |
+| **Input**              | `oklch(82% 0 0)`       | `oklch(34% 0 0)`       | Field strokes; `dark:bg-input/30` tints fields in dark mode |
+| **Ring**               | `oklch(60% 0.115 232)` | `oklch(82% 0.095 230)` | Focus rings                                                 |
+| **Rule**               | `oklch(87% 0 0)`       | `oklch(28% 0 0)`       | Editorial hairlines (`section-rule`, `rule-bleed`)          |
 
 ### Feedback Colors
 
@@ -61,12 +61,12 @@ Each feedback hue (destructive, warning, success, info) comes as a set of five t
 - `--<name>-text`: the hue tuned for text on a normal surface
 - `--<name>-surface` and `--<name>-border`: tinted background and stroke for callouts, banners and toasts
 
-| Hue             | Light solid              | Dark solid                 |
-| --------------- | ------------------------ | -------------------------- |
-| **Destructive** | `oklch(53% 0.16 27.3)`   | `oklch(71.1% 0.166 22.2)`  |
-| **Warning**     | `oklch(53% 0.108 90.4)`  | `oklch(80% 0.111 78.2)`    |
-| **Success**     | `oklch(53% 0.156 135.6)` | `oklch(76.9% 0.118 148.9)` |
-| **Info**        | `oklch(53% 0.16 260.8)`  | `oklch(87% 0 0)`           |
+| Hue             | Light solid              | Dark solid               |
+| --------------- | ------------------------ | ------------------------ |
+| **Destructive** | `oklch(53% 0.16 27.3)`   | `oklch(76% 0.15 22.2)`   |
+| **Warning**     | `oklch(53% 0.108 90.4)`  | `oklch(83% 0.111 78.2)`  |
+| **Success**     | `oklch(53% 0.156 135.6)` | `oklch(80% 0.118 148.9)` |
+| **Info**        | `oklch(52% 0.115 234)`   | `oklch(82% 0.095 230)`   |
 
 Info is deliberately neutral in dark mode. Light solids sit at the same lightness so no state shouts louder than another.
 
@@ -87,9 +87,9 @@ Four font roles, all set by the host app through CSS variables:
 - **Serif** `var(--font-serif)`: long-form reading text through `.prose-reading` (falls back to sans).
 - **Mono** `var(--font-mono)`: code and the small `.section-label`.
 
-This site sets Sans, Heading and Serif to Hanken Grotesk and Mono to DM Mono. Headings carry the lightness, not the size:
+This site sets Sans, Heading and Serif to Hanken Grotesk and Mono to DM Mono. Headings carry weight so they never read thin:
 
-- Page titles (`h1`, the landing hero, Studio screens): `font-light`, and `font-extralight` from 48px up. Tight tracking, around `-0.03em`.
+- Page titles (`h1`, the landing hero, Studio screens): `font-semibold` at every size. Tight tracking, around `-0.03em`.
 - Section headings (`h2`): `font-normal`.
 - Small headings (`h3` to `h5`) and card or dialog titles: `font-medium`.
 - Body text stays at `font-normal`; nothing under 16px goes below it.

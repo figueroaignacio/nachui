@@ -23,7 +23,7 @@ describe('foundations MDX components', () => {
 
   it('renders the token values from the theme files', () => {
     const html = renderToStaticMarkup(createElement(foundationsComponents.ColorPalette));
-    expect(html).toContain('oklch(99.1% 0.003 85)');
+    expect(html).toContain('oklch(97% 0 0)');
     expect(html).toContain('oklch(14.5% 0 0)');
     expect(html).toContain('--muted-foreground');
     expect(html).toContain('text-muted-foreground');
@@ -31,7 +31,7 @@ describe('foundations MDX components', () => {
 
   it('shows a grade for every contrast pair', () => {
     const html = renderToStaticMarkup(createElement(foundationsComponents.ContrastTable));
-    expect(html).toContain('19.29:1');
+    expect(html).toContain('16.93:1');
     expect(html).not.toContain('>fail<');
   });
 });
