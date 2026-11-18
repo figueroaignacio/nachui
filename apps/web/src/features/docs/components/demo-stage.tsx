@@ -2,8 +2,6 @@
 
 import { ThemeToggle } from '@/components/common/theme-toggle';
 import { useChatStore } from '@/features/chat/store/chat-store';
-import { CheckIcon } from '@repo/ui/icons/check';
-import { Drawer } from '@repo/ui/components/drawer';
 import { CodeIcon } from '@repo/ui/icons/code';
 import { ChevronDownIcon } from '@repo/ui/icons/chevron-down';
 import { SparklesIcon } from '@repo/ui/icons/sparkles';
@@ -15,11 +13,8 @@ import { createPortal } from 'react-dom';
 type StageMode = 'code' | 'stage';
 
 interface StageContextValue {
-  activeKey: string;
   defaultKey: string;
   mode: StageMode;
-  activate: (key: string) => void;
-  demoOutlet: HTMLElement | null;
   codeOutlet: HTMLElement | null;
 }
 
@@ -48,9 +43,9 @@ interface DemoStageProps {
 
 /**
  * A component page as a workbench. One demo runs on a stage that takes the whole
- * of the first screen, with the doc under it; every other demo is a row in
- * the doc that sends itself to the stage. The toolbar opens the code of
- * whatever is on the stage next to it and jumps down to the doc.
+ * of the first screen, with the doc under it; every other demo is drawn in
+ * the doc with its own code. The toolbar opens the code of the stage demo
+ * next to it and jumps down to the doc.
  */
 export function DemoStage({
   title,
@@ -63,39 +58,22 @@ export function DemoStage({
   const t = useTranslations('docs.stage');
   const tActions = useTranslations('components.explainButton');
   const triggerExplanation = useChatStore((state) => state.triggerExplanation);
-  const [activeKey, setActiveKey] = React.useState(defaultKey);
   const [mode, setMode] = React.useState<StageMode>('stage');
-  const [run, setRun] = React.useState(0);
-  const [demoOutlet, setDemoOutlet] = React.useState<HTMLElement | null>(null);
   const [codeOutlet, setCodeOutlet] = React.useState<HTMLElement | null>(null);
-  const stageRef = React.useRef<HTMLElement>(null);
-
-  const activate = React.useCallback(
-    (key: string) => {
-      setActiveKey((current) => (current === key ? defaultKey : key));
-      setRun((current) => current + 1);
-      const stage = stageRef.current;
-      if (!stage) return;
-      const { top, bottom } = stage.getBoundingClientRect();
-      if (top < 0 || bottom > window.innerHeight) {
-        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        stage.scrollIntoView({ behavior: reduce ? 'instant' : 'smooth', block: 'start' });
-      }
-    },
-    [defaultKey],
-  );
 
   const value = React.useMemo(
-    () => ({ activeKey, defaultKey, mode, activate, demoOutlet, codeOutlet }),
-    [activeKey, defaultKey, mode, activate, demoOutlet, codeOutlet],
+    () => ({ defaultKey, mode, codeOutlet }),
+    [defaultKey, mode, codeOutlet],
   );
-  const onDefault = activeKey === defaultKey;
 
   return (
     <StageContext value={value}>
-      <div data-stage-shell data-stage-mode={mode} className="grid min-w-0 gap-2.5">
+      <div
+        data-stage-shell
+        data-stage-mode={mode}
+        className="grid min-w-0 gap-2.5 transition-[grid-template-columns] duration-300 ease-out motion-reduce:transition-none lg:grid-cols-[minmax(0,1fr)_0rem] lg:gap-x-0 lg:data-[stage-mode=code]:grid-cols-[minmax(0,1fr)_minmax(0,44%)] lg:data-[stage-mode=code]:gap-x-2.5"
+      >
         <section
-          ref={stageRef}
           aria-label={t('label', { title })}
           className="bg-island relative flex h-[min(34rem,72svh)] scroll-mt-(--site-header-height) flex-col rounded-lg lg:h-[calc(100svh-1.25rem)]"
         >
@@ -139,27 +117,20 @@ export function DemoStage({
             data-no-select
             className="flex min-h-0 flex-1 items-center justify-center overflow-auto p-6 *:min-w-0 sm:p-10"
           >
-            <div key={run} className="contents">
-              <div className={cn('contents', !onDefault && 'hidden')}>{defaultDemo}</div>
-              <div ref={setDemoOutlet} className="contents" />
-            </div>
+            {defaultDemo}
           </div>
         </section>
 
-        <Drawer open={mode === 'code'} onOpenChange={(open) => setMode(open ? 'code' : 'stage')}>
-          <Drawer.Content
-            side="right"
-            aria-label={t('code')}
-            showClose={false}
-            showDragHandle={false}
-            className="bg-island w-[92vw] border-0 sm:w-[min(46rem,62vw)]"
-          >
-            <div
-              ref={setCodeOutlet}
-              className="-mx-3 -mb-3 overflow-hidden rounded-md **:max-h-none"
-            />
-          </Drawer.Content>
-        </Drawer>
+        <aside
+          aria-label={t('code')}
+          inert={mode !== 'code'}
+          className={cn(
+            'bg-code min-w-0 overflow-hidden rounded-lg lg:h-[calc(100svh-1.25rem)]',
+            mode === 'code' ? 'max-lg:max-h-[70svh]' : 'max-lg:hidden lg:invisible',
+          )}
+        >
+          <div ref={setCodeOutlet} className="h-full overflow-auto **:max-h-none" />
+        </aside>
 
         <div
           id="stage-doc"
@@ -175,68 +146,37 @@ export function DemoStage({
 interface StageRowProps {
   /** `component/demo`, unique on the page. */
   demoKey: string;
-  label: string;
-  description?: string;
   demo: React.ReactNode;
-  /** The highlighted source, collapsed, shown under the row. */
+  /** The highlighted source, collapsed, shown under the demo. */
   code: React.ReactNode;
-  /** The same source in full, for the code panel. */
+  /** The same source in full, for the code panel of the stage demo. */
   fullCode: React.ReactNode;
 }
 
 /**
- * One demo of the page, as the doc lists it: a button that puts it on the
- * stage, and its source. The demo itself is drawn on the stage, not here.
- * Pressing the row that is on stage hands the stage back to the main demo,
- * which the page opens with and so has no row of its own.
+ * One demo of the page, as the doc lists it: the demo, live, and its source
+ * under it. The demo the stage opens with has no row of its own: it only
+ * hands its source to the code panel.
  */
-export function StageRow({ demoKey, label, description, demo, code, fullCode }: StageRowProps) {
-  const t = useTranslations('docs.stage');
+export function StageRow({ demoKey, demo, code, fullCode }: StageRowProps) {
   const stage = useDemoStage();
   if (!stage) return null;
 
-  const active = stage.activeKey === demoKey;
-  const drawnByServer = demoKey === stage.defaultKey;
-  const inCodePanel = active && stage.mode === 'code';
-  const codeInPanel =
-    inCodePanel && stage.codeOutlet ? createPortal(fullCode, stage.codeOutlet) : null;
-
-  if (drawnByServer) return codeInPanel;
+  if (demoKey === stage.defaultKey) {
+    return stage.mode === 'code' && stage.codeOutlet
+      ? createPortal(fullCode, stage.codeOutlet)
+      : null;
+  }
 
   return (
     <div className="bg-island rounded-lg p-1.5">
-      <button
-        type="button"
-        aria-pressed={active}
-        onClick={() => stage.activate(demoKey)}
-        className={cn(
-          'focus-visible:ring-ring flex min-h-11 w-full items-center gap-3 rounded-md px-3 py-2 text-start text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
-          active ? 'bg-brand-soft text-brand-text' : 'hover:bg-muted text-foreground',
-        )}
+      <div
+        data-no-select
+        className="flex min-h-44 items-center justify-center overflow-x-auto px-4 py-10 *:min-w-0 sm:px-8"
       >
-        <span className="min-w-0 flex-1">
-          <span className="block truncate font-medium">{label}</span>
-          {description && (
-            <span
-              className={cn(
-                'mt-0.5 block text-[13px] leading-snug',
-                active ? 'text-brand-text' : 'text-muted-foreground',
-              )}
-            >
-              {description}
-            </span>
-          )}
-        </span>
-        <span className="flex shrink-0 items-center gap-1.5 font-mono text-xs">
-          {active && <CheckIcon size={13} aria-hidden="true" />}
-          {active ? t('showing') : t('show')}
-        </span>
-      </button>
-      <div className="bg-code mt-1.5 overflow-hidden rounded-md">
-        {code}
-        {codeInPanel}
+        {demo}
       </div>
-      {active && !drawnByServer && stage.demoOutlet && createPortal(demo, stage.demoOutlet)}
+      {code ? <div className="bg-code overflow-hidden rounded-md">{code}</div> : null}
     </div>
   );
 }

@@ -764,16 +764,13 @@
   "preview": {
     "loadError": "This demo could not load",
     "missingTitle": "Demo not registered",
-    "missingDescription": "There is no \"{demo}\" demo for {component} in the demo registry.",
-    "defaultDemo": "Main demo"
+    "missingDescription": "There is no \"{demo}\" demo for {component} in the demo registry."
   },
   "stage": {
     "label": "{title} demo",
     "toolbar": "Demo tools",
     "install": "Install",
     "doc": "Documentation",
-    "code": "Demo code",
-    "show": "Show",
-    "showing": "On stage"
+    "code": "Demo code"
   }
 }

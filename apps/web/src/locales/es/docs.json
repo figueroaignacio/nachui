@@ -764,16 +764,13 @@
   "preview": {
     "loadError": "No se pudo cargar este demo",
     "missingTitle": "Demo no registrado",
-    "missingDescription": "No hay un demo \"{demo}\" para {component} en el registro de demos.",
-    "defaultDemo": "Demo principal"
+    "missingDescription": "No hay un demo \"{demo}\" para {component} en el registro de demos."
   },
   "stage": {
     "label": "Demo de {title}",
     "toolbar": "Herramientas del demo",
     "install": "Instalar",
     "doc": "Documentación",
-    "code": "Código del demo",
-    "show": "Ver",
-    "showing": "En el stage"
+    "code": "Código del demo"
   }
 }

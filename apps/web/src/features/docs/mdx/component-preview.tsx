@@ -46,13 +46,10 @@ export async function ComponentPreview({
   }
 
   const componentPreview = <DemoComponent />;
-  const label = demo === 'default' ? t('defaultDemo') : humanize(demo);
 
   return (
     <StagePreview
       demoKey={`${component}/${demo}`}
-      label={label}
-      description={description}
       demo={componentPreview}
       code={
         code ? (
@@ -74,9 +71,4 @@ export async function ComponentPreview({
       }
     />
   );
-}
-
-function humanize(name: string) {
-  const words = name.split('-').join(' ');
-  return words.charAt(0).toUpperCase() + words.slice(1);
 }
