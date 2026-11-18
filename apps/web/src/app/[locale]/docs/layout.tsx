@@ -19,7 +19,7 @@ export default async function DocsLayout({ children, params }: DocsLayoutProps) 
         columns="1"
         gap="3"
         data-docs-grid
-        className="relative pt-6 pb-32 lg:grid-cols-[15rem_minmax(0,1fr)] lg:pb-36"
+        className="relative pt-6 pb-32 lg:grid-cols-[19rem_minmax(0,1fr)] lg:pb-36"
       >
         <Sidebar previews={previews} />
         {children}
