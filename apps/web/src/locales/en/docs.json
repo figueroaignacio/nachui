@@ -771,7 +771,6 @@
     "label": "{title} demo",
     "toolbar": "Demo tools",
     "install": "Install",
-    "replay": "Replay",
     "doc": "Documentation",
     "code": "Demo code",
     "show": "Show",

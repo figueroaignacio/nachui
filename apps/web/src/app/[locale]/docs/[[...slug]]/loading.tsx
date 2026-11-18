@@ -15,8 +15,8 @@ const DEMO_WIDTHS = ['w-full', 'w-11/12', 'w-3/4'];
 const COMPONENT_PAGE = /^\/docs\/elements\/[^/]+\/[^/]+$/;
 
 /**
- * A component page while it loads: the stage with its title, toolbar and replay
- * pill in place, and the top of the doc under it. It carries `data-stage-shell`
+ * A component page while it loads: the stage with its title and toolbar
+ * in place, and the top of the doc under it. It carries `data-stage-shell`
  * so the header and the sidebar already sit where the real page puts them.
  */
 function StageLoading({ label }: { label: string }) {
@@ -39,9 +39,6 @@ function StageLoading({ label }: { label: string }) {
             ))}
             <Skeleton className="mt-2 h-24 w-full rounded-md" />
           </div>
-        </div>
-        <div className="bg-popover border-border absolute start-1/2 bottom-4 -translate-x-1/2 rounded-full border p-1 shadow-md rtl:translate-x-1/2">
-          <Skeleton className="h-8 w-24 rounded-full" />
         </div>
       </div>
       <div className="mx-auto w-full max-w-3xl min-w-0 pt-6 xl:pt-10">

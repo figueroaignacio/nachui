@@ -6,7 +6,6 @@ import { CheckIcon } from '@repo/ui/icons/check';
 import { Drawer } from '@repo/ui/components/drawer';
 import { CodeIcon } from '@repo/ui/icons/code';
 import { ChevronDownIcon } from '@repo/ui/icons/chevron-down';
-import { RefreshIcon } from '@repo/ui/icons/refresh';
 import { SparklesIcon } from '@repo/ui/icons/sparkles';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
@@ -144,16 +143,6 @@ export function DemoStage({
               <div className={cn('contents', !onDefault && 'hidden')}>{defaultDemo}</div>
               <div ref={setDemoOutlet} className="contents" />
             </div>
-          </div>
-          <div className="bg-popover border-border absolute start-1/2 bottom-4 -translate-x-1/2 rounded-full border p-1 shadow-md rtl:translate-x-1/2">
-            <button
-              type="button"
-              onClick={() => setRun((current) => current + 1)}
-              className={cn(toolButton, 'bg-secondary text-foreground gap-2 px-3.5')}
-            >
-              <RefreshIcon size={15} aria-hidden="true" />
-              {t('replay')}
-            </button>
           </div>
         </section>
 
