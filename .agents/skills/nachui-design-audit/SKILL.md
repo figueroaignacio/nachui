@@ -17,7 +17,7 @@ Load when asked to audit the catalog (`packages/ui`), the docs site (`apps/web`)
 - Every finding needs a real capture from the running site or a browser test. No finding from code reading alone; code is where you locate the cause.
 - Audit only. Apply nothing until the user picks.
 - With `/design`, or when asked to document, the result is a Design artifact (`references/artifact.md`).
-- Load `.agents/skills/accessibility` for the accessibility pass and `.agents/skills/design-taste-frontend` (`critique.md`) for the visual pass. On any conflict, `DESIGN.md` wins.
+- Load `.agents/skills/accessibility` for the accessibility pass and `.agents/skills/impeccable` (`reference/critique.md`) for the visual pass. On any conflict, `DESIGN.md` wins.
 - Work inline. No subagents.
 - Reply in the user's language (Rioplatense Spanish), short.
 

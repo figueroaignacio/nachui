@@ -42,4 +42,4 @@ Then stop. Nothing is committed until the user says so.
 
 - Run the repo checks once, at the end: `pnpm checks`, `pnpm check-types`, `pnpm lint`, `pnpm test`, plus `pnpm --filter @repo/ui test:browser` when interactive behaviour changed and `pnpm turbo run build --filter=web` when docs or routes changed.
 - Commits: one line, `type(scope): summary`, English, types from `commitlint.config.ts`, split by logical unit (lib, component, docs, web). No body, no `Co-Authored-By`, no AI trailer.
-- Push and PRs only when asked in that turn. Never commit `.taste-skill/`.
+- Push and PRs only when asked in that turn. Never commit `.impeccable/`.

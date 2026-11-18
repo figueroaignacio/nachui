@@ -15,7 +15,7 @@ Load for any design or build task on NachUI: a new or reworked component in `pac
 
 ## Hard Rules
 
-- Load `.agents/skills/design-taste-frontend` first and follow its app-screen chapter (`references/app-screens.md`, `tells.md`, `critique.md`) with `--keep palette,type`. Palette and type are fixed by `DESIGN.md`. On any conflict, NachUI wins.
+- Load `.agents/skills/impeccable` first and work in its mode for the surface: Operate for components and Studio, Read for docs pages, Persuade for the landing (`reference/operate.md`, `reference/craft-floor.md`, `reference/critique.md`). It refines here, it never redesigns: palette and type are fixed by `DESIGN.md`, so skip its `document` command and any flow that rewrites that file. On any conflict, NachUI wins.
 - Follow `references/design-rules.md`. Read `DESIGN.md` for values; never restate or override it.
 - For a new component, also load `nachui-component-authoring`. For accessibility details, load `accessibility`; for composition, `composition-patterns`; for React performance, `react-best-practices`.
 - Work inline in the main thread. No subagents.
@@ -40,7 +40,7 @@ Load for any design or build task on NachUI: a new or reworked component in `pac
 3. Draw the canvas when a gate says so (`references/workflow.md`), wait for the pick.
 4. Build per `references/design-rules.md` and `references/frontend-craft.md`: every state, phone, en and es together.
 5. Look at it on the docs dev server at 1440, 768 and 390, in en and es, light and dark (`references/workflow.md`). Fix and look again.
-6. Run the review in `references/ux-principles.md` and the taste skill's `critique.md` on the screenshots. Fix what fails.
+6. Run the review in `references/ux-principles.md` and impeccable's `reference/critique.md` on the screenshots. Fix what fails.
 7. Report and stop. Commit only when the user says so.
 
 ## Output Contract
