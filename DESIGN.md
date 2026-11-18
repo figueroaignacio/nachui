@@ -87,7 +87,7 @@ Four font roles, all set by the host app through CSS variables:
 - **Serif** `var(--font-serif)`: long-form reading text through `.prose-reading` (falls back to sans).
 - **Mono** `var(--font-mono)`: code and the small `.section-label`.
 
-This site sets Sans, Heading and Serif to Hanken Grotesk and Mono to DM Mono. Headings carry weight so they never read thin:
+This site sets Sans and Serif to Hanken Grotesk, Heading to Bricolage Grotesque and Mono to DM Mono. Headings carry weight so they never read thin:
 
 - Page titles (`h1`, the landing hero, Studio screens): `font-semibold` at every size. Tight tracking, around `-0.03em`.
 - Section headings (`h2`): `font-normal`.
@@ -258,6 +258,18 @@ Exits are faster than entries, roughly 60% of the time. What arrives deserves at
 ### Origin
 
 Anything that opens from a trigger opens from the trigger: `floatingOrigin[side]` sets `transform-origin` toward it, and `floatingVariants[side]` starts the element a few pixels closer to it. Tooltip, popover, hover card, dropdown and context menu share exactly this behaviour.
+
+### Arrival
+
+The AI elements change while you watch them, so what changes is what moves. `packages/ui/src/lib/arrival.ts` holds the rules and four CSS animations in `globals.css` carry them:
+
+- **`arrive`** (0.42s): a message, an attachment, a source or a tool card that shows up after the first render pops into focus, the same depth of field as a popover, with one short overshoot. Lists wrap their children in `Arrivals` and items ask `useArrival()`.
+- **`token`** (0.22s): streamed text. `StreamText` fades each new word in from a 4px blur.
+- **`status`** (0.28s): a status icon that just changed. `useChanged(status)` gates it, so the spinner hands over to the check.
+- **`roll`** (0.38s): a counter that just changed. `Roll` slides the new value up into place.
+- **Height follows content**: collapsible bodies grow with `useAutoHeight()` when something is added inside them, under the same exception that lets collapsibles animate `height`.
+
+Nothing here runs on page load. What was already on screen at the first render stays still; only what arrives or changes afterwards animates. These are CSS keyframes instead of springs because they play once on mount and are never interrupted.
 
 ### Press
 

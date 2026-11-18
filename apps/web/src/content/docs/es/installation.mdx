@@ -359,6 +359,8 @@ En `lib/` viven tres archivos más, y solo los necesitas cuando agregas un compo
 
 Si un archivo que pegas importa `../lib/use-controllable-state`, `../lib/overlay` o `../lib/floating`, copia ese helper en `src/lib/`, junto a `cn.ts`. La CLI lo hace por ti.
 
+Los elementos AI comparten un archivo más, [`arrival.ts`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/lib/arrival.ts). Es lo que hace que un mensaje nuevo, un paso terminado o un contador se animen cuando cambian, y se queden quietos cuando la página carga. Sus cuatro animaciones (`arrive`, `token`, `status` y `roll`) son keyframes comunes: cópialas de [`globals.css`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/css/globals.css) junto con sus líneas `--animate-*` de `@theme`.
+
 #### Agrega los tokens del tema
 
 Reemplaza el contenido de tu hoja de estilos principal (la que anotaste en el primer paso) por lo siguiente. Si tu archivo ya tiene su propia línea `@import 'tailwindcss'`, conserva la tuya y pega todo lo demás debajo.

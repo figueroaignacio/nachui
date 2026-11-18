@@ -3,6 +3,15 @@
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import {
+  ARRIVE,
+  AUTO_HEIGHT,
+  Arrivals,
+  STATUS_IN,
+  useArrival,
+  useAutoHeight,
+  useChanged,
+} from '../lib/arrival';
 import { collapse, springs, still } from '../lib/motion';
 import { useControllableState } from '../lib/use-controllable-state';
 
@@ -224,6 +233,7 @@ const SubagentHeader = ({
   const { open, setOpen, status, id } = useSubagentContext();
   const shouldReduceMotion = useReducedMotion();
   const StatusIcon = STATUS_ICON[status];
+  const statusChanged = useChanged(status);
   const statusLabel = statusLabels?.[status] ?? DEFAULT_STATUS_LABELS[status];
 
   return (
@@ -261,8 +271,12 @@ const SubagentHeader = ({
       ) : null}
       <span className={cn('flex shrink-0 items-center', STATUS_TONE[status])}>
         <span
+          key={status}
           aria-hidden="true"
-          className={cn('flex', status === 'running' && 'motion-safe:animate-spin')}
+          className={cn(
+            'flex',
+            status === 'running' ? 'motion-safe:animate-spin' : statusChanged && STATUS_IN,
+          )}
         >
           <StatusIcon size={14} />
         </span>
@@ -291,6 +305,8 @@ const SubagentContent = ({
   const { open, id } = useSubagentContext();
   const shouldReduceMotion = useReducedMotion();
 
+  const [growRef, growStyle] = useAutoHeight();
+
   return (
     <AnimatePresence initial={false}>
       {open && (
@@ -305,15 +321,21 @@ const SubagentContent = ({
           exit="closed"
           className="overflow-hidden"
         >
-          <div
-            data-slot="subagent-content"
-            className={cn(
-              'border-border ms-[26px] flex flex-col gap-2 border-s ps-3 pt-2 sm:ps-4',
-              className,
-            )}
-            {...props}
-          >
-            {children}
+          <div style={growStyle} className={AUTO_HEIGHT}>
+            <div ref={growRef} className="flow-root">
+              <Arrivals>
+                <div
+                  data-slot="subagent-content"
+                  className={cn(
+                    'border-border ms-[26px] flex flex-col gap-2 border-s ps-3 pt-2 sm:ps-4',
+                    className,
+                  )}
+                  {...props}
+                >
+                  {children}
+                </div>
+              </Arrivals>
+            </div>
           </div>
         </motion.div>
       )}
@@ -330,11 +352,12 @@ const SubagentResult = ({
   ref,
   ...props
 }: SubagentResultProps & { ref?: React.Ref<HTMLDivElement> }) => {
+  const arrived = useArrival();
   return (
     <div
       ref={ref}
       data-slot="subagent-result"
-      className={cn('flex flex-col gap-1.5', className)}
+      className={cn('flex origin-top-left flex-col gap-1.5', arrived && ARRIVE, className)}
       {...props}
     >
       <span className="text-muted-foreground font-mono text-[11px]">{label}</span>

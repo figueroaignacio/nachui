@@ -3,6 +3,15 @@
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import {
+  ARRIVE,
+  AUTO_HEIGHT,
+  Arrivals,
+  STATUS_IN,
+  useArrival,
+  useAutoHeight,
+  useChanged,
+} from '../lib/arrival';
 import { collapse, springs, still } from '../lib/motion';
 import { useControllableState } from '../lib/use-controllable-state';
 
@@ -217,6 +226,7 @@ const TaskTrigger = ({
   const { open, setOpen, id } = useTaskContext();
   const shouldReduceMotion = useReducedMotion();
   const StatusIcon = STATUS_ICON[status];
+  const statusChanged = useChanged(status);
   const statusLabel = statusLabels?.[status] ?? DEFAULT_STATUS_LABELS[status];
 
   return (
@@ -237,11 +247,12 @@ const TaskTrigger = ({
       {...props}
     >
       <span
+        key={status}
         aria-hidden="true"
         className={cn(
           'flex shrink-0',
           STATUS_TONE[status],
-          status === 'active' && 'motion-safe:animate-spin',
+          status === 'active' ? 'motion-safe:animate-spin' : statusChanged && STATUS_IN,
         )}
       >
         <StatusIcon size={14} />
@@ -273,6 +284,8 @@ const TaskContent = ({
   const { open, id } = useTaskContext();
   const shouldReduceMotion = useReducedMotion();
 
+  const [growRef, growStyle] = useAutoHeight();
+
   return (
     <AnimatePresence initial={false}>
       {open && (
@@ -287,14 +300,20 @@ const TaskContent = ({
           exit="closed"
           className="overflow-hidden"
         >
-          <div
-            className={cn(
-              'border-border text-muted-foreground ms-[6px] mt-2 flex flex-col gap-2 border-s ps-4 pt-1 pb-1 text-sm',
-              className,
-            )}
-            {...props}
-          >
-            {children}
+          <div style={growStyle} className={AUTO_HEIGHT}>
+            <div ref={growRef} className="flow-root">
+              <Arrivals>
+                <div
+                  className={cn(
+                    'border-border text-muted-foreground ms-[6px] mt-2 flex flex-col gap-2 border-s ps-4 pt-1 pb-1 text-sm',
+                    className,
+                  )}
+                  {...props}
+                >
+                  {children}
+                </div>
+              </Arrivals>
+            </div>
           </div>
         </motion.div>
       )}
@@ -309,10 +328,15 @@ const TaskItem = ({
   ref,
   ...props
 }: TaskItemProps & { ref?: React.Ref<HTMLDivElement> }) => {
+  const arrived = useArrival();
   return (
     <div
       ref={ref}
-      className={cn('flex flex-wrap items-center gap-1.5 leading-relaxed', className)}
+      className={cn(
+        'flex origin-left flex-wrap items-center gap-1.5 leading-relaxed',
+        arrived && ARRIVE,
+        className,
+      )}
       {...props}
     />
   );

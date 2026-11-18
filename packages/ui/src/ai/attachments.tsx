@@ -3,6 +3,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { ARRIVE, Arrivals, useArrival } from '../lib/arrival';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
   size?: number | string;
@@ -164,15 +165,17 @@ const AttachmentsRoot = ({
 
   return (
     <AttachmentsContext value={value}>
-      <div
-        ref={ref}
-        data-attachments=""
-        data-variant={resolved}
-        className={cn(attachmentsVariants({ variant }), className)}
-        {...props}
-      >
-        {children}
-      </div>
+      <Arrivals>
+        <div
+          ref={ref}
+          data-attachments=""
+          data-variant={resolved}
+          className={cn(attachmentsVariants({ variant }), className)}
+          {...props}
+        >
+          {children}
+        </div>
+      </Arrivals>
     </AttachmentsContext>
   );
 };
@@ -202,9 +205,14 @@ const AttachmentItem = ({
     [data, onRemove, variant, hasInfo, registerInfo],
   );
 
+  const arrived = useArrival();
   return (
     <AttachmentItemContext value={value}>
-      <div ref={ref} className={cn(attachmentItemVariants({ variant }), className)} {...props}>
+      <div
+        ref={ref}
+        className={cn(attachmentItemVariants({ variant }), arrived && ARRIVE, className)}
+        {...props}
+      >
         {children}
       </div>
     </AttachmentItemContext>

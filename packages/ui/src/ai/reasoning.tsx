@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { AUTO_HEIGHT, useAutoHeight } from '../lib/arrival';
 import { collapse, springs, still } from '../lib/motion';
 import { useControllableState } from '../lib/use-controllable-state';
 
@@ -232,6 +233,8 @@ const ReasoningContent = ({
   const { isOpen, id } = useReasoning();
   const shouldReduceMotion = useReducedMotion();
 
+  const [growRef, growStyle] = useAutoHeight();
+
   return (
     <AnimatePresence initial={false}>
       {isOpen && (
@@ -246,14 +249,18 @@ const ReasoningContent = ({
           exit="closed"
           className="overflow-hidden"
         >
-          <div
-            className={cn(
-              'border-border text-muted-foreground ms-[7px] mt-1 border-s ps-4 text-sm leading-relaxed',
-              className,
-            )}
-            {...props}
-          >
-            {children}
+          <div style={growStyle} className={AUTO_HEIGHT}>
+            <div ref={growRef} className="flow-root">
+              <div
+                className={cn(
+                  'border-border text-muted-foreground ms-[7px] mt-1 border-s ps-4 text-sm leading-relaxed',
+                  className,
+                )}
+                {...props}
+              >
+                {children}
+              </div>
+            </div>
           </div>
         </motion.div>
       )}

@@ -3,6 +3,15 @@
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import {
+  ARRIVE,
+  AUTO_HEIGHT,
+  Arrivals,
+  STATUS_IN,
+  useArrival,
+  useAutoHeight,
+  useChanged,
+} from '../lib/arrival';
 import { collapse, springs, still } from '../lib/motion';
 import { useControllableState } from '../lib/use-controllable-state';
 
@@ -287,6 +296,7 @@ const ToolRoot = ({
     [open, setOpen, status, id],
   );
 
+  const arrived = useArrival();
   return (
     <ToolContext value={value}>
       <div
@@ -295,6 +305,7 @@ const ToolRoot = ({
         data-status={status}
         className={cn(
           'bg-card text-card-foreground data-[status=awaiting-approval]:ring-warning-border w-full overflow-hidden rounded-lg shadow-sm data-[status=awaiting-approval]:ring-2',
+          arrived && ARRIVE,
           className,
         )}
         {...props}
@@ -319,6 +330,7 @@ const ToolHeader = ({
   const { open, setOpen, status, id } = useToolContext();
   const shouldReduceMotion = useReducedMotion();
   const StatusIcon = STATUS_ICON[status];
+  const statusChanged = useChanged(status);
   const statusLabel = statusLabels?.[status] ?? DEFAULT_STATUS_LABELS[status];
 
   return (
@@ -356,8 +368,12 @@ const ToolHeader = ({
       </span>
       <span className={cn('flex shrink-0 items-center gap-1.5 text-xs', STATUS_TONE[status])}>
         <span
+          key={status}
           aria-hidden="true"
-          className={cn('flex shrink-0', status === 'running' && 'motion-safe:animate-spin')}
+          className={cn(
+            'flex shrink-0',
+            status === 'running' ? 'motion-safe:animate-spin' : statusChanged && STATUS_IN,
+          )}
         >
           <StatusIcon size={14} />
         </span>
@@ -386,6 +402,8 @@ const ToolContent = ({
   const { open, id } = useToolContext();
   const shouldReduceMotion = useReducedMotion();
 
+  const [growRef, growStyle] = useAutoHeight();
+
   return (
     <AnimatePresence initial={false}>
       {open && (
@@ -400,14 +418,20 @@ const ToolContent = ({
           exit="closed"
           className="overflow-hidden"
         >
-          <div
-            className={cn(
-              'border-border flex flex-col gap-3 border-t px-3 py-3 [&_[data-slot=confirmation]]:rounded-md',
-              className,
-            )}
-            {...props}
-          >
-            {children}
+          <div style={growStyle} className={AUTO_HEIGHT}>
+            <div ref={growRef} className="flow-root">
+              <Arrivals>
+                <div
+                  className={cn(
+                    'border-border flex flex-col gap-3 border-t px-3 py-3 [&_[data-slot=confirmation]]:rounded-md',
+                    className,
+                  )}
+                  {...props}
+                >
+                  {children}
+                </div>
+              </Arrivals>
+            </div>
           </div>
         </motion.div>
       )}

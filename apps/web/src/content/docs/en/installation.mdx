@@ -359,6 +359,8 @@ Three more files live in `lib/`, and you only need them once you add a component
 
 If a file you paste imports `../lib/use-controllable-state`, `../lib/overlay` or `../lib/floating`, copy that helper into `src/lib/` next to `cn.ts`. The CLI does this for you.
 
+The AI elements share one more file, [`arrival.ts`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/lib/arrival.ts). It is what makes a new message, a finished step or a counter animate when it changes, and stay still when the page first loads. Its four animations (`arrive`, `token`, `status` and `roll`) are plain keyframes: copy them from [`globals.css`](https://github.com/figueroaignacio/nachui/blob/main/packages/ui/src/css/globals.css) together with their `--animate-*` lines in `@theme`.
+
 #### Add the theme tokens
 
 Replace the contents of your main stylesheet (the one you noted in the first step) with the following. If your file already has its own `@import 'tailwindcss'` line, keep yours and paste everything below it.

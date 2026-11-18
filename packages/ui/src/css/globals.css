@@ -213,6 +213,10 @@
   --font-serif: var(--font-serif);
   --font-mono: var(--font-mono);
   --animate-blink: blink 2s infinite;
+  --animate-arrive: arrive 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-token: token 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-status: status 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-roll: roll 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @layer base {
@@ -351,6 +355,66 @@
 
 .doc-container {
   @apply mx-auto min-h-0 max-w-3xl;
+}
+
+@keyframes arrive {
+  0% {
+    opacity: 0;
+    filter: blur(6px);
+    transform: scale(0.85);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+@keyframes token {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+
+@keyframes status {
+  0% {
+    opacity: 0;
+    filter: blur(3px);
+    transform: scale(0.5);
+  }
+  65% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1.12);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+@keyframes roll {
+  from {
+    opacity: 0;
+    transform: translateY(60%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @keyframes blink {

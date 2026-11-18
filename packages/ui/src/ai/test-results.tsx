@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { AUTO_HEIGHT, Roll, STATUS_IN, useAutoHeight, useChanged } from '../lib/arrival';
 import { collapse, springs, still } from '../lib/motion';
 import { useControllableState } from '../lib/use-controllable-state';
 
@@ -248,7 +249,7 @@ const TestResultsSummary = ({
           >
             <dt className="text-muted-foreground text-xs">{stat.label}</dt>
             <dd className={cn('font-heading text-xl font-semibold tabular-nums', stat.tone)}>
-              {stat.count}
+              <Roll value={stat.count} />
             </dd>
           </div>
         ))}
@@ -311,7 +312,10 @@ const TestResultsSuite = ({
   const id = React.useId();
   const shouldReduceMotion = useReducedMotion();
   const StatusIcon = STATUS_ICON[status];
+  const statusChanged = useChanged(status);
   const statusLabel = statusLabels?.[status] ?? DEFAULT_STATUS_LABELS[status];
+
+  const [growRef, growStyle] = useAutoHeight();
 
   return (
     <div
@@ -331,11 +335,12 @@ const TestResultsSuite = ({
         className="hover:bg-muted/60 focus-visible:ring-ring flex w-full items-center gap-2 rounded-md px-1.5 py-1.5 text-start font-mono text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none"
       >
         <span
+          key={status}
           aria-hidden="true"
           className={cn(
             'flex shrink-0',
             STATUS_TONE[status],
-            status === 'running' && 'motion-safe:animate-spin',
+            status === 'running' ? 'motion-safe:animate-spin' : statusChanged && STATUS_IN,
           )}
         >
           <StatusIcon size={14} />
@@ -366,9 +371,13 @@ const TestResultsSuite = ({
             exit="closed"
             className="overflow-hidden"
           >
-            <ul className="border-border ms-[13px] flex flex-col gap-0.5 border-s py-1 ps-2.5">
-              {children}
-            </ul>
+            <div style={growStyle} className={AUTO_HEIGHT}>
+              <div ref={growRef} className="flow-root">
+                <ul className="border-border ms-[13px] flex flex-col gap-0.5 border-s py-1 ps-2.5">
+                  {children}
+                </ul>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -389,6 +398,7 @@ const TestResultsTest = ({
   ...props
 }: TestResultsTestProps & { ref?: React.Ref<HTMLLIElement> }) => {
   const StatusIcon = STATUS_ICON[status];
+  const statusChanged = useChanged(status);
   const statusLabel = statusLabels?.[status] ?? DEFAULT_STATUS_LABELS[status];
 
   return (
@@ -401,11 +411,12 @@ const TestResultsTest = ({
     >
       <span className="flex items-center gap-2 text-xs">
         <span
+          key={status}
           aria-hidden="true"
           className={cn(
             'flex shrink-0',
             STATUS_TONE[status],
-            status === 'running' && 'motion-safe:animate-spin',
+            status === 'running' ? 'motion-safe:animate-spin' : statusChanged && STATUS_IN,
           )}
         >
           <StatusIcon size={12} />

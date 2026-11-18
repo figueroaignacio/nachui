@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { Arrivals } from '../lib/arrival';
 import { springs } from '../lib/motion';
 
 type IconProps = React.SVGProps<SVGSVGElement> & {
@@ -269,7 +270,11 @@ const ConversationContent = ({
   ref,
   ...props
 }: ConversationContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  return <div ref={ref} className={cn('flex w-full flex-col gap-4 p-4', className)} {...props} />;
+  return (
+    <Arrivals>
+      <div ref={ref} className={cn('flex w-full flex-col gap-4 p-4', className)} {...props} />
+    </Arrivals>
+  );
 };
 
 ConversationContent.displayName = 'ConversationContent';

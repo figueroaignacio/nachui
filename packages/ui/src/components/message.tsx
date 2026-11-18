@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { ARRIVE, useArrival } from '../lib/arrival';
 
 interface MessageProps extends React.HTMLAttributes<HTMLDivElement> {
   align?: 'start' | 'end';
@@ -17,13 +18,16 @@ const MessageRoot = ({
   ref,
   ...props
 }: MessageProps & { ref?: React.Ref<HTMLDivElement> }) => {
+  const arrived = useArrival();
+
   return (
     <div
       ref={ref}
       data-align={align}
       className={cn(
         'group/message flex w-full items-end gap-2',
-        align === 'end' && 'flex-row-reverse',
+        align === 'end' ? 'origin-bottom-right flex-row-reverse' : 'origin-bottom-left',
+        arrived && ARRIVE,
         className,
       )}
       {...props}

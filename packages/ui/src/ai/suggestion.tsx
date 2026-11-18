@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { ARRIVE, Arrivals, useArrival } from '../lib/arrival';
 
 const suggestionVariants = cva(
   [
@@ -50,12 +51,13 @@ const SuggestionRoot = ({
   ref,
   ...props
 }: SuggestionProps & { ref?: React.Ref<HTMLButtonElement> }) => {
+  const arrived = useArrival();
   return (
     <button
       ref={ref}
       type="button"
       onClick={() => onClick?.(suggestion)}
-      className={cn(suggestionVariants({ variant, size }), className)}
+      className={cn(suggestionVariants({ variant, size }), arrived && ARRIVE, className)}
       {...props}
     >
       {children ?? suggestion}
@@ -72,18 +74,20 @@ const SuggestionGroup = ({
   ...props
 }: SuggestionGroupProps & { ref?: React.Ref<HTMLDivElement> }) => {
   return (
-    <div
-      ref={ref}
-      data-wrap={wrap ? '' : undefined}
-      className={cn(
-        'flex w-full items-center gap-2',
-        wrap
-          ? 'flex-wrap'
-          : 'hide-scrollbar overflow-x-auto [mask-image:linear-gradient(to_right,black_calc(100%-2rem),transparent)]',
-        className,
-      )}
-      {...props}
-    />
+    <Arrivals>
+      <div
+        ref={ref}
+        data-wrap={wrap ? '' : undefined}
+        className={cn(
+          'flex w-full items-center gap-2',
+          wrap
+            ? 'flex-wrap'
+            : 'hide-scrollbar overflow-x-auto [mask-image:linear-gradient(to_right,black_calc(100%-2rem),transparent)]',
+          className,
+        )}
+        {...props}
+      />
+    </Arrivals>
   );
 };
 

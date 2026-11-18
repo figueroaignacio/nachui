@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { ARRIVE, AUTO_HEIGHT, Arrivals, useArrival, useAutoHeight } from '../lib/arrival';
 import { collapse, springs, still } from '../lib/motion';
 import { useControllableState } from '../lib/use-controllable-state';
 
@@ -217,6 +218,8 @@ const SourcesContent = ({
   const { open, id } = useSourcesContext();
   const shouldReduceMotion = useReducedMotion();
 
+  const [growRef, growStyle] = useAutoHeight();
+
   return (
     <AnimatePresence initial={false}>
       {open && (
@@ -231,8 +234,14 @@ const SourcesContent = ({
           exit="closed"
           className="overflow-hidden"
         >
-          <div className={cn('mt-2 flex flex-col gap-1', className)} {...props}>
-            {children}
+          <div style={growStyle} className={AUTO_HEIGHT}>
+            <div ref={growRef} className="flow-root">
+              <Arrivals>
+                <div className={cn('mt-2 flex flex-col gap-1', className)} {...props}>
+                  {children}
+                </div>
+              </Arrivals>
+            </div>
           </div>
         </motion.div>
       )}
@@ -255,6 +264,7 @@ const SourcesItem = ({
   const host = sourceHost(href);
   const faviconSrc = favicon === undefined ? (context?.getFavicon?.(host) ?? null) : favicon;
 
+  const arrived = useArrival();
   return (
     <a
       ref={ref}
@@ -263,6 +273,7 @@ const SourcesItem = ({
       rel="noopener noreferrer"
       className={cn(
         'group/source text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
+        arrived && ARRIVE,
         className,
       )}
       {...props}

@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { ARRIVE, AUTO_HEIGHT, Arrivals, Roll, useArrival, useAutoHeight } from '../lib/arrival';
 import { collapse, springs, still } from '../lib/motion';
 import { useControllableState } from '../lib/use-controllable-state';
 
@@ -194,7 +195,7 @@ const QueueSectionTrigger = ({
       <span className="min-w-0 flex-1 truncate">{children}</span>
       {typeof count === 'number' ? (
         <span className="bg-muted text-muted-strong shrink-0 rounded-sm px-1.5 tabular-nums">
-          {count}
+          <Roll value={count} />
         </span>
       ) : null}
     </button>
@@ -212,6 +213,8 @@ const QueueList = ({
   const { open, id } = useQueueSectionContext();
   const shouldReduceMotion = useReducedMotion();
 
+  const [growRef, growStyle] = useAutoHeight();
+
   return (
     <AnimatePresence initial={false}>
       {open && (
@@ -225,14 +228,20 @@ const QueueList = ({
           exit="closed"
           className="overflow-hidden"
         >
-          <ul
-            ref={ref}
-            data-slot="queue-list"
-            className={cn('flex flex-col px-1.5 pb-1.5', className)}
-            {...props}
-          >
-            {children}
-          </ul>
+          <div style={growStyle} className={AUTO_HEIGHT}>
+            <div ref={growRef} className="flow-root">
+              <Arrivals>
+                <ul
+                  ref={ref}
+                  data-slot="queue-list"
+                  className={cn('flex flex-col px-1.5 pb-1.5', className)}
+                  {...props}
+                >
+                  {children}
+                </ul>
+              </Arrivals>
+            </div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
@@ -251,13 +260,15 @@ const QueueItem = ({
   ref,
   ...props
 }: QueueItemProps & { ref?: React.Ref<HTMLLIElement> }) => {
+  const arrived = useArrival();
   return (
     <li
       ref={ref}
       data-slot="queue-item"
       data-state={done ? 'done' : 'queued'}
       className={cn(
-        'group/queue-item hover:bg-muted/60 relative flex items-start gap-2.5 rounded-md px-1.5 py-1.5 text-sm transition-colors',
+        'group/queue-item hover:bg-muted/60 relative flex origin-left items-start gap-2.5 rounded-md px-1.5 py-1.5 text-sm transition-colors',
+        arrived && ARRIVE,
         className,
       )}
       {...props}

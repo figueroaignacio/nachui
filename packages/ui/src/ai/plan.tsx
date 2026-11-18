@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import { AUTO_HEIGHT, Roll, STATUS_IN, useAutoHeight, useChanged } from '../lib/arrival';
 import { collapse, springs, still } from '../lib/motion';
 import { useControllableState } from '../lib/use-controllable-state';
 
@@ -228,7 +229,9 @@ const PlanHeader = ({
       {children}
       {hasProgress ? (
         <span className="text-muted-foreground shrink-0 font-mono text-xs tabular-nums">
-          <span aria-hidden="true">{`${completed}/${total}`}</span>
+          <span aria-hidden="true">
+            <Roll value={completed ?? 0} />/{total}
+          </span>
           <span className="sr-only">{progressLabel(completed, total)}</span>
         </span>
       ) : null}
@@ -264,6 +267,8 @@ const PlanContent = ({
   const { open, id } = usePlanContext();
   const shouldReduceMotion = useReducedMotion();
 
+  const [growRef, growStyle] = useAutoHeight();
+
   return (
     <AnimatePresence initial={false}>
       {open && (
@@ -277,14 +282,18 @@ const PlanContent = ({
           exit="closed"
           className="overflow-hidden"
         >
-          <ol
-            ref={ref}
-            data-slot="plan-content"
-            className={cn('flex flex-col gap-2.5 px-3 py-3', className)}
-            {...props}
-          >
-            {children}
-          </ol>
+          <div style={growStyle} className={AUTO_HEIGHT}>
+            <div ref={growRef} className="flow-root">
+              <ol
+                ref={ref}
+                data-slot="plan-content"
+                className={cn('flex flex-col gap-2.5 px-3 py-3', className)}
+                {...props}
+              >
+                {children}
+              </ol>
+            </div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
@@ -303,6 +312,7 @@ const PlanStep = ({
   ...props
 }: PlanStepProps & { ref?: React.Ref<HTMLLIElement> }) => {
   const StatusIcon = STATUS_ICON[status];
+  const statusChanged = useChanged(status);
   const statusLabel = statusLabels?.[status] ?? DEFAULT_STATUS_LABELS[status];
 
   return (
@@ -315,11 +325,12 @@ const PlanStep = ({
       {...props}
     >
       <span
+        key={status}
         aria-hidden="true"
         className={cn(
           'mt-0.5 flex size-4 shrink-0 items-center justify-center',
           STATUS_TONE[status],
-          status === 'active' && 'motion-safe:animate-spin',
+          status === 'active' ? 'motion-safe:animate-spin' : statusChanged && STATUS_IN,
         )}
       >
         <StatusIcon size={14} />

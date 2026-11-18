@@ -3,6 +3,15 @@
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react';
 import * as React from 'react';
 import { cn } from '../lib/cn';
+import {
+  ARRIVE,
+  AUTO_HEIGHT,
+  Arrivals,
+  STATUS_IN,
+  useArrival,
+  useAutoHeight,
+  useChanged,
+} from '../lib/arrival';
 import { collapse, springs, still } from '../lib/motion';
 import { useControllableState } from '../lib/use-controllable-state';
 
@@ -222,6 +231,8 @@ const ChainOfThoughtContent = ({
   const { open, id } = useChainOfThoughtContext();
   const shouldReduceMotion = useReducedMotion();
 
+  const [growRef, growStyle] = useAutoHeight();
+
   return (
     <AnimatePresence initial={false}>
       {open && (
@@ -236,8 +247,14 @@ const ChainOfThoughtContent = ({
           exit="closed"
           className="overflow-hidden"
         >
-          <div role="list" className={cn('flex flex-col gap-3 pt-2', className)} {...props}>
-            {children}
+          <div style={growStyle} className={AUTO_HEIGHT}>
+            <div ref={growRef} className="flow-root">
+              <Arrivals>
+                <div role="list" className={cn('flex flex-col gap-3 pt-2', className)} {...props}>
+                  {children}
+                </div>
+              </Arrivals>
+            </div>
           </div>
         </motion.div>
       )}
@@ -259,13 +276,16 @@ const ChainOfThoughtStep = ({
   ...props
 }: ChainOfThoughtStepProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const statusLabel = statusLabels?.[status] ?? DEFAULT_STATUS_LABELS[status];
+  const statusChanged = useChanged(status);
 
   const indicator = (
     <span
+      key={status}
       aria-hidden="true"
       className={cn(
         'bg-secondary text-muted-foreground relative z-10 flex size-5 shrink-0 items-center justify-center rounded-full',
         status === 'complete' && 'text-foreground',
+        statusChanged && STATUS_IN,
       )}
     >
       <Icon size={12} />
@@ -315,7 +335,15 @@ const ChainOfThoughtSearchResults = ({
   ref,
   ...props
 }: ChainOfThoughtSearchResultsProps & { ref?: React.Ref<HTMLDivElement> }) => {
-  return <div ref={ref} className={cn('flex flex-wrap gap-1.5', className)} {...props} />;
+  const arrived = useArrival();
+
+  return (
+    <div
+      ref={ref}
+      className={cn('flex origin-left flex-wrap gap-1.5', arrived && ARRIVE, className)}
+      {...props}
+    />
+  );
 };
 
 ChainOfThoughtSearchResults.displayName = 'ChainOfThoughtSearchResults';
