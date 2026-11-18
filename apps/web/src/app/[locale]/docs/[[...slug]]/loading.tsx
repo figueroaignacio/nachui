@@ -25,7 +25,7 @@ function StageLoading({ label }: { label: string }) {
       <span className="sr-only">{label}</span>
       <div className="bg-island relative flex h-[min(34rem,72svh)] flex-col rounded-lg lg:h-[calc(100svh-1.25rem)]">
         <div className="flex justify-end p-3">
-          <div className="bg-popover border-border flex items-center gap-1.5 rounded-full border p-1 shadow-md">
+          <div className="bg-popover flex items-center gap-1.5 rounded-full p-1 shadow-md">
             <Skeleton className="h-8 w-16 rounded-full" />
             <Skeleton className="size-8 rounded-full" />
             <Skeleton className="size-8 rounded-full" />

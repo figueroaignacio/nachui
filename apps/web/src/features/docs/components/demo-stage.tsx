@@ -103,7 +103,7 @@ export function DemoStage({
             <div
               role="toolbar"
               aria-label={t('toolbar')}
-              className="bg-popover border-border flex shrink-0 items-center gap-0.5 rounded-full border p-1 shadow-md"
+              className="bg-popover flex shrink-0 items-center gap-0.5 rounded-full p-1 shadow-md"
             >
               {installHref && (
                 <a href={installHref} className={cn(toolButton, 'text-foreground px-3')}>

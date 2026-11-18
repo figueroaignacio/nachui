@@ -186,8 +186,8 @@ function Blockquote({ className, children, ...props }: React.HTMLAttributes<HTML
   return (
     <blockquote
       className={cn(
-        'border-primary/10 bg-primary/5 relative my-6 flex items-start gap-3 rounded-lg border p-4',
-        'text-foreground/90 hover:border-primary/20 hover:bg-primary/10 transition-colors',
+        'bg-primary/5 relative my-6 flex items-start gap-3 rounded-lg p-4',
+        'text-foreground/90 hover:bg-primary/10 transition-colors',
         className,
       )}
       {...props}
@@ -205,7 +205,7 @@ function Image({ className, alt, src, ...props }: React.ImgHTMLAttributes<HTMLIm
   return (
     <img
       src={src}
-      className={cn('border-border/50 my-6 rounded-lg border', className)}
+      className={cn('my-6 rounded-lg', className)}
       alt={alt || ''}
       sizes="100vw"
       style={{ width: '100%', height: 'auto' }}

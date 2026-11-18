@@ -25,7 +25,7 @@ export function InlineCode({ className, children, language = 'tsx', ...props }: 
       {({ style, tokens, getTokenProps }) => (
         <code
           className={cn(
-            'bg-muted/60 text-foreground border-border rounded-lg border px-[.35rem] py-[.15rem] font-mono text-[0.875em]',
+            'bg-muted/60 text-foreground rounded-lg px-[.35rem] py-[.15rem] font-mono text-[0.875em]',
             className,
           )}
           style={{

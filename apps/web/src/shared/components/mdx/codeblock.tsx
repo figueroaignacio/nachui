@@ -153,7 +153,7 @@ export function CodeBlock({
     <div
       className={cn(
         'bg-code relative overflow-hidden',
-        framed ? 'rounded-lg' : cn('border-rule rounded-md border', className),
+        framed ? 'rounded-lg' : cn('rounded-md', className),
       )}
     >
       {!framed && (
@@ -182,7 +182,7 @@ export function CodeBlock({
         <span className="text-muted-foreground min-w-0 truncate font-mono text-xs">{title}</span>
         <CopyButton value={codeString} className="rounded-md p-1.5" />
       </Frame.Header>
-      <Frame.Panel className="bg-code border-border p-0">{block}</Frame.Panel>
+      <Frame.Panel className="bg-code p-0">{block}</Frame.Panel>
     </Frame>
   );
 }
