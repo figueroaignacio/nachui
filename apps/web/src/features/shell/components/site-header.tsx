@@ -8,6 +8,7 @@ import { ThemeToggle } from '@/components/common/theme-toggle';
 import { useChatStore } from '@/features/chat/store/chat-store';
 import { MobileMenuPanel } from '@/features/docs/components/mobile-menu';
 import { Searcher } from '@/features/docs/components/searcher';
+import type { SidebarPreview } from '@/features/docs/lib/sidebar-previews';
 import { useModKeyLabel } from '@/hooks/use-kbd-shortcut';
 import { Link, usePathname } from '@/i18n/navigation';
 import { GITHUB_REPO_URL } from '@/lib/domains';
@@ -57,7 +58,12 @@ const roundButton = cn(
   focusRing,
 );
 
-export function SiteHeader() {
+interface SiteHeaderProps {
+  /** The first demo of every doc page, for the search preview. */
+  previews?: Record<string, SidebarPreview>;
+}
+
+export function SiteHeader({ previews }: SiteHeaderProps) {
   const t = useTranslations('ui');
   const tSearch = useTranslations('components.searcher');
   const pathname = usePathname();
@@ -202,7 +208,7 @@ export function SiteHeader() {
           </div>
         </div>
       </header>
-      <Searcher open={searchOpen} onOpenChange={setSearchOpen} />
+      <Searcher open={searchOpen} onOpenChange={setSearchOpen} previews={previews} />
       <MobileMenuPanel open={menuOpen} onClose={closeMenu} />
     </>
   );

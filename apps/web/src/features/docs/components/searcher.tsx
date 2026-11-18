@@ -11,20 +11,27 @@ import { ChevronUpIcon } from '@repo/ui/icons/chevron-up';
 import { CornerDownLeftIcon } from '@repo/ui/icons/corner-down-left';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useId } from 'react';
+import type { SidebarPreview } from '../lib/sidebar-previews';
 import { SearchInput } from './search-input';
+import { SearchPreview } from './search-preview';
 import { SearchResults } from './search-results';
+
+const EMPTY: Record<string, SidebarPreview> = {};
 
 type SearcherProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** The first demo of every doc page, keyed by its nav href. */
+  previews?: Record<string, SidebarPreview>;
 };
 
 /**
- * The search dialog. It renders no trigger of its own: the header owns the
+ * The search dialog: results on one side, the selected page on the other. It
+ * renders no trigger of its own: the header owns the
  * open state so several buttons can open the same dialog and the shortcut is
  * bound once.
  */
-export function Searcher({ open: isOpen, onOpenChange }: SearcherProps) {
+export function Searcher({ open: isOpen, onOpenChange, previews = EMPTY }: SearcherProps) {
   const t = useTranslations('components.searcher');
   const router = useRouter();
   const {
@@ -34,6 +41,7 @@ export function Searcher({ open: isOpen, onOpenChange }: SearcherProps) {
     results,
     navigation,
     selectedIndex,
+    setSelectedIndex,
     nextItem,
     previousItem,
     activeItems,
@@ -70,9 +78,16 @@ export function Searcher({ open: isOpen, onOpenChange }: SearcherProps) {
     [nextItem, previousItem, activeItems, selectedIndex, router, onOpenChange],
   );
 
+  const activeItem = activeItems[selectedIndex];
+  const activeCategory =
+    activeItem && 'category' in activeItem ? (activeItem.category as string) : undefined;
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <Dialog.Content className="border-border/60 max-w-lg overflow-hidden border p-0 shadow-2xl">
+      <Dialog.Content
+        showClose={false}
+        className="bg-card flex h-[min(34rem,calc(100dvh-2rem))] max-w-[52rem] flex-col gap-2.5 overflow-hidden rounded-xl border-0 p-2.5 shadow-lg"
+      >
         <SearchInput
           value={query}
           onChange={setQuery}
@@ -85,39 +100,44 @@ export function Searcher({ open: isOpen, onOpenChange }: SearcherProps) {
           listboxId={listboxId}
           expanded={hasOptions}
           activeOptionId={hasOptions ? optionId(selectedIndex) : undefined}
+          count={query ? results.length : undefined}
         />
-        <SearchResults
-          query={query}
-          results={results}
-          navigation={navigation}
-          selectedIndex={selectedIndex}
-          listboxId={listboxId}
-          optionId={optionId}
-        />
-        <div className="border-border/30 flex items-center justify-between border-t px-4 py-2.5">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <Kbd size="sm" variant="outline">
-                <ChevronDownIcon size={9} aria-hidden="true" />
-              </Kbd>
-              <Kbd size="sm" variant="outline">
-                <ChevronUpIcon size={9} aria-hidden="true" />
-              </Kbd>
-              <span className="text-muted-foreground/50 text-xs">navigate</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Kbd size="sm" variant="outline">
-                <CornerDownLeftIcon size={9} aria-hidden="true" />
-              </Kbd>
-              <span className="text-muted-foreground/50 text-xs">{t('select')}</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Kbd size="sm" variant="outline">
-              esc
+        <div className="grid min-h-0 flex-1 gap-2.5 md:grid-cols-2">
+          <SearchResults
+            query={query}
+            results={results}
+            navigation={navigation}
+            selectedIndex={selectedIndex}
+            onSelect={setSelectedIndex}
+            listboxId={listboxId}
+            optionId={optionId}
+          />
+          <SearchPreview
+            item={activeItem}
+            category={activeCategory}
+            preview={activeItem ? previews[activeItem.href] : undefined}
+          />
+        </div>
+        <div className="text-muted-foreground hidden items-center gap-4 px-2.5 pb-0.5 text-[13px] md:flex">
+          <span className="flex items-center gap-1.5">
+            <Kbd size="sm">
+              <ChevronUpIcon size={10} aria-hidden="true" />
             </Kbd>
-            <span className="text-muted-foreground/50 text-xs">{t('exit')}</span>
-          </div>
+            <Kbd size="sm">
+              <ChevronDownIcon size={10} aria-hidden="true" />
+            </Kbd>
+            {t('navigate')}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Kbd size="sm">
+              <CornerDownLeftIcon size={10} aria-hidden="true" />
+            </Kbd>
+            {t('select')}
+          </span>
+          <span className="ms-auto flex items-center gap-1.5">
+            <Kbd size="sm">esc</Kbd>
+            {t('exit')}
+          </span>
         </div>
       </Dialog.Content>
     </Dialog>

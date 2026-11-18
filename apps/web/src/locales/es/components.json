@@ -10,7 +10,10 @@
     "placeholder": "Buscar...",
     "noResults": "No se encontraron resultados",
     "exit": "para salir",
-    "select": "para seleccionar"
+    "select": "para seleccionar",
+    "navigate": "para navegar",
+    "tryAnother": "Prueba con otra palabra",
+    "noPreview": "Esta página no tiene vista previa"
   },
   "docsPagination": {
     "previous": "Anterior",

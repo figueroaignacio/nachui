@@ -10,7 +10,10 @@
     "placeholder": "Search...",
     "noResults": "No results found",
     "exit": "to exit",
-    "select": "to select"
+    "select": "to select",
+    "navigate": "to navigate",
+    "tryAnother": "Try a different keyword",
+    "noPreview": "No preview for this page"
   },
   "docsPagination": {
     "previous": "Previous",

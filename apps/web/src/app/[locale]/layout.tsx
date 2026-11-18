@@ -10,6 +10,8 @@ import { routing } from '@/i18n/routing';
 import { SITE_URL } from '@/lib/constants';
 import { getAbsoluteUrl, getAssetUrl } from '@/lib/domains';
 import { SPRITE_CSS } from '@repo/ui/components/sprite';
+import { getSidebarPreviews } from '@/features/docs/lib/sidebar-previews';
+import { ContentRepository } from '@/lib/content-repository';
 import { fontCode, fontHeading, fontSans, fontSerif } from '@/lib/font';
 import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
@@ -81,7 +83,7 @@ export default async function RootLayout({ children, params }: LocaleLayoutProps
         <SkipLink />
         <NextIntlClientProvider>
           <Providers>
-            <SiteHeader />
+            <SiteHeader previews={getSidebarPreviews(ContentRepository.getDocs(), locale)} />
             <PageFrame>
               <main id="main-content">{children}</main>
             </PageFrame>

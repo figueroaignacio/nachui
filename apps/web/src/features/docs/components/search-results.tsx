@@ -1,9 +1,7 @@
-import { NavBadge } from '@/components/common/nav-badge';
 import { Link } from '@/i18n/navigation';
 import type { DocBadge, DocSection, SearchResultItem } from '@/lib/definitions';
 import { Dialog } from '@repo/ui/components/dialog';
 import { Empty } from '@repo/ui/components/empty';
-import { Separator } from '@repo/ui/components/separator';
 import { SearchIcon } from '@repo/ui/icons/search';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
@@ -14,6 +12,7 @@ interface SearchResultsProps {
   results: SearchResultItem[];
   navigation: DocSection[];
   selectedIndex: number;
+  onSelect: (index: number) => void;
   listboxId: string;
   optionId: (index: number) => string;
 }
@@ -25,6 +24,7 @@ function ResultItem({
   isActive,
   meta,
   badge,
+  onPointerMove,
 }: {
   id: string;
   href: string;
@@ -32,35 +32,26 @@ function ResultItem({
   isActive: boolean;
   meta?: string;
   badge?: DocBadge;
+  onPointerMove: () => void;
 }) {
+  const tBadges = useTranslations('docs.badges');
   return (
     <li id={id} role="option" aria-selected={isActive}>
-      <Dialog.Close className="h-full w-full text-left outline-none">
+      <Dialog.Close className="h-full w-full text-start outline-none">
         <Link
           href={href}
           data-active={isActive}
+          onPointerMove={onPointerMove}
           className={cn(
-            'group flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-100',
-            isActive
-              ? 'bg-secondary text-foreground'
-              : 'text-foreground/70 hover:bg-secondary/50 hover:text-foreground',
+            'flex h-11 w-full cursor-pointer items-center gap-3 rounded-md px-3 text-[15px] transition-colors',
+            isActive ? 'bg-secondary text-foreground font-medium' : 'text-muted-strong',
           )}
         >
-          <div className="flex min-w-0 items-center gap-2.5">
-            <span
-              className={cn(
-                'h-1.5 w-1.5 shrink-0 rounded-full transition-colors',
-                isActive
-                  ? 'bg-foreground'
-                  : 'bg-muted-foreground/30 group-hover:bg-muted-foreground/60',
-              )}
-            />
-            <span className={cn('truncate', isActive && 'font-medium')}>{title}</span>
-            <NavBadge badge={badge} />
-          </div>
-          {meta && (
-            <span className="text-muted-foreground/40 shrink-0 text-xs font-medium">{meta}</span>
-          )}
+          <span className="min-w-0 flex-1 truncate">{title}</span>
+          {badge ? (
+            <span className="text-brand shrink-0 text-xs font-medium">{tBadges(badge)}</span>
+          ) : null}
+          {meta && <span className="text-muted-foreground shrink-0 text-[13px]">{meta}</span>}
         </Link>
       </Dialog.Close>
     </li>
@@ -68,12 +59,7 @@ function ResultItem({
 }
 
 function SectionHeader({ label }: { label: string }) {
-  return (
-    <Separator
-      label={label}
-      className="[&>span:last-child]:bg-border/30 [&>span:nth-child(2)]:text-muted-foreground/40 px-3 pt-3 pb-1 first:pt-0 [&>span:first-child]:hidden [&>span:nth-child(2)]:text-xs [&>span:nth-child(2)]:font-semibold"
-    />
-  );
+  return <p className="text-muted-foreground px-3 pt-3 pb-1.5 text-[13px]">{label}</p>;
 }
 
 export function SearchResults({
@@ -81,6 +67,7 @@ export function SearchResults({
   results,
   navigation,
   selectedIndex,
+  onSelect,
   listboxId,
   optionId,
 }: SearchResultsProps) {
@@ -96,16 +83,16 @@ export function SearchResults({
 
   if (query && results.length === 0) {
     return (
-      <Empty className="gap-2 py-12">
+      <Empty className="h-full gap-2 py-12">
         <Empty.Header className="gap-2">
           <Empty.Media className="mb-0">
             <SearchIcon size={20} aria-hidden="true" className="text-muted-foreground" />
           </Empty.Media>
-          <Empty.Title className="text-muted-foreground/60 text-sm font-normal">
+          <Empty.Title className="text-foreground text-[15px] font-medium">
             {t('noResults')}
           </Empty.Title>
-          <Empty.Description className="text-muted-foreground/35 text-xs">
-            Try a different keyword
+          <Empty.Description className="text-muted-foreground text-[13px]">
+            {t('tryAnother')}
           </Empty.Description>
         </Empty.Header>
       </Empty>
@@ -119,17 +106,17 @@ export function SearchResults({
         id={listboxId}
         role="listbox"
         aria-label={t('results')}
-        className="max-h-[320px] overflow-y-auto px-2 pb-2"
+        className="hide-scrollbar min-h-0 overflow-y-auto"
       >
-        <SectionHeader label="Results" />
-        <ul role="presentation" className="space-y-0.5">
+        <ul role="presentation" className="flex flex-col gap-0.5">
           {results.map((item, index) => (
             <ResultItem
-              key={item.href}
+              key={`${item.category}:${item.href}`}
               id={optionId(index)}
               href={item.href}
               title={item.title}
               isActive={index === selectedIndex}
+              onPointerMove={() => onSelect(index)}
               meta={item.category}
               badge={item.badge}
             />
@@ -147,12 +134,12 @@ export function SearchResults({
       id={listboxId}
       role="listbox"
       aria-label={t('results')}
-      className="max-h-[320px] overflow-y-auto px-2 pb-2"
+      className="hide-scrollbar min-h-0 overflow-y-auto"
     >
       {navigation.map((section) => (
         <div key={section.id} role="group" aria-label={section.title}>
           <SectionHeader label={section.title} />
-          <ul role="presentation" className="space-y-0.5">
+          <ul role="presentation" className="flex flex-col gap-0.5">
             {section.items.map((item) => {
               const index = globalIndex;
               const isActive = index === selectedIndex;
@@ -164,6 +151,7 @@ export function SearchResults({
                   href={item.href}
                   title={item.title}
                   isActive={isActive}
+                  onPointerMove={() => onSelect(index)}
                   badge={item.badge}
                 />
               );
