@@ -1,6 +1,7 @@
 'use client';
 
 import { Suggestion } from '../../ai/suggestion';
+import { usePlayback } from '../../lib/use-playback';
 
 const SUGGESTIONS = [
   'How do I install NachUI?',
@@ -11,10 +12,12 @@ const SUGGESTIONS = [
 ];
 
 export function Default() {
+  const { step, rootProps } = usePlayback(SUGGESTIONS.length, 220);
+
   return (
-    <div className="w-full max-w-md">
+    <div {...rootProps} className="min-h-9 w-full max-w-md">
       <Suggestion.Group>
-        {SUGGESTIONS.map((suggestion) => (
+        {SUGGESTIONS.slice(0, step).map((suggestion) => (
           <Suggestion key={suggestion} suggestion={suggestion} />
         ))}
       </Suggestion.Group>

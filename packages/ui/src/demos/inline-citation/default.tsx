@@ -1,4 +1,8 @@
+'use client';
+
 import { InlineCitation } from '../../ai/inline-citation';
+import { StreamText } from '../../lib/arrival';
+import { usePlayback } from '../../lib/use-playback';
 
 const ROUNDING = [
   {
@@ -20,13 +24,31 @@ const TAX = [
   },
 ];
 
+const OPENING =
+  'The total was rounding before the discount, so a 15% coupon on 126.00 lost a cent. Round once, after tax,'.split(
+    ' ',
+  );
+const CLOSING = 'Tax rates still come from the shipping address'.split(' ');
+const CITED = OPENING.length + 1;
+const TOTAL = CITED + CLOSING.length + 1;
+
 export function Default() {
+  const { step, rootProps } = usePlayback<HTMLParagraphElement>(TOTAL, 75);
+
   return (
-    <p className="text-foreground max-w-lg text-sm leading-7">
-      The total was rounding before the discount, so a 15% coupon on 126.00 lost a cent. Round once,
-      after tax,{' '}
-      <InlineCitation sources={ROUNDING}>and only when you display the amount</InlineCitation>. Tax
-      rates still come from the shipping address <InlineCitation sources={TAX} />.
+    <p {...rootProps} className="text-foreground min-h-28 max-w-lg text-sm leading-7">
+      <StreamText text={OPENING.slice(0, step).join(' ')} />{' '}
+      {step >= CITED ? (
+        <>
+          <InlineCitation sources={ROUNDING}>and only when you display the amount</InlineCitation>.{' '}
+          <StreamText text={CLOSING.slice(0, step - CITED).join(' ')} />{' '}
+        </>
+      ) : null}
+      {step >= TOTAL ? (
+        <>
+          <InlineCitation sources={TAX} />.
+        </>
+      ) : null}
     </p>
   );
 }

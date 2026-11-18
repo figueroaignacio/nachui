@@ -3,6 +3,7 @@
 import { Conversation } from '../../ai/conversation';
 import { Bubble } from '../../components/bubble';
 import { Message } from '../../components/message';
+import { usePlayback } from '../../lib/use-playback';
 
 const THREAD = [
   { role: 'user', text: 'Which component do I use for an agent run?' },
@@ -28,11 +29,16 @@ const THREAD = [
 ] as const;
 
 export function Default() {
+  const { step, rootProps } = usePlayback(THREAD.length, 850);
+
   return (
-    <div className="bg-card h-72 w-full max-w-md overflow-hidden rounded-lg shadow-sm">
+    <div
+      {...rootProps}
+      className="bg-card h-72 w-full max-w-md overflow-hidden rounded-lg shadow-sm"
+    >
       <Conversation className="h-full">
         <Conversation.Content>
-          {THREAD.map((message, index) => (
+          {THREAD.slice(0, step).map((message, index) => (
             <Message key={index} align={message.role === 'user' ? 'end' : 'start'}>
               <Message.Content>
                 <Bubble variant={message.role === 'user' ? 'default' : 'muted'}>

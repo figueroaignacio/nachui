@@ -771,6 +771,8 @@
     "toolbar": "Demo tools",
     "install": "Install",
     "doc": "Documentation",
-    "code": "Demo code"
+    "code": "Demo code",
+    "play": "Play",
+    "playing": "Playing"
   }
 }

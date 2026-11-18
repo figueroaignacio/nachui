@@ -771,6 +771,8 @@
     "toolbar": "Herramientas del demo",
     "install": "Instalar",
     "doc": "Documentación",
-    "code": "Código del demo"
+    "code": "Código del demo",
+    "play": "Reproducir",
+    "playing": "Reproduciendo"
   }
 }

@@ -1,23 +1,27 @@
 'use client';
 
-import { Tool } from '../../ai/tool';
+import { Tool, type ToolStatus } from '../../ai/tool';
+import { usePlayback } from '../../lib/use-playback';
 
-const input = { locale: 'en', limit: 3 };
+const input = { query: 'applyDiscount', path: 'src/checkout' };
 
 const output = [
-  { slug: 'nachui', title: 'NachUI', stars: 128 },
-  { slug: 'portfolio', title: 'ignaciofigueroa.dev', stars: 41 },
-  { slug: 'links', title: 'links.ignaciofigueroa.dev', stars: 9 },
+  { file: 'src/checkout/total.ts', line: 38, match: 'return round(applyDiscount(subtotal))' },
+  { file: 'src/checkout/discount.ts', line: 12, match: 'export function applyDiscount(amount)' },
+  { file: 'src/checkout/total.test.ts', line: 18, match: 'applies the discount before tax' },
 ];
 
 export function Default() {
+  const { step, rootProps } = usePlayback(34);
+  const status: ToolStatus = step < 6 ? 'pending' : step < 30 ? 'running' : 'complete';
+
   return (
-    <div className="w-full max-w-md">
-      <Tool status="complete" defaultOpen>
-        <Tool.Header name="get_projects" description="Lists the public projects" />
+    <div {...rootProps} className="w-full max-w-md">
+      <Tool status={status} defaultOpen>
+        <Tool.Header name="search_code" description="Finds where a symbol is used" />
         <Tool.Content>
           <Tool.Input value={input} />
-          <Tool.Output value={output} />
+          {status === 'complete' ? <Tool.Output value={output} /> : null}
         </Tool.Content>
       </Tool>
     </div>

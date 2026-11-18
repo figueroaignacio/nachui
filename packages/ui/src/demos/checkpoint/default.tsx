@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { Checkpoint } from '../../ai/checkpoint';
 import { Bubble } from '../../components/bubble';
 import { Message } from '../../components/message';
+import { usePlayback } from '../../lib/use-playback';
 
 export function Default() {
   const [restored, setRestored] = useState(false);
+  const { step, rootProps } = usePlayback(3, 800);
 
   return (
-    <div className="flex w-full max-w-md flex-col gap-3">
+    <div {...rootProps} className="flex min-h-40 w-full max-w-md flex-col gap-3">
       <Message align="end">
         <Message.Content>
           <Bubble>
@@ -17,8 +19,10 @@ export function Default() {
           </Bubble>
         </Message.Content>
       </Message>
-      <Checkpoint label="Before 12 files changed" onRestore={() => setRestored(true)} />
-      <Message>
+      {step >= 2 ? (
+        <Checkpoint label="Before 12 files changed" onRestore={() => setRestored(true)} />
+      ) : null}
+      <Message className={step >= 3 ? undefined : 'invisible'}>
         <Message.Content>
           <Bubble variant="secondary">
             <Bubble.Content>

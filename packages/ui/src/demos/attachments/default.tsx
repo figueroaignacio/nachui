@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Attachments, type AttachmentData } from '../../ai/attachments';
+import { usePlayback } from '../../lib/use-playback';
 
 const INITIAL: AttachmentData[] = [
   { id: '1', filename: 'design-system.pdf', mediaType: 'application/pdf', size: 248320 },
@@ -10,11 +11,13 @@ const INITIAL: AttachmentData[] = [
 ];
 
 export function Default() {
-  const [files, setFiles] = useState(INITIAL);
+  const [kept, setFiles] = useState(INITIAL);
+  const { step, playing, rootProps } = usePlayback(INITIAL.length, 550);
+  const files = playing ? INITIAL.slice(0, step) : kept;
 
-  if (files.length === 0) {
+  if (files.length === 0 && !playing) {
     return (
-      <div className="w-full max-w-md">
+      <div {...rootProps} className="w-full max-w-md">
         <Attachments>
           <Attachments.Empty>Everything removed, reload the demo to start over</Attachments.Empty>
         </Attachments>
@@ -23,7 +26,7 @@ export function Default() {
   }
 
   return (
-    <div className="w-full max-w-md">
+    <div {...rootProps} className="min-h-28 w-full max-w-md">
       <Attachments>
         {files.map((file) => (
           <Attachments.Item

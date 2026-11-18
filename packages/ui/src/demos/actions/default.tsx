@@ -2,17 +2,24 @@
 
 import { useState } from 'react';
 import { Actions } from '../../ai/actions';
+import { StreamText } from '../../lib/arrival';
+import { usePlayback } from '../../lib/use-playback';
 
 const ANSWER =
   'Keep the trigger and the region linked with aria-controls and aria-labelledby, and let the open state live in one place so both stay in sync.';
 
+const WORDS = ANSWER.split(' ');
+
 export function Default() {
+  const { step, playing, rootProps } = usePlayback(WORDS.length + 3, 70);
   const [vote, setVote] = useState<'up' | 'down' | null>(null);
 
   return (
-    <div className="flex w-full max-w-md flex-col gap-2">
-      <p className="text-foreground/90 text-sm leading-relaxed">{ANSWER}</p>
-      <Actions>
+    <div {...rootProps} className="flex min-h-28 w-full max-w-md flex-col gap-2">
+      <p className="text-foreground/90 text-sm leading-relaxed">
+        <StreamText text={WORDS.slice(0, step).join(' ')} />
+      </p>
+      <Actions className={playing ? 'invisible' : undefined}>
         <Actions.Copy text={ANSWER} />
         <Actions.Button label="Retry">
           <Actions.Icons.retry />

@@ -15,6 +15,9 @@ type StageMode = 'code' | 'stage';
 interface StageContextValue {
   defaultKey: string;
   mode: StageMode;
+  /** The row that hands the stage demo's source to the code panel. */
+  codeOwner: string | null;
+  claimCode: (id: string) => () => void;
   codeOutlet: HTMLElement | null;
 }
 
@@ -27,6 +30,64 @@ export function useDemoStage() {
 
 const toolButton =
   'text-muted-foreground hover:text-foreground hover:bg-muted aria-pressed:bg-secondary aria-pressed:text-foreground focus-visible:ring-ring inline-flex h-8 min-w-8 items-center justify-center gap-1.5 rounded-full px-2 text-[13px] font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none';
+
+const PLAYBACK_EVENT = 'playback:play';
+
+interface PlayButtonProps {
+  /** Where to look for a demo that can play itself through its states. */
+  container: HTMLElement | null;
+  className?: string;
+}
+
+/**
+ * Plays a demo from the start. It only shows up when the demo inside
+ * `container` marks itself with `data-playback`, which the animated demos do
+ * through `usePlayback`; everything else has nothing to play.
+ */
+function PlayButton({ container, className }: PlayButtonProps) {
+  const t = useTranslations('docs.stage');
+  const [target, setTarget] = React.useState<Element | null>(null);
+  const [playing, setPlaying] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!container) return;
+    const sync = () => {
+      const element = container.querySelector('[data-playback]');
+      setTarget(element);
+      setPlaying(element?.getAttribute('data-playback') === 'playing');
+    };
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(container, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ['data-playback'],
+    });
+    return () => observer.disconnect();
+  }, [container]);
+
+  if (!target) return null;
+
+  return (
+    <div className={cn('bg-popover absolute z-10 rounded-full p-1 shadow-md', className)}>
+      <button
+        type="button"
+        disabled={playing}
+        onClick={() => target.dispatchEvent(new CustomEvent(PLAYBACK_EVENT))}
+        className={cn(
+          toolButton,
+          'bg-secondary text-foreground cursor-pointer gap-2 px-3.5 transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.94] disabled:cursor-default disabled:opacity-60',
+        )}
+      >
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5Z" />
+        </svg>
+        {playing ? t('playing') : t('play')}
+      </button>
+    </div>
+  );
+}
 
 interface DemoStageProps {
   title: string;
@@ -60,10 +121,18 @@ export function DemoStage({
   const triggerExplanation = useChatStore((state) => state.triggerExplanation);
   const [mode, setMode] = React.useState<StageMode>('stage');
   const [codeOutlet, setCodeOutlet] = React.useState<HTMLElement | null>(null);
+  const [demoBox, setDemoBox] = React.useState<HTMLElement | null>(null);
+
+  const [codeOwner, setCodeOwner] = React.useState<string | null>(null);
+
+  const claimCode = React.useCallback((id: string) => {
+    setCodeOwner((current) => current ?? id);
+    return () => setCodeOwner((current) => (current === id ? null : current));
+  }, []);
 
   const value = React.useMemo(
-    () => ({ defaultKey, mode, codeOutlet }),
-    [defaultKey, mode, codeOutlet],
+    () => ({ defaultKey, mode, codeOwner, claimCode, codeOutlet }),
+    [defaultKey, mode, codeOwner, claimCode, codeOutlet],
   );
 
   return (
@@ -114,11 +183,16 @@ export function DemoStage({
           </div>
 
           <div
+            ref={setDemoBox}
             data-no-select
             className="flex min-h-0 flex-1 items-center justify-center overflow-auto p-6 *:min-w-0 sm:p-10"
           >
             {defaultDemo}
           </div>
+          <PlayButton
+            container={demoBox}
+            className="start-1/2 bottom-4 -translate-x-1/2 rtl:translate-x-1/2"
+          />
         </section>
 
         <aside
@@ -155,27 +229,40 @@ interface StageRowProps {
 
 /**
  * One demo of the page, as the doc lists it: the demo, live, and its source
- * under it. The demo the stage opens with has no row of its own: it only
- * hands its source to the code panel.
+ * under it. The first row of the demo the stage opens with draws nothing: it
+ * only hands its source to the code panel. A page that lists that demo again
+ * further down gets it as a normal row.
  */
 export function StageRow({ demoKey, demo, code, fullCode }: StageRowProps) {
   const stage = useDemoStage();
+  const [demoBox, setDemoBox] = React.useState<HTMLElement | null>(null);
+  const id = React.useId();
+  const isDefault = stage ? demoKey === stage.defaultKey : false;
+  const claimCode = stage?.claimCode;
+
+  React.useEffect(() => {
+    if (!isDefault || !claimCode) return;
+    return claimCode(id);
+  }, [isDefault, claimCode, id]);
+
   if (!stage) return null;
 
-  if (demoKey === stage.defaultKey) {
+  if (isDefault && (stage.codeOwner === null || stage.codeOwner === id)) {
     return stage.mode === 'code' && stage.codeOutlet
       ? createPortal(fullCode, stage.codeOutlet)
       : null;
   }
 
   return (
-    <div className="bg-island rounded-lg p-1.5">
+    <div className="bg-island relative rounded-lg p-1.5">
       <div
+        ref={setDemoBox}
         data-no-select
         className="flex min-h-44 items-center justify-center overflow-x-auto px-4 py-10 *:min-w-0 sm:px-8"
       >
         {demo}
       </div>
+      <PlayButton container={demoBox} className="end-3 top-3" />
       {code ? <div className="bg-code overflow-hidden rounded-md">{code}</div> : null}
     </div>
   );

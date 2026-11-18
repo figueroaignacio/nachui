@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FileTree, type FileChange } from '../../ai/file-tree';
+import { usePlayback } from '../../lib/use-playback';
 
 const FILES: FileChange[] = [
   { path: 'src/checkout/total.ts', status: 'modified', additions: 12, deletions: 3 },
@@ -14,10 +15,15 @@ const FILES: FileChange[] = [
 
 export function Default() {
   const [selected, setSelected] = useState('src/checkout/total.ts');
+  const { step, rootProps } = usePlayback(FILES.length, 480);
 
   return (
-    <div className="flex w-full max-w-sm flex-col gap-3">
-      <FileTree files={FILES} selected={selected} onFileSelect={setSelected} />
+    <div {...rootProps} className="flex min-h-72 w-full max-w-sm flex-col gap-3">
+      <FileTree
+        files={FILES.slice(0, Math.max(step, 1))}
+        selected={selected}
+        onFileSelect={setSelected}
+      />
       <p className="text-muted-foreground font-mono text-xs">{selected}</p>
     </div>
   );
