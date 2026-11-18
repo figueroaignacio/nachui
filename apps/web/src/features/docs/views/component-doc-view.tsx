@@ -20,7 +20,6 @@ interface ComponentDocViewProps {
 }
 
 const INSTALL_HEADING = /^#instal/i;
-
 /**
  * A component page: its first demo on a stage that fills the first screen, and
  * the doc under it. Every other page keeps `DocView`.
@@ -64,21 +63,15 @@ export async function ComponentDocView({ doc, preview }: ComponentDocViewProps) 
         installHref={installHref}
       >
         <article className="@container min-w-0 pb-4">
-          <header className="mt-2 mb-8">
-            <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-semibold tracking-[-0.03em] break-words">
-              {doc.title}
-              <span
-                aria-hidden="true"
-                className="bg-brand ms-[0.05em] inline-block size-[0.16em]"
-              />
-            </h1>
+          <header className="mt-2 mb-12">
+            <h1 className="section-label tracking-[0.08em] uppercase">{doc.title}</h1>
             {doc.description && (
-              <p className="text-muted-strong mt-4 text-lg leading-relaxed text-pretty">
+              <p className="font-heading text-foreground mt-4 text-2xl leading-snug font-semibold tracking-[-0.02em] text-pretty md:text-[1.75rem]">
                 {doc.description}
               </p>
             )}
-            <NavBadge badge={badge} className="mt-4" />
-            <div className="mt-5">
+            <NavBadge badge={badge} className="mt-5" />
+            <div className="mt-8">
               <DocActions
                 page={doc.title}
                 url={docUrl}

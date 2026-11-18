@@ -3,6 +3,7 @@
 import { ThemeToggle } from '@/components/common/theme-toggle';
 import { useChatStore } from '@/features/chat/store/chat-store';
 import { CheckIcon } from '@repo/ui/icons/check';
+import { Drawer } from '@repo/ui/components/drawer';
 import { CodeIcon } from '@repo/ui/icons/code';
 import { ChevronDownIcon } from '@repo/ui/icons/chevron-down';
 import { RefreshIcon } from '@repo/ui/icons/refresh';
@@ -93,17 +94,13 @@ export function DemoStage({
 
   return (
     <StageContext value={value}>
-      <div
-        data-stage-shell
-        data-stage-mode={mode}
-        className={cn('grid min-w-0 gap-2.5', mode === 'code' && 'xl:grid-cols-2')}
-      >
+      <div data-stage-shell data-stage-mode={mode} className="grid min-w-0 gap-2.5">
         <section
           ref={stageRef}
           aria-label={t('label', { title })}
           className="bg-island relative flex h-[min(34rem,72svh)] scroll-mt-(--site-header-height) flex-col rounded-lg lg:h-[calc(100svh-1.25rem)]"
         >
-          <div className="flex justify-end p-3">
+          <div className="relative z-20 flex justify-end p-3">
             <div
               role="toolbar"
               aria-label={t('toolbar')}
@@ -160,19 +157,24 @@ export function DemoStage({
           </div>
         </section>
 
-        <section
-          aria-label={t('code')}
-          className={cn(
-            'bg-code min-w-0 overflow-hidden rounded-lg xl:h-[calc(100svh-1.25rem)] xl:overflow-auto',
-            mode !== 'code' && 'hidden',
-          )}
-        >
-          <div ref={setCodeOutlet} className="**:max-h-none" />
-        </section>
+        <Drawer open={mode === 'code'} onOpenChange={(open) => setMode(open ? 'code' : 'stage')}>
+          <Drawer.Content
+            side="right"
+            aria-label={t('code')}
+            showClose={false}
+            showDragHandle={false}
+            className="bg-island w-[92vw] border-0 sm:w-[min(46rem,62vw)]"
+          >
+            <div
+              ref={setCodeOutlet}
+              className="-mx-3 -mb-3 overflow-hidden rounded-md **:max-h-none"
+            />
+          </Drawer.Content>
+        </Drawer>
 
         <div
           id="stage-doc"
-          className="mx-auto w-full max-w-3xl min-w-0 scroll-mt-(--site-header-height) pt-6 xl:col-span-full xl:pt-10"
+          className="mx-auto w-full max-w-3xl min-w-0 scroll-mt-(--site-header-height) pt-6 lg:col-span-full xl:pt-10"
         >
           {children}
         </div>

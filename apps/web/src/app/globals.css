@@ -799,3 +799,43 @@ body:has(.hero-stage) .site-header {
     }
   }
 }
+
+/*
+ * The doc under a stage reads as a spec sheet: every section opens with a small
+ * uppercase label instead of a heading, and a prop name sits in a chip.
+ */
+[data-stage-shell] [data-doc-prose] h2 {
+  margin-block: 3.5rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+[data-stage-shell] [data-doc-prose] h3 {
+  margin-block: 2rem 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+[data-stage-shell] [data-doc-prose] th {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+[data-stage-shell] [data-doc-prose] td:first-child code {
+  padding: 0.25rem 0.5rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background-color: var(--secondary);
+  color: var(--foreground);
+  white-space: nowrap;
+}
