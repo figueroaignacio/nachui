@@ -31,7 +31,7 @@ describe('foundations MDX components', () => {
 
   it('shows a grade for every contrast pair', () => {
     const html = renderToStaticMarkup(createElement(foundationsComponents.ContrastTable));
-    expect(html).toContain('16.93:1');
+    expect(html).toContain('18.46:1');
     expect(html).not.toContain('>fail<');
   });
 });

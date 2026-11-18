@@ -5,8 +5,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.15, 0, 0],
-          "hex": "#0b0b0b"
+          "components": [0.13, 0, 0],
+          "hex": "#070707"
         }
       },
       "foreground": {
@@ -21,8 +21,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.195, 0, 0],
-          "hex": "#151515"
+          "components": [0.225, 0, 0],
+          "hex": "#1c1c1c"
         }
       },
       "card-foreground": {
@@ -37,8 +37,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.215, 0, 0],
-          "hex": "#191919"
+          "components": [0.25, 0, 0],
+          "hex": "#222222"
         }
       },
       "popover-foreground": {
@@ -53,8 +53,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.17, 0, 0],
-          "hex": "#0f0f0f"
+          "components": [0.185, 0, 0],
+          "hex": "#131313"
         }
       },
       "inverse": {
@@ -104,8 +104,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.25, 0, 0],
-          "hex": "#222222"
+          "components": [0.28, 0, 0],
+          "hex": "#292929"
         }
       },
       "secondary-foreground": {
@@ -120,8 +120,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.25, 0, 0],
-          "hex": "#222222"
+          "components": [0.28, 0, 0],
+          "hex": "#292929"
         }
       },
       "accent-foreground": {
@@ -136,8 +136,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.25, 0, 0],
-          "hex": "#222222"
+          "components": [0.28, 0, 0],
+          "hex": "#292929"
         }
       },
       "muted-foreground": {
@@ -162,8 +162,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.28, 0, 0],
-          "hex": "#292929"
+          "components": [0.31, 0, 0],
+          "hex": "#303030"
         }
       },
       "border-interactive": {
@@ -178,8 +178,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.34, 0, 0],
-          "hex": "#383838"
+          "components": [0.37, 0, 0],
+          "hex": "#404040"
         }
       },
       "ring": {
@@ -194,8 +194,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.28, 0, 0],
-          "hex": "#292929"
+          "components": [0.31, 0, 0],
+          "hex": "#303030"
         }
       },
       "grid-color": {
@@ -375,8 +375,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.12, 0, 0],
-          "hex": "#060606"
+          "components": [0.16, 0, 0],
+          "hex": "#0d0d0d"
         }
       },
       "code-plain": {
