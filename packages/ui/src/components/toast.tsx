@@ -161,15 +161,15 @@ const SWIPE_DISTANCE = 80;
 const SWIPE_VELOCITY = 500;
 
 const toastVariants = cva(
-  'pointer-events-auto relative flex w-full items-center gap-3 overflow-hidden rounded-md border p-3.5 bg-popover shadow-md touch-pan-y focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+  'pointer-events-auto relative flex w-full items-center gap-3 overflow-hidden rounded-md p-3.5 bg-popover shadow-md touch-pan-y focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
   {
     variants: {
       variant: {
-        default: 'text-foreground border-border',
-        success: 'text-success-text border-success-border',
-        error: 'text-destructive-text border-destructive-border',
-        info: 'text-info-text border-info-border',
-        warning: 'text-warning-text border-warning-border',
+        default: 'text-foreground',
+        success: 'text-success-text',
+        error: 'text-destructive-text',
+        info: 'text-info-text',
+        warning: 'text-warning-text',
       },
     },
     defaultVariants: {
@@ -328,7 +328,7 @@ function ToastItem({ toast: t, onDismiss, position, dismissLabel, regionPaused }
                   t.action?.onClick();
                   onDismiss(t.id);
                 }}
-                className="hover:bg-muted focus-visible:ring-ring mt-2 shrink-0 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                className="bg-secondary hover:bg-muted focus-visible:ring-ring mt-2 shrink-0 rounded-md px-3 py-1.5 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
               >
                 {t.action.label}
               </button>

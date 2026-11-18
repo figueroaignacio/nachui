@@ -50,7 +50,7 @@ export function Streaming() {
   };
 
   return (
-    <div className="border-border h-[26rem] w-full max-w-2xl overflow-hidden rounded-lg border">
+    <div className="bg-card h-[26rem] w-full max-w-2xl overflow-hidden rounded-lg shadow-sm">
       <Chat
         messages={messages}
         status={status}

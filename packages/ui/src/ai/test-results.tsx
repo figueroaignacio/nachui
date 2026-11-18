@@ -170,7 +170,7 @@ const TestResultsRoot = ({
         data-slot="test-results"
         data-failed={failed ? '' : undefined}
         className={cn(
-          'border-border bg-card text-card-foreground w-full min-w-0 overflow-hidden rounded-lg border',
+          'bg-card text-card-foreground w-full min-w-0 overflow-hidden rounded-lg shadow-sm',
           className,
         )}
         {...props}
@@ -242,7 +242,7 @@ const TestResultsSummary = ({
             key={stat.key}
             data-slot={`test-results-${stat.key}`}
             className={cn(
-              'bg-surface-muted flex flex-col-reverse gap-0.5 rounded-md px-3 py-2',
+              'bg-secondary flex flex-col-reverse gap-0.5 rounded-md px-3 py-2',
               stat.key === 'failed' && summary.failed > 0 && 'bg-destructive-surface',
             )}
           >
@@ -441,7 +441,7 @@ const TestResultsError = ({
       ref={ref}
       data-slot="test-results-error"
       className={cn(
-        'bg-destructive-surface text-destructive-text border-destructive-border overflow-x-auto rounded-md border px-2.5 py-2 font-mono text-xs leading-relaxed break-words whitespace-pre-wrap',
+        'bg-destructive-surface text-destructive-text overflow-x-auto rounded-md px-2.5 py-2 font-mono text-xs leading-relaxed break-words whitespace-pre-wrap',
         className,
       )}
       {...props}

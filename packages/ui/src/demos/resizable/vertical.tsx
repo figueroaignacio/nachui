@@ -4,10 +4,7 @@ import { Resizable } from '../../components/resizable';
 
 export function Vertical() {
   return (
-    <Resizable
-      direction="vertical"
-      className="border-border bg-card h-64 w-full max-w-md rounded-lg border"
-    >
+    <Resizable direction="vertical" className="bg-card h-64 w-full max-w-md rounded-lg shadow-sm">
       <Resizable.Panel defaultSize={60} minSize={25}>
         <div className="flex h-full items-center justify-center p-4">
           <span className="text-sm font-medium">Preview</span>

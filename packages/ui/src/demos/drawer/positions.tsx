@@ -57,7 +57,7 @@ export function Positions() {
             </Drawer.Header>
             <ul className="text-muted-foreground flex flex-col gap-2 text-sm">
               {panel.items.map((item) => (
-                <li key={item} className="border-border bg-card rounded-md border px-3 py-2">
+                <li key={item} className="bg-card rounded-md px-3 py-2 shadow-sm">
                   {item}
                 </li>
               ))}

@@ -37,9 +37,9 @@ Each surface has a matching `*-foreground` token for text on it. In dark mode th
 | ---------------------- | ---------------------- | ---------------------- | ------------------------------------------ |
 | **Primary**            | `oklch(52% 0.115 234)` | `oklch(82% 0.095 230)` | Main buttons, checked controls             |
 | **Primary Foreground** | `oklch(99% 0.003 230)` | `oklch(22% 0.04 232)`  | Text on primary                            |
-| **Secondary**          | `oklch(92.5% 0 0)`     | `oklch(28% 0 0)`       | Secondary buttons, chips                   |
-| **Accent**             | `oklch(94% 0 0)`       | `oklch(28% 0 0)`       | Subtle hover and selected backgrounds      |
-| **Muted**              | `oklch(91.5% 0 0)`     | `oklch(28% 0 0)`       | Item highlight in menus, tracks, skeletons |
+| **Secondary**          | `oklch(92.5% 0 0)`     | `oklch(30.5% 0 0)`     | Secondary buttons, chips, field fill       |
+| **Accent**             | `oklch(94% 0 0)`       | `oklch(30.5% 0 0)`     | Subtle hover and selected backgrounds      |
+| **Muted**              | `oklch(91.5% 0 0)`     | `oklch(30.5% 0 0)`     | Item highlight in menus, tracks, skeletons |
 | **Muted Foreground**   | `oklch(46% 0 0)`       | `oklch(76% 0 0)`       | Captions, placeholders, secondary text     |
 | **Muted Strong**       | `oklch(36% 0 0)`       | `oklch(87% 0 0)`       | Long-form reading text                     |
 
@@ -47,11 +47,11 @@ Each surface has a matching `*-foreground` token for text on it. In dark mode th
 
 | Token                  | Light Mode             | Dark Mode              | Role                                                        |
 | ---------------------- | ---------------------- | ---------------------- | ----------------------------------------------------------- |
-| **Border**             | `oklch(88.5% 0 0)`     | `oklch(31% 0 0)`       | Default stroke on surfaces and dividers                     |
+| **Border**             | `oklch(88.5% 0 0)`     | `oklch(33.5% 0 0)`     | Default stroke on surfaces and dividers                     |
 | **Border Interactive** | `oklch(60% 0 0)`       | `oklch(55% 0 0)`       | Hover and focus-within stroke on fields, scrollbar thumb    |
 | **Input**              | `oklch(82% 0 0)`       | `oklch(37% 0 0)`       | Field strokes; `dark:bg-input/30` tints fields in dark mode |
 | **Ring**               | `oklch(60% 0.115 232)` | `oklch(82% 0.095 230)` | Focus rings                                                 |
-| **Rule**               | `oklch(88.5% 0 0)`     | `oklch(31% 0 0)`       | Editorial hairlines (`section-rule`, `rule-bleed`)          |
+| **Rule**               | `oklch(88.5% 0 0)`     | `oklch(33.5% 0 0)`     | Editorial hairlines (`section-rule`, `rule-bleed`)          |
 
 ### Feedback Colors
 
@@ -147,11 +147,11 @@ Segmented controls apply the first case: the tabs list and the toggle group are 
 
 | Utility     | Use                                                                                                                |
 | ----------- | ------------------------------------------------------------------------------------------------------------------ |
-| `shadow-sm` | Inline controls that sit slightly above their track, like the active tab pill                                      |
+| `shadow-sm` | Cards and other in-flow containers, and inline controls that sit above their track, like the active tab pill       |
 | `shadow-md` | Anchored floating surfaces: popover, hover card, dropdown and context menu, select content, navigation menu, toast |
 | `shadow-lg` | Modal surfaces: dialog, sheet, drawer                                                                              |
 
-Cards and other in-flow containers stay flat and rely on `border` plus `bg-card`.
+Nothing draws a box with a border. A card or any other in-flow container is `bg-card` with `shadow-sm`, so it floats one step above the island it sits on. A border is only a rule: a divider between rows, the rail of a list, or the dashed outline of a drop target.
 
 ### Buttons & Interactive Elements
 
@@ -162,7 +162,7 @@ Cards and other in-flow containers stay flat and rely on `border` plus `bg-card`
 
 ### Floating Surfaces
 
-Every surface anchored to a trigger shares one recipe: `bg-popover text-popover-foreground border border-border rounded-md shadow-md`.
+Every surface anchored to a trigger shares one recipe: `bg-popover text-popover-foreground rounded-md shadow-md`, with no border.
 
 - Menu-like containers (dropdown, context menu, select content, navigation menu) use `p-1`.
 - Content-like containers (popover, hover card) use `p-4`.
@@ -172,16 +172,16 @@ Every surface anchored to a trigger shares one recipe: `bg-popover text-popover-
 ### Cards & Containers
 
 - **Corner Radius**: `rounded-lg` for primary containers, smaller for anything nested
-- **Background**: `bg-card` with a `border-border` stroke
-- **Shadow**: none; see the elevation scale
+- **Background**: `bg-card`, no stroke
+- **Shadow**: `shadow-sm`; see the elevation scale
 - **Grid**: `--grid-color` for decorative grid overlays, and the `bg-hatch` utility for striped placeholder areas
 
 ### Inputs & Forms
 
-- **Background**: transparent in light mode, `dark:bg-input/30` in dark mode
-- **Border**: 1px `border-input`, moving to `border-border-interactive` on hover or focus-within
-- **Focus**: on keyboard focus the border and a 1px ring both take `ring`, a 2px band at about 3:1 against the page; invalid fields use the destructive hue instead
-- **Invalid**: `aria-invalid` switches the border and ring to destructive
+- **Background**: filled with `bg-secondary`, moving to `bg-muted` on hover
+- **Border**: none
+- **Focus**: a 2px ring in `ring`, at about 3:1 against the page; invalid fields use the destructive hue instead
+- **Invalid**: `aria-invalid` draws the 2px ring in destructive
 - **Placeholder**: `muted-foreground`
 
 ### Scrollbars

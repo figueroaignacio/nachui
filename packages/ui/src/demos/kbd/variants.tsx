@@ -16,7 +16,7 @@ export function Variants() {
         align="center"
         justify="between"
         gap="4"
-        className="border-border bg-card rounded-lg border px-3 py-2"
+        className="bg-card rounded-lg px-3 py-2 shadow-sm"
       >
         <span className="text-muted-foreground truncate text-sm">
           Close without saving the draft

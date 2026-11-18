@@ -5,8 +5,8 @@ import { cn } from '../lib/cn';
 const frameVariants = cva('flex w-full flex-col rounded-xl', {
   variants: {
     variant: {
-      default: 'bg-muted/40 border-border border',
-      ghost: 'bg-transparent border-transparent border',
+      default: 'bg-muted/40',
+      ghost: 'bg-transparent',
     },
     spacing: {
       sm: 'p-1 gap-1',
@@ -122,7 +122,7 @@ const FramePanel = ({
       ref={ref}
       data-slot="frame-panel"
       className={cn(
-        'bg-card text-card-foreground border-border overflow-hidden rounded-lg border p-4',
+        'bg-card text-card-foreground overflow-hidden rounded-lg p-4 shadow-sm',
         className,
       )}
       {...props}

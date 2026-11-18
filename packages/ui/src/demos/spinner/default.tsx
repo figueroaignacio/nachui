@@ -2,7 +2,7 @@ import { Spinner } from '../../components/spinner';
 
 export function Default() {
   return (
-    <div className="border-border bg-card flex w-full max-w-sm flex-col items-center gap-3 rounded-lg border px-6 py-10">
+    <div className="bg-card flex w-full max-w-sm flex-col items-center gap-3 rounded-lg px-6 py-10 shadow-sm">
       <Spinner />
       <div className="text-center">
         <p className="text-sm font-medium">Loading invoices</p>

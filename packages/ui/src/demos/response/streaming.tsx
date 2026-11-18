@@ -21,7 +21,7 @@ export function Streaming() {
       <button
         type="button"
         onClick={() => setCount(0)}
-        className="border-border hover:bg-muted w-fit rounded-full border px-3 py-1.5 text-xs transition-colors"
+        className="bg-card hover:bg-muted w-fit rounded-full px-3 py-1.5 text-xs shadow-sm transition-colors"
       >
         Stream again
       </button>

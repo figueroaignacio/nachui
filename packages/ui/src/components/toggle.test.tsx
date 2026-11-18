@@ -121,7 +121,7 @@ describe('Toggle', () => {
       </Toggle>,
     );
     const toggle = screen.getByRole('button', { name: 'Bold' });
-    expect(toggle).toHaveClass('border', 'border-input', 'h-10', 'custom');
+    expect(toggle).toHaveClass('bg-secondary', 'h-10', 'custom');
   });
 
   it('has no axe violations', async () => {

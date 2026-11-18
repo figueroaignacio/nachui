@@ -9,7 +9,7 @@ const deployments = [
 
 export function Statuses() {
   return (
-    <div className="border-border bg-card divide-border w-full max-w-md divide-y rounded-lg border">
+    <div className="bg-card divide-border w-full max-w-md divide-y rounded-lg shadow-sm">
       {deployments.map((deployment) => (
         <div key={deployment.id} className="flex items-center justify-between gap-3 px-4 py-3">
           <div className="flex min-w-0 flex-col">

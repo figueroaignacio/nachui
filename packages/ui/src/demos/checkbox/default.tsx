@@ -8,7 +8,7 @@ const invoices = [
 
 export function Default() {
   return (
-    <div className="border-border bg-card w-full max-w-md rounded-lg border">
+    <div className="bg-card w-full max-w-md rounded-lg shadow-sm">
       {invoices.map((invoice) => (
         <div
           key={invoice.id}

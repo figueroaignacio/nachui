@@ -582,7 +582,7 @@ const FormErrorSummary = ({
       aria-labelledby={titleId}
       data-slot="form-error-summary"
       className={cn(
-        'border-destructive-border bg-destructive-surface text-destructive-text rounded-md border p-4 text-sm',
+        'bg-destructive-surface text-destructive-text rounded-md p-4 text-sm',
         className,
       )}
       {...props}

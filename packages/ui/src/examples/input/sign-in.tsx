@@ -5,7 +5,7 @@ import { Label } from '../../components/label';
 
 export function SignIn() {
   return (
-    <form className="border-border bg-card flex w-full max-w-sm flex-col gap-4 rounded-lg border p-6">
+    <form className="bg-card flex w-full max-w-sm flex-col gap-4 rounded-lg p-6 shadow-sm">
       <div>
         <p className="text-base font-medium">Sign in</p>
         <p className="text-muted-foreground text-sm">Use your work email to continue.</p>

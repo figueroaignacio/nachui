@@ -14,7 +14,7 @@ export function Ratios() {
         <div key={ratio.label} className="flex flex-col gap-1.5">
           <AspectRatio
             ratio={ratio.value}
-            className="border-border bg-hatch text-muted-foreground flex items-center justify-center rounded-lg border"
+            className="bg-hatch text-muted-foreground flex items-center justify-center rounded-lg"
           >
             <span className="font-mono text-xs">{ratio.label}</span>
           </AspectRatio>

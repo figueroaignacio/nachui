@@ -6,7 +6,7 @@ import { cn } from '../lib/cn';
 import { Label } from './label';
 
 const textareaVariants = cva(
-  'placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring aria-invalid:border-destructive aria-invalid:focus-visible:ring-destructive flex w-full min-w-0 rounded-md border bg-transparent transition-[color,box-shadow] outline-none focus-visible:ring-[1px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40',
+  'placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground focus-visible:ring-ring aria-invalid:ring-2 aria-invalid:ring-destructive aria-invalid:focus-visible:ring-destructive flex w-full min-w-0 rounded-md bg-secondary transition-[color,box-shadow] outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40',
   {
     variants: {
       size: {
@@ -197,7 +197,7 @@ const TextareaRoot = ({
         defaultValue={defaultValue}
         className={cn(
           textareaVariants({ size, resize: autoResize ? 'none' : resize }),
-          error && 'border-destructive focus-visible:border-destructive',
+          error && 'ring-destructive ring-2',
           className,
         )}
         aria-invalid={!!error}

@@ -20,7 +20,7 @@ export function Controlled() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="border-border hover:bg-muted rounded-full border px-3 py-1.5 text-xs transition-colors"
+        className="bg-card hover:bg-muted rounded-full px-3 py-1.5 text-xs shadow-sm transition-colors"
       >
         Open command palette
       </button>

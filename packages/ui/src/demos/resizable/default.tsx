@@ -4,7 +4,7 @@ import { Resizable } from '../../components/resizable';
 
 export function Default() {
   return (
-    <Resizable className="border-border bg-card h-48 w-full max-w-md rounded-lg border">
+    <Resizable className="bg-card h-48 w-full max-w-md rounded-lg shadow-sm">
       <Resizable.Panel defaultSize={35} minSize={20}>
         <div className="flex h-full flex-col gap-2 p-4">
           <span className="text-sm font-medium">Files</span>

@@ -194,7 +194,7 @@ const StackTraceRoot = ({
         ref={ref}
         data-slot="stack-trace"
         className={cn(
-          'border-destructive-border bg-card text-card-foreground w-full min-w-0 overflow-hidden rounded-lg border',
+          'bg-card text-card-foreground w-full min-w-0 overflow-hidden rounded-lg shadow-sm',
           className,
         )}
         {...props}

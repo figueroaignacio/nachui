@@ -21,7 +21,7 @@ export function Default() {
       {cycles.map((cycle) => (
         <label
           key={cycle.value}
-          className="border-border bg-card flex cursor-pointer items-center gap-3 rounded-lg border p-3"
+          className="bg-card flex cursor-pointer items-center gap-3 rounded-lg p-3 shadow-sm"
         >
           <Radio name="billing-cycle" value={cycle.value} defaultChecked={cycle.defaultChecked} />
           <span className="flex flex-col gap-0.5">

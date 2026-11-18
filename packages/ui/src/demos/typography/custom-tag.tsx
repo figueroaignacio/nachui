@@ -2,7 +2,7 @@ import { Typography } from '../../components/typography';
 
 export function CustomTag() {
   return (
-    <div className="border-border bg-card flex w-full max-w-md flex-col gap-2 rounded-lg border p-5">
+    <div className="bg-card flex w-full max-w-md flex-col gap-2 rounded-lg p-5 shadow-sm">
       <Typography as="div" variant="h4">
         Release 2.4.0
       </Typography>

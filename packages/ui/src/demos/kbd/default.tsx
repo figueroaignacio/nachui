@@ -8,7 +8,7 @@ export function Default() {
       align="center"
       justify="between"
       gap="3"
-      className="border-border bg-card w-full max-w-sm rounded-lg border px-3 py-2"
+      className="bg-card w-full max-w-sm rounded-lg px-3 py-2 shadow-sm"
     >
       <Flex align="center" gap="2" className="text-muted-foreground min-w-0">
         <SearchIcon className="size-4 shrink-0" size={16} />

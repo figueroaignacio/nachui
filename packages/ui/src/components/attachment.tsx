@@ -294,8 +294,8 @@ const AttachmentRoot = ({
         data-status={status}
         aria-busy={status === 'uploading' || undefined}
         className={cn(
-          'group/attachment border-border bg-card text-card-foreground relative overflow-hidden border transition-colors',
-          'data-[status=error]:border-destructive/60 data-[status=uploading]:text-muted-foreground',
+          'group/attachment bg-card text-card-foreground relative overflow-hidden shadow-sm transition-colors',
+          'data-[status=error]:ring-destructive/60 data-[status=uploading]:text-muted-foreground data-[status=error]:ring-2',
           variant === 'row' && 'flex items-center gap-3 rounded-lg p-2.5 pe-2',
           variant === 'card' && 'flex w-40 flex-col rounded-lg',
           variant === 'chip' &&

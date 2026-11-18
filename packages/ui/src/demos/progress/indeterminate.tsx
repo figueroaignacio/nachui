@@ -2,7 +2,7 @@ import { Progress } from '../../components/progress';
 
 export function Indeterminate() {
   return (
-    <div className="border-border bg-card w-full max-w-sm rounded-lg border p-5">
+    <div className="bg-card w-full max-w-sm rounded-lg p-5 shadow-sm">
       <p className="text-sm font-medium">Importing contacts from HubSpot</p>
       <p className="text-muted-foreground mt-1 text-xs">
         We do not know the total yet, so this bar keeps moving until the import finishes.

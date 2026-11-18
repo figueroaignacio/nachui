@@ -11,7 +11,7 @@ describe('IconTile', () => {
   it('applies the outline variant and default size by default', () => {
     render(<IconTile data-testid="tile" />);
     const tile = screen.getByTestId('tile');
-    expect(tile).toHaveClass('border');
+    expect(tile).toHaveClass('shadow-sm');
     expect(tile).toHaveClass('size-10');
     expect(tile).toHaveClass('rounded-lg');
   });

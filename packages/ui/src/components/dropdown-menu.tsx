@@ -319,7 +319,7 @@ const DropdownMenuTrigger = ({
       transition={springs.snappy}
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium',
-        'text-foreground border-border border',
+        'text-foreground',
         'hover:bg-muted transition-colors',
         'ring-offset-background focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
         className,
@@ -451,7 +451,7 @@ const DropdownMenuContent = ({
             exit="exit"
             style={style}
             className={cn(
-              'bg-popover text-popover-foreground border-border z-500 max-h-(--available-height) min-w-48 overflow-y-auto overscroll-contain rounded-md border shadow-md outline-none',
+              'bg-popover text-popover-foreground z-500 max-h-(--available-height) min-w-48 overflow-y-auto overscroll-contain rounded-md shadow-md outline-none',
               ORIGIN_CLASSES[verticalSide][align],
               className,
             )}

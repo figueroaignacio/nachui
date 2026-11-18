@@ -9,11 +9,7 @@ import { Spacer } from '../../layout/spacer';
 
 export function Default() {
   return (
-    <Flex
-      align="center"
-      gap="2"
-      className="border-border bg-card w-full max-w-md rounded-lg border px-3 py-2"
-    >
+    <Flex align="center" gap="2" className="bg-card w-full max-w-md rounded-lg px-3 py-2 shadow-sm">
       <span className="px-2 text-sm font-semibold">Northwind</span>
       <Spacer />
       <Button variant="ghost" size="icon" aria-label="Search">

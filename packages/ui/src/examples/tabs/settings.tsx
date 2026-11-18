@@ -14,7 +14,7 @@ export function Settings() {
         <Tabs.Trigger value="danger">Danger zone</Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content value="general">
-        <div className="border-border bg-card flex flex-col gap-4 rounded-lg border p-4">
+        <div className="bg-card flex flex-col gap-4 rounded-lg p-4 shadow-sm">
           <Input id="workspace-name" label="Workspace name" defaultValue="Northwind Labs" />
           <Input
             id="workspace-slug"
@@ -28,7 +28,7 @@ export function Settings() {
         </div>
       </Tabs.Content>
       <Tabs.Content value="notifications">
-        <div className="border-border bg-card divide-border divide-y rounded-lg border">
+        <div className="bg-card divide-border divide-y rounded-lg shadow-sm">
           <div className="flex items-center justify-between gap-4 p-4">
             <span className="text-sm">Deploy finished</span>
             <Switch aria-label="Deploy finished" defaultChecked />
@@ -40,7 +40,7 @@ export function Settings() {
         </div>
       </Tabs.Content>
       <Tabs.Content value="danger">
-        <div className="border-destructive-border bg-destructive-surface flex items-center justify-between gap-4 rounded-lg border p-4">
+        <div className="bg-destructive-surface flex items-center justify-between gap-4 rounded-lg p-4">
           <div>
             <p className="text-destructive-text text-sm font-medium">Delete workspace</p>
             <p className="text-muted-foreground text-xs">This cannot be undone.</p>

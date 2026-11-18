@@ -31,13 +31,13 @@ function LoaderIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
 }
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer rounded-md text-sm font-medium outline-none select-none relative overflow-hidden ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 aria-disabled:pointer-events-none aria-disabled:opacity-40 aria-invalid:ring-1 aria-invalid:ring-destructive/50 aria-invalid:border-destructive transition-colors',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer rounded-md text-sm font-medium outline-none select-none relative overflow-hidden ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 aria-disabled:pointer-events-none aria-disabled:opacity-40 aria-invalid:ring-1 aria-invalid:ring-destructive/50 aria-invalid:ring-2 aria-invalid:ring-destructive transition-colors',
   {
     variants: {
       variant: {
         default: 'bg-primary text-primary-foreground hover:bg-primary/90',
         destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-        outline: 'border-border border bg-transparent hover:bg-muted text-foreground',
+        outline: 'bg-card hover:bg-muted text-foreground shadow-sm',
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         ghost: 'hover:bg-muted text-foreground',
         link: 'text-foreground underline-offset-4 hover:underline',

@@ -254,7 +254,7 @@ describe('InputOTP', () => {
     expect(input).toHaveAttribute('id', 'otp');
     expect(input).toHaveAttribute('aria-invalid', 'true');
     expect(container.querySelector('[data-slot="input-otp"]')).toHaveAttribute('data-disabled');
-    expect(slots(container)[0]?.className).toContain('border-destructive');
+    expect(slots(container)[0]?.className).toContain('ring-destructive');
   });
 
   it('renders custom groups, slots and separators', async () => {

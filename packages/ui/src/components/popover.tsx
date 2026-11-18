@@ -381,7 +381,7 @@ const PopoverPanel = ({
       style={{ ...POPOVER_STYLE, ...style, ...floating.style }}
       onKeyDown={handleKeyDown}
       className={cn(
-        'bg-popover text-popover-foreground border-border z-500 max-h-(--available-height) w-72 max-w-[calc(100vw-2rem)] overflow-y-auto rounded-md border p-4 shadow-md outline-none',
+        'bg-popover text-popover-foreground z-500 max-h-(--available-height) w-72 max-w-[calc(100vw-2rem)] overflow-y-auto rounded-md p-4 shadow-md outline-none',
         floatingOrigin[side],
         className,
       )}

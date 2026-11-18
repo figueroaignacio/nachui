@@ -542,7 +542,7 @@ const FileUploadDropzone = ({
       className={cn(
         'border-border bg-card text-muted-foreground flex min-h-40 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-6 text-center text-sm transition-colors outline-none',
         'hover:bg-muted/50 focus-visible:ring-ring ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2',
-        'data-[dragging]:border-primary data-[dragging]:bg-primary/5 data-[disabled]:pointer-events-none data-[disabled]:opacity-40',
+        'data-[dragging]:ring-primary data-[dragging]:bg-primary/5 data-[disabled]:pointer-events-none data-[disabled]:opacity-40 data-[dragging]:ring-2',
         '[&_svg]:size-6',
         className,
       )}
@@ -584,7 +584,7 @@ const FileUploadTrigger = ({
       data-slot="file-upload-trigger"
       disabled={disabled || disabledProp}
       className={cn(
-        'border-border text-foreground hover:bg-muted focus-visible:ring-ring ring-offset-background inline-flex h-9 items-center justify-center gap-2 rounded-md border bg-transparent px-4 text-sm font-medium whitespace-nowrap transition-colors outline-none select-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 [&_svg]:size-4',
+        'text-foreground hover:bg-muted focus-visible:ring-ring ring-offset-background bg-card inline-flex h-9 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium whitespace-nowrap shadow-sm transition-colors outline-none select-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40 [&_svg]:size-4',
         className,
       )}
       onClick={(event) => {
@@ -651,10 +651,7 @@ const FileUploadItem = ({
       <li
         ref={ref}
         data-slot="file-upload-item"
-        className={cn(
-          'border-border bg-card flex items-center gap-3 rounded-lg border p-3',
-          className,
-        )}
+        className={cn('bg-card flex items-center gap-3 rounded-lg p-3 shadow-sm', className)}
         {...props}
       >
         {children ?? (
@@ -820,7 +817,7 @@ const FileUploadClear = ({
       data-slot="file-upload-clear"
       disabled={disabled}
       className={cn(
-        'text-muted-foreground hover:text-foreground relative self-start text-xs underline-offset-4 transition-colors before:absolute before:-inset-x-2 before:-inset-y-2 hover:underline disabled:pointer-events-none disabled:opacity-40',
+        'text-muted-foreground hover:text-foreground focus-visible:ring-ring relative self-start rounded-sm text-xs underline-offset-4 transition-colors outline-none before:absolute before:-inset-x-2 before:-inset-y-2 hover:underline focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-40',
         className,
       )}
       onClick={(event) => {

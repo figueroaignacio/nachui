@@ -19,7 +19,7 @@ export function WithText() {
         onConfirm={() => setResult(`${PROJECT} transferred.`)}
         onCancel={() => setResult('Nothing changed.')}
       >
-        <Confirm.Trigger className="border-border hover:bg-muted rounded-md border px-3 py-1.5 text-sm transition-colors">
+        <Confirm.Trigger className="bg-card hover:bg-muted rounded-md px-3 py-1.5 text-sm shadow-sm transition-colors">
           Transfer project
         </Confirm.Trigger>
       </Confirm>

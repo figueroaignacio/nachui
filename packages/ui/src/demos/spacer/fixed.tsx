@@ -3,7 +3,7 @@ import { Spacer } from '../../layout/spacer';
 
 export function Fixed() {
   return (
-    <div className="border-border bg-card w-full max-w-sm rounded-lg border p-6">
+    <div className="bg-card w-full max-w-sm rounded-lg p-6 shadow-sm">
       <p className="text-base font-semibold">Delete workspace</p>
       <Spacer size="2" />
       <p className="text-muted-foreground text-sm">

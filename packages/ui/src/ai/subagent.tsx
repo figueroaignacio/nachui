@@ -239,7 +239,7 @@ const SubagentHeader = ({
         onClick?.(event);
       }}
       className={cn(
-        'border-border bg-card hover:bg-muted/60 focus-visible:ring-ring flex w-full items-center gap-3 rounded-lg border px-3 py-2.5 text-start transition-colors focus-visible:ring-2 focus-visible:outline-none',
+        'bg-card hover:bg-muted/60 focus-visible:ring-ring flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-start shadow-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
         className,
       )}
       {...props}

@@ -176,7 +176,7 @@ const PlanRoot = ({
         data-slot="plan"
         data-state={open ? 'open' : 'closed'}
         className={cn(
-          'border-border bg-card text-card-foreground w-full overflow-hidden rounded-lg border',
+          'bg-card text-card-foreground w-full overflow-hidden rounded-lg shadow-sm',
           className,
         )}
         {...props}

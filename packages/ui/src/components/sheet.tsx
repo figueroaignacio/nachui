@@ -45,11 +45,11 @@ type SheetSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
 const SIDE_CLASSES: Record<SheetSide, string> = {
   right:
-    'inset-y-0 right-0 h-full border-l pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)]',
-  left: 'inset-y-0 left-0 h-full border-r pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]',
-  top: 'inset-x-0 top-0 w-full border-b pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)]',
+    'inset-y-0 right-0 h-full pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)]',
+  left: 'inset-y-0 left-0 h-full pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]',
+  top: 'inset-x-0 top-0 w-full pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)]',
   bottom:
-    'inset-x-0 bottom-0 w-full border-t pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]',
+    'inset-x-0 bottom-0 w-full pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]',
 };
 
 const CLOSE_TOP: Record<SheetSide, string> = {
@@ -335,7 +335,7 @@ const SheetContent = ({
             exit="exit"
             style={PANEL_STYLE}
             className={cn(
-              'bg-popover text-popover-foreground border-border fixed z-500 flex max-w-full flex-col shadow-lg outline-none',
+              'bg-popover text-popover-foreground fixed z-500 flex max-w-full flex-col shadow-lg outline-none',
               SIDE_CLASSES[side],
               horizontal ? HORIZONTAL_SIZE[size] : VERTICAL_SIZE[size],
               className,

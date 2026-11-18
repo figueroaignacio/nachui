@@ -12,10 +12,9 @@ const bubbleVariants = cva(
         secondary: 'bg-secondary text-secondary-foreground',
         muted: 'bg-muted text-foreground',
         tinted: 'bg-primary/10 text-foreground',
-        outline: 'border-border text-foreground border bg-transparent',
+        outline: 'text-foreground bg-card shadow-sm',
         ghost: 'text-foreground bg-transparent',
-        destructive:
-          'bg-destructive-surface text-destructive-text border-destructive-border border',
+        destructive: 'bg-destructive-surface text-destructive-text',
       },
       align: {
         start: 'self-start',
@@ -30,7 +29,7 @@ const bubbleVariants = cva(
 );
 
 const bubbleReactionsVariants = cva(
-  'border-border bg-background absolute z-10 flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-xs leading-none shadow-sm select-none',
+  'bg-card absolute z-10 flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-xs leading-none shadow-sm select-none',
   {
     variants: {
       side: {

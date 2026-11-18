@@ -94,15 +94,15 @@ function InfoIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
 }
 
 const calloutVariants = cva(
-  'group/callout flex w-full items-start gap-3 rounded-md border p-3.5 text-sm',
+  'group/callout flex w-full items-start gap-3 rounded-md p-3.5 text-sm',
   {
     variants: {
       variant: {
-        default: 'bg-surface-muted text-card-foreground border-border',
-        info: 'bg-info-surface text-info-text border-info-border',
-        warning: 'bg-warning-surface text-warning-text border-warning-border',
-        danger: 'bg-destructive-surface text-destructive-text border-destructive-border',
-        success: 'bg-success-surface text-success-text border-success-border',
+        default: 'bg-surface-muted text-card-foreground',
+        info: 'bg-info-surface text-info-text',
+        warning: 'bg-warning-surface text-warning-text',
+        danger: 'bg-destructive-surface text-destructive-text',
+        success: 'bg-success-surface text-success-text',
       },
     },
     defaultVariants: {

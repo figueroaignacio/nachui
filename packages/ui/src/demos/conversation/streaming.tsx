@@ -36,7 +36,7 @@ export function Streaming() {
         <button
           type="button"
           onClick={() => setRunning((previous) => !previous)}
-          className="border-border hover:bg-muted w-fit rounded-full border px-3 py-1.5 text-xs transition-colors"
+          className="bg-card hover:bg-muted w-fit rounded-full px-3 py-1.5 text-xs shadow-sm transition-colors"
         >
           {running ? 'Stop stream' : 'Start stream'}
         </button>
@@ -48,7 +48,7 @@ export function Streaming() {
           Clear
         </button>
       </div>
-      <div className="border-border h-64 w-full overflow-hidden rounded-lg border">
+      <div className="bg-card h-64 w-full overflow-hidden rounded-lg shadow-sm">
         <Conversation className="h-full">
           {messages.length === 0 ? (
             <Conversation.Empty>

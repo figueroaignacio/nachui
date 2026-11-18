@@ -7,7 +7,7 @@ const versions = Array.from({ length: 24 }, (_, index) => {
 
 export function Default() {
   return (
-    <ScrollArea className="border-border bg-card h-72 w-56 rounded-lg border">
+    <ScrollArea className="bg-card h-72 w-56 rounded-lg shadow-sm">
       <div className="p-3">
         <p className="text-muted-foreground mb-3 px-1 text-xs font-medium">Releases</p>
         <ul className="flex flex-col">

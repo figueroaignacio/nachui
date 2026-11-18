@@ -125,11 +125,11 @@ const bannerVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-inverse text-inverse-foreground border-inverse',
-        info: 'bg-info text-info-foreground border-info',
-        warning: 'bg-warning text-warning-foreground border-warning',
-        danger: 'bg-destructive text-destructive-foreground border-destructive',
-        success: 'bg-success text-success-foreground border-success',
+        default: 'bg-inverse text-inverse-foreground',
+        info: 'bg-info text-info-foreground',
+        warning: 'bg-warning text-warning-foreground',
+        danger: 'bg-destructive text-destructive-foreground',
+        success: 'bg-success text-success-foreground',
       },
     },
     defaultVariants: {
@@ -219,7 +219,7 @@ const BannerAction = ({ className, children, ref, ...props }: BannerActionProps)
   <a
     ref={ref}
     className={cn(
-      'shrink-0 rounded-md border border-current/20 px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors hover:bg-current/10 focus-visible:ring-2 focus-visible:ring-current focus-visible:outline-none',
+      'shrink-0 rounded-md px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors hover:bg-current/10 focus-visible:ring-2 focus-visible:ring-current focus-visible:outline-none',
       className,
     )}
     {...props}

@@ -15,7 +15,7 @@ const TableRoot = ({
     role={label ? 'region' : undefined}
     aria-label={label}
     tabIndex={label ? 0 : undefined}
-    className="border-border focus-visible:ring-ring ring-offset-background relative w-full overflow-auto rounded-md border focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+    className="bg-card focus-visible:ring-ring ring-offset-background relative w-full overflow-auto rounded-md shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
   >
     <table ref={ref} className={cn('w-full text-xs', className)} {...props} />
   </div>
@@ -81,7 +81,7 @@ const TableHead = ({
     ref={ref}
     scope={scope}
     className={cn(
-      'border-border text-muted-foreground h-10 border-e px-3 py-4 text-start align-middle font-medium last:border-e-0 [&:has([role=checkbox])]:pr-0',
+      'text-muted-foreground h-10 px-3 py-4 text-start align-middle font-medium [&:has([role=checkbox])]:pr-0',
       className,
     )}
     {...props}
@@ -96,10 +96,7 @@ const TableCell = ({
 }: React.TdHTMLAttributes<HTMLTableCellElement> & { ref?: React.Ref<HTMLTableCellElement> }) => (
   <td
     ref={ref}
-    className={cn(
-      'border-border border-e px-3 py-4 align-middle last:border-e-0 [&:has([role=checkbox])]:pr-0',
-      className,
-    )}
+    className={cn('px-3 py-4 align-middle [&:has([role=checkbox])]:pr-0', className)}
     {...props}
   />
 );

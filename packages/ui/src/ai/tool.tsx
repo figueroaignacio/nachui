@@ -294,7 +294,7 @@ const ToolRoot = ({
         data-state={open ? 'open' : 'closed'}
         data-status={status}
         className={cn(
-          'border-border bg-card text-card-foreground data-[status=awaiting-approval]:border-warning-border w-full overflow-hidden rounded-lg border',
+          'bg-card text-card-foreground data-[status=awaiting-approval]:ring-warning-border w-full overflow-hidden rounded-lg shadow-sm data-[status=awaiting-approval]:ring-2',
           className,
         )}
         {...props}
@@ -447,9 +447,7 @@ const ToolBlock = ({
         <pre
           className={cn(
             'overflow-x-auto rounded-md px-3 py-2 font-mono text-xs leading-relaxed break-words whitespace-pre-wrap',
-            error
-              ? 'bg-destructive-surface text-destructive-text border-destructive-border border'
-              : 'bg-secondary text-foreground',
+            error ? 'bg-destructive-surface text-destructive-text' : 'bg-secondary text-foreground',
           )}
         >
           {body}
@@ -458,9 +456,7 @@ const ToolBlock = ({
         <div
           className={cn(
             'rounded-md px-3 py-2 text-sm',
-            error
-              ? 'bg-destructive-surface text-destructive-text border-destructive-border border'
-              : 'bg-secondary text-foreground',
+            error ? 'bg-destructive-surface text-destructive-text' : 'bg-secondary text-foreground',
           )}
         >
           {body}

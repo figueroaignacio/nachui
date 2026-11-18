@@ -92,7 +92,7 @@ const attachmentsVariants = cva('flex w-full min-w-0', {
 });
 
 const attachmentItemVariants = cva(
-  'group/attachment border-border bg-background relative flex min-w-0 items-center border',
+  'group/attachment bg-card relative flex min-w-0 items-center shadow-sm',
   {
     variants: {
       variant: {
@@ -324,7 +324,7 @@ const AttachmentRemove = ({
         onClick?.(event);
       }}
       className={cn(
-        'border-border bg-background text-muted-foreground hover:text-foreground focus-visible:ring-ring relative flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors after:absolute after:-inset-2 focus-visible:ring-2 focus-visible:outline-none',
+        'bg-card text-muted-foreground hover:text-foreground focus-visible:ring-ring relative flex size-5 shrink-0 items-center justify-center rounded-full shadow-sm transition-colors after:absolute after:-inset-2 focus-visible:ring-2 focus-visible:outline-none',
         variant === 'grid' &&
           'absolute -end-2 -top-2 group-hover/attachment:opacity-100 focus-visible:opacity-100 [@media(hover:hover)_and_(pointer:fine)]:opacity-0',
         variant === 'list' && 'ms-auto',

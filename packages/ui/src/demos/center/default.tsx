@@ -4,10 +4,7 @@ import { Center } from '../../layout/center';
 
 export function Default() {
   return (
-    <Center
-      text
-      className="border-border bg-card h-56 w-full max-w-md flex-col gap-3 rounded-lg border"
-    >
+    <Center text className="bg-card h-56 w-full max-w-md flex-col gap-3 rounded-lg shadow-sm">
       <span className="bg-muted text-muted-foreground flex size-10 items-center justify-center rounded-full">
         <InboxIcon size={20} />
       </span>

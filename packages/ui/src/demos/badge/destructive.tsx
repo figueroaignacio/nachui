@@ -9,7 +9,7 @@ const deploys = [
 
 export function Destructive() {
   return (
-    <Stack gap="4" className="border-border bg-card w-full max-w-md rounded-lg border p-4">
+    <Stack gap="4" className="bg-card w-full max-w-md rounded-lg p-4 shadow-sm">
       {deploys.map((deploy) => (
         <Flex key={deploy.commit} align="center" justify="between" gap="4">
           <div className="min-w-0">

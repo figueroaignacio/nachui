@@ -37,7 +37,7 @@ export function Sizes() {
           align="center"
           justify="between"
           gap="4"
-          className="border-border bg-card rounded-lg border p-4"
+          className="bg-card rounded-lg p-4 shadow-sm"
         >
           <div className="min-w-0">
             <p className="text-muted-foreground text-[11px]">{row.place}</p>
@@ -57,12 +57,7 @@ export function Sizes() {
           </Button>
         </Flex>
       ))}
-      <Flex
-        align="center"
-        justify="between"
-        gap="4"
-        className="border-border bg-card rounded-lg border p-4"
-      >
+      <Flex align="center" justify="between" gap="4" className="bg-card rounded-lg p-4 shadow-sm">
         <div className="min-w-0">
           <p className="text-muted-foreground text-[11px]">Toolbar</p>
           <p className="mt-1 truncate text-sm font-medium">Search this project</p>

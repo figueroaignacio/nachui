@@ -146,7 +146,7 @@ const TerminalRoot = ({
         data-status={status}
         data-failed={failed ? '' : undefined}
         className={cn(
-          'border-border bg-code text-foreground w-full min-w-0 overflow-hidden rounded-lg border',
+          'bg-code text-foreground w-full min-w-0 overflow-hidden rounded-lg',
           className,
         )}
         {...props}

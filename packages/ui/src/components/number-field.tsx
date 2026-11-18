@@ -407,9 +407,9 @@ function NumberFieldGroup({ className, ref, ...props }: NumberFieldGroupProps) {
       data-slot="number-field-group"
       data-disabled={disabled ? '' : undefined}
       className={cn(
-        'border-input text-foreground dark:bg-input/30 flex h-9 w-full items-stretch overflow-hidden rounded-md border bg-transparent transition-[color,box-shadow]',
-        'hover:border-border-interactive focus-within:border-ring focus-within:ring-ring focus-within:ring-[1px]',
-        'has-[[aria-invalid=true]]:border-destructive has-[[aria-invalid=true]]:ring-destructive',
+        'text-foreground bg-secondary flex h-9 w-full items-stretch overflow-hidden rounded-md transition-[color,box-shadow]',
+        'hover:bg-muted focus-within:ring-ring focus-within:ring-2',
+        'has-[[aria-invalid=true]]:ring-destructive has-[[aria-invalid=true]]:ring-destructive has-[[aria-invalid=true]]:ring-2',
         'data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40',
         className,
       )}
@@ -547,7 +547,7 @@ function NumberFieldStepper({
       data-slot={increment ? 'number-field-increment' : 'number-field-decrement'}
       data-disabled={enabled ? undefined : ''}
       className={cn(
-        'border-input text-muted-foreground flex w-9 shrink-0 cursor-pointer items-center justify-center transition-colors outline-none select-none',
+        'bg-secondary text-muted-foreground flex w-9 shrink-0 cursor-pointer items-center justify-center transition-colors outline-none select-none',
         'hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40',
         increment ? 'border-s' : 'border-e',
         className,

@@ -12,8 +12,8 @@ const tabsListVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-muted/60 border border-border/40',
-        outline: 'border border-border bg-transparent',
+        default: 'bg-muted/60',
+        outline: 'bg-card shadow-sm',
         underline: 'bg-transparent border-b border-border rounded-none p-0 justify-start w-full',
         ghost: 'bg-transparent p-0 gap-1',
         unstyled: '',
@@ -312,7 +312,7 @@ const TabsTrigger = ({
             'absolute inset-0 z-10',
             finalVariant === 'underline'
               ? 'bg-foreground top-auto bottom-0 h-[1.5px]'
-              : 'bg-background dark:bg-input border-border/30 border shadow-sm',
+              : 'bg-background dark:bg-input shadow-sm',
             finalVariant === 'ghost' ? 'rounded-md' : 'rounded-[calc(var(--radius-md)-3px)]',
           )}
           transition={shouldReduceMotion ? still : springs.smooth}

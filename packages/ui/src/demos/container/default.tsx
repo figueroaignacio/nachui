@@ -4,9 +4,9 @@ import { Container } from '../../layout/container';
 
 export function Default() {
   return (
-    <div className="border-border bg-hatch w-full rounded-lg border py-8">
+    <div className="bg-hatch w-full rounded-lg py-8">
       <Container size="sm" align="center">
-        <article className="border-border bg-card rounded-lg border p-6">
+        <article className="bg-card rounded-lg p-6 shadow-sm">
           <p className="text-primary text-xs font-medium">Article</p>
           <h3 className="mt-2 text-lg font-semibold">Readable by design</h3>
           <p className="text-muted-foreground mt-2 text-sm leading-relaxed">

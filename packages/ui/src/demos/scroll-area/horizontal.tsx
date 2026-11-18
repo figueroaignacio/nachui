@@ -17,7 +17,7 @@ export function Horizontal() {
         {regions.map((region) => (
           <div
             key={region.code}
-            className="border-border bg-card flex w-36 shrink-0 flex-col gap-1 rounded-lg border p-3"
+            className="bg-card flex w-36 shrink-0 flex-col gap-1 rounded-lg p-3 shadow-sm"
           >
             <span className="text-sm font-medium">{region.city}</span>
             <span className="text-muted-foreground font-mono text-xs">{region.code}</span>

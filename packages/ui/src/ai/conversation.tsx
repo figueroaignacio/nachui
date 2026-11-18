@@ -320,7 +320,7 @@ const ConversationScrollButton = ({
               onClick?.(event);
             }}
             className={cn(
-              'border-border bg-background text-muted-foreground hover:text-foreground focus-visible:ring-ring pointer-events-auto flex size-8 items-center justify-center rounded-full border shadow-sm transition-colors focus-visible:ring-2 focus-visible:outline-none pointer-coarse:size-11',
+              'bg-card text-muted-foreground hover:text-foreground focus-visible:ring-ring pointer-events-auto flex size-8 items-center justify-center rounded-full shadow-sm transition-colors focus-visible:ring-2 focus-visible:outline-none pointer-coarse:size-11',
               className,
             )}
             {...props}

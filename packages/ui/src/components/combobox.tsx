@@ -933,10 +933,10 @@ const ComboboxInput = ({
       data-state={expanded ? 'open' : 'closed'}
       data-disabled={disabled || undefined}
       className={cn(
-        'border-input text-foreground flex min-h-9 w-full cursor-text items-center gap-2 rounded-md border bg-transparent px-3 text-sm transition-[color,box-shadow]',
-        'dark:bg-input/30 hover:border-border-interactive',
-        'focus-within:border-foreground/40 focus-within:ring-foreground/10 focus-within:ring-[1px]',
-        'has-[input[aria-invalid=true]]:border-destructive has-[input[aria-invalid=true]]:ring-destructive/15 dark:has-[input[aria-invalid=true]]:ring-destructive/30',
+        'text-foreground bg-secondary flex min-h-9 w-full cursor-text items-center gap-2 rounded-md px-3 text-sm transition-[color,box-shadow]',
+        'hover:bg-muted',
+        'focus-within:ring-ring focus-within:ring-2',
+        'has-[input[aria-invalid=true]]:ring-destructive has-[input[aria-invalid=true]]:ring-2',
         'data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-disabled:opacity-40',
         className,
       )}
@@ -954,7 +954,7 @@ const ComboboxInput = ({
               <span
                 key={item}
                 data-slot="combobox-chip"
-                className="bg-secondary border-border text-secondary-foreground inline-flex h-6 max-w-full items-center gap-1 rounded-full border ps-2 pe-1 text-xs"
+                className="bg-secondary text-secondary-foreground inline-flex h-6 max-w-full items-center gap-1 rounded-full ps-2 pe-1 text-xs"
               >
                 <span className="truncate">{label}</span>
                 <button
@@ -968,7 +968,7 @@ const ComboboxInput = ({
                     removeValue(item);
                     inputRef.current?.focus();
                   }}
-                  className="text-muted-foreground hover:text-foreground hover:bg-muted flex size-4 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors"
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring relative flex size-4 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors outline-none before:absolute before:-inset-1.5 focus-visible:ring-2"
                 >
                   <XIcon size={12} className="size-3" />
                 </button>
@@ -1054,7 +1054,7 @@ const ComboboxClear = ({
         inputRef.current?.focus();
       }}
       className={cn(
-        'text-muted-foreground hover:text-foreground hover:bg-muted flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors',
+        'text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring relative flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-sm transition-colors outline-none before:absolute before:-inset-1.5 focus-visible:ring-2',
         className,
       )}
     >
@@ -1183,7 +1183,7 @@ const ComboboxContent = ({
         }
         style={style}
         className={cn(
-          'bg-popover text-popover-foreground border-border z-500 max-h-[min(18rem,var(--available-height,18rem))] w-(--anchor-width) overflow-y-auto overscroll-contain rounded-md border p-1 shadow-md outline-none',
+          'bg-popover text-popover-foreground z-500 max-h-[min(18rem,var(--available-height,18rem))] w-(--anchor-width) overflow-y-auto overscroll-contain rounded-md p-1 shadow-md outline-none',
           floatingOrigin[position],
           !expanded && 'pointer-events-none',
           className,

@@ -29,7 +29,7 @@ describe('Card', () => {
     );
     const card = screen.getByTestId('card-root');
     expect(card).toBeInTheDocument();
-    expect(card).toHaveClass('border', 'border-border'); // Outline variant
+    expect(card).toHaveClass('bg-secondary');
   });
 
   it('renders correctly with ghost variant', () => {

@@ -327,7 +327,7 @@ const AlertDialogContent = ({
             exit="exit"
             style={CONTENT_STYLE}
             className={cn(
-              'bg-popover text-popover-foreground fixed inset-0 z-500 m-auto grid h-fit max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-md gap-5 overflow-y-auto rounded-lg border p-6 shadow-lg outline-none',
+              'bg-popover text-popover-foreground fixed inset-0 z-500 m-auto grid h-fit max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-md gap-5 overflow-y-auto rounded-lg p-6 shadow-lg outline-none',
               className,
             )}
             {...props}

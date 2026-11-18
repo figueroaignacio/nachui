@@ -42,7 +42,7 @@ export function Card() {
             </span>
           </Collapsible.Trigger>
           <Collapsible.Content>
-            <ol className="border-border ml-1 space-y-3 border-l pt-1 pl-4">
+            <ol className="ml-1 space-y-3 border-l pt-1 pl-4">
               {incident.updates.map((update) => (
                 <li key={update.time} className="text-sm">
                   <span className="text-muted-foreground mr-2 font-mono text-xs">

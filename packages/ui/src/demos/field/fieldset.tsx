@@ -22,7 +22,7 @@ export function Fieldset() {
             key={plan.value}
             orientation="horizontal"
             id={`plan-${plan.value}`}
-            className="border-border bg-card rounded-lg border p-3"
+            className="bg-card rounded-lg p-3 shadow-sm"
           >
             <Field.Control>
               <Radio name="plan" value={plan.value} defaultChecked={plan.value === 'pro'} />

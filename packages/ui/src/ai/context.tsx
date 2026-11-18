@@ -204,7 +204,7 @@ const ContextTrigger = ({
         if (!event.defaultPrevented) toggle();
       }}
       className={cn(
-        'border-border bg-background text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex h-8 items-center gap-1.5 rounded-full border ps-1.5 pe-2.5 text-xs tabular-nums transition-colors focus-visible:ring-2 focus-visible:outline-none',
+        'bg-card text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex h-8 items-center gap-1.5 rounded-full ps-1.5 pe-2.5 text-xs tabular-nums shadow-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
         className,
       )}
       {...props}
@@ -266,7 +266,7 @@ const ContextContent = ({
           exit={shouldReduceMotion ? REDUCED_INITIAL : PANEL_EXIT}
           transition={shouldReduceMotion ? REDUCED_TRANSITION : springs.smooth}
           className={cn(
-            'border-border bg-popover text-popover-foreground absolute z-50 w-64 rounded-md border p-3 shadow-md',
+            'bg-popover text-popover-foreground absolute z-50 w-64 rounded-md p-3 shadow-md',
             'before:absolute before:inset-x-0 before:h-2 before:content-[""]',
             side === 'bottom'
               ? 'top-full mt-2 before:bottom-full'

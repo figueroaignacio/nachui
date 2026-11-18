@@ -9,7 +9,5 @@ function isWeekend(date: PlainDate) {
 }
 
 export function DisabledDates() {
-  return (
-    <Calendar isDateDisabled={isWeekend} className="border-border bg-card rounded-lg border" />
-  );
+  return <Calendar isDateDisabled={isWeekend} className="bg-card rounded-lg shadow-sm" />;
 }

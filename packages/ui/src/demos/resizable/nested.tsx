@@ -4,7 +4,7 @@ import { Resizable } from '../../components/resizable';
 
 export function Nested() {
   return (
-    <Resizable className="border-border bg-card h-64 w-full max-w-md rounded-lg border">
+    <Resizable className="bg-card h-64 w-full max-w-md rounded-lg shadow-sm">
       <Resizable.Panel defaultSize={28} minSize={15}>
         <div className="flex h-full items-center justify-center p-4">
           <span className="text-muted-foreground text-sm">Sidebar</span>

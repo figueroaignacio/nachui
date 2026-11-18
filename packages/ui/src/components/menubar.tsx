@@ -404,10 +404,7 @@ const MenubarRoot = ({
         role="menubar"
         dir={dirProp}
         data-slot="menubar"
-        className={cn(
-          'bg-card border-border flex items-center gap-1 rounded-md border p-1',
-          className,
-        )}
+        className={cn('bg-card flex items-center gap-1 rounded-md p-1 shadow-sm', className)}
         {...props}
       >
         {children}
@@ -684,7 +681,7 @@ const MenubarSurface = ({
               exit="exit"
               style={style}
               className={cn(
-                'bg-popover text-popover-foreground border-border z-500 max-h-(--available-height) min-w-48 overflow-y-auto overscroll-contain rounded-md border shadow-md outline-none',
+                'bg-popover text-popover-foreground z-500 max-h-(--available-height) min-w-48 overflow-y-auto overscroll-contain rounded-md shadow-md outline-none',
                 ORIGIN_CLASSES[resolvedSide][align],
                 className,
               )}

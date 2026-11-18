@@ -104,8 +104,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.28, 0, 0],
-          "hex": "#292929"
+          "components": [0.305, 0, 0],
+          "hex": "#2f2f2f"
         }
       },
       "secondary-foreground": {
@@ -120,8 +120,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.28, 0, 0],
-          "hex": "#292929"
+          "components": [0.305, 0, 0],
+          "hex": "#2f2f2f"
         }
       },
       "accent-foreground": {
@@ -136,8 +136,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.28, 0, 0],
-          "hex": "#292929"
+          "components": [0.305, 0, 0],
+          "hex": "#2f2f2f"
         }
       },
       "muted-foreground": {
@@ -162,8 +162,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.31, 0, 0],
-          "hex": "#303030"
+          "components": [0.335, 0, 0],
+          "hex": "#373737"
         }
       },
       "border-interactive": {
@@ -194,8 +194,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.31, 0, 0],
-          "hex": "#303030"
+          "components": [0.335, 0, 0],
+          "hex": "#373737"
         }
       },
       "grid-color": {
@@ -452,7 +452,7 @@
         "color": {
           "colorSpace": "oklch",
           "components": [0, 0, 0],
-          "alpha": 0.5,
+          "alpha": 0.45,
           "hex": "#000000"
         },
         "offsetX": {
@@ -464,7 +464,7 @@
           "unit": "px"
         },
         "blur": {
-          "value": 2,
+          "value": 3,
           "unit": "px"
         },
         "spread": {
@@ -479,7 +479,7 @@
         "color": {
           "colorSpace": "oklch",
           "components": [0, 0, 0],
-          "alpha": 0.65,
+          "alpha": 0.55,
           "hex": "#000000"
         },
         "offsetX": {
@@ -495,7 +495,7 @@
           "unit": "px"
         },
         "spread": {
-          "value": -8,
+          "value": -6,
           "unit": "px"
         }
       }
@@ -506,7 +506,7 @@
         "color": {
           "colorSpace": "oklch",
           "components": [0, 0, 0],
-          "alpha": 0.8,
+          "alpha": 0.65,
           "hex": "#000000"
         },
         "offsetX": {
@@ -514,15 +514,15 @@
           "unit": "px"
         },
         "offsetY": {
-          "value": 10,
+          "value": 16,
           "unit": "px"
         },
         "blur": {
-          "value": 40,
+          "value": 44,
           "unit": "px"
         },
         "spread": {
-          "value": -15,
+          "value": -12,
           "unit": "px"
         }
       }

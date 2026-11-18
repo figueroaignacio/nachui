@@ -35,7 +35,7 @@ export function Default() {
       </Tabs.List>
 
       <Tabs.Content value="overview">
-        <Card className="border-border shadow-sm">
+        <Card className="shadow-sm">
           <Card.Header>
             <Card.Title className="flex items-center gap-2">
               storefront-api
@@ -59,7 +59,7 @@ export function Default() {
       </Tabs.Content>
 
       <Tabs.Content value="logs">
-        <Card className="border-border shadow-sm">
+        <Card className="shadow-sm">
           <Card.Header>
             <Card.Title>Build log</Card.Title>
             <Card.Description>Last 5 lines of the production build.</Card.Description>
@@ -73,7 +73,7 @@ export function Default() {
       </Tabs.Content>
 
       <Tabs.Content value="env">
-        <Card className="border-border shadow-sm">
+        <Card className="shadow-sm">
           <Card.Header>
             <Card.Title>Environment variables</Card.Title>
             <Card.Description>

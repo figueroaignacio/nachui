@@ -20,7 +20,7 @@ export function WithValue() {
   const uploaded = ((TOTAL_MB * percent) / 100).toFixed(1);
 
   return (
-    <div className="border-border bg-card w-full max-w-sm rounded-lg border p-5">
+    <div className="bg-card w-full max-w-sm rounded-lg p-5 shadow-sm">
       <div className="flex items-baseline justify-between gap-3">
         <p className="truncate text-sm font-medium">q3-report.pdf</p>
         <p className="text-muted-foreground shrink-0 text-xs">{percent}%</p>

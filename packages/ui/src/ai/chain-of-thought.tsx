@@ -264,7 +264,7 @@ const ChainOfThoughtStep = ({
     <span
       aria-hidden="true"
       className={cn(
-        'border-border bg-background text-muted-foreground relative z-10 flex size-5 shrink-0 items-center justify-center rounded-full border',
+        'bg-secondary text-muted-foreground relative z-10 flex size-5 shrink-0 items-center justify-center rounded-full',
         status === 'complete' && 'text-foreground',
       )}
     >
@@ -330,7 +330,7 @@ const ChainOfThoughtSearchResult = ({
     <span
       ref={ref}
       className={cn(
-        'border-border bg-secondary text-secondary-foreground inline-flex max-w-full min-w-0 items-center gap-1 overflow-hidden rounded-sm border px-1.5 py-0.5 text-[11px] [&>svg]:size-3 [&>svg]:shrink-0',
+        'bg-secondary text-secondary-foreground inline-flex max-w-full min-w-0 items-center gap-1 overflow-hidden rounded-sm px-1.5 py-0.5 text-[11px] [&>svg]:size-3 [&>svg]:shrink-0',
         className,
       )}
       {...props}
@@ -357,9 +357,7 @@ const ChainOfThoughtImage = ({
 }: ChainOfThoughtImageProps & { ref?: React.Ref<HTMLDivElement> }) => {
   return (
     <div ref={ref} className={cn('flex flex-col gap-1.5', className)} {...props}>
-      <div className="border-border bg-muted/40 overflow-hidden rounded-md border p-2">
-        {children}
-      </div>
+      <div className="bg-muted/40 overflow-hidden rounded-md p-2">{children}</div>
       {caption && <span className="text-muted-foreground text-xs">{caption}</span>}
     </div>
   );

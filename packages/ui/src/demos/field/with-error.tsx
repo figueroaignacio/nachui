@@ -19,7 +19,7 @@ export function WithError() {
 
   return (
     <form
-      className="border-border bg-card w-full max-w-sm rounded-lg border p-6"
+      className="bg-card w-full max-w-sm rounded-lg p-6 shadow-sm"
       onSubmit={(event) => event.preventDefault()}
     >
       <Field.Group>

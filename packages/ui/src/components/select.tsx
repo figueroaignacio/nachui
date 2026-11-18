@@ -128,10 +128,10 @@ interface SelectSeparatorProps {
 
 const selectTriggerVariants = cva(
   [
-    'border-input bg-transparent text-foreground flex w-full items-center justify-between gap-2 rounded-md border text-start transition-[color,box-shadow] outline-none',
-    'dark:bg-input/30 hover:border-border-interactive',
-    'focus-visible:border-foreground/40 focus-visible:ring-foreground/10 focus-visible:ring-[1px]',
-    'aria-invalid:border-destructive aria-invalid:ring-destructive/15 dark:aria-invalid:ring-destructive/30',
+    'bg-secondary text-foreground flex w-full items-center justify-between gap-2 rounded-md text-start transition-[color,box-shadow] outline-none',
+    'hover:bg-muted',
+    'focus-visible:ring-ring focus-visible:ring-2',
+    'aria-invalid:ring-2 aria-invalid:ring-destructive',
     'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40',
     'data-[placeholder=true]:text-muted-foreground',
   ],
@@ -631,7 +631,7 @@ const SelectContent = ({
         }
         style={style}
         className={cn(
-          'bg-popover text-popover-foreground border-border z-500 max-h-[min(18rem,var(--available-height,18rem))] overflow-y-auto overscroll-contain rounded-md border p-1 shadow-md outline-none',
+          'bg-popover text-popover-foreground z-500 max-h-[min(18rem,var(--available-height,18rem))] overflow-y-auto overscroll-contain rounded-md p-1 shadow-md outline-none',
           floatingOrigin[position],
           !isOpen && 'pointer-events-none',
           className,

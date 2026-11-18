@@ -36,7 +36,7 @@ export function Preferences() {
   return (
     <div className="flex w-full max-w-md flex-col gap-4">
       {groups.map((group) => (
-        <div key={group.title} className="border-border bg-card rounded-lg border">
+        <div key={group.title} className="bg-card rounded-lg shadow-sm">
           <p className="text-muted-foreground border-border border-b px-4 py-2 text-xs font-medium tracking-wide uppercase">
             {group.title}
           </p>

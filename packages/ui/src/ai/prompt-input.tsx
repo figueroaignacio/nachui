@@ -455,8 +455,8 @@ const PromptInputRoot = ({
           if (event.dataTransfer.files.length > 0) add(event.dataTransfer.files);
         }}
         className={cn(
-          'border-input bg-background focus-within:border-border-interactive flex w-full flex-col rounded-xl border transition-colors',
-          dragging && 'border-ring bg-muted/40',
+          'bg-card focus-within:ring-ring flex w-full flex-col rounded-xl shadow-sm transition-shadow focus-within:ring-2',
+          dragging && 'ring-ring bg-muted/40 ring-2',
           className,
         )}
         {...props}
@@ -563,7 +563,7 @@ const PromptInputAttachments = ({
         files.map((file, index) => (
           <span
             key={file.id}
-            className="border-border bg-secondary text-secondary-foreground flex h-8 max-w-48 items-center gap-1.5 rounded-full border py-1 ps-2.5 pe-1 text-xs"
+            className="bg-secondary text-secondary-foreground flex h-8 max-w-48 items-center gap-1.5 rounded-full py-1 ps-2.5 pe-1 text-xs"
           >
             <span className="truncate">{file.filename}</span>
             <button
@@ -684,7 +684,7 @@ const PromptInputButton = ({
       className={cn(
         'text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex h-8 items-center justify-center gap-1.5 rounded-full px-2 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&>svg]:size-4 [&>svg]:shrink-0',
         variant === 'ghost' && 'hover:bg-muted',
-        variant === 'outline' && 'border-border hover:bg-muted border',
+        variant === 'outline' && 'hover:bg-muted',
         className,
       )}
       {...props}

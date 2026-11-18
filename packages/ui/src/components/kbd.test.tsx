@@ -8,7 +8,7 @@ describe('Kbd', () => {
     const element = screen.getByText('Ctrl');
     expect(element).toBeInTheDocument();
     expect(element.tagName).toBe('KBD');
-    expect(element).toHaveClass('font-mono', 'text-[11px]', 'bg-muted/50');
+    expect(element).toHaveClass('font-mono', 'text-[11px]', 'bg-secondary');
   });
 
   it('applies the abbrTitle attribute correctly', () => {
@@ -29,7 +29,7 @@ describe('Kbd', () => {
   it('renders outline variant correctly', () => {
     render(<Kbd variant="outline">Alt</Kbd>);
     const element = screen.getByText('Alt');
-    expect(element).toHaveClass('bg-transparent', 'text-foreground');
+    expect(element).toHaveClass('bg-card', 'text-foreground');
   });
 
   it('passes additional classes and props to Kbd as custom components do', () => {

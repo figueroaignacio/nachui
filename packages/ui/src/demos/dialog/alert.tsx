@@ -17,7 +17,7 @@ export function Alert() {
             in the last hour, so update your pipeline secrets before you revoke.
           </Dialog.Description>
         </Dialog.Header>
-        <div className="border-destructive-border bg-destructive-surface text-destructive-text rounded-md border p-3 text-xs">
+        <div className="bg-destructive-surface text-destructive-text rounded-md p-3 text-xs">
           <p className="font-mono">sk_live_9f2c...4ab1</p>
           <p className="mt-1">Created Mar 14, last used 42 minutes ago by deploy-runner</p>
         </div>

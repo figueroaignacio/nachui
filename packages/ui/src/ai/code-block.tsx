@@ -160,7 +160,7 @@ const CodeBlockRoot = ({
         data-language={language}
         data-state={collapsible ? (expanded ? 'expanded' : 'collapsed') : undefined}
         className={cn(
-          'group/code border-border bg-code text-foreground relative w-full min-w-0 overflow-hidden rounded-lg border',
+          'group/code bg-code text-foreground relative w-full min-w-0 overflow-hidden rounded-lg',
           className,
         )}
         {...props}

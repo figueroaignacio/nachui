@@ -98,7 +98,7 @@ export function Live() {
         type="button"
         onClick={start}
         disabled={status === 'running'}
-        className="border-border hover:bg-muted w-fit rounded-full border px-3 py-1.5 text-xs transition-colors disabled:opacity-40"
+        className="bg-card hover:bg-muted w-fit rounded-full px-3 py-1.5 text-xs shadow-sm transition-colors disabled:opacity-40"
       >
         {status === 'running' ? 'Running' : status === 'complete' ? 'Run again' : 'Start the run'}
       </button>

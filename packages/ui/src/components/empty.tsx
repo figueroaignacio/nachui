@@ -9,7 +9,7 @@ const emptyVariants = cva(
       variant: {
         default: '',
         outline: 'border-border border border-dashed',
-        card: 'bg-card border-border border',
+        card: 'bg-card shadow-sm',
       },
     },
     defaultVariants: {

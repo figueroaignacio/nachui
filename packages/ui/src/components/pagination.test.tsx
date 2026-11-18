@@ -83,7 +83,7 @@ describe('Pagination', () => {
     expect(ellipsis.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it('sets the current page apart with a filled background and a stronger border', async () => {
+  it('sets the current page apart with a filled background', async () => {
     const { container } = render(
       <Pagination>
         <Pagination.Content>
@@ -100,7 +100,7 @@ describe('Pagination', () => {
     );
     const current = screen.getByRole('link', { name: '2' });
     expect(current).toHaveAttribute('aria-current', 'page');
-    expect(current).toHaveClass('bg-muted', 'text-foreground', 'border-border-interactive');
+    expect(current).toHaveClass('bg-muted', 'text-foreground');
     expect(screen.getByRole('link', { name: '1' })).not.toHaveClass('bg-muted');
     await expectNoAxeViolations(container);
   });

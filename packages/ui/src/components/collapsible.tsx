@@ -43,8 +43,8 @@ const collapsibleVariants = cva('', {
   variants: {
     variant: {
       default: 'rounded-lg',
-      bordered: 'rounded-lg border border-border',
-      card: 'rounded-lg border border-border bg-card',
+      bordered: 'bg-secondary rounded-lg',
+      card: 'rounded-lg bg-card shadow-sm',
     },
   },
   defaultVariants: {

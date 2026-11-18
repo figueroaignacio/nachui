@@ -11,7 +11,6 @@ export function Danger() {
       <SettingsRow.Section
         title="Danger zone"
         description="Keys and actions that are hard to undo."
-        className="border-destructive-border"
       >
         <SettingsRow label="API key" description="Use it from the server only. Rotates on demand.">
           <SettingsRow.Value value="sk_live_4f2a…9c1e" copy />

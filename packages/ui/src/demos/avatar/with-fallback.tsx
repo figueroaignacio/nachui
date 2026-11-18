@@ -22,7 +22,7 @@ const invites = [
 
 export function WithFallback() {
   return (
-    <div className="border-border bg-card w-full max-w-sm rounded-lg border p-4">
+    <div className="bg-card w-full max-w-sm rounded-lg p-4 shadow-sm">
       <p className="text-muted-foreground mb-3 text-xs">Pending invites</p>
       <div className="flex flex-col gap-4">
         {invites.map((invite) => (

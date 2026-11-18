@@ -6,7 +6,7 @@ const tags = ['v2.4.0', 'node 22', 'eu-central-1'];
 
 export function Outline() {
   return (
-    <Stack gap="3" className="border-border bg-card w-full max-w-sm rounded-lg border p-4">
+    <Stack gap="3" className="bg-card w-full max-w-sm rounded-lg p-4 shadow-sm">
       <div>
         <p className="text-sm font-medium">checkout-api</p>
         <p className="text-muted-foreground mt-1 text-xs">Deployed Mar 14 at 09:41</p>

@@ -4,7 +4,7 @@ const summaryLines = ['h-3.5 w-full', 'h-3.5 w-4/5'];
 
 export function Card() {
   return (
-    <div className="border-border bg-card w-full max-w-sm rounded-lg border p-4">
+    <div className="bg-card w-full max-w-sm rounded-lg p-4 shadow-sm">
       <Skeleton className="h-[140px] w-full rounded-md" />
       <div className="mt-4 space-y-2">
         <Skeleton className="h-5 w-40" />

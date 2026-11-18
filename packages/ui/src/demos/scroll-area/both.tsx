@@ -20,7 +20,7 @@ export function Both() {
     <ScrollArea
       orientation="both"
       type="always"
-      className="border-border bg-card h-56 w-full max-w-md rounded-lg border"
+      className="bg-card h-56 w-full max-w-md rounded-lg shadow-sm"
     >
       <table className="w-max min-w-full text-left text-sm">
         <thead className="bg-muted/60 text-muted-foreground sticky top-0 text-xs">

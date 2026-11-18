@@ -4,11 +4,7 @@ const links = ['General', 'Members', 'Billing', 'Integrations', 'Danger zone'];
 
 export function Default() {
   return (
-    <Split
-      ratio="1/3"
-      collapse="sm"
-      className="border-border bg-card w-full max-w-lg rounded-lg border p-4"
-    >
+    <Split ratio="1/3" collapse="sm" className="bg-card w-full max-w-lg rounded-lg p-4 shadow-sm">
       <nav aria-label="Settings" className="flex flex-col gap-1">
         {links.map((link, index) => (
           <a

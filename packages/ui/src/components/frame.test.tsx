@@ -27,7 +27,7 @@ describe('Frame', () => {
 
   it('applies the ghost variant classes', () => {
     render(<Frame variant="ghost" data-testid="frame" />);
-    expect(screen.getByTestId('frame')).toHaveClass('border-transparent');
+    expect(screen.getByTestId('frame')).toHaveClass('bg-transparent');
   });
 
   it('connects panels when stacked', () => {

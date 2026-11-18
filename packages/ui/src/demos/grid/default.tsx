@@ -14,7 +14,7 @@ export function Default() {
   return (
     <Grid columns="3" gap="4" className="w-full max-w-lg">
       {stats.map((stat) => (
-        <div key={stat.label} className="border-border bg-card rounded-lg border p-4">
+        <div key={stat.label} className="bg-card rounded-lg p-4 shadow-sm">
           <p className="text-muted-foreground text-xs">{stat.label}</p>
           <p className="mt-1 text-xl font-semibold tracking-tight">{stat.value}</p>
           <p className={`mt-1 text-xs ${stat.up ? 'text-success-text' : 'text-destructive-text'}`}>
@@ -22,7 +22,7 @@ export function Default() {
           </p>
         </div>
       ))}
-      <div className="border-border bg-card col-span-3 rounded-lg border p-4">
+      <div className="bg-card col-span-3 rounded-lg p-4 shadow-sm">
         <div className="flex items-baseline justify-between">
           <p className="text-muted-foreground text-xs">Weekly traffic</p>
           <p className="text-muted-foreground text-xs">Last 12 weeks</p>

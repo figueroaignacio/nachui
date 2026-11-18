@@ -3,7 +3,7 @@ import * as React from 'react';
 import { cn } from '../lib/cn';
 
 const kbdVariants = cva(
-  'inline-flex items-center justify-center border border-b-2 font-mono font-medium text-muted-foreground transition-colors gap-1',
+  'inline-flex items-center justify-center font-mono font-medium text-muted-foreground transition-colors gap-1',
   {
     variants: {
       size: {
@@ -12,8 +12,8 @@ const kbdVariants = cva(
         lg: 'h-8 px-2.5 text-[13px] min-w-[32px] rounded-sm',
       },
       variant: {
-        default: 'bg-muted/50 text-muted-foreground border-border/80 border-b-border',
-        outline: 'bg-transparent text-foreground border-border border-b-border',
+        default: 'bg-secondary text-muted-foreground',
+        outline: 'bg-card text-foreground shadow-sm',
       },
     },
     defaultVariants: {

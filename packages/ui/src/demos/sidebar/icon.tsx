@@ -10,7 +10,7 @@ import { UsersIcon } from '../../icons/users';
 
 export function Icon() {
   return (
-    <div className="border-border h-[420px] w-full overflow-hidden rounded-lg border">
+    <div className="bg-card h-[420px] w-full overflow-hidden rounded-lg shadow-sm">
       <Sidebar.Provider defaultOpen={false} className="h-full min-h-0">
         <Sidebar collapsible="icon" label="Workspace navigation">
           <Sidebar.Content>

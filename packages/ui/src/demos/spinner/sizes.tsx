@@ -13,7 +13,7 @@ export function Sizes() {
       {sizes.map((entry) => (
         <div
           key={entry.size}
-          className="border-border bg-card flex h-28 flex-col items-center justify-center gap-3 rounded-lg border p-3"
+          className="bg-card flex h-28 flex-col items-center justify-center gap-3 rounded-lg p-3 shadow-sm"
         >
           <Spinner size={entry.size} />
           <p className="text-muted-foreground text-center text-xs">{entry.usage}</p>

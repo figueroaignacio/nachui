@@ -4,17 +4,16 @@ import { cn } from '../lib/cn';
 
 const suggestionVariants = cva(
   [
-    'inline-flex shrink-0 items-center gap-1.5 rounded-full border text-sm whitespace-nowrap',
+    'inline-flex shrink-0 items-center gap-1.5 rounded-full text-sm whitespace-nowrap',
     'transition-colors focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none',
     'disabled:pointer-events-none disabled:opacity-40 [&>svg]:size-3.5 [&>svg]:shrink-0',
   ].join(' '),
   {
     variants: {
       variant: {
-        outline: 'border-border bg-background hover:bg-muted text-foreground',
-        secondary: 'border-transparent bg-secondary text-secondary-foreground hover:bg-muted',
-        ghost:
-          'border-transparent bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted',
+        outline: 'bg-card hover:bg-muted text-foreground shadow-sm',
+        secondary: 'bg-secondary text-secondary-foreground hover:bg-muted',
+        ghost: 'bg-card text-muted-foreground hover:text-foreground hover:bg-muted shadow-sm',
       },
       size: {
         sm: 'h-7 px-2.5 text-xs',

@@ -64,7 +64,7 @@ describe('Textarea', () => {
   it('shows a clearly visible focus ring', () => {
     render(<Textarea aria-label="Search" />);
     expect(screen.getByRole('textbox', { name: 'Search' })).toHaveClass(
-      'focus-visible:border-ring',
+      'focus-visible:ring-2',
       'focus-visible:ring-ring',
       'aria-invalid:focus-visible:ring-destructive',
     );

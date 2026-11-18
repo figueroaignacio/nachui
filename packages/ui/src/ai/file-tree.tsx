@@ -235,7 +235,7 @@ const FileTree = ({
       ref={ref}
       data-slot="file-tree"
       className={cn(
-        'border-border bg-card text-card-foreground w-full min-w-0 overflow-hidden rounded-lg border',
+        'bg-card text-card-foreground w-full min-w-0 overflow-hidden rounded-lg shadow-sm',
         className,
       )}
       {...props}

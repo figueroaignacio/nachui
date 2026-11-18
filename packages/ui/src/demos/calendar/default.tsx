@@ -1,5 +1,5 @@
 import { Calendar } from '../../components/calendar';
 
 export function Default() {
-  return <Calendar className="border-border bg-card rounded-lg border" />;
+  return <Calendar className="bg-card rounded-lg shadow-sm" />;
 }

@@ -249,7 +249,7 @@ describe('ToggleGroup keyboard', () => {
 describe('ToggleGroup styling and a11y', () => {
   it('joins outline items into a segmented control', () => {
     render(<Alignment variant="outline" defaultValue="left" />);
-    expect(screen.getByRole('group')).toHaveClass('border-input');
+    expect(screen.getByRole('group')).toHaveClass('bg-secondary');
     expect(button('Center')).toHaveClass('border-s', 'first:rounded-s-md', 'last:rounded-e-md');
   });
 

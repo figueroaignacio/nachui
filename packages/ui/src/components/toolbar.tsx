@@ -83,7 +83,7 @@ const ToolbarRoot = ({
           data-slot="toolbar"
           data-orientation={orientation}
           className={cn(
-            'border-border bg-card flex gap-1 rounded-lg border p-1',
+            'bg-card flex gap-1 rounded-lg p-1 shadow-sm',
             orientation === 'horizontal' ? 'flex-row items-center' : 'w-fit flex-col items-stretch',
             className,
           )}

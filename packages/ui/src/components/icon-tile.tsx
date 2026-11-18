@@ -7,11 +7,11 @@ const iconTileVariants = cva(
   {
     variants: {
       variant: {
-        outline: 'bg-background border-border text-(--tile-color) border',
+        outline: 'bg-card text-(--tile-color) shadow-sm',
         elevated: 'bg-muted text-(--tile-color) ring-background shadow-sm ring-2',
-        soft: 'bg-(--tile-color)/10 border-(--tile-color)/20 text-(--tile-color) ring-(--tile-color)/5 border ring-4',
+        soft: 'bg-(--tile-color)/10 text-(--tile-color) ring-(--tile-color)/5 ring-4',
         solid: 'bg-(--tile-color) text-(--tile-contrast)',
-        frame: 'bg-card border-border text-(--tile-color) ring-muted border ring-4',
+        frame: 'bg-card text-(--tile-color) ring-muted ring-4 shadow-sm',
       },
       size: {
         xs: 'size-6 text-[10px] [&_svg]:size-3.5',

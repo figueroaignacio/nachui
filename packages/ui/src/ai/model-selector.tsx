@@ -19,7 +19,7 @@ const ModelSelectorTrigger = ({ className, size = 'sm', ...props }: ModelSelecto
     size={size}
     data-slot="model-selector-trigger"
     className={cn(
-      'text-muted-strong hover:bg-muted hover:text-foreground data-[state=open]:bg-muted data-[state=open]:text-foreground w-auto gap-1.5 border-transparent bg-transparent px-2 dark:bg-transparent',
+      'text-muted-strong hover:bg-muted hover:text-foreground data-[state=open]:bg-muted data-[state=open]:text-foreground bg-card w-auto gap-1.5 px-2 shadow-sm dark:bg-transparent',
       className,
     )}
     {...props}

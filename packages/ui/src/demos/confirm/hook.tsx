@@ -21,7 +21,7 @@ function ArchiveButton() {
       <button
         type="button"
         onClick={() => void archive()}
-        className="border-border hover:bg-muted rounded-md border px-3 py-1.5 text-sm transition-colors"
+        className="bg-card hover:bg-muted rounded-md px-3 py-1.5 text-sm shadow-sm transition-colors"
       >
         Archive draft
       </button>

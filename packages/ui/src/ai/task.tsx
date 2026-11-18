@@ -329,7 +329,7 @@ const TaskFile = ({
     <span
       ref={ref}
       className={cn(
-        'border-border bg-secondary text-foreground inline-flex items-center gap-1 rounded-sm border px-1.5 py-0.5 font-mono text-xs [&>svg]:size-3 [&>svg]:shrink-0',
+        'bg-secondary text-foreground inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 font-mono text-xs [&>svg]:size-3 [&>svg]:shrink-0',
         className,
       )}
       {...props}

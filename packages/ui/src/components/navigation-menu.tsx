@@ -262,7 +262,7 @@ const NavigationMenuContent = ({ className, children, ...props }: HTMLMotionProp
           exit="exit"
           style={style}
           className={cn(
-            'bg-popover text-popover-foreground border-border absolute start-0 top-full z-50 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-md border p-1 shadow-md',
+            'bg-popover text-popover-foreground absolute start-0 top-full z-50 mt-2 w-72 max-w-[calc(100vw-2rem)] rounded-md p-1 shadow-md',
             floatingOrigin.bottom,
             className,
           )}
@@ -270,7 +270,7 @@ const NavigationMenuContent = ({ className, children, ...props }: HTMLMotionProp
         >
           <span
             aria-hidden="true"
-            className="border-border bg-popover absolute start-5 -top-[5.5px] size-2.5 rotate-45 rounded-[1px] border-s border-t"
+            className="bg-popover absolute start-5 -top-[5px] size-2.5 rotate-45 rounded-[1px]"
           />
           {children as React.ReactNode}
         </motion.div>
@@ -310,7 +310,7 @@ const NavigationMenuLink = ({
   const content = (
     <>
       {icon && (
-        <span className="border-border bg-background text-muted-foreground group-hover/navlink:text-foreground flex size-9 shrink-0 items-center justify-center rounded-md border transition-colors">
+        <span className="bg-background text-muted-foreground group-hover/navlink:text-foreground flex size-9 shrink-0 items-center justify-center rounded-md shadow-sm transition-colors">
           {icon}
         </span>
       )}

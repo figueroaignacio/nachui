@@ -17,8 +17,8 @@ import { toggleVariants } from './toggle';
 const toggleGroupVariants = cva('inline-flex w-fit', {
   variants: {
     variant: {
-      default: 'gap-0.5 rounded-md border border-border bg-card p-0.5',
-      outline: 'rounded-md border border-input',
+      default: 'gap-0.5 rounded-md bg-card p-0.5 shadow-sm',
+      outline: 'bg-secondary rounded-md',
     },
     orientation: {
       horizontal: 'flex-row items-center',
@@ -36,7 +36,7 @@ const toggleGroupItemVariants = cva('', {
   variants: {
     variant: {
       default: 'rounded-[calc(var(--radius-md)-3px)]',
-      outline: 'rounded-none border-input focus-visible:z-10',
+      outline: 'bg-secondary rounded-none focus-visible:z-10',
     },
     orientation: {
       horizontal: '',

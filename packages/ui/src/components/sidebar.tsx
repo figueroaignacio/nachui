@@ -280,7 +280,7 @@ function iconWidth(variant: SidebarVariant) {
 }
 
 function surfaceClasses(variant: SidebarVariant, side: SidebarSide) {
-  if (variant === 'floating') return 'border-border rounded-lg border shadow-sm';
+  if (variant === 'floating') return 'rounded-lg shadow-sm';
   if (variant === 'inset') return 'bg-transparent';
   return side === 'start' ? 'border-border border-e' : 'border-border border-s';
 }
@@ -763,7 +763,7 @@ const SidebarInset = ({
     data-slot="sidebar-inset"
     className={cn(
       'bg-background relative flex min-w-0 flex-1 flex-col',
-      'group-has-[>[data-slot=sidebar][data-variant=inset]]/sidebar-wrapper:border-border group-has-[>[data-slot=sidebar][data-variant=inset]]/sidebar-wrapper:m-2 group-has-[>[data-slot=sidebar][data-variant=inset]]/sidebar-wrapper:rounded-lg group-has-[>[data-slot=sidebar][data-variant=inset]]/sidebar-wrapper:border',
+      'group-has-[>[data-slot=sidebar][data-variant=inset]]/sidebar-wrapper:ring-border group-has-[>[data-slot=sidebar][data-variant=inset]]/sidebar-wrapper:m-2 group-has-[>[data-slot=sidebar][data-variant=inset]]/sidebar-wrapper:rounded-lg group-has-[>[data-slot=sidebar][data-variant=inset]]/sidebar-wrapper:border group-has-[>[data-slot=sidebar][data-variant=inset]]/sidebar-wrapper:ring-2',
       className,
     )}
     {...props}

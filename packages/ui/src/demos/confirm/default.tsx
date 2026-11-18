@@ -47,7 +47,7 @@ export function Default() {
         }
         onCancel={() => setResult('Kept it.')}
       >
-        <Confirm.Trigger className="border-border hover:bg-muted rounded-md border px-3 py-1.5 text-sm transition-colors">
+        <Confirm.Trigger className="bg-card hover:bg-muted rounded-md px-3 py-1.5 text-sm shadow-sm transition-colors">
           Delete project
         </Confirm.Trigger>
       </Confirm>

@@ -17,7 +17,7 @@ export function Statuses() {
             type="button"
             onClick={() => setStatus(value)}
             data-active={status === value ? '' : undefined}
-            className="border-border hover:bg-muted data-active:bg-muted rounded-full border px-3 py-1 text-xs transition-colors"
+            className="bg-card hover:bg-muted data-active:bg-muted rounded-full px-3 py-1 text-xs shadow-sm transition-colors"
           >
             {value}
           </button>

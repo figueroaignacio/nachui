@@ -45,7 +45,7 @@ export function Default() {
   const open = React.useSyncExternalStore(subscribe, readOpen, () => true);
 
   return (
-    <div className="border-border h-[520px] w-full overflow-hidden rounded-lg border">
+    <div className="bg-card h-[520px] w-full overflow-hidden rounded-lg shadow-sm">
       <Sidebar.Provider
         open={open}
         onOpenChange={writeOpen}
@@ -116,7 +116,7 @@ export function Default() {
             {projects.map((project) => (
               <div
                 key={project.name}
-                className="border-border bg-card flex items-center justify-between rounded-md border px-4 py-3"
+                className="bg-card flex items-center justify-between rounded-md px-4 py-3 shadow-sm"
               >
                 <div className="flex flex-col">
                   <span className="text-sm font-medium">{project.name}</span>

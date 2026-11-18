@@ -121,7 +121,7 @@ const LABEL_OPTIONS: Intl.DateTimeFormatOptions = {
 };
 
 const navButtonClass = cn(
-  'border-border text-foreground inline-flex size-8 shrink-0 items-center justify-center rounded-md border bg-transparent outline-none transition-colors',
+  'text-foreground inline-flex size-8 shrink-0 items-center justify-center rounded-md bg-card outline-none transition-colors shadow-sm',
   'hover:bg-muted ring-offset-background focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2',
   'disabled:pointer-events-none disabled:opacity-40',
 );

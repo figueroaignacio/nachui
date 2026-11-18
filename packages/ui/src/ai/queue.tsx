@@ -103,7 +103,7 @@ const QueueRoot = ({
       ref={ref}
       data-slot="queue"
       className={cn(
-        'border-border bg-card text-card-foreground divide-border w-full divide-y overflow-hidden rounded-lg border',
+        'bg-card text-card-foreground divide-border w-full divide-y overflow-hidden rounded-lg shadow-sm',
         className,
       )}
       {...props}
@@ -265,10 +265,8 @@ const QueueItem = ({
       <span
         aria-hidden="true"
         className={cn(
-          'mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border',
-          done
-            ? 'border-success-text bg-success-text text-background'
-            : 'border-border-interactive',
+          'mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full',
+          done && 'bg-success-text text-background',
         )}
       >
         {done ? <CheckIcon size={10} strokeWidth={2.5} /> : null}

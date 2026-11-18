@@ -115,7 +115,7 @@ const ConfirmationRoot = ({
         data-slot="confirmation"
         data-state={state}
         className={cn(
-          'border-border bg-card text-card-foreground data-[state=pending]:border-warning-border flex flex-col gap-3 rounded-lg border p-3',
+          'bg-card text-card-foreground data-[state=pending]:ring-warning-border flex flex-col gap-3 rounded-lg p-3 shadow-sm data-[state=pending]:ring-2',
           className,
         )}
         {...props}
