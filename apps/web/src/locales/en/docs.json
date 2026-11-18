@@ -752,7 +752,9 @@
   },
   "sidebar": {
     "all": "All",
-    "filterLabel": "Filter the sidebar by section"
+    "filterLabel": "Filter the sidebar by section",
+    "toggle": "Toggle sidebar",
+    "catalog": "Catalog"
   },
   "componentsList": {
     "emptyTitle": "No components found",
@@ -762,6 +764,17 @@
   "preview": {
     "loadError": "This demo could not load",
     "missingTitle": "Demo not registered",
-    "missingDescription": "There is no \"{demo}\" demo for {component} in the demo registry."
+    "missingDescription": "There is no \"{demo}\" demo for {component} in the demo registry.",
+    "defaultDemo": "Main demo"
+  },
+  "stage": {
+    "label": "{title} demo",
+    "toolbar": "Demo tools",
+    "install": "Install",
+    "replay": "Replay",
+    "doc": "Documentation",
+    "code": "Demo code",
+    "show": "Show",
+    "showing": "On stage"
   }
 }

@@ -5,6 +5,7 @@ import { useChatStore } from '@/features/chat/store/chat-store';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { getDocEditUrl } from '@/lib/domains';
 import { Button } from '@repo/ui/components/button';
+import { cn } from '@repo/ui/lib/cn';
 import { DropdownMenu } from '@repo/ui/components/dropdown-menu';
 import { CheckIcon } from '@repo/ui/icons/check';
 import { ChevronDownIcon } from '@repo/ui/icons/chevron-down';
@@ -25,6 +26,8 @@ type DocActionsProps = {
   sourceUrl?: string;
   /** `rail` stacks the buttons to fit the docs sidebar. */
   layout?: 'inline' | 'rail';
+  /** Leave the explain button out, for pages that show it somewhere else. */
+  hideExplain?: boolean;
 };
 
 export function DocActions({
@@ -34,6 +37,7 @@ export function DocActions({
   rawPath,
   sourceUrl,
   layout = 'inline',
+  hideExplain = false,
 }: DocActionsProps) {
   const t = useTranslations('components');
   const triggerExplanation = useChatStore((s) => s.triggerExplanation);
@@ -110,19 +114,21 @@ export function DocActions({
 
   return (
     <Button.Group attached>
+      {!hideExplain && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 gap-2 rounded-l-md border-r-0 px-4"
+          onClick={handleExplain}
+          leftIcon={<SparklesIcon size={14} aria-hidden="true" />}
+        >
+          <span>{t('explainButton.label')}</span>
+        </Button>
+      )}
       <Button
         variant="outline"
         size="sm"
-        className="h-8 gap-2 rounded-l-md border-r-0 px-4"
-        onClick={handleExplain}
-        leftIcon={<SparklesIcon size={14} aria-hidden="true" />}
-      >
-        <span>{t('explainButton.label')}</span>
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        className="h-8 gap-2 border-r-0 px-4"
+        className={cn('h-8 gap-2 border-r-0 px-4', hideExplain && 'rounded-l-md')}
         onClick={copyMarkdown}
         leftIcon={isCopied ? <CheckIcon size={16} /> : <CopyIcon size={16} />}
       >

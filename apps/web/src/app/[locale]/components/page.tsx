@@ -1,4 +1,4 @@
-import { GalleryView } from '@/features/gallery/views/gallery-view';
+import { CatalogView } from '@/features/catalog/views/catalog-view';
 import { buildAlternates, getAbsoluteUrl, getAssetUrl } from '@/lib/domains';
 import type { Locale } from '@/lib/constants';
 import type { Metadata } from 'next';
@@ -12,19 +12,19 @@ export default async function ComponentsPage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return <GalleryView />;
+  return <CatalogView />;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'sections.gallery' });
+  const t = await getTranslations({ locale, namespace: 'sections.catalog' });
   const canonicalUrl = getAbsoluteUrl(locale, '/components');
 
   return {
-    title: 'Components',
+    title: t('title'),
     description: t('metaDescription'),
     openGraph: {
-      title: 'Components · NachUI',
+      title: `${t('title')} · NachUI`,
       description: t('metaDescription'),
       type: 'website',
       locale,
@@ -35,13 +35,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
           url: getAssetUrl('/images/og/og-home.png'),
           width: 1200,
           height: 630,
-          alt: 'Components · NachUI',
+          alt: `${t('title')} · NachUI`,
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Components · NachUI',
+      title: `${t('title')} · NachUI`,
       description: t('metaDescription'),
       images: [getAssetUrl('/images/og/og-home.png')],
     },

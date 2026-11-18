@@ -75,7 +75,7 @@ export function ChatWindow(props: ChatWindowProps) {
   useDialogBehavior({ open: isOpen, onClose, ref: panelRef, trap: isModal });
 
   const body = (
-    <div className="bg-background relative z-10 flex h-full flex-col">
+    <div className="relative z-10 flex h-full flex-col">
       <ChatHeader
         onClose={onClose}
         onReset={onReset}
@@ -152,7 +152,10 @@ export function ChatWindow(props: ChatWindowProps) {
                   onDoubleClick={resize.reset}
                   className="hover:bg-border-interactive/60 data-[active]:bg-border-interactive/60 pointer-events-auto z-10 bg-transparent transition-colors duration-150"
                 />
-                <Resizable.Panel {...resize.chat} className="pointer-events-auto min-w-0">
+                <Resizable.Panel
+                  {...resize.chat}
+                  className="pointer-events-auto min-w-0 py-2.5 ps-1.5 pe-2.5"
+                >
                   <motion.div
                     ref={panelRef}
                     role="dialog"
@@ -164,7 +167,7 @@ export function ChatWindow(props: ChatWindowProps) {
                     animate={panelVisible}
                     exit={reduceMotion ? { opacity: 0 } : panelHidden}
                     transition={reduceMotion ? { duration: 0 } : panelEnterTransition}
-                    className="bg-background border-rule flex h-full flex-col border-l"
+                    className="bg-island flex h-full flex-col overflow-hidden rounded-lg"
                   >
                     {body}
                   </motion.div>

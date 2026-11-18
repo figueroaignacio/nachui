@@ -1,10 +1,18 @@
 'use client';
 
+import { LocaleSwitcher } from '@/components/common/locale-switcher';
+import { Logo } from '@/components/common/logo';
+import { ThemeToggle } from '@/components/common/theme-toggle';
 import { NavBadge } from '@/components/common/nav-badge';
+import { useChatStore } from '@/features/chat/store/chat-store';
+import { OPEN_SEARCH_EVENT } from '@/features/shell/components/site-header';
+import { useModKeyLabel } from '@/hooks/use-kbd-shortcut';
 import { Link, usePathname } from '@/i18n/navigation';
 import type { DocItem, DocSection } from '@/lib/definitions';
 import { getDocsSections } from '@/lib/docs-navigation';
+import { Kbd } from '@repo/ui/components/kbd';
 import { Tooltip } from '@repo/ui/components/tooltip';
+import { SparklesIcon } from '@repo/ui/icons/sparkles';
 import { cn } from '@repo/ui/lib/cn';
 import { springs, still } from '@repo/ui/lib/motion';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
@@ -78,6 +86,54 @@ export function Sidebar({ previews = {} }: SidebarProps) {
   React.useEffect(() => clearPreviewTimer, [pathname, clearPreviewTimer]);
 
   const t = useTranslations('docs');
+  const tHeader = useTranslations('ui.header');
+  const modKey = useModKeyLabel();
+  const openChat = useChatStore((state) => state.openChat);
+  const [collapsed, setCollapsed] = React.useState(false);
+
+  React.useEffect(() => {
+    if (collapsed) document.body.dataset.docsSidebar = 'collapsed';
+    else delete document.body.dataset.docsSidebar;
+    return () => {
+      delete document.body.dataset.docsSidebar;
+    };
+  }, [collapsed]);
+
+  const [drawer, setDrawer] = React.useState(false);
+  const [isDesktop, setIsDesktop] = React.useState(true);
+
+  React.useEffect(() => {
+    const query = window.matchMedia('(min-width: 64rem)');
+    const sync = () => {
+      setIsDesktop(query.matches);
+      if (query.matches) setDrawer(false);
+    };
+    sync();
+    query.addEventListener('change', sync);
+    return () => query.removeEventListener('change', sync);
+  }, []);
+
+  React.useEffect(() => {
+    if (drawer) document.body.dataset.docsDrawer = 'open';
+    else delete document.body.dataset.docsDrawer;
+    return () => {
+      delete document.body.dataset.docsDrawer;
+    };
+  }, [drawer]);
+
+  React.useEffect(() => {
+    if (!drawer) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setDrawer(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [drawer]);
+
+  const toggleSidebar = () => {
+    if (window.matchMedia('(min-width: 64rem)').matches) setCollapsed((current) => !current);
+    else setDrawer((current) => !current);
+  };
   const docsNavigation = getDocsSections(t);
   const shouldReduceMotion = useReducedMotion();
 
@@ -92,6 +148,7 @@ export function Sidebar({ previews = {} }: SidebarProps) {
     setRenderedPath(pathname);
     setAnchor(current);
     setHovered(null);
+    setDrawer(false);
   }
   const anchors = buildSectionFilters(docsNavigation, t('sidebar.all')).slice(1);
 
@@ -137,8 +194,98 @@ export function Sidebar({ previews = {} }: SidebarProps) {
 
   return (
     <aside className="hidden lg:block lg:pr-6">
-      <div className="sticky top-[calc(var(--site-header-height)+2.5rem)] grid h-[calc(100vh-var(--site-header-height)-4.5rem)] grid-cols-[2.25rem_minmax(0,1fr)] gap-3 transition-[top] duration-300 motion-reduce:transition-none">
-        <div className="flex flex-col gap-1" role="group" aria-label={t('sidebar.filterLabel')}>
+      <div data-sidebar-backdrop aria-hidden="true" onClick={() => setDrawer(false)} />
+      <div
+        data-sidebar-rail
+        className="sticky top-[calc(var(--site-header-height)+2.5rem)] grid h-[calc(100vh-var(--site-header-height)-4.5rem)] grid-cols-[2.25rem_minmax(0,1fr)] gap-3 transition-[top] duration-300 motion-reduce:transition-none"
+      >
+        <div data-sidebar-head className="hidden flex-col gap-3">
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              aria-label={t('sidebar.toggle')}
+              aria-expanded={isDesktop ? !collapsed : drawer}
+              onClick={toggleSidebar}
+              className="bg-secondary text-muted-strong hover:text-foreground focus-visible:ring-ring inline-flex size-9 shrink-0 items-center justify-center rounded-sm transition-colors focus-visible:ring-2 focus-visible:outline-none"
+            >
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <rect x="3" y="4" width="18" height="16" rx="2" />
+                <line
+                  x1="9"
+                  y1="4"
+                  x2="9"
+                  y2="20"
+                  className={cn(!collapsed && 'lg:hidden', drawer && 'max-lg:hidden')}
+                />
+                <path
+                  d="M5 4h4v16H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"
+                  fill="currentColor"
+                  className={cn(collapsed && 'lg:hidden', !drawer && 'max-lg:hidden')}
+                />
+              </svg>
+            </button>
+            <div data-sidebar-extra className="ms-auto flex items-center">
+              <button
+                type="button"
+                aria-label={tHeader('ask')}
+                title={tHeader('ask')}
+                onClick={() => {
+                  setDrawer(false);
+                  openChat();
+                }}
+                className="text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring inline-flex size-8 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:outline-none"
+              >
+                <SparklesIcon size={16} aria-hidden="true" />
+              </button>
+              <ThemeToggle />
+              <LocaleSwitcher />
+            </div>
+          </div>
+          <div data-sidebar-extra className="flex items-center gap-2 ps-1 text-[15px]">
+            <Link
+              href="/"
+              aria-label={tHeader('homeLink')}
+              className="text-muted-foreground hover:text-foreground focus-visible:ring-ring flex items-center gap-2 rounded-sm transition-colors focus-visible:ring-2 focus-visible:outline-none"
+            >
+              <Logo size={20} />
+              NachUI
+            </Link>
+            <span aria-hidden="true" className="text-muted-foreground">
+              /
+            </span>
+            <Link
+              href="/components"
+              className="text-foreground focus-visible:ring-ring rounded-sm font-medium focus-visible:ring-2 focus-visible:outline-none"
+            >
+              {t('sidebar.catalog')}
+            </Link>
+            <button
+              type="button"
+              aria-label={tHeader('search')}
+              onClick={() => window.dispatchEvent(new Event(OPEN_SEARCH_EVENT))}
+              className="focus-visible:ring-ring ms-auto flex items-center gap-0.5 rounded-sm focus-visible:ring-2 focus-visible:outline-none"
+            >
+              <Kbd size="sm">{modKey}</Kbd>
+              <Kbd size="sm">K</Kbd>
+            </button>
+          </div>
+        </div>
+        <div
+          data-sidebar-anchors
+          className="flex flex-col gap-1"
+          role="group"
+          aria-label={t('sidebar.filterLabel')}
+        >
           {anchors.map(({ id, label, Icon }) => {
             const isActive = id === anchor;
             return (
@@ -174,12 +321,13 @@ export function Sidebar({ previews = {} }: SidebarProps) {
 
         <nav
           ref={navRef}
+          data-sidebar-nav
           className="hide-scrollbar relative min-h-0 overflow-y-scroll mask-[linear-gradient(180deg,black_90%,transparent)] pb-20"
         >
           {docsNavigation.map((section: DocSection) => (
             <div key={section.id} data-section={section.id} className="mb-6 last:mb-0">
-              <p className="text-brand-text px-2.5 text-xs font-medium">{section.title}</p>
-              <ul className="mt-2">
+              <p className="section-label px-1 tracking-[0.08em] uppercase">{section.title}</p>
+              <ul className="border-border ms-1.5 mt-2 border-s">
                 {section.items.map((item: DocItem) => {
                   const isActive = pathname === item.href;
                   return (
@@ -199,18 +347,12 @@ export function Sidebar({ previews = {} }: SidebarProps) {
                           setHovered(null);
                         }}
                         className={cn(
-                          'focus-visible:ring-ring flex h-8 items-center gap-2 rounded-md px-2.5 text-[13px] transition-colors focus-visible:ring-2 focus-visible:outline-none',
+                          'focus-visible:ring-ring -ms-px flex h-8 items-center gap-2 rounded-e-sm border-s ps-3.5 pe-2 text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
                           isActive
-                            ? 'bg-brand-soft text-brand-text font-medium'
-                            : 'text-muted-foreground hover:text-foreground',
+                            ? 'border-brand text-foreground font-medium'
+                            : 'text-muted-foreground hover:text-foreground border-transparent',
                         )}
                       >
-                        {isActive && (
-                          <span
-                            aria-hidden="true"
-                            className="bg-brand size-1.5 shrink-0 rounded-full"
-                          />
-                        )}
                         {item.title}
                         <NavBadge badge={item.badge} />
                       </Link>

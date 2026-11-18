@@ -752,7 +752,9 @@
   },
   "sidebar": {
     "all": "Todo",
-    "filterLabel": "Filtrar el sidebar por sección"
+    "filterLabel": "Filtrar el sidebar por sección",
+    "toggle": "Mostrar u ocultar la barra lateral",
+    "catalog": "Catálogo"
   },
   "componentsList": {
     "emptyTitle": "No hay componentes",
@@ -762,6 +764,17 @@
   "preview": {
     "loadError": "No se pudo cargar este demo",
     "missingTitle": "Demo no registrado",
-    "missingDescription": "No hay un demo \"{demo}\" para {component} en el registro de demos."
+    "missingDescription": "No hay un demo \"{demo}\" para {component} en el registro de demos.",
+    "defaultDemo": "Demo principal"
+  },
+  "stage": {
+    "label": "Demo de {title}",
+    "toolbar": "Herramientas del demo",
+    "install": "Instalar",
+    "replay": "Repetir",
+    "doc": "Documentación",
+    "code": "Código del demo",
+    "show": "Ver",
+    "showing": "En el stage"
   }
 }

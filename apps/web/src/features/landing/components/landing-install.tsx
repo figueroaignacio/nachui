@@ -2,11 +2,7 @@
 
 import { CopyButton } from '@/components/mdx/copy-button';
 import { Link } from '@/i18n/navigation';
-import { buttonVariants } from '@repo/ui/components/button';
-import { Frame } from '@repo/ui/components/frame';
 import { ArrowRightIcon } from '@repo/ui/icons/arrow-right';
-import { ArrowUpRightIcon } from '@repo/ui/icons/arrow-up-right';
-import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 
 type Tool = { name: string; description: string };
@@ -45,81 +41,63 @@ function ConfigLine({ line }: { line: string }) {
   );
 }
 
+/**
+ * The MCP pitch as one floating panel: the copy and the config side by side,
+ * and the four tools the server exposes underneath.
+ */
 export function LandingInstall() {
   const t = useTranslations('components.landingLogoCta');
   const tools: Tool[] = t.raw('tools');
 
   return (
-    <section className="w-full">
-      <div className="scroll-reveal flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-12">
-        <div className="flex flex-col lg:w-[40%] lg:shrink-0">
-          <p className="section-label">{t('label')}</p>
-          <h2 className="font-heading text-foreground mt-3 text-xl leading-tight font-normal tracking-[-0.025em]">
+    <section className="bg-island mx-auto mt-16 w-full max-w-[70rem] rounded-lg p-1.5 sm:rounded-xl md:mt-20">
+      <div className="flex flex-col gap-1.5 lg:flex-row">
+        <div className="flex flex-col items-start p-5 sm:p-7 lg:w-[44%] lg:shrink-0">
+          <h2 className="font-heading text-foreground text-2xl leading-tight font-normal tracking-[-0.025em] md:text-3xl">
             {t('line1')}
             <span className="text-muted-foreground block">{t('line2')}</span>
           </h2>
-          <p className="text-muted-strong mt-3 text-sm leading-relaxed">{t('description')}</p>
-          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-            <Link
-              href="/docs/concepts/mcp"
-              className={cn(buttonVariants({ variant: 'default', size: 'sm' }), 'font-mono')}
-            >
-              {t('primaryAction')}
-              <ArrowRightIcon size={14} aria-hidden="true" />
-            </Link>
-            <Link
-              href="/docs/elements/ui"
-              className={cn(
-                buttonVariants({ variant: 'link', size: 'sm' }),
-                'text-muted-foreground hover:text-foreground font-mono',
-              )}
-            >
-              {t('secondaryAction')}
-              <ArrowUpRightIcon size={14} aria-hidden="true" />
-            </Link>
-          </div>
+          <p className="text-muted-strong mt-4 max-w-[52ch] leading-relaxed">{t('description')}</p>
+          <Link
+            href="/docs/concepts/mcp"
+            className="bg-popover border-border text-foreground hover:border-border-interactive focus-visible:ring-ring focus-visible:ring-offset-card mt-7 inline-flex h-11 items-center gap-2 rounded-full border px-5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          >
+            {t('primaryAction')}
+            <ArrowRightIcon size={15} aria-hidden="true" className="rtl:-scale-x-100" />
+          </Link>
         </div>
 
-        <div className="min-w-0 lg:flex-1">
-          <Frame spacing="sm">
-            <Frame.Header className="flex-row items-center justify-between gap-4 py-1 pr-1 pl-3">
-              <Frame.Title className="text-muted-foreground font-mono text-xs font-normal">
-                {t('configFile')}
-              </Frame.Title>
-              <CopyButton
-                value={config}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              />
-            </Frame.Header>
-            <Frame.Panel className="overflow-x-auto sm:p-5">
-              <pre className="font-mono text-[13px] leading-[1.7]">
-                <code>
-                  {config.split('\n').map((line, index) => (
-                    <ConfigLine key={index} line={line} />
-                  ))}
-                </code>
-              </pre>
-            </Frame.Panel>
-          </Frame>
-          <ul className="mt-5 space-y-2.5">
-            {tools.map((tool) => (
-              <li
-                key={tool.name}
-                className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-3"
-              >
-                <code className="text-foreground shrink-0 font-mono text-[12px]">{tool.name}</code>
-                <span className="text-muted-foreground text-[13px] leading-relaxed">
-                  {tool.description}
-                </span>
-              </li>
-            ))}
-          </ul>
-          <p className="text-muted-foreground mt-5 font-mono text-xs leading-relaxed">
-            {t('outputNote')}
-          </p>
+        <div className="bg-code min-w-0 flex-1 rounded-md sm:rounded-lg">
+          <div className="border-border flex items-center justify-between gap-4 border-b py-1.5 ps-4 pe-1.5">
+            <span className="text-muted-foreground font-mono text-xs">{t('configFile')}</span>
+            <CopyButton
+              value={config}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            />
+          </div>
+          <pre dir="ltr" className="overflow-x-auto p-4 font-mono text-[13px] leading-[1.7] sm:p-5">
+            <code>
+              {config.split('\n').map((line, index) => (
+                <ConfigLine key={index} line={line} />
+              ))}
+            </code>
+          </pre>
         </div>
       </div>
-      <p className="text-muted-foreground mt-16 font-mono text-xs">{t('license')}</p>
+
+      <dl className="grid gap-x-6 gap-y-5 px-5 pt-6 sm:grid-cols-2 sm:px-7 lg:grid-cols-4">
+        {tools.map((tool) => (
+          <div key={tool.name}>
+            <dt className="text-foreground font-mono text-[13px]">{tool.name}</dt>
+            <dd className="text-muted-foreground mt-1.5 text-sm leading-relaxed">
+              {tool.description}
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <p className="text-muted-foreground px-5 pt-5 pb-5 text-[13px] leading-relaxed sm:px-7 sm:pb-6">
+        {t('outputNote')}
+      </p>
     </section>
   );
 }

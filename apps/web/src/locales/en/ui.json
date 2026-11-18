@@ -27,8 +27,8 @@
         "href": "/docs/elements/ai"
       },
       {
-        "title": "Components",
-        "description": "A gallery of live examples built with the library.",
+        "title": "Catalog",
+        "description": "Every component, AI element and icon, running live on one page.",
         "href": "/components"
       },
       {
@@ -84,12 +84,20 @@
     "searchPlaceholder": "Search components, docs and icons",
     "tabs": [
       {
-        "title": "Get started",
-        "href": "/docs"
+        "title": "AI Elements",
+        "href": "/docs/elements/ai"
       },
       {
-        "title": "Foundations",
-        "href": "/docs/foundations"
+        "title": "Components",
+        "href": "/docs/elements/ui"
+      },
+      {
+        "title": "Icons",
+        "href": "/docs/elements/icons"
+      },
+      {
+        "title": "Docs",
+        "href": "/docs"
       },
       {
         "title": "Themes",

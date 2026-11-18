@@ -27,8 +27,8 @@
         "href": "/docs/elements/ai"
       },
       {
-        "title": "Componentes",
-        "description": "Una galería de ejemplos vivos hechos con la librería.",
+        "title": "Catálogo",
+        "description": "Todos los componentes, elementos AI e íconos, corriendo en vivo en una página.",
         "href": "/components"
       },
       {
@@ -84,12 +84,20 @@
     "searchPlaceholder": "Buscar componentes, docs e iconos",
     "tabs": [
       {
-        "title": "Empezar",
-        "href": "/docs"
+        "title": "Elementos AI",
+        "href": "/docs/elements/ai"
       },
       {
-        "title": "Fundamentos",
-        "href": "/docs/foundations"
+        "title": "Componentes",
+        "href": "/docs/elements/ui"
+      },
+      {
+        "title": "Íconos",
+        "href": "/docs/elements/icons"
+      },
+      {
+        "title": "Docs",
+        "href": "/docs"
       },
       {
         "title": "Temas",

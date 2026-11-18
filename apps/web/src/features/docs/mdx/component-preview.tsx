@@ -1,6 +1,8 @@
+import { CodeBlock } from '@/components/mdx/codeblock';
 import { DEMO_COMPONENTS } from '@/components/mdx/demo-registry';
 import { Callout } from '@repo/ui/components/callout';
 import { getTranslations } from 'next-intl/server';
+import { StagePreview } from '../components/demo-stage';
 import { getDemoCode } from '../lib/get-component-code';
 import { ComponentPreviewClient } from './component-preview-client';
 
@@ -44,15 +46,37 @@ export async function ComponentPreview({
   }
 
   const componentPreview = <DemoComponent />;
+  const label = demo === 'default' ? t('defaultDemo') : humanize(demo);
 
   return (
-    <ComponentPreviewClient
-      componentPreview={componentPreview}
-      code={code}
+    <StagePreview
+      demoKey={`${component}/${demo}`}
+      label={label}
       description={description}
-      className={className}
-      align={align}
-      filePath={filePath || undefined}
+      demo={componentPreview}
+      code={
+        code ? (
+          <CodeBlock code={code} language="tsx" collapsible className="rounded-none border-0" />
+        ) : null
+      }
+      fullCode={
+        code ? <CodeBlock code={code} language="tsx" className="rounded-none border-0" /> : null
+      }
+      fallback={
+        <ComponentPreviewClient
+          componentPreview={componentPreview}
+          code={code}
+          description={description}
+          className={className}
+          align={align}
+          filePath={filePath || undefined}
+        />
+      }
     />
   );
+}
+
+function humanize(name: string) {
+  const words = name.split('-').join(' ');
+  return words.charAt(0).toUpperCase() + words.slice(1);
 }

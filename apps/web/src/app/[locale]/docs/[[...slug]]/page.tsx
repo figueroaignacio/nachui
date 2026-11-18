@@ -1,3 +1,5 @@
+import { getStagePreview } from '@/features/docs/lib/sidebar-previews';
+import { ComponentDocView } from '@/features/docs/views/component-doc-view';
 import { DocView } from '@/features/docs/views/doc-view';
 import type { Locale } from '@/lib/constants';
 import { ContentRepository } from '@/lib/content-repository';
@@ -29,7 +31,9 @@ export default async function DocPage({ params }: { params: Promise<DocPageProps
     notFound();
   }
 
-  return <DocView doc={doc} />;
+  const preview = getStagePreview(doc);
+
+  return preview ? <ComponentDocView doc={doc} preview={preview} /> : <DocView doc={doc} />;
 }
 
 export async function generateMetadata({

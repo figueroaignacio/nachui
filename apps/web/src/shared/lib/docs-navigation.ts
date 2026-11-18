@@ -1,4 +1,5 @@
 import type { DocItem, DocSection } from './definitions';
+import { isHiddenDocSection } from './hidden-product-links';
 
 /**
  * Anything that can read the raw `docs` namespace: the translator returned by
@@ -14,7 +15,7 @@ export interface DocsTranslator {
  * that shape.
  */
 export function getDocsSections(t: DocsTranslator): DocSection[] {
-  return t.raw('navigation') as DocSection[];
+  return (t.raw('navigation') as DocSection[]).filter((section) => !isHiddenDocSection(section.id));
 }
 
 export function getDocItems(sections: DocSection[]): DocItem[] {

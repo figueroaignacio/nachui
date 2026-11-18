@@ -20,6 +20,16 @@
     "announcement": {
       "badge": "new",
       "text": "The icon catalog now lives in the docs"
+    },
+    "catalog": {
+      "heading": "{ai} AI elements, {ui} components, {icons} icons",
+      "description": "One file per component. Copy it into your repo and it is yours.",
+      "action": "See the whole catalog",
+      "iconsCaption": "Icons",
+      "tags": {
+        "ai": "AI",
+        "ui": "UI"
+      }
     }
   },
   "bricks": {
@@ -312,5 +322,18 @@
       "downloadLight": "Download light",
       "downloadDark": "Download dark"
     }
+  },
+  "catalog": {
+    "title": "Catalog",
+    "description": "Every tile is the real component, running. Open it, try it and copy the file.",
+    "metaDescription": "Every NachUI component, AI element and icon on one page, each one running live and one click away from its code.",
+    "search": "Search {count} pieces",
+    "filterLabel": "Filter by family",
+    "filters": {
+      "all": "All",
+      "icons": "Icons"
+    },
+    "iconsCaption": "One file per icon, 1.5 stroke, no dependencies",
+    "noResults": "Nothing matches that search."
   }
 }

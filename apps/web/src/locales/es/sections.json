@@ -20,6 +20,16 @@
     "announcement": {
       "badge": "nuevo",
       "text": "El catálogo de íconos ya vive en los docs"
+    },
+    "catalog": {
+      "heading": "{ai} elementos AI, {ui} componentes, {icons} íconos",
+      "description": "Un archivo por componente. Lo copiás a tu repo y pasa a ser tuyo.",
+      "action": "Ver todo el catálogo",
+      "iconsCaption": "Íconos",
+      "tags": {
+        "ai": "AI",
+        "ui": "UI"
+      }
     }
   },
   "bricks": {
@@ -312,5 +322,18 @@
       "downloadLight": "Descargar claro",
       "downloadDark": "Descargar oscuro"
     }
+  },
+  "catalog": {
+    "title": "Catálogo",
+    "description": "Cada tarjeta es el componente real, corriendo. Abrila, probala y copiá el archivo.",
+    "metaDescription": "Todos los componentes, elementos AI e íconos de NachUI en una página, cada uno corriendo en vivo y a un clic de su código.",
+    "search": "Buscar en {count} piezas",
+    "filterLabel": "Filtrar por familia",
+    "filters": {
+      "all": "Todo",
+      "icons": "Íconos"
+    },
+    "iconsCaption": "Un archivo por ícono, trazo de 1.5 y sin dependencias",
+    "noResults": "Nada coincide con esa búsqueda."
   }
 }

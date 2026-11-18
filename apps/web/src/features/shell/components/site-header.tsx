@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { GitHubIcon } from '@/components/common/github-icon';
 import { LocaleSwitcher } from '@/components/common/locale-switcher';
 import { Logo } from '@/components/common/logo';
@@ -13,25 +13,19 @@ import { Link, usePathname } from '@/i18n/navigation';
 import { GITHUB_REPO_URL } from '@/lib/domains';
 import { isHiddenProductLink } from '@/lib/hidden-product-links';
 import { Kbd } from '@repo/ui/components/kbd';
-import { NavigationMenu } from '@repo/ui/components/navigation-menu';
-import { ImageIcon } from '@repo/ui/icons/image';
-import { LayoutGridIcon } from '@repo/ui/icons/layout-grid';
 import { MenuIcon } from '@repo/ui/icons/menu';
-import { PuzzleIcon } from '@repo/ui/icons/puzzle';
 import { SearchIcon } from '@repo/ui/icons/search';
 import { SparklesIcon } from '@repo/ui/icons/sparkles';
 import { cn } from '@repo/ui/lib/cn';
 import { useTranslations } from 'next-intl';
 
 type NavItem = { title: string; href: string };
-type ProductItem = NavItem & { description: string };
 
-const PRODUCT_ICONS: Record<string, ReactNode> = {
-  '/docs/elements/ui': <PuzzleIcon size={16} aria-hidden="true" />,
-  '/docs/elements/layout': <LayoutGridIcon size={16} aria-hidden="true" />,
-  '/docs/elements/ai': <SparklesIcon size={16} aria-hidden="true" />,
-  '/docs/elements/icons': <ImageIcon size={16} aria-hidden="true" />,
-};
+/**
+ * Lets a control outside the header open the search dialog it owns, like the
+ * sidebar of a component page, where the header itself is hidden.
+ */
+export const OPEN_SEARCH_EVENT = 'nachui:open-search';
 
 /** Docs tabs match on their full path; anything else matches its whole top-level section. */
 function tabRoot(href: string) {
@@ -48,6 +42,21 @@ function findActiveTab(tabs: NavItem[], pathname: string) {
   return best?.href;
 }
 
+/**
+ * Every floating piece of the header shares this surface. The header itself is
+ * transparent and lets clicks through, so only the pills take the pointer.
+ */
+const pill =
+  'bg-popover text-popover-foreground border-border pointer-events-auto flex h-11 items-center rounded-full border shadow-md';
+
+const focusRing =
+  'focus-visible:ring-ring focus-visible:ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none';
+
+const roundButton = cn(
+  'text-muted-foreground hover:text-foreground hover:bg-muted inline-flex size-8 items-center justify-center rounded-full transition-colors',
+  focusRing,
+);
+
 export function SiteHeader() {
   const t = useTranslations('ui');
   const tSearch = useTranslations('components.searcher');
@@ -59,176 +68,124 @@ export function SiteHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
+  useEffect(() => {
+    const open = () => setSearchOpen(true);
+    window.addEventListener(OPEN_SEARCH_EVENT, open);
+    return () => window.removeEventListener(OPEN_SEARCH_EVENT, open);
+  }, []);
+
   const tabs = (t.raw('header.tabs') as NavItem[]).filter(
     (item) => !isHiddenProductLink(item.href),
   );
-  const productItems = (t.raw('elementsMenu.items') as ProductItem[]).filter(
-    (item) => item.href in PRODUCT_ICONS && !isHiddenProductLink(item.href),
-  );
-  const activeTab = findActiveTab([...tabs, ...productItems], pathname);
-  const productActive = productItems.some((item) => item.href === activeTab);
-  const tabClass = (active: boolean) =>
-    cn(
-      'focus-visible:ring-ring flex h-8 items-center rounded-md px-2.5 text-sm whitespace-nowrap focus-visible:ring-2 focus-visible:outline-none',
-      active
-        ? 'bg-brand-soft text-brand-text font-medium'
-        : 'text-muted-foreground hover:text-foreground',
-    );
-
-  const iconButton =
-    'text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring inline-flex size-11 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:outline-none';
+  const activeTab = findActiveTab(tabs, pathname);
 
   return (
     <>
-      <header data-site-header className="site-header border-rule sticky top-0 z-40 border-b">
+      <header data-site-header className="site-header pointer-events-none sticky top-0 z-40">
         <div className="page-frame-outer">
           <div className="page-frame">
-            <div className="hidden h-14 items-center gap-4 lg:flex">
+            <div className="hidden h-(--site-header-height) items-center justify-center gap-2 lg:flex">
               <Link
                 href="/"
                 aria-label={t('header.homeLink')}
-                className="focus-visible:ring-ring flex shrink-0 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                className={cn(pill, focusRing, 'ps-2.5 pe-4')}
               >
-                <Logo withText priority />
+                <Logo withText size={24} priority />
               </Link>
-              <span className="bg-border h-5 w-px shrink-0" aria-hidden="true" />
-              <NavigationMenu aria-label={t('header.sections')} className="gap-0.5">
-                {tabs.slice(0, 1).map((tab) => (
-                  <Link
-                    key={tab.href}
-                    href={tab.href}
-                    aria-current={tab.href === activeTab ? 'page' : undefined}
-                    className={tabClass(tab.href === activeTab)}
-                  >
-                    {tab.title}
-                  </Link>
-                ))}
-                <NavigationMenu.Item>
-                  <NavigationMenu.Trigger
-                    className={cn(
-                      'h-8 min-h-0 px-2.5 text-sm focus-visible:ring-offset-0',
-                      productActive && 'bg-brand-soft text-brand-text font-medium',
-                    )}
-                  >
-                    {t('elementsMenu.label')}
-                  </NavigationMenu.Trigger>
-                  <NavigationMenu.Content className="w-[26rem]">
-                    {productItems.map((item) => (
-                      <NavigationMenu.Link
-                        key={item.href}
-                        asChild
-                        title={item.title}
-                        description={item.description}
-                        icon={PRODUCT_ICONS[item.href]}
-                        aria-current={item.href === activeTab ? 'page' : undefined}
-                      >
-                        <Link href={item.href} />
-                      </NavigationMenu.Link>
-                    ))}
-                  </NavigationMenu.Content>
-                </NavigationMenu.Item>
-                {tabs.slice(1).map((tab) => (
-                  <Link
-                    key={tab.href}
-                    href={tab.href}
-                    aria-current={tab.href === activeTab ? 'page' : undefined}
-                    className={tabClass(tab.href === activeTab)}
-                  >
-                    {tab.title}
-                  </Link>
-                ))}
-              </NavigationMenu>
-              <div className="ml-auto flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setSearchOpen(true)}
-                  className="border-input bg-card text-muted-foreground hover:border-border-interactive focus-visible:ring-ring dark:bg-input/30 flex h-8 w-48 items-center gap-2 rounded-md border pr-1.5 pl-2.5 text-[13px] focus-visible:ring-2 focus-visible:outline-none xl:w-[22rem]"
+
+              <nav aria-label={t('header.sections')} className={cn(pill, 'gap-0.5 px-1')}>
+                {tabs.map((tab) => {
+                  const active = tab.href === activeTab;
+                  return (
+                    <Link
+                      key={tab.href}
+                      href={tab.href}
+                      aria-current={active ? 'page' : undefined}
+                      className={cn(
+                        'flex h-8.5 items-center rounded-full px-3 text-sm whitespace-nowrap transition-colors',
+                        focusRing,
+                        active
+                          ? 'bg-secondary text-foreground font-medium'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-muted',
+                      )}
+                    >
+                      {tab.title}
+                    </Link>
+                  );
+                })}
+              </nav>
+
+              <button
+                type="button"
+                onClick={() => setSearchOpen(true)}
+                className={cn(
+                  pill,
+                  focusRing,
+                  'text-muted-foreground hover:border-border-interactive gap-2 ps-3.5 pe-2 text-[13px] transition-colors 2xl:w-64',
+                )}
+              >
+                <SearchIcon size={15} aria-hidden="true" />
+                <span className="sr-only 2xl:not-sr-only 2xl:flex-1 2xl:truncate 2xl:text-start">
+                  {tSearch('placeholder')}
+                </span>
+                <span className="flex items-center gap-0.5" aria-hidden="true">
+                  <Kbd size="sm">{modKey}</Kbd>
+                  <Kbd size="sm">K</Kbd>
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={openChat}
+                className={cn(
+                  'bg-primary text-primary-foreground hover:bg-primary/90 pointer-events-auto inline-flex h-11 items-center gap-2 rounded-full px-4 text-[13px] font-medium whitespace-nowrap shadow-md transition-colors',
+                  focusRing,
+                )}
+              >
+                <SparklesIcon size={15} aria-hidden="true" />
+                {t('header.ask')}
+              </button>
+
+              <div className={cn(pill, 'gap-0.5 px-1.5')}>
+                <a
+                  href={GITHUB_REPO_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={t('header.github')}
+                  className={roundButton}
                 >
-                  <SearchIcon size={14} aria-hidden="true" />
-                  <span className="flex-1 truncate text-left xl:hidden">
-                    {tSearch('placeholder')}
-                  </span>
-                  <span className="hidden flex-1 truncate text-left xl:inline">
-                    {t('header.searchPlaceholder')}
-                  </span>
-                  <span className="flex items-center gap-0.5" aria-hidden="true">
-                    <Kbd size="sm" className="bg-brand-soft text-brand-text border-brand-line">
-                      {modKey}
-                    </Kbd>
-                    <Kbd size="sm" className="bg-brand-soft text-brand-text border-brand-line">
-                      K
-                    </Kbd>
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  onClick={openChat}
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring ring-offset-background inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-[13px] font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-                >
-                  <SparklesIcon size={14} aria-hidden="true" />
-                  {t('header.ask')}
-                </button>
-                <span className="bg-border h-5 w-px" aria-hidden="true" />
-                <div className="flex items-center gap-0.5">
-                  <a
-                    href={GITHUB_REPO_URL}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={t('header.github')}
-                    className="text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-ring inline-flex size-8 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:outline-none"
-                  >
-                    <GitHubIcon size={16} />
-                  </a>
-                  <ThemeToggle />
-                  <LocaleSwitcher />
-                </div>
+                  <GitHubIcon size={16} />
+                </a>
+                <ThemeToggle />
+                <LocaleSwitcher />
               </div>
             </div>
 
-            <div className="flex h-14 items-center gap-3 lg:hidden">
+            <div className="flex h-(--site-header-height) items-center gap-2 lg:hidden">
               <Link
                 href="/"
                 aria-label={t('header.homeLink')}
-                className="focus-visible:ring-ring flex shrink-0 rounded-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                className={cn(pill, focusRing, 'me-auto ps-2.5 pe-4')}
               >
-                <Logo withText />
+                <Logo withText size={24} />
               </Link>
-              <div className="hidden min-w-0 flex-1 justify-center md:flex">
-                <button
-                  type="button"
-                  onClick={() => setSearchOpen(true)}
-                  className="border-input bg-card text-muted-foreground hover:border-border-interactive focus-visible:ring-ring dark:bg-input/30 flex h-9 w-full max-w-sm items-center gap-2 rounded-md border pr-1.5 pl-2.5 text-[13px] focus-visible:ring-2 focus-visible:outline-none"
-                >
-                  <SearchIcon size={14} aria-hidden="true" />
-                  <span className="flex-1 truncate text-left">{t('header.searchPlaceholder')}</span>
-                  <span className="flex items-center gap-0.5" aria-hidden="true">
-                    <Kbd size="sm" className="bg-brand-soft text-brand-text border-brand-line">
-                      {modKey}
-                    </Kbd>
-                    <Kbd size="sm" className="bg-brand-soft text-brand-text border-brand-line">
-                      K
-                    </Kbd>
-                  </span>
-                </button>
-              </div>
-              <div className="ml-auto flex shrink-0 items-center gap-0.5 md:ml-0">
+              <div className={cn(pill, 'px-0')}>
                 <button
                   type="button"
                   aria-label={tSearch('label')}
                   onClick={() => setSearchOpen(true)}
-                  className={cn(iconButton, 'md:hidden')}
+                  className={cn(roundButton, 'size-11')}
                 >
-                  <SearchIcon size={19} aria-hidden="true" />
+                  <SearchIcon size={18} aria-hidden="true" />
                 </button>
                 <button
                   type="button"
                   aria-label={t('header.ask')}
                   onClick={openChat}
-                  className={iconButton}
+                  className={cn(roundButton, 'size-11')}
                 >
                   <SparklesIcon size={18} aria-hidden="true" />
                 </button>
-                <span className="bg-border mx-1 h-5 w-px" aria-hidden="true" />
                 <button
                   type="button"
                   aria-label={t('header.menu')}
@@ -236,9 +193,9 @@ export function SiteHeader() {
                   aria-expanded={menuOpen}
                   aria-controls="mobile-menu"
                   onClick={() => setMenuOpen((previous) => !previous)}
-                  className={cn(iconButton, 'text-foreground')}
+                  className={cn(roundButton, 'text-foreground size-11')}
                 >
-                  <MenuIcon size={20} aria-hidden="true" />
+                  <MenuIcon size={19} aria-hidden="true" />
                 </button>
               </div>
             </div>

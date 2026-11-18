@@ -50,6 +50,7 @@
 }
 
 body {
+  background-color: var(--page);
   transition: padding-right 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -79,8 +80,8 @@ body:has([data-chat-launcher]) footer {
     transition: grid-template-columns 300ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  body:has([data-chat-open='true']) [data-docs-grid] {
-    grid-template-columns: 260px minmax(0, 1fr) 0px;
+  body:has([data-chat-open='true']) [data-doc-panel] {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   body:has([data-chat-open='true']) [data-doc-toc] {
@@ -160,17 +161,32 @@ body:has([data-chat-launcher]) footer {
  * outside the stage and come into focus, then they keep a slow float.
  */
 .hero-stage {
+  --hero-inset: 0.5rem;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: max(calc(100svh - var(--site-header-height)), 44rem);
+  min-height: max(calc(100svh - 2 * var(--hero-inset)), 48rem);
+  /* The panel starts under the floating header, so the pills read as part of
+     it, and stops one inset short of the viewport on every side. */
+  margin-block-start: calc(var(--hero-inset) - var(--site-header-height));
+  margin-inline: calc(var(--hero-inset) - var(--frame-bleed));
+  padding-block-start: var(--site-header-height);
+  padding-inline: var(--frame-pad);
   overflow: clip;
 }
 
+@media (min-width: 40rem) {
+  .hero-stage {
+    --hero-inset: 0.625rem;
+  }
+}
+
+/* The cards live below the header row, so none of them ends up under a pill. */
 .hero-orbit {
   position: absolute;
-  inset: 0;
+  inset: var(--site-header-height) 0 0 0;
+  overflow: clip;
   pointer-events: none;
   user-select: none;
 }
@@ -454,7 +470,17 @@ body:has([data-chat-launcher]) footer {
   --welcome-cue: 60ms;
 }
 
+/*
+ * The site reads as islands floating on a page. The page is `background`, the
+ * lightest surface in light mode and the darkest in dark mode. Every island
+ * (the stage, a doc panel, a catalog tile, the assistant) is `surface-muted`,
+ * one step of gray away, with no border. A card sits one more step up from the
+ * island and code one step down, so both read on it in either mode.
+ */
 :root {
+  --page: var(--background);
+  --island: var(--surface-muted);
+  --island-hover: var(--accent);
   --brand: oklch(60% 0.115 232);
   --brand-text: oklch(45% 0.11 236);
   --brand-soft: oklch(95% 0.03 228);
@@ -464,6 +490,9 @@ body:has([data-chat-launcher]) footer {
 }
 
 @theme inline {
+  --color-page: var(--page);
+  --color-island: var(--island);
+  --color-island-hover: var(--island-hover);
   --color-brand: var(--brand);
   --color-brand-text: var(--brand-text);
   --color-brand-soft: var(--brand-soft);
@@ -473,6 +502,7 @@ body:has([data-chat-launcher]) footer {
 }
 
 .dark {
+  --island-hover: var(--card);
   --brand: oklch(80% 0.1 228);
   --brand-text: oklch(84% 0.09 228);
   --brand-soft: oklch(29% 0.045 232);
@@ -481,11 +511,291 @@ body:has([data-chat-launcher]) footer {
   --brand-highlight-foreground: oklch(20% 0.035 240);
 }
 
-/* One fixed row on every screen. Sticky rails read this to sit right under it. */
+/* The floating header: a 44px row of pills with 12px of air above and below.
+   Sticky rails read this to sit right under it. */
 :root {
-  --site-header-height: 3.5rem;
+  --site-header-height: 4.25rem;
 }
 
+/* Content scrolls under the pills, so the row fades it out before it gets
+   there. The landing skips it: its hero panel starts behind the header. */
 .site-header {
-  background-color: var(--background);
+  background-image: linear-gradient(var(--page) 45%, transparent);
+}
+
+body:has(.hero-stage) .site-header {
+  background-image: none;
+}
+
+/*
+ * The docs are a workbench, not a marketing page: from desktop up the floating
+ * header steps aside, the sidebar carries the way home, the search and the
+ * assistant, and the page takes every pixel that is left, as one panel. On a
+ * component page that panel is the stage; everywhere else it holds the doc.
+ * Phones keep the header, since the sidebar is not there to replace it.
+ */
+@media (min-width: 64rem) {
+  body:has([data-docs-grid]) {
+    --site-header-height: 0rem;
+    --frame-gutter: 0rem;
+    --frame-pad: 0.625rem;
+  }
+
+  body:has([data-docs-grid]) .site-header,
+  body:has([data-stage-shell]) [data-chat-launcher] {
+    display: none;
+  }
+
+  body:has([data-docs-grid]) [data-docs-grid] {
+    grid-template-columns: 15rem minmax(0, 1fr);
+    gap: 0.625rem;
+    padding-block-start: 0.625rem;
+  }
+
+  body:has([data-docs-grid]) [data-docs-grid] > aside {
+    padding-inline-end: 0;
+  }
+
+  body:has([data-docs-grid]) [data-sidebar-rail] {
+    top: 0.625rem;
+    height: calc(100vh - 1.25rem);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    padding-block-start: 0.375rem;
+    padding-inline-start: 0.375rem;
+  }
+
+  body:has([data-docs-grid]) [data-sidebar-head] {
+    display: flex;
+  }
+
+  body:has([data-docs-grid]) [data-sidebar-anchors] {
+    display: none;
+  }
+
+  /*
+   * Collapsing: the sidebar column closes with a soft overshoot and the stage
+   * grows into it. The rail keeps its width, so nothing inside reflows while
+   * the column moves; its contents slide out of focus toward the edge, and on
+   * the way back they arrive one after the other. The button never moves: it
+   * ends up floating over the corner of the stage.
+   */
+  body:has([data-docs-grid]) [data-docs-grid] {
+    transition: grid-template-columns 420ms cubic-bezier(0.22, 1.12, 0.36, 1);
+  }
+
+  body:has([data-docs-grid]) [data-docs-grid] > aside {
+    min-width: 0;
+  }
+
+  body:has([data-docs-grid]) [data-sidebar-rail] {
+    z-index: 30;
+    width: 14.375rem;
+  }
+
+  body:has([data-docs-grid]) [data-sidebar-nav],
+  body:has([data-docs-grid]) [data-sidebar-extra] {
+    transition:
+      opacity 320ms ease-out,
+      transform 460ms cubic-bezier(0.22, 1.2, 0.36, 1),
+      filter 320ms ease-out,
+      visibility 0s;
+  }
+
+  body:has([data-docs-grid]) [data-sidebar-extra] {
+    transition-delay: 70ms;
+  }
+
+  body:has([data-docs-grid]) [data-sidebar-nav] {
+    transition-delay: 130ms;
+  }
+
+  body[data-docs-sidebar='collapsed']:has([data-docs-grid]) [data-docs-grid] {
+    grid-template-columns: 0rem minmax(0, 1fr);
+    gap: 0;
+  }
+
+  body[data-docs-sidebar='collapsed']:has([data-docs-grid]) [data-sidebar-rail] {
+    pointer-events: none;
+  }
+
+  body[data-docs-sidebar='collapsed']:has([data-docs-grid]) [data-sidebar-rail] button {
+    pointer-events: auto;
+  }
+
+  body[data-docs-sidebar='collapsed']:has([data-docs-grid]) [data-sidebar-nav],
+  body[data-docs-sidebar='collapsed']:has([data-docs-grid]) [data-sidebar-extra] {
+    visibility: hidden;
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateX(-1.25rem) scale(0.96);
+    transition:
+      opacity 160ms ease-in,
+      transform 200ms ease-in,
+      filter 160ms ease-in,
+      visibility 0s 200ms;
+  }
+
+  [dir='rtl'] body[data-docs-sidebar='collapsed']:has([data-docs-grid]) [data-sidebar-nav],
+  [dir='rtl'] body[data-docs-sidebar='collapsed']:has([data-docs-grid]) [data-sidebar-extra] {
+    transform: translateX(1.25rem) scale(0.96);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body:has([data-docs-grid]) [data-docs-grid] {
+      transition: none;
+    }
+
+    body:has([data-docs-grid]) [data-sidebar-nav],
+    body:has([data-docs-grid]) [data-sidebar-extra] {
+      filter: none !important;
+      transform: none !important;
+      transition: opacity 150ms linear;
+    }
+  }
+}
+
+/*
+ * Below desktop the docs keep the same idea with less room: no header, the page
+ * as one island, and the sidebar as a drawer. Its button sits in the corner of
+ * the first screen and never moves; the panel slides in behind it from the
+ * edge, over a dimmed page, and its contents arrive the way they do on desktop.
+ */
+@media (max-width: 63.99rem) {
+  body:has([data-stage-shell]) [data-chat-launcher] {
+    display: none;
+  }
+
+  body:has([data-docs-grid]) {
+    --site-header-height: 0rem;
+    --frame-gutter: 0rem;
+    --frame-pad: 0.5rem;
+  }
+
+  body:has([data-docs-grid]) .site-header {
+    display: none;
+  }
+
+  body:has([data-docs-grid]) [data-docs-grid] {
+    padding-block-start: 0.5rem;
+  }
+
+  body[data-docs-drawer='open'] {
+    overflow: hidden;
+  }
+
+  body:has([data-docs-grid]) [data-docs-grid] > aside {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: 45;
+    display: block;
+    width: 0;
+  }
+
+  body:has([data-docs-grid]) [data-sidebar-rail] {
+    position: relative;
+    top: 0;
+    width: min(19rem, 86vw);
+    height: 100dvh;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    padding: 1rem 0.875rem 0;
+    pointer-events: none;
+  }
+
+  body:has([data-docs-grid]) [data-sidebar-rail] button[aria-expanded] {
+    pointer-events: auto;
+  }
+
+  body:has([data-docs-grid]) [data-sidebar-rail]::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--page);
+    box-shadow: var(--elevation-lg);
+    transform: translateX(-102%);
+    transition: transform 240ms ease-in;
+  }
+
+  [dir='rtl'] body:has([data-docs-grid]) [data-sidebar-rail]::before {
+    transform: translateX(102%);
+  }
+
+  body:has([data-docs-grid]) [data-sidebar-head] {
+    display: flex;
+  }
+
+  body:has([data-docs-grid]) [data-sidebar-anchors] {
+    display: none;
+  }
+
+  body:has([data-docs-grid]) [data-sidebar-nav],
+  body:has([data-docs-grid]) [data-sidebar-extra] {
+    visibility: hidden;
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateX(-1.25rem) scale(0.96);
+    transition:
+      opacity 160ms ease-in,
+      transform 200ms ease-in,
+      filter 160ms ease-in,
+      visibility 0s 200ms;
+  }
+
+  body:has([data-docs-grid]) [data-sidebar-backdrop] {
+    position: fixed;
+    inset: 0;
+    background-color: var(--overlay);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease-out;
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+  }
+
+  body[data-docs-drawer='open'] [data-sidebar-backdrop] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  body[data-docs-drawer='open'] [data-sidebar-rail] {
+    pointer-events: auto;
+  }
+
+  body[data-docs-drawer='open'] [data-sidebar-rail]::before {
+    transform: none;
+    transition: transform 420ms cubic-bezier(0.22, 1.12, 0.36, 1);
+  }
+
+  body[data-docs-drawer='open'] [data-sidebar-nav],
+  body[data-docs-drawer='open'] [data-sidebar-extra] {
+    visibility: visible;
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition:
+      opacity 320ms ease-out 90ms,
+      transform 460ms cubic-bezier(0.22, 1.2, 0.36, 1) 90ms,
+      filter 320ms ease-out 90ms,
+      visibility 0s;
+  }
+
+  body[data-docs-drawer='open'] [data-sidebar-nav] {
+    transition-delay: 150ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body:has([data-docs-grid]) [data-sidebar-rail]::before {
+      transition: none;
+    }
+
+    body:has([data-docs-grid]) [data-sidebar-nav],
+    body:has([data-docs-grid]) [data-sidebar-extra] {
+      filter: none !important;
+      transform: none !important;
+      transition: opacity 150ms linear;
+    }
+  }
 }

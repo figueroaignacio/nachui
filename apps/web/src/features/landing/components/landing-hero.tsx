@@ -9,7 +9,7 @@ export function LandingHero() {
   const actions: HeroAction[] = t.raw('actions');
 
   return (
-    <section className="hero-stage bleed-x">
+    <section className="hero-stage bg-island rounded-lg sm:rounded-xl">
       <HeroOrbit />
       <div className="relative z-10 flex w-full flex-col items-center text-center">
         <Link

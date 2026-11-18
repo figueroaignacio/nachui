@@ -55,64 +55,72 @@ export function DocView({ doc }: DocViewProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(techArticleSchema) }}
       />
-      <Container size={isWide ? 'fluid' : 'md'} className={cn('px-0', isWide && 'xl:col-span-2')}>
-        <Stack as="article" className="@container w-full min-w-0">
-          <div className="mt-4 mb-10">
-            <div>
-              <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-semibold tracking-[-0.03em] break-words lg:text-4xl">
-                {doc.title}
-                <span
-                  aria-hidden="true"
-                  className="bg-brand ml-[0.05em] inline-block size-[0.16em]"
-                />
-              </h1>
-              {doc.description && (
-                <p className="text-muted-strong mt-5 max-w-[46ch] text-lg leading-relaxed font-normal text-pretty md:text-xl">
-                  {doc.description}
-                </p>
+      <div
+        data-doc-panel
+        className={cn(
+          'lg:bg-island grid min-w-0 gap-8 max-lg:pt-12 lg:min-h-[calc(100svh-1.25rem)] lg:content-start lg:rounded-lg lg:px-10 lg:py-8 xl:px-14',
+          !isWide && 'xl:grid-cols-[minmax(0,1fr)_13rem]',
+        )}
+      >
+        <Container size={isWide ? 'fluid' : 'md'} className="px-0">
+          <Stack as="article" className="@container w-full min-w-0">
+            <div className="mt-4 mb-10">
+              <div>
+                <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-semibold tracking-[-0.03em] break-words lg:text-4xl">
+                  {doc.title}
+                  <span
+                    aria-hidden="true"
+                    className="bg-brand ml-[0.05em] inline-block size-[0.16em]"
+                  />
+                </h1>
+                {doc.description && (
+                  <p className="text-muted-strong mt-5 max-w-[46ch] text-lg leading-relaxed font-normal text-pretty md:text-xl">
+                    {doc.description}
+                  </p>
+                )}
+                <NavBadge badge={badge} className="mt-4" />
+                <div className={cn('mt-6', !isWide && 'xl:hidden')}>
+                  <DocActions
+                    page={doc.title}
+                    url={docUrl}
+                    filePath={doc.sourceFilePath}
+                    rawPath={`/${doc.locale || 'en'}${currentPath}.md`}
+                    sourceUrl={sourceUrl}
+                  />
+                </div>
+              </div>
+            </div>
+            <div data-doc-prose className="min-w-0 flex-1 *:first:mt-0">
+              {doc.body ? (
+                <MDXContent code={doc.body} />
+              ) : (
+                <Callout variant="danger">
+                  <Callout.Title>{t('renderError')}</Callout.Title>
+                </Callout>
               )}
-              <NavBadge badge={badge} className="mt-4" />
-              <div className={cn('mt-6', !isWide && 'xl:hidden')}>
+            </div>
+            <IssueCta pageTitle={doc.title} pageUrl={docUrl} />
+            <DocsPagination currentPath={currentPath} />
+          </Stack>
+        </Container>
+        {!isWide && (
+          <div data-doc-toc className="hidden xl:block">
+            <Toc
+              toc={tocContent}
+              footer={
                 <DocActions
+                  layout="rail"
                   page={doc.title}
                   url={docUrl}
                   filePath={doc.sourceFilePath}
                   rawPath={`/${doc.locale || 'en'}${currentPath}.md`}
                   sourceUrl={sourceUrl}
                 />
-              </div>
-            </div>
+              }
+            />
           </div>
-          <div data-doc-prose className="min-w-0 flex-1 *:first:mt-0">
-            {doc.body ? (
-              <MDXContent code={doc.body} />
-            ) : (
-              <Callout variant="danger">
-                <Callout.Title>{t('renderError')}</Callout.Title>
-              </Callout>
-            )}
-          </div>
-          <IssueCta pageTitle={doc.title} pageUrl={docUrl} />
-          <DocsPagination currentPath={currentPath} />
-        </Stack>
-      </Container>
-      {!isWide && (
-        <div data-doc-toc className="hidden xl:block">
-          <Toc
-            toc={tocContent}
-            footer={
-              <DocActions
-                layout="rail"
-                page={doc.title}
-                url={docUrl}
-                filePath={doc.sourceFilePath}
-                rawPath={`/${doc.locale || 'en'}${currentPath}.md`}
-                sourceUrl={sourceUrl}
-              />
-            }
-          />
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 }

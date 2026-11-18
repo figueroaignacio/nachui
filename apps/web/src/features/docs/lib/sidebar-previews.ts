@@ -47,3 +47,19 @@ export function getSidebarPreviews(
 
   return previews;
 }
+
+const ELEMENT_PAGE = /^elements\/[^/]+\/[^/]+$/;
+
+/**
+ * The demo a component page opens with on its stage: the first preview of an
+ * element page. Index pages, guides and anything without a demo have none and
+ * keep the reading layout.
+ */
+export function getStagePreview(doc: Pick<PreviewSourceDoc, 'raw' | 'slugAsParams'>) {
+  if (!ELEMENT_PAGE.test(doc.slugAsParams)) return undefined;
+  const tag = doc.raw.match(PREVIEW_TAG)?.[0];
+  if (!tag) return undefined;
+  const component = attribute(tag, 'component');
+  if (!component) return undefined;
+  return { component, demo: attribute(tag, 'demo') ?? 'default' };
+}
