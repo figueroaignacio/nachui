@@ -13,7 +13,7 @@ const roles = [
     key: 'heading',
     className: 'font-heading',
     variable: '--font-heading',
-    family: 'Hanken Grotesk',
+    family: 'Bricolage Grotesque',
   },
   {
     key: 'serif',

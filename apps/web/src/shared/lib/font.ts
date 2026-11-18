@@ -1,4 +1,4 @@
-import { DM_Mono, Hanken_Grotesk } from 'next/font/google';
+import { Bricolage_Grotesque, DM_Mono, Hanken_Grotesk } from 'next/font/google';
 
 export const fontSans = Hanken_Grotesk({
   subsets: ['latin'],
@@ -7,7 +7,7 @@ export const fontSans = Hanken_Grotesk({
   preload: true,
 });
 
-export const fontHeading = Hanken_Grotesk({
+export const fontHeading = Bricolage_Grotesque({
   subsets: ['latin'],
   variable: '--font-heading',
   display: 'swap',
