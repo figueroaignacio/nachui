@@ -16,7 +16,7 @@ export function PreviewAiSummary() {
     <Card className="gap-3 p-4">
       <div className="flex items-center justify-between">
         <p className="text-foreground text-sm font-semibold">Research summary</p>
-        <Badge variant="info" className="font-mono text-xs">
+        <Badge variant="secondary" className="font-mono text-xs">
           3 sources
         </Badge>
       </div>

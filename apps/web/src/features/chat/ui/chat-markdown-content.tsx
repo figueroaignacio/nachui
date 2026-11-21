@@ -76,7 +76,7 @@ export function ChatMarkdownContent({ content }: MarkdownContentProps) {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary wrap-break-words hover:text-primary/80 font-medium underline underline-offset-4 transition-colors"
+              className="text-foreground wrap-break-words decoration-primary hover:decoration-foreground font-medium underline decoration-2 underline-offset-4 transition-colors"
             >
               {children}
             </a>

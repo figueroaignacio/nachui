@@ -40,10 +40,10 @@ export function PreviewAiChat() {
         </Bubble>
       </Bubble.Group>
       <div className="flex gap-1.5">
-        <Badge variant="info" className="font-mono text-xs">
+        <Badge variant="secondary" className="font-mono text-xs">
           guide.pdf
         </Badge>
-        <Badge variant="info" className="font-mono text-xs">
+        <Badge variant="secondary" className="font-mono text-xs">
           forecast
         </Badge>
       </div>

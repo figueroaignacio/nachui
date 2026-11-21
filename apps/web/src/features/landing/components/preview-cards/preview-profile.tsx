@@ -31,7 +31,7 @@ export function PreviewProfile() {
           <p className="text-muted-foreground text-xs">Product designer in Córdoba</p>
         </div>
         <div className="flex gap-1.5">
-          <Badge variant="info" className="text-xs">
+          <Badge variant="secondary" className="text-xs">
             Design systems
           </Badge>
           <Badge variant="secondary" className="text-xs">

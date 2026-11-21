@@ -19,10 +19,10 @@ export function PreviewFilter() {
         <Slider.Thumb aria-label="Maximum price" />
       </Slider>
       <div className="flex flex-wrap gap-1.5">
-        <Badge variant="info" className="text-xs">
+        <Badge variant="secondary" className="text-xs">
           Wifi
         </Badge>
-        <Badge variant="info" className="text-xs">
+        <Badge variant="secondary" className="text-xs">
           Pets
         </Badge>
         <Badge variant="outline" className="text-xs">

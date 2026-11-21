@@ -481,12 +481,12 @@ body:has([data-chat-launcher]) footer {
   --page: var(--background);
   --island: var(--surface-muted);
   --island-hover: var(--accent);
-  --brand: oklch(60% 0.115 232);
-  --brand-text: oklch(45% 0.11 236);
-  --brand-soft: oklch(95% 0.03 228);
-  --brand-line: oklch(86% 0.06 228);
-  --brand-highlight: oklch(80% 0.1 228);
-  --brand-highlight-foreground: oklch(20% 0.035 240);
+  --brand: oklch(68% 0.185 42);
+  --brand-text: oklch(54% 0.17 38);
+  --brand-soft: oklch(95.5% 0.03 50);
+  --brand-line: oklch(86% 0.07 45);
+  --brand-highlight: oklch(80% 0.12 48);
+  --brand-highlight-foreground: oklch(20% 0.03 40);
 }
 
 @theme inline {
@@ -503,12 +503,12 @@ body:has([data-chat-launcher]) footer {
 
 .dark {
   --island-hover: var(--card);
-  --brand: oklch(80% 0.1 228);
-  --brand-text: oklch(84% 0.09 228);
-  --brand-soft: oklch(29% 0.045 232);
-  --brand-line: oklch(40% 0.06 232);
-  --brand-highlight: oklch(80% 0.1 228);
-  --brand-highlight-foreground: oklch(20% 0.035 240);
+  --brand: oklch(74% 0.155 48);
+  --brand-text: oklch(78% 0.13 50);
+  --brand-soft: oklch(28% 0.06 40);
+  --brand-line: oklch(40% 0.08 42);
+  --brand-highlight: oklch(80% 0.12 48);
+  --brand-highlight-foreground: oklch(20% 0.03 40);
 }
 
 /* The floating header: a 44px row of pills with 12px of air above and below.

@@ -20,7 +20,7 @@ export function PreviewStay() {
           <p className="text-foreground text-sm font-semibold">Lakeside cabin</p>
           <p className="text-muted-foreground text-xs">Bariloche, 2 guests</p>
         </div>
-        <Badge variant="info" className="gap-1 text-xs">
+        <Badge variant="secondary" className="gap-1 text-xs">
           <StarIcon size={12} fill="currentColor" aria-hidden="true" />
           4.9
         </Badge>
