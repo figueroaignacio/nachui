@@ -1,0 +1,25 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Introduction" />
+
+<img src="./nachui-logo.svg" alt="NachUI" width="220" />
+
+# NachUI Storybook
+
+Every element in the catalog, one story per demo, rendered from the same source files the docs use.
+
+- **AI Elements, Components, Layout and Hybrids**: one entry per element, with a Docs page that lists its props.
+- **Bricks**: whole page sections, shown full screen.
+- **Examples**: the small compositions from the gallery.
+- **Icons**: the full set, with size and stroke controls.
+
+Use the toolbar to switch between light and dark, and between left to right and right to left. Demos that play through their states show a Play button in the corner.
+
+## How the stories are made
+
+Nobody writes these stories by hand. `scripts/generate-stories.mjs` reads `packages/ui/src/demos`, `bricks`, `examples` and `icons` and writes them to `src/generated` every time Storybook starts, builds or type checks. Add a demo to the catalog and it shows up here on the next run.
+
+```bash
+pnpm --filter storybook dev     # http://localhost:6006
+pnpm --filter storybook build   # static site in storybook-static
+```

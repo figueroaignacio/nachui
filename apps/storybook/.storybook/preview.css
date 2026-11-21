@@ -1,0 +1,9 @@
+@import '@repo/ui/globals.css';
+@source '../src';
+
+:root {
+  --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Bricolage Grotesque', var(--font-sans);
+  --font-serif: var(--font-sans);
+  --font-mono: 'DM Mono', ui-monospace, monospace;
+}

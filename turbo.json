@@ -7,7 +7,13 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", ".content-collections/**", "!.next/cache/**"],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        ".content-collections/**",
+        "storybook-static/**",
+        "!.next/cache/**"
+      ],
       "env": ["GOOGLE_GENERATIVE_AI_API_KEY", "POSTGRES_URL", "FRONTEND_URL"],
       "inputs": ["$TURBO_DEFAULT$", ".env", ".env.*"]
     },

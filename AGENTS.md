@@ -13,6 +13,7 @@ pnpm 9 + Turborepo monorepo, Node >= 18. Scope commands with `pnpm --filter <nam
 - `apps/web` (filter: `web`): Next.js 16 App Router docs site. next-intl (`en`/`es` locales), MDX via @content-collections, Tailwind CSS v4.
 - `apps/api` (filter: `api`): NestJS server (default port 3001). Modules: `chat`, `rag`, `registry`, `themes`, plus `auth`, `github` and `studio` for NachUI Studio (off unless its env is set). Env is validated with zod at boot (`apps/api/.env.example`).
 - `apps/studio` (filter: `studio`): NachUI Studio, a Next.js app (port 3002) where a chat agent builds screens with NachUI only. Talks to the API with a session cookie; the preview runs in a sandboxed iframe. See `apps/studio/README.md`.
+- `apps/storybook` (filter: `storybook`): Storybook 10 (React + Vite, port 6006) with every catalog element. Its stories are generated, never written by hand: `scripts/generate-stories.mjs` turns `packages/ui/src/{demos,bricks,examples,icons}` into `src/generated/` (gitignored) before every `dev`, `build` and `check-types`, using titles and descriptions from `apps/web/src/locales/en/docs.json`. A new demo shows up there on the next run.
 - `packages/ui` (filter: `@repo/ui`): the component catalog itself, with most of the frontend tests (Vitest + React Testing Library).
 - `packages/ai` (filter: `@repo/ai`): Vercel AI SDK + Google Gemini agent, tools, prompts, and the RAG ingest pipeline.
 - `packages/db` (filter: `@repo/db`): Drizzle ORM + Postgres.
@@ -29,6 +30,7 @@ pnpm format                        # prettier + tailwind class sorting
 pnpm --filter web dev              # docs site dev server
 pnpm --filter api dev              # nest start --watch
 pnpm --filter studio dev           # NachUI Studio on :3002
+pnpm --filter storybook dev        # Storybook on :6006, every demo as a story
 ```
 
 Tests:
