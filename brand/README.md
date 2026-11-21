@@ -33,22 +33,23 @@ Every logo comes in five colorways: `ink`, `paper`, `two-tone`, `two-tone-revers
 
 ## Color
 
-| Name      | Hex       | OKLCH                    | Role                                  |
-| --------- | --------- | ------------------------ | ------------------------------------- |
-| Ink       | `#141414` | `oklch(19% 0 0)`         | The mark on light grounds, dark tiles |
-| Night     | `#070707` | `oklch(13% 0 0)`         | Darkest ground, matches the site      |
-| Graphite  | `#585858` | `oklch(46% 0 0)`         | Secondary text                        |
-| Line      | `#d9d9d9` | `oklch(88.5% 0 0)`       | Rules and borders                     |
-| Island    | `#f2f2f2` | `oklch(96.2% 0 0)`       | Soft panels                           |
-| Paper     | `#ffffff` | `oklch(100% 0 0)`        | The mark on dark grounds              |
-| Sky       | `#0072a0` | `oklch(52% 0.115 234)`   | The piece on light grounds, links     |
-| Sky Light | `#80d0f6` | `oklch(82% 0.095 230)`   | The piece on dark grounds             |
-| Sky Deep  | `#031e2a` | `oklch(22% 0.04 232)`    | Text and marks on Sky Light           |
-| Sky Wash  | `#def4ff` | `oklch(95.5% 0.028 228)` | Tinted surfaces                       |
+| Name           | Hex       | OKLCH                  | Role                                  |
+| -------------- | --------- | ---------------------- | ------------------------------------- |
+| Ink            | `#141414` | `oklch(19% 0 0)`       | The mark on light grounds, dark tiles |
+| Night          | `#070707` | `oklch(13% 0 0)`       | Darkest ground, matches the site      |
+| Graphite       | `#585858` | `oklch(46% 0 0)`       | Secondary text                        |
+| Line           | `#d9d9d9` | `oklch(88.5% 0 0)`     | Rules and borders                     |
+| Island         | `#f2f2f2` | `oklch(96.2% 0 0)`     | Soft panels                           |
+| Paper          | `#ffffff` | `oklch(100% 0 0)`      | The mark on dark grounds              |
+| Persimmon      | `#f26829` | `oklch(68% 0.185 42)`  | The piece on light grounds, fills     |
+| Persimmon Dark | `#f8894b` | `oklch(74% 0.155 48)`  | The piece on dark grounds             |
+| Persimmon Deep | `#451a0b` | `oklch(28% 0.07 40)`   | Text on Persimmon Dark                |
+| Persimmon Text | `#bf4213` | `oklch(55% 0.17 38)`   | Accent text on white, when it must be |
+| Persimmon Wash | `#ffebdf` | `oklch(95.5% 0.03 50)` | Tinted surfaces                       |
 
-These are the same values as the site's tokens in `packages/ui/tokens/themes/nachui`, so the brand and the product never drift. Sky is the only brand hue. In the two-tone mark only the piece takes it, because the piece is the part that becomes yours.
+Persimmon, Persimmon Dark and Persimmon Deep are the site's `primary` and `primary-foreground` tokens in `packages/ui/tokens/themes/nachui`, so the brand and the product never drift. Persimmon is the only brand hue. In the two-tone mark only the piece takes it, because the piece is the part that becomes yours.
 
-Contrast: Sky on Paper 5.4:1, Ink on Sky Light 10.8:1, Sky Deep on Sky Light 10.0:1, Graphite on Paper 7.1:1.
+Contrast: Ink on Persimmon 6.0:1, Persimmon Deep on Persimmon Dark 6.2:1, Persimmon Dark on Night 8.3:1, Persimmon Text on Paper 5.2:1, Graphite on Paper 7.1:1. Persimmon itself on Paper is 3.1:1: fine for the mark, icons and focus rings, never for text.
 
 ## Typography
 
@@ -70,7 +71,7 @@ These are the fonts the docs site already ships, so nothing new has to load.
 
 - Don't move, resize or rotate the piece, or close the gap.
 - Don't round the cut corners or square the outer ones.
-- Don't color the block in Sky or the piece in anything but Sky, Sky Light or the mark's own color.
+- Don't color the block in Persimmon or the piece in anything but Persimmon, Persimmon Dark or the mark's own color.
 - Don't add gradients, shadows, outlines or effects.
 - Don't stretch, rotate or rebuild the wordmark in a font.
 - Don't place the mark on busy images or on grounds without enough contrast.

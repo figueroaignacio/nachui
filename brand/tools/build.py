@@ -10,9 +10,9 @@ OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.dirname(os.path.dirname(os.p
 INK = '#141414'
 NIGHT = '#070707'
 PAPER = '#ffffff'
-SKY = '#0072a0'
-SKY_LIGHT = '#80d0f6'
-SKY_DEEP = '#031e2a'
+ACCENT = '#f26829'
+ACCENT_DARK = '#f8894b'
+ACCENT_DEEP = '#451a0b'
 
 K = 100 / B
 GAP = 30
@@ -20,8 +20,8 @@ GAP = 30
 SCHEMES = {
     'ink': (INK, INK),
     'paper': (PAPER, PAPER),
-    'two-tone': (INK, SKY),
-    'two-tone-reversed': (PAPER, SKY_LIGHT),
+    'two-tone': (INK, ACCENT),
+    'two-tone-reversed': (PAPER, ACCENT_DARK),
     'current': ('currentColor', 'currentColor'),
 }
 
@@ -104,7 +104,7 @@ def build_logos():
         write(f'logo/horizontal/nachui-logo-{name}.svg', svg(w, h, inner))
         inner, w, h = stacked_inner(bl, pc, word)
         write(f'logo/stacked/nachui-logo-stacked-{name}.svg', svg(w, h, inner))
-    inner, w, h = horiz_inner(PAPER, SKY_LIGHT, PAPER)
+    inner, w, h = horiz_inner(PAPER, ACCENT_DARK, PAPER)
     pad = 64
     write('logo/horizontal/nachui-logo-on-ink.svg',
           svg(w + pad * 2, h + pad * 2, f'<rect width="{f(w + pad * 2)}" height="{f(h + pad * 2)}" fill="{INK}"/>'
@@ -116,7 +116,7 @@ def build_logos():
 def build_favicon():
     b, p = hinted(32)
     style = ('<style>.b{fill:%s}.p{fill:%s}@media (prefers-color-scheme:dark){.b{fill:%s}.p{fill:%s}}</style>'
-             % (INK, SKY, PAPER, SKY_LIGHT))
+             % (INK, ACCENT, PAPER, ACCENT_DARK))
     write('icons/favicon.svg', svg(32, 32, style + f'<path class="b" d="{b}"/><path class="p" d="{p}"/>'))
 
 
@@ -149,14 +149,14 @@ def jobs():
     def add(rel, html, w, h, transparent=True):
         J.append({'html': html, 'out': os.path.join(OUT, rel), 'w': w, 'h': h, 'transparent': transparent})
 
-    add('icons/favicon-16.png', page(hinted_png_svg(16, INK, SKY, 16), 16, 16), 16, 16)
-    add('icons/favicon-32.png', page(hinted_png_svg(32, INK, SKY, 32), 32, 32), 32, 32)
-    add('icons/favicon-48.png', page(hinted_png_svg(32, INK, SKY, 48), 48, 48), 48, 48)
-    add('icons/apple-touch-icon.png', page(tile(180, INK, PAPER, SKY_LIGHT, 0.6), 180, 180), 180, 180, False)
-    add('icons/icon-192.png', page(tile(192, INK, PAPER, SKY_LIGHT, 0.6, 0.225), 192, 192), 192, 192)
-    add('icons/icon-512.png', page(tile(512, INK, PAPER, SKY_LIGHT, 0.6, 0.225), 512, 512), 512, 512)
-    add('icons/icon-maskable-512.png', page(tile(512, INK, PAPER, SKY_LIGHT, 0.46), 512, 512), 512, 512, False)
-    add('icons/avatar-400.png', page(tile(400, INK, PAPER, SKY_LIGHT, 0.56), 400, 400), 400, 400, False)
+    add('icons/favicon-16.png', page(hinted_png_svg(16, INK, ACCENT, 16), 16, 16), 16, 16)
+    add('icons/favicon-32.png', page(hinted_png_svg(32, INK, ACCENT, 32), 32, 32), 32, 32)
+    add('icons/favicon-48.png', page(hinted_png_svg(32, INK, ACCENT, 48), 48, 48), 48, 48)
+    add('icons/apple-touch-icon.png', page(tile(180, INK, PAPER, ACCENT_DARK, 0.6), 180, 180), 180, 180, False)
+    add('icons/icon-192.png', page(tile(192, INK, PAPER, ACCENT_DARK, 0.6, 0.225), 192, 192), 192, 192)
+    add('icons/icon-512.png', page(tile(512, INK, PAPER, ACCENT_DARK, 0.6, 0.225), 512, 512), 512, 512)
+    add('icons/icon-maskable-512.png', page(tile(512, INK, PAPER, ACCENT_DARK, 0.46), 512, 512), 512, 512, False)
+    add('icons/avatar-400.png', page(tile(400, INK, PAPER, ACCENT_DARK, 0.56), 400, 400), 400, 400, False)
 
     for name in ('ink', 'paper', 'two-tone', 'two-tone-reversed'):
         bl, pc = SCHEMES[name]
@@ -167,7 +167,7 @@ def jobs():
         add(f'logo/png/nachui-logo-{name}-{W}x{H}.png',
             page(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {f(w)} {f(h)}">{inner}</svg>', W, H), W, H)
 
-    inner, w, h = horiz_inner(PAPER, SKY_LIGHT, PAPER)
+    inner, w, h = horiz_inner(PAPER, ACCENT_DARK, PAPER)
     LH = 112
     LW = w * LH / h
     for rel, line in (('icons/og-image.png', 'A design system you own.'), ('icons/og-about.png', 'About'),
@@ -175,7 +175,7 @@ def jobs():
         og = (f'<div style="width:1200px;height:630px;background:{INK};position:relative;font-family:\'Hanken Grotesk\',sans-serif">'
               f'<svg style="position:absolute;left:{f((1200-LW)/2)}px;top:{f(250-LH/2)}px" width="{f(LW)}" height="{LH}" viewBox="0 0 {f(w)} {f(h)}">{inner}</svg>'
               f'<div style="position:absolute;left:0;right:0;top:372px;text-align:center;color:#bdbdbd;font-size:34px;letter-spacing:-0.01em">{line}</div>'
-              f'<div style="position:absolute;left:0;right:0;bottom:48px;text-align:center;color:{SKY_LIGHT};font-size:22px">nachui.tech</div></div>')
+              f'<div style="position:absolute;left:0;right:0;bottom:48px;text-align:center;color:{ACCENT_DARK};font-size:22px">nachui.tech</div></div>')
         add(rel, page(og, 1200, 630, INK, True), 1200, 630, False)
     return J
 
@@ -188,18 +188,18 @@ def build_motion():
                  f'.block{{animation:in .5s cubic-bezier(.2,0,0,1) both;transform-box:fill-box;transform-origin:50% 50%}}'
                  f'@keyframes lift{{from{{transform:translate(-{d}px,{d}px)}}to{{transform:none}}}}'
                  f'@keyframes in{{from{{opacity:0;transform:scale(.92)}}to{{opacity:1;transform:none}}}}' + rm)
-    body = sym_inner(INK, SKY, cls=True)
+    body = sym_inner(INK, ACCENT, cls=True)
     write('motion/nachui-symbol-intro.svg', svg(100, 100, f'<style>{intro_css}</style>{body}', extra=' overflow="visible"'))
 
     loader_css = (f'.piece{{animation:hop 1.6s infinite}}'
                   f'@keyframes hop{{0%,12%{{transform:translate(-{d}px,{d}px);animation-timing-function:{ease_out}}}'
                   f'45%,62%{{transform:none;animation-timing-function:cubic-bezier(.6,0,.3,1)}}100%{{transform:translate(-{d}px,{d}px)}}}}' + rm)
-    write('motion/nachui-loader.svg', svg(100, 100, f'<style>{loader_css}</style>{sym_inner(INK, SKY, cls=True)}',
+    write('motion/nachui-loader.svg', svg(100, 100, f'<style>{loader_css}</style>{sym_inner(INK, ACCENT, cls=True)}',
                                           label='Loading', extra=' overflow="visible"'))
-    write('motion/nachui-loader-reversed.svg', svg(100, 100, f'<style>{loader_css}</style>{sym_inner(PAPER, SKY_LIGHT, cls=True)}',
+    write('motion/nachui-loader-reversed.svg', svg(100, 100, f'<style>{loader_css}</style>{sym_inner(PAPER, ACCENT_DARK, cls=True)}',
                                                    label='Loading', extra=' overflow="visible"'))
 
-    inner, w, h = horiz_inner(INK, SKY, INK, cls=True)
+    inner, w, h = horiz_inner(INK, ACCENT, INK, cls=True)
     logo_css = (f'.block{{animation:in .5s cubic-bezier(.2,0,0,1) both;transform-box:fill-box;transform-origin:50% 50%}}'
                 f'.piece{{animation:lift .9s {ease_out} .4s both}}'
                 f'.word{{animation:wipe .8s cubic-bezier(.65,0,.35,1) .75s both}}'
