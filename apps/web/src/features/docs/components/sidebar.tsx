@@ -208,8 +208,7 @@ export function Sidebar({ previews = {} }: SidebarProps) {
               aria-label={tHeader('homeLink')}
               className="text-foreground focus-visible:ring-ring flex min-w-0 items-center gap-2.5 rounded-sm ps-1 text-[17px] font-semibold tracking-tight focus-visible:ring-2 focus-visible:outline-none"
             >
-              <Logo size={22} />
-              NachUI
+              <Logo withText size={20} />
             </Link>
             <button
               type="button"

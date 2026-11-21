@@ -96,7 +96,7 @@ export function SiteHeader({ previews }: SiteHeaderProps) {
                 aria-label={t('header.homeLink')}
                 className={cn(pill, focusRing, 'ps-2.5 pe-4')}
               >
-                <Logo withText size={24} priority />
+                <Logo withText size={20} />
               </Link>
 
               <nav aria-label={t('header.sections')} className={cn(pill, 'gap-0.5 px-1')}>
@@ -173,7 +173,7 @@ export function SiteHeader({ previews }: SiteHeaderProps) {
                 aria-label={t('header.homeLink')}
                 className={cn(pill, focusRing, 'me-auto ps-2.5 pe-4')}
               >
-                <Logo withText size={24} />
+                <Logo withText size={20} />
               </Link>
               <div className={cn(pill, 'px-0')}>
                 <button
