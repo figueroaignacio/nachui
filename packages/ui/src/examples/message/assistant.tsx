@@ -20,7 +20,7 @@ export function Assistant() {
       <Message align="start">
         <Message.Avatar>
           <Avatar size="sm">
-            <Avatar.Fallback className="bg-primary/10 text-primary">
+            <Avatar.Fallback className="bg-primary text-primary-foreground">
               <SparklesIcon size={14} />
             </Avatar.Fallback>
           </Avatar>

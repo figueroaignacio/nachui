@@ -2,11 +2,11 @@
 
 ## 1. Visual Theme & Atmosphere
 
-NachUI is a **quiet, soft minimalist** system. Sky blue carries the actions and the brand; the neutrals are pure gray, and hierarchy comes from contrast, type and spacing.
+NachUI is a **quiet, soft minimalist** system. Persimmon, a warm orange, carries the actions and the brand; the neutrals are pure gray, and hierarchy comes from contrast, type and spacing.
 
 - **Pure light grays** in light mode: a white page (zero chroma) with light gray islands on it and white cards on the islands
 - **Pure neutral grays** in dark mode (zero chroma), stepped so islands, cards and popovers stack clearly on a near-black page
-- **Sky blue primary**: a deep sky blue with white text in light mode and a pastel sky blue with dark text in dark mode. Everything around it stays pure gray, so the sky blue is the only brand color
+- **Persimmon primary**: a bright persimmon with ink text in light mode and a softer persimmon with deep brown text in dark mode, like a highlighter on paper. Everything around it stays pure gray, so persimmon is the only brand color. In light mode it is a fill, never text on white (3.1:1): links and labels stay `foreground`, with a persimmon underline or chip when they need the accent
 - **Soft, device-like corners** (base 1.125rem): controls read as pills and surfaces curve generously, with a small fixed scale described in section 4
 - **Soft, tokenized elevation** in both modes. Shadows are gentle in light mode and deeper in dark mode, where they do more of the work of separating surfaces
 - **OKLCH everywhere**, so steps between tokens are perceptually even
@@ -33,25 +33,25 @@ Each surface has a matching `*-foreground` token for text on it. In dark mode th
 
 ### Interactive Colors
 
-| Token                  | Light Mode             | Dark Mode              | Role                                       |
-| ---------------------- | ---------------------- | ---------------------- | ------------------------------------------ |
-| **Primary**            | `oklch(52% 0.115 234)` | `oklch(82% 0.095 230)` | Main buttons, checked controls             |
-| **Primary Foreground** | `oklch(99% 0.003 230)` | `oklch(22% 0.04 232)`  | Text on primary                            |
-| **Secondary**          | `oklch(92.5% 0 0)`     | `oklch(30.5% 0 0)`     | Secondary buttons, chips, field fill       |
-| **Accent**             | `oklch(94% 0 0)`       | `oklch(30.5% 0 0)`     | Subtle hover and selected backgrounds      |
-| **Muted**              | `oklch(91.5% 0 0)`     | `oklch(30.5% 0 0)`     | Item highlight in menus, tracks, skeletons |
-| **Muted Foreground**   | `oklch(46% 0 0)`       | `oklch(76% 0 0)`       | Captions, placeholders, secondary text     |
-| **Muted Strong**       | `oklch(36% 0 0)`       | `oklch(87% 0 0)`       | Long-form reading text                     |
+| Token                  | Light Mode            | Dark Mode             | Role                                       |
+| ---------------------- | --------------------- | --------------------- | ------------------------------------------ |
+| **Primary**            | `oklch(68% 0.185 42)` | `oklch(74% 0.155 48)` | Main buttons, checked controls             |
+| **Primary Foreground** | `oklch(19% 0 0)`      | `oklch(28% 0.07 40)`  | Text on primary                            |
+| **Secondary**          | `oklch(92.5% 0 0)`    | `oklch(30.5% 0 0)`    | Secondary buttons, chips, field fill       |
+| **Accent**             | `oklch(94% 0 0)`      | `oklch(30.5% 0 0)`    | Subtle hover and selected backgrounds      |
+| **Muted**              | `oklch(91.5% 0 0)`    | `oklch(30.5% 0 0)`    | Item highlight in menus, tracks, skeletons |
+| **Muted Foreground**   | `oklch(46% 0 0)`      | `oklch(76% 0 0)`      | Captions, placeholders, secondary text     |
+| **Muted Strong**       | `oklch(36% 0 0)`      | `oklch(87% 0 0)`      | Long-form reading text                     |
 
 ### Lines and Focus
 
-| Token                  | Light Mode             | Dark Mode              | Role                                                        |
-| ---------------------- | ---------------------- | ---------------------- | ----------------------------------------------------------- |
-| **Border**             | `oklch(88.5% 0 0)`     | `oklch(33.5% 0 0)`     | Default stroke on surfaces and dividers                     |
-| **Border Interactive** | `oklch(60% 0 0)`       | `oklch(55% 0 0)`       | Hover and focus-within stroke on fields, scrollbar thumb    |
-| **Input**              | `oklch(82% 0 0)`       | `oklch(37% 0 0)`       | Field strokes; `dark:bg-input/30` tints fields in dark mode |
-| **Ring**               | `oklch(60% 0.115 232)` | `oklch(82% 0.095 230)` | Focus rings                                                 |
-| **Rule**               | `oklch(88.5% 0 0)`     | `oklch(33.5% 0 0)`     | Editorial hairlines (`section-rule`, `rule-bleed`)          |
+| Token                  | Light Mode            | Dark Mode             | Role                                                        |
+| ---------------------- | --------------------- | --------------------- | ----------------------------------------------------------- |
+| **Border**             | `oklch(88.5% 0 0)`    | `oklch(33.5% 0 0)`    | Default stroke on surfaces and dividers                     |
+| **Border Interactive** | `oklch(60% 0 0)`      | `oklch(55% 0 0)`      | Hover and focus-within stroke on fields, scrollbar thumb    |
+| **Input**              | `oklch(82% 0 0)`      | `oklch(37% 0 0)`      | Field strokes; `dark:bg-input/30` tints fields in dark mode |
+| **Ring**               | `oklch(68% 0.185 42)` | `oklch(74% 0.155 48)` | Focus rings                                                 |
+| **Rule**               | `oklch(88.5% 0 0)`    | `oklch(33.5% 0 0)`    | Editorial hairlines (`section-rule`, `rule-bleed`)          |
 
 ### Feedback Colors
 
@@ -68,7 +68,7 @@ Each feedback hue (destructive, warning, success, info) comes as a set of five t
 | **Success**     | `oklch(53% 0.156 135.6)` | `oklch(80% 0.118 148.9)` |
 | **Info**        | `oklch(52% 0.115 234)`   | `oklch(82% 0.095 230)`   |
 
-Info is deliberately neutral in dark mode. Light solids sit at the same lightness so no state shouts louder than another.
+Info keeps the old sky blue on purpose: orange would read as a warning. Info is deliberately neutral in dark mode. Light solids sit at the same lightness so no state shouts louder than another.
 
 ### Code
 

@@ -7,7 +7,7 @@ export function Default() {
     <div className="bg-hatch w-full rounded-lg py-8">
       <Container size="sm" align="center">
         <article className="bg-card rounded-lg p-6 shadow-sm">
-          <p className="text-primary text-xs font-medium">Article</p>
+          <p className="text-muted-foreground text-xs font-medium">Article</p>
           <h3 className="mt-2 text-lg font-semibold">Readable by design</h3>
           <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
             A container caps content at a comfortable measure and keeps it centered, so long text

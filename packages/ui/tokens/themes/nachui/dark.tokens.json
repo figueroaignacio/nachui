@@ -88,16 +88,16 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.82, 0.095, 230],
-          "hex": "#80d0f6"
+          "components": [0.74, 0.155, 48],
+          "hex": "#f8894b"
         }
       },
       "primary-foreground": {
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.22, 0.04, 232],
-          "hex": "#031e2a"
+          "components": [0.28, 0.07, 40],
+          "hex": "#451a0b"
         }
       },
       "secondary": {
@@ -186,8 +186,8 @@
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.82, 0.095, 230],
-          "hex": "#80d0f6"
+          "components": [0.74, 0.155, 48],
+          "hex": "#f8894b"
         }
       },
       "rule": {
