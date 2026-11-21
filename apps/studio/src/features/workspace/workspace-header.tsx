@@ -5,9 +5,9 @@ import { DropdownMenu } from '@repo/ui/components/dropdown-menu';
 import { Sidebar } from '@repo/ui/components/sidebar';
 import { ChevronDownIcon } from '@repo/ui/icons/chevron-down';
 import { UploadIcon } from '@repo/ui/icons/upload';
-import Image from 'next/image';
 import Link from 'next/link';
 import * as React from 'react';
+import { LogoMark } from '@/features/shell/logo';
 import type { VersionSummary } from '@/lib/types';
 
 function ProjectName({ name, onRename }: { name: string; onRename?: (name: string) => void }) {
@@ -89,7 +89,7 @@ export function WorkspaceHeader({
           aria-label="Studio home"
           className="focus-visible:ring-ring me-1 shrink-0 rounded-sm focus-visible:ring-2 focus-visible:outline-none"
         >
-          <Image src="/icon-192.png" alt="" width={24} height={24} className="rounded-[8px]" />
+          <LogoMark size={24} />
         </Link>
       )}
       <ProjectName key={name} name={name} onRename={onRename} />
