@@ -18,6 +18,8 @@ Los docs también están escritos para el agente que tenés al lado en el editor
 
 Sitio: **[nachui.tech](https://nachui.tech)**
 
+Storybook, con cada elemento como una historia: **[ignaciofigueroa.me/nachui](https://ignaciofigueroa.me/nachui/)**
+
 ## Cómo usar los componentes
 
 Por ahora el camino recomendado es copiar a mano:
