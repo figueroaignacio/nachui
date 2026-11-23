@@ -49,7 +49,7 @@ export async function LandingCatalog() {
       <div className="mt-6 flex md:justify-center">
         <Link
           href="/components"
-          className="bg-popover border-border text-foreground hover:border-border-interactive focus-visible:ring-ring focus-visible:ring-offset-background inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border px-5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:w-auto"
+          className="bg-popover text-foreground hover:bg-muted focus-visible:ring-ring focus-visible:ring-offset-background inline-flex h-11 w-full items-center justify-center gap-2 rounded-full px-5 text-sm font-medium shadow-sm transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:w-auto"
         >
           {t('action')}
           <ArrowRightIcon size={15} aria-hidden="true" className="rtl:-scale-x-100" />

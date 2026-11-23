@@ -23,7 +23,7 @@ function StageLoading({ label }: { label: string }) {
   return (
     <div data-stage-shell role="status" aria-busy="true" className="grid min-w-0 gap-2.5">
       <span className="sr-only">{label}</span>
-      <div className="bg-island relative flex h-[min(34rem,72svh)] flex-col rounded-lg lg:h-[calc(100svh-1.25rem)]">
+      <div className="bg-island relative flex h-[min(34rem,72svh)] flex-col rounded-lg shadow-xs lg:h-[calc(100svh-1.25rem)]">
         <div className="flex justify-end p-3">
           <div className="bg-popover flex items-center gap-1.5 rounded-full p-1 shadow-md">
             <Skeleton className="h-8 w-16 rounded-full" />
@@ -65,7 +65,7 @@ export default function DocLoading() {
   }
 
   return (
-    <div className="lg:bg-island grid min-w-0 gap-8 lg:min-h-[calc(100svh-1.25rem)] lg:content-start lg:rounded-lg lg:px-10 lg:py-8 xl:grid-cols-[minmax(0,1fr)_13rem] xl:px-14">
+    <div className="lg:bg-island grid min-w-0 gap-8 lg:min-h-[calc(100svh-1.25rem)] lg:content-start lg:rounded-lg lg:px-10 lg:py-8 lg:shadow-xs xl:grid-cols-[minmax(0,1fr)_13rem] xl:px-14">
       <Container size="md" className="px-0">
         <Stack role="status" aria-busy="true" className="w-full min-w-0">
           <span className="sr-only">{t('loading')}</span>

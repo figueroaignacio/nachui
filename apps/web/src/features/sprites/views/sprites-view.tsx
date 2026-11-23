@@ -25,9 +25,9 @@ export async function SpritesView() {
             <li key={member.id}>
               <Link
                 href={`/sprites/${member.id}`}
-                className="border-border bg-card hover:border-border-interactive focus-visible:ring-ring block overflow-hidden rounded-lg border transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                className="bg-card hover:bg-muted focus-visible:ring-ring block overflow-hidden rounded-lg shadow-sm transition-colors focus-visible:ring-2 focus-visible:outline-none"
               >
-                <span className="bg-surface-muted border-border flex h-28 items-end justify-center border-b pb-4">
+                <span className="bg-well/60 border-border flex h-28 items-end justify-center border-b pb-4">
                   <Sprite seed={member.seed} parts={member.parts} size={72} />
                 </span>
                 <span className="block px-3 py-3">

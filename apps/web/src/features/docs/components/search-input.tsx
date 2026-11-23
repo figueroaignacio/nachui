@@ -32,7 +32,7 @@ export function SearchInput({
   count,
 }: SearchInputProps) {
   return (
-    <div className="bg-secondary focus-within:ring-ring flex h-13 shrink-0 items-center gap-3 rounded-lg px-4 focus-within:ring-2">
+    <div className="bg-well focus-within:ring-ring flex h-13 shrink-0 items-center gap-3 rounded-lg px-4 inset-shadow-sm focus-within:ring-2">
       <SearchIcon className="text-muted-foreground size-4.5 shrink-0" aria-hidden="true" />
       <input
         ref={inputRef}

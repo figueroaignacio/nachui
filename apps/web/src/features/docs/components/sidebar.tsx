@@ -174,7 +174,7 @@ export function Sidebar({ previews = {} }: SidebarProps) {
             aria-label={t('sidebar.toggle')}
             aria-expanded={isDesktop ? !collapsed : drawer}
             onClick={toggleSidebar}
-            className="bg-secondary text-muted-strong hover:text-foreground focus-visible:ring-ring inline-flex size-9.5 shrink-0 items-center justify-center rounded-md transition-colors focus-visible:ring-2 focus-visible:outline-none"
+            className="bg-secondary text-muted-strong hover:text-foreground focus-visible:ring-ring inline-flex size-9.5 shrink-0 items-center justify-center rounded-md shadow-xs transition-colors focus-visible:ring-2 focus-visible:outline-none"
           >
             <svg
               width="18"
@@ -290,7 +290,7 @@ export function Sidebar({ previews = {} }: SidebarProps) {
                             className={cn(
                               'focus-visible:ring-ring flex h-9.5 items-center gap-2.5 rounded-md px-2.5 text-[15px] transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
                               isActive
-                                ? 'bg-secondary text-foreground font-medium'
+                                ? 'bg-secondary text-foreground font-medium shadow-xs'
                                 : 'text-muted-foreground hover:text-foreground',
                             )}
                           >
@@ -321,7 +321,7 @@ export function Sidebar({ previews = {} }: SidebarProps) {
         <div
           data-sidebar-extra
           data-sidebar-foot
-          className="bg-secondary flex items-center gap-0.5 rounded-lg p-1"
+          className="bg-secondary flex items-center gap-0.5 rounded-lg p-1 shadow-xs"
         >
           <button
             type="button"

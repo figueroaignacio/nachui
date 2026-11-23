@@ -56,7 +56,7 @@ export function LayerStack({ locale = 'en' }: { locale?: Locale }) {
   const t = copy[locale];
 
   return (
-    <div className="bg-surface-muted border-border my-8 rounded-lg border px-4 py-6 sm:px-6">
+    <div className="bg-surface-muted my-8 rounded-lg px-4 py-6 shadow-xs sm:px-6">
       <ol className="flex flex-col">
         {layers.map((layer, index) => {
           const depth = layers.length - 1 - index;
@@ -66,10 +66,11 @@ export function LayerStack({ locale = 'en' }: { locale?: Locale }) {
             <li
               key={layer.key}
               className={cn(
-                'border-border relative flex items-center justify-between gap-4 rounded-md border px-4 py-3',
+                'relative flex items-center justify-between gap-4 rounded-md px-4 py-3',
                 index > 0 && '-mt-1.5',
                 floating ? 'bg-popover shadow-md' : 'bg-card shadow-sm',
-                layer.key === 'flow' && 'bg-background border-dashed shadow-none',
+                layer.key === 'flow' &&
+                  'border-border bg-background border border-dashed shadow-none',
               )}
               style={{
                 zIndex: layers.length - index,

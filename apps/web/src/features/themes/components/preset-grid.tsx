@@ -38,8 +38,8 @@ export function PresetGrid({ presets, selected, onSelect }: PresetGridProps) {
             <li
               key={preset.name}
               className={cn(
-                'bg-card relative flex flex-col rounded-lg border p-2 transition-colors',
-                active ? 'border-foreground' : 'border-border hover:border-border-interactive',
+                'bg-card relative flex flex-col rounded-lg p-2 shadow-sm transition-colors',
+                active ? 'ring-foreground ring-2' : 'hover:bg-muted',
               )}
             >
               <div

@@ -19,7 +19,7 @@ export default function CatalogLoading() {
       <Skeleton className="mt-12 h-6 w-40" />
       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {TILES.map((tile) => (
-          <div key={tile} className="bg-island flex h-72 flex-col rounded-lg p-1.5">
+          <div key={tile} className="bg-island flex h-72 flex-col rounded-lg p-1.5 shadow-xs">
             <div className="relative min-h-0 flex-1 rounded-md">
               <Skeleton className="absolute inset-8 rounded-md" />
             </div>

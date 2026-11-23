@@ -57,7 +57,7 @@ export function FormWithSummary() {
       schema={schema}
       onSubmit={(data) => setCreated(data.name)}
       onReset={() => setCreated(null)}
-      className="border-border bg-card w-full max-w-sm gap-5 rounded-lg border p-5"
+      className="bg-card w-full max-w-sm gap-5 rounded-lg p-5 shadow-sm"
     >
       <Form.ErrorSummary title={t.summary} />
       <Form.Field name="name">
@@ -146,7 +146,7 @@ export function FooterOneAction() {
   });
 
   return (
-    <div className="border-border bg-card flex w-80 max-w-full flex-col gap-4 rounded-lg border p-5">
+    <div className="bg-card flex w-80 max-w-full flex-col gap-4 rounded-lg p-5 shadow-sm">
       <div className="flex flex-col gap-1.5">
         <p className="text-base font-semibold">{t.title}</p>
         <p className="text-muted-foreground text-sm">{t.body}</p>
@@ -176,7 +176,7 @@ export function FooterCompetingActions() {
   });
 
   return (
-    <div className="border-border bg-card flex w-80 max-w-full flex-col gap-4 rounded-lg border p-5">
+    <div className="bg-card flex w-80 max-w-full flex-col gap-4 rounded-lg p-5 shadow-sm">
       <div className="flex flex-col gap-1.5">
         <p className="text-base font-semibold">{t.title}</p>
         <p className="text-muted-foreground text-sm">{t.body}</p>

@@ -6,7 +6,7 @@ import { cn } from '@repo/ui/lib/cn';
  * server component can read the class names as plain strings.
  */
 export const tileClassName =
-  'group/tile bg-island hover:bg-island-hover focus-visible:ring-ring focus-visible:ring-offset-page flex flex-col rounded-lg p-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none';
+  'group/tile bg-island hover:bg-island-hover focus-visible:ring-ring focus-visible:ring-offset-page flex flex-col rounded-lg p-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none shadow-xs';
 
 export const tileStageClassName = 'relative min-h-0 flex-1 overflow-hidden rounded-md';
 

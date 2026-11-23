@@ -85,7 +85,7 @@ export async function AboutView() {
 
           {/* ── Stats ── */}
           <div
-            className="border-border bg-card mb-14 grid grid-cols-4 divide-x overflow-hidden rounded-lg border max-sm:grid-cols-2 max-sm:divide-y"
+            className="bg-card mb-14 grid grid-cols-4 divide-x overflow-hidden rounded-lg shadow-sm max-sm:grid-cols-2 max-sm:divide-y"
             role="list"
             aria-label="Project statistics"
           >

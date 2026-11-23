@@ -39,12 +39,12 @@ function Verdict({ tone, caption, children, className }: VerdictProps & { tone: 
     <figure
       data-verdict={tone}
       className={cn(
-        'border-border bg-card flex min-w-0 flex-col overflow-hidden rounded-lg border',
+        'bg-card flex min-w-0 flex-col overflow-hidden rounded-lg shadow-sm',
         className,
       )}
     >
       {children ? (
-        <div className="bg-surface-muted flex min-h-44 flex-1 items-center justify-center p-5 *:min-w-0 sm:p-6">
+        <div className="bg-well/60 flex min-h-44 flex-1 items-center justify-center p-5 *:min-w-0 sm:p-6">
           {children}
         </div>
       ) : null}
@@ -85,10 +85,8 @@ export function GuidelineExample({
   className?: string;
 }) {
   return (
-    <figure
-      className={cn('border-border bg-card my-8 overflow-hidden rounded-lg border', className)}
-    >
-      <div className="bg-surface-muted flex min-h-56 items-center justify-center p-5 *:min-w-0 sm:p-8">
+    <figure className={cn('bg-card my-8 overflow-hidden rounded-lg shadow-sm', className)}>
+      <div className="bg-well/60 flex min-h-56 items-center justify-center p-5 *:min-w-0 sm:p-8">
         {children}
       </div>
       {caption ? (

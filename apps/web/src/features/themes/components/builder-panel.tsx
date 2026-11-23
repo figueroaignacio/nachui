@@ -109,7 +109,7 @@ export function BuilderPanel({
   return (
     <section
       aria-labelledby="themes-builder"
-      className="border-border bg-card flex flex-col gap-6 rounded-lg border p-4 lg:sticky lg:top-20"
+      className="bg-card flex flex-col gap-6 rounded-lg p-4 shadow-sm lg:sticky lg:top-20"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">

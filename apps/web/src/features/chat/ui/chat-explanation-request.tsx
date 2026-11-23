@@ -32,7 +32,7 @@ export function ChatExplanationRequest({ componentName, href }: ChatExplanationR
   );
 
   const cardClass =
-    'border-rule bg-card flex max-w-[85%] items-center gap-3 rounded-2xl rounded-br-md border py-2.5 pr-3.5 pl-2.5';
+    'bg-card flex max-w-[85%] items-center gap-3 rounded-2xl rounded-br-md shadow-sm py-2.5 pr-3.5 pl-2.5';
 
   if (!href) return <div className={cardClass}>{content}</div>;
 
@@ -41,7 +41,7 @@ export function ChatExplanationRequest({ componentName, href }: ChatExplanationR
       href={href}
       className={cn(
         cardClass,
-        'group hover:border-border-interactive focus-visible:ring-ring ring-offset-background transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+        'group hover:bg-muted focus-visible:ring-ring ring-offset-background transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
       )}
     >
       {content}

@@ -17,7 +17,7 @@ export function BricksView() {
           <Link
             key={category.slug}
             href={`/bricks/${category.slug}`}
-            className="group border-border bg-background hover:bg-surface-muted hover:border-foreground/30 relative overflow-hidden rounded-lg border transition-all duration-300"
+            className="group bg-card hover:bg-muted relative overflow-hidden rounded-lg shadow-sm transition-all duration-300"
           >
             <Stack className="justify-between p-5">
               <Stack gap="4">

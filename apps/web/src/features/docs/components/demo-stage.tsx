@@ -29,7 +29,7 @@ export function useDemoStage() {
 }
 
 const toolButton =
-  'text-muted-foreground hover:text-foreground hover:bg-muted aria-pressed:bg-secondary aria-pressed:text-foreground focus-visible:ring-ring inline-flex h-8 min-w-8 items-center justify-center gap-1.5 rounded-full px-2 text-[13px] font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none';
+  'text-muted-foreground hover:text-foreground hover:bg-muted aria-pressed:bg-secondary aria-pressed:shadow-xs aria-pressed:text-foreground focus-visible:ring-ring inline-flex h-8 min-w-8 items-center justify-center gap-1.5 rounded-full px-2 text-[13px] font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none';
 
 const PLAYBACK_EVENT = 'playback:play';
 
@@ -144,7 +144,7 @@ export function DemoStage({
       >
         <section
           aria-label={t('label', { title })}
-          className="bg-island relative flex h-[min(34rem,72svh)] scroll-mt-(--site-header-height) flex-col rounded-lg lg:h-[calc(100svh-1.25rem)]"
+          className="bg-island relative flex h-[min(34rem,72svh)] scroll-mt-(--site-header-height) flex-col rounded-lg shadow-xs lg:h-[calc(100svh-1.25rem)]"
         >
           <div className="relative z-20 flex justify-end p-3">
             <div
@@ -254,7 +254,7 @@ export function StageRow({ demoKey, demo, code, fullCode }: StageRowProps) {
   }
 
   return (
-    <div className="bg-island relative rounded-lg p-1.5">
+    <div className="bg-island relative rounded-lg p-1.5 shadow-xs">
       <div
         ref={setDemoBox}
         data-no-select

@@ -178,7 +178,7 @@ function IconDetail({
             </Dialog.Header>
 
             <div className="grid gap-5 sm:grid-cols-[160px_minmax(0,1fr)]">
-              <div className="border-border bg-surface-muted text-foreground flex aspect-square items-center justify-center rounded-md border max-sm:aspect-auto max-sm:h-36">
+              <div className="bg-surface-muted text-foreground flex aspect-square items-center justify-center rounded-md shadow-xs max-sm:aspect-auto max-sm:h-36">
                 <Component size={64} strokeWidth={stroke} />
               </div>
               <div className="flex min-w-0 flex-col gap-2">
@@ -217,7 +217,7 @@ function IconDetail({
                         title={item.name}
                         aria-label={item.name}
                         onClick={() => onSelect(item)}
-                        className="border-border text-foreground hover:border-border-interactive hover:bg-surface-muted focus-visible:ring-ring flex size-11 items-center justify-center rounded-sm border transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                        className="bg-card text-foreground hover:bg-muted focus-visible:ring-ring flex size-11 items-center justify-center rounded-sm shadow-sm transition-colors focus-visible:ring-2 focus-visible:outline-none"
                       >
                         <Related size={18} strokeWidth={stroke} />
                       </button>
@@ -362,7 +362,7 @@ export function IconsBrowser({ icons }: { icons: CatalogIcon[] }) {
                     type="button"
                     onClick={() => setSelected(icon)}
                     title={icon.name}
-                    className="border-border hover:border-border-interactive hover:bg-surface-muted focus-visible:ring-ring group flex aspect-square w-full flex-col items-center justify-center gap-2 rounded-md border transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                    className="bg-card hover:bg-muted focus-visible:ring-ring group flex aspect-square w-full flex-col items-center justify-center gap-2 rounded-md shadow-sm transition-colors focus-visible:ring-2 focus-visible:outline-none"
                   >
                     <span className="text-foreground flex h-9 items-center justify-center">
                       <Component size={size} strokeWidth={stroke} />

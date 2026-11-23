@@ -59,7 +59,7 @@ export function IconsTile({ caption, limit = SAMPLE.length, tag, className }: Ic
         {SAMPLE.slice(0, limit).map((Icon, index) => (
           <span
             key={index}
-            className="bg-card border-border flex size-12 items-center justify-center rounded-sm border"
+            className="bg-card flex size-12 items-center justify-center rounded-sm shadow-sm"
           >
             <Icon size={20} />
           </span>

@@ -21,7 +21,7 @@ function DecisionCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="border-border bg-card flex w-80 max-w-full flex-col gap-4 rounded-lg border p-5">
+    <div className="bg-card flex w-80 max-w-full flex-col gap-4 rounded-lg p-5 shadow-sm">
       <div className="flex flex-col gap-1.5">
         <p className="text-base font-semibold">{title}</p>
         <p className="text-muted-foreground text-sm">{body}</p>
@@ -162,7 +162,7 @@ export function HardcodedFormat() {
 
 function Summary({ rows }: { rows: { label: string; value: string }[] }) {
   return (
-    <dl className="border-border bg-card grid w-72 max-w-full gap-2.5 rounded-lg border p-4 text-sm">
+    <dl className="bg-card grid w-72 max-w-full gap-2.5 rounded-lg p-4 text-sm shadow-sm">
       {rows.map((row) => (
         <div key={row.label} className="flex items-baseline justify-between gap-4">
           <dt className="text-muted-foreground">{row.label}</dt>
@@ -190,7 +190,7 @@ export function StatusWithText() {
   ] as const;
 
   return (
-    <ul className="border-border bg-card divide-border w-64 max-w-full divide-y rounded-lg border">
+    <ul className="bg-card divide-border w-64 max-w-full divide-y rounded-lg shadow-sm">
       {DEPLOYS.map((name, index) => {
         const badge = badges[index] ?? badges[0];
         const Icon = badge.icon;
@@ -212,7 +212,7 @@ export function StatusColorOnly() {
   const dots = ['bg-success', 'bg-warning', 'bg-destructive'];
 
   return (
-    <ul className="border-border bg-card divide-border w-64 max-w-full divide-y rounded-lg border">
+    <ul className="bg-card divide-border w-64 max-w-full divide-y rounded-lg shadow-sm">
       {DEPLOYS.map((name, index) => (
         <li key={name} className="flex items-center justify-between px-4 py-2.5 text-sm">
           <span className="font-mono">{name}</span>

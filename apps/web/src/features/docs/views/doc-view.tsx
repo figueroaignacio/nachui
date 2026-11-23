@@ -58,7 +58,7 @@ export function DocView({ doc }: DocViewProps) {
       <div
         data-doc-panel
         className={cn(
-          'lg:bg-island grid min-w-0 gap-8 max-lg:pt-12 lg:min-h-[calc(100svh-1.25rem)] lg:content-start lg:rounded-lg lg:px-10 lg:py-8 xl:px-14',
+          'lg:bg-island grid min-w-0 gap-8 max-lg:pt-12 lg:min-h-[calc(100svh-1.25rem)] lg:content-start lg:rounded-lg lg:px-10 lg:py-8 lg:shadow-xs xl:px-14',
           !isWide && 'xl:grid-cols-[minmax(0,1fr)_13rem]',
         )}
       >

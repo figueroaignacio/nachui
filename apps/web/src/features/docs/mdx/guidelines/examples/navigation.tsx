@@ -30,7 +30,7 @@ export function DropdownForActions() {
   });
 
   return (
-    <div className="border-border bg-card flex w-72 max-w-full items-center justify-between gap-3 rounded-lg border p-3">
+    <div className="bg-card flex w-72 max-w-full items-center justify-between gap-3 rounded-lg p-3 shadow-sm">
       <div className="min-w-0">
         <p className="truncate text-sm font-medium">acme-web</p>
         <p className="text-muted-foreground truncate text-xs">{t.meta}</p>

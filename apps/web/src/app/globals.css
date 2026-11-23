@@ -573,6 +573,7 @@ body:has(.hero-stage) .site-header {
     z-index: -1;
     border-radius: var(--radius-lg);
     background-color: var(--island);
+    box-shadow: var(--elevation-xs);
     transition:
       opacity 320ms ease-out,
       transform 460ms cubic-bezier(0.22, 1.2, 0.36, 1);

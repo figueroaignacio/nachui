@@ -51,7 +51,7 @@ export async function SpriteView({ id }: { id: string }) {
           ← {t('back')}
         </Link>
 
-        <div className="border-border bg-surface-muted mt-6 flex flex-wrap items-end gap-8 rounded-lg border px-7 pt-7 pb-6">
+        <div className="bg-surface-muted mt-6 flex flex-wrap items-end gap-8 rounded-lg px-7 pt-7 pb-6 shadow-xs">
           <Sprite seed={member.seed} parts={member.parts} state="loop" size={132} />
           <div className="flex-1 pb-1">
             <h1 className="font-heading text-foreground text-3xl leading-[1.1] font-semibold tracking-[-0.03em] lg:text-4xl">
@@ -66,8 +66,8 @@ export async function SpriteView({ id }: { id: string }) {
         <h2 className="text-muted-foreground mt-12 mb-4 font-mono text-xs">{t('statesTitle')}</h2>
         <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {STATES.map((state) => (
-            <li key={state} className="border-border bg-card overflow-hidden rounded-lg border">
-              <span className="bg-surface-muted border-border flex h-32 items-end justify-center border-b pb-4">
+            <li key={state} className="bg-card overflow-hidden rounded-lg shadow-sm">
+              <span className="bg-well/60 border-border flex h-32 items-end justify-center border-b pb-4">
                 <Sprite seed={member.seed} parts={member.parts} state={state} size={92} />
               </span>
               <span className="block px-3 py-3">

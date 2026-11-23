@@ -48,7 +48,7 @@ function findActiveTab(tabs: NavItem[], pathname: string) {
  * transparent and lets clicks through, so only the pills take the pointer.
  */
 const pill =
-  'bg-popover text-popover-foreground border-border pointer-events-auto flex h-11 items-center rounded-full border shadow-md';
+  'bg-popover text-popover-foreground pointer-events-auto flex h-11 items-center rounded-full shadow-md';
 
 const focusRing =
   'focus-visible:ring-ring focus-visible:ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none';
@@ -111,7 +111,7 @@ export function SiteHeader({ previews }: SiteHeaderProps) {
                         'flex h-8.5 items-center rounded-full px-3 text-sm whitespace-nowrap transition-colors',
                         focusRing,
                         active
-                          ? 'bg-secondary text-foreground font-medium'
+                          ? 'bg-secondary text-foreground font-medium shadow-xs'
                           : 'text-muted-foreground hover:text-foreground hover:bg-muted',
                       )}
                     >
@@ -127,7 +127,7 @@ export function SiteHeader({ previews }: SiteHeaderProps) {
                 className={cn(
                   pill,
                   focusRing,
-                  'text-muted-foreground hover:border-border-interactive gap-2 ps-3.5 pe-2 text-[13px] transition-colors 2xl:w-64',
+                  'text-muted-foreground hover:text-foreground gap-2 ps-3.5 pe-2 text-[13px] transition-colors 2xl:w-64',
                 )}
               >
                 <SearchIcon size={15} aria-hidden="true" />
@@ -144,7 +144,7 @@ export function SiteHeader({ previews }: SiteHeaderProps) {
                 type="button"
                 onClick={openChat}
                 className={cn(
-                  'bg-primary text-primary-foreground hover:bg-primary/90 pointer-events-auto inline-flex h-11 items-center gap-2 rounded-full px-4 text-[13px] font-medium whitespace-nowrap shadow-md transition-colors',
+                  'bg-primary text-primary-foreground hover:bg-primary/90 pointer-events-auto inline-flex h-11 items-center gap-2 rounded-full px-4 text-[13px] font-medium whitespace-nowrap inset-shadow-xs transition-colors',
                   focusRing,
                 )}
               >

@@ -83,10 +83,10 @@ export function CatalogBrowser({ groups, iconCount }: CatalogBrowserProps) {
                 aria-pressed={active}
                 onClick={() => setFamily(filter.id)}
                 className={cn(
-                  'focus-visible:ring-ring focus-visible:ring-offset-background flex h-9 shrink-0 items-center gap-2 rounded-full border px-3.5 text-sm whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                  'focus-visible:ring-ring focus-visible:ring-offset-background flex h-9 shrink-0 items-center gap-2 rounded-full px-3.5 text-sm whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                   active
-                    ? 'bg-inverse text-inverse-foreground border-transparent font-medium'
-                    : 'bg-card border-border text-muted-strong hover:border-border-interactive hover:text-foreground',
+                    ? 'bg-inverse text-inverse-foreground font-medium inset-shadow-xs'
+                    : 'bg-card text-muted-strong hover:text-foreground hover:bg-muted shadow-sm',
                 )}
               >
                 {filter.label}

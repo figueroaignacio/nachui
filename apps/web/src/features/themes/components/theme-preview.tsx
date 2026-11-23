@@ -152,7 +152,7 @@ function MenuSurface() {
   return (
     <div aria-hidden="true" className="flex flex-col gap-2">
       <span className="text-muted-foreground text-xs">{t('label')}</span>
-      <div className="bg-popover text-popover-foreground border-border w-full rounded-md border p-1 text-sm shadow-md">
+      <div className="bg-popover text-popover-foreground w-full rounded-md p-1 text-sm shadow-md">
         {items.map((item, index) => (
           <div
             key={item.label}

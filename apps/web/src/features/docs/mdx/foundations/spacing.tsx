@@ -84,7 +84,7 @@ export function ControlSizes({ locale = 'en' }: { locale?: Locale }) {
   const t = controlCopy[locale];
 
   return (
-    <div className="bg-surface-muted border-border my-8 flex flex-wrap items-end gap-6 rounded-lg border p-6">
+    <div className="bg-surface-muted my-8 flex flex-wrap items-end gap-6 rounded-lg p-6 shadow-xs">
       {controls.map((control) => (
         <div key={control.utility} className="flex flex-col items-start gap-2">
           <span

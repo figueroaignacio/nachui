@@ -146,7 +146,7 @@ export function BrickPreview({
         </div>
 
         <Tabs.Content value="preview" className="mt-0">
-          <div className="border-border bg-surface-muted border">
+          <div className="bg-surface-muted shadow-xs">
             <div
               className={cn(
                 'mx-auto flex min-h-[500px] items-center justify-center p-6 transition-all duration-300 sm:p-10',

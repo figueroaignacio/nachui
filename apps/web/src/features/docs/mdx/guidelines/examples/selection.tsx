@@ -31,7 +31,7 @@ export function SwitchAppliesNow() {
   });
 
   return (
-    <div className="border-border bg-card flex w-80 max-w-full flex-col gap-2 rounded-lg border p-4">
+    <div className="bg-card flex w-80 max-w-full flex-col gap-2 rounded-lg p-4 shadow-sm">
       <Field orientation="horizontal" className="items-start justify-between">
         <Field.Content>
           <Field.Label>{t.label}</Field.Label>
@@ -63,7 +63,7 @@ export function SwitchWaitsForSave() {
   });
 
   return (
-    <div className="border-border bg-card flex w-80 max-w-full flex-col gap-4 rounded-lg border p-4">
+    <div className="bg-card flex w-80 max-w-full flex-col gap-4 rounded-lg p-4 shadow-sm">
       <Field orientation="horizontal" className="items-start justify-between">
         <Field.Content>
           <Field.Label>{t.label}</Field.Label>
@@ -108,7 +108,7 @@ export function RadioPlans() {
           <Field
             key={plan.value}
             orientation="horizontal"
-            className="border-border bg-card rounded-lg border p-3"
+            className="bg-card rounded-lg p-3 shadow-sm"
           >
             <Field.Control>
               <Radio name={name} value={plan.value} defaultChecked={plan.value === 'pro'} />

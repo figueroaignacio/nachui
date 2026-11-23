@@ -124,7 +124,7 @@ export function DepthOfFieldDemo({ locale = 'en' }: { locale?: Locale }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="bg-surface-muted border-border my-8 flex min-h-56 flex-col items-center rounded-lg border px-4 pt-10 pb-6">
+    <div className="bg-surface-muted my-8 flex min-h-56 flex-col items-center rounded-lg px-4 pt-10 pb-6 shadow-xs">
       <Button variant="outline" size="sm" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
         {open ? t.hide : t.show}
       </Button>
@@ -138,7 +138,7 @@ export function DepthOfFieldDemo({ locale = 'en' }: { locale?: Locale }) {
               animate="visible"
               exit="exit"
               className={cn(
-                'bg-popover text-popover-foreground border-border absolute inset-x-0 top-0 rounded-md border p-4 shadow-md',
+                'bg-popover text-popover-foreground absolute inset-x-0 top-0 rounded-md p-4 shadow-md',
                 floatingOrigin.bottom,
               )}
             >
@@ -162,7 +162,7 @@ export function PressDemo({ locale = 'en' }: { locale?: Locale }) {
   const reduce = useReducedMotion();
 
   return (
-    <div className="bg-surface-muted border-border my-8 flex flex-col items-center gap-3 rounded-lg border px-4 py-10">
+    <div className="bg-surface-muted my-8 flex flex-col items-center gap-3 rounded-lg px-4 py-10 shadow-xs">
       <motion.button
         type="button"
         whileTap={reduce ? undefined : tap}

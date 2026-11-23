@@ -167,7 +167,7 @@ export function ChatWindow(props: ChatWindowProps) {
                     animate={panelVisible}
                     exit={reduceMotion ? { opacity: 0 } : panelHidden}
                     transition={reduceMotion ? { duration: 0 } : panelEnterTransition}
-                    className="bg-island flex h-full flex-col overflow-hidden rounded-lg"
+                    className="bg-island flex h-full flex-col overflow-hidden rounded-lg shadow-xs"
                   >
                     {body}
                   </motion.div>

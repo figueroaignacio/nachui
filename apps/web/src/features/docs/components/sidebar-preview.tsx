@@ -66,7 +66,7 @@ export function SidebarPreview({
         animate="visible"
         exit="exit"
         className={cn(
-          'bg-popover text-popover-foreground border-border overflow-hidden rounded-md border shadow-md',
+          'bg-popover text-popover-foreground overflow-hidden rounded-md shadow-md',
           floatingOrigin.right,
         )}
       >

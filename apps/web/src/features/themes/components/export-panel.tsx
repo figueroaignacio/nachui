@@ -41,7 +41,7 @@ export function ExportPanel({ preset, theme, css, dirty }: ExportPanelProps) {
       </h2>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <div className="border-border bg-card flex flex-col gap-3 rounded-lg border p-4">
+        <div className="bg-card flex flex-col gap-3 rounded-lg p-4 shadow-sm">
           <h3 className="text-foreground text-sm font-medium">{t('cli')}</h3>
           {dirty ? (
             <p className="text-muted-foreground text-sm leading-relaxed">{t('cliDirty')}</p>
@@ -53,7 +53,7 @@ export function ExportPanel({ preset, theme, css, dirty }: ExportPanelProps) {
           )}
         </div>
 
-        <div className="border-border bg-card flex flex-col gap-3 rounded-lg border p-4">
+        <div className="bg-card flex flex-col gap-3 rounded-lg p-4 shadow-sm">
           <h3 className="text-foreground text-sm font-medium">{t('tokens')}</h3>
           <p className="text-muted-foreground text-sm leading-relaxed">{t('tokensHint')}</p>
           <div className="mt-auto flex flex-wrap gap-2">
@@ -77,7 +77,7 @@ export function ExportPanel({ preset, theme, css, dirty }: ExportPanelProps) {
         </div>
       </div>
 
-      <div className="border-border bg-card flex flex-col gap-3 rounded-lg border p-4">
+      <div className="bg-card flex flex-col gap-3 rounded-lg p-4 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex flex-col gap-1">
             <h3 className="text-foreground text-sm font-medium">{t('css')}</h3>

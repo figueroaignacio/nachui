@@ -35,10 +35,14 @@ export function SearchPreview({ item, category, preview }: SearchPreviewProps) {
   const t = useTranslations('components.searcher');
   const tBadges = useTranslations('docs.badges');
 
-  if (!item) return <div aria-hidden="true" className="bg-island hidden rounded-lg md:block" />;
+  if (!item)
+    return <div aria-hidden="true" className="bg-island hidden rounded-lg shadow-xs md:block" />;
 
   return (
-    <div aria-hidden="true" className="bg-island hidden min-h-0 flex-col rounded-lg md:flex">
+    <div
+      aria-hidden="true"
+      className="bg-island hidden min-h-0 flex-col rounded-lg shadow-xs md:flex"
+    >
       {preview ? (
         <PreviewDemo key={item.href} component={preview.component} demo={preview.demo} />
       ) : (

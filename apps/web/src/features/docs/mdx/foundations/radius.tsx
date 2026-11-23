@@ -36,7 +36,7 @@ export function RadiusScale({ locale = 'en' }: { locale?: Locale }) {
     <div className="my-8 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
       {steps.map((step) => (
         <div key={step.utility} className="flex flex-col gap-3">
-          <div className="bg-surface-muted border-border flex aspect-square items-center justify-center rounded-lg border p-4">
+          <div className="bg-surface-muted flex aspect-square items-center justify-center rounded-lg p-4 shadow-xs">
             <div
               className={cn('border-foreground/70 bg-card size-full border', classes[step.utility])}
             />
@@ -71,7 +71,7 @@ const nestingCopy = {
 
 function NestedCard({ inner, title, item }: { inner: string; title: string; item: string }) {
   return (
-    <div className="bg-card border-border w-full max-w-64 rounded-lg border p-2">
+    <div className="bg-card w-full max-w-64 rounded-lg p-2 shadow-sm">
       <div className="text-muted-foreground px-2 pt-1 pb-2 text-xs font-medium">{title}</div>
       <div className={cn('bg-muted text-foreground px-3 py-2 text-sm font-medium', inner)}>
         {item}
@@ -85,7 +85,7 @@ export function RadiusNesting({ locale = 'en' }: { locale?: Locale }) {
 
   return (
     <div className="my-8 grid gap-3 sm:grid-cols-2">
-      <figure className="bg-surface-muted border-border flex flex-col items-center gap-4 rounded-lg border p-6">
+      <figure className="bg-surface-muted flex flex-col items-center gap-4 rounded-lg p-6 shadow-xs">
         <NestedCard inner="rounded-sm" title={t.title} item={t.item} />
         <figcaption className="text-muted-foreground text-center text-xs">
           <span className="text-success-text font-medium">rounded-lg › rounded-sm</span>
@@ -93,7 +93,7 @@ export function RadiusNesting({ locale = 'en' }: { locale?: Locale }) {
           {t.good}
         </figcaption>
       </figure>
-      <figure className="bg-surface-muted border-border flex flex-col items-center gap-4 rounded-lg border p-6">
+      <figure className="bg-surface-muted flex flex-col items-center gap-4 rounded-lg p-6 shadow-xs">
         <NestedCard inner="rounded-lg" title={t.title} item={t.item} />
         <figcaption className="text-muted-foreground text-center text-xs">
           <span className="text-destructive-text font-medium">rounded-lg › rounded-lg</span>
