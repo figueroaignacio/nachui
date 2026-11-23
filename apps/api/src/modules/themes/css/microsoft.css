@@ -9,6 +9,7 @@
   --popover: #ffffff;
   --popover-foreground: #201f1e;
   --surface-muted: oklch(95.3% 0.002 67.8);
+  --well: #f0eeec;
   --inverse: oklch(24% 0.002 67.7);
   --inverse-foreground: oklch(98.3% 0.002 67.8);
   --overlay: oklch(24% 0.002 67.7 / 0.32);
@@ -61,9 +62,25 @@
   --code-number: oklch(55.4% 0.201 35.8);
   --code-tag: oklch(43% 0.193 24.7);
 
-  --elevation-sm: 0 1px 2px oklch(24% 0.002 67.7 / 0.06);
-  --elevation-md: 0 4px 12px -4px oklch(24% 0.002 67.7 / 0.1);
-  --elevation-lg: 0 12px 32px -12px oklch(24% 0.002 67.7 / 0.16);
+  --elevation-xs:
+    inset 0 0 0 1px oklch(100% 0 0 / 0.5), 0 0 0 1px oklch(24% 0.002 67.7 / 0.065),
+    0 1px 0 1px oklch(24% 0.002 67.7 / 0.05);
+  --elevation-sm:
+    inset 0 0 0 1px oklch(100% 0 0 / 0.5), 0 0 0 1px oklch(24% 0.002 67.7 / 0.065),
+    0 1px 0 1px oklch(24% 0.002 67.7 / 0.05), 0 1px 2px oklch(24% 0.002 67.7 / 0.06);
+  --elevation-md:
+    inset 0 0 0 1px oklch(100% 0 0 / 0.5), 0 0 0 1px oklch(24% 0.002 67.7 / 0.065),
+    0 1px 0 1px oklch(24% 0.002 67.7 / 0.05), 0 4px 12px -4px oklch(24% 0.002 67.7 / 0.1);
+  --elevation-lg:
+    inset 0 0 0 1px oklch(100% 0 0 / 0.5), 0 0 0 1px oklch(24% 0.002 67.7 / 0.065),
+    0 1px 0 1px oklch(24% 0.002 67.7 / 0.05), 0 12px 32px -12px oklch(24% 0.002 67.7 / 0.16);
+
+  --relief-fill:
+    inset 0 1px 0 oklch(100% 0 0 / 0.3), inset 0 -1px 0 oklch(24% 0.002 67.7 / 0.12),
+    0 1px 2px oklch(24% 0.002 67.7 / 0.2);
+  --relief-well:
+    inset 0 1px 2px oklch(24% 0.002 67.7 / 0.12), inset 0 0 0 1px oklch(24% 0.002 67.7 / 0.045),
+    0 1px 0 oklch(100% 0 0 / 0.9);
 
   --radius: 0.25rem;
 }
@@ -76,6 +93,7 @@
   --popover: #201f1e;
   --popover-foreground: #f3f2f1;
   --surface-muted: oklch(23.4% 0.003 67.7);
+  --well: #161514;
   --inverse: oklch(96.2% 0.002 67.8);
   --inverse-foreground: oklch(17.4% 0.003 67.7);
   --overlay: oklch(0% 0 0 / 0.6);
@@ -128,9 +146,28 @@
   --code-number: oklch(69.1% 0.173 41.4);
   --code-tag: oklch(63.8% 0.178 22.1);
 
-  --elevation-sm: 0 1px 2px oklch(0% 0 0 / 0.4);
-  --elevation-md: 0 4px 12px -4px oklch(0% 0 0 / 0.5);
-  --elevation-lg: 0 12px 32px -12px oklch(0% 0 0 / 0.65);
+  --elevation-xs:
+    inset 0 1px 0 oklch(100% 0 0 / 0.075), inset 0 -1px 0 oklch(0% 0 0 / 0.16),
+    inset 0 0 0 1px oklch(100% 0 0 / 0.065), 0 0 0 1px oklch(100% 0 0 / 0.035);
+  --elevation-sm:
+    inset 0 1px 0 oklch(100% 0 0 / 0.075), inset 0 -1px 0 oklch(0% 0 0 / 0.16),
+    inset 0 0 0 1px oklch(100% 0 0 / 0.065), 0 0 0 1px oklch(100% 0 0 / 0.035),
+    0 1px 2px oklch(0% 0 0 / 0.4);
+  --elevation-md:
+    inset 0 1px 0 oklch(100% 0 0 / 0.075), inset 0 -1px 0 oklch(0% 0 0 / 0.16),
+    inset 0 0 0 1px oklch(100% 0 0 / 0.065), 0 0 0 1px oklch(100% 0 0 / 0.035),
+    0 4px 12px -4px oklch(0% 0 0 / 0.5);
+  --elevation-lg:
+    inset 0 1px 0 oklch(100% 0 0 / 0.075), inset 0 -1px 0 oklch(0% 0 0 / 0.16),
+    inset 0 0 0 1px oklch(100% 0 0 / 0.065), 0 0 0 1px oklch(100% 0 0 / 0.035),
+    0 12px 32px -12px oklch(0% 0 0 / 0.65);
+
+  --relief-fill:
+    inset 0 1px 0 oklch(100% 0 0 / 0.26), inset 0 -1px 0 oklch(0% 0 0 / 0.14),
+    inset 0 0 0 1px oklch(100% 0 0 / 0.14), 0 1px 3px oklch(0% 0 0 / 0.45);
+  --relief-well:
+    inset 0 1px 2px oklch(0% 0 0 / 0.55), inset 0 0 0 1px oklch(0% 0 0 / 0.3),
+    0 1px 0 oklch(100% 0 0 / 0.11);
 }
 
 @theme inline {
@@ -141,6 +178,7 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-surface-muted: var(--surface-muted);
+  --color-well: var(--well);
   --color-inverse: var(--inverse);
   --color-inverse-foreground: var(--inverse-foreground);
   --color-overlay: var(--overlay);
@@ -190,9 +228,12 @@
   --radius-xl: calc(var(--radius) * 1.66);
   --radius-2xl: calc(var(--radius) * 2);
 
+  --shadow-xs: var(--elevation-xs);
   --shadow-sm: var(--elevation-sm);
   --shadow-md: var(--elevation-md);
   --shadow-lg: var(--elevation-lg);
+  --inset-shadow-xs: var(--relief-fill);
+  --inset-shadow-sm: var(--relief-well);
 }
 
 @utility hide-scrollbar {

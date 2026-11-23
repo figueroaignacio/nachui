@@ -33,4 +33,4 @@ Copy a theme folder, rename it and change the values. Every theme declares the s
 
 ## Using the tokens in Figma
 
-Import `light.tokens.json` and `dark.tokens.json` of a theme as two modes of one variable collection, with Tokens Studio or any plugin that reads the DTCG format. Group names (`color/surface`, `color/feedback`, `elevation`) become variable groups, and each variable keeps the CSS name the components use, so a designer and a developer talk about the same `muted-foreground`.
+Import `light.tokens.json` and `dark.tokens.json` of a theme as two modes of one variable collection, with Tokens Studio or any plugin that reads the DTCG format. Group names (`color/surface`, `color/feedback`, `elevation`, `relief`) become variable groups, and each variable keeps the CSS name the components use, so a designer and a developer talk about the same `muted-foreground`.

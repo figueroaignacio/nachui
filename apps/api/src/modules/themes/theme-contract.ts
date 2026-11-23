@@ -21,6 +21,7 @@ export const THEME_CONTRACT = [
   '--popover',
   '--popover-foreground',
   '--surface-muted',
+  '--well',
 
   // Interactive
   '--primary',
@@ -65,11 +66,14 @@ export const THEME_CONTRACT = [
   '--info-surface',
   '--info-border',
 
-  // Scrim and elevation
+  // Scrim, elevation and relief
   '--overlay',
+  '--elevation-xs',
   '--elevation-sm',
   '--elevation-md',
   '--elevation-lg',
+  '--relief-fill',
+  '--relief-well',
 
   // Code surface and syntax. Consumed by apps/web, in the Prism theme of
   // codeblock.tsx — not by @repo/ui, so a contract test that only looks at

@@ -17,6 +17,8 @@ const TEXT_PAIRS: Array<[string, string]> = [
   ['popover-foreground', 'popover'],
   ['muted-foreground', 'background'],
   ['muted-foreground', 'muted'],
+  ['foreground', 'well'],
+  ['muted-foreground', 'well'],
   ['primary-foreground', 'primary'],
   ['secondary-foreground', 'secondary'],
   ['accent-foreground', 'accent'],

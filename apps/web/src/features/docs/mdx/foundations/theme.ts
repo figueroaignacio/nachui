@@ -15,6 +15,9 @@ export const lightColors = colorMap(lightTheme);
 export const lightShadows = shadowMap(lightTheme);
 export const darkShadows = shadowMap(darkTheme);
 
+export const lightRelief = shadowMap(lightTheme, 'relief');
+export const darkRelief = shadowMap(darkTheme, 'relief');
+
 export const baseRadius = (lightTheme.radius?.$value as DtcgDimension | undefined) ?? {
   value: 0.75,
   unit: 'rem',

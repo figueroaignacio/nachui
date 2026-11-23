@@ -13,6 +13,7 @@ export type DtcgShadow = {
   offsetY: DtcgDimension;
   blur: DtcgDimension;
   spread?: DtcgDimension;
+  inset?: boolean;
 };
 
 type DtcgToken = { $type: string; $value: unknown; $description?: string };
@@ -20,6 +21,7 @@ type DtcgToken = { $type: string; $value: unknown; $description?: string };
 export type TokenTree = {
   color: Record<string, Record<string, DtcgToken>>;
   elevation?: Record<string, DtcgToken>;
+  relief?: Record<string, DtcgToken>;
   radius?: DtcgToken;
 };
 
@@ -45,10 +47,15 @@ export function formatDimension({ value, unit }: DtcgDimension): string {
   return value === 0 ? '0' : `${formatNumber(value)}${unit}`;
 }
 
-export function formatShadow(shadow: DtcgShadow): string {
+function formatShadowLayer(shadow: DtcgShadow): string {
   const lengths = [shadow.offsetX, shadow.offsetY, shadow.blur];
   if (shadow.spread && shadow.spread.value !== 0) lengths.push(shadow.spread);
-  return `${lengths.map(formatDimension).join(' ')} ${formatColor(shadow.color)}`;
+  const body = `${lengths.map(formatDimension).join(' ')} ${formatColor(shadow.color)}`;
+  return shadow.inset ? `inset ${body}` : body;
+}
+
+export function formatShadow(value: DtcgShadow | DtcgShadow[]): string {
+  return [value].flat().map(formatShadowLayer).join(', ');
 }
 
 export function colorGroups(tree: TokenTree): ColorGroup[] {
@@ -68,10 +75,13 @@ export function colorMap(tree: TokenTree): Record<string, DtcgColor> {
   return out;
 }
 
-export function shadowMap(tree: TokenTree): Record<string, DtcgShadow> {
-  const out: Record<string, DtcgShadow> = {};
-  for (const [name, token] of Object.entries(tree.elevation ?? {})) {
-    if (token.$type === 'shadow') out[name] = token.$value as DtcgShadow;
+export function shadowMap(
+  tree: TokenTree,
+  group: 'elevation' | 'relief' = 'elevation',
+): Record<string, DtcgShadow[]> {
+  const out: Record<string, DtcgShadow[]> = {};
+  for (const [name, token] of Object.entries(tree[group] ?? {})) {
+    if (token.$type === 'shadow') out[name] = [token.$value as DtcgShadow | DtcgShadow[]].flat();
   }
   return out;
 }
@@ -164,6 +174,8 @@ export const CONTRAST_PAIRS: ContrastPair[] = [
   { fg: 'muted-foreground', bg: 'background' },
   { fg: 'muted-foreground', bg: 'card' },
   { fg: 'muted-foreground', bg: 'muted' },
+  { fg: 'foreground', bg: 'well' },
+  { fg: 'muted-foreground', bg: 'well' },
   ...FEEDBACK.flatMap((hue): ContrastPair[] => [
     { fg: `${hue}-foreground`, bg: hue },
     { fg: `${hue}-text`, bg: `${hue}-surface` },

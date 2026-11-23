@@ -85,10 +85,15 @@ function formatDimension({ value, unit }) {
   return value === 0 ? '0' : `${formatNumber(value)}${unit}`;
 }
 
-function formatShadow(shadow) {
+function formatShadowLayer(shadow) {
   const lengths = [shadow.offsetX, shadow.offsetY, shadow.blur];
   if (shadow.spread && shadow.spread.value !== 0) lengths.push(shadow.spread);
-  return `${lengths.map(formatDimension).join(' ')} ${formatColor(shadow.color)}`;
+  const body = `${lengths.map(formatDimension).join(' ')} ${formatColor(shadow.color)}`;
+  return shadow.inset ? `inset ${body}` : body;
+}
+
+function formatShadow(value) {
+  return [value].flat().map(formatShadowLayer).join(', ');
 }
 
 function formatValue(token) {
@@ -138,11 +143,13 @@ function fillHex(tree) {
         changed = true;
       }
     }
-    if (node.$type === 'shadow' && node.$value?.color) {
-      const hex = toHex(node.$value.color);
-      if (node.$value.color.hex !== hex) {
-        node.$value.color.hex = hex;
-        changed = true;
+    if (node.$type === 'shadow' && node.$value) {
+      for (const { color } of [node.$value].flat()) {
+        const hex = toHex(color);
+        if (color.hex !== hex) {
+          color.hex = hex;
+          changed = true;
+        }
       }
     }
     for (const [key, child] of Object.entries(node)) {
@@ -153,12 +160,33 @@ function fillHex(tree) {
   return changed;
 }
 
+/** Prettier's width: the generated CSS has to survive the commit hook untouched. */
+const PRINT_WIDTH = 100;
+
+function wrapLayers(layers) {
+  const lines = [];
+  let line = '';
+  for (const layer of layers) {
+    const next = line ? `${line}, ${layer}` : `    ${layer}`;
+    if (line && next.length + 1 > PRINT_WIDTH) {
+      lines.push(line);
+      line = `    ${layer}`;
+    } else {
+      line = next;
+    }
+  }
+  return [...lines, line].join(',\n');
+}
+
+function declaration({ name, token }) {
+  if (token.$type === 'shadow' && Array.isArray(token.$value) && token.$value.length > 1) {
+    return `  --${name}:\n${wrapLayers(token.$value.map(formatShadowLayer))};`;
+  }
+  return `  --${name}: ${formatValue(token)};`;
+}
+
 function block(selector, groups) {
-  const body = groups
-    .map(({ tokens }) =>
-      tokens.map(({ name, token }) => `  --${name}: ${formatValue(token)};`).join('\n'),
-    )
-    .join('\n\n');
+  const body = groups.map(({ tokens }) => tokens.map(declaration).join('\n')).join('\n\n');
   return `${selector} {\n${body}\n}`;
 }
 
@@ -181,9 +209,12 @@ function tailwindMapping(groups) {
     '  --radius-2xl: calc(var(--radius) * 2);',
   ].join('\n');
   const shadow = [
+    '  --shadow-xs: var(--elevation-xs);',
     '  --shadow-sm: var(--elevation-sm);',
     '  --shadow-md: var(--elevation-md);',
     '  --shadow-lg: var(--elevation-lg);',
+    '  --inset-shadow-xs: var(--relief-fill);',
+    '  --inset-shadow-sm: var(--relief-well);',
   ].join('\n');
   return `${colors}\n\n${radius}\n\n${shadow}`;
 }

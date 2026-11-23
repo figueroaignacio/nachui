@@ -18,12 +18,13 @@ export interface ShadowValue {
   offsetY: DimensionValue;
   blur: DimensionValue;
   spread?: DimensionValue;
+  inset?: boolean;
 }
 
 export type Token =
   | { $type: 'color'; $value: ColorValue; $description?: string }
   | { $type: 'dimension'; $value: DimensionValue; $description?: string }
-  | { $type: 'shadow'; $value: ShadowValue; $description?: string };
+  | { $type: 'shadow'; $value: ShadowValue | ShadowValue[]; $description?: string };
 
 export interface TokenGroup {
   [key: string]: TokenGroup | Token | string;
@@ -90,10 +91,15 @@ function formatDimension({ value, unit }: DimensionValue) {
   return value === 0 ? '0' : `${formatNumber(value)}${unit}`;
 }
 
-function formatShadow(shadow: ShadowValue) {
+function formatShadowLayer(shadow: ShadowValue) {
   const lengths = [shadow.offsetX, shadow.offsetY, shadow.blur];
   if (shadow.spread && shadow.spread.value !== 0) lengths.push(shadow.spread);
-  return `${lengths.map(formatDimension).join(' ')} ${formatColor(shadow.color)}`;
+  const body = `${lengths.map(formatDimension).join(' ')} ${formatColor(shadow.color)}`;
+  return shadow.inset ? `inset ${body}` : body;
+}
+
+function formatShadow(value: ShadowValue | ShadowValue[]) {
+  return [value].flat().map(formatShadowLayer).join(', ');
 }
 
 export function formatValue(token: Token) {
@@ -148,7 +154,9 @@ export function fillHex(tree: TokenGroup) {
     if (typeof node !== 'object') return;
     if (isToken(node)) {
       if (node.$type === 'color') node.$value.hex = toHex(node.$value);
-      if (node.$type === 'shadow') node.$value.color.hex = toHex(node.$value.color);
+      if (node.$type === 'shadow') {
+        for (const layer of [node.$value].flat()) layer.color.hex = toHex(layer.color);
+      }
       return;
     }
     for (const [key, child] of Object.entries(node)) {
@@ -159,12 +167,33 @@ export function fillHex(tree: TokenGroup) {
   return tree;
 }
 
+/** Prettier's width: the generated CSS has to survive the commit hook untouched. */
+const PRINT_WIDTH = 100;
+
+function wrapLayers(layers: string[]) {
+  const lines: string[] = [];
+  let line = '';
+  for (const layer of layers) {
+    const next = line ? `${line}, ${layer}` : `    ${layer}`;
+    if (line && next.length + 1 > PRINT_WIDTH) {
+      lines.push(line);
+      line = `    ${layer}`;
+    } else {
+      line = next;
+    }
+  }
+  return [...lines, line].join(',\n');
+}
+
+function declaration({ name, token }: FlatToken) {
+  if (token.$type === 'shadow' && Array.isArray(token.$value) && token.$value.length > 1) {
+    return `  --${name}:\n${wrapLayers(token.$value.map(formatShadowLayer))};`;
+  }
+  return `  --${name}: ${formatValue(token)};`;
+}
+
 function block(selector: string, groups: TokenBucket[]) {
-  const body = groups
-    .map(({ tokens }) =>
-      tokens.map(({ name, token }) => `  --${name}: ${formatValue(token)};`).join('\n'),
-    )
-    .join('\n\n');
+  const body = groups.map(({ tokens }) => tokens.map(declaration).join('\n')).join('\n\n');
   return `${selector} {\n${body}\n}`;
 }
 
@@ -187,9 +216,12 @@ function tailwindMapping(groups: TokenBucket[]) {
     '  --radius-2xl: calc(var(--radius) * 2);',
   ].join('\n');
   const shadow = [
+    '  --shadow-xs: var(--elevation-xs);',
     '  --shadow-sm: var(--elevation-sm);',
     '  --shadow-md: var(--elevation-md);',
     '  --shadow-lg: var(--elevation-lg);',
+    '  --inset-shadow-xs: var(--relief-fill);',
+    '  --inset-shadow-sm: var(--relief-well);',
   ].join('\n');
   return `${colors}\n\n${radius}\n\n${shadow}`;
 }

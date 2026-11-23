@@ -92,7 +92,15 @@ export function pairsFor(tokens: Record<string, Oklch>): Pair[] {
   }
 
   // Body and secondary text on every surface it can land on.
-  for (const surface of ['background', 'card', 'popover', 'muted', 'surface-muted', 'code']) {
+  for (const surface of [
+    'background',
+    'card',
+    'popover',
+    'muted',
+    'surface-muted',
+    'well',
+    'code',
+  ]) {
     pairs.push({
       name: `muted-foreground on ${surface}`,
       fg: 'muted-foreground',
