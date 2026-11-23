@@ -78,12 +78,13 @@ Follow the pairing and contrast takes care of itself: a theme author only has to
 
 The stacking order of the interface, from the page backwards to floating layers.
 
-| Token             | Utility            | Role                                               |
-| ----------------- | ------------------ | -------------------------------------------------- |
-| `--background`    | `bg-background`    | The page canvas                                    |
-| `--card`          | `bg-card`          | Panels and cards raised off the canvas             |
-| `--popover`       | `bg-popover`       | Floating layers: dropdowns, popovers, tooltips     |
-| `--surface-muted` | `bg-surface-muted` | Recessed areas: table headers, hovered rows, wells |
+| Token             | Utility            | Role                                                     |
+| ----------------- | ------------------ | -------------------------------------------------------- |
+| `--background`    | `bg-background`    | The page canvas                                          |
+| `--card`          | `bg-card`          | Panels and cards raised off the canvas                   |
+| `--popover`       | `bg-popover`       | Floating layers: dropdowns, popovers, tooltips           |
+| `--surface-muted` | `bg-surface-muted` | Islands, panel headers, hovered rows                     |
+| `--well`          | `bg-well`          | Sunk areas: fields, tab tracks, slider and switch tracks |
 
 Each of `--background`, `--card` and `--popover` has a matching `-foreground`.
 
@@ -152,12 +153,15 @@ Reaching for `text-destructive` on a pale background is the common mistake. That
 
 ### Overlay, elevation and code
 
-| Token                                                                                                                                       | Utility                     | Role                                           |
-| ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | ---------------------------------------------- |
-| `--overlay`                                                                                                                                 | `bg-overlay`                | Scrim behind dialogs and drawers               |
-| `--elevation-sm` / `-md` / `-lg`                                                                                                            | `shadow-sm` / `-md` / `-lg` | The shadow scale                               |
-| `--code`                                                                                                                                    | `bg-code`                   | Code block surface                             |
-| `--code-plain`, `--code-keyword`, `--code-string`, `--code-function`, `--code-number`, `--code-tag`, `--code-comment`, `--code-punctuation` | -                           | Syntax colors, read directly by the code block |
+| Token                                                                                                                                       | Utility                     | Role                                               |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------------------------------------------------- |
+| `--overlay`                                                                                                                                 | `bg-overlay`                | Scrim behind dialogs and drawers                   |
+| `--elevation-xs`                                                                                                                            | `shadow-xs`                 | The edge light of a raised surface, no drop shadow |
+| `--relief-fill`                                                                                                                             | `inset-shadow-xs`           | The light on a solid fill, like a primary button   |
+| `--relief-well`                                                                                                                             | `inset-shadow-sm`           | The inner shadow of a sunk area                    |
+| `--elevation-sm` / `-md` / `-lg`                                                                                                            | `shadow-sm` / `-md` / `-lg` | The edge light plus a drop shadow                  |
+| `--code`                                                                                                                                    | `bg-code`                   | Code block surface                                 |
+| `--code-plain`, `--code-keyword`, `--code-string`, `--code-function`, `--code-number`, `--code-tag`, `--code-comment`, `--code-punctuation` | -                           | Syntax colors, read directly by the code block     |
 
 Shadows are themeable values, not fixed drop shadows: a dark theme raises their opacity, because a shadow tuned for a white canvas disappears on a near-black one.
 
@@ -301,11 +305,11 @@ The rule exists because of how the cascade fails here. A theme that omits `--suc
 
 So when you write a theme, work down the contract:
 
-- **Surfaces**: `background`, `card`, `popover`, `surface-muted` and their foregrounds
+- **Surfaces**: `background`, `card`, `popover`, `surface-muted`, `well` and their foregrounds
 - **Interactive**: `primary`, `secondary`, `accent`, `muted`, `inverse` and their foregrounds, plus `muted-strong`
 - **Structure**: `border`, `border-interactive`, `input`, `ring`, `rule`, `grid-color`
 - **Feedback**: all five roles for each of `destructive`, `warning`, `success`, `info`
-- **Scrim and elevation**: `overlay`, `elevation-sm`, `elevation-md`, `elevation-lg`
+- **Scrim, elevation and relief**: `overlay`, `elevation-xs`, `elevation-sm`, `elevation-md`, `elevation-lg`, `relief-fill`, `relief-well`
 - **Code**: `code` plus the eight syntax tokens
 - **Radius**: `--radius`, in `:root` only
 

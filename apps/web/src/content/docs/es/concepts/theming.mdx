@@ -78,12 +78,13 @@ Si respetás el par, el contraste se resuelve solo: quien escribe el tema solo t
 
 El orden de apilado de la interfaz, desde el lienzo hasta las capas flotantes.
 
-| Token             | Utilidad           | Rol                                                |
-| ----------------- | ------------------ | -------------------------------------------------- |
-| `--background`    | `bg-background`    | El lienzo de la página                             |
-| `--card`          | `bg-card`          | Paneles y tarjetas elevadas sobre el lienzo        |
-| `--popover`       | `bg-popover`       | Capas flotantes: dropdowns, popovers, tooltips     |
-| `--surface-muted` | `bg-surface-muted` | Zonas hundidas: cabeceras de tabla, filas en hover |
+| Token             | Utilidad           | Rol                                                     |
+| ----------------- | ------------------ | ------------------------------------------------------- |
+| `--background`    | `bg-background`    | El lienzo de la página                                  |
+| `--card`          | `bg-card`          | Paneles y tarjetas elevadas sobre el lienzo             |
+| `--popover`       | `bg-popover`       | Capas flotantes: dropdowns, popovers, tooltips          |
+| `--surface-muted` | `bg-surface-muted` | Islas, cabeceras de panel, filas en hover               |
+| `--well`          | `bg-well`          | Zonas hundidas: campos, tracks de tabs, slider y switch |
 
 `--background`, `--card` y `--popover` tienen cada uno su `-foreground`.
 
@@ -155,7 +156,10 @@ Usar `text-destructive` sobre un fondo claro es el error típico: ese es el rell
 | Token                                                                                                                                       | Utilidad                    | Rol                                                         |
 | ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | ----------------------------------------------------------- |
 | `--overlay`                                                                                                                                 | `bg-overlay`                | Velo detrás de diálogos y drawers                           |
-| `--elevation-sm` / `-md` / `-lg`                                                                                                            | `shadow-sm` / `-md` / `-lg` | La escala de sombras                                        |
+| `--elevation-xs`                                                                                                                            | `shadow-xs`                 | La luz del filo de una superficie, sin sombra proyectada    |
+| `--relief-fill`                                                                                                                             | `inset-shadow-xs`           | La luz sobre un relleno sólido, como un botón primario      |
+| `--relief-well`                                                                                                                             | `inset-shadow-sm`           | La sombra interior de una zona hundida                      |
+| `--elevation-sm` / `-md` / `-lg`                                                                                                            | `shadow-sm` / `-md` / `-lg` | La luz del filo más una sombra proyectada                   |
 | `--code`                                                                                                                                    | `bg-code`                   | Superficie de los bloques de código                         |
 | `--code-plain`, `--code-keyword`, `--code-string`, `--code-function`, `--code-number`, `--code-tag`, `--code-comment`, `--code-punctuation` | -                           | Colores de sintaxis, leídos directo por el bloque de código |
 
@@ -301,11 +305,11 @@ La regla existe por cómo falla la cascada acá. Un tema que omite `--success-su
 
 Así que cuando escribas un tema, recorré el contrato:
 
-- **Superficies**: `background`, `card`, `popover`, `surface-muted` y sus foregrounds
+- **Superficies**: `background`, `card`, `popover`, `surface-muted`, `well` y sus foregrounds
 - **Interacción**: `primary`, `secondary`, `accent`, `muted`, `inverse` y sus foregrounds, más `muted-strong`
 - **Estructura**: `border`, `border-interactive`, `input`, `ring`, `rule`, `grid-color`
 - **Feedback**: los cinco roles de `destructive`, `warning`, `success` e `info`
-- **Scrim y elevación**: `overlay`, `elevation-sm`, `elevation-md`, `elevation-lg`
+- **Scrim, elevación y relieve**: `overlay`, `elevation-xs`, `elevation-sm`, `elevation-md`, `elevation-lg`, `relief-fill`, `relief-well`
 - **Código**: `code` más los ocho tokens de sintaxis
 - **Radio**: `--radius`, solo en `:root`
 

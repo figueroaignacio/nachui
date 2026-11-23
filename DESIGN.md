@@ -8,6 +8,7 @@ NachUI is a **quiet, soft minimalist** system. Persimmon, a warm orange, carries
 - **Pure neutral grays** in dark mode (zero chroma), stepped so islands, cards and popovers stack clearly on a near-black page
 - **Persimmon primary**: a bright persimmon with ink text in light mode and a softer persimmon with deep brown text in dark mode, like a highlighter on paper. Everything around it stays pure gray, so persimmon is the only brand color. In light mode it is a fill, never text on white (3.1:1): links and labels stay `foreground`, with a persimmon underline or chip when they need the accent
 - **Soft, device-like corners** (base 1.125rem): controls read as pills and surfaces curve generously, with a small fixed scale described in section 4
+- **Relief on every edge**: raised surfaces carry a thin light just inside their edge, sunk ones an inner shadow, so nothing reads as a flat cutout (section 4)
 - **Soft, tokenized elevation** in both modes. Shadows are gentle in light mode and deeper in dark mode, where they do more of the work of separating surfaces
 - **OKLCH everywhere**, so steps between tokens are perceptually even
 
@@ -26,10 +27,11 @@ All tokens live in `packages/ui/src/css/globals.css` as CSS variables on `:root`
 | **Card**          | `oklch(100% 0 0)`      | `oklch(22.5% 0 0)`     | Primary containers, one step above an island                         |
 | **Popover**       | `oklch(100% 0 0)`      | `oklch(25% 0 0)`       | Every floating surface: menus, popovers, toasts                      |
 | **Surface Muted** | `oklch(96.2% 0 0)`     | `oklch(18.5% 0 0)`     | Islands: preview stages, doc panels, tiles, the `bg-hatch` fill      |
+| **Well**          | `oklch(93% 0 0)`       | `oklch(16.5% 0 0)`     | Sunk areas: fields, tracks of tabs, toggles, sliders and switches    |
 | **Inverse**       | `oklch(19% 0 0)`       | `oklch(97% 0 0)`       | High contrast fills that flip with the mode, like the default banner |
 | **Overlay**       | `oklch(19% 0 0 / 0.5)` | `oklch(0% 0 0 / 0.72)` | Backdrop behind dialogs, sheets and drawers                          |
 
-Each surface has a matching `*-foreground` token for text on it. In dark mode the surfaces step up in lightness: background 13%, surface muted 18.5%, card 22.5%, popover 25%. The site reads as islands floating on the page: an island is `surface-muted` with no border, a card sits one step above it and code (`--code`, 94.5% light and 16% dark) one step below, so both read on an island in either mode. That ordering is why floating surfaces must use `bg-popover` and never `bg-background`: on a dark page a `bg-background` menu has no edge.
+Each surface has a matching `*-foreground` token for text on it. In dark mode the surfaces step up in lightness: background 13%, surface muted 18.5%, card 22.5%, popover 25%. The site reads as islands floating on the page: an island is `surface-muted` with `shadow-xs` and no border, a card sits one step above it and code (`--code`, 94.5% light and 16% dark) one step below, so both read on an island in either mode. That ordering is why floating surfaces must use `bg-popover` and never `bg-background`: on a dark page a `bg-background` menu has no edge.
 
 ### Interactive Colors
 
@@ -37,7 +39,7 @@ Each surface has a matching `*-foreground` token for text on it. In dark mode th
 | ---------------------- | --------------------- | --------------------- | ------------------------------------------ |
 | **Primary**            | `oklch(68% 0.185 42)` | `oklch(74% 0.155 48)` | Main buttons, checked controls             |
 | **Primary Foreground** | `oklch(19% 0 0)`      | `oklch(28% 0.07 40)`  | Text on primary                            |
-| **Secondary**          | `oklch(92.5% 0 0)`    | `oklch(30.5% 0 0)`    | Secondary buttons, chips, field fill       |
+| **Secondary**          | `oklch(92.5% 0 0)`    | `oklch(30.5% 0 0)`    | Secondary buttons, chips                   |
 | **Accent**             | `oklch(94% 0 0)`      | `oklch(30.5% 0 0)`    | Subtle hover and selected backgrounds      |
 | **Muted**              | `oklch(91.5% 0 0)`    | `oklch(30.5% 0 0)`    | Item highlight in menus, tracks, skeletons |
 | **Muted Foreground**   | `oklch(46% 0 0)`      | `oklch(76% 0 0)`      | Captions, placeholders, secondary text     |
@@ -45,13 +47,13 @@ Each surface has a matching `*-foreground` token for text on it. In dark mode th
 
 ### Lines and Focus
 
-| Token                  | Light Mode            | Dark Mode             | Role                                                        |
-| ---------------------- | --------------------- | --------------------- | ----------------------------------------------------------- |
-| **Border**             | `oklch(88.5% 0 0)`    | `oklch(33.5% 0 0)`    | Default stroke on surfaces and dividers                     |
-| **Border Interactive** | `oklch(60% 0 0)`      | `oklch(55% 0 0)`      | Hover and focus-within stroke on fields, scrollbar thumb    |
-| **Input**              | `oklch(82% 0 0)`      | `oklch(37% 0 0)`      | Field strokes; `dark:bg-input/30` tints fields in dark mode |
-| **Ring**               | `oklch(68% 0.185 42)` | `oklch(74% 0.155 48)` | Focus rings                                                 |
-| **Rule**               | `oklch(88.5% 0 0)`    | `oklch(33.5% 0 0)`    | Editorial hairlines (`section-rule`, `rule-bleed`)          |
+| Token                  | Light Mode            | Dark Mode             | Role                                                               |
+| ---------------------- | --------------------- | --------------------- | ------------------------------------------------------------------ |
+| **Border**             | `oklch(88.5% 0 0)`    | `oklch(33.5% 0 0)`    | Default stroke on surfaces and dividers                            |
+| **Border Interactive** | `oklch(60% 0 0)`      | `oklch(55% 0 0)`      | Hover and focus-within stroke on fields, scrollbar thumb           |
+| **Input**              | `oklch(82% 0 0)`      | `oklch(37% 0 0)`      | Strokes of the few controls that keep one, active tab in dark mode |
+| **Ring**               | `oklch(68% 0.185 42)` | `oklch(74% 0.155 48)` | Focus rings                                                        |
+| **Rule**               | `oklch(88.5% 0 0)`    | `oklch(33.5% 0 0)`    | Editorial hairlines (`section-rule`, `rule-bleed`)                 |
 
 ### Feedback Colors
 
@@ -143,13 +145,18 @@ Segmented controls apply the first case: the tabs list and the toggle group are 
 
 ### Elevation Scale
 
-`--elevation-sm`, `--elevation-md` and `--elevation-lg` are defined in both modes and mapped to `shadow-sm`, `shadow-md` and `shadow-lg`. Use only these three, never `shadow-xl`, `shadow-2xl` or arbitrary shadows.
+What sticks out can be pressed or floats; what is sunk can be filled in. `--elevation-xs` to `--elevation-lg` (`shadow-xs` to `shadow-lg`) are the raised side and all carry the same edge light. `--relief-fill` and `--relief-well` (`inset-shadow-xs` and `inset-shadow-sm`) are the light on a solid fill and the inner shadow of a well. Use only these six, never `shadow-xl`, `shadow-2xl` or arbitrary shadows. The names stay inside Tailwind's size scale so `tailwind-merge` can override them.
 
-| Utility     | Use                                                                                                                |
-| ----------- | ------------------------------------------------------------------------------------------------------------------ |
-| `shadow-sm` | Cards and other in-flow containers, and inline controls that sit above their track, like the active tab pill       |
-| `shadow-md` | Anchored floating surfaces: popover, hover card, dropdown and context menu, select content, navigation menu, toast |
-| `shadow-lg` | Modal surfaces: dialog, sheet, drawer                                                                              |
+The edge light in dark mode is a 1px white line inside the edge: 13.5% at the top, 6.5% at the sides and less at the bottom, with a 3.5% ring outside so it reads as set in. In light mode it is a soft dark edge with a lip underneath. It is an inset shadow: a child with an opaque background that reaches the edge covers it, so card headers use a translucent fill (`bg-well/60`).
+
+| Utility           | Use                                                                                                                                  |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `shadow-xs`       | Surfaces that cast nothing: islands, secondary buttons, chips, badges, kbd                                                           |
+| `shadow-sm`       | Cards and other in-flow containers, and inline controls that sit above their track, like the active tab pill                         |
+| `shadow-md`       | Anchored floating surfaces: popover, hover card, dropdown and context menu, select content, navigation menu, toast                   |
+| `shadow-lg`       | Modal surfaces: dialog, sheet, drawer                                                                                                |
+| `inset-shadow-xs` | Solid fills: primary and destructive buttons, default badge, selected day, checked checkbox and radio                                |
+| `inset-shadow-sm` | Wells, with `bg-well`: fields, tabs and toggle group tracks, slider, switch, progress. Code blocks and terminals use it on `bg-code` |
 
 Nothing draws a box with a border. A card or any other in-flow container is `bg-card` with `shadow-sm`, so it floats one step above the island it sits on. A border is only a rule: a divider between rows, the rail of a list, or the dashed outline of a drop target.
 
@@ -162,7 +169,7 @@ Nothing draws a box with a border. A card or any other in-flow container is `bg-
 
 ### Floating Surfaces
 
-Every surface anchored to a trigger shares one recipe: `bg-popover text-popover-foreground rounded-md shadow-md`, with no border.
+Every surface anchored to a trigger shares one recipe: `bg-popover text-popover-foreground rounded-md shadow-md`, with no border: the edge light is part of the shadow.
 
 - Menu-like containers (dropdown, context menu, select content, navigation menu) use `p-1`.
 - Content-like containers (popover, hover card) use `p-4`.
@@ -178,7 +185,7 @@ Every surface anchored to a trigger shares one recipe: `bg-popover text-popover-
 
 ### Inputs & Forms
 
-- **Background**: filled with `bg-secondary`, moving to `bg-muted` on hover
+- **Background**: a well, `bg-well inset-shadow-sm`, moving to `bg-well/60` on hover
 - **Border**: none
 - **Focus**: a 2px ring in `ring`, at about 3:1 against the page; invalid fields use the destructive hue instead
 - **Invalid**: `aria-invalid` draws the 2px ring in destructive

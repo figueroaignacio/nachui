@@ -28,7 +28,7 @@
 
 - Quiet and editorial: hierarchy from contrast, type and space. Color goes on state and meaning, not chrome.
 - Buttons are `rounded-md`; `rounded-full` only for icon buttons that are round on purpose, avatars, dots and pills.
-- Cards stay flat (`border` + `bg-card`); shadows only on floating and modal surfaces.
+- Relief says what a thing is: raised (`shadow-xs` to `shadow-lg`, `inset-shadow-xs` on solid fills) can be pressed or floats, sunk (`bg-well inset-shadow-sm`) can be filled in. No borders around boxes.
 - Sentence case for headings, labels and buttons. Mono uppercase is reserved for the small section labels the site already uses.
 
 ## Copy

@@ -10,7 +10,7 @@ packages/ui/tokens/themes/<theme>/dark.tokens.json
 Themes today: `nachui` (the site), `default`, `google`, `microsoft`, `mr-robot`.
 
 - `color.<group>.<name>`: `$type: "color"`, `$value: { colorSpace: "oklch" | "srgb", components: [...], alpha?, hex }`. Groups: `surface`, `interactive`, `structure`, `feedback`, `code`. The CSS variable is the leaf name (`--muted-foreground`).
-- `elevation.sm|md|lg`: `$type: "shadow"`, `$value: { color, offsetX, offsetY, blur, spread }` → `--elevation-sm`.
+- `elevation.xs|sm|md|lg` and `relief.fill|well`: `$type: "shadow"`, `$value` is one layer or a list of layers, first on top: `{ color, offsetX, offsetY, blur, spread, inset? }` → `--elevation-sm`, `--relief-well`. `elevation` maps to `shadow-*`, `relief` to `inset-shadow-xs|sm`.
 - `radius` (light only): `$type: "dimension"`, `$value: { value, unit }` → `--radius`. The scale is derived: sm 0.5x, md 1x, lg 1.33x, xl 1.66x, 2xl 2x.
 - `oklch` lightness is 0 to 1 in JSON and printed as a percentage. `hex` is filled in by the build; don't hand-write it.
 
