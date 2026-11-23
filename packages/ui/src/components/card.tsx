@@ -8,7 +8,7 @@ const cardVariants = cva(
     variants: {
       variant: {
         default: 'bg-card text-card-foreground shadow-sm',
-        outline: 'bg-secondary text-card-foreground',
+        outline: 'bg-secondary text-card-foreground shadow-xs',
         ghost: 'bg-transparent text-card-foreground border-0',
       },
     },

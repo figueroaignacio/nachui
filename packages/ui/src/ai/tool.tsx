@@ -471,7 +471,9 @@ const ToolBlock = ({
         <pre
           className={cn(
             'overflow-x-auto rounded-md px-3 py-2 font-mono text-xs leading-relaxed break-words whitespace-pre-wrap',
-            error ? 'bg-destructive-surface text-destructive-text' : 'bg-secondary text-foreground',
+            error
+              ? 'bg-destructive-surface text-destructive-text'
+              : 'bg-well text-foreground inset-shadow-sm',
           )}
         >
           {body}
@@ -480,7 +482,9 @@ const ToolBlock = ({
         <div
           className={cn(
             'rounded-md px-3 py-2 text-sm',
-            error ? 'bg-destructive-surface text-destructive-text' : 'bg-secondary text-foreground',
+            error
+              ? 'bg-destructive-surface text-destructive-text'
+              : 'bg-well text-foreground inset-shadow-sm',
           )}
         >
           {body}

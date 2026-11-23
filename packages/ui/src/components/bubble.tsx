@@ -8,9 +8,9 @@ const bubbleVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground',
-        secondary: 'bg-secondary text-secondary-foreground',
-        muted: 'bg-muted text-foreground',
+        default: 'bg-primary text-primary-foreground inset-shadow-xs',
+        secondary: 'bg-secondary text-secondary-foreground shadow-xs',
+        muted: 'bg-muted text-foreground shadow-xs',
         tinted: 'bg-primary/10 text-foreground',
         outline: 'text-foreground bg-card shadow-sm',
         ghost: 'text-foreground bg-transparent',

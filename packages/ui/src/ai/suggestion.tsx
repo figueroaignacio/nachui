@@ -13,7 +13,7 @@ const suggestionVariants = cva(
     variants: {
       variant: {
         outline: 'bg-card hover:bg-muted text-foreground shadow-sm',
-        secondary: 'bg-secondary text-secondary-foreground hover:bg-muted',
+        secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-muted',
         ghost: 'bg-card text-muted-foreground hover:text-foreground hover:bg-muted shadow-sm',
       },
       size: {

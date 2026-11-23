@@ -12,7 +12,7 @@ const kbdVariants = cva(
         lg: 'h-8 px-2.5 text-[13px] min-w-[32px] rounded-sm',
       },
       variant: {
-        default: 'bg-secondary text-muted-foreground',
+        default: 'bg-secondary text-muted-foreground shadow-xs',
         outline: 'bg-card text-foreground shadow-sm',
       },
     },

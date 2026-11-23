@@ -358,7 +358,7 @@ const ChainOfThoughtSearchResult = ({
     <span
       ref={ref}
       className={cn(
-        'bg-secondary text-secondary-foreground inline-flex max-w-full min-w-0 items-center gap-1 overflow-hidden rounded-sm px-1.5 py-0.5 text-[11px] [&>svg]:size-3 [&>svg]:shrink-0',
+        'bg-secondary text-secondary-foreground inline-flex max-w-full min-w-0 items-center gap-1 overflow-hidden rounded-sm px-1.5 py-0.5 text-[11px] shadow-xs [&>svg]:size-3 [&>svg]:shrink-0',
         className,
       )}
       {...props}

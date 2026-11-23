@@ -491,7 +491,7 @@ const ComposerSend = ({
         disabled={disabled}
         onClick={() => onStop?.()}
         className={cn(
-          'bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex size-8 shrink-0 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&>svg]:size-4 [&>svg]:shrink-0',
+          'bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex size-8 shrink-0 items-center justify-center rounded-full inset-shadow-xs transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&>svg]:size-4 [&>svg]:shrink-0',
           className,
         )}
         {...props}

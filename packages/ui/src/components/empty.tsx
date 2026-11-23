@@ -22,7 +22,7 @@ const emptyMediaVariants = cva('mb-1 flex items-center justify-center', {
   variants: {
     variant: {
       default: '',
-      icon: 'bg-muted text-muted-foreground size-12 rounded-lg [&_svg]:size-6',
+      icon: 'bg-muted text-muted-foreground shadow-xs size-12 rounded-lg [&_svg]:size-6',
     },
   },
   defaultVariants: {

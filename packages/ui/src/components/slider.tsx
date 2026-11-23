@@ -396,7 +396,7 @@ function SliderTrack({ className, ref, ...props }: SliderTrackProps) {
       data-slot="slider-track"
       data-orientation={orientation}
       className={cn(
-        'bg-muted relative grow overflow-hidden rounded-full',
+        'bg-well relative grow overflow-hidden rounded-full inset-shadow-sm',
         orientation === 'horizontal' ? 'h-1 w-full' : 'h-full w-1',
         className,
       )}

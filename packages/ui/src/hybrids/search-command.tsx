@@ -327,7 +327,7 @@ const SearchCommandTrigger = ({
       ref={ref}
       aria-label={labels.trigger}
       className={cn(
-        'border-border bg-background text-muted-foreground hover:border-border-interactive hover:text-foreground focus-visible:ring-ring inline-flex h-9 w-full max-w-sm items-center gap-2 rounded-md border px-3 text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
+        'bg-well hover:bg-well/60 text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex h-9 w-full max-w-sm items-center gap-2 rounded-md px-3 text-sm inset-shadow-sm transition-colors focus-visible:ring-2 focus-visible:outline-none',
         className,
       )}
       {...props}

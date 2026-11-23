@@ -328,7 +328,7 @@ function ToastItem({ toast: t, onDismiss, position, dismissLabel, regionPaused }
                   t.action?.onClick();
                   onDismiss(t.id);
                 }}
-                className="bg-secondary hover:bg-muted focus-visible:ring-ring mt-2 shrink-0 rounded-md px-3 py-1.5 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
+                className="bg-secondary hover:bg-muted focus-visible:ring-ring mt-2 shrink-0 rounded-md px-3 py-1.5 text-xs font-medium shadow-xs transition-colors focus-visible:ring-2 focus-visible:outline-none"
               >
                 {t.action.label}
               </button>

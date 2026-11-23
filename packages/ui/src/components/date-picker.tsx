@@ -40,8 +40,8 @@ function CalendarIcon({ size = 24, strokeWidth = 1.5, ...props }: IconProps) {
 
 const datePickerTriggerVariants = cva(
   [
-    'bg-secondary text-foreground flex w-full items-center gap-2 rounded-md text-start transition-[color,box-shadow] outline-none',
-    'hover:bg-muted',
+    'bg-well inset-shadow-sm text-foreground flex w-full items-center gap-2 rounded-md text-start transition-[color,box-shadow] outline-none',
+    'hover:bg-well/60',
     'focus-visible:ring-ring focus-visible:ring-2',
     'aria-invalid:ring-2 aria-invalid:ring-destructive',
     'disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40',

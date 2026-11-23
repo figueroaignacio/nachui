@@ -307,7 +307,7 @@ const ContextHeader = ({
               {formatTokens(usedTokens)} / {formatTokens(maxTokens)}
             </span>
           </div>
-          <div className="bg-muted h-1 w-full overflow-hidden rounded-full">
+          <div className="bg-well h-1 w-full overflow-hidden rounded-full inset-shadow-sm">
             <div
               className="bg-foreground h-full rounded-full"
               style={{ width: `${percent * 100}%` }}

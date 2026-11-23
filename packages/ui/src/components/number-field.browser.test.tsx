@@ -106,9 +106,10 @@ describe('NumberField in a real browser', () => {
   it('draws the focus ring on the group', async () => {
     const screen = await render(<Quantity />);
     const group = screen.container.querySelector('[data-slot="number-field-group"]')!;
-    expect(getComputedStyle(group).boxShadow).toBe('none');
+    const ring = /0px 0px 0px 2px/;
+    expect(getComputedStyle(group).boxShadow).not.toMatch(ring);
     await userEvent.click(screen.getByRole('spinbutton'));
-    expect(getComputedStyle(group).boxShadow).not.toBe('none');
+    await expect.poll(() => getComputedStyle(group).boxShadow).toMatch(ring);
   });
 
   it('lays out the decrement button at the start in rtl', async () => {

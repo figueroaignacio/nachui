@@ -562,7 +562,7 @@ const DataTableToolbar = ({
         {children}
       </div>
       <DropdownMenu>
-        <DropdownMenu.Trigger className="border-border hover:bg-muted text-foreground inline-flex h-8 items-center gap-2 rounded-md border px-3 text-xs transition-colors">
+        <DropdownMenu.Trigger className="bg-card hover:bg-muted text-foreground inline-flex h-8 items-center gap-2 rounded-md px-3 text-xs shadow-sm transition-colors">
           <ColumnsIcon size={14} />
           {labels.columns}
         </DropdownMenu.Trigger>

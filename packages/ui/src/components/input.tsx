@@ -6,7 +6,7 @@ import { cn } from '../lib/cn';
 import { Label } from './label';
 
 const inputVariants = cva(
-  'file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground w-full min-w-0 rounded-md bg-secondary transition-[color,box-shadow] outline-none file:inline-flex file:border-0 file:bg-transparent file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40 focus-visible:ring-ring focus-visible:ring-2 aria-invalid:ring-2 aria-invalid:ring-destructive aria-invalid:focus-visible:ring-destructive',
+  'file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground w-full min-w-0 rounded-md bg-well inset-shadow-sm transition-[color,box-shadow] outline-none file:inline-flex file:border-0 file:bg-transparent file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40 focus-visible:ring-ring focus-visible:ring-2 aria-invalid:ring-2 aria-invalid:ring-destructive aria-invalid:focus-visible:ring-destructive',
   {
     variants: {
       size: {

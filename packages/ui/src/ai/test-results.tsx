@@ -196,7 +196,7 @@ const TestResultsHeader = ({
       ref={ref}
       data-slot="test-results-header"
       className={cn(
-        'bg-surface-muted border-border text-muted-strong flex min-h-10 items-center gap-2 border-b px-3 font-mono text-xs',
+        'bg-well/60 border-border text-muted-strong flex min-h-10 items-center gap-2 border-b px-3 font-mono text-xs',
         className,
       )}
       {...props}
@@ -243,7 +243,7 @@ const TestResultsSummary = ({
             key={stat.key}
             data-slot={`test-results-${stat.key}`}
             className={cn(
-              'bg-secondary flex flex-col-reverse gap-0.5 rounded-md px-3 py-2',
+              'bg-well flex flex-col-reverse gap-0.5 rounded-md px-3 py-2 inset-shadow-sm',
               stat.key === 'failed' && summary.failed > 0 && 'bg-destructive-surface',
             )}
           >
@@ -255,7 +255,7 @@ const TestResultsSummary = ({
         ))}
       </dl>
       {total > 0 ? (
-        <div aria-hidden="true" className="bg-muted flex h-1 overflow-hidden rounded-full">
+        <div aria-hidden="true" className="bg-well flex h-1 overflow-hidden rounded-full">
           <span
             className="bg-success-text"
             style={{ width: `${(summary.passed / total) * 100}%` }}

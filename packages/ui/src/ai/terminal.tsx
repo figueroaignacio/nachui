@@ -146,7 +146,7 @@ const TerminalRoot = ({
         data-status={status}
         data-failed={failed ? '' : undefined}
         className={cn(
-          'bg-code text-foreground w-full min-w-0 overflow-hidden rounded-lg',
+          'bg-code text-foreground w-full min-w-0 overflow-hidden rounded-lg inset-shadow-sm',
           className,
         )}
         {...props}
@@ -175,7 +175,7 @@ const TerminalHeader = ({
       ref={ref}
       data-slot="terminal-header"
       className={cn(
-        'bg-surface-muted border-border text-muted-strong flex min-h-10 items-center gap-2 border-b ps-3 pe-1.5 font-mono text-xs',
+        'bg-card/40 border-border text-muted-strong flex min-h-10 items-center gap-2 border-b ps-3 pe-1.5 font-mono text-xs',
         className,
       )}
       {...props}

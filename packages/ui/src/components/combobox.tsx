@@ -933,8 +933,8 @@ const ComboboxInput = ({
       data-state={expanded ? 'open' : 'closed'}
       data-disabled={disabled || undefined}
       className={cn(
-        'text-foreground bg-secondary flex min-h-9 w-full cursor-text items-center gap-2 rounded-md px-3 text-sm transition-[color,box-shadow]',
-        'hover:bg-muted',
+        'text-foreground bg-well flex min-h-9 w-full cursor-text items-center gap-2 rounded-md px-3 text-sm inset-shadow-sm transition-[color,box-shadow]',
+        'hover:bg-well/60',
         'focus-within:ring-ring focus-within:ring-2',
         'has-[input[aria-invalid=true]]:ring-destructive has-[input[aria-invalid=true]]:ring-2',
         'data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-disabled:opacity-40',
@@ -954,7 +954,7 @@ const ComboboxInput = ({
               <span
                 key={item}
                 data-slot="combobox-chip"
-                className="bg-secondary text-secondary-foreground inline-flex h-6 max-w-full items-center gap-1 rounded-full ps-2 pe-1 text-xs"
+                className="bg-secondary text-secondary-foreground inline-flex h-6 max-w-full items-center gap-1 rounded-full ps-2 pe-1 text-xs shadow-xs"
               >
                 <span className="truncate">{label}</span>
                 <button

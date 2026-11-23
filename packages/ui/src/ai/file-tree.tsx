@@ -242,7 +242,7 @@ const FileTree = ({
     >
       <div
         data-slot="file-tree-header"
-        className="bg-surface-muted border-border text-muted-strong flex min-h-10 items-center gap-2 border-b px-3 font-mono text-xs"
+        className="bg-well/60 border-border text-muted-strong flex min-h-10 items-center gap-2 border-b px-3 font-mono text-xs"
       >
         <span className="text-foreground min-w-0 flex-1 truncate">{title}</span>
         {hasCounts ? (

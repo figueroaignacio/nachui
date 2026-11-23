@@ -219,7 +219,7 @@ const PlanHeader = ({
         onClick?.(event);
       }}
       className={cn(
-        'bg-surface-muted hover:bg-muted/60 focus-visible:ring-ring relative flex w-full items-center gap-3 px-3 py-2.5 text-start transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
+        'bg-well/60 hover:bg-muted/60 focus-visible:ring-ring relative flex w-full items-center gap-3 px-3 py-2.5 text-start transition-colors focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset',
         open && 'border-border border-b',
         className,
       )}

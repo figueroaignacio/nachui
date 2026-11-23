@@ -299,7 +299,7 @@ const AgentRunRoot = ({
         ref={ref}
         data-status={status}
         className={cn(
-          'border-border bg-card text-card-foreground divide-rule flex w-full flex-col divide-y overflow-hidden rounded-lg border',
+          'bg-card text-card-foreground divide-rule flex w-full flex-col divide-y overflow-hidden rounded-lg shadow-sm',
           className,
         )}
         {...props}
@@ -384,7 +384,7 @@ const AgentRunProgress = ({
       aria-valuemax={total}
       aria-valuenow={done}
       aria-label={labels.progress(done, total)}
-      className={cn('bg-secondary relative h-1 w-full', className)}
+      className={cn('bg-well relative h-1 w-full', className)}
       {...props}
     >
       <motion.div

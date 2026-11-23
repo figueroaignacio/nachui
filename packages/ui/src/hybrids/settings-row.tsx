@@ -358,7 +358,7 @@ const SettingsSection = ({
       ref={ref}
       aria-labelledby={titleId}
       data-slot="settings-section"
-      className={cn('border-border bg-card w-full overflow-hidden rounded-lg border', className)}
+      className={cn('bg-card w-full overflow-hidden rounded-lg shadow-sm', className)}
       {...props}
     >
       <header className="border-rule flex flex-col gap-1 border-b px-5 py-4">
@@ -378,7 +378,7 @@ const SettingsSection = ({
         ))}
       </div>
       {footer ? (
-        <footer className="border-rule bg-surface-muted flex items-center justify-end gap-2 border-t px-5 py-3">
+        <footer className="border-rule bg-well/60 flex items-center justify-end gap-2 border-t px-5 py-3">
           {footer}
         </footer>
       ) : null}

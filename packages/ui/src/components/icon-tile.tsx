@@ -10,7 +10,7 @@ const iconTileVariants = cva(
         outline: 'bg-card text-(--tile-color) shadow-sm',
         elevated: 'bg-muted text-(--tile-color) ring-background shadow-sm ring-2',
         soft: 'bg-(--tile-color)/10 text-(--tile-color) ring-(--tile-color)/5 ring-4',
-        solid: 'bg-(--tile-color) text-(--tile-contrast)',
+        solid: 'bg-(--tile-color) text-(--tile-contrast) inset-shadow-xs',
         frame: 'bg-card text-(--tile-color) ring-muted ring-4 shadow-sm',
       },
       size: {

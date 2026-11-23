@@ -111,7 +111,7 @@ const AvatarFallback = ({ className, ...props }: React.HTMLAttributes<HTMLSpanEl
   return (
     <span
       className={cn(
-        'bg-muted flex h-full w-full items-center justify-center rounded-full text-sm font-medium',
+        'bg-muted flex h-full w-full items-center justify-center rounded-full text-sm font-medium shadow-xs',
         className,
       )}
       {...props}

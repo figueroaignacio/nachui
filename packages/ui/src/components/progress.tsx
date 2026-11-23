@@ -36,7 +36,10 @@ function Progress({
       aria-valuemin={0}
       aria-valuemax={safeMax}
       aria-valuenow={clampedValue}
-      className={cn('bg-secondary relative h-1 w-full overflow-hidden rounded-none', className)}
+      className={cn(
+        'bg-well relative h-1 w-full overflow-hidden rounded-none inset-shadow-sm',
+        className,
+      )}
       {...props}
     >
       {clampedValue === undefined ? (

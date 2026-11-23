@@ -343,7 +343,7 @@ const InputOTPSlot = ({ index, className, ...props }: InputOTPSlotProps) => {
       data-filled={char ? '' : undefined}
       data-state={active ? 'active' : 'inactive'}
       className={cn(
-        'bg-secondary text-foreground relative flex h-12 w-11 items-center justify-center rounded-md font-mono text-xl tabular-nums transition-shadow duration-150',
+        'bg-well text-foreground relative flex h-12 w-11 items-center justify-center rounded-md font-mono text-xl tabular-nums inset-shadow-sm transition-shadow duration-150',
         active && 'ring-ring ring-2',
         invalid && 'ring-destructive ring-2',
         className,

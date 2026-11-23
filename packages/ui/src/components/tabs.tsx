@@ -12,7 +12,7 @@ const tabsListVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-muted/60',
+        default: 'bg-well inset-shadow-sm',
         outline: 'bg-card shadow-sm',
         underline: 'bg-transparent border-b border-border rounded-none p-0 justify-start w-full',
         ghost: 'bg-transparent p-0 gap-1',

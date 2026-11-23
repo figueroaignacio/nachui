@@ -98,7 +98,7 @@ const calloutVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-surface-muted text-card-foreground',
+        default: 'bg-surface-muted text-card-foreground shadow-xs',
         info: 'bg-info-surface text-info-text',
         warning: 'bg-warning-surface text-warning-text',
         danger: 'bg-destructive-surface text-destructive-text',

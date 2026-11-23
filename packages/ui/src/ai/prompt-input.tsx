@@ -563,7 +563,7 @@ const PromptInputAttachments = ({
         files.map((file, index) => (
           <span
             key={file.id}
-            className="bg-secondary text-secondary-foreground flex h-8 max-w-48 items-center gap-1.5 rounded-full py-1 ps-2.5 pe-1 text-xs"
+            className="bg-secondary text-secondary-foreground flex h-8 max-w-48 items-center gap-1.5 rounded-full py-1 ps-2.5 pe-1 text-xs shadow-xs"
           >
             <span className="truncate">{file.filename}</span>
             <button
@@ -777,7 +777,7 @@ const PromptInputSubmit = ({
         if (busy && !event.defaultPrevented) onStop?.();
       }}
       className={cn(
-        'bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex size-8 shrink-0 items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&>svg]:size-4 [&>svg]:shrink-0',
+        'bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex size-8 shrink-0 items-center justify-center rounded-full inset-shadow-xs transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40 [&>svg]:size-4 [&>svg]:shrink-0',
         status === 'error' && 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
         className,
       )}

@@ -141,7 +141,7 @@ const linkClassName = (isActive: boolean, disabled: boolean, size: 'default' | '
     'inline-flex h-9 cursor-pointer items-center justify-center gap-1 rounded-md text-sm font-medium transition-colors select-none',
     'hover:bg-muted ring-offset-background focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
     size === 'icon' ? 'w-9' : 'px-3',
-    isActive && 'bg-muted text-foreground hover:bg-muted',
+    isActive && 'bg-muted text-foreground hover:bg-muted shadow-xs',
     disabled && 'pointer-events-none opacity-40',
   );
 

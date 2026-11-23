@@ -13,7 +13,8 @@ const toggleVariants = cva(
     variants: {
       variant: {
         default: 'bg-transparent',
-        outline: 'bg-secondary',
+        outline:
+          'bg-secondary shadow-xs data-[state=on]:bg-well data-[state=on]:shadow-none data-[state=on]:inset-shadow-sm',
       },
       size: {
         sm: 'h-8 min-w-8 px-2',

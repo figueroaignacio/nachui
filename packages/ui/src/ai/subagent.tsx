@@ -361,7 +361,7 @@ const SubagentResult = ({
       {...props}
     >
       <span className="text-muted-foreground font-mono text-[11px]">{label}</span>
-      <div className="bg-surface-muted text-foreground rounded-md px-3 py-2 text-sm leading-relaxed">
+      <div className="bg-well text-foreground rounded-md px-3 py-2 text-sm leading-relaxed inset-shadow-sm">
         {children}
       </div>
     </div>

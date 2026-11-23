@@ -407,8 +407,8 @@ function NumberFieldGroup({ className, ref, ...props }: NumberFieldGroupProps) {
       data-slot="number-field-group"
       data-disabled={disabled ? '' : undefined}
       className={cn(
-        'text-foreground bg-secondary flex h-9 w-full items-stretch overflow-hidden rounded-md transition-[color,box-shadow]',
-        'hover:bg-muted focus-within:ring-ring focus-within:ring-2',
+        'text-foreground bg-well flex h-9 w-full items-stretch overflow-hidden rounded-md inset-shadow-sm transition-[color,box-shadow]',
+        'hover:bg-well/60 focus-within:ring-ring focus-within:ring-2',
         'has-[[aria-invalid=true]]:ring-destructive has-[[aria-invalid=true]]:ring-destructive has-[[aria-invalid=true]]:ring-2',
         'data-[disabled]:pointer-events-none data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40',
         className,
@@ -547,7 +547,7 @@ function NumberFieldStepper({
       data-slot={increment ? 'number-field-increment' : 'number-field-decrement'}
       data-disabled={enabled ? undefined : ''}
       className={cn(
-        'bg-secondary text-muted-foreground flex w-9 shrink-0 cursor-pointer items-center justify-center transition-colors outline-none select-none',
+        'text-muted-foreground flex w-9 shrink-0 cursor-pointer items-center justify-center bg-transparent transition-colors outline-none select-none',
         'hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40',
         increment ? 'border-s' : 'border-e',
         className,

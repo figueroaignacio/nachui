@@ -501,7 +501,7 @@ const CalendarRoot = (props: CalendarProps): React.JSX.Element => {
                                 isOutside && 'text-muted-foreground opacity-60',
                                 rangeMiddle && 'hover:bg-foreground/5',
                                 (mode === 'single' ? selected : rangeStart || rangeEnd) &&
-                                  'bg-primary text-primary-foreground hover:bg-primary/90',
+                                  'bg-primary text-primary-foreground hover:bg-primary/90 inset-shadow-xs',
                                 disabled &&
                                   'cursor-not-allowed line-through opacity-35 hover:bg-transparent',
                               )}

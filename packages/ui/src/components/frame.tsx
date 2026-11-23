@@ -5,7 +5,7 @@ import { cn } from '../lib/cn';
 const frameVariants = cva('flex w-full flex-col rounded-xl', {
   variants: {
     variant: {
-      default: 'bg-muted/40',
+      default: 'bg-muted/40 shadow-xs',
       ghost: 'bg-transparent',
     },
     spacing: {
