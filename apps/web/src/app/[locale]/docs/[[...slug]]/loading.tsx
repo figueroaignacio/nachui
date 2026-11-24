@@ -23,7 +23,7 @@ function StageLoading({ label }: { label: string }) {
   return (
     <div data-stage-shell role="status" aria-busy="true" className="grid min-w-0 gap-2.5">
       <span className="sr-only">{label}</span>
-      <div className="bg-island relative flex h-[min(34rem,72svh)] flex-col rounded-lg shadow-xs lg:h-[calc(100svh-1.25rem)]">
+      <div className="bg-island relative flex h-[calc(100svh-1rem)] flex-col rounded-lg shadow-xs lg:h-[calc(100svh-1.25rem)]">
         <div className="flex justify-end p-3">
           <div className="bg-popover flex items-center gap-1.5 rounded-full p-1 shadow-md">
             <Skeleton className="h-8 w-16 rounded-full" />

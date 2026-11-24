@@ -144,7 +144,7 @@ export function DemoStage({
       >
         <section
           aria-label={t('label', { title })}
-          className="bg-island relative flex h-[min(34rem,72svh)] scroll-mt-(--site-header-height) flex-col rounded-lg shadow-xs lg:h-[calc(100svh-1.25rem)]"
+          className="bg-island relative flex h-[calc(100svh-1rem)] scroll-mt-(--site-header-height) flex-col rounded-lg shadow-xs lg:h-[calc(100svh-1.25rem)]"
         >
           <div className="relative z-20 flex justify-end p-3">
             <div
