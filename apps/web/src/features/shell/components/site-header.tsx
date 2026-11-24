@@ -144,7 +144,8 @@ export function SiteHeader({ previews }: SiteHeaderProps) {
                 type="button"
                 onClick={openChat}
                 className={cn(
-                  'bg-primary text-primary-foreground hover:bg-primary/90 pointer-events-auto inline-flex h-11 items-center gap-2 rounded-full px-4 text-[13px] font-medium whitespace-nowrap inset-shadow-xs transition-colors',
+                  pill,
+                  'hover:bg-muted gap-2 px-4 text-[13px] font-medium whitespace-nowrap transition-colors',
                   focusRing,
                 )}
               >
