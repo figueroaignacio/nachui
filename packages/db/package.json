@@ -25,15 +25,15 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "drizzle-orm": "^0.45.2",
+    "drizzle-orm": "^0.45.4",
     "postgres": "^3.4.9"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^25.9.2",
-    "drizzle-kit": "^0.31.10",
+    "drizzle-kit": "^0.31.11",
     "tsup": "^8.5.1",
-    "tsx": "^4.22.4",
+    "tsx": "^4.23.15",
     "typescript": "^6.0.3"
   }
 }
