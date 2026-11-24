@@ -599,6 +599,8 @@ body:has(.hero-stage) .site-header {
 
   body:has([data-docs-grid]) [data-sidebar-rail] {
     position: relative;
+    /* Keeps the panel's surface, at z-index -1, above the backdrop. */
+    isolation: isolate;
     top: 0;
     width: min(20rem, 88vw);
     height: 100dvh;
@@ -618,7 +620,7 @@ body:has(.hero-stage) .site-header {
     inset: 0;
     z-index: -1;
     background-color: var(--island);
-    box-shadow: var(--elevation-lg);
+    box-shadow: none;
     transform: translateX(-102%);
     transition: transform 240ms ease-in;
   }
@@ -661,6 +663,7 @@ body:has(.hero-stage) .site-header {
   }
 
   body[data-docs-drawer='open'] [data-sidebar-rail]::before {
+    box-shadow: var(--elevation-lg);
     transform: none;
     transition: transform 420ms cubic-bezier(0.22, 1.12, 0.36, 1);
   }
