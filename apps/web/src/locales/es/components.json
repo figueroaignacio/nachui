@@ -149,35 +149,6 @@
   "skipLink": {
     "label": "Saltar al contenido principal"
   },
-  "landingLogoCta": {
-    "label": "mcp",
-    "line1": "Conectalo una vez.",
-    "line2": "Tu agente se queda con todo el catálogo.",
-    "primaryAction": "Ver la guía de instalación",
-    "secondaryAction": "Ver elementos UI",
-    "license": "MIT",
-    "description": "Apuntá cualquier cliente MCP al servidor y tu agente puede listar el catálogo, traer el código real de un componente y leer la documentación antes de escribir una línea. El mismo copiar y pegar de siempre, sin la parte donde inventa un componente que no existe.",
-    "configFile": "mcp.json",
-    "tools": [
-      {
-        "name": "list_components",
-        "description": "Todos los componentes del registro, con los paquetes npm que necesitan."
-      },
-      {
-        "name": "get_component",
-        "description": "El código de un componente, el mismo archivo que copiarías a mano."
-      },
-      {
-        "name": "search_docs",
-        "description": "Búsqueda semántica sobre la documentación, en inglés o español."
-      },
-      {
-        "name": "get_doc",
-        "description": "Una página entera de la documentación en markdown, cuando un fragmento no alcanza."
-      }
-    ],
-    "outputNote": "No instala nada ni deja nada corriendo. Cuatro herramientas de lectura sobre el mismo registro que usa la documentación."
-  },
   "issueCta": {
     "question": "¿Encontraste algo que mejorar?",
     "description": "¿Notaste un error, tipografía o detalle faltante en esta página? Ayúdanos a mejorar la documentación abriendo un issue en GitHub.",

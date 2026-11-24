@@ -149,35 +149,6 @@
   "skipLink": {
     "label": "Skip to main content"
   },
-  "landingLogoCta": {
-    "label": "mcp",
-    "line1": "Connect it once.",
-    "line2": "Your agent gets the whole catalog.",
-    "primaryAction": "Read the setup guide",
-    "secondaryAction": "Browse UI elements",
-    "license": "MIT",
-    "description": "Point any MCP client at the server and your agent can list the catalog, pull the real source of a component and read the docs before it writes a line. Same copy and paste as always, without the part where it invents a component that does not exist.",
-    "configFile": "mcp.json",
-    "tools": [
-      {
-        "name": "list_components",
-        "description": "Every component in the registry, with the npm packages it needs."
-      },
-      {
-        "name": "get_component",
-        "description": "The source of one component, the same file you would copy by hand."
-      },
-      {
-        "name": "search_docs",
-        "description": "Semantic search across the documentation, in English or Spanish."
-      },
-      {
-        "name": "get_doc",
-        "description": "A full docs page as markdown, for when a snippet is not enough."
-      }
-    ],
-    "outputNote": "Nothing is installed and nothing runs in the background. Four read-only tools over the same registry the docs use."
-  },
   "issueCta": {
     "question": "Found something to improve?",
     "description": "Notice a bug, typo, or missing detail on this page? Help us make the documentation better by opening a GitHub issue.",
