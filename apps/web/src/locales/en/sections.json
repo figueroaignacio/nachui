@@ -1,9 +1,8 @@
 {
   "home": {
     "subheading1": "An open source design system you own, ready for you and your agent",
-    "headline1": "An open source design system you own,",
-    "headline2": "ready for you and",
-    "headline2Highlight": "your agent",
+    "headline": "<t>An open</t> <theme>source</theme> <t>design system you own,</t> <soft>ready for</soft> <me>you</me> <soft>and</soft> <agent>your agent</agent>",
+    "themeSwitch": "Dark theme",
     "description": "Tokens, components, patterns and themes for React. Copied into your repo as plain source, so you and your agent read the same thing.",
     "actions": [
       {
@@ -14,7 +13,7 @@
       {
         "label": "Browse components",
         "href": "/docs/elements/ui",
-        "variant": "outline"
+        "variant": "secondary"
       }
     ],
     "announcement": {

@@ -1,9 +1,8 @@
 {
   "home": {
     "subheading1": "Un sistema de diseño de código abierto que es tuyo, listo para vos y tu agente",
-    "headline1": "Un sistema de diseño de código abierto que es tuyo,",
-    "headline2": "listo para vos y",
-    "headline2Highlight": "tu agente",
+    "headline": "<t>Un sistema de diseño de código</t> <theme>abierto</theme> <t>que es tuyo,</t> <soft>listo para</soft> <me>vos</me> <soft>y</soft> <agent>tu agente</agent>",
+    "themeSwitch": "Tema oscuro",
     "description": "Tokens, componentes, patrones y temas para React. Se copian a tu repo como código plano, así vos y tu agente leen lo mismo.",
     "actions": [
       {
@@ -14,7 +13,7 @@
       {
         "label": "Ver componentes",
         "href": "/docs/elements/ui",
-        "variant": "outline"
+        "variant": "secondary"
       }
     ],
     "announcement": {

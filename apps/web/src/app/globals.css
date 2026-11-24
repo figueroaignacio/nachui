@@ -152,282 +152,161 @@ body:has([data-chat-launcher]) footer {
 }
 
 /*
- * The hero stage: the copy sits in the middle and real component previews
- * float around it. Every card is placed from the stage centre (--x, --y),
- * tilted (--r) and scaled (--s). Phones show four cards peeking in from the
- * top and bottom; desktop spreads ten around the copy and the rest only
- * show on very wide screens.
- * On load the copy sharpens in line by line while the cards fly in from
- * outside the stage and come into focus, then they keep a slow float.
+ * The hero stage: the Lift mark is the backdrop and the copy sits on its
+ * block. The panel fills the window. `--hero-mark` is the size of the mark and
+ * everything else follows from it, so a short window gets a smaller mark and
+ * the actions stay in view; `--hero-drop` centres the group in a tall one.
+ * The mark is placed by the centre of its block (41 of its 100 units).
  */
 .hero-stage {
   --hero-inset: 0.5rem;
+  --hero-mark: min(25rem, 106vw);
+  --hero-copy: calc(var(--hero-mark) * 0.68);
+  --hero-drop: max(0px, (100svh - 2 * var(--hero-inset) - var(--hero-copy) - 29rem) / 2);
+  --hero-soft: oklch(54% 0 0);
+  --hero-lip: oklch(80% 0 0);
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: max(calc(100svh - 2 * var(--hero-inset)), 48rem);
   /* The panel starts under the floating header, so the pills read as part of
      it, and stops one inset short of the viewport on every side. */
   margin-block-start: calc(var(--hero-inset) - var(--site-header-height));
   margin-inline: calc(var(--hero-inset) - var(--frame-bleed));
-  padding-block-start: var(--site-header-height);
-  padding-inline: var(--frame-pad);
+  min-height: calc(100svh - 2 * var(--hero-inset));
+  padding-block: calc(var(--hero-drop) + var(--hero-copy)) 1.5rem;
+  padding-inline: 1.5rem;
   overflow: clip;
 }
 
-@media (min-width: 40rem) {
-  .hero-stage {
-    --hero-inset: 0.625rem;
-  }
+.dark .hero-stage {
+  --hero-soft: oklch(64% 0 0);
+  --hero-lip: oklch(12% 0 0);
 }
 
-/* The cards live below the header row, so none of them ends up under a pill. */
-.hero-orbit {
+.text-hero-soft {
+  color: var(--hero-soft);
+}
+
+.hero-mark {
   position: absolute;
-  inset: var(--site-header-height) 0 0 0;
-  overflow: clip;
+  top: calc(var(--hero-drop) + 3rem);
+  left: -1rem;
+  width: var(--hero-mark);
+  height: var(--hero-mark);
+  overflow: visible;
   pointer-events: none;
-  user-select: none;
 }
 
-.hero-orbit-card {
+.hero-mark-block {
+  fill: color-mix(in oklab, var(--card) 75%, var(--island));
+}
+
+.hero-mark-piece {
+  fill: var(--primary);
+  animation: hero-lift 900ms cubic-bezier(0.3, 1.45, 0.55, 1) 300ms both;
+}
+
+.hero-mark-rim-top {
+  stop-color: oklch(0% 0 0 / 0.09);
+}
+
+.hero-mark-rim-low {
+  stop-color: oklch(0% 0 0 / 0.05);
+}
+
+.dark .hero-mark-rim-top {
+  stop-color: oklch(100% 0 0 / 0.17);
+}
+
+.dark .hero-mark-rim-low {
+  stop-color: oklch(100% 0 0 / 0.05);
+}
+
+/* The pieces inside the headline are sized in `em`, so they follow the text.
+   The switch is the real component scaled up, in a box of its final size. */
+.hero-chip {
+  position: relative;
+  display: inline-block;
+  width: 0.74em;
+  height: 0.74em;
+  vertical-align: -0.06em;
+  overflow: hidden;
+}
+
+/* A keycap: the edge light on top and a lip underneath that it sinks into. */
+.hero-key {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.92em;
+  height: 0.74em;
+  border-radius: 0.2em;
+  vertical-align: top;
+  top: 0.16em;
+  box-shadow:
+    0 0.07em 0 var(--hero-lip),
+    var(--elevation-xs);
+  transition:
+    translate 120ms ease-out,
+    box-shadow 120ms ease-out;
+}
+
+.hero-key:active {
+  translate: 0 0.06em;
+  box-shadow:
+    0 0.01em 0 var(--hero-lip),
+    var(--elevation-xs);
+}
+
+.hero-switch {
+  --hero-switch: 1.3;
+  position: relative;
+  display: inline-block;
+  width: calc(2.25rem * var(--hero-switch));
+  height: calc(1.25rem * var(--hero-switch));
+  vertical-align: -0.06em;
+  letter-spacing: 0;
+}
+
+.hero-switch > * {
   position: absolute;
-  top: var(--y);
-  inset-inline-start: calc(50% + var(--x));
-  display: none;
-  width: 19.5rem;
-  margin-inline-start: -9.75rem;
-  translate: 0 -50%;
-  rotate: var(--r);
-  scale: var(--s, 0.55);
-  --fx: calc(var(--x) * 0.8 * var(--flip, 1));
-  --fr: calc(var(--r) * -2);
-  animation:
-    hero-enter 1100ms cubic-bezier(0.22, 1.2, 0.36, 1) var(--e, 0ms) both,
-    hero-float var(--fd, 7s) ease-in-out calc(var(--e, 0ms) + 1100ms) infinite;
-}
-
-[dir='rtl'] .hero-orbit-card {
-  --flip: -1;
+  top: 0;
+  left: 0;
+  scale: var(--hero-switch);
+  transform-origin: 0 0;
 }
 
 .hero-rise {
   animation: hero-rise 900ms cubic-bezier(0.2, 0.7, 0.2, 1) var(--e, 0ms) both;
 }
 
-.hero-orbit-card > * {
-  box-shadow: var(--elevation-lg);
-}
-
-.hero-orbit-card * {
-  animation: none;
-}
-
-.orbit-stay {
-  display: block;
-  --x: -6.5rem;
-  --y: calc((100% - 26rem) / 2 - 6.5rem);
-  --r: -5deg;
-  --fy: -10rem;
-}
-
-.orbit-chat {
-  display: block;
-  --x: 6.5rem;
-  --y: calc((100% - 26rem) / 2 - 7.5rem);
-  --r: 4deg;
-  --fy: -10rem;
-}
-
-.orbit-summary {
-  display: block;
-  --x: -6rem;
-  --y: calc((100% + 26rem) / 2 + 7.5rem);
-  --r: 3deg;
-  --fy: 10rem;
-}
-
-.orbit-date {
-  display: block;
-  --x: 6.5rem;
-  --y: calc((100% + 26rem) / 2 + 7.5rem);
-  --r: -3deg;
-  --fy: 10rem;
-}
-
-@media (min-width: 40rem) {
-  .hero-orbit-card {
-    --s: 0.68;
+@media (min-width: 48rem) {
+  .hero-stage {
+    --hero-inset: 0.625rem;
+    --hero-mark: clamp(34rem, min(150svh - 24rem, 88vw), 76rem);
+    --hero-copy: calc(var(--hero-mark) * 0.405);
+    --hero-drop: max(0px, (100svh - 2 * var(--hero-inset) - var(--hero-copy) - 27rem) / 2);
+    padding-block-end: 3rem;
   }
 
-  .orbit-stay {
-    --x: -14rem;
-    --y: calc((100% - 23rem) / 2 - 8rem);
+  .hero-mark {
+    top: calc(var(--hero-drop) + var(--hero-mark) * 0.033);
+    left: calc(50% - var(--hero-mark) * 0.41);
   }
 
-  .orbit-chat {
-    --x: 14rem;
-    --y: calc((100% - 23rem) / 2 - 8rem);
-  }
-
-  .orbit-summary {
-    --x: -13rem;
-    --y: calc((100% + 23rem) / 2 + 8rem);
-  }
-
-  .orbit-date {
-    --x: 14rem;
-    --y: calc((100% + 23rem) / 2 + 8rem);
+  .hero-switch {
+    --hero-switch: 1.73;
   }
 }
 
 @media (min-width: 64rem) {
-  .hero-orbit-card {
-    display: block;
-    --s: 0.72;
-  }
-
-  .orbit-stay {
-    --x: -35rem;
-    --y: 22%;
-    --r: -5deg;
-    --fy: -6rem;
-  }
-
-  .orbit-summary {
-    --x: -37rem;
-    --y: 58%;
-    --r: 4deg;
-    --fy: 2rem;
-  }
-
-  .orbit-guests {
-    --x: -33rem;
-    --y: 92%;
-    --r: -3deg;
-    --fy: 12rem;
-  }
-
-  .orbit-chat {
-    --x: 34rem;
-    --y: 20%;
-    --r: 4deg;
-    --fy: -8rem;
-  }
-
-  .orbit-date {
-    --x: 36rem;
-    --y: 56%;
-    --r: -4deg;
-    --fy: 0rem;
-  }
-
-  .orbit-total {
-    --x: 33rem;
-    --y: 94%;
-    --r: 3deg;
-    --fy: 10rem;
-  }
-
-  .orbit-filter {
-    --x: -13rem;
-    --y: 10%;
-    --r: -3deg;
-    --fy: -14rem;
-  }
-
-  .orbit-suggestions {
-    --x: 14rem;
-    --y: 10%;
-    --r: 3deg;
-    --fy: -14rem;
-  }
-
-  .orbit-variations {
-    --x: -12rem;
-    --y: 99%;
-    --r: 2deg;
-    --fy: 14rem;
-  }
-
-  .orbit-profile {
-    --x: 13rem;
-    --y: 98%;
-    --r: -2deg;
-    --fy: 14rem;
-  }
-
-  .orbit-thinking {
-    --x: -55rem;
-    --y: 12%;
-    --r: 3deg;
-    --fy: -8rem;
-  }
-
-  .orbit-aiplan {
-    --x: -56rem;
-    --y: 50%;
-    --r: -3deg;
-    --fy: 0rem;
-  }
-
-  .orbit-review {
-    --x: -53rem;
-    --y: 84%;
-    --r: 4deg;
-    --fy: 10rem;
-  }
-
-  .orbit-composer {
-    --x: 55rem;
-    --y: 10%;
-    --r: -3deg;
-    --fy: -8rem;
-  }
-
-  .orbit-model {
-    --x: 56rem;
-    --y: 40%;
-    --r: 3deg;
-    --fy: 0rem;
-  }
-
-  .orbit-upload {
-    --x: 54rem;
-    --y: 68%;
-    --r: -4deg;
-    --fy: 4rem;
+  .hero-switch {
+    --hero-switch: 2.02;
   }
 }
 
-@keyframes hero-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes hero-enter {
+@keyframes hero-lift {
   from {
-    opacity: 0;
-    filter: blur(12px);
-    transform: translate(var(--fx), var(--fy, 0rem)) scale(0.8) rotate(var(--fr));
-  }
-
-  60% {
-    opacity: 1;
-    filter: blur(0);
-  }
-
-  to {
-    opacity: 1;
-    filter: blur(0);
-    transform: none;
+    transform: translate(-18px, 18px);
   }
 }
 
@@ -446,7 +325,7 @@ body:has([data-chat-launcher]) footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-orbit-card,
+  .hero-mark-piece,
   .hero-rise {
     animation: none;
   }

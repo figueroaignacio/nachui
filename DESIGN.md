@@ -100,7 +100,7 @@ Every role has one size per width on the site, shared by every page (phone 390 /
 
 | Role                             | 390              | 768 | 1440 | Classes                                     |
 | -------------------------------- | ---------------- | --- | ---- | ------------------------------------------- |
-| Landing hero                     | 36               | 48  | 52   | `text-4xl md:text-5xl lg:text-[3.25rem]`    |
+| Landing hero                     | 36               | 48  | 56   | `text-4xl md:text-5xl lg:text-[3.5rem]`     |
 | Page title                       | 30               | 30  | 36   | `text-3xl leading-[1.1] lg:text-4xl`        |
 | Page intro                       | 18               | 20  | 20   | `text-lg md:text-xl text-muted-strong`      |
 | Docs `h2`                        | 20               | 24  | 24   | `text-xl md:text-2xl`                       |
